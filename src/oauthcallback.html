@@ -1,0 +1,13 @@
+<html>
+
+<body>
+    <script>
+        if (window.opener && window.opener.FB) {
+            window.opener.FB.oauthCallback(window.location.href);
+            window.close();
+        } else
+            window.location = 'findapp://?' + window.location.hash;
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,2642 @@
+* {
+	-webkit-overflow-scrolling: touch;
+	-webkit-user-select: none;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	-moz-tap-highlight-color: rgba(0, 0, 0, 0);
+	-moz-user-select: -moz-none;
+	-webkit-touch-callout: none;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: optimizelegibility;
+	margin: 0;
+	padding: 0;
+}
+
+*::-webkit-scrollbar {
+	display: none;
+}
+
+html {
+	height: 100vh;
+}
+
+@font-face {
+	font-family: 'Comfortaa';
+	font-style: regular;
+	font-weight: 400;
+	src: url(../font/Comfortaa-Regular.ttf) format('truetype');
+}
+
+h1,
+h2,
+h3,
+h4 {
+	font-size: 1em;
+	margin-top: 3em;
+	margin-bottom: 1em;
+	text-align: center;
+	color: rgb(69, 109, 166);
+}
+
+body {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	color: black;
+	line-height: 1.5em;
+	background: white;
+	-webkit-text-size-adjust: none;
+	-webkit-box-orient: vertical;
+	-webkit-box-align: stretch;
+	overflow: hidden;
+	text-align: left;
+	margin: 0;
+	padding: 0;
+	font-family: Comfortaa, Verdana, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	-ms-overflow-style: none;
+	touch-action: none;
+	-ms-touch-action: none;
+}
+
+main {
+	bottom: 0;
+	top: 0;
+	position: absolute;
+	left: 50%;
+	overflow: hidden;
+	box-shadow: 0 0 5em rgba(0, 0, 0, 0.3);
+}
+
+main.app {
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	box-shadow: none;
+}
+
+main.app,
+main.app home {
+	padding-top: constant(safe-area-inset-top);
+	padding-top: env(safe-area-inset-top);
+}
+
+main.app alert,
+main.app progressbar,
+main.app hint {
+	margin-top: constant(safe-area-inset-top);
+	margin-top: env(safe-area-inset-top);
+}
+
+add {
+	display: none;
+	bottom: 0;
+	z-index: 9999;
+	position: absolute;
+	text-align: center;
+	padding: 1.5em;
+}
+
+add#addLeft {
+	left: 0;
+}
+
+add#addRight {
+	right: 0;
+}
+
+menu {
+	border-radius: 3em 1em;
+	width: 100%;
+	bottom: 4em;
+	border-bottom: none;
+	position: absolute;
+	box-shadow: 0 0 1em rgba(0, 0, 0, 0.5);
+	text-align: center;
+	overflow: hidden;
+	z-index: 999;
+	line-height: 0;
+	display: block;
+	float: left;
+}
+
+menu>div {
+	position: relative;
+	float: left;
+	color: white;
+	width: 100%;
+	font-weight: bold;
+	clear: both;
+	padding: 1em;
+	line-height: 1em;
+}
+
+menu badge {
+	top: 2em;
+	right: 63%;
+	line-height: normal;
+	display: none;
+	border-radius: 2em;
+}
+
+menu container a {
+	display: inline-block;
+	width: 33.3%;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	position: relative;
+	height: 4em;
+	line-height: 4em;
+	padding: 0 0.4em;
+	text-align: center;
+	color: white;
+}
+
+menu container a {
+	font-size: 0.8em;
+}
+
+menu container a:not(.nohover):hover,
+menu container a.menuHighlight {
+	background: rgba(255, 255, 255, 0.1);
+}
+
+menu container {
+	display: block;
+	width: 100%;
+	position: relative;
+	white-space: nowrap;
+	float: left;
+}
+
+hint {
+	opacity: 0;
+	position: absolute;
+	z-index: 99999;
+	display: none;
+	transition: all 0.4s ease-in;
+	line-height: 1.5;
+}
+
+hint .body,
+hint.body {
+	position: absolute;
+	background: rgba(69, 109, 166, 0.9);
+	padding: 1em;
+	color: white;
+	border-radius: 1em;
+	text-align: center;
+	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+}
+
+hint close,
+alert close {
+	position: absolute;
+	right: 0;
+	top: 0;
+	opacity: 0.4;
+	width: 6em;
+	height: 6em;
+	text-align: right;
+	padding: 0.5em 1em;
+	z-index: 9;
+	cursor: pointer;
+}
+
+hint hinky {
+	position: absolute;
+	border-right: solid 0.5em transparent;
+	border-left: solid 0.5em transparent;
+	z-index: 0;
+}
+
+hint hinky.top {
+	top: -0.5em;
+	border-bottom: solid 0.5em rgba(69, 109, 166, 0.9);
+}
+
+hint hinky.bottom {
+	bottom: -0.5em;
+	border-top: solid 0.5em rgba(69, 109, 166, 0.9);
+}
+
+ul li,
+ol li {
+	margin-left: 1.85em;
+	text-align: left;
+}
+
+ul li {
+	list-style-type: circle;
+}
+
+ol li {
+	list-style-type: decimal;
+}
+
+whatToDoDiv {
+	padding-bottom: 1em;
+	display: block;
+}
+
+subCatTitle {
+	padding-top: 0.38em;
+	margin-bottom: 0.5em;
+	text-align: center;
+	border-bottom: solid 0.06em rgba(255, 255, 255, 0.1);
+	display: block;
+}
+
+.mainBG {
+	background: url(../images/background.jpg) no-repeat right top;
+	background-size: 100% 100%;
+}
+
+home>div {
+	position: relative;
+	height: 100%;
+	width: 100%;
+	overflow-y: auto;
+	display: block;
+}
+
+homeBody {
+	position: relative;
+	width: 100%;
+	height: 62vh;
+	max-height: 32.5em;
+	min-height: 25.5em;
+	perspective: 20em;
+	display: block;
+	margin-top: 2vh;
+}
+
+home .button1 {
+	margin-left: -11.6em;
+	border-radius: 1em 50%;
+	text-align: right;
+}
+
+home .button1::before {
+	border-radius: 1em 50%;
+}
+
+home .button2 {
+	margin-left: 0.1em;
+	border-radius: 50% 1em;
+	text-align: left;
+}
+
+home .button2::before {
+	border-radius: 50% 1em;
+}
+
+home .button3 {
+	margin-left: -9.1em;
+	margin-top: 11.7em;
+	width: 9em;
+	height: 9em;
+	border-radius: 50% 1em;
+	padding-top: 0;
+	text-align: right;
+}
+
+home .button3::before {
+	border-radius: 50% 1em;
+}
+
+home .button4 {
+	margin-left: 0.1em;
+	margin-top: 11.7em;
+	width: 9em;
+	height: 9em;
+	border-radius: 1em 50%;
+	padding-top: 0;
+	text-align: left;
+}
+
+home .button4::before {
+	border-radius: 1em 50%;
+}
+
+whattodo navbutton {
+	opacity: 0.3;
+	cursor: pointer;
+	width: 33%;
+	display: inline-block;
+	position: absolute;
+	margin: 0 0.5em;
+}
+
+.bgColor {
+	background: linear-gradient(rgb(250, 190, 40) 0%, rgb(200, 140, 0) 100%) center center / 100% no-repeat;
+}
+
+a.bgColor:hover,
+img.bgColor:hover,
+icons:hover .bgColor,
+homeBody .bgColor:hover {
+	background: rgb(250, 190, 40);
+}
+
+.bgColor2 {
+	background: linear-gradient(rgb(69, 109, 166) 0%, rgb(29, 59, 106) 100%) center center / 100% no-repeat;
+}
+
+a.bgColor2:hover,
+img.bgColor2:hover,
+icons:hover .bgColor2 {
+	background: rgb(69, 109, 166);
+}
+
+.bgWeb {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	opacity: 0.95;
+	display: none;
+}
+
+icons category .no4 {
+	font-size: 0.7em;
+}
+
+icons category .no6 {
+	font-size: 0.6em;
+}
+
+navbar {
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	z-index: 1000;
+	display: block;
+	left: 0;
+	height: 4em;
+	color: white;
+	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
+}
+
+navbar .loggedOff {
+	width: 33%;
+}
+
+navbar .loggedOff:last-of-type {
+	width: 34%;
+}
+
+navbar navbutton {
+	width: 20%;
+	text-align: center;
+	height: 100%;
+	cursor: pointer;
+	float: left;
+	position: relative;
+	z-index: 9;
+}
+
+navbar navbutton p {
+	display: none;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+}
+
+navbar navbutton p img {
+	height: 0.6em;
+	position: relative;
+	z-index: 9;
+}
+
+navbar navbutton img {
+	position: relative;
+	height: 2.6em;
+	margin-top: 0.7em;
+	opacity: 0.3;
+	transition: opacity 0.4s;
+}
+
+navbar navbutton.active {
+	background: rgba(255, 255, 255, 0.1);
+}
+
+navbar navbutton.active img,
+navbar navbutton:hover img {
+	opacity: 1;
+}
+
+navbar navbutton.active p {
+	display: block !important;
+}
+
+content {
+	height: 100%;
+	position: relative;
+	display: block;
+	z-index: 1;
+}
+
+.contentList {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 4em;
+	text-align: center;
+}
+
+groups {
+	padding: 0 1em 1em 1em;
+	display: block;
+}
+
+filters {
+	position: absolute;
+	line-height: 1;
+	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+	background: rgba(255, 255, 255, 0.9);
+	padding: 1em 1em 0 1em;
+	left: 2%;
+	border-radius: 1em;
+	width: 96%;
+	top: 0.5em;
+	transition: all 0.4s ease-out 0s;
+}
+
+login registerHint {
+	padding-top: 1em;
+	margin-left: 5%;
+	width: 90%;
+	color: rgb(0, 0, 100);
+}
+
+login registerHint li {
+	list-style-type: circle;
+	margin-left: 1.85em;
+}
+
+listBody {
+	text-align: center;
+	position: absolute;
+	top: 3.5em;
+	bottom: 0;
+	width: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
+	display: block;
+}
+
+input[type="file"] {
+	opacity: 0;
+	position: absolute;
+	left: 0;
+	top: 0;
+	cursor: pointer;
+}
+
+inputFile {
+	position: relative;
+	min-height: 2em;
+	text-align: left;
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	border-radius: 1em;
+	background: rgba(255, 255, 255, 0.7);
+	border: solid 1px rgb(240, 240, 240);
+	display: block;
+}
+
+inputFile img {
+	position: absolute;
+}
+
+inputFile span {
+	padding: 0.36em 0.75em;
+	display: inline-block;
+}
+
+inputFile close {
+	position: absolute;
+	height: 2.5em;
+	top: 0;
+	right: 0;
+	width: 4em;
+	z-index: 9;
+	text-align: right;
+	padding: 0.5em 0.75em;
+	color: white;
+	text-shadow: 0 0 0.15em rgba(0, 0, 0, 0.8);
+}
+
+inputFile desc {
+	position: absolute;
+	color: white;
+	text-align: center;
+	width: 100%;
+	left: 0;
+	bottom: 0;
+	text-shadow: 0 0 0.15em rgba(0, 0, 0, 0.8);
+	pointer-events: none;
+}
+
+inputFile rotate {
+	position: absolute;
+	left: 0;
+	text-align: left;
+	font-size: 2em;
+	width: 1.25em;
+	height: 2em;
+	padding: 0.25em;
+	color: white;
+	top: 0;
+	z-index: 9;
+	filter: drop-shadow(0 0 0.05em rgba(0, 0, 0, 0.8));
+}
+
+select,
+textarea,
+input {
+	-webkit-appearance: none;
+	position: relative;
+	font-size: 1em;
+	font-weight: normal;
+	box-sizing: border-box;
+	width: 100%;
+	outline: none !important;
+	font-family: Comfortaa, Verdana, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+	height: 2em;
+	padding: 0em 0.75em;
+	z-index: 99;
+	border-radius: 1em !important;
+	background: rgba(255, 255, 255, 0.7);
+	border: solid 1px rgb(240, 240, 240);
+	vertical-align: top;
+}
+
+input,
+textarea {
+	-webkit-user-select: text;
+	-moz-user-select: -moz-text;
+	-moz-user-select: text;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+	display: none;
+}
+
+input[type="radio"]+label,
+input[type="checkbox"]+label {
+	cursor: pointer;
+	display: inline-block;
+	position: relative;
+	text-align: left;
+	width: auto;
+	padding: 0.34em 1.25em;
+	margin-left: 0.25em;
+	margin-right: 0.25em;
+	margin-bottom: 0.5em;
+	left: -0.25em;
+	background: rgba(255, 255, 255, 0.7);
+	min-height: 2em;
+	border-radius: 1em;
+	transition: all .4s;
+	border: solid 1px rgb(240, 240, 240);
+}
+
+input[type="radio"]+label>img,
+input[type="checkbox"]+label>img {
+	height: 3em;
+	margin: -1em;
+}
+
+input[type="radio"]+label:hover,
+input[type="checkbox"]+label:hover {
+	color: black;
+}
+
+input:checked+label {
+	padding-left: 1.75em;
+	padding-right: 0.75em;
+	color: black;
+}
+
+input:checked+label:before {
+	position: absolute;
+	content: "\2713";
+	left: 0.5em;
+	opacity: 0.8;
+}
+
+popup .multiple input:checked+label {
+	background: rgb(250, 190, 40) !important;
+}
+
+popup .multiple {
+	max-height: 60vh;
+	overflow-y: auto;
+	margin-bottom: 1em;
+}
+
+.multipleLabel {
+	cursor: pointer;
+	display: inline-block;
+	position: relative;
+	padding: 0.25em 0.75em;
+	border-radius: 1em;
+	background: rgba(255, 255, 255, 0.7);
+	border: solid 1px rgb(240, 240, 240);
+	margin: 0.25em;
+}
+
+textarea {
+	height: 5em;
+	padding-top: 0.34em;
+	overflow-y: auto;
+	resize: none;
+}
+
+li {
+	list-style: none;
+	padding-left: 0.25em;
+	margin: 0.75em 0;
+}
+
+field>label {
+	position: relative;
+	width: 25%;
+	text-align: right;
+	padding-right: 0.25em;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	height: 2em;
+	line-height: 2em;
+	vertical-align: top;
+	white-space: nowrap;
+	color: rgb(0, 0, 100);
+	float: left;
+}
+
+popup field>label {
+	color: white;
+}
+
+settings,
+settings2,
+settings3,
+info,
+login {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+settings,
+settings2,
+settings3 .notification,
+info,
+login {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
+
+explain {
+	font-size: 0.8em;
+	padding: 0 0.5em 1em 0.5em;
+	display: block;
+	color: rgb(0, 0, 100);
+}
+
+settings explain {
+	margin-top: -0.5em;
+}
+
+whattodo {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.borderBottom {
+	border-bottom: solid 1px rgba(200, 200, 200, 0.4);
+}
+
+.dialogFieldError,
+.dialogFieldError+label,
+.dialogFieldErrorHint {
+	background-color: rgba(255, 0, 100, 0.3) !important;
+}
+
+#blocked {
+	width: 100%;
+	margin-left: 0;
+}
+
+#locationNameInputHelper {
+	position: relative;
+	display: block;
+	margin-top: 1px;
+	width: 100%;
+	padding: 0.75em 1em;
+	border-radius: 1em;
+	background-color: rgba(200, 200, 200, 0.1);
+}
+
+.facebook {
+	top: 3em;
+	position: absolute;
+	z-index: 999;
+	opacity: 1 !important;
+	right: 2.75em;
+}
+
+.noDisp {
+	display: none !important;
+}
+
+field {
+	position: relative;
+	width: 100%;
+	margin-bottom: 0.5em;
+	display: inline-block;
+}
+
+field value {
+	text-align: left;
+	position: relative;
+	width: 75%;
+	display: inline-block;
+	min-height: 2em;
+	vertical-align: top;
+}
+
+field .checkbox {
+	margin-bottom: -0.5em;
+}
+
+dialogButtons {
+	text-align: center;
+	white-space: nowrap;
+	clear: both;
+	position: relative;
+	width: 100%;
+	margin-bottom: 1em;
+	display: block;
+}
+
+.langSelectImg {
+	border-radius: 2em;
+	display: inline-block;
+	position: relative;
+	margin: 0 1em;
+	padding: 1em 2em;
+}
+
+.langSelectImg.pressed::before,
+.chatLinks.pressed::before {
+	display: block;
+	content: '✓';
+	position: absolute;
+	right: 0;
+	top: 0;
+	font-weight: bold;
+	font-size: 3em;
+	text-shadow: 0 0 0.5em rgba(0, 0, 0, 0.9);
+	color: rgba(255, 255, 255, 0.9);
+}
+
+slider {
+	position: relative;
+	height: 1.85em;
+	margin: 0 1.25em 1.85em 1.25em;
+	border-bottom: solid 1px rgba(200, 200, 200, 0.4);
+	display: block;
+}
+
+slider>* {
+	transform: translate3d(0, 0, 0);
+}
+
+slider thumb {
+	position: absolute;
+	top: 0;
+	height: 3.7em;
+	width: 5em;
+	margin-left: -3.65em;
+	line-height: 1.8;
+	display: inline-block;
+}
+
+slider thumb span {
+	position: absolute;
+	top: 0;
+	height: 100%;
+	width: 2.5em;
+	text-align: center;
+	border-radius: 0.75em;
+	background: rgba(255, 255, 255, 0.7);
+	border: solid 1px rgb(240, 240, 240);
+}
+
+slider thumb val {
+	display: block;
+}
+
+homeButton {
+	padding-top: 7.3em;
+	position: absolute;
+	cursor: pointer;
+	text-align: center;
+	color: white;
+	width: 11.5em;
+	height: 11.5em;
+	left: 50%;
+	z-index: auto;
+}
+
+homeButton::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: -1;
+	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+}
+
+homeButton badge {
+	border-radius: 2em;
+}
+
+homeButton img {
+	height: 4em;
+	opacity: 0.3;
+	transition: opacity 0.4s;
+}
+
+homeButton:hover img,
+homeButton:hover .lang {
+	opacity: 1;
+}
+
+homeButton .lang {
+	font-size: 2em;
+	line-height: 2.3em;
+	opacity: 0.3;
+	margin-left: 0.2em;
+	transition: opacity 0.4s;
+	font-weight: bold;
+}
+
+homeButtonFav {
+	height: 2em;
+	margin-top: -0.75em;
+	margin-bottom: -0.5em;
+	margin-right: -0.5em;
+}
+
+homeButtonBottom {
+	height: 7em !important;
+	width: 7em !important;
+}
+
+homeButtonSmall {
+	position: absolute;
+	bottom: 7vh;
+	text-align: center;
+	width: 100%;
+}
+
+homeButtonSmall img {
+	border-radius: 50%;
+	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+	margin: 0 1.3em;
+	height: 8vh;
+	max-height: 5em;
+	padding: 1em;
+	cursor: pointer;
+}
+
+whatToDoList {
+	display: none;
+	padding-top: 0.5em;
+}
+
+whattodo tabBody {
+	padding: 0;
+}
+
+whatToDoBody {
+	display: block;
+	padding: 1em 2em;
+}
+
+#whatToDoLocation>img {
+	border-radius: 50% 0.5em;
+}
+
+chat {
+	z-index: 99999;
+}
+
+chat listHeader img {
+	position: absolute;
+	right: 0.25em;
+	height: 3em;
+	border-radius: 50%;
+	top: 0.25em;
+	z-index: 2;
+}
+
+chat .sendButton {
+	float: right;
+	margin: 0.25em 0;
+}
+
+listHeader chatName {
+	position: absolute;
+	right: 4em;
+}
+
+listHeader chatDate {
+	position: absolute;
+	left: 0.75em;
+}
+
+chatButton {
+	position: absolute;
+	left: 0;
+	top: -1.8em;
+	z-index: 10;
+}
+
+chatButton .buttonIcon {
+	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+	border-radius: 0 1.5em 1.5em 0;
+	margin: 0;
+}
+
+chatUserList {
+	position: absolute;
+	left: 1em;
+	bottom: 4em;
+	padding: 0.5em 0 0 0.3em;
+	border-radius: 2em;
+	margin-bottom: 0.5em;
+	overflow-x: hidden;
+	overflow-y: auto;
+	z-index: 100;
+	max-height: 23em;
+	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+}
+
+chatUserList>div {
+	height: 4em;
+	color: black;
+	margin-bottom: 0.5em;
+	width: 16em;
+	background: rgba(255, 255, 255, 0.7);
+	border-radius: 2em 0 0 2em;
+	border: solid 1px rgb(240, 240, 240);
+	cursor: pointer;
+	position: relative;
+	padding: 0.2em;
+}
+
+chatUserList badge {
+	right: -1px !important;
+	top: -0.5em;
+	width: initial;
+	border-radius: 1.5em 0 0 1.5em !important;
+}
+
+chatUserList close {
+	position: absolute;
+	height: 100%;
+	width: 2.5em;
+	top: 0;
+	right: 0;
+	text-align: right;
+	padding-right: 0.5em;
+	display: none;
+	color: rgb(230, 230, 230);
+}
+
+chatUserList div span {
+	display: inline;
+	width: 12em;
+	position: absolute;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 0.3em 0 0 0.3em;
+	white-space: nowrap;
+	line-height: 1.5;
+}
+
+chatUserList img {
+	border-radius: 50%;
+	height: 100%;
+}
+
+errorHint {
+	text-align: center;
+	color: red;
+	position: relative;
+	z-index: 0;
+	margin-top: 0.25em;
+	display: block;
+}
+
+listHeader {
+	height: 3.5em;
+	line-height: 3.5em;
+	text-align: center;
+	z-index: 9;
+	position: relative;
+	z-index: 99999;
+	display: block;
+}
+
+listResults {
+	display: inline-block;
+	width: 100%;
+}
+
+listScroll {
+	display: none;
+	position: absolute;
+	z-index: 99999;
+	width: 3em;
+	height: 7.5em;
+	right: 0;
+	margin-top: -3em;
+}
+
+listScroll a {
+	position: absolute;
+	width: 1.2em;
+	height: 1.5em;
+	top: 3em;
+	right: 0;
+	border-radius: 1em 0 0 1em;
+	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+}
+
+noResult {
+	line-height: 1.6;
+	padding: 1em;
+}
+
+@-moz-document url-prefix(http: //),url-prefix(https://){
+
+	scrollbar {
+		-moz-appearance: none !important;
+	}
+
+	scrollbarbutton {
+		-moz-appearance: none !important;
+	}
+
+	thumb {
+		-moz-appearance: none !important;
+	}
+
+	scrollcorner {
+		-moz-appearance: none !important;
+		resize: both;
+	}
+
+	scrollbar[orient="vertical"] {
+		color: silver;
+	}
+}
+
+popup {
+	position: absolute;
+	z-index: 99999;
+	box-shadow: 0 0 2em rgba(0, 0, 0, 0.5);
+	width: 100%;
+	border-radius: 4em 1em;
+	overflow: hidden;
+}
+
+popupTitle {
+	color: white;
+	overflow: hidden;
+	height: 3em;
+	line-height: 3.3em;
+	position: relative;
+	width: 100%;
+	z-index: 99;
+	font-size: 1.3em;
+	text-align: center;
+	border-bottom: solid 0.06em rgba(255, 255, 255, 0.1);
+	overflow: hidden;
+	white-space: nowrap;
+	padding: 0 1em;
+	text-overflow: ellipsis;
+	display: block;
+}
+
+popupHint {
+	padding: 0.5em;
+	text-align: center;
+	color: red;
+	display: block;
+}
+
+popupContent {
+	border-radius: 0 0 4em 1em;
+	overflow-y: auto;
+	color: white;
+	display: block;
+}
+
+popupContent input,
+popupContent input[type="radio"]+label,
+popupContent input[type="checkbox"]+label,
+popupContent select,
+popupContent textarea,
+popupContent > :not(detail) value label,
+popupContent inputFile,
+popupContent slider thumb span {
+	color: rgba(255, 255, 255, 0.7);
+	background: rgba(255, 255, 255, 0.1);
+	border: none;
+}
+
+popupContent input[type="radio"]+label:hover,
+popupContent input[type="checkbox"]+label:hover {
+	color: white;
+}
+
+popupContent input:checked+label {
+	color: white;
+}
+
+popupContent > div {
+	border-radius: 0 0 4em 1em;
+}
+
+ratingHint {
+	margin:0 1em 1em 1em;
+	display: block;
+}
+
+ratingHistory {
+	display: block;
+}
+
+ratingItem {
+	display: block;
+	background: transparent;
+	padding: 0.5em;
+	text-align: left;
+	width: 100%;
+	position: relative;
+}
+
+ratingItem rating {
+	margin-right: 0.5em;
+	height: 1em;
+}
+
+ratingItem img {
+	max-width: 100%;
+	border-radius: 1em;
+}
+
+rating,
+ratingSelection {
+	position: relative;
+	line-height: 1;
+	display: inline-block;
+	height: 1.5em;
+}
+
+rating empty,
+ratingSelection empty {
+	opacity: 0.3;
+	position: relative;
+}
+
+rating full,
+ratingSelection full {
+	position: absolute;
+	left: 0;
+	overflow: hidden;
+	top: 0;
+}
+
+ratingSelection span {
+	width: 2em;
+	display: inline-block;
+	position: relative;
+}
+
+popupContent > :not(detail) ratingSelection {
+	width: 10em;
+	margin-left: -5em;
+	font-size: 2em;
+	left: 50%;
+	cursor: pointer;
+	display: block;
+}
+
+.whatToDoTime {
+	float: none;
+	width: 3em;
+	margin-left: 1em;
+	min-width: 8em;
+}
+
+eventListTitle {
+	position: relative;
+	width: 100%;
+	text-align: center;
+	font-size: 1.3em;
+	clear: both;
+	height: 3em;
+	line-height: 4em;
+	display: block;
+}
+
+badgeChats {
+	z-index: 11;
+	text-align: center;
+	position: absolute;
+	height: 3.8em;
+	line-height: 3.8;
+	width: 100%;
+	font-size: 0.8em;
+}
+
+badge {
+	display: none;
+	border-radius: 0 2em 2em 0;
+	position: absolute;
+	top: -1.3em;
+	color: white;
+	text-align: center;
+	padding: 0.5em 1em;
+	z-index: 99;
+	box-shadow: 0 0 0.3em rgba(0, 0, 0, 0.3);
+	opacity: 0.9;
+}
+
+badge img {
+	height: 2em;
+	margin: -0.8em;
+}
+
+badge span {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	font-weight: bold;
+	height: 100%;
+	line-height: 2.5em;
+	color: rgb(250, 190, 40);
+}
+
+navbar badge {
+	line-height: 1.3em;
+	font-size: 1em;
+	right: 0.25em;
+	position: absolute;
+	opacity: 0.8;
+	z-index: 9999;
+	border-radius: 2em;
+}
+
+navbar .active badge {
+	opacity: 1;
+}
+
+popup badge {
+	display: none;
+}
+
+chatDateTitle {
+	padding-top: 2em;
+	position: relative;
+	float: left;
+	width: 100%;
+	font-weight: bold;
+}
+
+chatMoreButton {
+	position: absolute;
+	top: -2.5em;
+	right: 0;
+	padding: 0.5em 1em;
+	border-radius: 2em 0 0 2em;
+	z-index: 9;
+	color: white;
+	display: block;
+	font-size: 1.5em;
+	background-color: rgba(220, 220, 220, 0.3);
+	white-space: nowrap;
+}
+
+alert {
+	position: absolute;
+	top: 1em;
+	right: 1em;
+	left: 1em;
+	text-align: center;
+	z-index: 999999;
+	border-radius: 1em;
+	color: white;
+	background-color: rgba(69, 109, 166, 0.9);
+	box-shadow: 0 0 2em rgba(0, 0, 0, 0.3);
+}
+
+alert > div {
+	z-index: 1;
+	position: relative;
+	padding: 1.5em;
+}
+
+chatConversation {
+	top: 3em;
+	left: 0;
+	overflow-y: auto;
+	overflow-x: hidden;
+	position: absolute;
+	width: 100%;
+	z-index: 1;
+	transition: opacity .4s;
+}
+
+chatMessage .unseen {
+	color: rgb(250, 190, 40) !important;
+}
+
+chatMessage {
+	text-align: left;
+	position: relative;
+	float: left;
+	clear: both;
+	max-width: 100%;
+	padding-top: 1em;
+	display: block;
+	width: 100%;
+}
+
+emoji {
+	height: 1em;
+	display: inline-block;
+	position: relative;
+	font-size: 2em;
+	top: 0.2em;
+}
+
+.newsLinks {
+	display: block;
+	height: 5em;
+	overflow: hidden;
+	white-space: nowrap;
+	width: 6em;
+	text-overflow: ellipsis;
+	line-height: 1em;
+	position: relative;
+	left: 50%;
+	margin-left: -3em;
+	text-align: center;
+	cursor: pointer;
+}
+
+.newsLinks img {
+	height: 4em;
+	border-radius: 2em;
+	margin-bottom: -1.75em;
+}
+
+.newsLinks span {
+	position: absolute;
+}
+
+.autoNewsImg {
+	height: 3em !important;
+	position: absolute;
+	left: 50%;
+	margin-left: 1em;
+	top: -1em;
+	z-index: 9;
+}
+
+.chatLinks {
+	text-align: center;
+	display: inline-block;
+	width: 7em;
+	height: 6.5em;
+	border-radius: 1em;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	margin: 0 0.5em;
+	padding-top: 0.5em;
+	cursor: pointer;
+	position: relative;
+}
+
+chatMessage.me .chatLinks {
+	margin-left: 0.5em;
+}
+
+chatMessage .chatLinks {
+	margin-right: 0.5em;
+}
+
+.chatLinks img {
+	border-radius: 50%;
+	height: 4.8em;
+	margin-bottom: -0.5em;
+}
+
+.chatLinks.pressed::before {
+	right: 0.4em;
+	top: 0.5em;
+}
+
+.chatImg {
+	margin-top: -4em;
+	position: relative;
+	z-index: 1;
+	border-radius: 1.5em !important;
+	float: left;
+	max-width: 100%;
+}
+
+.chatImg img {
+	max-width: 100%;
+	height: auto !important;
+}
+
+.chatImgPreview {
+	max-width: 20em;
+	max-height: 20em;
+	border-radius: 1em;
+}
+
+.chatSendImgPrevHint {
+	position: absolute;
+	bottom: 4.5em;
+	text-align: center;
+	width: 100%;
+	left: 0;
+	text-shadow: 0 0 0.5em rgba(0, 0, 0, 0.5);
+}
+
+chatInput {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	padding: 0 0.5em;
+	left: 0;
+}
+
+chatInput errorHint {
+	position: absolute;
+	bottom: 2.1em;
+	margin-left: 0.75em;
+}
+
+chatMessage .chatImg img {
+	border-radius: 1em;
+}
+
+feedbackHint {
+	margin-top: 1em;
+	display: block;
+}
+
+chatMessage note {
+	padding: 0.75em 1em;
+	border-radius: 1em 0 0 1em;
+	position: relative;
+	z-index: 99999;
+	max-width: 90%;
+	float: right;
+	box-sizing: initial;
+	overflow: hidden;
+	text-align: left;
+	margin: 0 -1px;
+	display: block;
+	background: rgba(220, 240, 255, 0.8);
+}
+
+chatMessage note a {
+	color: darkblue;
+	cursor: pointer;
+}
+
+chatMessage.me note {
+	background: rgba(255, 255, 255, 0.8);
+	float: left;
+	border-radius: 0 1em 1em 0;
+}
+
+chatMessage note img {
+	max-width: 100%;
+	z-index: 9999;
+	position: relative;
+}
+
+chatMessage time {
+	position: absolute;
+	top: 0.3em;
+	color: rgb(200, 200, 200);
+	z-index: 9999999999;
+}
+
+chatMessage.me time {
+	left: 1em;
+}
+
+chatMessage time {
+	right: 1em;
+}
+
+.showFilterButton {
+	position: absolute;
+	left: 0.25em;
+	top: 0.5em;
+	height: 2.5em !important;
+	width: 2.5em !important;
+}
+
+icons > * {
+	position: relative;
+	height: 2.3em;
+	width: 2.3em;
+	color: white;
+	white-space: nowrap;
+	overflow: hidden;
+	float: right;
+}
+
+icons > :nth-child(1) {
+	border-radius: 50% 0.5em;
+	margin-bottom: 1px;
+	margin-left: 1px;
+	width: 3em;
+	height: 3em;
+}
+
+icons > :nth-child(2) {
+	border-radius: 0.5em 50%;
+	text-align: right;
+	margin-bottom: 1px;
+	width: 3em;
+	height: 3em;
+}
+
+icons > :nth-child(3) {
+	border-radius: 0.5em 50%;
+	margin-left: 1px;
+	margin-right: 0.7em;
+}
+
+icons > :nth-child(4) {
+	border-radius: 50% 0.5em;
+}
+
+icons img {
+	width: 1.5em;
+}
+
+icons gender img {
+	width: 1em;
+	margin-top: 1.7em;
+	margin-left: 0.2em;
+	opacity: 0.8;
+}
+
+icons {
+	position: relative;
+	float: right;
+	width: 6.2em;
+	height: 5.5em;
+	margin: 0.1em 0.8em 0 0;
+	z-index: 9999;
+	cursor: pointer;
+}
+
+icons span {
+	font-size: 0.8em;
+	display: inline-block;
+	position: absolute;
+	line-height: 1;
+	opacity: 0.8;
+}
+
+icons > :nth-child(1) > span {
+	bottom: 0.3em;
+	left: 0.3em;
+}
+
+icons > :nth-child(2) > span {
+	bottom: 0.3em;
+	right: 0.3em;
+}
+
+icons favorite {
+	font-size: 1em;
+	padding: 0.1em;
+}
+
+icons > :nth-child(4) > span {
+	top: 0.4em;
+	right: 0.3em;
+}
+
+icons km::after {
+	margin-left: -0.5em;
+}
+
+km::after {
+	content: 'KM';
+	font-size: 0.5em;
+}
+
+icons percent::after {
+	content: '%';
+	font-size: 0.5em;
+	margin-left: -0.5em;
+}
+
+compass::after {
+	content: '↑';
+}
+
+compass {
+	position: absolute;
+	right: 0.2em;
+	top: 0;
+	line-height: 1.5;
+	opacity: 0.6;
+	width: 1.5em;
+	height: 1.5em;
+	text-align: center;
+	font-size: 1.5em;
+}
+
+detailCompass,
+detailDistance {
+	width: 10em;
+	height: 10em;
+	padding-top: 4.5em;
+	position: absolute;
+	bottom: 1em;
+	left: 50%;
+	margin-left: -5em;
+	opacity: 0.9;
+	line-height: 1;
+}
+
+detailCompass span {
+	position: absolute;
+	font-size: 6em;
+	line-height: 1.5;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	opacity: 0.6;
+}
+
+detail detailDistance img {
+	height: 4em;
+	position: absolute;
+	left: 0;
+	top: 3em;
+	opacity: 0.6;
+}
+
+row badge {
+	right: auto;
+	left: 0;
+	top: 0.2em;
+	opacity: 0.9;
+}
+
+a:link, a:visited {
+	text-decoration: none;
+}
+
+form {
+	position: relative;
+	margin: 0;
+	padding: 0;
+}
+
+.ratingBonusImg {
+	width: 55%;
+	border-radius: 50%;
+}
+
+ratingBonusCaption {
+	position: absolute;
+	width: 55%;
+	left: 0;
+	bottom: -1.5em;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+detailtitle {
+	position: relative;
+	font-size: 1.3em;
+	white-space: nowrap;
+	padding: 0.5em;
+	overflow: hidden;
+	color: white;
+	text-overflow: ellipsis;
+	display: block;
+}
+
+home {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 9999;
+	overflow: hidden;
+	display: block;
+}
+
+homeHeader {
+	position: relative;
+	text-align: center;
+	max-height: 8em;
+	min-height: 7em;
+	height: 17vh;
+	z-index: 99;
+	cursor: pointer;
+	display: block;
+}
+
+homeTitle {
+	font-size: 2.5em;
+	padding: 0.5em 0;
+	white-space: nowrap;
+	color: rgb(69, 109, 166);
+	display: block;
+}
+
+homeSubTitle {
+	margin: 0 1em;
+	display: block;
+}
+
+homeImage {
+	height: 18vh;
+	max-height: 10em;
+	margin-top: 3vh;
+	margin-bottom: 1vh;
+	cursor: pointer;
+	position: relative;
+	display: block;
+	text-align: center;
+}
+
+elementNo {
+	position: absolute;
+	font-size: 0.5em;
+	top: 0;
+	right: 0.5em;
+	opacity: 0.6;
+}
+
+elementNoAux {
+	position: absolute;
+	font-size: 0.8em;
+	bottom: 0;
+	right: 0.5em;
+}
+
+notifications {
+	height: 100%;
+	position: absolute;
+	z-index: 999;
+	width: 100%;
+	left: 0;
+	overflow: hidden;
+}
+
+notifications listBody {
+	padding: 0;
+}
+
+buttontext {
+	border-radius: 2em;
+	display: inline-block;
+	cursor: pointer;
+	padding: 1em 1.5em;
+	min-height: 3em;
+	color: white;
+	line-height: 100%;
+	margin: 0 0.25em;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	vertical-align: middle;
+}
+
+.buttonIcon {
+	cursor: pointer;
+	display: inline-block;
+	padding: 0.4em;
+	border-radius: 50%;
+	margin: 0 0.25em;
+	height: 3em;
+	width: 3em;
+	vertical-align: middle;
+}
+
+.appInput {
+	white-space: nowrap;
+	text-align: left;
+	margin-left: -0.25em;
+	text-align: center;
+}
+
+.appInput buttontext {
+	padding: 0.5em 0.75em;
+	min-height: 2em;
+}
+
+add buttontext {
+	width: 100%;
+	text-align: center;
+	margin: 1em 0 0 0;
+}
+
+descbox {
+	position: fixed;
+	max-width: 40em;
+	top: 1%;
+	z-index: 99999999;
+	display: inline-block;
+	background: white;
+	box-shadow: 0px 0px 5em rgba(0, 0, 0, 0.3);
+	padding: 1em;
+	border-radius: 1em;
+	transition: all 0.4s ease-out 0s;
+	text-align: center;
+	line-height: 1.6;
+	max-height: 98%;
+	overflow: auto;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+}
+
+.newsInDetail {
+	padding: 1.5em 0.5em;
+	border-bottom: solid 1px rgb(240, 240, 240);
+	margin: 0 !important;
+}
+
+.newsInDetail a {
+	position: relative;
+	left: auto;
+	margin-left: 0;
+}
+
+.newsInDetail .newsSmily {
+	bottom: -1em;
+	left: 50%;
+	margin-left: -5.5em;
+}
+
+.newsImage {
+	max-width: 10em;
+	border-radius: 50%;
+	margin-top: 0.5em;
+}
+
+.internalLink {
+	margin: -1em 0;
+	padding: 1em 0;
+	color: rgb(0, 255, 255);
+	cursor: pointer;
+}
+
+homeImage img {
+	height: 100%;
+}
+
+homeImage img.set {
+	border-radius: 50%;
+	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+}
+
+row {
+	width: 100%;
+	position: relative;
+	height: 6.7em;
+	display: block;
+	overflow: hidden;
+	transition: all 0.4s ease-out;
+}
+
+row text {
+	max-height: 5.5em;
+	overflow: hidden;
+	left: 6em;
+	right: 7em;
+	width: auto;
+	position: absolute;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	display: inline-block;
+}
+
+.participate::before {
+	display: block;
+	content: '✓';
+	position: absolute;
+	right: 3.75em;
+	top: 0.2em;
+	font-weight: bold;
+	font-size: 2em;
+	line-height: 1;
+	opacity: 0.5;
+}
+
+detail .participate::before {
+	top: 0.1em;
+	right: 0.2em;
+}
+
+row div {
+	margin: 0.3em 0 0 6em;
+}
+
+.itemTitle, .itemTitle div {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.itemTitle {
+	height: 5.1em;
+	margin-left: 0.5em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	line-height: 1.7;
+}
+
+row imagelist {
+	height: 6.2em;
+	width: 6.2em;
+	left: 0;
+	top: 0;
+	position: absolute;
+	text-align: center;
+	border-radius: 4em;
+	overflow: hidden;
+	border: solid 0.25em transparent;
+	margin: -1px;
+}
+
+chatButtons {
+	text-align: left;
+	margin-left: -0.25em;
+	padding: 0 0 0.25em 0 !important;
+	margin-right: -0.75em;
+	white-space: nowrap;
+	overflow-x: auto;
+	display: block;
+}
+
+chat.location chatButtons {
+	display: none;
+}
+
+row imagelist img {
+	height: 100%;
+	max-width: 100%;
+}
+
+row imagelist img.present {
+	position: absolute;
+	left: 0;
+	height: 2.5em;
+	border-radius: 0;
+}
+
+.bgBonus {
+	background: linear-gradient(160deg, rgb(255, 220, 80) 0%, rgb(110, 90, 10) 130%) !important;
+}
+
+eventOwner {
+	color: rgb(250, 190, 40);
+}
+
+eventOutdated {
+	text-decoration: line-through;
+
+}
+
+filterSeparator {
+	margin: 0 2em 0.5em 2em;
+	border-top: solid 1px rgb(240, 240, 240);
+	display: block;
+}
+
+settingsNav {
+	opacity: 0.3;
+	cursor: pointer;
+	padding: 1em;
+	font-size: 1.4em;
+}
+
+title {
+	display: block;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+subtitle {
+	font-size: 0.5em;
+	right: 0.5em;
+	position: absolute;
+	opacity: 0.6;
+	top: 2em;
+}
+
+row > div {
+	text-align: left;
+	width: 100%;
+	position: absolute;
+	overflow: hidden;
+	cursor: pointer;
+	background: rgba(255, 255, 255, 0.7);
+	border-radius: 3em 0 0 3em;
+	margin: 0 0 0 0.5em;
+	height: 6.2em;
+	border: solid 1px rgb(240, 240, 240);
+}
+
+auxEvents {
+	float: left;
+	width: 100%;
+	position: relative;
+	padding: 0.5em 1em 1.5em 1em;
+}
+
+auxEvents > img {
+	height: 8em;
+	border-radius: 4em;
+	float: left;
+}
+
+.map {
+	width: 100%;
+	float: left;
+	position: relative;
+	cursor: pointer;
+}
+
+img {
+	border: none;
+	vertical-align: middle;
+}
+
+text {
+	position: relative;
+	width: 100%;
+	padding: 0.5em;
+	color: black;
+	display: block;
+	overflow: hidden;
+}
+
+text > div {
+	padding: 0.25em 0;
+}
+
+text.collapsed {
+	display: none;
+}
+
+detail detailTogglePanel {
+	padding: 1.5em;
+	margin: 0 !important;
+	display: block;
+}
+
+detail {
+	height: 100%;
+	z-index: 99999;
+	text-align: center;
+	position: relative;
+	width: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
+	display: block;
+	padding: 0 0 4em 0;
+}
+
+detail badge {
+	top: 0.3em;
+}
+
+detail detailButtons {
+	padding: 0.75em 0 0.75em 0.5em;
+	white-space: nowrap;
+	overflow-x: auto;
+	display: block;
+}
+
+detail detailButtons buttontext:last-child {
+	margin-right: 0.75em;
+}
+
+detail detailImg {
+	cursor: pointer;
+	position: relative;
+	color: white;
+	display: block;
+}
+
+detail detailImg img {
+	width: 100%;
+}
+
+detail > img.present {
+	position: absolute;
+	z-index: 99;
+	left: -0.5em;
+	margin-top: -0.5em;
+	height: 4em;
+}
+
+openTimes row {
+	padding-top: 0.2em;
+	height: 1.6em;
+	text-align: left;
+}
+
+openTimesAdd {
+	top: 2.5em;
+	right: 1em;
+	line-height: 3em;
+	width: 3em;
+	height: 3em;
+	text-align: center;
+	border-radius: 50%;
+	position: absolute;
+}
+
+openTimes day {
+	width: 45%;
+	text-align: right;
+	display: inline-block;
+	vertical-align: top;
+}
+
+openTimes time {
+	width: 55%;
+	display: inline-block;
+	text-align: left;
+}
+
+openTimes sep {
+	width: 1em;
+	text-align: center;
+	display: inline-block;
+}
+
+openTimes from {
+	width: 3.5em;
+	text-align: right;
+	display: inline-block;
+}
+
+openTimes to {
+	width: 3.7em;
+	text-align: left;
+	display: inline-block;
+}
+
+marketing span {
+	font-style: italic;
+	margin-top: 1.5em;
+	display: block;
+}
+
+tabHeader {
+	height: 1.5em;
+	line-height: 1.6;
+	white-space: nowrap;
+	display: block;
+}
+
+tabHeader tab p {
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.tabActive {
+	opacity: 1 !important;
+	border-bottom: solid 1px rgb(0, 0, 100);
+	color: rgb(0, 0, 100);
+}
+
+popup .tabActive {
+	border-bottom: solid 1px white;
+}
+
+tab {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	height: 100%;
+	opacity: 0.5;
+	padding: 0 0.5em;
+	display: inline-block;
+	cursor: pointer;
+	position: relative;
+}
+
+tabBody {
+	min-height: 5em;
+	position: relative;
+	width: 100%;
+	display: block;
+	margin-bottom: 1em;
+	padding-top: 1.25em;
+}
+
+progressbar {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	z-index: 999999;
+	height: 0.75em;
+	padding-right: 1em;
+}
+
+.highlight {
+	background: rgba(250, 190, 40, 0.7);
+	border-radius: 1em;
+}
+
+homeStatus {
+	width: 100%;
+	bottom: 0;
+	text-align: center;
+	position: absolute;
+	cursor: pointer;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding: 0 1em;
+	line-height: 3em;
+}
+
+.infoButton {
+	display: block;
+	position: relative;
+	margin: 0 0 1em 0;
+}
+
+.settings2Button {
+	display: block;
+	position: relative;
+	margin: 1em 0 0 0;
+}
+
+settings3 .infoButton {
+	margin: 0 0.5em 1em 0.5em;
+}
+
+infoblock {
+	position: relative;
+	width: 96%;
+	margin-left: 2%;
+	margin-bottom: 1em;
+	display: block;
+}
+
+infoblock.overflow {
+	max-height: 30em;
+	overflow-y: auto;
+}
+
+landingblock {
+	padding-bottom: 1em;
+	display: block;
+}
+
+landingimages img {
+	margin: 1em;
+}
+
+landingtitle {
+	font-size: 2em;
+	white-space: nowrap;
+	color: rgb(69, 109, 166);
+	margin-top: -0.2em;
+	padding-bottom: 0.25em;
+	display: block;
+}
+
+landingsubtitle {
+	color: rgb(250, 190, 40);
+	font-size: 1.3em;
+	padding: 0.5em 0;
+	margin-bottom: 0.5em;
+	cursor: pointer;
+	display: block;
+}
+
+landingsubject {
+	font-weight: bold;
+	display: block;
+	padding: 1em 0 0.5em 0;
+}
+
+whattodotitle {
+	color: rgb(0, 0, 100);
+	font-size: 1.1em;
+	font-weight: bold;
+	cursor: pointer;
+	height: 3em;
+	padding: 0.5em 1.5em;
+	line-height: 2;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: block;
+}
+
+infoblock landingsubtitle {
+	color: rgb(0, 0, 100);
+	font-size: 1.1em;
+}
+
+.pulse {
+	animation-name: pulse_animation;
+	animation-duration: 5000ms;
+	transform-origin: 70% 70%;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+
+@keyframes pulse_animation {
+	0% {
+		transform: scale(1);
+	}
+
+	30% {
+		transform: scale(1);
+	}
+
+	40% {
+		transform: scale(1.08);
+	}
+
+	50% {
+		transform: scale(1);
+	}
+
+	60% {
+		transform: scale(1);
+	}
+
+	70% {
+		transform: scale(1.05);
+	}
+
+	80% {
+		transform: scale(1);
+	}
+
+	100% {
+		transform: scale(1);
+	}
+}
+
+@keyframes menuSlideIn {
+	0% {
+		transform: rotate3d(0, 0, 1, 90deg);
+	}
+
+	100% {
+		transform: none;
+	}
+}
+
+.menuSlideIn {
+	transform-origin: left bottom;
+	animation-name: menuSlideIn;
+}
+
+@keyframes menuSlideOut {
+	100% {
+		transform: rotate3d(0, 0, 1, -179deg);
+	}
+}
+
+.menuSlideOut {
+	animation-duration: 1s !important;
+	transform-origin: left bottom;
+	animation-name: menuSlideOut;
+}
+
+@keyframes popupSlideIn {
+	0% {
+		transform: rotate3d(0, 0, 1, 90deg);
+	}
+
+	100% {
+		transform: none;
+	}
+}
+
+.popupSlideIn {
+	transform: rotate3d(0, 0, 1, 90deg);
+	transform-origin: right top;
+	animation-name: popupSlideIn;
+}
+
+@keyframes popupSlideOut {
+	0% {
+		transform: none;
+	}
+
+	100% {
+		transform: rotate3d(0, 0, 1, -90deg);
+	}
+}
+
+.popupSlideOut {
+	transform-origin: right top;
+	animation-name: popupSlideOut;
+}
+
+@keyframes listSlideOut {
+	0% {
+		transform: none;
+	}
+
+	100% {
+		transform: rotate3d(0, 0, 1, -90deg);
+	}
+}
+
+.listSlideOut {
+	animation-duration: 1.5s !important;
+	transform-origin: right top;
+	animation-name: listSlideOut;
+}
+
+.listSlideIn {
+	animation-duration: 1.5s !important;
+	transform: rotate3d(0, 0, 1, 90deg);
+	transform-origin: right top;
+}
+
+@keyframes homeSlideIn {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+.homeSlideIn {
+	animation-name: homeSlideIn;
+}
+
+@keyframes homeSlideOut {
+	100% {
+		opacity: 0;
+	}
+}
+
+.homeSlideOut {
+	animation-name: homeSlideOut;
+}
+
+.detailSlideIn {
+	transform: translate3d(100%, 0, 0);
+}
+
+@keyframes detailSlideOut {
+	100% {
+		transform: translate3d(-100%, 0, 0);
+	}
+}
+
+.detailSlideOut {
+	animation-name: detailSlideOut;
+}
+
+.detailBackSlideIn {
+	transform: translate3d(-100%, 0, 0);
+}
+
+@keyframes detailBackSlideOut {
+	100% {
+		transform: translate3d(100%, 0, 0);
+	}
+}
+
+.detailBackSlideOut {
+	animation-name: detailBackSlideOut;
+}
+
+@keyframes slideUp {
+	0% {
+		transform: none;
+	}
+
+	100% {
+		transform: translate3d(0, -100%, 0);
+	}
+}
+
+.slideUp {
+	animation-name: slideUp;
+}
+
+@keyframes slideDown {
+	0% {
+		transform: translate3d(0, -100%, 0);
+	}
+
+	100% {
+		transform: none;
+	}
+}
+
+.slideDown {
+	animation-name: slideDown;
+}
+
+.animated {
+	animation-duration: 0.5s;
+}
+
+progressbar > * {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 1em;
+	height: 1em;
+	border-radius: 0.5em;
+	animation-name: bounce_followingBallsG;
+	animation-duration: 2.9s;
+	animation-iteration-count: infinite;
+	animation-direction: linear;
+}
+
+progressbar ball1 {
+	animation-delay: 0s;
+}
+
+progressbar ball2 {
+	animation-delay: 0.29s;
+}
+
+progressbar ball3 {
+	animation-delay: 0.58s;
+}
+
+progressbar ball4 {
+	animation-delay: 0.87s;
+}
+
+@keyframes bounce_followingBallsG {
+	0% {
+		left: 0px;
+	}
+
+	50% {
+		left: 100%;
+	}
+
+	100% {
+		left: 0px;
+	}
+}
