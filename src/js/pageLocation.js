@@ -1509,7 +1509,6 @@ ${v.hint}
 				url: global.server + 'action/google?param=js',
 				responseType: 'text',
 				success(r) {
-					r = r.replace(/\n/g, '').replace(/"/g, '\"');
 					var w = ui.navigation.openHTML('map.html');
 					ui.on(w, 'load' + (global.isBrowser() ? '' : 'stop'), function () {
 						var latlon = geoData.getLatLon();

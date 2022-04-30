@@ -177,7 +177,7 @@ class pageInfo {
 						useragent: navigator.userAgent,
 						device: global.getDevice(),
 						version: global.appVersion,
-						localized: geoData.localized ? true : geoData.currentStreet,
+						localized: (geoData.currentTown ? geoData.currentTown + ' | ' : '') + geoData.currentStreet,
 						lang: global.language,
 						stack: stack,
 						type: feedback ? 'FEEDBACK' : 'BUG'
