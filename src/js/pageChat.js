@@ -44,7 +44,7 @@ class pageChat {
 	static askLocation() {
 		if (document.activeElement)
 			document.activeElement.blur();
-		if (geoData.localized == true) {
+		if (geoData.localized) {
 			var l = geoData.getLatLon();
 			var s = global.string.replaceInternalLinks(' :openPos(' + l.lat + ',' + l.lon + '): ');
 			s = s.replace(/onclick="ui.navigation.autoOpen/g, 'onclick="pageChat.doNothing');

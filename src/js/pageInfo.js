@@ -128,11 +128,11 @@ class pageInfo {
 		pageInfo.updateLocalisation();
 	}
 	static openMap() {
-		if (geoData.localized == true) {
+		if (geoData.localized) {
 			var l = geoData.getLatLon();
 			ui.navigation.openHTML('https://maps.google.com/maps?q=' + l.lat + ',' + l.lon + '%28Your+current+location%29');
 		} else
-			ui.navigation.openPopup(ui.l('locations.serviceTitle'), ui.l('locations.serviceError').replace('{0}', geoData.localized ? geoData.localized : '-'));
+			ui.navigation.openPopup(ui.l('locations.serviceTitle'), ui.l('locations.serviceError').replace('{0}', geoData.currentStreet ? geoData.currentStreet : '-'));
 	}
 	static sendFeedback(text, stack, exec, feedback) {
 		if (!text || text.trim().length == 0)
@@ -177,7 +177,7 @@ class pageInfo {
 						useragent: navigator.userAgent,
 						device: global.getDevice(),
 						version: global.appVersion,
-						localized: geoData.localized && geoData.localized.indexOf && geoData.localized.length > 50 ? geoData.localized.substring(0, 50) : geoData.localized,
+						localized: geoData.localized ? true : geoData.currentStreet,
 						lang: global.language,
 						stack: stack,
 						type: feedback ? 'FEEDBACK' : 'BUG'
@@ -208,7 +208,7 @@ class pageInfo {
 			communication.ajax({
 				url: global.server + 'action/notify',
 				method: 'POST',
-				body: 'text=' + encodeURIComponent('text:' + text + '\nappname:' + navigator.appName + '\nappversion:' + navigator.appVersion + '\ncookies:' + navigator.cookieEnabled + '\nlanguage:' + navigator.language + '\nplatform:' + navigator.platform + '\nuseragent:' + navigator.userAgent + '\ndevice:' + global.getDevice() + '\nversion:' + global.appVersion + '\nlocalized:' + (geoData.localized && geoData.localized.indexOf && geoData.localized.length > 50 ? geoData.localized.substring(0, 50) : geoData.localized) + '\nlang:' + global.language + '\nstack:' + stack),
+				body: 'text=' + encodeURIComponent('text:' + text + '\nappname:' + navigator.appName + '\nappversion:' + navigator.appVersion + '\ncookies:' + navigator.cookieEnabled + '\nlanguage:' + navigator.language + '\nplatform:' + navigator.platform + '\nuseragent:' + navigator.userAgent + '\ndevice:' + global.getDevice() + '\nversion:' + global.appVersion + '\nlocalized:' + geoData.localized + '\nlang:' + global.language + '\nstack:' + stack),
 				error(r) {
 					console.log(r);
 				},
@@ -237,6 +237,6 @@ class pageInfo {
 		ui.toggleHeight(id);
 	}
 	static updateLocalisation() {
-		ui.html('#infoLocalized', geoData.localized == true ? ui.l('info.localized').replace('{0}', geoData.currentTown + global.separator + geoData.currentStreet) : ui.l('info.notLocalized').replace('{0}', geoData.localized ? geoData.localized : '-'));
+		ui.html('#infoLocalized', geoData.localized ? ui.l('info.localized').replace('{0}', geoData.currentTown + global.separator + geoData.currentStreet) : ui.l('info.notLocalized').replace('{0}', geoData.currentStreet ? geoData.currentStreet : '-'));
 	}
 };

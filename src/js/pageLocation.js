@@ -1505,20 +1505,26 @@ ${v.hint}
 					break;
 				x *= 2;
 			}
-			var w = ui.navigation.openHTML('map.html');
-			var exec = function () {
-				var latlon = geoData.getLatLon();
-				if (global.isBrowser())
-					w.initMap(popupData, latlon.lat, latlon.lon, zoom);
-				else
-					w.executeScript({ code: 'window.initMap(' + JSON.stringify(popupData) + ',' + latlon.lat + ',' + latlon.lon + ',' + zoom + ')' });
-			};
-			ui.on(w, 'load' + (global.isBrowser() ? '' : 'stop'), exec, true);
+			communication.ajax({
+				url: global.server + 'action/google?param=js',
+				responseType: 'text',
+				success(r) {
+					r = r.replace(/\n/g, '').replace(/"/g, '\"');
+					var w = ui.navigation.openHTML('map.html');
+					ui.on(w, 'load' + (global.isBrowser() ? '' : 'stop'), function () {
+						var latlon = geoData.getLatLon();
+						if (global.isBrowser())
+							w.initMap(popupData, latlon.lat, latlon.lon, zoom, r);
+						else
+							w.executeScript({ code: 'window.initMap(' + JSON.stringify(popupData) + ',' + latlon.lat + ',' + latlon.lon + ',' + zoom + ',"' + r + '")' });
+					}, true);
+				}
+			});
 		}
 	}
 	static prefillAddress() {
 		var l = geoData.getLatLon();
-		if (geoData.localized == true && l && ui.q('input[name="name"]')) {
+		if (geoData.localized && l && ui.q('input[name="name"]')) {
 			if (!ui.val('[name="address"]')) {
 				communication.ajax({
 					url: global.server + 'action/google?param=' + encodeURIComponent('geocode/json?latlng=' + l.lat + ',' + l.lon),

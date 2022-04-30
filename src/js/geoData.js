@@ -120,7 +120,7 @@ class geoData {
 	static save(position) {
 		var l = geoData.getLatLon();
 		window.localStorage.setItem('latlon', position.latitude + ',' + position.longitude);
-		if (!geoData.localized || geoData.getDistance(l.lat, l.lon, position.latitude, position.longitude) > 0.05) {
+		if (user.contact && (!geoData.localized || geoData.getDistance(l.lat, l.lon, position.latitude, position.longitude) > 0.05)) {
 			communication.ajax({
 				url: global.server + 'action/position',
 				progressBar: false,
@@ -129,6 +129,7 @@ class geoData {
 				responseType: 'json',
 				error(r) {
 					geoData.currentStreet = r.status + ' ' + r.responseText;
+					pageInfo.updateLocalisation();
 				},
 				success(r) {
 					if (r) {

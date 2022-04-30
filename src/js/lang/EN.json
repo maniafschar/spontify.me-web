@@ -426,7 +426,7 @@
 			"1": "What does the app cost?",
 			"1a": "We have 2 types of users. On the one hand the users themselves and on the other hand the traders:<ul><li>The users pay nothing and have all functions immediately available. There are no hidden costs.</li><li>The traders can make their business stand out by making special offers to the users, e.g. in the case of a restaurant, a free espresso with a turnover more than 30 euros. The type of offers is left to the traders themselves.</li> </ul>",
 			"2": "What happens to my data?",
-			"2a": "We want to gain maximum trust and are in no way out of collecting or selling data. We are convinced that users and traders will create a stable ecosystem on the basis of ${appTitle}, through which everyone has a great advantage and no disadvantages. If you would like more information, please visit us on our website.",
+			"2a": "We want to gain maximum trust and are in no way out of collecting or selling data. We are convinced that users and traders will create a stable ecosystem on the basis of ${appTitle}, through which everyone has a great advantage and no disadvantages. That's why findapp's source code is publicly available, so everyone can see what's stored in the code and how the data is further processed. You can find the source code here:<br/><a href=\"https://github.com/maniafschar\" target=\"_blank\">https://github.com/maniafschar</a>",
 			"3": "How does your business model work?",
 			"3a": "Business people can buy additional services. These are only actively shown for matching matches. There is no such thing as classic-style advertising.",
 			"4": "So do I see advertising everywhere in the app?",
