@@ -564,17 +564,18 @@ class pageContact {
 			var s = user.contact.groups.replace(/type="checkbox"/g, 'type="radio"').replace(/<input /g, '<input onclick="pageContact.groups.loadListGroups()"');
 			lists.setListDivs(activeID);
 			ui.html('contacts listTitle', '');
-			if (ui.cssValue('groups', 'max-height')) {
+			if (ui.cssValue('groups', 'display') == 'none') {
 				ui.html('contacts listResults', '');
-				ui.css('groups', 'max-height', '');
+				ui.toggleHeight('groups');
 			}
 			if (s) {
-				var e = ui.q('groups');
+				e = ui.q('groups');
 				if (!e.innerHTML) {
 					ui.html(e, pageContact.templateGroups({ groups: s }));
 					formFunc.initFields(activeID + ' groups');
 				}
 				ui.q('[name="groupdialog"]').checked = false;
+				ui.css(e, 'display', '');
 				ui.navigation.hideMenu();
 			} else {
 				ui.html(activeID + ' listResults', lists.getListNoResults(activeID, 'noGroups'));

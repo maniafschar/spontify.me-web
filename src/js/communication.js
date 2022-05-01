@@ -78,7 +78,7 @@ class communication {
 	}
 	static loadList(data, callback, divID, errorID) {
 		if (divID == 'contacts' && errorID != 'groups' && ui.cssValue('groups', 'display') != 'none')
-			ui.css('groups', 'max-height', '0');
+			ui.toggleHeight('groups');
 		ui.css(divID + ' filters', 'transform', 'scale(0)');
 		ui.html('popupHint', '');
 		var menuIndex = -1;
