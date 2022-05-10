@@ -1362,9 +1362,8 @@ class formFunc {
 			e = e.parentNode;
 			for (var i = 0; i < e.children.length; i++) {
 				if (e.children[i].nodeName == 'ERRORHINT')
-					ui.html(e.children[i], '');
+					e.children[i].outerHTML = '';
 			}
-			ui.classRemove(e.parentNode.children[0], 'dialogFieldErrorHint');
 		}
 	}
 	static saveDraft(key, value) {

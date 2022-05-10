@@ -3,6 +3,7 @@ import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './initialisation';
 import { pageChat } from './pageChat';
+import { pageContact } from './pageContact';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 
@@ -48,6 +49,8 @@ class pageInfo {
         </buttontext>
         <feedbackHint></feedbackHint>
     </infoblock>
+	<buttontext class="bgColor infoButton" onclick="pageInfo.toggleMarketing()"${v.marketingDisplay}>${v.marketingTitle}</buttontext>
+	<infoblock id="info5" style="display:none;width:auto;margin:1em -0.5em;"></infoblock>
 	<buttontext onclick="pageInfo.socialShare();" id="socialShare" class="bgColor2 infoButton">
 		${ui.l('sendSocialShare')}
 	</buttontext>
@@ -55,49 +58,55 @@ class pageInfo {
 </div>`;
 	static templateAbout = v =>
 		global.template`<landingsubtitle onclick="pageInfo.toggleInfoBlock(&quot;${v.parent} #landing0&quot;, event);" style="padding-top:0;">
-			${ui.l('appSubTitle')}
-		</landingsubtitle>
-		<landingblock id="landing0">
-			<landingsubject style="padding-top:0;">${ui.l('landing.block1Title')}</landingsubject>
-			<ul>
-				<li>${ui.l('landing.block1_1')}</li>
-				<li>${ui.l('landing.block1_2')}</li>
-			</ul>
-			<landingsubject>${ui.l('landing.block2Title')}</landingsubject>
-			<ul>
-				<li>${ui.l('landing.block2_1')}</li>
-				<li>${ui.l('landing.block2_2')}</li>
-			</ul>
-			<landingsubject>${ui.l('landing.block3Title')}</landingsubject>
-			<ul>
-				<li>${ui.l('landing.block3_1')}</li>
-				<li>${ui.l('landing.block3_2')}</li>
-			</ul>
-			<a style="margin:2em 0 1em 0;color:rgb(0,0,100);display:block;cursor:pointer;${v['displayBlogButton']}" onclick="ui.navigation.openHTML(&quot;https://blog.findapp.online&quot;, &quot;blog_findapp&quot;)">${ui.l('info.link2blog')}</a>
-		</landingblock>
-		<landingsubtitle onclick="pageInfo.toggleInfoBlock(&quot;${v.parent} #landing3&quot;, event);">
-			${ui.l('faq.title')}
-		</landingsubtitle>
-		<landingblock id="landing3" style="display:none;">
-			<landingsubject style="padding-top:0;">${ui.l('faq.1')}</landingsubject>
-			${ui.l('faq.1a')}
-			<landingsubject>${ui.l('faq.2')}</landingsubject>
-			${ui.l('faq.2a')}
-			<landingsubject>${ui.l('faq.3')}</landingsubject>
-			${ui.l('faq.3a')}
-			<landingsubject>${ui.l('faq.4')}</landingsubject>
-			${ui.l('faq.4a')}
-			<landingsubject>${ui.l('faq.5')}</landingsubject>
-			${ui.l('faq.5a')}
-			<landingsubject>${ui.l('faq.6')}</landingsubject>
-			${ui.l('faq.6a')}
-		</landingblock>`;
+	${ui.l('appSubTitle')}
+</landingsubtitle>
+<landingblock id="landing0">
+	<landingsubject style="padding-top:0;">${ui.l('landing.block1Title')}</landingsubject>
+	<ul>
+		<li>${ui.l('landing.block1_1')}</li>
+		<li>${ui.l('landing.block1_2')}</li>
+	</ul>
+	<landingsubject>${ui.l('landing.block2Title')}</landingsubject>
+	<ul>
+		<li>${ui.l('landing.block2_1')}</li>
+		<li>${ui.l('landing.block2_2')}</li>
+	</ul>
+	<landingsubject>${ui.l('landing.block3Title')}</landingsubject>
+	<ul>
+		<li>${ui.l('landing.block3_1')}</li>
+		<li>${ui.l('landing.block3_2')}</li>
+	</ul>
+	<a style="margin:2em 0 1em 0;color:rgb(0,0,100);display:block;cursor:pointer;${v['displayBlogButton']}" onclick="ui.navigation.openHTML(&quot;https://blog.findapp.online&quot;, &quot;blog_findapp&quot;)">${ui.l('info.link2blog')}</a>
+</landingblock>
+<landingsubtitle onclick="pageInfo.toggleInfoBlock(&quot;${v.parent} #landing3&quot;, event);">
+	${ui.l('faq.title')}
+</landingsubtitle>
+<landingblock id="landing3" style="display:none;">
+	<landingsubject style="padding-top:0;">${ui.l('faq.1')}</landingsubject>
+	${ui.l('faq.1a')}
+	<landingsubject>${ui.l('faq.2')}</landingsubject>
+	${ui.l('faq.2a')}
+	<landingsubject>${ui.l('faq.3')}</landingsubject>
+	${ui.l('faq.3a')}
+	<landingsubject>${ui.l('faq.4')}</landingsubject>
+	${ui.l('faq.4a')}
+	<landingsubject>${ui.l('faq.5')}</landingsubject>
+	${ui.l('faq.5a')}
+	<landingsubject>${ui.l('faq.6')}</landingsubject>
+	${ui.l('faq.6a')}
+</landingblock>`;
+	static marketingTitle = '';
 
 	static init() {
 		var e = ui.q('info');
 		if (!e.innerHTML) {
 			var v = [];
-			v.feedback = user.contact ? '' : ' noDisp';
+			if (user.contact) {
+				v.feedback = ' noDisp';
+				v.marketingTitle = pageInfo.marketingTitle;
+			}
+			if (!v.marketingTitle)
+				v.marketingDisplay = ' style="display:none;"';
 			v.server = global.server;
 			v.url = global.server + 'store';
 			v.parent = 'info';
@@ -106,8 +115,6 @@ class pageInfo {
 			v.infoAbout = pageInfo.templateAbout(v);
 			if (user.contact)
 				v.url = v.url + '?c=' + user.contact.id;
-			else
-				v.styleRecommentFB = ' style="display:none;"';
 			e.innerHTML = pageInfo.template(v) + e.innerHTML;
 			formFunc.initFields('info');
 			ui.addFastButton('info');
@@ -119,13 +126,22 @@ class pageInfo {
 		}
 		if (pageInfo.openSection > -1) {
 			ui.css('info infoblock', 'display', 'none');
-			setTimeout(function () {
-				pageInfo.toggleInfoBlock('#info' + pageInfo.openSection);
-				pageInfo.openSection = -1;
-			}, 50);
+			if (ui.cssValue('#info' + pageInfo.openSection, 'display') == 'none')
+				setTimeout(function () {
+					ui.q('#info' + pageInfo.openSection).previousElementSibling.click();
+				}, 50);
 		}
 		ui.html('#infoVersion', ui.l('info.infoOther').replace('{0}', '<span id="infoLocalized"></span>'));
 		pageInfo.updateLocalisation();
+	}
+	static initMarketing(d) {
+		pageInfo.marketingTitle = d.title;
+		var e = ui.q('#info5');
+		if (e && d.title && user.contact) {
+			e = e.previousElementSibling;
+			e.innerText = d.title;
+			ui.css(e, 'display', '');
+		}
 	}
 	static openMap() {
 		if (geoData.localized) {
@@ -235,6 +251,27 @@ class pageInfo {
 		if (event)
 			event.stopPropagation();
 		ui.toggleHeight(id);
+	}
+	static toggleMarketing() {
+		var e = ui.q('#info5');
+		if (e.innerHTML)
+			ui.toggleHeight(e, function () {
+				ui.css(e, 'display', 'none');
+				ui.html(e, '');
+			});
+		else
+			communication.ajax({
+				url: global.server + 'action/marketing/result',
+				responseType: 'json',
+				success(r) {
+					if (r.list)
+						e.innerHTML = (r.text ? '<div style="cursor:pointer;padding:0 0.5em 0.5em 0.5em"' + (r.action ? ' onclick="ui.navigation.autoOpen(&quot;' + r.action + '&quot;)"' : '') + '>' + r.text + '</div>' : '') + pageContact.listContacts(r.list);
+					else if (r.html)
+						e.innerHTML = r.html;
+					ui.addFastButton('#info5');
+					ui.toggleHeight(e);
+				}
+			});
 	}
 	static updateLocalisation() {
 		ui.html('#infoLocalized', geoData.localized ? ui.l('info.localized').replace('{0}', geoData.currentTown + global.separator + geoData.currentStreet) : ui.l('info.notLocalized').replace('{0}', geoData.currentStreet ? geoData.currentStreet : '-'));

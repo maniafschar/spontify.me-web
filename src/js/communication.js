@@ -77,7 +77,7 @@ class communication {
 			ui.css('progressbar', 'display', 'none');
 	}
 	static loadList(data, callback, divID, errorID) {
-		if (divID == 'contacts' && errorID != 'groups' && ui.cssValue('groups', 'display') != 'none')
+		if (divID == 'contacts' && errorID != 'groups' && ui.q('groups') && ui.cssValue('groups', 'display') != 'none')
 			ui.toggleHeight('groups');
 		ui.css(divID + ' filters', 'transform', 'scale(0)');
 		ui.html('popupHint', '');
@@ -375,8 +375,8 @@ class communication {
 		resetAfterLogoff(forEver) {
 			user.reset();
 			ui.html('chatUserList', '');
-			ui.css('chatButton', 'display', 'none');
 			initialisation.recoverInvoked = false;
+			pageLocation.locationsAdded = null;
 			formFunc.drafts = {};
 			pageWhatToDo.daily.date = new Date();
 			pageWhatToDo.daily.data = [];

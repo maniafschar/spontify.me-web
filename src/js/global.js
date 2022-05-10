@@ -7,7 +7,7 @@ export { global };
 
 class global {
 	static appTitle = 'findapp';
-	static appVersion = '0.9.4';
+	static appVersion = '0.9.5';
 	static language = null;
 	static lastClick = null;
 	static minLocations = 5;

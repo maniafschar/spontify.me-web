@@ -222,17 +222,18 @@ class initialisation {
 		});
 		setTimeout(function () {
 			communication.ajax({
-				url: global.server + 'action/marketing',
+				url: global.server + 'action/marketing/' + global.language,
 				responseType: 'json',
 				error() { },
 				success(e) {
+					pageInfo.initMarketing(e);
 					if (!e.text)
 						return;
 					var f = function () {
 						if (ui.cssValue('popup', 'display') != 'none' || ui.q('alert').innerHTML)
 							setTimeout(f, 3000);
 						else
-							communication.notification.open({ message: e.text, additionalData: { exec: e.action } });
+							communication.notification.open({ message: '<b>' + e.title + '</b><br/>' + e.text + (e.action ? ' ' + ui.l('locations.clickForMoreDetails') : ''), additionalData: { exec: e.action } });
 					};
 					f.call();
 				}

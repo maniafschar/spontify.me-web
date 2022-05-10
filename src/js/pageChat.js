@@ -290,7 +290,6 @@ class pageChat {
 			s += '<div onclick="pageChat.open(' + v.id + ')" i="' + v.id + '"><badge class="bgColor"' + (v._unseen > 0 ? ' style="display:block;"' : '') + '>' + v._unseen + '</badge><img src="' + v.image + '"' + (v.imageList ? '' : ' class="bgColor2" style="padding:0.6em;"') + '/><span>' + v.pseudonym + '<br/>' + global.date.formatDate(v._maxDate) + '</span></div>';
 		}
 		ui.q('chatUserList').innerHTML = s;
-		ui.css('chatButton', 'display', s ? '' : 'none');
 		ui.addFastButton('chatUserList');
 	}
 	static open(id, location) {

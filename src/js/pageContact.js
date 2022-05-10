@@ -742,13 +742,15 @@ class pageContact {
 				v.badgeAction = birth[1] ? '' : 'remove';
 			v.icons = pageContact.getIcons(v);
 			if (activeID == 'detail')
-				v.oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;);';
+				v.oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;)';
 			else if (activeID == 'settings3')
-				v.oc = 'pageSettings.unblockUser(' + v.id + ',' + v.contactBlock.id + ');';
+				v.oc = 'pageSettings.unblockUser(' + v.id + ',' + v.contactBlock.id + ')';
+			else if (activeID == 'info')
+				v.oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;)';
 			else if (v.contactNotification.id)
-				v.oc = 'details.open(&quot;contacts&quot;,' + v.id + ',&quot;contact_listNotification&search=' + encodeURIComponent('contactNotification.id=' + v.contactNotification.id) + '&quot;,pageContact.detail);';
+				v.oc = 'details.open(&quot;contacts&quot;,' + v.id + ',&quot;contact_listNotification&search=' + encodeURIComponent('contactNotification.id=' + v.contactNotification.id) + '&quot;,pageContact.detail)';
 			else
-				v.oc = 'details.open(&quot;contacts&quot;,' + v.id + ',&quot;contact_list&search=' + encodeURIComponent('contact.id=' + v.id) + '&quot;,pageContact.detail);';
+				v.oc = 'details.open(&quot;contacts&quot;,' + v.id + ',&quot;contact_list&search=' + encodeURIComponent('contact.id=' + v.id) + '&quot;,pageContact.detail)';
 			s += pageContact.templateList(v);
 		}
 		return s;

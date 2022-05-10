@@ -209,17 +209,17 @@ class pageSettings {
 <div class="notification" id="settings3Notifications" style="display:none;">
 	<div style="text-align:left;margin:0 0.5em 1em 0.5em;float:left;">
 		<form name="myProfile3">
-			<input type="checkbox" id="notificationChat" label="${ui.l('notification.chat')}" ${v['contact.notificationChat']}>
+			<input type="checkbox" value="true" name="notificationChat" label="${ui.l('notification.chat')}" ${v['contact.notificationChat']}>
 			<br />
-			<input type="checkbox" id="notificationFriendRequest" label="${ui.l('notification.friendRequest')}" ${v['contact.notificationFriendRequest']}>
+			<input type="checkbox" value="true" name="notificationFriendRequest" label="${ui.l('notification.friendRequest')}" ${v['contact.notificationFriendRequest']}>
 			<br />
-			<input type="checkbox" id="notificationBirthday" label="${ui.l('notification.birthday')}" ${v['contact.notificationBirthday']}>
+			<input type="checkbox" value="true" name="notificationBirthday" label="${ui.l('notification.birthday')}" ${v['contact.notificationBirthday']}>
 			<br />
-			<input type="checkbox" id="notificationVisitProfile" label="${ui.l('notification.visitProfile')}" ${v['contact.notificationVisitProfile']}>
+			<input type="checkbox" value="true" name="notificationVisitProfile" label="${ui.l('notification.visitProfile')}" ${v['contact.notificationVisitProfile']}>
 			<br />
-			<input type="checkbox" id="notificationVisitLocation" label="${ui.l('notification.visitLocation')}" ${v['contact.notificationVisitLocation']}>
+			<input type="checkbox" value="true" name="notificationVisitLocation" label="${ui.l('notification.visitLocation')}" ${v['contact.notificationVisitLocation']}>
 			<br />
-			<input type="checkbox" id="notificationMarkEvent" label="${ui.l('notification.markEvent')}" ${v['contact.notificationMarkEvent']}>
+			<input type="checkbox" value="true" name="notificationMarkEvent" label="${ui.l('notification.markEvent')}" ${v['contact.notificationMarkEvent']}>
 		</form>
 	</div>
 </div>
@@ -255,12 +255,12 @@ class pageSettings {
 		});
 	}
 	static getCurrentSettings3String() {
-		var s = '' + (ui.q('[id="notificationChat"]:checked') ? 1 : 0);
-		s += (ui.q('[id="notificationFriendRequest"]:checked') ? 1 : 0);
-		s += (ui.q('[id="notificationBirthday"]:checked') ? 1 : 0);
-		s += (ui.q('[id="notificationVisitProfile"]:checked') ? 1 : 0);
-		s += (ui.q('[id="notificationVisitLocation"]:checked') ? 1 : 0);
-		s += (ui.q('[id="notificationMarkEvent"]:checked') ? 1 : 0);
+		var s = '' + (ui.q('settings3 [name="notificationChat"]:checked') ? 1 : 0);
+		s += (ui.q('settings3 [name="notificationFriendRequest"]:checked') ? 1 : 0);
+		s += (ui.q('settings3 [name="notificationBirthday"]:checked') ? 1 : 0);
+		s += (ui.q('settings3 [name="notificationVisitProfile"]:checked') ? 1 : 0);
+		s += (ui.q('settings3 [name="notificationVisitLocation"]:checked') ? 1 : 0);
+		s += (ui.q('settings3 [name="notificationMarkEvent"]:checked') ? 1 : 0);
 		return s;
 	}
 	static getCurrentSettingsString() {
