@@ -545,8 +545,7 @@ class pageContact {
 			var v = ui.q('input[name="groupdialog"]:checked').getAttribute('value');
 			if (!v)
 				return;
-			var l = geoData.getLatLon();
-			communication.loadList('latitude=' + l.lat + '&longitude=' + l.lon + '&query=contact_listGroupLink&search=' + encodeURIComponent('contactGroupLink.contactGroupId=' + v), pageContact.listContacts, 'contacts', 'groups');
+			communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&query=contact_listGroupLink&search=' + encodeURIComponent('contactGroupLink.contactGroupId=' + v), pageContact.listContacts, 'contacts', 'groups');
 		},
 		open() {
 			var activeID = ui.navigation.getActiveID();
@@ -803,8 +802,7 @@ class pageContact {
 	static toggleLocation(id) {
 		var e = ui.q('detail[i="' + id + '"] [name="location"]');
 		if (!e.innerHTML) {
-			var l = geoData.getLatLon();
-			communication.loadList('latitude=' + l.lat + '&longitude=' + l.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent('location.contactId=' + id), function (l) {
+			communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent('location.contactId=' + id), function (l) {
 				var s = pageLocation.listLocation(l), p, p2, i;
 				while ((p = s.indexOf('onclick="details.open(')) > -1) {
 					p2 = s.indexOf(',pageLocation.detailLocationEvent)', p);

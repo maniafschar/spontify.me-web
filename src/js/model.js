@@ -34,7 +34,7 @@ class model {
 					if (i2 == 0 && !o.hasOwnProperty(key[i2]) && key.length > i2 && o.hasOwnProperty(key[i2 + 1]))
 						i2++;
 					if (key[i2].indexOf('_') != 0 && user.contact && user.contact.id == 3 && !model.reportedErrors[keys[i]] && !o.hasOwnProperty(key[i2])) {
-						pageInfo.sendFeedback('model.convert:\n' + object.constructor.name + ' has no property called ' + keys[i] + '\n' + JSON.stringify(keys) + '\n' + JSON.stringify(object2Transform), true);
+						pageInfo.sendFeedback('model.convert:\n' + object.constructor.name + ' has no property called ' + keys[i] + '\n' + JSON.stringify(keys) + '\n' + JSON.stringify(object2Transform));
 						model.reportedErrors[keys[i]] = 1;
 					}
 					if (i2 < key.length - 1)

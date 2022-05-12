@@ -535,7 +535,7 @@ class communication {
 				s2 += '\n' + global.lastClick.trim();
 			if ((!r.status || r.status < 500) && !communication.sentErrors[s2]) {
 				communication.sentErrors[s2] = 1;
-				pageInfo.sendFeedback('communication.onError:\n' + s2, true);
+				pageInfo.sendFeedback('communication.onError:\n' + s2);
 			}
 			s = ui.l('error.text') + '<br/>Status:&nbsp;' + r.status;
 		}

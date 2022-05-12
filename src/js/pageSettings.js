@@ -241,7 +241,7 @@ class pageSettings {
 	}
 	static deleteProfileExec() {
 		if (ui.val('#deleteAccountFeedback'))
-			pageInfo.sendFeedback('Delete Account Reason:\n' + ui.val('#deleteAccountFeedback'), false, pageSettings.deleteProfileExec2, true);
+			pageInfo.sendFeedback('Delete Account Reason:\n' + ui.val('#deleteAccountFeedback'), pageSettings.deleteProfileExec2, true);
 		else
 			pageSettings.deleteProfileExec2();
 	}

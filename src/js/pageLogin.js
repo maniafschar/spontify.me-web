@@ -285,10 +285,9 @@ class pageLogin {
 		formFunc.validation.birthday(ui.q('input[name="birthday"]'));
 		if (!ui.q('[name=loginRegister] errorHint')) {
 			e = ui.q('input[name="name"]');
-			if (!e.value) {
-				e.value = new Date().getTime() - pageLogin.timestamp;
+			if (e)
 				ui.attr(e, 'name', 'time');
-			}
+			ui.q('input[name="time"]').value = new Date().getTime() - pageLogin.timestamp;
 			ui.q('input[name="language"]').value = global.language;
 			ui.q('input[name="version"]').value = global.appVersion;
 			ui.q('input[name="device"]').value = global.getDevice();

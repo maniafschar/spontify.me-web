@@ -280,8 +280,7 @@ class pageSearch {
 		user.save({ values: { filter: JSON.stringify(s) } },
 			function () {
 				user.contact.search = s;
-				var l = geoData.getLatLon();
-				var lola = 'latitude=' + l.lat + '&longitude=' + l.lon + '&distance=100000&';
+				var lola = 'latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&';
 				if (s.type == 'contacts')
 					communication.loadList(lola + 'query=contact_list&search=' + encodeURIComponent(pageSearch.getSearchContact()), pageContact.listContacts, 'search', 'search');
 				else if (s.type == 'locations')

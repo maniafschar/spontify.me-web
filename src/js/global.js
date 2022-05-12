@@ -373,8 +373,7 @@ class global {
 					if (l2.length == 2 && !isNaN(l2[0]) && !isNaN(l2[1])) {
 						l2 = l2[0] + ',' + l2[1];
 						var imgId = l2.replace(/\./g, '').replace(',', '');
-						var l = geoData.getLatLon();
-						s = s.substring(0, p + 1) + '<a class="chatLinks" onclick="ui.navigation.openHTML(&quot;https://maps.google.com/maps?saddr=' + l.lat + ',' + l.lon + '&daddr=' + l2 + '&quot;);"><img l="' + imgId + '" /><p>' + ui.l('hereAmI') + '</p></a>' + s.substring(p2 + 2);
+						s = s.substring(0, p + 1) + '<a class="chatLinks" onclick="ui.navigation.openHTML(&quot;https://maps.google.com/maps?saddr=' + geoData.latlon.lat + ',' + geoData.latlon.lon + '&daddr=' + l2 + '&quot;);"><img l="' + imgId + '" /><p>' + ui.l('hereAmI') + '</p></a>' + s.substring(p2 + 2);
 						communication.ajax({
 							url: global.server + 'action/map?destination=' + l2,
 							progressBar: false,

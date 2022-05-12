@@ -29,8 +29,7 @@ class intro {
 		}, 400);
 	}
 	static loadLocations() {
-		var l = geoData.getLatLon();
-		communication.loadList('latitude=' + l.lat + '&longitude=' + l.lon + '&query=' + (user.contact ? 'location_list' : 'location_anonymousList'), pageLocation.listLocation, 'locations', 'list');
+		communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&query=' + (user.contact ? 'location_list' : 'location_anonymousList'), pageLocation.listLocation, 'locations', 'list');
 	}
 	static openHint(data, save) {
 		if (save && new Date().getTime() / 60000 - intro.lastHint < 4)

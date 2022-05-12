@@ -532,20 +532,16 @@ class ui {
 	}
 	static query = {
 		contactAll() {
-			var l = geoData.getLatLon();
-			return 'query=contact_list&latitude=' + l.lat + '&longitude=' + l.lon + '&search=' + encodeURIComponent('contact.id<>' + user.contact.id);
+			return 'query=contact_list&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contact.id<>' + user.contact.id);
 		},
 		contactMatches() {
-			var l = geoData.getLatLon();
-			return 'query=contact_list&latitude=' + l.lat + '&longitude=' + l.lon + '&search=' + encodeURIComponent(pageSearch.getSearchMatchesContact());
+			return 'query=contact_list&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent(pageSearch.getSearchMatchesContact());
 		},
 		contactFriends() {
-			var l = geoData.getLatLon();
-			return 'query=contact_list&distance=100000&limit=500&latitude=' + l.lat + '&longitude=' + l.lon + '&search=' + encodeURIComponent('contactLink.id is not null');
+			return 'query=contact_list&distance=100000&limit=500&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactLink.id is not null');
 		},
 		contactVisitees() {
-			var l = geoData.getLatLon();
-			return 'query=contact_listVisit&distance=100000&sort=false&latitude=' + l.lat + '&longitude=' + l.lon + '&search=' + encodeURIComponent('contactVisit.contactId2=contact.id and contactVisit.contactId=' + user.contact.id);
+			return 'query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactVisit.contactId2=contact.id and contactVisit.contactId=' + user.contact.id);
 		},
 		contactVisits() {
 			communication.ajax({
@@ -553,36 +549,28 @@ class ui {
 				method: 'PUT',
 				body: { classname: 'Contact', id: user.contact.id, values: { visitPage: new Date().toISOString() } }
 			});
-			var l = geoData.getLatLon();
-			return 'query=contact_listVisit&distance=100000&sort=false&latitude=' + l.lat + '&longitude=' + l.lon + '&search=' + encodeURIComponent('contactVisit.contactId=contact.id and contactVisit.contactId2=' + user.contact.id);
+			return 'query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactVisit.contactId=contact.id and contactVisit.contactId2=' + user.contact.id);
 		},
 		eventAll() {
-			var l = geoData.getLatLon();
-			return 'query=event_listCurrent&latitude=' + l.lat + '&longitude=' + l.lon;
+			return 'query=event_listCurrent&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon;
 		},
 		eventMatches() {
-			var l = geoData.getLatLon();
-			return 'query=event_listCurrent&latitude=' + l.lat + '&longitude=' + l.lon + '&search=' + encodeURIComponent(pageSearch.getSearchMatchesLocation());
+			return 'query=event_listCurrent&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent(pageSearch.getSearchMatchesLocation());
 		},
 		eventMy() {
-			var l = geoData.getLatLon();
-			return 'query=event_list&distance=100000&latitude=' + l.lat + '&longitude=' + l.lon + '&search=' + encodeURIComponent('event.contactId=' + user.contact.id);
+			return 'query=event_list&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('event.contactId=' + user.contact.id);
 		},
 		locationAll() {
-			var l = geoData.getLatLon();
-			return (user.contact ? 'query=location_list' : 'query=location_anonymousList') + '&latitude=' + l.lat + '&longitude=' + l.lon;
+			return (user.contact ? 'query=location_list' : 'query=location_anonymousList') + '&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon;
 		},
 		locationFavorites() {
-			var l = geoData.getLatLon();
-			return 'query=location_list&distance=100000&limit=500&latitude=' + l.lat + '&longitude=' + l.lon + '&search=' + encodeURIComponent('locationFavorite.id is not null');
+			return 'query=location_list&distance=100000&limit=500&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('locationFavorite.id is not null');
 		},
 		locationMatches() {
-			var l = geoData.getLatLon();
-			return 'query=location_list&latitude=' + l.lat + '&longitude=' + l.lon + '&search=' + encodeURIComponent(pageSearch.getSearchMatchesLocation());
+			return 'query=location_list&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent(pageSearch.getSearchMatchesLocation());
 		},
 		locationVisits() {
-			var l = geoData.getLatLon();
-			return 'query=location_listVisit&distance=100000&sort=false&latitude=' + l.lat + '&longitude=' + l.lon;
+			return 'query=location_listVisit&distance=100000&sort=false&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon;
 		}
 	}
 	static l(id) {

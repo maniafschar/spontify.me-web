@@ -13,6 +13,7 @@ class geoData {
 	static headingID = null;
 	static id = null;
 	static initDeviceOrientation = null;
+	static latlon = { lat: 48.13684, lon: 11.57685 };
 	static localizationAsked = false;
 	static localized = false;
 	static rad = 0.017453292519943295;
@@ -44,13 +45,6 @@ class geoData {
 			Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
 			(1 - Math.cos((lon2 - lon1) * Math.PI / 180)) / 2;
 		return R * 2 * Math.asin(Math.sqrt(a));
-	}
-	static getLatLon() {
-		var l = window.localStorage.getItem('latlon');
-		if (!l)
-			l = '48.13684,11.57685';
-		l = l.split(',');
-		return { lat: l[0], lon: l[1] };
 	}
 	static headingClear() {
 		if (geoData.headingID) {
@@ -118,8 +112,9 @@ class geoData {
 		cordova.plugins.diagnostic.requestLocationAuthorization(geoData.init2, null, cordova.plugins.diagnostic.locationAuthorizationMode.WHEN_IN_USE);
 	}
 	static save(position) {
-		var l = geoData.getLatLon();
-		window.localStorage.setItem('latlon', position.latitude + ',' + position.longitude);
+		var l = geoData.latlon;
+		geoData.latlon.lat = position.latitude;
+		geoData.latlon.lon = position.longitude;
 		if (user.contact && user.contact.id && (!geoData.localized || geoData.getDistance(l.lat, l.lon, position.latitude, position.longitude) > 0.05)) {
 			communication.ajax({
 				url: global.server + 'action/position',

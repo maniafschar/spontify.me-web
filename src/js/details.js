@@ -43,10 +43,8 @@ class details {
 		if (ui.navigation.detailAnimation)
 			clearTimeout(ui.navigation.detailAnimation);
 		ui.navigation.hideMenu();
-		var l = geoData.getLatLon();
-		var lola = '&distance=100000&latitude=' + l.lat + '&longitude=' + l.lon;
 		communication.ajax({
-			url: global.server + 'action/one?query=' + action + lola,
+			url: global.server + 'action/one?query=' + action + '&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon,
 			responseType: 'json',
 			success(r) {
 				if (!r || r.length < 1) {

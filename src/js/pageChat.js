@@ -45,8 +45,7 @@ class pageChat {
 		if (document.activeElement)
 			document.activeElement.blur();
 		if (geoData.localized) {
-			var l = geoData.getLatLon();
-			var s = global.string.replaceInternalLinks(' :openPos(' + l.lat + ',' + l.lon + '): ');
+			var s = global.string.replaceInternalLinks(' :openPos(' + geoData.latlon.lat + ',' + geoData.latlon.lon + '): ');
 			s = s.replace(/onclick="ui.navigation.autoOpen/g, 'onclick="pageChat.doNothing');
 			ui.navigation.openPopup(ui.l('chat.askInsertCurrentLocationLink'), '<div style="text-align:center;margin-bottom:1em;"><div style="float:none;text-align:center;margin:1em 0;">' + s + '</div><buttontext class="bgColor" onclick="pageChat.insertLink();">' + ui.l('send') + '</buttontext></div>');
 		} else
@@ -253,10 +252,8 @@ class pageChat {
 		for (var i = 0; i < e.length; i++) {
 			if (e[i].getAttribute('insertID'))
 				s += ' :open(' + e[i].getAttribute('insertID') + '): ';
-			else {
-				var l = geoData.getLatLon();
-				s += ' :openPos(' + l.lat + ',' + l.lon + '): ';
-			}
+			else
+				s += ' :openPos(' + geoData.latlon.lat + ',' + geoData.latlon.lon + '): ';
 		}
 		if (s)
 			pageChat.sendChat(ui.q('chat').getAttribute('i'), s);

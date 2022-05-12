@@ -153,10 +153,8 @@ class pageWhatToDo {
 			if (d && d[0]) {
 				pageWhatToDo.daily.setDate(tag);
 				pageWhatToDo.daily.listBirthdays(d[0]);
-			} else {
-				var l = geoData.getLatLon();
-				communication.loadList('latitude=' + l.lat + '&longitude=' + l.lon + '&distance=100000&query=contact_list&&search=' + encodeURIComponent('day(birthday)=' + t.getDate() + ' and month(birthday)=' + (t.getMonth() + 1) + ' and contactLink.status=\'Friends\''), function (l) { pageWhatToDo.daily.listBirthdays(l, tag) });
-			}
+			} else
+				communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=contact_list&&search=' + encodeURIComponent('day(birthday)=' + t.getDate() + ' and month(birthday)=' + (t.getMonth() + 1) + ' and contactLink.status=\'Friends\''), function (l) { pageWhatToDo.daily.listBirthdays(l, tag) });
 		},
 		loadListEvents(t) {
 			if (!t)
@@ -166,10 +164,8 @@ class pageWhatToDo {
 			if (d && d[2]) {
 				pageWhatToDo.daily.setDate(tag);
 				pageWhatToDo.daily.listEvents(d[2]);
-			} else {
-				var l = geoData.getLatLon();
-				communication.loadList('latitude=' + l.lat + '&longitude=' + l.lon + '&query=event_listCurrent&&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventDate=\'' + t.getFullYear() + '-' + tag.replace('.', '-') + '\''), function (l) { pageWhatToDo.daily.listEvents(l, tag) });
-			}
+			} else
+				communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&query=event_listCurrent&&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventDate=\'' + t.getFullYear() + '-' + tag.replace('.', '-') + '\''), function (l) { pageWhatToDo.daily.listEvents(l, tag) });
 		},
 		loadListOffers(t) {
 			if (!t)
@@ -184,8 +180,7 @@ class pageWhatToDo {
 				pageWhatToDo.daily.setDate(tag);
 			} else {
 				var d = t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate();
-				var l = geoData.getLatLon();
-				communication.loadList('latitude=' + l.lat + '&longitude=' + l.lon + '&query=location_list&search=' + encodeURIComponent('location.ownerId is not null and length(location.bonus)>0 and location.urlActive>=\'' + d + '\''), function (l) { pageWhatToDo.daily.listOffers(l, tag) });
+				communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&query=location_list&search=' + encodeURIComponent('location.ownerId is not null and length(location.bonus)>0 and location.urlActive>=\'' + d + '\''), function (l) { pageWhatToDo.daily.listOffers(l, tag) });
 			}
 		},
 		next(next) {
@@ -285,8 +280,7 @@ class pageWhatToDo {
 		ui.scrollTo('whattodo', 0);
 		var e = ui.q('notifications');
 		if (!e.innerHTML || !ui.q('notifications listResults') || ui.q('[name="badgeNotifications"]').innerText != '0') {
-			var l = geoData.getLatLon();
-			communication.loadList('query=contact_listNotification&latitude=' + l.lat + '&longitude=' + l.lon + '&distance=100000&sort=false', function (l) {
+			communication.loadList('query=contact_listNotification&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&sort=false', function (l) {
 				var x = ui.q('[name="badgeNotifications"]').innerHTML;
 				l[0].push('_message1');
 				l[0].push('_message2');
@@ -424,7 +418,7 @@ class pageWhatToDo {
 				for (var i = 0; i < s2.length; i++)
 					s += field + ' like \'%' + s2[i] + '%\' or ';
 				search += s.substring(0, s.length - 4) + ')';
-				var l = currentWtd.locationLatitude ? currentWtd : geoData.getLatLon();
+				var l = currentWtd.locationLatitude ? currentWtd : geoData.latlon;
 				communication.loadList('query=' + query + '&latitude=' + l.lat + '&longitude=' + l.lon + '&distance=' + pageWhatToDo.wtd.maxRadius + '&search=' + encodeURIComponent(search), exec);
 			}
 		},

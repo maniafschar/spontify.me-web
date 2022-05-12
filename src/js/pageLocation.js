@@ -80,7 +80,7 @@ class pageLocation {
 		<div>${v.openTimesText}</div>
 	</text>
 	<img class="map" i="${v.id}"
-		onclick="ui.navigation.openHTML(&quot;https://maps.google.com/maps/dir/${geoData.getLatLon().lat},${geoData.getLatLon().lon}/${v.latitude},${v.longitude}&quot;);" />
+		onclick="ui.navigation.openHTML(&quot;https://maps.google.com/maps/dir/${geoData.latlon.lat},${geoData.latlon.lon}/${v.latitude},${v.longitude}&quot;);" />
 	<detailButtons>
 		<buttontext class="${v.bgFavorite}${v.hideMeFavorite}" name="buttonFavorite" idFav="${v.locationFavorite.id ? v.locationFavorite.id : ''}" fav="${v.locationFavorite.favorite ? true : ''}"
 			onclick="pageLocation.toggleFavorite(${v.id})">${ui.l('locations.favoritesButton')}</buttontext>
@@ -496,7 +496,7 @@ ${v.hint}
 			v.classBGImg = 'class="bgColor2"';
 		v.classBGIcons = 'bgColor';
 		v.locID = v.isEvent ? v.event.locationId : id;
-		v.angle = geoData.getAngel(geoData.getLatLon(), { lat: v.latitude, lon: v.longitude });
+		v.angle = geoData.getAngel(geoData.latlon, { lat: v.latitude, lon: v.longitude });
 		v.image = v.event.image ? v.event.image : v.image;
 		if (v.image)
 			v.image = global.serverImg + v.image;
@@ -604,9 +604,8 @@ ${v.hint}
 			v.cat = v.cat + ',' + v.category.substring(i, i + 1);
 		v.cat = v.cat.substring(1);
 		if (user.contact) {
-			var l2 = geoData.getLatLon();
 			communication.ajax({
-				url: global.server + 'action/map?source=' + l2.lat + ',' + l2.lon + '&destination=' + v.latitude + ',' + v.longitude,
+				url: global.server + 'action/map?source=' + geoData.latlon.lat + ',' + geoData.latlon.lon + '&destination=' + v.latitude + ',' + v.longitude,
 				progressBar: false,
 				success(r) {
 					ui.attr('[i="' + v.id + '"] img.map', 'src', 'data:image/png;base64,' + r);
@@ -882,7 +881,6 @@ ${v.hint}
 				return '';
 			var s = '', v, outdated = false;
 			var current = '', dateString;
-			var l1 = geoData.getLatLon();
 			if (date) {
 				dateString = global.date.formatDate(date, 'weekdayLong');
 				dateString = dateString.substring(0, dateString.lastIndexOf(' '));
@@ -941,7 +939,7 @@ ${v.hint}
 							v.open = ui.l('locations.open');
 						else if (v._openTimesEntries > 0)
 							v.open = ui.l('locations.closed');
-						v.icons = pageLocation.getIcons(l1, v);
+						v.icons = pageLocation.getIcons(geoData.latlon, v);
 						v._geolocationDistance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 10 ? 0 : 1).replace('.', ',') : '';
 						v.type = 'Event';
 						v.render = 'pageLocation.detailLocationEvent';
@@ -1449,13 +1447,12 @@ ${v.hint}
 	}
 	static listLocationInternal(l) {
 		var s = '', v;
-		var l1 = geoData.getLatLon();
 		for (var i = 1; i < l.length; i++) {
 			v = model.convert(new Location(), l, i);
 			v.locID = v.id;
 			v.classBGImg = v.imageList ? '' : 'bgColor2';
 			v.classBGIcons = v.ownerId ? 'bgColor2' : 'bgColor';
-			v.icons = pageLocation.getIcons(l1, v);
+			v.icons = pageLocation.getIcons(geoData.latlon, v);
 			pageLocation.listInfos(v);
 			if (v.imageList)
 				v.image = global.serverImg + v.imageList;
@@ -1512,22 +1509,20 @@ ${v.hint}
 				success(r) {
 					var w = ui.navigation.openHTML('map.html');
 					ui.on(w, 'load' + (global.isBrowser() ? '' : 'stop'), function () {
-						var latlon = geoData.getLatLon();
 						if (global.isBrowser())
-							w.initMap(popupData, latlon.lat, latlon.lon, zoom, r);
+							w.initMap(popupData, geoData.latlon.lat, geoData.latlon.lon, zoom, r);
 						else
-							w.executeScript({ code: 'window.initMap(' + JSON.stringify(popupData) + ',' + latlon.lat + ',' + latlon.lon + ',' + zoom + ',"' + r + '")' });
+							w.executeScript({ code: 'window.initMap(' + JSON.stringify(popupData) + ',' + geoData.latlon.lat + ',' + geoData.latlon.lon + ',' + zoom + ',"' + r + '")' });
 					}, true);
 				}
 			});
 		}
 	}
 	static prefillAddress() {
-		var l = geoData.getLatLon();
 		if (geoData.localized && l && ui.q('input[name="name"]')) {
 			if (!ui.val('[name="address"]')) {
 				communication.ajax({
-					url: global.server + 'action/google?param=' + encodeURIComponent('geocode/json?latlng=' + l.lat + ',' + l.lon),
+					url: global.server + 'action/google?param=' + encodeURIComponent('geocode/json?latlng=' + geoData.latlon.lat + ',' + geoData.latlon.lon),
 					responseType: 'json',
 					success(r) {
 						if (r.status == 'OK' && r.results[0]) {
@@ -1540,7 +1535,7 @@ ${v.hint}
 				});
 			}
 			communication.ajax({
-				url: global.server + 'action/google?param=' + encodeURIComponent('place/nearbysearch/json?radius=100&sensor=false&location=' + l.lat + ',' + l.lon),
+				url: global.server + 'action/google?param=' + encodeURIComponent('place/nearbysearch/json?radius=100&sensor=false&location=' + geoData.latlon.lat + ',' + geoData.latlon.lon),
 				responseType: 'json',
 				success(r) {
 					if (r.status == 'OK') {
@@ -1650,8 +1645,7 @@ ${v.hint}
 				method: 'PUT',
 				body: v,
 				success() {
-					var l = geoData.getLatLon();
-					communication.loadList('latitude=' + l.lat + '&longitude=' + l.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent('location.id=' + id), function (l) {
+					communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent('location.id=' + id), function (l) {
 						var e = ui.q('locations [i="' + id + '"]'), l2 = lists.data['locations'];
 						e.outerHTML = pageLocation.listLocation(l);
 						for (var i = 1; i < l2.length; i++) {
