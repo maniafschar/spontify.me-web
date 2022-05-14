@@ -241,7 +241,7 @@ class pageSettings {
 	}
 	static deleteProfileExec() {
 		if (ui.val('#deleteAccountFeedback'))
-			pageInfo.sendFeedback('Delete Account Reason:\n' + ui.val('#deleteAccountFeedback'), pageSettings.deleteProfileExec2, true);
+			pageInfo.sendFeedback('Delete Account Reason:\n' + ui.val('#deleteAccountFeedback'), pageSettings.deleteProfileExec2);
 		else
 			pageSettings.deleteProfileExec2();
 	}
@@ -468,9 +468,8 @@ class pageSettings {
 			var e = ui.q('settings [name="birthday"]');
 			if (!e.value)
 				formFunc.setError(e, 'settings.bdayUsingInterrestedIn');
-			e = ui.q('settings [name="gender"]');
-			if (!e)
-				formFunc.setError(e, 'settings.genderUsingInterrestedIn');
+			if (!ui.q('settings [name="gender"]:checked'))
+				formFunc.setError(ui.q('settings [name="gender"]'), 'settings.genderUsingInterrestedIn');
 		}
 		if (ui.q('input[name="guide"]:checked') && !ui.val('textarea[name="aboutMe"]'))
 			formFunc.setError(ui.q('textarea[name="aboutMe"]'), 'settings.aboutMeEmpty');

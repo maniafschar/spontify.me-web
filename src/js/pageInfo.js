@@ -44,7 +44,7 @@ class pageInfo {
     </buttontext>
     <infoblock id="info6" style="display:none;">
         <textarea placeholder="${ui.l('info.feedbackHint')}" maxlength="2000" id="feedbackText" style="height:10em;width:90%;"></textarea>
-        <buttontext onclick="pageInfo.sendFeedback(ui.val(&quot;#feedbackText&quot;), null, true);"
+        <buttontext onclick="pageInfo.sendFeedback(ui.val(&quot;#feedbackText&quot;));"
             class="bgColor2" style="margin-top:0.5em;">${ui.l('send')}
         </buttontext>
         <feedbackHint></feedbackHint>
@@ -101,10 +101,10 @@ class pageInfo {
 		var e = ui.q('info');
 		if (!e.innerHTML) {
 			var v = [];
-			if (user.contact) {
-				v.feedback = ' noDisp';
+			if (user.contact)
 				v.marketingTitle = pageInfo.marketingTitle;
-			}
+			else
+				v.feedback = ' noDisp';
 			if (!v.marketingTitle)
 				v.marketingDisplay = ' style="display:none;"';
 			v.server = global.server;
@@ -149,7 +149,7 @@ class pageInfo {
 		else
 			ui.navigation.openPopup(ui.l('locations.serviceTitle'), ui.l('locations.serviceError').replace('{0}', geoData.currentStreet ? geoData.currentStreet : '-'));
 	}
-	static sendFeedback(text, exec, feedback) {
+	static sendFeedback(text, exec) {
 		if (!text || text.trim().length == 0)
 			return;
 		text = text.trim();
@@ -159,7 +159,7 @@ class pageInfo {
 			if (pageInfo.sentFeedback[i] == text)
 				return;
 		}
-		if (user.contact && feedback) {
+		if (user.contact) {
 			communication.ajax({
 				url: global.server + 'db/one',
 				method: 'POST',
@@ -182,15 +182,13 @@ class pageInfo {
 				},
 				error(r) {
 					var e = ui.q('feedbackHint');
-					if (e && feedback)
+					if (e)
 						ui.html(e, ui.l('error.text'));
 				},
 				success(r) {
 					pageInfo.sentFeedback.push(text);
-					if (exec)
-						exec.call();
 					var e = ui.q('feedbackHint');
-					if (e && feedback) {
+					if (e) {
 						pageChat.initActiveChats();
 						ui.css(e.parentNode, 'height', '');
 						ui.html(e, ui.l('info.feedbackUploadSuccess'));
@@ -199,30 +197,6 @@ class pageInfo {
 							ui.q('#feedbackText').value = '';
 						}, 5000);
 					}
-				}
-			});
-		} else {
-			var stack = '';
-			try {
-				var s2 = new Error();
-				stack = s2.stack;
-			} catch (e) {
-				stack = e;
-			}
-			if (!stack)
-				stack = 'stack could not be evaluated!';
-			else if (stack.length > 450)
-				stack = stack.substring(0, 450);
-			if (!stack)
-				stack = '-';
-			communication.ajax({
-				url: global.server + 'action/notify',
-				method: 'POST',
-				body: 'text=' + encodeURIComponent('text:' + text + '\nappname:' + navigator.appName + '\nappversion:' + navigator.appVersion + '\nlanguage:' + navigator.language + '\nplatform:' + navigator.platform + '\nuseragent:' + navigator.userAgent + '\ndevice:' + global.getDevice() + '\nversion:' + global.appVersion + '\nlocalized:' + geoData.localized + '\nlang:' + global.language + '\nstack:' + stack),
-				error(r) {
-					console.log(r);
-				},
-				success() {
 					if (exec)
 						exec.call();
 				}

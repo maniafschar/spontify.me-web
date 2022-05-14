@@ -34,13 +34,13 @@ class bluetooth {
 				ble.connect(device.id, function () {
 					ble.write(device.id, bluetooth.UUID_SERVICE, bluetooth.UUID_TX, bluetooth.encode(user.contact.id), function () {
 						ble.disconnect(device.id, null, function (e) {
-							pageInfo.sendFeedback('ble disconnect: ' + JSON.stringify(e));
+							communication.sendError('ble disconnect: ' + JSON.stringify(e));
 						});
 					}, function (e) {
-						pageInfo.sendFeedback('ble write: ' + JSON.stringify(e));
+						communication.sendError('ble write: ' + JSON.stringify(e));
 					});
 				}, function (e) {
-					pageInfo.sendFeedback('ble connect: ' + JSON.stringify(e));
+					communication.sendError('ble connect: ' + JSON.stringify(e));
 				});
 			}
 		}
@@ -59,11 +59,13 @@ class bluetooth {
 		var notification = function () {
 			cordova.plugins.backgroundMode.enable();
 			cordova.plugins.backgroundMode.on('failure', function (e) {
-				pageInfo.sendFeedback('ble background mode: ' + JSON.stringify(e));
+				communication.sendError('ble background mode: ' + JSON.stringify(e));
 			});
 			ble.startStateNotifications(function (state) {
 				bluetooth.state = state;
 				if (state == 'on') {
+					if (ui.q('popupContent').innerHTML.indexOf(ui.l('findMe.bluetoothDeactivated')) > -1)
+						ui.navigation.hidePopup();
 					Promise.all([
 						blePeripheral.createService(bluetooth.UUID_SERVICE),
 						blePeripheral.addCharacteristic(bluetooth.UUID_SERVICE, bluetooth.UUID_TX, blePeripheral.properties.WRITE, blePeripheral.permissions.WRITEABLE),
@@ -89,12 +91,12 @@ class bluetooth {
 						function (e) {
 							if (e.indexOf('Advertising has already started') < 0) {
 								bluetooth.stop();
-								pageInfo.sendFeedback('ble peripheral: ' + JSON.stringify(e));
+								communication.sendError('ble peripheral: ' + JSON.stringify(e));
 							}
 						}
 					);
 					bluetooth.restartScan();
-				} else if (user.contact.findMe && !ui.q('homeStatus').innerText)
+				} else if (user.contact.findMe)
 					ui.navigation.openPopup(ui.l('attention'), ui.l('findMe.bluetoothDeactivated'));
 			})
 		};
@@ -115,7 +117,7 @@ class bluetooth {
 		if (user.contact.findMe && bluetooth.state) {
 			bluetooth.started = new Date().getTime();
 			ble.startScan([bluetooth.UUID_SERVICE], bluetooth.registerDevice, function (e) {
-				pageInfo.sendFeedback('ble scan: ' + JSON.stringify(e));
+				communication.sendError('ble scan: ' + JSON.stringify(e));
 			});
 		} else
 			bluetooth.started = null;
@@ -143,13 +145,13 @@ class bluetooth {
 		if (global.getOS() == 'ios')
 			cordova.plugins.locationManager.requestAlwaysAuthorization();
 		cordova.plugins.locationManager.startMonitoringForRegion(beaconRegion)
-			.fail(function (e) { pageInfo.sendFeedback('beacon startMonitoringForRegion: ' + JSON.stringify(e)); }).done();
+			.fail(function (e) { communication.sendError('beacon startMonitoringForRegion: ' + JSON.stringify(e)); }).done();
 		cordova.plugins.locationManager.isAdvertisingAvailable()
 			.then(function (supported) {
 				if (supported)
-					cordova.plugins.locationManager.startAdvertising(beaconRegion).fail(function (e) { pageInfo.sendFeedback('beacon startAdvertising: ' + JSON.stringify(e)); }).done();
+					cordova.plugins.locationManager.startAdvertising(beaconRegion).fail(function (e) { communication.sendError('beacon startAdvertising: ' + JSON.stringify(e)); }).done();
 				else
-					pageInfo.sendFeedback('beacon startAdvertising not supported');
-			}).fail(function (e) { pageInfo.sendFeedback('beacon isAdvertisingAvailable: ' + JSON.stringify(e)); }).done();
+					communication.sendError('beacon startAdvertising not supported');
+			}).fail(function (e) { communication.sendError('beacon isAdvertisingAvailable: ' + JSON.stringify(e)); }).done();
 	}
 }

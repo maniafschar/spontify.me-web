@@ -581,7 +581,7 @@ class ui {
 				s = ui.labels[i[0]][i[1]];
 		}
 		if (!s)
-			pageInfo.sendFeedback('ERROR label not found: ' + id);
+			communication.sendError('ERROR label not found: ' + id);
 		return s;
 	}
 	static off(e, type, f) {

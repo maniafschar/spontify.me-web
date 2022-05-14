@@ -264,8 +264,10 @@ class communication {
 				return;
 			if (!global.isBrowser())
 				bluetooth.stop();
+			var token = window.localStorage.getItem('autoLogin');
+			token = forEver && token ? '?token=' + encodeURIComponent(Encryption.encPUB(token)) : '';
 			communication.ajax({
-				url: global.server + 'authentication/logoff',
+				url: global.server + 'authentication/logoff' + token,
 				error() {
 					communication.login.resetAfterLogoff(forEver);
 				},
@@ -531,12 +533,8 @@ class communication {
 			var s2 = 'Status:' + r.status;
 			if (r.responseText)
 				s2 += '\nresponse:' + r.responseText;
-			if (global.lastClick)
-				s2 += '\n' + global.lastClick.trim();
-			if ((!r.status || r.status < 500) && !communication.sentErrors[s2]) {
-				communication.sentErrors[s2] = 1;
-				pageInfo.sendFeedback('communication.onError:\n' + s2);
-			}
+			if (!r.status || r.status < 500)
+				communication.sendError('communication.onError:\n' + s2);
 			s = ui.l('error.text') + '<br/>Status:&nbsp;' + r.status;
 		}
 		if (r.param.progressBar != false) {
@@ -617,6 +615,43 @@ class communication {
 				clearTimeout(communication.pingExec);
 				if (user.contact)
 					communication.pingExec = setTimeout(communication.ping, ui.q('chat chatConversation') ? 3000 : 15000);
+			}
+		});
+	}
+	static sendError(text) {
+		if (!text || text.trim().length == 0)
+			return;
+		for (var i = 0; i < communication.sentErrors.length; i++) {
+			if (communication.sentErrors[i] == text)
+				return;
+		}
+		var body = 'TEXT\n\t' + text.replace(/\n/g, '\n\t');
+		body += '\n\nCONTACTID\n\t' + (user.contact ? user.contact.id : '-');
+		body += '\n\nAPPNAME\n\t' + navigator.appName;
+		body += '\n\nAPPVERSION\n\t' + navigator.appVersion;
+		body += '\n\nLANGUAGE\n\t' + navigator.language;
+		body += '\n\nPLATFORM\n\t' + navigator.platform;
+		body += '\n\nUSERAGENT\n\t' + navigator.userAgent;
+		body += '\n\nDEVICE\n\t' + global.getDevice();
+		body += '\n\nOS\n\t' + global.getOS();
+		body += '\n\nVERSION\n\t' + global.appVersion;
+		body += '\n\nLOCALIZED\n\t' + geoData.localized;
+		body += '\n\nLANG\n\t' + global.language;
+		body += '\n\nLASTCLICK\n\t' + (global.lastClick ? global.lastClick.replace(/\n/g, '\n\t') : '');
+		try {
+			body += '\n\nSTACK\n\t' + new Error().stack.replace(/\n/g, '\n\t');
+		} catch (e) {
+			body += '\n\nSTACK\n\t' + e;
+		}
+		communication.ajax({
+			url: global.server + 'action/notify',
+			method: 'POST',
+			body: 'text=' + encodeURIComponent(body),
+			error(r) {
+				console.log(r);
+			},
+			success() {
+				communication.sentErrors.push(text);
 			}
 		});
 	}

@@ -66,7 +66,7 @@ class initialisation {
 		global.serverImg = global.server.substring(0, global.server.lastIndexOf('/', global.server.length - 2)) + '/med/';
 		window.onerror = function (message, url, line, column, error) {
 			if (url && (url.lastIndexOf('fmg.js') + 6 == url.length || url.lastIndexOf('lang') + 6 == url.lastIndexOf('.js')))
-				pageInfo.sendFeedback('uncaughtExecption:\n' + message + '\n' + url + ': ' + line + '/' + column + '\n' + JSON.stringify(error) + '\n' + global.lastClick);
+				communication.sendError('uncaughtExecption:\n' + message + '\n' + url + ': ' + line + '/' + column + '\n' + JSON.stringify(error));
 			communication.currentCalls.splice(0, communication.currentCalls.length);
 			ui.css('progressbar', 'display', 'none');
 		};
