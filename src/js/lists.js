@@ -1,6 +1,6 @@
 import { global } from './global';
 import { DragObject } from './initialisation';
-import { Contact, model } from './model';
+import { Contact, Location, model } from './model';
 import { ui, formFunc } from './ui';
 
 export { lists };
@@ -65,6 +65,8 @@ class lists {
 	}
 	static removeListEntry(id) {
 		var activeID = ui.q('detail').getAttribute('type');
+		if (!activeID)
+			activeID = ui.navigation.getActiveID();
 		ui.attr(activeID + ' [i="' + id + '"]', 'remove', '1');
 		if (ui.q('detail [i="' + id + '"]'))
 			ui.q('detail [i="' + id + '"]').outerHTML = '';
@@ -77,11 +79,12 @@ class lists {
 		var e = ui.q(activeID + ' row[i="' + id + '"]');
 		ui.navigation.animation(e, 'homeSlideOut', function () {
 			if (e.nextSibling) {
-				e.nextSibling.style.transition = 'none';
-				e.nextSibling.style.marginTop = e.offsetHeight + 'px';
+				var e2 = e.nextSibling;
+				e2.style.transition = 'none';
+				e2.style.marginTop = e.offsetHeight + 'px';
 				setTimeout(function () {
-					e.nextSibling.style.transition = '';
-					e.nextSibling.style.marginTop = 0;
+					e2.style.transition = '';
+					e2.style.marginTop = 0;
 				}, 100);
 			}
 			e.outerHTML = '';

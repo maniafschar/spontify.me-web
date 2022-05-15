@@ -591,7 +591,7 @@ class ui {
 	}
 	static on(e, type, f, once) {
 		ui.x(e, function (e2) {
-			e2.addEventListener(type, f, { capture: false, passive: true, once: once == true ? true : false });
+			e2.addEventListener(type, f, { capture: type == 'touchstart' ? true : false, passive: true, once: once == true ? true : false });
 		});
 	}
 	static q(path) {
@@ -700,31 +700,20 @@ class ui {
 	static swipe(e, exec, exclude) {
 		if (typeof e == 'string')
 			e = ui.q(e);
-		var swipedir,
-			startX,
-			startY,
-			distX,
-			distY,
-			threshold = 60,
-			restraint = 2000,
-			allowedTime = 1000,
-			elapsedTime,
-			startTime;
 		exclude = exclude ? exclude.toUpperCase() : '';
-
 		ui.on(e, 'touchstart', function (event) {
-			if (event.target.nodeName != exclude) {
-				swipedir = 'none';
-				startX = event.changedTouches[0].pageX;
-				startY = event.changedTouches[0].pageY;
-				startTime = new Date().getTime();
+			if (exclude.indexOf(event.target.nodeName) < 0 && exclude.indexOf(event.target.parentNode.nodeName) < 0) {
+				e.startX = event.changedTouches[0].pageX;
+				e.startY = event.changedTouches[0].pageY;
+				e.startTime = new Date().getTime();
 			}
 		});
 		ui.on(e, 'touchend', function (event) {
-			if (event.target.nodeName != exclude || event.target.parentNode.nodeName != exclude) {
-				distX = event.changedTouches[0].pageX - startX;
-				distY = event.changedTouches[0].pageY - startY;
-				elapsedTime = new Date().getTime() - startTime;
+			if (exclude.indexOf(event.target.nodeName) < 0 && exclude.indexOf(event.target.parentNode.nodeName) < 0) {
+				var distX = event.changedTouches[0].pageX - e.startX;
+				var distY = event.changedTouches[0].pageY - e.startY;
+				var elapsedTime = new Date().getTime() - e.startTime;
+				var swipedir = 'none', threshold = 60, restraint = 2000, allowedTime = 1000;
 				if (elapsedTime <= allowedTime) {
 					if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint)
 						swipedir = distX < 0 ? 'left' : 'right';
