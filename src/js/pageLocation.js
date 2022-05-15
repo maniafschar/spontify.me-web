@@ -247,7 +247,7 @@ ${v.hint}
 		${ui.l('save')}
 	</buttontext>
 	${v.deleteButton}
-	<span id="popupHint"></span>
+	<popupHint></popupHint>
 </dialogButtons>
 </form> `;
 	static templateEditEvent = v =>
@@ -326,7 +326,7 @@ ${v.hint}
 	<buttontext onclick="pageLocation.event.save();" class="bgColor">${ui.l('save')}</buttontext>
 	<buttontext onclick="pageLocation.deleteElement(${v.idOrNull},&quot;Event&quot;);"
 		style="margin-left:1em;" class="bgColor" id="deleteElement">${ui.l('delete')}</buttontext>
-	<span id="popupHint"></span>
+	<popupHint></popupHint>
 </dialogButtons>
 </form>`;
 	static templateEditMarketing = v =>
@@ -1519,7 +1519,7 @@ ${v.hint}
 		}
 	}
 	static prefillAddress() {
-		if (geoData.localized && l && ui.q('input[name="name"]')) {
+		if (geoData.localized && ui.q('input[name="name"]')) {
 			if (!ui.val('[name="address"]')) {
 				communication.ajax({
 					url: global.server + 'action/google?param=' + encodeURIComponent('geocode/json?latlng=' + geoData.latlon.lat + ',' + geoData.latlon.lon),
@@ -1668,7 +1668,7 @@ ${v.hint}
 				method: 'POST',
 				body: v,
 				error(e) {
-					if (e.status == 500)
+					if (e.status == 500 && e.response && e.response.indexOf('exists') > 0)
 						ui.html('popupHint', ui.l('locations.alreadyExists'));
 					else
 						communication.onError(e);

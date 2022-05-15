@@ -836,13 +836,13 @@ class formFunc {
 						img.src = f.getAttribute('src');
 						var ratio;
 						if (f.clientHeight > f.clientWidth)
-							ratio = f[0].naturalWidth / f.clientWidth;
+							ratio = f.naturalWidth / f.clientWidth;
 						else
-							ratio = f[0].naturalHeight / f.clientHeight;
-						var x = -f[0].offsetLeft * ratio;
-						var y = -f[0].offsetTop * ratio;
-						var w = Math.min(f.parentNode.clientWith, f.clientWidth) * ratio;
-						var h = Math.min(f.parentNode.clientHeight, f.clientHeight) * ratio;
+							ratio = f.naturalHeight / f.clientHeight;
+						var x = -f.offsetLeft * ratio;
+						var y = -f.offsetTop * ratio;
+						var w = Math.min(f.parentElement.clientWidth, f.clientWidth) * ratio;
+						var h = Math.min(f.parentElement.clientHeight, f.clientHeight) * ratio;
 						var b = formFunc.image.scale(img, x, y, w, h).data;
 						// b = data:image/jpeg;base64,/9j/4AAQS...
 						d.values[e[i].name] = '.' + b.substring(b.indexOf('/') + 1, b.indexOf(';')) + '\u0015' + b.substring(b.indexOf(',') + 1);

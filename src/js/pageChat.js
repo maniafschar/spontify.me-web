@@ -394,7 +394,7 @@ class pageChat {
 			var g = user.contact.groups;
 			for (var i = 1; i < v.length; i++)
 				g = g.replace('value="' + v[i] + '"', 'value="' + v[i] + '" checked="checked"');
-			ui.navigation.openPopup(ui.l('chat.groupTitle'), '<div style="text-align:center;padding:1em 2em;">' + g + '<br/><textarea placeholder="' + ui.l('chat.textHint') + '" style="height:20em;" id="groupChatText">' + v[0] + '</textarea>' + s + '<span id="popupHint"></span></div>', 'pageChat.saveGroupText()');
+			ui.navigation.openPopup(ui.l('chat.groupTitle'), '<div style="text-align:center;padding:1em 2em;">' + g + '<br/><textarea placeholder="' + ui.l('chat.textHint') + '" style="height:20em;" id="groupChatText">' + v[0] + '</textarea>' + s + '<popupHint></popupHint></div>', 'pageChat.saveGroupText()');
 		} else
 			ui.navigation.openPopup(ui.l('chat.groupTitle'), lists.getListNoResults(ui.navigation.getActiveID(), 'noGroups'));
 	}
