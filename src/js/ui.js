@@ -731,7 +731,7 @@ class ui {
 					else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint)
 						swipedir = distY < 0 ? 'up' : 'down';
 				}
-				exec(swipedir);
+				exec(swipedir, event);
 			}
 		});
 	}

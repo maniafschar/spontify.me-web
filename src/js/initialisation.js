@@ -198,17 +198,17 @@ class initialisation {
 			if (dir == 'left')
 				pageSettings.open2();
 		}, 'input,textarea,img,slider');
-		ui.swipe('contacts', function (dir) {
+		ui.swipe('contacts', function (dir, event) {
 			if (dir == 'left')
-				ui.navigation.openSwipeLeftUI();
+				ui.navigation.openSwipeLeftUI(event);
 			else if (dir == 'right')
-				lists.removeListEntryUI();
+				lists.removeListEntryUI(event);
 		}, 'input,listScroll');
-		ui.swipe('locations', function (dir) {
+		ui.swipe('locations', function (dir, event) {
 			if (dir == 'left')
-				ui.navigation.openSwipeLeftUI();
+				ui.navigation.openSwipeLeftUI(event);
 			else if (dir == 'right')
-				lists.removeListEntryUI();
+				lists.removeListEntryUI(event);
 		}, 'input,listScroll');
 		ui.swipe('info', function (dir) {
 			if (dir == 'left')
