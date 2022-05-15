@@ -329,8 +329,9 @@ class pageSettings {
 					v['budget0'] = v['contact.budget'] && v['contact.budget'].indexOf('0') > -1 ? ' checked' : '';
 					v['budget1'] = v['contact.budget'] && v['contact.budget'].indexOf('1') > -1 ? ' checked' : '';
 					v['budget2'] = v['contact.budget'] && v['contact.budget'].indexOf('2') > -1 ? ' checked' : '';
-					v['gender3'] = v['contact.gender'] == 3 ? ' checked' : '';
+					v['gender1'] = v['contact.gender'] == 1 ? ' checked' : '';
 					v['gender2'] = v['contact.gender'] == 2 ? ' checked' : '';
+					v['gender3'] = v['contact.gender'] == 3 ? ' checked' : '';
 					v['guide'] = v['contact.guide'] == 1 ? ' checked' : '';
 					if (user.contact.image)
 						v['userImage'] = global.serverImg + user.contact.image;
@@ -445,6 +446,7 @@ class pageSettings {
 		formFunc.resetError(ui.q('input[name="email"]'));
 		formFunc.resetError(ui.q('input[name="image"]'));
 		formFunc.resetError(ui.q('input[name="birthday"]'));
+		formFunc.resetError(ui.q('input[name="gender"]'));
 		formFunc.resetError(ui.q('textarea[name="aboutMe"]'));
 		formFunc.resetError(ui.q('#settingsInterest1'));
 		formFunc.resetError(ui.q('#settingsInterest2'));
@@ -459,20 +461,20 @@ class pageSettings {
 		if (!user.contact || pageSettings.currentSettings == pageSettings.getCurrentSettingsString())
 			return true;
 		ui.html('#settingsHint', '');
-		formFunc.validation.birthday(ui.q('input[name="birthday"]'));
-		if (!ui.q('settings .dialogFieldError') && (!ui.q('settings input[name="birthday"]').value || !ui.q('settings input[name="gender"]')) &&
-			(ui.q('settings input[name="genderInterest1"]:checked') ||
-				ui.q('settingsinput[name="genderInterest2"]:checked') ||
-				ui.q('settings input[name="genderInterest3"]:checked'))) {
+		if (ui.q('settings input[name="genderInterest1"]:checked') ||
+			ui.q('settingsinput[name="genderInterest2"]:checked') ||
+			ui.q('settings input[name="genderInterest3"]:checked')) {
 			var e = ui.q('settings [name="birthday"]');
 			if (!e.value)
 				formFunc.setError(e, 'settings.bdayUsingInterrestedIn');
 			if (!ui.q('settings [name="gender"]:checked'))
 				formFunc.setError(ui.q('settings [name="gender"]'), 'settings.genderUsingInterrestedIn');
 		}
-		if (ui.q('input[name="guide"]:checked') && !ui.val('textarea[name="aboutMe"]'))
+		if (ui.q('settings [name="birthday"]').parentNode.lastChild.tagName != 'ERRORHINT')
+			formFunc.validation.birthday(ui.q('input[name="birthday"]'));
+		if (ui.q('input[name="guide"]:checked') && !ui.val('textarea[name="aboutMe"]').value)
 			formFunc.setError(ui.q('textarea[name="aboutMe"]'), 'settings.aboutMeEmpty');
-		else
+		else if (ui.val('textarea[name="aboutMe"]').value)
 			formFunc.validation.filterWords(ui.q('textarea[name="aboutMe"]'));
 		formFunc.validation.email(ui.q('input[name="email"]'));
 		formFunc.validation.pseudonym(ui.q('input[name="pseudonym"]'));
