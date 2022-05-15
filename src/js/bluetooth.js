@@ -7,7 +7,6 @@ import { user } from './user';
 export { bluetooth };
 
 class bluetooth {
-	static started = null;
 	static state = null;
 	static UUID_SERVICE = 'e8a98f86-f973-442b-a099-b0b2d2c4f20e';
 	static UUID_RX = 'a682b873-22a7-402b-b2ef-8cb432a7c3b1';
@@ -52,9 +51,9 @@ class bluetooth {
 			bluetooth.stop();
 			return;
 		}
+		var isRunning = window.localStorage.getItem('findMeIDs');
 		bluetooth.reset();
-		bluetooth.startBeacon();
-		if (bluetooth.started)
+		if (isRunning)
 			return;
 		var notification = function () {
 			cordova.plugins.backgroundMode.enable();
@@ -64,7 +63,7 @@ class bluetooth {
 			ble.startStateNotifications(function (state) {
 				bluetooth.state = state;
 				if (state == 'on') {
-					if (ui.q('popupContent').innerHTML.indexOf(ui.l('findMe.bluetoothDeactivated')) > -1)
+					if (ui.q('popupContent') && ui.q('popupContent').innerHTML.indexOf(ui.l('findMe.bluetoothDeactivated')) > -1)
 						ui.navigation.hidePopup();
 					Promise.all([
 						blePeripheral.createService(bluetooth.UUID_SERVICE),
@@ -115,43 +114,14 @@ class bluetooth {
 	}
 	static restartScan() {
 		if (user.contact.findMe && bluetooth.state) {
-			bluetooth.started = new Date().getTime();
 			ble.startScan([bluetooth.UUID_SERVICE], bluetooth.registerDevice, function (e) {
 				communication.sendError('ble scan: ' + JSON.stringify(e));
 			});
 		} else
-			bluetooth.started = null;
+			bluetooth.stop();
 	}
 	static stop() {
-		bluetooth.started = null;
 		ble.stopScan();
-		cordova.plugins.locationManager.stopMonitoringForRegion(bluetooth.createBeacon()).done();
-		cordova.plugins.locationManager.stopAdvertising().done();
-		cordova.plugins.backgroundMode.disable();
 		window.localStorage.removeItem('findMeIDs');
-	}
-	static createBeacon() {
-		return new cordova.plugins.locationManager.BeaconRegion('findapp', '1e6153b0-9c7e-47e9-a14a-c917fad22e41', 5, 1000, true);
-	}
-
-	static startBeacon() {
-		var delegate = new cordova.plugins.locationManager.Delegate();
-		delegate.didDetermineStateForRegion = function () {
-			if (bluetooth.started && new Date().getTime() - bluetooth.started > 3600000)
-				setTimeout(function () { ble.stopScan(bluetooth.restartScan) }, 15000);
-		};
-		var beaconRegion = bluetooth.createBeacon();
-		cordova.plugins.locationManager.setDelegate(delegate);
-		if (global.getOS() == 'ios')
-			cordova.plugins.locationManager.requestAlwaysAuthorization();
-		cordova.plugins.locationManager.startMonitoringForRegion(beaconRegion)
-			.fail(function (e) { communication.sendError('beacon startMonitoringForRegion: ' + JSON.stringify(e)); }).done();
-		cordova.plugins.locationManager.isAdvertisingAvailable()
-			.then(function (supported) {
-				if (supported)
-					cordova.plugins.locationManager.startAdvertising(beaconRegion).fail(function (e) { communication.sendError('beacon startAdvertising: ' + JSON.stringify(e)); }).done();
-				else
-					communication.sendError('beacon startAdvertising not supported');
-			}).fail(function (e) { communication.sendError('beacon isAdvertisingAvailable: ' + JSON.stringify(e)); }).done();
 	}
 }

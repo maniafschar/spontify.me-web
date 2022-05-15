@@ -440,7 +440,6 @@ class pageSettings {
 		var l = ui.val('[name="language"]:checked');
 		if (l != global.language)
 			initialisation.setLanguage(l);
-		bluetooth.reset();
 	}
 	static reset() {
 		formFunc.resetError(ui.q('input[name="email"]'));
