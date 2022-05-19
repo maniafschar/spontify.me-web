@@ -182,7 +182,7 @@ class rating {
 			e.nextSibling.innerHTML = ui.l('rating.negativeRateValidation');
 			return;
 		}
-		var extra = {
+		var data = {
 			type: ui.val('#type'),
 			cid: ui.val('#cid'),
 			ratings: ui.val('[name="ratings"]'),
@@ -195,8 +195,8 @@ class rating {
 			method: 'POST',
 			body: v,
 			success(r) {
-				extra.id = r;
-				rating.postSave(extra);
+				data.id = r;
+				rating.postSave(data);
 			}
 		});
 	}

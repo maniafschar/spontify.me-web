@@ -216,6 +216,7 @@ class global {
 		return window.cordova ? false : true;
 	}
 	static string = {
+		emoji: /\p{Extended_Pictographic}/ug,
 		extractNewsAdHoc(s) {
 			var r = [];
 			if ((s.indexOf('rl:') == 0 || s.indexOf('rp:') == 0) && s.lastIndexOf(':') == s.length - 2) {
@@ -245,18 +246,22 @@ class global {
 			}
 			return r;
 		},
-		isEmoji(c) {
-			return (0x2000 <= c && c <= 0x3299) || (0x1f000 <= c && c <= 0x1ffff) || c == 0xfe0f;
+		isEmoji(c, subsequent) {
+			if (subsequent)
+				return 0x2000 <= c && c <= 0x1ffff;
+			return (0x2310 <= c && c <= 0x3299) || (0x1f000 <= c && c <= 0x1ffff);
 		},
 		replaceEmoji(s) {
-			if (s.codePointAt) {
-				var c;
-				for (var i = s.length; i >= 0; i--) {
-					c = s.codePointAt(i);
-					if (global.string.isEmoji(c))
-						s = s.substring(0, i) + '<emoji>' + String.fromCodePoint(c) + '</emoji>' + s.substring(i + (c > 65536 ? 2 : 1));
+			if (s.codePointAt && global.string.emoji.test(s)) {
+				for (var i = 0; i < s.length; i++) {
+					if (global.string.isEmoji(s.codePointAt(i))) {
+						var l = 1;
+						while (global.string.isEmoji(s.codePointAt(i + l), true))
+							l++;
+						s = s.substring(0, i) + '<emoji>' + s.substring(i, i + l) + '</emoji>' + s.substring(i + l);
+						i += l - 1 + 15;
+					}
 				}
-				s = s.replace(/<\/emoji><emoji>/g, '');
 			}
 			return s;
 		},

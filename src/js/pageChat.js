@@ -77,9 +77,9 @@ class pageChat {
 		if (document.activeElement)
 			document.activeElement.blur();
 		var popupVisible = ui.q('popupContent');
-		ui.navigation.openPopup(ui.l('chat.sendImg'), '<form name="chatImg" action="saveChatImage" style="padding:0 2em;"><input type="hidden" name="chat.contactId2" value="' + ui.q('chat').getAttribute('i') + '"><div style="padding:1em;"><input name="chat.image" type="file"/></div><div style="text-align:center;margin-bottom:1em;"></form><buttontext onclick="pageChat.sendChatImage();" class="bgColor" id="popupSendImage"' + (global.isBrowser() ? '' : ' style="display:none;"') + '>' + ui.l('send') + '</buttontext></div>');
+		ui.navigation.openPopup(ui.l('chat.sendImg'), '<form name="chatImg" action="saveChatImage" style="padding:0 2em;"><input type="hidden" name="contactId2" value="' + ui.q('chat').getAttribute('i') + '"><div style="padding:1em;"><input name="image" type="file"/></div><div style="text-align:center;margin-bottom:1em;"></form><buttontext onclick="pageChat.sendChatImage();" class="bgColor" id="popupSendImage"' + (global.isBrowser() ? '' : ' style="display:none;"') + '>' + ui.l('send') + '</buttontext></div>');
 		if (!popupVisible && global.isBrowser()) {
-			var e = ui.q('[name="chat.image"]');
+			var e = ui.q('[name="image"]');
 			if (e)
 				e.click();
 		}
@@ -104,7 +104,7 @@ class pageChat {
 				exec.call();
 			else {
 				var activeID = ui.navigation.getActiveID();
-				if ((activeID == 'contacts' || activeID == 'locations') && !ui.q(activeID + ' listBody'))
+				if ((activeID == 'contacts' || activeID == 'locations') && !ui.q(activeID + ' listBody') && ui.cssValue('chatUserList', 'display') == 'none')
 					ui.navigation.toggleMenu(null, activeID);
 			}
 		});
@@ -118,7 +118,7 @@ class pageChat {
 	static detailChat(l, id) {
 		ui.html('chat > div', '<chatConversation></chatConversation>' + pageChat.templateInput({
 			id: id,
-			draft: formFunc.drafts['c' + id],
+			draft: formFunc.getDraft('chat' + id),
 			action: global.getDevice() == 'computer' ? 'onclick' : 'onmousedown'
 		}));
 		ui.attr('chat', 'i', id);
@@ -399,17 +399,18 @@ class pageChat {
 			ui.navigation.openPopup(ui.l('chat.groupTitle'), lists.getListNoResults(ui.navigation.getActiveID(), 'noGroups'));
 	}
 	static postSendChatImage(r) {
-		if (ui.q('chat').getAttribute('i') == r.extra) {
-			ui.q('[name="chat.image"]').value = '';
+		if (ui.q('chat').getAttribute('i') == r.contactId) {
+			ui.q('[name="image"]').value = '';
 			ui.navigation.hidePopup();
 			setTimeout(function () {
-				if (ui.q('chat[i="' + r.extra + '"] chatConversation')) {
+				if (ui.q('chat[i="' + r.contactId + '"] chatConversation')) {
 					communication.ajax({
-						url: global.server + 'db/one?query=contact_chat&search=' + encodeURIComponent('chat.id=' + r.id),
+						url: global.server + 'db/one?query=contact_chat&search=' + encodeURIComponent('chat.id=' + r.chatId),
 						responseType: 'json',
-						success(r) {
-							var e = ui.q('chat[i="' + r.extra + '"] chatConversation');
-							e.innerHTML = e.innerHTML + pageChat.renderMsg(r);
+						success(r2) {
+							var e = document.createElement('div');
+							e.innerHTML = pageChat.renderMsg(model.convert(new Chat(), r2));
+							ui.q('chat[i="' + r.contactId + '"] chatConversation').insertBefore(e.children[0], null);
 							pageChat.scrollToBottom();
 						}
 					});
@@ -421,7 +422,7 @@ class pageChat {
 		var e2 = ui.q('popupTitle');
 		if (e2 && e2.innerHTML.indexOf(ui.l('chat.sendImg')) == 0)
 			e2.innerHTML = e2.innerHTML.substring(0, e2.innerHTML.indexOf('<img')) + ' ' + e2.innerHTML.substring(e2.innerHTML.indexOf('<img'));
-		ui.navigation.openPopup(ui.l('chat.sendImg'), '<img src="images/buttonRotate.png" style="position:absolute;width:3em;" onclick="formFunc.image.rotate(this);"><img name="chat.imagepreview" class="chatImgPreview" onclick="formFunc.image.rotate(this);"/><br/><buttontext onclick="pageChat.sendChatImage();" class="bgColor" style="margin-top:1em;">' + ui.l('ready') + '</buttontext><div class="chatSendImgPrevHint" style="bottom:5.5em;"></div><div class="chatSendImgPrevHint"></div>', 'formFunc.image.remove(&quot;chat.image&quot;)', false, function () {
+		ui.navigation.openPopup(ui.l('chat.sendImg'), '<img src="images/buttonRotate.png" style="position:absolute;width:3em;" onclick="formFunc.image.rotate(this);"><img name="imagepreview" class="chatImgPreview" onclick="formFunc.image.rotate(this);"/><br/><buttontext onclick="pageChat.sendChatImage();" class="bgColor" style="margin-top:1em;">' + ui.l('ready') + '</buttontext><div class="chatSendImgPrevHint" style="bottom:5.5em;"></div><div class="chatSendImgPrevHint"></div>', 'formFunc.image.remove(&quot;image&quot;)', false, function () {
 			formFunc.image.previewInternal(e.files[0], e.getAttribute('name'));
 		});
 	}
@@ -582,7 +583,7 @@ class pageChat {
 			ui.html('popupHint', ui.l('chat.groupNoInput'));
 	}
 	static sendChatImage() {
-		if (formFunc.image.hasImage('chat.image')) {
+		if (formFunc.image.hasImage('image')) {
 			var id = ui.q('chat').getAttribute('i');
 			var v = formFunc.getForm('chatImg');
 			v.classname = 'Chat';
@@ -590,8 +591,8 @@ class pageChat {
 				url: global.server + 'db/one',
 				method: 'POST',
 				body: v,
-				success() {
-					pageChat.postSendChatImage(id);
+				success(chatId) {
+					pageChat.postSendChatImage({ contactId: id, chatId: chatId, });
 				}
 			});
 		} else

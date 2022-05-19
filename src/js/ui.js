@@ -797,11 +797,10 @@ class ui {
 
 class formFunc {
 	static cameraField = null;
-	static drafts = {};
 	static dist = 0;
 
 	static getDraft(id) {
-		return formFunc.drafts[id];
+		return user.contact.storage[id];
 	}
 	static getForm(id) {
 		var d = { values: {} }, cb = {};
@@ -1326,12 +1325,12 @@ class formFunc {
 	}
 	static removeDraft(key) {
 		var d = {};
-		for (var k in formFunc.drafts) {
+		for (var k in user.contact.storage) {
 			if (k != key)
-				d[k] = formFunc.drafts[k];
+				d[k] = user.contact.storage[k];
 		}
-		formFunc.drafts = d;
-		user.save({ values: { storage: JSON.stringify(formFunc.drafts) } });
+		user.contact.storage = d;
+		user.save({ values: { storage: JSON.stringify(user.contact.storage) } });
 	}
 	static resetError(e) {
 		if (e) {
@@ -1344,8 +1343,11 @@ class formFunc {
 		}
 	}
 	static saveDraft(key, value) {
-		formFunc.drafts[key] = value;
-		user.save({ values: { storage: JSON.stringify(formFunc.drafts) } });
+		if (value) {
+			user.contact.storage[key] = value;
+			user.save({ values: { storage: JSON.stringify(user.contact.storage) } });
+		} else
+			formFunc.removeDraft(key);
 	}
 	static setChoices(id, exec) {
 		var e = ui.q('#' + id);

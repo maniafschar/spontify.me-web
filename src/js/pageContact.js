@@ -327,7 +327,7 @@ class pageContact {
 		v.hideGroups = v.contactLink.status == 'Friends' ? '' : ' noDisp';
 		v.hideMe = user.contact.id == v.id ? ' noDisp' : '';
 		if (v.image)
-			v.image = global.serverImg + (user.contact.image.indexOf(v.image) == 0 ? user.contact.image : v.image);
+			v.image = global.serverImg + v.image;
 		else
 			v.image = 'images/contact.svg" style="padding:3em;';
 		if (v.rating > 0)

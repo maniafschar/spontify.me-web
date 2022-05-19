@@ -152,6 +152,7 @@ class communication {
 				return;
 			communication.ajax({
 				url: global.server + 'action/unique?email=' + encodeURIComponent(communication.login.getRealPseudonym(f.value)),
+				responseType: 'json',
 				success(r) {
 					if (f.value == r.email) {
 						if (r.unique) {
@@ -184,9 +185,9 @@ class communication {
 						user.password = p;
 						user.init(v);
 						try {
-							formFunc.drafts = user.contact.storage ? JSON.parse(user.contact.storage) : {};
+							user.contact.storage = user.contact.storage ? JSON.parse(user.contact.storage) : {};
 						} catch (e) {
-							formFunc.drafts = {};
+							user.contact.storage = {};
 						}
 						ui.css('progressbar', 'display', 'none');
 						communication.notification.clear();
@@ -379,7 +380,6 @@ class communication {
 			ui.html('chatUserList', '');
 			initialisation.recoverInvoked = false;
 			pageLocation.locationsAdded = null;
-			formFunc.drafts = {};
 			pageWhatToDo.daily.date = new Date();
 			pageWhatToDo.daily.data = [];
 			user.reset();

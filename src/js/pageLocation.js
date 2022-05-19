@@ -643,7 +643,7 @@ ${v.hint}
 	}
 	static editInternal(id, l) {
 		var v;
-		var draft = formFunc.getDraft('locations' + id);
+		var draft = formFunc.getDraft('location' + (id ? id : ''));
 		if (l) {
 			v = model.convert(new Location(), l);
 			if ((!v.ownerId && v.contactId == user.contact.id) || v.ownerId == user.contact.id)
@@ -707,7 +707,7 @@ ${v.hint}
 				pageLocation.event.editInternal(locationID);
 		},
 		editInternal(locationID, id, v) {
-			var draft = formFunc.getDraft('events' + locationID + (id ? '_' + id : ''));
+			var draft = formFunc.getDraft('event' + locationID + (id ? '_' + id : ''));
 			if (v)
 				v = model.convert(new Location(), v);
 			else if (draft)
@@ -1478,6 +1478,10 @@ ${v.hint}
 		pageChat.open(id, true);
 	}
 	static openMap() {
+		if (!user.contact) {
+			pageLocation.actionNotLoggedIn();
+			return;
+		}
 		var l = lists.data['locations'];
 		// TODO: filter list...
 		var max = 0;
@@ -1683,7 +1687,6 @@ ${v.hint}
 	static saveDraft() {
 		pageLocation.sanatizeFields();
 		var a = formFunc.getForm('editElement');
-		formFunc.saveDraft('location' + ui.q('detail').getAttribute('i'), a);
 		a['OT'] = [];
 		a['OT'][0] = ['locationOpenTime.day', 'locationOpenTime.openAt', 'locationOpenTime.closeAt', 'locationOpenTime.id'];
 		var e, i = 1;
@@ -1691,6 +1694,7 @@ ${v.hint}
 			a['OT'][i] = [e.value, ui.val('[name="locationOpenTime.openAt' + i + '"]'), ui.val('[name="locationOpenTime.closeAt' + i + '"]'), ''];
 			i++;
 		}
+		formFunc.saveDraft('location' + ui.q('popup input[name="id"]').value, a);
 	}
 	static savedWhatToDo() {
 		ui.html(ui.navigation.getActiveID() + ' [name="whattodo"] detailTogglePanel', ui.l('message.setStatusLocation'));
@@ -1792,6 +1796,10 @@ ${v.hint}
 		});
 	}
 	static toggleWhatToDo(id) {
+		if (!user.contact) {
+			pageLocation.actionNotLoggedIn();
+			return;
+		}
 		details.togglePanel(ui.q('detail[i="' + id + '"] [name="whattodo"]'));
 	}
 };
