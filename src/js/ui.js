@@ -24,6 +24,7 @@ class ui {
 	static categories = [];
 	static emInPX = 0;
 	static labels = [];
+	static lastClick = '';
 	static templateMenuLocation = () =>
 		global.template`<div onclick="ui.navigation.toggleMenu();" style="border-radius:3em 0.5em 0 0;">
     ${ui.l('locations.title')}

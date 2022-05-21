@@ -7,7 +7,6 @@ import { lists } from './lists';
 import { Contact, model } from './model';
 import { pageChat } from './pageChat';
 import { pageHome } from './pageHome';
-import { pageInfo } from './pageInfo';
 import { pageLogin } from './pageLogin';
 import { pageWhatToDo } from './pageWhatToDo';
 import { pageSettings } from './pageSettings';
@@ -19,13 +18,15 @@ export { communication, FB };
 
 class communication {
 	static currentCalls = [];
-	static pingExec;
+	static lastCall = '';
+	static pingExec = null;
 	static sentErrors = [];
 
 	static ajax(param) {
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function () {
 			if (xmlhttp.readyState == 4) {
+				communication.lastCall += xmlhttp.status + ' ' + param.method + ' ' + param.url;
 				communication.hideProgressBar(param);
 				if (xmlhttp.status >= 200 && xmlhttp.status < 300) {
 					if (param.success)
@@ -39,7 +40,10 @@ class communication {
 				}
 			}
 		};
-		xmlhttp.open(param.method ? param.method : 'GET', param.url, true);
+		if (!param.method)
+			param.method = 'GET';
+		communication.lastCall = param.method + ' ' + param.url;
+		xmlhttp.open(param.method, param.url, true);
 		if (param.url.indexOf(global.server.substring(0, global.server.lastIndexOf('/', global.server.length - 2))) == 0) {
 			var d = new Date();
 			param.id = d.getTime();
@@ -637,7 +641,8 @@ class communication {
 		body += '\n\nVERSION\n\t' + global.appVersion;
 		body += '\n\nLOCALIZED\n\t' + geoData.localized;
 		body += '\n\nLANG\n\t' + global.language;
-		body += '\n\nLASTCLICK\n\t' + (global.lastClick ? global.lastClick.replace(/\n/g, '\n\t') : '');
+		body += '\n\nLASTCLICK\n\t' + ui.lastClick.replace(/\n/g, '\n\t');
+		body += '\n\nLASTCALL\n\t' + communication.lastCall.replace(/\n/g, '\n\t');
 		try {
 			body += '\n\nSTACK\n\t' + new Error().stack.replace(/\n/g, '\n\t');
 		} catch (e) {

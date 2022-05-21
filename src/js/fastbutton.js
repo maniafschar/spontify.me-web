@@ -65,7 +65,7 @@ class FastButton {
 		}
 		if (event.type == 'touchend')
 			this.preventOnClick = true;
-		global.lastClick = event.target.outerHTML;
+		ui.lastClick = event.target.outerHTML;
 		this.reset();
 		this.handler.call(this.element, event);
 	}
