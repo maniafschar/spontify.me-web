@@ -297,7 +297,10 @@ class pageLogin {
 				body: formFunc.getForm('loginRegister').values,
 				method: 'POST',
 				error(r) {
-					communication.login.checkUnique(ui.q('input[name="email"]'));
+					if (JSON.parse(r.response).message == 'domain')
+						formFunc.setError(ui.q('input[name="email"]'), 'login.failed');
+					else
+						communication.login.checkUnique(ui.q('input[name="email"]'));
 				},
 				success(r) {
 					ui.q('login').innerHTML = '<div style="padding:2em;text-align:center;">' + ui.l('register.success') + '<br/><br/><br/><buttontext onclick="pageLogin.init();" class="bgColor">&lt;</buttontext></div>';
