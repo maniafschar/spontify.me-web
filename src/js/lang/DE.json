@@ -582,6 +582,7 @@
 			"finishRegBody": "Bitte vervollständige Deine Registrierung, in dem Du auf den Link klickst, den wir Dir zugesendet habe.<br/>Du kannst die Email erneut Dir zusenden lassen, in dem Du den \"Neues Passwort\" Dialog ausfüllst.",
 			"failedToSetCreds": "Die automatische Anmeldung konnte auf Grund Ihrer Browsereinstellungen nicht gesetzt werden. Eventuell läuft Ihr Browser momentan im Privat-Modus.",
 			"hints": "Als registrierter Benutzer kannst Du<ul><li>Buddies sehen und <b>chatten</b></li><li>über <b>Bluetooth Matching</b> Buddies mit gleichen Interessen in Deiner unmittelbaren Umgebung finden</li><li><b>Guides</b> finden oder Dich als Guide anbieten</li><li>Locations zu Deinen <b>Favoriten</b> hinzufügen und Benachrichtgung erhalten, wenn Dir passende Buddies sich die Location anschauen</li><li>an <b>Events</b> teilnehmen oder eigene einstellen</li><li>und vieles mehr</li>",
+			"hintsTitle": "Warum registrieren?",
 			"keepmeloggedon": "Eingeloggt bleiben",
 			"legal": "Ich habe die Datenschutzerklärung und AGB gelesen, verstanden und akzeptiere diese.",
 			"openReg": "Registrierungsformular öffnen",

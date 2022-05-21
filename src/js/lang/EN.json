@@ -582,6 +582,7 @@
 			"finishRegBody": "Please complete your registration, in which you can click on the link we have sent you.<br/>You can view the current email can send you where you \"forgot password\" the Dialog fill in.",
 			"failedToSetCreds": " Automatic login could not be set due to your browser settings. Possibly your browser is currently running in private mode.",
 			"hints": "As a registered user you can<ul><li>see and <b>chat</b> with Buddies</li><li>find Buddies with similar interests within your immediate surrounding with <b>Bluetooth Matching</b></li><li>find <b>Guides</b> or offer yourself as a guide</li><li>add locations to your <b>favorites</b> and receive notifications when buddies, who suit you, are also interested in the location</li><li>participate in <b>events</b> or post your own</li><li>and much more</li>",
+			"hintsTitle": "Why register?",
 			"keepmeloggedon": "Remember me",
 			"legal": "I have read the Data Protecttion and Terms and Conditions, understand and accept them.",
 			"openReg": "open registration form",

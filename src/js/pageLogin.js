@@ -27,16 +27,16 @@ class pageLogin {
 		</value>
 	</field>
 	<dialogButtons>
-		<buttontext onclick="pageLogin.fromForm();" class="bgColor" id="defaultButton">
+		<buttontext onclick="pageLogin.fromForm()" class="bgColor" id="defaultButton">
 			${ui.l('login.action')}
 		</buttontext>
 		<div style="padding:3em 0 1em 0;color:rgb(0,0,100);">${ui.l('login.alternative')}</div>
-		<buttontext onclick="communication.login.openFB();" class="bgColor">
+		<buttontext onclick="communication.login.openFB()" class="bgColor">
 			Facebook
 		</buttontext>
 		<br />
 		<br />
-		<buttontext onclick="communication.login.openApple();" class="loginExternal"
+		<buttontext onclick="communication.login.openApple()" class="loginExternal"
 			style="background:black;${v['hideApple']}">
 			<svg xmlns="http://www.w3.org/2000/svg" width="1em" viewBox="0 0 170 170" version="1.1" height="1em">
 				<path
@@ -60,7 +60,7 @@ class pageLogin {
 			</value>
 		</field>
 		<dialogButtons style="margin-top:0.5em;">
-			<buttontext onclick="pageLogin.recoverPasswordSendEmail();" class="bgColor" id="defaultButton">
+			<buttontext onclick="pageLogin.recoverPasswordSendEmail()" class="bgColor" id="defaultButton">
 			${ui.l('login.recoverPassword')}
 			</buttontext>
 		</dialogButtons>
@@ -71,7 +71,7 @@ class pageLogin {
         <label>${ui.l('email')}</label>
         <value>
             <input type="email" name="email" value="${v.email}" maxlength="100" size="50"
-                onblur="communication.login.checkUnique(this);" />
+                onblur="communication.login.checkUnique(this)" />
         </value>
     </field>
     <field>
@@ -106,26 +106,30 @@ class pageLogin {
         </value>
     </field>
     <dialogButtons>
-        <buttontext onclick="pageLogin.signUp();" class="bgColor" id="defaultButton">
+        <buttontext onclick="pageLogin.signUp()" class="bgColor" id="defaultButton">
 			${ui.l('login.register')}
         </buttontext>
         <br /><br />
-        <buttontext onclick="ui.navigation.openAGB();" class="bgColor" style="margin-left: 0.5em;">
+        <buttontext onclick="ui.navigation.openAGB()" class="bgColor" style="margin-left: 0.5em;">
 			${ui.l('info.legalTitle')}${global.separator}${ui.l('info.dsgvoTitle')}
         </buttontext>
+        <br /><br />
+        <buttontext onclick="pageLogin.toggleRegistrationHints()" class="bgColor" style="margin-left: 0.5em;">
+			${ui.l('login.hintsTitle')}
+        </buttontext>
     </dialogButtons>
-    <registerHint>${ui.l('login.hints')}</registerHint>
-</form>`;
+</form>
+<registerHint onclick="pageLogin.toggleRegistrationHints()">${ui.l('login.hints')}</registerHint>`;
 	static templateTabs = () =>
 		global.template`<div style="padding-top:2em;">
     <tabHeader>
-        <tab onclick="pageLogin.setLoginFormTab1();" style="max-width:30%;">
+        <tab onclick="pageLogin.setLoginFormTab1()" style="max-width:30%;">
 			${ui.l('login.action')}
         </tab>
-        <tab onclick="pageLogin.setLoginFormTab2();" style="max-width:45%;">
+        <tab onclick="pageLogin.setLoginFormTab2()" style="max-width:45%;">
 			${ui.l('login.passwordForgotten')}
         </tab>
-        <tab onclick="pageLogin.setLoginFormTab3();" style="max-width:30%;">
+        <tab onclick="pageLogin.setLoginFormTab3()" style="max-width:30%;">
 			${ui.l('login.register')}
         </tab>
     </tabHeader>
@@ -180,6 +184,10 @@ class pageLogin {
 		else if (pageLogin.lastTab == 3)
 			pageLogin.setLoginFormTab3();
 	}
+	static toggleRegistrationHints() {
+		var e = ui.q('registerHint');
+		ui.css(e, 'transform', ui.cssValue(e, 'transform').indexOf('1') > -1 ? 'scale(0)' : 'scale(1)');
+	}
 	static recoverPasswordSendEmail() {
 		var email = ui.q('input[name="email"]');
 		var pseudonym = ui.q('input[name="pseudonym"]');
@@ -195,7 +203,7 @@ class pageLogin {
 	}
 	static recoverPasswordSetNew() {
 		ui.navigation.openMenu();
-		ui.navigation.openPopup(ui.l('login.changePassword'), '<span style="padding-bottom:1em;display:block;">' + ui.l('login.changePasswordBody') + '</span><field><label>' + ui.l('login.password') + '</label><value><input type="password" name="passwd" maxlength="30"></value></div><dialogButtons><buttontext class="bgColor" onclick="communication.login.recoverPasswordSetNew();">' + ui.l('login.changePassword') + '</buttontext></dialogButtons><popupHint></popupHint>', 'communication.login.warningRegNotComplete()', true);
+		ui.navigation.openPopup(ui.l('login.changePassword'), '<span style="padding-bottom:1em;display:block;">' + ui.l('login.changePasswordBody') + '</span><field><label>' + ui.l('login.password') + '</label><value><input type="password" name="passwd" maxlength="30"></value></div><dialogButtons><buttontext class="bgColor" onclick="communication.login.recoverPasswordSetNew()">' + ui.l('login.changePassword') + '</buttontext></dialogButtons><popupHint></popupHint>', 'communication.login.warningRegNotComplete()', true);
 	}
 	static saveDraft() {
 		var v;
@@ -303,7 +311,7 @@ class pageLogin {
 						communication.login.checkUnique(ui.q('input[name="email"]'));
 				},
 				success(r) {
-					ui.q('login').innerHTML = '<div style="padding:2em;text-align:center;">' + ui.l('register.success') + '<br/><br/><br/><buttontext onclick="pageLogin.init();" class="bgColor">&lt;</buttontext></div>';
+					ui.q('login').innerHTML = '<div style="padding:2em;text-align:center;">' + ui.l('register.success') + '<br/><br/><br/><buttontext onclick="pageLogin.init()" class="bgColor">&lt;</buttontext></div>';
 					communication.login.removeCredentials();
 				}
 			});
