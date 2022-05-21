@@ -1,4 +1,4 @@
-import { pageInfo } from './pageInfo';
+import { communication } from './communication';
 import { user } from './user';
 
 export { model, Contact, ContactLink, Location, ContactNotification, EventParticipate, LocationOpenTime, LocationFavorite, Event, ContactBlock, Chat, LocationOwnerHistory, ContactVisit, ContactWhatToDo, ContactGroup, ContactGroupLink };

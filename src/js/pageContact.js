@@ -242,7 +242,7 @@ class pageContact {
 					var e = lists.data['contacts'];
 					if (e) {
 						for (var i = 1; i < e.length; i++) {
-							if (model.convert(new ContactBlock(), e, i).ID == id) {
+							if (model.convert(new ContactBlock(), e, i).id == id) {
 								e.splice(i, 1);
 								break;
 							}
@@ -659,8 +659,9 @@ class pageContact {
 				if (!friendship) {
 					communication.ajax({
 						url: global.server + 'db/one?query=contact_listFriends&id=' + id,
+						responseType: 'json',
 						success(r) {
-							pageContact.groups.toggleGroups(id, r ? model.convert(new ContactLink(), JSON.parse(r)).status : -1);
+							pageContact.groups.toggleGroups(id, r ? model.convert(new ContactLink(), r).status : -1);
 						}
 					});
 					return;

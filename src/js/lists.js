@@ -71,9 +71,8 @@ class lists {
 		if (ui.q('detail [i="' + id + '"]'))
 			ui.q('detail [i="' + id + '"]').outerHTML = '';
 		var l = lists.data[activeID];
-		for (var i = l.length - 1; i >= 0; i--) {
-			var v = model.convert(activeID == 'locations' ? new Location() : new Contact(), l, i);
-			if (v.id == id)
+		for (var i = l.length - 1; i > 0; i--) {
+			if (id == model.convert(activeID == 'locations' ? new Location() : new Contact(), l, i).id)
 				l.splice(i, 1);
 		}
 		var e = ui.q(activeID + ' row[i="' + id + '"]');
