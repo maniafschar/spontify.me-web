@@ -298,7 +298,7 @@ class pageLogin {
 				method: 'POST',
 				error(r) {
 					if (JSON.parse(r.response).message == 'domain')
-						formFunc.setError(ui.q('input[name="email"]'), 'login.failed');
+						formFunc.setError(ui.q('input[name="email"]'), 'login.failedDomain');
 					else
 						communication.login.checkUnique(ui.q('input[name="email"]'));
 				},
