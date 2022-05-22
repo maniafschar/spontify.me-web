@@ -44,7 +44,7 @@ class global {
 			today.setHours(0);
 			today.setMinutes(0);
 			today.setSeconds(0);
-			var diff = (d - today) / 86400000;
+			var diff = (d.getTime() - today.getTime()) / 86400000;
 			if (d.getDate() == today.getDate() && d.getMonth() == today.getMonth())
 				l = 'today';
 			else if (diff > 0) {

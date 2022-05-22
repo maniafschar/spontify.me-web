@@ -1491,11 +1491,12 @@ class formFunc {
 		filterWords(e) {
 			var s = e.value;
 			if (s) {
-				var bad = ' anal | anus | arsch| ass |bdsm|blowjob| boob|bukkake|bumse|busen| cock | cum |cunnilingus|dildo|ejacul|ejakul|erection|erektion|faschis|fascis|fick|fuck|goebbels|göring|hakenkreuz|himmler|hitler|hure| möse |nazi|neger|nsdap|nutte|orgasm|porn|pussy|queer| sex |sucker|tits|titten|vagina|vibrator|vögeln|whore|wigger|wixer'.split('|');
+				s = ' ' + s + ' ';
+				var bad = ' anal | anus | arsch| ass |bdsm|blowjob| boob|bukkake|bumse|busen| cock | cum |cunnilingus|dildo|ejacul|ejakul|erection|erektion|faschis|fascis|fick|fuck|goebbels|göring|hakenkreuz|himmler|hitler|hure| möse |nazi|neger|nsdap|nutte|orgasm|penis|porn|pussy|queer|schwanz| sex |sucker|tits|titten|vagina|vibrator|vögeln|whore|wigger|wixer'.split('|');
 				for (var i = 0; i < bad.length; i++) {
 					var s2 = '';
 					for (var i2 = 0; i2 < bad[i].length; i2++)
-						s2 += '*';
+						s2 += bad[i2] == ' ' ? ' ' : '*';
 					s = s.replace(new RegExp(bad[i], 'ig'), s2);
 				}
 			}
