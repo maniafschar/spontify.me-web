@@ -159,12 +159,12 @@ class communication {
 				responseType: 'json',
 				success(r) {
 					if (f.value == r.email) {
-						if (r.unique) {
+						if (r.unique && !r.blocked) {
 							formFunc.resetError(f);
 							if (exec)
 								exec.call();
 						} else
-							formFunc.setError(f, 'email.alreadyExists');
+							formFunc.setError(f, r.unique ? 'email.domainBlocked' : 'email.alreadyExists');
 					}
 				}
 			});

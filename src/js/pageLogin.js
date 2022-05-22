@@ -305,10 +305,7 @@ class pageLogin {
 				body: formFunc.getForm('loginRegister').values,
 				method: 'POST',
 				error(r) {
-					if (JSON.parse(r.response).message == 'domain')
-						formFunc.setError(ui.q('input[name="email"]'), 'login.failedDomain');
-					else
-						communication.login.checkUnique(ui.q('input[name="email"]'));
+					communication.login.checkUnique(ui.q('input[name="email"]'));
 				},
 				success(r) {
 					ui.q('login').innerHTML = '<div style="padding:2em;text-align:center;">' + ui.l('register.success') + '<br/><br/><br/><buttontext onclick="pageLogin.init()" class="bgColor">&lt;</buttontext></div>';
