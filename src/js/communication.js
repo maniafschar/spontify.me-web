@@ -164,7 +164,7 @@ class communication {
 							if (exec)
 								exec.call();
 						} else
-							formFunc.setError(f, r.unique ? 'email.domainBlocked' : 'email.alreadyExists');
+							formFunc.setError(f, r.blocked ? 'email.domainBlocked' : 'email.alreadyExists');
 					}
 				}
 			});

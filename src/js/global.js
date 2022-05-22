@@ -31,13 +31,13 @@ class global {
 			if (d instanceof Date)
 				return d;
 			if (d.indexOf('-') < 0 && d.length == 8)
-				return new Date(d.substring(0, 4), parseInt(d.substring(4, 6)) - 1, d.substring(6, 8));
+				return new Date(Date.UTC(d.substring(0, 4), parseInt(d.substring(4, 6)) - 1, d.substring(6, 8)));
 			var p1 = d.indexOf('-'), p2 = d.indexOf('-', p1 + 1), p3 = d.replace('T', ' ').indexOf(' '), p4 = d.indexOf(':'), p5 = d.indexOf(':', p4 + 1), p6 = d.indexOf('.');
 			if (p4 < 0)
-				return new Date(d.substring(0, p1), d.substring(p1 + 1, p2) - 1, d.substring(p2 + 1), 23, 59, 59);
+				return new Date(Date.UTC(d.substring(0, p1), d.substring(p1 + 1, p2) - 1, d.substring(p2 + 1), 23, 59, 59));
 			if (p6 < 0)
 				p6 = d.length;
-			return new Date(d.substring(0, p1), d.substring(p1 + 1, p2) - 1, d.substring(p2 + 1, p3), d.substring(p3 + 1, p4), d.substring(p4 + 1, p5), d.substring(p5 + 1, p6));
+			return new Date(Date.UTC(d.substring(0, p1), d.substring(p1 + 1, p2) - 1, d.substring(p2 + 1, p3), d.substring(p3 + 1, p4), d.substring(p4 + 1, p5), d.substring(p5 + 1, p6)));
 		},
 		getDateHint(d) {
 			var today = new Date(), l;
