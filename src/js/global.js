@@ -60,46 +60,12 @@ class global {
 				l = 'yesterday';
 			return l ? ui.l('events.' + l) : '{0}';
 		},
-		getDateUI(s) {
-			if (!s)
-				throw 'NaN';
-			s = s.replace('T', ' ');
-			var d = new Date();
-			var s2 = s.indexOf(' ') > -1 ? s.substring(0, s.indexOf(' ')) : s;
-			if (s2.indexOf('.') > 0) {
-				s2 = s2.split('.');
-				if (isNaN(s2[0]) || isNaN(s2[1]) || isNaN(s2[2]))
-					throw 'NaN';
-				d.setDate(s2[0]);
-				d.setMonth(s2[1] - 1);
-				d.setFullYear(s2[2]);
-			} else if (s2.indexOf('-') > 0) {
-				s2 = s2.split('-');
-				if (isNaN(s2[0]) || isNaN(s2[1]) || isNaN(s2[2]))
-					throw 'NaN';
-				d.setDate(s2[2]);
-				d.setMonth(s2[1] - 1);
-				d.setFullYear(s2[0]);
-			} else
-				throw 'NaN';
-			if (s.indexOf(' ') > -1) {
-				s2 = s.substring(s.indexOf(' ') + 1).trim();
-				s2 = s2.split(':');
-				if (isNaN(s2[0]) || isNaN(s2[1]))
-					throw 'NaN';
-				d.setHours(s2[0]);
-				d.setMinutes(s2[1]);
-				d.setSeconds(0);
-				d.setMilliseconds(0);
-			}
-			return d;
-		},
 		getWeekNumber(date) {
 			var d = new Date(+date);
 			d.setHours(0, 0, 0);
 			d.setDate(d.getDate() + 4 - (d.getDay() || 7));
 			var yearStart = new Date(d.getFullYear(), 0, 1);
-			var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+			var weekNo = Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
 			return [d.getFullYear(), weekNo];
 		}
 	};

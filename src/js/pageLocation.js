@@ -1034,7 +1034,7 @@ ${v.hint}
 				try {
 					if (start.value.indexOf(':') < 0)
 						throw 'NaN';
-					d1 = global.date.getDateUI(start.value);
+					d1 = global.date.getDate(start.value);
 					if (!id && d1 < new Date())
 						formFunc.setError(start, 'events.errorDateTooSmall');
 				} catch (e) {
@@ -1046,7 +1046,7 @@ ${v.hint}
 					formFunc.setError(end, 'events.errorDateNoEnd');
 				else {
 					try {
-						d2 = global.date.getDateUI(end.value);
+						d2 = global.date.getDate(end.value);
 						if (d1 && d1 > d2)
 							formFunc.setError(end, 'events.errorDateEndTooSmall');
 					} catch (e) {
