@@ -1185,7 +1185,7 @@ ${v.hint}
 				s2 = '<img src="' + img + '"/>' + oc + s2;
 				var partButton = pageLocation.event.getParticipateButton({ id: id, date: date }, v);
 				if (user.contact.id == v.contactId)
-					partButton += '<buttontext class="' + bg + '" onclick="pageLocation.event.edit(' + id + ',' + v.id + '); event.stopPropagation(); ">' + ui.l('edit') + '</buttontext>';
+					partButton += '<buttontext class="' + bg + '" onclick="pageLocation.event.edit(' + id + ',' + v.id + ');event.stopPropagation();">' + ui.l('edit') + '</buttontext>';
 				text = '';
 				if (v.price > 0)
 					text += global.separator + ui.l('events.priceDisp').replace('{0}', parseFloat(v.price).toFixed(2));
@@ -1215,7 +1215,8 @@ ${v.hint}
 			details.togglePanel(e);
 		},
 		toggleParticipants(event, id, confirm) {
-			event.stopPropagation();
+			if (event.stopPropagation)
+				event.stopPropagation();
 			var d = id.substring(id.lastIndexOf('_') + 1), i = id.substring(id.indexOf('_') + 1, id.lastIndexOf('_'));
 			var e = ui.q('detail[i="' + id + '"] [name="participants"]');
 			if (e.innerHTML)
@@ -1702,15 +1703,6 @@ ${v.hint}
 	static selectFriend(c) {
 		ui.classRemove('.locationToFriend.selected', 'selected');
 		ui.classAdd(c, 'selected');
-	}
-	static selectMarketingLang(event) {
-		event.stopPropagation();
-		var e = event.target;
-		e = e.previousSibling;
-		for (var i = 1; i < 4; i++) {
-			if (e.getAttribute('name').indexOf(i) < 0)
-				ui.attr('[name="marketing.language' + i + '"][value="' + e.getAttribute('value') + '"]', 'checked', false);
-		}
 	}
 	static setEditAttributes() {
 		if (ui.q('#loc_attrib')) {

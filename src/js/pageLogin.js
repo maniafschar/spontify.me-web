@@ -166,11 +166,9 @@ class pageLogin {
 		} else
 			ui.navigation.goTo('login');
 	}
-	static goToRegister(event) {
-		if (ui.navigation.lastID == 'login') {
-			event.stopPropagation();
+	static goToRegister() {
+		if (ui.navigation.lastID == 'login')
 			ui.navigation.goTo('login', null, true);
-		}
 	}
 	static init() {
 		if (ui.q('login').innerHTML.indexOf('loginBodyDiv') < 0) {
