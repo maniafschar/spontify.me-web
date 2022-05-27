@@ -144,8 +144,8 @@ class pageLocation {
 	static templateEdit = v =>
 		global.template`<form name="editElement">
 <input type="hidden" name="id" transient="true" value="${v.id}" />
-<input type="hidden" name="latitude" />
-<input type="hidden" name="longitude" />
+<input type="hidden" name="latitude" value="${v.latitude}" />
+<input type="hidden" name="longitude" value="${v.longitude}" />
 <input type="hidden" name="town" />
 <input type="hidden" name="street" />
 <input type="hidden" name="zipCode" />
@@ -689,6 +689,10 @@ ${v.hint}
 			v.budget1 = v.budget.indexOf('1') > -1 ? ' checked' : '';
 			v.budget2 = v.budget.indexOf('2') > -1 ? ' checked' : '';
 		}
+		if (!v.longitude)
+			v.longitude = geoData.latlon.lon;
+		if (!v.latitude)
+			v.latitude = geoData.latlon.lat;
 		ui.navigation.openPopup(ui.l('locations.' + (id ? 'edit' : 'new')).replace('{0}', v.name), pageLocation.templateEdit(v), 'pageLocation.saveDraft()');
 		if (id)
 			pageLocation.setEditAttributes();
