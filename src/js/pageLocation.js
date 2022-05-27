@@ -1527,15 +1527,11 @@ ${v.hint}
 		if (geoData.localized && ui.q('input[name="name"]')) {
 			if (!ui.val('[name="address"]')) {
 				communication.ajax({
-					url: global.server + 'action/google?param=' + encodeURIComponent('geocode/json?latlng=' + geoData.latlon.lat + ',' + geoData.latlon.lon),
+					url: global.server + 'action/google?param=' + encodeURIComponent('latlng=' + geoData.latlon.lat + ',' + geoData.latlon.lon),
 					responseType: 'json',
 					success(r) {
-						if (r.status == 'OK' && r.results[0]) {
-							var s = r.results[0].formatted_address.split(','), s2 = '';
-							for (var i = 0; i < s.length; i++)
-								s2 = s2 + '\n' + s[i].trim();
-							ui.html('[name="address"]', s2.substring(1));
-						}
+						if (r.formatted)
+							ui.html('[name="address"]', r.formatted);
 					}
 				});
 			}
