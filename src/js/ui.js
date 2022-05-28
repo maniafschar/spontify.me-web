@@ -1449,6 +1449,9 @@ class formFunc {
 		return x;
 	}
 	static validation = {
+		badWords: ' anal | anus | arsch| ass |bdsm|blowjob| boob|bukkake|bumse|busen| cock | cum |cunnilingus|dildo|ejacul|ejakul|erection|erektion|faschis|fascis|fick|fuck|goebbels|göring|hakenkreuz|himmler|hitler|hure| möse |nazi|neger|nsdap|nutte|orgasm|penis|porn|pussy|queer|schwanz| sex |sucker|tits|titten|vagina|vibrator|vögeln|whore|wigger|wixer'.split('|'),
+		badWordsReplacement: null,
+
 		birthday(s) {
 			formFunc.resetError(s);
 			if (s.value.trim().length > 0) {
@@ -1492,18 +1495,22 @@ class formFunc {
 			var s = e.value;
 			if (s) {
 				s = ' ' + s + ' ';
-				var bad = ' anal | anus | arsch| ass |bdsm|blowjob| boob|bukkake|bumse|busen| cock | cum |cunnilingus|dildo|ejacul|ejakul|erection|erektion|faschis|fascis|fick|fuck|goebbels|göring|hakenkreuz|himmler|hitler|hure| möse |nazi|neger|nsdap|nutte|orgasm|penis|porn|pussy|queer|schwanz| sex |sucker|tits|titten|vagina|vibrator|vögeln|whore|wigger|wixer'.split('|');
-				for (var i = 0; i < bad.length; i++) {
-					var s2 = '';
-					for (var i2 = 0; i2 < bad[i].length; i2++)
-						s2 += bad[i2] == ' ' ? ' ' : '*';
-					s = s.replace(new RegExp(bad[i], 'ig'), s2);
+				if (!formFunc.validation.badWordsReplacement) {
+					formFunc.validation.badWordsReplacement = [];
+					for (var i = 0; i < formFunc.validation.badWords.length; i++) {
+						var s2 = '';
+						for (var i2 = 0; i2 < formFunc.validation.badWords[i].length; i2++)
+							s2 += formFunc.validation.badWords[i].charAt(i2) == ' ' ? ' ' : '*';
+						formFunc.validation.badWordsReplacement.push(s2);
+					}
 				}
+				for (var i = 0; i < formFunc.validation.badWords.length; i++)
+					s = s.replace(new RegExp(formFunc.validation.badWords[i], 'ig'), formFunc.validation.badWordsReplacement[i]);
 			}
-			if (s == e.value)
+			if (s == ' ' + e.value + ' ')
 				formFunc.resetError(e);
 			else {
-				e.value = s;
+				e.value = s.substring(1, s.length - 1);
 				formFunc.setError(e, 'filter.offensiveWords');
 			}
 		},

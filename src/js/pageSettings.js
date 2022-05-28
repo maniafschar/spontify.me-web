@@ -443,6 +443,7 @@ class pageSettings {
 			initialisation.setLanguage(l);
 	}
 	static reset() {
+		formFunc.resetError(ui.q('input[name="pseudonym"]'));
 		formFunc.resetError(ui.q('input[name="email"]'));
 		formFunc.resetError(ui.q('input[name="image"]'));
 		formFunc.resetError(ui.q('input[name="birthday"]'));
@@ -472,9 +473,9 @@ class pageSettings {
 		}
 		if (ui.q('settings [name="birthday"]').parentNode.lastChild.tagName != 'ERRORHINT')
 			formFunc.validation.birthday(ui.q('input[name="birthday"]'));
-		if (ui.q('input[name="guide"]:checked') && !ui.val('textarea[name="aboutMe"]').value)
+		if (ui.q('input[name="guide"]:checked') && !ui.val('textarea[name="aboutMe"]'))
 			formFunc.setError(ui.q('textarea[name="aboutMe"]'), 'settings.aboutMeEmpty');
-		else if (ui.val('textarea[name="aboutMe"]').value)
+		else if (ui.val('textarea[name="aboutMe"]'))
 			formFunc.validation.filterWords(ui.q('textarea[name="aboutMe"]'));
 		formFunc.validation.email(ui.q('input[name="email"]'));
 		formFunc.validation.pseudonym(ui.q('input[name="pseudonym"]'));
