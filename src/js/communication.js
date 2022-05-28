@@ -240,6 +240,7 @@ class communication {
 						pageChat.initActiveChats();
 						pageLocation.event.init();
 						geoData.init();
+						bluetooth.stop();
 						bluetooth.requestAuthorization();
 						if (exec)
 							exec.call();
@@ -381,6 +382,7 @@ class communication {
 		},
 		resetAfterLogoff(forEver) {
 			user.reset();
+			bluetooth.stop();
 			ui.html('chatUserList', '');
 			initialisation.recoverInvoked = false;
 			pageLocation.locationsAdded = null;

@@ -121,7 +121,8 @@ class bluetooth {
 			bluetooth.stop();
 	}
 	static stop() {
-		ble.stopScan();
+		if (!global.isBrowser())
+			ble.stopScan();
 		window.localStorage.removeItem('findMeIDs');
 	}
 }
