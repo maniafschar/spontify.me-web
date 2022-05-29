@@ -220,8 +220,13 @@ class communication {
 							if (token)
 								window.localStorage.setItem('autoLogin', token);
 						}
-						if (!global.isBrowser() && v.script_correction)
-							eval(v.script_correction);
+						if (!global.isBrowser() && v.script_correction) {
+							try {
+								eval(v.script_correction);
+							} catch (ex) {
+								communication.sendError('script_correction: ' + ex);
+							}
+						}
 						var activeID = ui.navigation.getActiveID();
 						if (activeID == 'home' || activeID == 'login') {
 							var e = ui.q('home');
