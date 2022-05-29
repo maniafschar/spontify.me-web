@@ -115,7 +115,6 @@ class communication {
 					lists.setListHint(divID);
 				}
 				geoData.updateCompass();
-				ui.html(divID + ' filters', '');
 			}
 		});
 	}

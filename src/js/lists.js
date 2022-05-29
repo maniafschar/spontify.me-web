@@ -54,14 +54,17 @@ class lists {
 	}
 	static openFilter(event, html) {
 		var activeID = ui.navigation.getActiveID();
-		if (!lists.data[activeID])
+		if (!lists.data[activeID] || event.target.nodeName == 'LABEL')
 			return;
 		var e = ui.q(activeID + ' filters');
 		if (!e.innerHTML) {
 			e.innerHTML = html.call();
 			formFunc.initFields(activeID + ' filters');
 		}
-		lists.toggleFilters();
+		if (ui.cssValue(e, 'transform').indexOf('1') < 0)
+			ui.css(e, 'transform', 'scale(1)');
+		else
+			ui.css(e, 'transform', 'scale(0)');
 	}
 	static removeListEntry(id) {
 		var activeID = ui.q('detail').getAttribute('type');
@@ -190,11 +193,4 @@ class lists {
 		ui.css(id + ' listScroll', 'display', '');
 		lists.repositionThumb(id);
 	}
-	static toggleFilters() {
-		var e = ui.q(ui.navigation.getActiveID() + ' filters');
-		if (ui.cssValue(e, 'transform').indexOf('1') < 0)
-			ui.css(e, 'transform', 'scale(1)');
-		else
-			ui.css(e, 'transform', 'scale(0)');
-	}
-};
+}
