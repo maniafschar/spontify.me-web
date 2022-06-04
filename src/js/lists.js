@@ -1,6 +1,7 @@
 import { global } from './global';
 import { DragObject } from './initialisation';
 import { Contact, Location, model } from './model';
+import { pageLocation } from './pageLocation';
 import { ui, formFunc } from './ui';
 
 export { lists };
@@ -9,7 +10,7 @@ class lists {
 	static data = [];
 
 	static templateList = v =>
-		global.template`<listHeader onclick="${v.action}">${v.img}<filters style="transform:scale(0);"></filters><listTitle></listTitle></listHeader>
+		global.template`<listHeader onclick="${v.action}">${v.img}<filters style="transform:scale(0);"></filters><listTitle></listTitle>${v.map}</listHeader>
 <listScroll><a class="bgColor2"></a></listScroll><listBody>${v.groups}<listResults></listResults></listBody>`;
 
 	static execFilter() {
@@ -54,7 +55,7 @@ class lists {
 	}
 	static openFilter(event, html) {
 		var activeID = ui.navigation.getActiveID();
-		if (!lists.data[activeID] || event.target.nodeName == 'LABEL')
+		if (!lists.data[activeID] || event.target.nodeName == 'LABEL' || event.target.nodeName == 'BUTTONTEXT' || ui.parents(event.target, 'map'))
 			return;
 		var e = ui.q(activeID + ' filters');
 		if (!e.innerHTML) {
@@ -96,12 +97,12 @@ class lists {
 		});
 	}
 	static removeListEntryUI(event) {
-		var e = event.target;
-		while (e && e.nodeName != 'ROW')
-			e = e.parentNode;
+		var e = ui.parents(event.target, 'row');
 		if (e) {
 			event.stopPropagation();
 			lists.removeListEntry(e.getAttribute('i'));
+			if (ui.navigation.getActiveID() == 'locations')
+				pageLocation.scrollMap();
 		}
 	}
 	static repositionThumb(activeID) {
@@ -141,7 +142,10 @@ class lists {
 			var v = {};
 			v.action = action ? action : 'lists.openFilter(event, ' + (id == 'locations' ? 'pageLocation' : id == 'contacts' ? 'pageContact' : 'pageSearch') + '.getFilterFields)';
 			v.img = action ? '' : '<img src="images/search.svg" class="showFilterButton buttonIcon bgColor2"/>';
-			v.groups = id == 'contacts' ? '<groups style="display:none;"></groups>' : '';
+			if (id == 'contacts')
+				v.groups = '<groups style="display:none;"></groups>';
+			else if (id == 'locations')
+				v.map = '<map style="display:none;"></map>';
 			e.innerHTML = lists.templateList(v);
 			ui.addFastButton(id);
 			new DragObject(ui.q(id + ' listScroll')).ondrag = function (event, top) {

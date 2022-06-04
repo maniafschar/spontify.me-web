@@ -1060,9 +1060,15 @@ class formFunc {
 		},
 		zoom(event, delta) {
 			var e = event.target;
-			if (e.nodeName != 'IMG')
-				e = e.parentNode.children('img');
-			if (e.nodeName == 'IMG' && e.getAttribute('name') && e.getAttribute('name').indexOf('Preview') > 0) {
+			if (e.nodeName != 'IMG') {
+				e = e.parentNode;
+				for (var i = 0; i < e.children.length; i++)
+					if (e.children[i].nodeName == 'IMG') {
+						e = e.children[i];
+						break;
+					}
+			}
+			if (e && e.nodeName == 'IMG' && e.getAttribute('name') && e.getAttribute('name').indexOf('Preview') > 0) {
 				var style = ('' + ui.cssValue(e, 'max-width')).indexOf('%') > 0 ? 'max-width' : 'max-height';
 				var windowSize = style == 'max-width' ? e.parentNode.clientWidth : e.parentNode.clientHeight;
 				var imageSize = style == 'max-width' ? e.naturalWidth : e.naturalHeight;
@@ -1507,7 +1513,7 @@ class formFunc {
 				for (var i = 0; i < formFunc.validation.badWords.length; i++)
 					s = s.replace(new RegExp(formFunc.validation.badWords[i], 'ig'), formFunc.validation.badWordsReplacement[i]);
 			}
-			if (s == ' ' + e.value + ' ')
+			if (!s || s == ' ' + e.value + ' ')
 				formFunc.resetError(e);
 			else {
 				e.value = s.substring(1, s.length - 1);

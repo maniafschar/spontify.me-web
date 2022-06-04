@@ -15,6 +15,14 @@ export { pageLocation };
 class pageLocation {
 	static currentDetail;
 	static locationsAdded = null;
+	static map = {
+		canvas: null,
+		id: null,
+		markerLocation: null,
+		markerMe: null,
+		scrollTop: -1,
+		timeout: null
+	};
 	static templateList = v =>
 		global.template`<row onclick="details.open(&quot;locations&quot;,&quot;${v.id}&quot;,&quot;${v.query}&quot;,${v.render});" i="${v.id}" class="location">
 			${v.present}
@@ -1252,12 +1260,13 @@ ${v.hint}
 		for (var i = 1; i < d.length; i++) {
 			if (d[i] != 'outdated') {
 				var e = model.convert(new Location(), d, i);
-				var match = (v.length == 0 || towns[e.town]) && (v2.length == 0 || pageLocation.hasCategory(cats, e.category)) && (v3.length == 0 || pageLocation.isInPosition(comp, e.angle));
+				var match = (v.length == 0 || towns[e.town]) && (v2.length == 0 || pageLocation.hasCategory(cats, e.category)) && (v3.length == 0 || pageLocation.isInPosition(comp, e._angle));
 				e = ui.q(activeID + ' [i="' + e.id + '"]');
 				ui.attr(e, 'filtered', !match);
 			}
 		}
 		lists.execFilter();
+		pageLocation.scrollMap();
 	}
 	static getAttributesForDisplay(v) {
 		var s = '', s2;
@@ -1299,9 +1308,21 @@ ${v.hint}
 		S['S'] = 1;
 		W['W'] = 1;
 		E['E'] = 1;
-		var isEvent = l[0].toString().indexOf('event.id') > 0;
+		var isEvent = l[0].toString().indexOf('event.id') > 0, hasAngel;
+		for (var i = 1; i < l[0].length; i++) {
+			if (l[0][i] == '_angle') {
+				hasAngel = true;
+				break;
+			}
+		}
+		if (!hasAngel)
+			l[0].push('_angle');
 		for (var i = 1; i < l.length; i++) {
 			var v = model.convert(new Location(), l, i);
+			if (!hasAngel) {
+				v._angle = geoData.getAngel(geoData.latlon, { lat: v.latitude, lon: v.longitude });
+				l[i].push(v._angle);
+			}
 			if (v.town && !r3[v.town]) {
 				r.push(v.town);
 				r3[v.town] = 1;
@@ -1311,13 +1332,13 @@ ${v.hint}
 			var s = '' + v.category;
 			for (var i2 = 0; i2 < s.length; i2++)
 				r2[s.substring(i2, i2 + 1)] = 1;
-			if (!r4['E'] && pageLocation.isInPosition(E, v.angle))
+			if (!r4['E'] && pageLocation.isInPosition(E, v._angle))
 				r4['E'] = 1;
-			if (!r4['N'] && pageLocation.isInPosition(N, v.angle))
+			if (!r4['N'] && pageLocation.isInPosition(N, v._angle))
 				r4['N'] = 1;
-			if (!r4['W'] && pageLocation.isInPosition(W, v.angle))
+			if (!r4['W'] && pageLocation.isInPosition(W, v._angle))
 				r4['W'] = 1;
-			if (!r4['S'] && pageLocation.isInPosition(S, v.angle))
+			if (!r4['S'] && pageLocation.isInPosition(S, v._angle))
 				r4['S'] = 1;
 		}
 		var s = '', i2 = 0, m = ' onclick="pageLocation.filterList();" deselect="true"/>', sep = '<filterSeparator></filterSeparator>';
@@ -1338,7 +1359,7 @@ ${v.hint}
 				s += '<input type="radio" name="filterCompass" value="' + e + '" label="' + ui.l('locations.compass' + e) + '"' + m;
 			s += sep;
 		}
-		if (r.length > 1) {
+		if (false && r.length > 1) {
 			r = r.sort();
 			for (var i = 0; i < r.length; i++)
 				s += '<input type="radio" label="' + r[i] + '" name="filterLocationTown"' + m;
@@ -1347,7 +1368,7 @@ ${v.hint}
 		if (s)
 			s = s.substring(0, s.lastIndexOf(sep));
 		if (s)
-			return '<div>' + s + '</div><buttontext onclick="pageLocation.openMap();" style="margin:1em 0.25em;" class="bgColor2">' + ui.l('filterLocMapButton') + '</buttontext>';
+			return '<div>' + s + '</div><buttontext onclick="pageLocation.toggleMap();" style="margin:1em 0.25em;" class="bgColor2">' + ui.l('filterLocMapButton') + '</buttontext>';
 		return '<div style="padding-bottom:1em;">' + ui.l('filterNoDifferentValues') + '</div>';
 	}
 	static getIcons(l1, v) {
@@ -1451,6 +1472,8 @@ ${v.hint}
 		return pageLocation.listLocationInternal(l);
 	}
 	static listLocationInternal(l) {
+		if (ui.navigation.getActiveID() == 'locations' && ui.q('map') && ui.cssValue('map', 'display') != 'none')
+			pageLocation.toggleMap();
 		var s = '', v;
 		for (var i = 1; i < l.length; i++) {
 			v = model.convert(new Location(), l, i);
@@ -1481,51 +1504,6 @@ ${v.hint}
 			return;
 		}
 		pageChat.open(id, true);
-	}
-	static openMap() {
-		if (!user.contact) {
-			pageLocation.actionNotLoggedIn();
-			return;
-		}
-		var l = lists.data['locations'];
-		// TODO: filter list...
-		var max = 0;
-		var popupData = [];
-		var processed = [], img;
-		for (var i = 1; i < l.length; i++) {
-			var v = model.convert(new Location(), l, i);
-			if (!processed[v.id]) {
-				processed[v.id] = 1;
-				if (v.imageList)
-					img = global.serverImg + v.imageList;
-				else
-					img = '';
-				popupData.push({ title: pageLocation.replaceMapDescData(v.name), img: img, address: pageLocation.replaceMapDescData(v.address), desc: pageLocation.replaceMapDescData(v.description), lat: v.latitude, lng: v.longitude });
-			}
-			if (max < v._geolocationDistance)
-				max = v._geolocationDistance;
-		}
-		if (popupData) {
-			var delta = (Math.min(window.innerWidth, window.innerHeight) / 90) / 2, x = 0.0625, zoom = 18;
-			for (; zoom > 0; zoom--) {
-				if (x * delta > max)
-					break;
-				x *= 2;
-			}
-			communication.ajax({
-				url: global.server + 'action/google?param=js',
-				responseType: 'text',
-				success(r) {
-					var w = ui.navigation.openHTML('map.html');
-					ui.on(w, 'load' + (global.isBrowser() ? '' : 'stop'), function () {
-						if (global.isBrowser())
-							w.initMap(popupData, geoData.latlon.lat, geoData.latlon.lon, zoom, r);
-						else
-							w.executeScript({ code: 'window.initMap(' + JSON.stringify(popupData) + ',' + geoData.latlon.lat + ',' + geoData.latlon.lon + ',' + zoom + ',"' + r + '")' });
-					}, true);
-				}
-			});
-		}
 	}
 	static prefillAddress() {
 		if (geoData.localized && ui.q('input[name="name"]')) {
@@ -1700,6 +1678,46 @@ ${v.hint}
 	static savedWhatToDo() {
 		ui.html(ui.navigation.getActiveID() + ' [name="whattodo"] detailTogglePanel', ui.l('message.setStatusLocation'));
 	}
+	static scrollMap() {
+		if (ui.cssValue('map', 'display') == 'none')
+			return;
+		if (pageLocation.map.scrollTop != ui.q('locations listBody').scrollTop) {
+			pageLocation.map.scrollTop = ui.q('locations listBody').scrollTop;
+			clearTimeout(pageLocation.map.timeout);
+			pageLocation.map.timeout = setTimeout(pageLocation.scrollMap, 100);
+			return;
+		}
+		var rows = ui.qa('locations listResults row');
+		var id = ui.q('locations listBody').scrollTop - ui.emInPX, i = 0;
+		for (; i < rows.length; i++) {
+			if (rows[i].offsetTop > id && rows[i].getAttribute('filtered') != 'true') {
+				id = parseInt(rows[i].getAttribute('i'));
+				break;
+			}
+		}
+		if (id == pageLocation.map.id || !rows[i])
+			return;
+		ui.classRemove('locations listResults row div.highlight', 'highlight');
+		rows[i].children[0].classList = 'highlight';
+		pageLocation.map.id = id;
+		var d = model.convert(new Location(), lists.data['locations'], i + 1);
+		var delta = ui.q('map').clientHeight / 320, x = 0.0625, zoom = 18;
+		for (; zoom > 0; zoom--) {
+			if (x * delta > d._geolocationDistance)
+				break;
+			x *= 2;
+		}
+		if (pageLocation.map.canvas) {
+			pageLocation.map.markerMe.setMap(null);
+			pageLocation.map.markerLocation.setMap(null);
+			pageLocation.map.canvas.setCenter(new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon));
+			pageLocation.map.canvas.setZoom(zoom);
+		} else
+			pageLocation.map.canvas = new google.maps.Map(document.getElementsByTagName("map")[0],
+				{ zoom: zoom, center: new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon), mapTypeId: google.maps.MapTypeId.ROADMAP });
+		pageLocation.map.markerMe = new google.maps.Marker({ map: pageLocation.map.canvas, title: d.name, contentString: '', icon: 'images/mapMe1.png', position: new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon) });
+		pageLocation.map.markerLocation = new google.maps.Marker({ map: pageLocation.map.canvas, title: d.name, contentString: '', icon: 'images/mapLoc.png', position: new google.maps.LatLng(d.latitude, d.longitude) });
+	}
 	static selectFriend(c) {
 		ui.classRemove('.locationToFriend.selected', 'selected');
 		ui.classAdd(c, 'selected');
@@ -1787,6 +1805,44 @@ ${v.hint}
 			}
 		});
 	}
+	static toggleMap() {
+		if (!user.contact) {
+			pageLocation.actionNotLoggedIn();
+			return;
+		}
+		if (ui.q('map').getAttribute('created')) {
+			ui.classRemove('locations listResults row div.highlight', 'highlight');
+			if (ui.cssValue('map', 'display') == 'none') {
+				ui.css('locations listBody', 'margin-top', '20em');
+				ui.css('locations listBody', 'padding-top', '0.5em');
+				ui.css('locations listHeader', 'box-shadow', '0 0 1em rgba(0, 0, 0, 0.3)');
+			} else {
+				ui.css('locations listBody', 'margin-top', '');
+				ui.css('locations listBody', 'padding-top', '');
+				ui.css('locations listHeader', 'box-shadow', '');
+			}
+			ui.toggleHeight('map', pageLocation.scrollMap);
+			pageLocation.map.scrollTop = -1;
+			pageLocation.map.id = -1;
+			return;
+		}
+		ui.attr('map', 'created', new Date().getTime());
+		communication.ajax({
+			url: global.server + 'action/google?param=js',
+			responseType: 'text',
+			success(r) {
+				var script = document.createElement('script');
+				script.onload = function () {
+					new google.maps.Geocoder();
+					pageLocation.scrollMap();
+					pageLocation.toggleMap();
+					ui.on('locations listBody', 'scroll', pageLocation.scrollMap);
+				};
+				script.src = r;
+				document.head.appendChild(script);
+			}
+		});
+	}
 	static toggleWhatToDo(id) {
 		if (!user.contact) {
 			pageLocation.actionNotLoggedIn();
@@ -1794,4 +1850,4 @@ ${v.hint}
 		}
 		details.togglePanel(ui.q('detail[i="' + id + '"] [name="whattodo"]'));
 	}
-};
+}

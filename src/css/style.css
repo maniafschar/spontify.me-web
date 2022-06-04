@@ -466,6 +466,7 @@ filters {
 	width: 96%;
 	top: 0.5em;
 	transition: all 0.4s ease-out 0s;
+	z-index: 9;
 }
 
 login registerHint {
@@ -498,6 +499,7 @@ listBody {
 	overflow-x: hidden;
 	overflow-y: auto;
 	display: block;
+	transition: all 0.5s ease-out;
 }
 
 input[type="file"] {
@@ -1068,7 +1070,6 @@ value.checkbox errorHint {
 }
 
 listHeader {
-	height: 3.5em;
 	line-height: 3.5em;
 	text-align: center;
 	z-index: 9;
@@ -2104,6 +2105,7 @@ row > div {
 	margin: 0 0 0 0.5em;
 	height: 6.2em;
 	border: solid 1px rgb(240, 240, 240);
+	transition: all 0.4s ease-out;
 }
 
 auxEvents {
@@ -2117,6 +2119,13 @@ auxEvents > img {
 	height: 8em;
 	border-radius: 4em;
 	float: left;
+}
+
+map {
+	height: 20em;
+	overflow: hidden;
+	position: relative;
+	display: block;
 }
 
 .map {
@@ -2315,7 +2324,6 @@ progressbar {
 
 .highlight {
 	background: rgba(250, 190, 40, 0.7);
-	border-radius: 1em;
 }
 
 homeStatus {

@@ -170,7 +170,8 @@ class initialisation {
 		});
 		ui.on(window, 'wheel', function (event) {
 			if (event.ctrlKey) {
-				event.preventDefault();
+				if (!event.defaultPrevented)
+					event.preventDefault();
 				formFunc.image.zoom(event, event.deltaY);
 			}
 		});
@@ -209,7 +210,7 @@ class initialisation {
 				ui.navigation.openSwipeLeftUI(event);
 			else if (dir == 'right')
 				lists.removeListEntryUI(event);
-		}, 'input,listScroll');
+		}, 'input,listScroll,map');
 		ui.swipe('info', function (dir) {
 			if (dir == 'left')
 				pageLogin.goToRegister();
