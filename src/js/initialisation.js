@@ -144,7 +144,7 @@ class initialisation {
 		});
 	}
 	static initPostProcessor() {
-		ui.css('content > *', 'display', 'none');
+		ui.css('content > .content', 'display', 'none');
 		ui.css('main', 'display', '');
 		if (!global.isBrowser())
 			initialisation.initApp();
@@ -233,8 +233,8 @@ class initialisation {
 					var f = function () {
 						if (ui.cssValue('popup', 'display') != 'none' || ui.q('alert').innerHTML)
 							setTimeout(f, 3000);
-						else
-							communication.notification.open({ message: '<b>' + e.title + '</b><br/>' + e.text + (e.action ? ' ' + ui.l('locations.clickForMoreDetails') : ''), additionalData: { exec: e.action } });
+						//else
+						//communication.notification.open({ message: '<b>' + e.title + '</b><br/>' + e.text + (e.action ? ' ' + ui.l('locations.clickForMoreDetails') : ''), additionalData: { exec: e.action } });
 					};
 					f.call();
 				}
@@ -264,7 +264,6 @@ class initialisation {
 		var wOrg = !window.orientation ? w1 : Math.abs(window.orientation) == 90 ? Math.max(h1, w1) : Math.min(h1, w1), w = wOrg;
 		var f = 16;
 		if (global.getDevice() == 'computer') {
-			ui.css('body', 'background', w > 600 ? 'black' : '');
 			ui.css('.bgWeb', 'display', 'block');
 			if (w < 600)
 				f = w / 600 * f;

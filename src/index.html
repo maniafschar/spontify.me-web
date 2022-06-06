@@ -29,7 +29,6 @@
 	<link rel="icon" type="image/x-icon" href="favicon.ico" />
 	<link rel="preload" as="style" href="css/style.css" />
 	<link rel="preload" as="script" href="js/fmg.js" />
-	<link rel="preload" as="image" href="images/background.jpg" />
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
 	<script defer type="text/javascript" src="cordova.js"></script>
 	<script type="text/javascript" src="js/fmg.js"></script>
@@ -54,9 +53,9 @@
 			transition: all .5s;
 		}
 
-		preloader>span {
+		preloader>img {
 			white-space: nowrap;
-			font-size: 8em;
+			width: 110%;
 			animation: scaleOut 4s ease-in;
 		}
 
@@ -75,14 +74,13 @@
 </head>
 
 <body onload="initialisation.onLoad();">
-	<img src="images/background.jpg" class="bgWeb" />
 	<preloader class="mainBG">
-		<span>findapp</span>
+		<image src="images/logoNew.svg" />
 	</preloader>
 	<descbox onclick="ui.openDescription(event)" style="transform:scale(0);" class="mainBG"></descbox>
 	<add id="addLeft">
-		<buttontext class="bgColor2" onclick="ui.openDescription(event,1)"></buttontext>
-		<buttontext class="bgColor2" onclick="ui.navigation.openHTML('https://blog.findapp.online', 'blog_findapp')">
+		<buttontext class="bgColor" onclick="ui.openDescription(event,1)"></buttontext>
+		<buttontext class="bgColor" onclick="ui.navigation.openHTML('https://blog.findapp.online', 'blog_findapp')">
 			findapp blog</buttontext>
 	</add>
 	<add id="addRight">
@@ -98,50 +96,34 @@
 			<ball3 class="bgColor"></ball3>
 			<ball4 class="bgColor"></ball4>
 		</progressbar>
-		<popup style="display:none;" class="bgColor2"></popup>
+		<popup style="display:none;" class="bgColor"></popup>
 		<alert style="display:none;"></alert>
 		<home class="mainBG"></home>
 		<content>
-			<login class="contentList" style="display:none;"></login>
-			<locations class="contentList" style="display:none;"></locations>
-			<contacts class="contentList" style="display:none;"></contacts>
-			<search class="contentList" style="display:none;"></search>
-			<detail style="display:none;"></detail>
-			<info class="contentList" style="display:none;"></info>
-			<settings class="contentList" style="display:none;"></settings>
-			<settings2 class="contentList" style="display:none;"></settings2>
-			<settings3 class="contentList" style="display:none;padding-top:0.5em;"></settings3>
-			<whattodo class="contentList" style="display:none;"></whattodo>
-			<chat class="contentList mainBG" style="display:none;"></chat>
+			<login class="content"></login>
+			<locations class="content"></locations>
+			<contacts class="content"></contacts>
+			<search class="content"></search>
+			<detail class="content"></detail>
+			<info class="content"></info>
+			<settings class="content"></settings>
+			<settings2 class="content"></settings2>
+			<settings3 class="content" style="padding-top:0.5em;"></settings3>
+			<whattodo class="content"></whattodo>
+			<chat class="content mainBG"></chat>
+			<chatUserList class="mainBG" style="display:none;"></chatUserList>
+			<buttonIcon onclick="ui.toggleHeight('chatUserList')" style="bottom:0;">
+				<badgeChats></badgeChats>
+				<img src="images/buttonChat.png" />
+			</buttonIcon>
+			<buttonIcon onclick="ui.navigation.goTo('home')" style="bottom:0;left:50%;margin-left:-2.25em;">
+				<img src="images/home.svg" />
+			</buttonIcon>
+			<buttonIcon onclick="ui.navigation.goTo('info');" style="bottom:0;right:0;">
+				<img src="images/iconInfo.png" />
+			</buttonIcon>
 		</content>
 		<hint></hint>
-		<menu style="display:none;" class="bgColor2"></menu>
-		<navbar class="bgColor2">
-			<chatUserList class="mainBG" style="display:none;"></chatUserList>
-			<chatButton onclick="ui.toggleHeight('chatUserList')">
-				<badgeChats></badgeChats>
-				<img src="images/buttonChat.png" class="buttonIcon bgColor" />
-			</chatButton>
-			<navbutton onclick="ui.navigation.goTo('home')" class="loggedOff" id="navHome">
-				<img src="images/home.svg" />
-			</navbutton>
-			<navbutton onclick="ui.navigation.goTo('locations')" id="navLocations" class="loggedOff">
-				<img src="images/location.svg" />
-			</navbutton>
-			<navbutton onclick="ui.navigation.goTo('contacts')" name="navElem" style="display:none;" id="navContacts">
-				<img src="images/contact.svg" />
-			</navbutton>
-			<navbutton onclick="ui.navigation.goTo('search')" name="navElem" style="display:none;" id="navSearch">
-				<img src="images/search.svg" />
-			</navbutton>
-			<navbutton onclick="ui.navigation.goTo('whattodo')" name="navElem" style="display:none;" id="navWhatToDo">
-				<img src="images/logo.svg" />
-				<badge name="badgeNotifications" class="bgColor">0</badge>
-			</navbutton>
-			<navbutton onclick="pageLogin.goToLogin()" id="navLogin" class="loggedOff">
-				<img src="images/login.svg" />
-			</navbutton>
-		</navbar>
 	</main>
 </body>
 

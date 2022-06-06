@@ -17,17 +17,7 @@ class pageSettings {
 	static currentSettings = null;
 	static currentSettings3 = null;
 	static templateSettings1 = v =>
-		global.template`<homeImage>
-	<img id="settingsImage" class="bgColor" onclick="ui.navigation.autoOpen(&quot;${v['autoOpen']}&quot;)" ${v['bg']}/>
-</homeImage>
-<form name="myProfile">
-	<field>
-		<label>ID</label>
-		<value>
-			<input value="${v['contact.idDisplay']}" readonly="true" style="background:transparent;border:none;"
-				onclick="this.setSelectionRange(0, this.value.length)" />
-		</value>
-	</field>
+		global.template`<form name="myProfile">
 	<field>
 		<label>${ui.l('pseudonym')}</label>
 		<value>
@@ -129,14 +119,14 @@ class pageSettings {
 		</value>
 	</field>
 	<dialogButtons style="margin-top:1.5em;">
-		<buttontext onclick="communication.login.logoff(false);" class="bgColor">${ui.l('logoff.title')}</buttontext>
-		<div style="${v['forever']};margin-top:1em;"><buttontext onclick="communication.login.logoff(true);" class="bgColor">${ui.l('logoff.forEver')}</buttontext></div>
+		<buttontext onclick="communication.login.logoff(true)" class="bgColor">${ui.l('logoff.title')}</buttontext>
+		<buttontext onclick="ui.navigation.autoOpen(&quot;${v['autoOpen']}&quot;)" class="bgColor">${ui.l('settings.preview')}</buttontext>
 	</dialogButtons>
-	<settingsNav onclick="pageSettings.open2(event);" style="float:right;">></settingsNav>
 	<input type="hidden" name="verified" value="true" />
-</form>`;
+</form>
+<settingsNav onclick="pageSettings.open2(event);" style="float:right;">></settingsNav>`;
 	static templateSettings2 = v =>
-		global.template`<div style="padding-top:1em;">${ui.l('attributesHint')}</div>
+		global.template`<div style="padding-top:1em;text-align:center;">${ui.l('attributesHint')}</div>
 <div>
     <buttontext class="bgColor settings2Button"
         onclick="formFunc.openChoices(&quot;CONTACTATTRIB&quot;,&quot;pageSettings.saveAttributes&quot;);">${ui.l('settings.attributes')}</buttontext>
@@ -205,9 +195,9 @@ class pageSettings {
 <settingsNav onclick="ui.navigation.goTo(&quot;settings&quot;,event,true);" style="float:left;">&lt;</settingsNav>
 <settingsNav onclick="ui.navigation.goTo(&quot;settings3&quot;,event);" style="float:right;">></settingsNav>`;
 	static templateSettings3 = v =>
-		global.template`<buttontext class="bgColor infoButton" onclick="pageInfo.toggleInfoBlock(&quot;#settings3Notifications&quot;)">${ui.l('wtd.myNotifications')}</buttontext>
+		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#settings3Notifications&quot;)">${ui.l('wtd.myNotifications')}</buttontext><br/>
 <div class="notification" id="settings3Notifications" style="display:none;">
-	<div style="text-align:left;margin:0 0.5em 1em 0.5em;float:left;">
+	<div style="margin:0 0.5em 1em 0.5em;">
 		<form name="myProfile3">
 			<input type="checkbox" value="true" name="notificationChat" label="${ui.l('notification.chat')}" ${v['contact.notificationChat']}>
 			<br />
@@ -223,11 +213,9 @@ class pageSettings {
 		</form>
 	</div>
 </div>
-<buttontext class="bgColor infoButton" onclick="pageSettings.toggleBlocked()">${ui.l('contacts.blocked')}</buttontext>
+<buttontext class="bgColor settings2Button" onclick="pageSettings.toggleBlocked()">${ui.l('contacts.blocked')}</buttontext><br/>
 <infoblock id="blocked" style="display:none;"></infoblock>
-<dialogButtons style="padding-top:3em;">
-	<buttontext onclick="pageSettings.deleteProfile()" class="bgColor">${ui.l('settings.delete')}</buttontext>
-</dialogButtons>
+<buttontext onclick="pageSettings.deleteProfile()" class="bgColor settings2Button">${ui.l('settings.delete')}</buttontext><br/>
 <settingsNav onclick="ui.navigation.goTo(&quot;settings2&quot;,event,true)" style="float:left;">&lt;</settingsNav>`;
 
 	static checkUnique() {
@@ -401,7 +389,7 @@ class pageSettings {
 		}
 		var s = pageContact.listContactsInternal(l);
 		var e = ui.q('#blocked');
-		e.innerHTML = s ? s : ui.l('noResults.block');
+		e.innerHTML = s ? s : '<div style="padding:0.5em;">' + ui.l('noResults.block') + '</div>';
 		ui.toggleHeight(e);
 	}
 	static open2() {

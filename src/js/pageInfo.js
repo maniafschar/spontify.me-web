@@ -13,7 +13,7 @@ class pageInfo {
 	static openSection = 4;
 	static sentFeedback = [];
 	static template = v =>
-		global.template`<div style="padding:0.5em 0;">
+		global.template`<div style="padding-top:1.5em;">
     <buttontext class="bgColor infoButton" onclick="pageInfo.toggleInfoBlock(&quot;#info4&quot;);">
         ${ui.l('home.DescLink')}
     </buttontext>
@@ -51,10 +51,10 @@ class pageInfo {
     </infoblock>
 	<buttontext class="bgColor infoButton" onclick="pageInfo.toggleMarketing()"${v.marketingDisplay}>${v.marketingTitle}</buttontext>
 	<infoblock id="info5" style="display:none;width:auto;margin:1em -0.5em;"></infoblock>
-	<buttontext onclick="pageInfo.socialShare();" id="socialShare" class="bgColor2 infoButton">
+	<buttontext onclick="pageInfo.socialShare();" id="socialShare" class="bgColor infoButton">
 		${ui.l('sendSocialShare')}
 	</buttontext>
-	<div style="position:relative;display:block;padding-top:1.5em;">© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>
+	<div style="text-align:center;color:white;padding-top:2em;">© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>
 </div>`;
 	static templateAbout = v =>
 		global.template`<landingsubtitle onclick="pageInfo.toggleInfoBlock(&quot;${v.parent} #landing0&quot;, event);" style="padding-top:0;">
@@ -129,6 +129,7 @@ class pageInfo {
 			if (ui.cssValue('#info' + pageInfo.openSection, 'display') == 'none')
 				setTimeout(function () {
 					ui.q('#info' + pageInfo.openSection).previousElementSibling.click();
+					pageInfo.openSection = -1;
 				}, 50);
 		}
 		ui.html('#infoVersion', ui.l('info.infoOther').replace('{0}', '<span id="infoLocalized"></span>'));

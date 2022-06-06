@@ -6,12 +6,12 @@ import { ui } from './ui';
 export { global };
 
 class global {
-	static appTitle = 'findapp';
+	static appTitle = 'spontify me';
 	static appVersion = '1.0.0';
 	static language = null;
 	static minLocations = 5;
 	static paused = false;
-	static server = 'https://findapp.online/rest/';
+	static server = 'https://spontify.me/rest/';
 	static serverImg = '';
 	static separator = ' · ';
 	static url = '';

@@ -10,66 +10,34 @@ export { pageHome };
 class pageHome {
 	static template = v =>
 		global.template`<div>
-	<a href="loc_" style="position:absolute;opacity:0;">next</a>
-	<homeImage>
-		<img onclick="ui.navigation.goTo(&quot;${v.oc}&quot;);" />
-	</homeImage>
-	<homeHeader onclick="ui.navigation.goTo(&quot;${v.oc}&quot;);">
-		<homeTitle>${global.appTitle}</homeTitle>
+	<homeHeader onclick="ui.navigation.goTo(&quot;${v['oc']}&quot;);">
+		<buttonIcon onclick="ui.navigation.goTo(&quot;search&quot;);" style="left:0;text-align:left;">
+			<img src="images/search.svg" />
+		</buttonIcon>
+		<buttonIcon onclick="ui.navigation.goTo(&quot;settings&quot;);" style="right:0;text-align:right;">
+			<img src="images/contact.svg" />
+		</buttonIcon>
+		<homeTitle><img src="images/logoNew.svg" /></homeTitle>
 		<homeSubTitle>${ui.l('appSubTitle')}</homeSubTitle>
 	</homeHeader>
 	<homeBody>
-		<homeButton class="bgColor button1" onclick="ui.navigation.goTo(&quot;locations&quot;);">
-			<img src="images/location.svg" />
-		</homeButton>
-		<homeButton class="bgColor button2" onclick="pageHome.openLanguage();">
-			<span class="lang">
-				${v.lang}
-			</span>
-		</homeButton>
-		<homeButton class="bgColor button3" onclick="intro.openIntro();">
-			<img src="images/intro.svg" />
-		</homeButton>
-		<homeButton class="bgColor button4" onclick="ui.navigation.goTo(&quot;login&quot;);">
-			<img src="images/login.svg" />
-		</homeButton>
-		<homeButtonSmall class="middle">
-			<img onclick="ui.navigation.goTo(&quot;info&quot;);" class="bgColor2" src="images/iconInfo.png" />
-		</homeButtonSmall>
-	</homeBody>
-</div>`;
-	static templateLoggedIn = v =>
-		global.template`<div>
-	<homeImage>
-		<img onclick="ui.navigation.goTo(&quot;${v['oc']}&quot;);" />
-	</homeImage>
-	<homeHeader onclick="ui.navigation.goTo(&quot;${v['oc']}&quot;);">
-		<homeTitle><span>${global.appTitle}</span></homeTitle>
-		<homeSubTitle><homeTown></homeTown> ${ui.l('homeWelcome')}
-			<homeUsername>${v['username']}</homeUsername>!
-		</homeSubTitle>
-	</homeHeader>
-	<homeBody>
-		<homeButton class="bgColor button1" onclick="ui.navigation.goTo(&quot;locations&quot;);">
-			<badge name="badgeLocations" class="bgColor2 pulse" style="left:-1.5em;top:-1.5em;">0</badge>
-			<img src="images/location.svg" />
-		</homeButton>
-		<homeButton class="bgColor button2" onclick="ui.navigation.goTo(&quot;contacts&quot;);">
-			<badge name="badgeContacts" class="bgColor2 pulse" style="top:-1.5em;right:-1.5em;">0</badge>
-			<img src="images/contact.svg" />
-		</homeButton>
-		<homeButton class="bgColor button3" onclick="ui.navigation.goTo(&quot;search&quot;);">
-			<img src="images/search.svg" />
-		</homeButton>
-		<homeButton class="bgColor button4" onclick="ui.navigation.goTo(&quot;whattodo&quot;);">
+		<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;whattodo&quot;);" style="width:80%;">
 			<badge name="badgeNotifications" class="bgColor2 pulse" style="right:-1.5em;top:8em;">0</badge>
-			<img src="images/logo.svg" />
-		</homeButton>
-		<homeButtonSmall>
-			<img onclick="ui.navigation.goTo(&quot;info&quot;);" class="bgColor2" src="images/iconInfo.png" />
-		</homeButtonSmall>
+			${ui.l('wtd.todayIWant')}<img src="images/logo.svg" />
+		</buttontext><br/>
+		<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;locations&quot;);" style="width:70%;">
+			<badge name="badgeLocations" class="bgColor2 pulse" style="left:-1.5em;top:-1.5em;">0</badge>
+			${ui.l('events.title')}<img src="images/location.svg" />
+		</buttontext><br/>
+		<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;contacts&quot;);" style="width:60%;">
+			<badge name="badgeContacts" class="bgColor2 pulse" style="top:-1.5em;right:-1.5em;">0</badge>
+			${ui.l('contacts.title')}<img src="images/contact.svg" />
+		</buttontext>
 		<homeStatus onclick="pageWhatToDo.wtd.open()"></homeStatus>
 	</homeBody>
+	<buttonIcon onclick="ui.navigation.goTo(&quot;info&quot;);" style="bottom:0;width:100%;">
+		<img src="images/iconInfo.png" />
+	</buttonIcon>
 </div>`;
 	static init() {
 		var e = ui.q('home');
@@ -80,7 +48,7 @@ class pageHome {
 		v.username = contact.pseudonym ? contact.pseudonym : '';
 		v.oc = contact.id ? 'settings' : 'login';
 		v.lang = global.language;
-		e.innerHTML = contact.id ? pageHome.templateLoggedIn(v) : pageHome.template(v);
+		e.innerHTML = pageHome.template(v);
 		ui.attr(e, 'loggedOn', contact.id);
 		pageHome.initHomeImage();
 		ui.addFastButton('home');

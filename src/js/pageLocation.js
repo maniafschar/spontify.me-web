@@ -60,12 +60,12 @@ class pageLocation {
 </rating>
 </icons>`;
 	static templateDetail = v =>
-		global.template`<detailImg ${v.classBGImg}>
+		global.template`<detailImg>
 		<img src="${v.image}" />
-		<detailtitle class="bgColor2">
+		<detailTitle>
 			<title>${v.name}</title>
 			<elementNo>${v.elementNo}</elementNo>
-		</detailtitle>
+		</detailTitle>
 		<detailCompass>
 			<span a="${v.angle}" style="transform:rotate(${v.angle}deg);">&uarr;</span>
 			${v.distance}<km />

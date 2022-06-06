@@ -270,9 +270,13 @@ class ui {
 		},
 		getActiveID() {
 			var id = 'home';
+			if (ui.cssValue(id, 'display') != 'none') {
+				ui.css('content>.content', 'display', 'none');
+				return id;
+			}
 			var e = ui.q('content>[class*="SlideIn"]');
 			if (!e)
-				e = ui.q('content>:not([style*="none"])');
+				e = ui.q('content>.content:not([style*="none"])');
 			if (e)
 				id = e.nodeName.toLowerCase();
 			if (id == 'whattodo' && ui.q('notifications:not([style*="none"])'))
@@ -350,18 +354,21 @@ class ui {
 				if ((id == 'locations' || id == 'contacts') && oldID != id && !ui.q(id + ' row'))
 					ui.navigation.toggleMenu(null, id);
 			});
-			var e = ui.q('navbar').children;
 			var s = id;
 			if (s == 'detail' && oldID == 'notifications')
 				s = 'whattodo';
 			else if (s != 'whattodo' && s != 'locations' && s != 'contacts' && s != 'whattodo' && s != 'login' && s != 'info' && s != 'search' && s.indexOf('settings') < 0)
 				s = oldID;
-			for (var i = 1; i < e.length; i++) {
-				if (e[i].getAttribute && e[i].getAttribute('id')) {
-					if (e[i].getAttribute('id').toLowerCase().indexOf(s) > 2)
-						ui.classAdd(e[i], 'active');
-					else
-						ui.classRemove(e[i], 'active');
+			var e = ui.q('navbar');
+			if (e) {
+				e = e.children;
+				for (var i = 1; i < e.length; i++) {
+					if (e[i].getAttribute && e[i].getAttribute('id')) {
+						if (e[i].getAttribute('id').toLowerCase().indexOf(s) > 2)
+							ui.classAdd(e[i], 'active');
+						else
+							ui.classRemove(e[i], 'active');
+					}
 				}
 			}
 			if (oldID != id) {
@@ -486,6 +493,8 @@ class ui {
 					activeID = 'whattodo';
 			}
 			var e = ui.q('menu');
+			if (!e)
+				return;
 			if (activeID == 'locations') {
 				if (user.contact)
 					ui.html(e, ui.templateMenuLocation());
@@ -498,8 +507,10 @@ class ui {
 			var e2 = ui.qa('menu [name="badgeNotifications"]');
 			if (e2) {
 				var e3 = ui.q('navbar [name="badgeNotifications"]');
-				ui.html(e2, e3.innerHTML);
-				ui.css(e2, 'display', e3.innerHTML > 0 ? 'block' : 'none');
+				if (e3) {
+					ui.html(e2, e3.innerHTML);
+					ui.css(e2, 'display', e3.innerHTML > 0 ? 'block' : 'none');
+				}
 			}
 			var b = e.style.display == 'none';
 			ui.navigation.animation(e, 'menuSlide' + (b ? 'In' : 'Out'), function () {

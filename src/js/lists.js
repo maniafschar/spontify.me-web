@@ -11,7 +11,7 @@ class lists {
 
 	static templateList = v =>
 		global.template`<listHeader onclick="${v.action}">${v.img}<filters style="transform:scale(0);"></filters><listTitle></listTitle>${v.map}</listHeader>
-<listScroll><a class="bgColor2"></a></listScroll><listBody>${v.groups}<listResults></listResults></listBody>`;
+<listScroll><a class="bgColor"></a></listScroll><listBody>${v.groups}<listResults></listResults></listBody>`;
 
 	static execFilter() {
 		var activeID = ui.navigation.getActiveID();
@@ -141,7 +141,7 @@ class lists {
 		if (!e.innerHTML) {
 			var v = {};
 			v.action = action ? action : 'lists.openFilter(event, ' + (id == 'locations' ? 'pageLocation' : id == 'contacts' ? 'pageContact' : 'pageSearch') + '.getFilterFields)';
-			v.img = action ? '' : '<img src="images/search.svg" class="showFilterButton buttonIcon bgColor2"/>';
+			v.img = action ? '' : '<buttonIcon style="left:0;"><img src="images/search.svg"/></buttonIcon>';
 			if (id == 'contacts')
 				v.groups = '<groups style="display:none;"></groups>';
 			else if (id == 'locations')

@@ -11,7 +11,7 @@ export { pageSearch };
 
 class pageSearch {
 	static templateSearch = v =>
-		global.template`<div style="padding-right:0.5em;">
+		global.template`<div style="padding:0 0.5em;">
 	<field style="margin-bottom:0;">
 		<label>${ui.l('search.type')}</label>
 		<value>

@@ -4,19 +4,19 @@
 	<style type="text/css">
 		<![CDATA[
 		.mouth {
-			stroke: white;
+			stroke: rgb(69, 109, 166);
 			fill: none;
 			stroke-width: 10px;
 			stroke-linecap: round;
 		}
 		.left-eye {
-			stroke: white;
+			stroke: rgb(69, 109, 166);
 			fill: none;
 			stroke-width: 8px;
 			stroke-linecap: round;
 		}
 		.right-eye {
-			fill: white;
+			fill: rgb(69, 109, 166);
 		}
     ]]>
 	</style>

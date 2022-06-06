@@ -51,47 +51,39 @@ class pageContact {
 </icons>`;
 	static templateDetail = v =>
 		global.template`${v.present}
-		<detailImg ${v.classBGImg} i="${v.id}">
+		<buttonIcon onclick="pageChat.open(${v.id})" style="right:1em;"><img src="images/buttonChat.png"/></buttonIcon>
+		<buttonIcon onclick="pageContact.toggleBlockUser(${v.id})" style="right:1em;top:6em;"><img src="images/buttonChat.png"/></buttonIcon>
+		<detailImg>
 			<img src="${v.image}" />
-			<detailtitle class="bgColor2">
+			<detailTitle>
 				<title>
-					${v.pseudonym}
+					${v.pseudonym}${v.ageDisplay}
 				</title>
 				<subtitle>
 					${v.idDisplay}
 				</subtitle>
-				<elementNo>
-					${v.elementNo}
-				</elementNo>
-			</detailtitle>
+			</detailTitle>
 			<detailDistance>
 				${v.gender}
 				${v.distance}<km />
 			</detailDistance>
 		</detailImg>
 		<text>
-			${v.birthday}
 			${v.birthdayToday}
-		</text>
-		<text onclick="rating.open(${v.id},&quot;contact&quot;,event);" style="cursor:pointer;" style="border-top:solid 1px rgb(240,240,240);${v.dispBody}">
 			${v.message}
 			${v.attributes}
 			${v.budget}
-			${v.rating}
 			${v.aboutMe}
 		</text>
 		<detailButtons>
-			<buttontext class="bgColor${v.bgFriends}${v.hideMe}" name="buttonBlock"
-				onclick="pageContact.toggleBlockUser(${v.id});">${ui.l('contacts.relation')}</buttontext>
-			<buttontext class="bgColor${v.blocked}${v.hideMe}" onclick="pageChat.open(${v.id});" name="buttonChat">${ui.l('chat.title')}</buttontext>
-			<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonCopy"
-				onclick="pageChat.doCopyLink(event,&quot;p=${v.id}&quot;);">${ui.l('share')}</buttontext>
-			<buttontext class="bgColor${v.blocked}${v.hideMe}${v.hideGroups}" name="buttonGroups"
-				onclick="pageContact.groups.toggleGroups(${v.id});">${ui.l('group.action')}</buttontext>
-			<buttontext class="bgColor${v.blocked}" name="buttonEvents"
-				onclick="pageLocation.event.toggle(${v.id});">${ui.l('events.title')}</buttontext>
-			<buttontext class="bgColor${v.blocked}" name="buttonLocation"
-				onclick="pageContact.toggleLocation(${v.id});">${ui.l('locations.title')}</buttontext>
+			<buttonIcon name="buttonCopy"
+				onclick="pageChat.doCopyLink(event,&quot;p=${v.id}&quot;);"><img src="images/share.svg"/></buttonIcon>
+			<buttonIcon name="buttonGroups"
+				onclick="pageContact.groups.toggleGroups(${v.id});"><img src="images/group.svg"/></buttonIcon>
+			<buttonIcon name="buttonEvents"
+				onclick="pageLocation.event.toggle(${v.id});"><img src="images/event.svg"/></buttonIcon>
+			<buttonIcon name="buttonLocation"
+				onclick="pageContact.toggleLocation(${v.id});"><img src="images/location.svg"/></buttonIcon>
 		</detailButtons>
 		<text name="block" class="collapsed">
 			<detailTogglePanel>
@@ -287,13 +279,10 @@ class pageContact {
 		v.classBGImg = 'class="bgColor2"';
 		v.classBGIcons = 'bgColor';
 		if (v.birthday[0]) {
+			if (v.age)
+				v.ageDisplay = ' (' + v.age + ')';
 			if (v.birthday[1])
 				v.birthdayToday = '<div class="highlight">' + ui.l('contacts.birthdayToday') + '</div>';
-			v.birthday = v.birthday[0].split(global.separator);
-			if (v.birthday.length == 1)
-				v.birthday = v.birthday[0];
-			else
-				v.birthday = v.birthday[0] + '<br/>' + v.birthday[1];
 		} else
 			v.birthday = '';
 		if (v.guide)
@@ -315,6 +304,8 @@ class pageContact {
 			v.buddy += '<buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + idIntern + ');">' + ui.l('contacts.requestFriendship') + '</buttontext>';
 		v.buddy += '</div>';
 		v.budget = pageLocation.budgetLabel(v.budget);
+		if (v.budget)
+			v.budget = '<label class="multipleLabel">' + v.budget + '</label>';
 		pageContact.addWTDMessage(v);
 		if (!details.getNextNavElement(true, v.id))
 			v.hideNext = 'display:none;';
@@ -358,7 +349,7 @@ class pageContact {
 		if (!v.message && !v.attributes && !v.aboutMe && !v.rating)
 			v.dispBody = 'display:none;';
 		if (v.aboutMe)
-			v.aboutMe = ui.l('settings.aboutMe') + ': ' + v.aboutMe;
+			v.aboutMe = '<text class="bgColor" style="margin-top:1em;">' + v.aboutMe + '</text>';
 		var sep = pageContact.templateDetail(v);
 		if (v.contactLink.status == 'Pending' && v.contactLink.contactId != user.contact.id)
 			setTimeout(function () {
