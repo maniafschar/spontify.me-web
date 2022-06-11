@@ -1005,6 +1005,7 @@ ratingSelection full {
 	left: 0;
 	overflow: hidden;
 	top: 0;
+	color: rgba(246, 255, 187, 0.8);
 }
 
 ratingSelection span {
@@ -1445,10 +1446,6 @@ homeHeader {
 	color: white;
 }
 
-homeHeader buttonIcon {
-	width: 10em;
-}
-
 homeTitle {
 	white-space: nowrap;
 	display: inline-block;
@@ -1502,7 +1499,7 @@ buttontext {
 buttonIcon {
 	position: absolute;
 	cursor: pointer;
-	display: inline-block;
+	display: flex;
 	padding: 0.5em;
 	text-align: center;
 	z-index: 99;
@@ -1879,6 +1876,14 @@ detail detailHeader action matchIndicator span {
 	border: solid 0.75em rgba(255, 255, 255, 0.6);
 }
 
+detail detailRating {
+	font-size: 1.5em;
+	margin: 1em 0 0.75em 0;
+	display: block;
+	position: relative;
+	cursor:pointer;
+}
+
 openTimes row {
 	height: 1.6em;
 	width: 10em;
@@ -1996,7 +2001,7 @@ progressbar {
 }
 
 .highlight {
-	background: rgba(246, 255, 187, 0.7);
+	background: rgba(246, 255, 187, 0.8);
 }
 
 homeStatus {

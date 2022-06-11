@@ -30,7 +30,7 @@ class pageLocation {
 		<div>
 			<text class="${v.classParticipate}">
 				<title>${v.name}</title>
-				${v._message}
+				${v._message}<matchIndicator>${v.matchIndicator}</matchIndicator>
 			</text>
 		</div>
 		<imagelist>
@@ -49,7 +49,7 @@ class pageLocation {
 	<action>
 		<buttonIcon style="position:relative;" onclick="pageLocation.openChat(${v.id})"><img src="images/chat.svg"/></buttonIcon>
 		<buttonIcon style="position:relative;margin-top:1em;" idFav="${v.locationFavorite.id ? v.locationFavorite.id : ''}" fav="${v.locationFavorite.favorite ? true : ''}" onclick="pageLocation.toggleFavorite(${v.id})"><img src="images/buttonFavorite.png"/></buttonIcon>
-		<matchIndicator></matchIndicator>
+		<matchIndicator>${v.matchIndicator}</matchIndicator>
 		<detailCompass>
 			<span a="${v.angle}" style="transform:rotate(${v.angle}deg);">&uarr;</span>
 			<km>${v.distance}</km>
@@ -61,7 +61,7 @@ class pageLocation {
 </text>
 ${v.eventDetails}
 ${v.description}
-<text style="cursor:pointer;" onclick="rating.open(${v.locID},&quot;location&quot;,event)">
+<text>
 	${v.bonus}
 	${v.attributes}
 	${v.budget}
@@ -391,27 +391,6 @@ ${v.hint}
 		for (var i = 0; i < e2.childNodes.length; i++)
 			e.insertBefore(e2.childNodes[i], null);
 	}
-	static budgetLabel(budget) {
-		var p = '';
-		if (budget) {
-			var userBudget = user.contact.budget || '';
-			budget = budget.split('\u0015');
-			for (var i = 0; i < budget.length; i++) {
-				var s = '', i2 = 0;
-				var max = 1 + parseInt(budget[i]);
-				for (; i2 < max; i2++)
-					s += ui.l('budget');
-				if (max < 3) {
-					s += '<span style="opacity:0.3;">';
-					for (; i2 < 3; i2++)
-						s += ui.l('budget');
-					s += '</span>';
-				}
-				p += '<label class="multipleLabel' + (userBudget.indexOf(budget[i]) > -1 ? ' highlight' : '') + '">' + s + '</label>';
-			}
-		}
-		return p;
-	}
 	static closeLocationInputHelper() {
 		var e = ui.q('#locationNameInputHelper');
 		if (e.innerHTML)
@@ -492,10 +471,12 @@ ${v.hint}
 			v.telOpenTag = '<a href="tel:' + v.tel.replace(/[^+\d]*/g, '') + '" style="color:black;">';
 			v.telCloseTag = '</a>';
 		}
-		v.attributes = pageLocation.getAttributes(v, 'detail');
-		v.budget = pageLocation.budgetLabel(v.budget);
+		v.attr = ui.getAttributes(v, 'detail');
+		v.budget = v.attr.budget;
+		v.matchIndicator = v.attr.totalMatch + '/' + v.attr.total;
+		v.attributes = v.attr.text;
 		if (v.rating > 0)
-			v.rating = '<div><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></ratingSelection></div>';
+			v.rating = '<detailRating onclick="rating.open(' + v.locID + ',&quot;location&quot;,event)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></ratingSelection></detailRating>';
 		v.address = v.address.replace(/\n/g, '<br />');
 		if (v.ownerId && v.url)
 			v.description = (v.description ? v.description + ' ' : '') + ui.l('locations.clickForMoreDetails');
@@ -1243,40 +1224,6 @@ ${v.hint}
 		lists.execFilter();
 		pageLocation.scrollMap();
 	}
-	static getAttributes(v, style) {
-		var s = '';
-		for (var i = 0; i < ui.categories.length; i++) {
-			if (v.category.indexOf(i) > -1) {
-				s += style == 'list' ? ', ' + ui.categories[i].label : '<label class="multipleLabel">' + ui.categories[i].label + '</label>';
-				if (v['attr' + i]) {
-					var locationAttr = v['attr' + i].split('\u0015');
-					var userAttr = user.contact['attr' + i] || '';
-					for (var i2 = 0; i2 < locationAttr.length; i2++) {
-						var a = ui.categories[i].subCategories[parseInt(locationAttr[i2], 10)];
-						if (a) {
-							if (style == 'list')
-								s += ', ' + a;
-							else
-								s += userAttr.indexOf(locationAttr[i2]) > -1 ? '<label class="multipleLabel highlight">' + a + '</label>' : '<label class="multipleLabel">' + a + '</label>';
-						}
-					}
-				}
-				if (v['attr' + i + 'Ex']) {
-					if (s)
-						s += global.separator;
-					var a = v['attr' + i + 'Ex'].toLowerCase().split(',');
-					var userAttr = user.contact['attr' + i + 'Ex'] || '';
-					for (var i = 0; i < a.length; i++) {
-						if (style == 'list')
-							s += ', ' + a[i].trim();
-						else
-							s += userAttr.indexOf(',' + a[i].trim() + ',') > -1 ? '<label class="multipleLabel highlight">' + a[i].trim() + '</label>' : '<label class="multipleLabel">' + a[i].trim() + '</label>';
-					}
-				}
-			}
-		}
-		return s && style == 'list' ? s.substring(2) : '<div>' + s + '</div>';
-	}
 	static getFilterFields() {
 		var l = lists.data[ui.navigation.getActiveID()];
 		var r = [], r2 = [], r3 = [], r4 = [], E = [], N = [], W = [], S = [], own = 0;
@@ -1398,8 +1345,12 @@ ${v.hint}
 		}
 	}
 	static listInfos(v) {
+
+		v.attr = ui.getAttributes(v, 'list');
+		if (v.attr.total && v.attr.totalMatch / v.attr.total > 0)
+			v.matchIndicator = parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5) + '%';
 		if (!v._message1)
-			v._message1 = pageLocation.getAttributes(v, 'list');
+			v._message1 = v.attr.text;
 		if (!v._message2)
 			v._message2 = v.description;
 		if (v.parkingOption) {
@@ -1439,7 +1390,7 @@ ${v.hint}
 			else
 				v.image = 'images/location.svg" style="padding: 1em; ';
 			if (v.bonus)
-				v.present = '<badge class="bgBonus" style="display:block;"><img src="images/iconPresent.png" class="present"></badge>';
+				v.present = '<badge class="bgBonus" style="display:block;"><img src="images/present.svg" class="present"></badge>';
 			v.type = 'Location';
 			v.render = 'pageLocation.detailLocationEvent';
 			v._message = v.time ? v.time + '<br/>' : '';
@@ -1756,10 +1707,6 @@ ${v.hint}
 		});
 	}
 	static toggleMap() {
-		if (!user.contact) {
-			pageLocation.actionNotLoggedIn();
-			return;
-		}
 		if (ui.q('map').getAttribute('created')) {
 			ui.classRemove('locations listResults row div.highlight', 'highlight');
 			if (ui.cssValue('map', 'display') == 'none') {
@@ -1787,6 +1734,7 @@ ${v.hint}
 					pageLocation.scrollMap();
 					pageLocation.toggleMap();
 					ui.on('locations listBody', 'scroll', pageLocation.scrollMap);
+					lists.toggleFilter();
 				};
 				script.src = r;
 				document.head.appendChild(script);

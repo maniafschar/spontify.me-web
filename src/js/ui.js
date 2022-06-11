@@ -89,6 +89,100 @@ class ui {
 			e[i].removeAttribute('onclick');
 		}
 	}
+	static getAttributes(compare, style) {
+		var result = {
+			budget: '',
+			text: '',
+			total: 0,
+			totalMatch: 0
+		};
+		var a, userAttr = user.contact.attrInterest || '';
+		if (compare.idDisplay) {
+			if (userAttr)
+				result.total += userAttr.split('\u0015').length;
+			if (compare.attr) {
+				a = compare.attr.split('\u0015');
+				for (var i = 0; i < a.length; i++) {
+					var attr = ui.attributes[parseInt(a[i], 10)];
+					if (userAttr.indexOf(a[i]) > -1) {
+						result.text += style == 'list' ? ', ' + attr : '<label class="multipleLabel highlight">' + attr + '</label>';
+						result.totalMatch++;
+					} else if (style != 'list')
+						result.text += '<label class="multipleLabel">' + attr + '</label>';
+				}
+			}
+			userAttr = user.contact.attrInterestEx ? ',' + user.contact.attrInterestEx.toLowerCase() + ',' : '';
+			if (userAttr)
+				result.total += userAttr.split(',').length - 2;
+			if (compare.attrEx) {
+				a = compare.attrEx.toLowerCase().split(',');
+				for (var i = 0; i < a.length; i++) {
+					if (userAttr.indexOf(',' + a[i].trim() + ',') > -1) {
+						result.text += style == 'list' ? ', ' + a[i].trim() : '<label class="multipleLabel highlight">' + a[i].trim() + '</label>';
+						result.totalMatch++;
+					} else if (style != 'list')
+						result.text += '<label class="multipleLabel">' + a[i].trim() + '</label>';
+				}
+			}
+		}
+		for (var i = 0; i < ui.categories.length; i++) {
+			userAttr = user.contact['attr' + i] || '';
+			if (userAttr)
+				result.total += userAttr.split('\u0015').length;
+			if (compare['attr' + i] || compare['attr' + i + 'Ex']) {
+				result.text += style == 'list' ? ', ' + ui.categories[i].label : '</div><div><label class="multipleLabel' + (userAttr ? ' highlight' : '') + '">' + ui.categories[i].label + '</label>';
+				if (userAttr)
+					result.totalMatch++;
+			}
+			if (compare['attr' + i]) {
+				a = compare['attr' + i].split('\u0015');
+				for (var i2 = 0; i2 < a.length; i2++) {
+					var attr = ui.categories[i].subCategories[parseInt(a[i2], 10)];
+					if (userAttr.indexOf(a[i2]) > -1) {
+						result.text += style == 'list' ? ', ' + attr : '<label class="multipleLabel highlight">' + attr + '</label>';
+						result.totalMatch++;
+					} else if (style != 'list')
+						result.text += '<label class="multipleLabel">' + attr + '</label>';
+				}
+			}
+			userAttr = user.contact['attr' + i + 'Ex'] ? ',' + user.contact['attr' + i + 'Ex'].toLowerCase() + ',' : '';
+			if (userAttr)
+				result.total += userAttr.split(',').length - 2;
+			if (compare['attr' + i + 'Ex']) {
+				a = compare['attr' + i + 'Ex'].split(',');
+				for (var i2 = 0; i2 < a.length; i2++) {
+					if (userAttr.indexOf(',' + a[i2] + ',') > -1) {
+						result.text += style == 'list' ? ', ' + a[i2].trim() : '<label class="multipleLabel highlight">' + a[i2].trim() + '</label>';
+						result.totalMatch++;
+					} else if (style != 'list')
+						result.text += '<label class="multipleLabel">' + a[i2].trim() + '</label>';
+				}
+			}
+		}
+		if (user.contact.budget)
+			result.total += user.contact.budget.split('\u0015').length;
+		if (compare.budget) {
+			var userBudget = user.contact.budget || '';
+			var b = compare.budget.split('\u0015');
+			for (var i = 0; i < b.length; i++) {
+				var s = '', i2 = 0;
+				var max = 1 + parseInt(b[i]);
+				for (; i2 < max; i2++)
+					s += ui.l('budget');
+				if (max < 3) {
+					s += '<span style="opacity:0.3;">';
+					for (; i2 < 3; i2++)
+						s += ui.l('budget');
+					s += '</span>';
+				}
+				result.budget += '<label class="multipleLabel' + (userBudget.indexOf(b[i]) > -1 ? ' highlight' : '') + '">' + s + '</label>';
+			}
+			result.totalMatch += result.budget.split('highlight').length - 1;
+		}
+		if (result.text)
+			result.text = style == 'list' ? result.text.substring(2) : '<div>' + result.text + '</div>';
+		return result;
+	}
 	static getEvtPos(e, horizontal) {
 		if (!e)
 			e = window.event;

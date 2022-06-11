@@ -290,13 +290,13 @@ ${v.aboutMe}
 		} else
 			v.buddy += '<buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + idIntern + ');">' + ui.l('contacts.requestFriendship') + '</buttontext>';
 		v.buddy += '</div>';
-		v.budget = pageLocation.budgetLabel(v.budget);
 		pageContact.addWTDMessage(v);
 		if (!details.getNextNavElement(true, v.id))
 			v.hideNext = 'display:none;';
 		if (!details.getNextNavElement(false, v.id))
 			v.hidePrevious = 'display:none;';
-		v.attr = pageContact.getAttributes(v, 'detail');
+		v.attr = ui.getAttributes(v, 'detail');
+		v.budget = v.attr.budget;
 		v.attributes = v.attr.text;
 		v.matchIndicator = v.attr.totalMatch + '/' + v.attr.total;
 		if (v.gender) {
@@ -379,81 +379,6 @@ ${v.aboutMe}
 		}
 		lists.execFilter();
 	}
-	static getAttributes(contact, style) {
-		var result = {
-			text: '',
-			total: 0,
-			totalMatch: 0
-		};
-		var a, userAttr = user.contact.attrInterest || '';
-		if (userAttr)
-			result.total += userAttr.split('\u0015').length;
-		if (contact.attr) {
-			a = contact.attr.split('\u0015');
-			for (var i = 0; i < a.length; i++) {
-				var attr = ui.attributes[parseInt(a[i], 10)];
-				if (userAttr.indexOf(a[i]) > -1) {
-					result.text += style == 'list' ? ', ' + attr : '<label class="multipleLabel highlight">' + attr + '</label>';
-					result.totalMatch++;
-				} else if (style != 'list')
-					result.text += '<label class="multipleLabel">' + attr + '</label>';
-			}
-		}
-		userAttr = user.contact.attrInterestEx ? ',' + user.contact.attrInterestEx.toLowerCase() + ',' : '';
-		if (userAttr)
-			result.total += userAttr.split(',').length - 2;
-		if (contact.attrEx) {
-			a = contact.attrEx.toLowerCase().split(',');
-			for (var i = 0; i < a.length; i++) {
-				if (userAttr.indexOf(',' + a[i].trim() + ',') > -1) {
-					result.text += style == 'list' ? ', ' + a[i].trim() : '<label class="multipleLabel highlight">' + a[i].trim() + '</label>';
-					result.totalMatch++;
-				} else if (style != 'list')
-					result.text += '<label class="multipleLabel">' + a[i].trim() + '</label>';
-			}
-		}
-		for (var i = 0; i < ui.categories.length; i++) {
-			userAttr = user.contact['attr' + i] || '';
-			if (userAttr)
-				result.total += userAttr.split('\u0015').length;
-			if (contact['attr' + i] || contact['attr' + i + 'Ex']) {
-				result.text += style == 'list' ? ', ' + ui.categories[i].label : '</div><div><label class="multipleLabel' + (userAttr ? ' highlight' : '') + '">' + ui.categories[i].label + '</label>';
-				if (userAttr)
-					result.totalMatch++;
-			}
-			if (contact['attr' + i]) {
-				a = contact['attr' + i].split('\u0015');
-				for (var i2 = 0; i2 < a.length; i2++) {
-					var attr = ui.categories[i].subCategories[parseInt(a[i2], 10)];
-					if (userAttr.indexOf(a[i2]) > -1) {
-						result.text += style == 'list' ? ', ' + attr : '<label class="multipleLabel highlight">' + attr + '</label>';
-						result.totalMatch++;
-					} else if (style != 'list')
-						result.text += '<label class="multipleLabel">' + attr + '</label>';
-				}
-			}
-			userAttr = user.contact['attr' + i + 'Ex'] ? ',' + user.contact['attr' + i + 'Ex'].toLowerCase() + ',' : '';
-			if (userAttr)
-				result.total += userAttr.split(',').length - 2;
-			if (contact['attr' + i + 'Ex']) {
-				a = contact['attr' + i + 'Ex'].split(',');
-				for (var i2 = 0; i2 < a.length; i2++) {
-					if (userAttr.indexOf(',' + a[i2] + ',') > -1) {
-						result.text += style == 'list' ? ', ' + a[i2].trim() : '<label class="multipleLabel highlight">' + a[i2].trim() + '</label>';
-						result.totalMatch++;
-					} else if (style != 'list')
-						result.text += '<label class="multipleLabel">' + a[i2].trim() + '</label>';
-				}
-			}
-		}
-		if (user.contact.budget)
-			result.total += user.contact.budget.split('\u0015').length;
-		if (contact.budget)
-			result.totalMatch += contact.budget.split('highlight').length - 1;
-		if (result.text)
-			result.text = style == 'list' ? result.text.substring(2) : '<div>' + result.text + '</div>';
-		return result;
-	}
 	static getBirthday(b, bd) {
 		var birth = '', present = '', age = 0;
 		if (b) {
@@ -465,7 +390,7 @@ ${v.aboutMe}
 				birth = global.date.formatDate(b);
 				birth = ui.l('contacts.bday').replace('{0}', birth.substring(0, birth.lastIndexOf(' ')));
 				if (d2.getMonth() == d1.getMonth() && d2.getDate() == d1.getDate())
-					present = '<img src="images/iconBirthday.png"/>';
+					present = '<img src="images/present.svg"/>';
 			}
 		}
 		return [birth, present, age];
@@ -755,7 +680,7 @@ ${v.aboutMe}
 			else
 				v.image = 'images/contact.svg" style="padding:1em;';
 			v.classBGImg = v.imageList ? '' : 'bgColor';
-			v.attr = pageContact.getAttributes(v, 'list');
+			v.attr = ui.getAttributes(v, 'list');
 			if (v.attr.total && v.attr.totalMatch / v.attr.total > 0)
 				v.matchIndicator = parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5) + '%';
 			if (!v._message1)

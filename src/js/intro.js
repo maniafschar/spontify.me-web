@@ -90,7 +90,7 @@ class intro {
 			intro.steps.push({ desc: 'bluetooth', pos: '10%,18em', size: '80%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'top', action: '' });
 			intro.steps.push({ desc: 'listMenu', pos: '10%,-12em', size: '80%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'bottom', action: 'ui.navigation.goTo("locations")' });
 			intro.steps.push({ desc: 'listExplained', pos: '10%,10em', size: '80%,auto', hinky: 'right:2em;', hinkyClass: 'top', action: 'intro.loadLocations()' });
-			intro.steps.push({ desc: 'listFilter', pos: '10%,50%', size: '80%,auto', hinky: 'left:2em;', hinkyClass: 'top', action: 'lists.openFilter(event, pageLocation.getFilterFields)' });
+			intro.steps.push({ desc: 'listFilter', pos: '10%,50%', size: '80%,auto', hinky: 'left:2em;', hinkyClass: 'top', action: 'lists.toggleFilter(event, pageLocation.getFilterFields)' });
 			intro.steps.push({ desc: 'detail', pos: '10%,4em', size: '80%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'bottom', action: 'var e=ui.q("locations row");if(e)e.click();intro.introMode=2' });
 			intro.steps.push({ desc: 'register', pos: '10%,-5em', size: '80%,auto', hinky: 'left:2em;', hinkyClass: 'top', action: 'pageLogin.lastTab=3;ui.navigation.goTo("login", null, true)' });
 		}

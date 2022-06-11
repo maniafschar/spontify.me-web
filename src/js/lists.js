@@ -53,11 +53,12 @@ class lists {
 			s += '<br/><br/>' + ui.l('noResults.searchWithoutKeywords') + '<br/><br/><buttontext onclick="pageSearch.repeatSearch()" class="bgColor">' + ui.l('noResults.repeat') + '</buttontext>';
 		return '<noResult>' + s.replace(/\{0\}/g, ui.l(activeID + '.title')).replace('{1}', '') + '</noResult>';
 	}
-	static openFilter(event, html) {
+	static toggleFilter(event, html) {
 		var activeID = ui.navigation.getActiveID();
-		if (!lists.data[activeID] || event.target.nodeName == 'LABEL' || event.target.nodeName == 'BUTTONTEXT' || ui.parents(event.target, 'map'))
+		var e = event ? event.target.nodeName : null;
+		if (!lists.data[activeID] || e == 'LABEL' || e == 'BUTTONTEXT' || event && ui.parents(event.target, 'map'))
 			return;
-		var e = ui.q(activeID + ' filters');
+		e = ui.q(activeID + ' filters');
 		if (!e.innerHTML) {
 			e.innerHTML = html.call();
 			formFunc.initFields(activeID + ' filters');
@@ -142,7 +143,7 @@ class lists {
 		var e = ui.q(id);
 		if (!e.innerHTML) {
 			var v = {};
-			v.action = action ? action : 'lists.openFilter(event, ' + (id == 'locations' ? 'pageLocation' : id == 'contacts' ? 'pageContact' : 'pageSearch') + '.getFilterFields)';
+			v.action = action ? action : 'lists.toggleFilter(event, ' + (id == 'locations' ? 'pageLocation' : id == 'contacts' ? 'pageContact' : 'pageSearch') + '.getFilterFields)';
 			v.img = action ? '' : '<buttonIcon style="left:0;" onclick="' + v.action + '"><img src="images/search.svg"/></buttonIcon><buttonIcon style="right:0;" onclick="ui.navigation.toggleMenu()"><img src="images/menu.svg"/></buttonIcon>';
 			if (id == 'contacts')
 				v.groups = '<groups style="display:none;"></groups>';
