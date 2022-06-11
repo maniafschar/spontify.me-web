@@ -41,7 +41,7 @@ class intro {
 				intro.introMode = 0;
 		}
 		var e = ui.q('hint'), body = ui.l('intro.' + data.desc) + (data.hinky ? '<hinky style="' + data.hinky + '" class="' + data.hinkyClass + '"></hinky>' : '')
-			+ (data.desc == 'home' ? '' : '<close onclick="intro.close(event);">x</close>');
+			+ (data.desc == 'home' ? '' : '<close onclick="intro.close(event)">x</close>');
 		if (intro.currentStep < 0 || intro.currentStep == intro.steps.length - 1) {
 			ui.css(e, 'left', null);
 			ui.css(e, 'right', null);

@@ -49,13 +49,12 @@
 			flex-flow: row nowrap;
 			justify-content: center;
 			align-items: center;
-			color: rgb(29, 79, 116);
 			transition: all .5s;
+			color: white;
+			padding-top: 7vh;
 		}
 
-		preloader>img {
-			white-space: nowrap;
-			width: 110%;
+		preloader>logo {
 			animation: scaleOut 4s ease-in;
 		}
 
@@ -66,7 +65,7 @@
 			}
 
 			100% {
-				transform: scale(1);
+				transform: scale(4);
 				opacity: 1;
 			}
 		}
@@ -75,13 +74,18 @@
 
 <body onload="initialisation.onLoad();">
 	<preloader class="mainBG">
-		<image src="images/logoNew.svg" />
+		<logo>
+			<span>sp</span>
+			<img src="images/location.svg" onload="formFunc.image.svgInject(this)" />
+			<span>ntify</span>
+			<last>me</last>
+		</logo>
 	</preloader>
 	<descbox onclick="ui.openDescription(event)" style="transform:scale(0);" class="mainBG"></descbox>
 	<add id="addLeft">
 		<buttontext class="bgColor" onclick="ui.openDescription(event,1)"></buttontext>
-		<buttontext class="bgColor" onclick="ui.navigation.openHTML('https://blog.findapp.online', 'blog_findapp')">
-			findapp blog</buttontext>
+		<buttontext class="bgColor" onclick="ui.navigation.openHTML('https://blog.spontify.me', 'blog_spontifyme')">
+		</buttontext>
 	</add>
 	<add id="addRight">
 		<img id="imgStoreGoogle" style="margin-bottom:1em;"
@@ -96,7 +100,7 @@
 			<ball3 class="bgColor"></ball3>
 			<ball4 class="bgColor"></ball4>
 		</progressbar>
-		<popup style="display:none;" class="bgColor"></popup>
+		<popup style="display:none;"></popup>
 		<alert style="display:none;"></alert>
 		<home class="mainBG"></home>
 		<content>
@@ -111,19 +115,17 @@
 			<settings3 class="content" style="padding-top:0.5em;"></settings3>
 			<whattodo class="content"></whattodo>
 			<chat class="content mainBG"></chat>
-			<chatUserList class="mainBG" style="display:none;"></chatUserList>
-			<buttonIcon onclick="ui.toggleHeight('chatUserList')" style="bottom:0;">
-				<badgeChats></badgeChats>
-				<img src="images/buttonChat.png" />
-			</buttonIcon>
-			<buttonIcon onclick="ui.navigation.goTo('home')" style="bottom:0;left:50%;margin-left:-2.25em;">
-				<img src="images/home.svg" />
-			</buttonIcon>
-			<buttonIcon onclick="ui.navigation.goTo('info');" style="bottom:0;right:0;">
-				<img src="images/iconInfo.png" />
-			</buttonIcon>
+			<chatUserList style="display:none;"></chatUserList>
 		</content>
+		<buttonIcon onclick="ui.toggleHeight('chatUserList')" style="bottom:0;">
+			<badgeChats></badgeChats>
+			<img src="images/chat.svg" onload="formFunc.image.svgInject(this)" />
+		</buttonIcon>
+		<buttonIcon onclick="ui.navigation.goTo('home')" style="bottom:0;left:50%;margin-left:-2em;">
+			<img src="images/home.svg" onload="formFunc.image.svgInject(this)" />
+		</buttonIcon>
 		<hint></hint>
+		<menu style="transform:scale(0);"></menu>
 	</main>
 </body>
 

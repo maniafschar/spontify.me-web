@@ -145,6 +145,7 @@ class initialisation {
 	}
 	static initPostProcessor() {
 		ui.css('content > .content', 'display', 'none');
+		ui.css('main>buttonIcon', 'display', 'none');
 		ui.css('main', 'display', '');
 		if (!global.isBrowser())
 			initialisation.initApp();
@@ -152,21 +153,14 @@ class initialisation {
 		pageHome.init();
 		communication.login.autoLogin(initialisation.showStartDialogs);
 		window.onresize = initialisation.reposition;
-		ui.addFastButton('navbar');
 		ui.on(window, 'orientationchange', initialisation.reposition);
 		ui.on(window, 'popstate', ui.navigation.goBack);
 		ui.on('main', 'touchstart', function (e) {
-			if (!document.activeElement || e.target == document.activeElement)
-				return;
 			e = e.target;
+			if (!document.activeElement || e == document.activeElement)
+				return;
 			if (!ui.classContains(e, 'sendButton') && !ui.classContains(e, 'quote') && !ui.parents(e, 'chatConversation'))
 				document.activeElement.blur();
-		});
-		ui.on('detail', 'scroll', function () {
-			if (ui.navigation.detailAnimation && ui.q('detail').scrollTop > 10) {
-				clearTimeout(ui.navigation.detailAnimation);
-				ui.navigation.detailAnimation = null;
-			}
 		});
 		ui.on(window, 'wheel', function (event) {
 			if (event.ctrlKey) {
@@ -178,6 +172,10 @@ class initialisation {
 		ui.on(window, 'touchmove', function (event) {
 			if (event.touches.length > 1)
 				event.preventDefault();
+		});
+		ui.on('detail', 'click', function (event) {
+			if (event.offsetX < event.target.clientWidth * 0.3)
+				ui.navigation.goTo(ui.q('detail').getAttribute('type'));
 		});
 		ui.swipe('detail', function (dir) {
 			if (dir == 'left')
@@ -251,10 +249,10 @@ class initialisation {
 		var name = event.target.parentNode.getAttribute('name');
 		if (!name || name.indexOf('_disp') < 0)
 			ui.navigation.openPopup(ui.l('settings.scale'),
-				'<input name="zoom" type="radio" label="' + ui.l('settings.scale0') + '" onclick="initialisation.zoom();" value="0.8"' + (user.scale == 0.8 ? ' checked' : '') + '/>' +
-				'<input name="zoom" type="radio" label="' + ui.l('settings.scale1') + '" onclick="initialisation.zoom();" value="1.0"' + (user.scale == 1.0 ? ' checked' : '') + '/>' +
-				'<input name="zoom" type="radio" label="' + ui.l('settings.scale2') + '" onclick="initialisation.zoom();" value="1.2"' + (user.scale == 1.2 ? ' checked' : '') + '/>' +
-				'<input name="zoom" type="radio" label="' + ui.l('settings.scale3') + '" onclick="initialisation.zoom();" value="1.4"' + (user.scale == 1.4 ? ' checked' : '') + '/>');
+				'<input name="zoom" type="radio" label="' + ui.l('settings.scale0') + '" onclick="initialisation.zoom()" value="0.8"' + (user.scale == 0.8 ? ' checked' : '') + '/>' +
+				'<input name="zoom" type="radio" label="' + ui.l('settings.scale1') + '" onclick="initialisation.zoom()" value="1.0"' + (user.scale == 1.0 ? ' checked' : '') + '/>' +
+				'<input name="zoom" type="radio" label="' + ui.l('settings.scale2') + '" onclick="initialisation.zoom()" value="1.2"' + (user.scale == 1.2 ? ' checked' : '') + '/>' +
+				'<input name="zoom" type="radio" label="' + ui.l('settings.scale3') + '" onclick="initialisation.zoom()" value="1.4"' + (user.scale == 1.4 ? ' checked' : '') + '/>');
 	}
 	static reposition() {
 		if (!ui.q('body div'))
@@ -351,7 +349,9 @@ class initialisation {
 				ui.labels['infoLegal'] = r[1];
 			}
 		});
-		ui.q('#addLeft > buttontext').innerHTML = ui.l('home.DescLink');
+		var e = ui.qa('#addLeft > buttontext');
+		e[0].innerHTML = ui.l('home.DescLink');
+		e[1].innerHTML = global.appTitle + ' blog';
 		lists.resetLists();
 		pageHome.init();
 		if (exec)

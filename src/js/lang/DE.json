@@ -722,10 +722,8 @@
 			"todayIWant": "Heute will ich..."
 		},
 		"all": "in der Nähe",
-		"appSubTitle": "neue Leute hier und heute",
+		"appSubTitle": "neue Leute <span class=\"colorHighlight\">hier</span> und <span class=\"colorHighlight\">heute</span>",
 		"attention": "Achtung",
-		"attribMatch": "1 übereinstimmende Eigenschaft",
-		"attribMatches": "{0} übereinstimmende Eigenschaften",
 		"attributesHint": "Die Angaben helfen Dir,<br/>neue Buddies, Locations und Events zu finden.",
 		"autoOpen.title": "${appTitle}${separator}Eintrag",
 		"back": "Zurück",

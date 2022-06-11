@@ -199,7 +199,6 @@ class communication {
 							initialisation.setLanguage(user.contact.language);
 						else
 							lists.resetLists();
-						ui.navigation.openMenu();
 						if (user.contact.birthday && user.contact.birthday.trim().length > 8 && !exec) {
 							var d = new Date();
 							if (d.getMonth() == user.contact.birthday.substring(5, 7) - 1 && d.getDate() == user.contact.birthday.substring(8, 10)) {
@@ -336,7 +335,7 @@ class communication {
 					else {
 						ui.navigation.hidePopup();
 						communication.login.removeCredentials();
-						ui.html('login', '<div style="padding:2em;text-align:center;">' + ui.l('login.recoverPasswordBody') + '<br/><br/><br/><buttontext onclick="pageLogin.init();" class="bgColor">&lt;</buttontext></div>');
+						ui.html('login', '<div style="padding:2em;text-align:center;">' + ui.l('login.recoverPasswordBody') + '<br/><br/><br/><buttontext onclick="pageLogin.init()" class="bgColor">&lt;</buttontext></div>');
 						setTimeout(pageLogin.init, 10000);
 					}
 				}
@@ -418,7 +417,6 @@ class communication {
 				communication.login.removeCredentials();
 			ui.attr('content > *', 'menuIndex', null);
 			communication.currentCalls = [];
-			ui.css(ui.q('navbar'), 'display', 'none');
 			ui.navigation.goTo('home');
 			e = ui.q('head title');
 			var s = e.innerText;

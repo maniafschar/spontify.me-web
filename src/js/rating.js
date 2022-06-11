@@ -26,7 +26,7 @@ class rating {
 	<div style="color:red;${v.hidePaid}">
 		${ui.l('locations.ratedBonusPagePaidOut')}
 	</div>
-	<a class="${v.bg} fmg_text_button" onclick="rating.confirmBonusPaidOut(${v['locationRating.id']});" style="border-radius:8em;margin:0 1em;${v.hideButton}">${v.button}</a>
+	<a class="${v.bg} fmg_text_button" onclick="rating.confirmBonusPaidOut(${v['locationRating.id']})" style="border-radius:8em;margin:0 1em;${v.hideButton}">${v.button}</a>
 	<br/><br/>
 </div>`;
 	static templateForm = v =>
@@ -50,12 +50,12 @@ class rating {
         <field class="${v.showImage}" style="margin:0.5em 0 0 0;">
             <input type="file" name="image" accept=".gif, .png, .jpg" />
         </field>
-        <buttontext onclick="rating.save(this);" type="${v.type}" oId="${v.id}"
+        <buttontext onclick="rating.save(this)" type="${v.type}" oId="${v.id}"
             class="${v.bg}" style="margin-top:0.5em;">${ui.l('rating.save')}</buttontext>
     </form>
 </div>`;
 	static templateHistory = v =>
-		global.template`<div onclick="rating.openHistory(&quot;${v.type}&quot;,${v.id});" style="margin:1em 0;cursor:pointer;">${ui.l('rating.history')}</div>
+		global.template`<div onclick="rating.openHistory(&quot;${v.type}&quot;,${v.id})" style="margin:1em 0;cursor:pointer;">${ui.l('rating.history')}</div>
 <ratingHistory style="display:none;"></ratingHistory>`;
 
 	static click(x) {
@@ -116,7 +116,7 @@ class rating {
 				} else if (t == 'contact' && id == user.contact.id)
 					f = '<ratingHint>' + ui.l('rating.notYourself') + '</ratingHint>';
 				else if (t == 'contact' && r._contactLink != 1)
-					f = '<ratingHint>' + ui.l('rating.onlyFriends') + '<br/><buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + id + ');" style="margin:1em 0;">' + ui.l('contacts.requestFriendship') + '</buttontext></ratingHint>';
+					f = '<ratingHint>' + ui.l('rating.onlyFriends') + '<br/><buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + id + ')" style="margin:1em 0;">' + ui.l('contacts.requestFriendship') + '</buttontext></ratingHint>';
 				else
 					f = rating.getForm(id, t, true, r._ownerId);
 				ui.html('detail [name="favLoc"]', '');
@@ -147,7 +147,7 @@ class rating {
 						s += '<ratingItem';
 						rate = '<rating><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v2.rating) + '%;">★★★★★</full></rating>';
 						if (v2.contactId != user.contact.id)
-							s += ' onclick="ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v2.contactId) + '&quot;);" style="cursor:pointer;"';
+							s += ' onclick="ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v2.contactId) + '&quot;)" style="cursor:pointer;"';
 						s += '>' + rate + date + ' ' + pseudonym + text + img + '</ratingItem>';
 					}
 					if (s) {

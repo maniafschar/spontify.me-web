@@ -75,17 +75,17 @@ class pageSettings {
 		<label>${ui.l('settings.genderInterest')}</label>
 		<value>
 			<input type="checkbox" name="genderInterest2" label="${ui.l('settings.genderInterestFemale')}"
-				onclick="pageSettings.toggleGenderSlider(2);" ${v['genderInterest2']} transient="true" />
+				onclick="pageSettings.toggleGenderSlider(2)" ${v['genderInterest2']} transient="true" />
 			<input type="text" id="settingsInterest2" slider="range" min="18" max="99" value="${v['contact.ageFemale']}"
 				name="ageFemale" />
 			<br />
 			<input type="checkbox" name="genderInterest1" label="${ui.l('settings.genderInterestMale')}"
-				onclick="pageSettings.toggleGenderSlider(1);" ${v['genderInterest1']} transient="true" />
+				onclick="pageSettings.toggleGenderSlider(1)" ${v['genderInterest1']} transient="true" />
 			<input type="text" id="settingsInterest1" slider="range" min="18" max="99" value="${v['contact.ageMale']}"
 				name="ageMale" />
 			<br />
 			<input type="checkbox" name="genderInterest3" label="${ui.l('settings.genderInterestDivers')}"
-				onclick="pageSettings.toggleGenderSlider(3);" ${v['genderInterest3']} transient="true" />
+				onclick="pageSettings.toggleGenderSlider(3)" ${v['genderInterest3']} transient="true" />
 			<input type="text" id="settingsInterest3" slider="range" min="18" max="99" value="${v['contact.ageDivers']}"
 				name="ageDivers" />
 		</value>
@@ -124,76 +124,76 @@ class pageSettings {
 	</dialogButtons>
 	<input type="hidden" name="verified" value="true" />
 </form>
-<settingsNav onclick="pageSettings.open2(event);" style="float:right;">></settingsNav>`;
+<settingsNav onclick="pageSettings.open2(event)" style="float:right;">></settingsNav>`;
 	static templateSettings2 = v =>
 		global.template`<div style="padding-top:1em;text-align:center;">${ui.l('attributesHint')}</div>
 <div>
     <buttontext class="bgColor settings2Button"
-        onclick="formFunc.openChoices(&quot;CONTACTATTRIB&quot;,&quot;pageSettings.saveAttributes&quot;);">${ui.l('settings.attributes')}</buttontext>
-    <div>
+        onclick="formFunc.openChoices(&quot;CONTACTATTRIB&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.l('settings.attributes')}</buttontext>
+    <attributesDisplay>
         <input type="text" id="CONTACTATTRIB" multiplePopup="Attributes" saveAction="pageSettings.saveAttributes"
             valueEx="${v['attEx']}" value="${v['att']}" max="60" maxEx="250" />
-    </div>
+    </attributesDisplay>
 </div>
 <div>
     <buttontext class="bgColor settings2Button"
-        onclick="formFunc.openChoices(&quot;CONTACTATTRIBINTEREST&quot;,&quot;pageSettings.saveAttributes&quot;);">${ui.l('settings.interestedIn')}</buttontext>
-    <div>
+        onclick="formFunc.openChoices(&quot;CONTACTATTRIBINTEREST&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.l('settings.interestedIn')}</buttontext>
+    <attributesDisplay>
         <input type="text" id="CONTACTATTRIBINTEREST" multiplePopup="Attributes"
             saveAction="pageSettings.saveAttributes" valueEx="${v['attIntEx']}" value="${v['attInt']}" max="60"
             maxEx="250" />
-    </div>
+    </attributesDisplay>
 </div>
 <div>
     <buttontext class="bgColor settings2Button"
-        onclick="formFunc.openChoices(&quot;CONTACTATTRIB0&quot;,&quot;pageSettings.saveAttributes&quot;);">${ui.categories[0].label}</buttontext>
-    <div>
+        onclick="formFunc.openChoices(&quot;CONTACTATTRIB0&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[0].label}</buttontext>
+    <attributesDisplay>
         <input type="text" id="CONTACTATTRIB0" multiplePopup="Attributes0" saveAction="pageSettings.saveAttributes"
             valueEx="${v['att0Ex']}" value="${v['att0']}" max="60" maxEx="250" />
-    </div>
+    </attributesDisplay>
 </div>
 <div>
     <buttontext class="bgColor settings2Button"
-        onclick="formFunc.openChoices(&quot;CONTACTATTRIB1&quot;,&quot;pageSettings.saveAttributes&quot;);">${ui.categories[1].label}</buttontext>
-    <div>
+        onclick="formFunc.openChoices(&quot;CONTACTATTRIB1&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[1].label}</buttontext>
+    <attributesDisplay>
         <input type="text" id="CONTACTATTRIB1" multiplePopup="Attributes1" saveAction="pageSettings.saveAttributes"
             valueEx="${v['att1Ex']}" value="${v['att1']}" max="60" maxEx="250" />
-    </div>
+    </attributesDisplay>
 </div>
 <div>
     <buttontext class="bgColor settings2Button"
-        onclick="formFunc.openChoices(&quot;CONTACTATTRIB2&quot;,&quot;pageSettings.saveAttributes&quot;);">${ui.categories[2].label}</buttontext>
-    <div>
+        onclick="formFunc.openChoices(&quot;CONTACTATTRIB2&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[2].label}</buttontext>
+    <attributesDisplay>
         <input type="text" id="CONTACTATTRIB2" multiplePopup="Attributes2" saveAction="pageSettings.saveAttributes"
             valueEx="${v['att2Ex']}" value="${v['att2']}" max="60" maxEx="250" />
-    </div>
+    </attributesDisplay>
 </div>
 <div>
     <buttontext class="bgColor settings2Button"
-        onclick="formFunc.openChoices(&quot;CONTACTATTRIB3&quot;,&quot;pageSettings.saveAttributes&quot;);">${ui.categories[3].label}</buttontext>
-    <div>
+        onclick="formFunc.openChoices(&quot;CONTACTATTRIB3&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[3].label}</buttontext>
+    <attributesDisplay>
         <input type="text" id="CONTACTATTRIB3" multiplePopup="Attributes3" saveAction="pageSettings.saveAttributes"
             valueEx="${v['att3Ex']}" value="${v['att3']}" max="60" maxEx="250" />
-    </div>
+    </attributesDisplay>
 </div>
 <div>
     <buttontext class="bgColor settings2Button"
-        onclick="formFunc.openChoices(&quot;CONTACTATTRIB4&quot;,&quot;pageSettings.saveAttributes&quot;);">${ui.categories[4].label}</buttontext>
-    <div>
+        onclick="formFunc.openChoices(&quot;CONTACTATTRIB4&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[4].label}</buttontext>
+    <attributesDisplay>
         <input type="text" id="CONTACTATTRIB4" multiplePopup="Attributes4" saveAction="pageSettings.saveAttributes"
             valueEx="${v['att4Ex']}" value="${v['att4']}" max="60" maxEx="250" />
-    </div>
+    </attributesDisplay>
 </div>
 <div>
     <buttontext class="bgColor settings2Button"
-        onclick="formFunc.openChoices(&quot;CONTACTATTRIB5&quot;,&quot;pageSettings.saveAttributes&quot;);">${ui.categories[5].label}</buttontext>
-    <div>
+        onclick="formFunc.openChoices(&quot;CONTACTATTRIB5&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[5].label}</buttontext>
+    <attributesDisplay>
         <input type="text" id="CONTACTATTRIB5" multiplePopup="Attributes5" saveAction="pageSettings.saveAttributes"
             valueEx="${v['att5Ex']}" value="${v['att5']}" max="60" maxEx="250" />
-    </div>
+    </attributesDisplay>
 </div>
-<settingsNav onclick="ui.navigation.goTo(&quot;settings&quot;,event,true);" style="float:left;">&lt;</settingsNav>
-<settingsNav onclick="ui.navigation.goTo(&quot;settings3&quot;,event);" style="float:right;">></settingsNav>`;
+<settingsNav onclick="ui.navigation.goTo(&quot;settings&quot;,event,true)" style="float:left;">&lt;</settingsNav>
+<settingsNav onclick="ui.navigation.goTo(&quot;settings3&quot;,event)" style="float:right;">></settingsNav>`;
 	static templateSettings3 = v =>
 		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#settings3Notifications&quot;)">${ui.l('wtd.myNotifications')}</buttontext><br/>
 <div class="notification" id="settings3Notifications" style="display:none;">
@@ -225,7 +225,7 @@ class pageSettings {
 			communication.login.checkUnique(ui.q('input[name="email"]'));
 	}
 	static deleteProfile() {
-		ui.navigation.openPopup(ui.l('settings.delete'), ui.l('deleteProfileHint') + '<br /><br /><textarea id="deleteAccountFeedback" placeholder="' + ui.l('deleteProfileFeedbackHint') + '" maxlength="2000"></textarea><div style="margin-top:1em;"><buttontext onclick="pageSettings.deleteProfileExec();" class="bgColor">' + ui.l('deleteProfileFinal') + '</buttontext><buttontext onclick="ui.navigation.hidePopup();" class="bgColor" style="margin-left:0.5em;">' + ui.l('deleteProfileCancel') + '</buttontext></div>');
+		ui.navigation.openPopup(ui.l('settings.delete'), ui.l('deleteProfileHint') + '<br /><br /><textarea id="deleteAccountFeedback" placeholder="' + ui.l('deleteProfileFeedbackHint') + '" maxlength="2000"></textarea><div style="margin-top:1em;"><buttontext onclick="pageSettings.deleteProfileExec()" class="bgColor">' + ui.l('deleteProfileFinal') + '</buttontext><buttontext onclick="ui.navigation.hidePopup()" class="bgColor" style="margin-left:0.5em;">' + ui.l('deleteProfileCancel') + '</buttontext></div>');
 	}
 	static deleteProfileExec() {
 		if (ui.val('#deleteAccountFeedback'))
@@ -472,7 +472,7 @@ class pageSettings {
 				if (saveNewEmail)
 					ui.q('input[name="verified"]').value = 'false';
 				else {
-					ui.navigation.openPopup(ui.l('attention'), ui.l('settings.confirmEmailChange') + '<br /><buttontext class="bgColor" onclick="pageSettings.save(&quot;' + goToID + '&quot;,true);ui.navigation.hidePopup();" style="margin-top:1em;">' + ui.l('Yes') + '</buttontext><buttontext class="bgColor" onclick="pageSettings.resetEmailToOldValue();" style="margin-top:1em;">' + ui.l('No') + '</buttontext>');
+					ui.navigation.openPopup(ui.l('attention'), ui.l('settings.confirmEmailChange') + '<br /><buttontext class="bgColor" onclick="pageSettings.save(&quot;' + goToID + '&quot;,true);ui.navigation.hidePopup()" style="margin-top:1em;">' + ui.l('Yes') + '</buttontext><buttontext class="bgColor" onclick="pageSettings.resetEmailToOldValue()" style="margin-top:1em;">' + ui.l('No') + '</buttontext>');
 					return false;
 				}
 			}
