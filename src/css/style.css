@@ -1876,6 +1876,11 @@ detail detailHeader action matchIndicator span {
 	border: solid 0.75em rgba(255, 255, 255, 0.6);
 }
 
+detail detailHeader action buttonIcon {
+	position: relative;
+	display: inline-block;
+}
+
 detail detailRating {
 	font-size: 1.5em;
 	margin: 1em 0 0.75em 0;

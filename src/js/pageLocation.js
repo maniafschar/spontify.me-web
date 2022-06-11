@@ -47,8 +47,8 @@ class pageLocation {
 		</detailTitle>
 	</detailImg>
 	<action>
-		<buttonIcon style="position:relative;" onclick="pageLocation.openChat(${v.id})"><img src="images/chat.svg"/></buttonIcon>
-		<buttonIcon style="position:relative;margin-top:1em;" idFav="${v.locationFavorite.id ? v.locationFavorite.id : ''}" fav="${v.locationFavorite.favorite ? true : ''}" onclick="pageLocation.toggleFavorite(${v.id})"><img src="images/buttonFavorite.png"/></buttonIcon>
+		<buttonIcon onclick="pageLocation.openChat(${v.id})"><img src="images/chat.svg"/></buttonIcon>
+		<buttonIcon style="margin-top:1em;" idFav="${v.locationFavorite.id ? v.locationFavorite.id : ''}" fav="${v.locationFavorite.favorite ? true : ''}" onclick="pageLocation.toggleFavorite(${v.id})"><img src="images/buttonFavorite.png"/></buttonIcon>
 		<matchIndicator>${v.matchIndicator}</matchIndicator>
 		<detailCompass>
 			<span a="${v.angle}" style="transform:rotate(${v.angle}deg);">&uarr;</span>

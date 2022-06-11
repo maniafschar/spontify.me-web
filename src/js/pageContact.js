@@ -44,8 +44,8 @@ class pageContact {
 		</detailTitle>
 	</detailImg>
 	<action>
-		<buttonIcon style="position:relative;" onclick="pageChat.open(${v.id})"><img src="images/chat.svg"/></buttonIcon>
-		<buttonIcon style="position:relative;margin-top:1em;" onclick="pageContact.toggleBlockUser(${v.id})"><img src="images/buttonFavorite.png"/></buttonIcon>
+		<buttonIcon onclick="pageChat.open(${v.id})"><img src="images/chat.svg"/></buttonIcon>
+		<buttonIcon style="margin-top:1em;" onclick="pageContact.toggleBlockUser(${v.id})"><img src="images/buttonFavorite.png"/></buttonIcon>
 		<matchIndicator${v.matchIndicatorClass}>
 			${v.matchIndicator}
 		</matchIndicator>
