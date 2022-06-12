@@ -1890,7 +1890,6 @@ detail detailHeader action matchIndicator svg .circle {
 }
 
 detail detailHeader action matchIndicator svg .percentage {
-	fill: #666;
 	font-family: sans-serif;
 	font-size: 0.5em;
 	text-anchor: middle;
@@ -1912,6 +1911,14 @@ detail detailHeader action matchIndicator span {
 detail detailHeader action buttonIcon {
 	position: relative;
 	display: inline-block;
+}
+
+detail detailHeader action buttonIcon .iconFavorite {
+	margin-top: 1em;
+}
+
+detail detailHeader action .favorite svg {
+	fill: rgb(246, 255, 187);
 }
 
 detail detailRating {

@@ -48,9 +48,9 @@ class pageLocation {
 	</detailImg>
 	<action>
 		<buttonIcon onclick="pageLocation.openChat(${v.id})"><img src="images/chat.svg"/></buttonIcon>
-		<buttonIcon style="margin-top:1em;" idFav="${v.locationFavorite.id ? v.locationFavorite.id : ''}" fav="${v.locationFavorite.favorite ? true : ''}" onclick="pageLocation.toggleFavorite(${v.id})"><img src="images/buttonFavorite.png"/></buttonIcon>
+		<buttonIcon class="iconFavorite${v.favorite}" idFav="${v.locationFavorite.id ? v.locationFavorite.id : ''}" fav="${v.locationFavorite.favorite ? true : ''}" onclick="pageLocation.toggleFavorite(${v.id})"><img src="images/favorite.svg" onload="formFunc.image.svgInject(this)"/></buttonIcon>
 		<matchIndicator>
-			<svg viewBox="0 0 36 36" class="circular-chart blue">
+			<svg viewBox="0 0 36 36">
 				<path class="circle-bg" d="M18 2.0845
 					a 15.9155 15.9155 0 0 1 0 31.831
 					a 15.9155 15.9155 0 0 1 0 -31.831"></path>
@@ -552,7 +552,7 @@ ${v.hint}
 			v.hideMeEvents = ' noDisp';
 			v.hideMeMarketing = ' noDisp';
 		} else {
-			v.bgFavorite = v.locationFavorite.favorite ? 'bgColor2' : 'bgColor';
+			v.favorite = v.locationFavorite.favorite ? ' favorite' : '';
 			if (global.isBrowser())
 				v.copyLinkHint = ui.l('copyLinkHint.location');
 			else

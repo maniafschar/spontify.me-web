@@ -45,9 +45,9 @@ class pageContact {
 	</detailImg>
 	<action>
 		<buttonIcon onclick="pageChat.open(${v.id})"><img src="images/chat.svg"/></buttonIcon>
-		<buttonIcon style="margin-top:1em;" onclick="pageContact.toggleBlockUser(${v.id})"><img src="images/buttonFavorite.png"/></buttonIcon>
+		<buttonIcon class="iconFavorite${v.favorite}" onclick="pageContact.toggleBlockUser(${v.id})"><img src="images/favorite.svg" onload="formFunc.image.svgInject(this)"/></buttonIcon>
 		<matchIndicator${v.matchIndicatorClass}>
-			<svg viewBox="0 0 36 36" class="circular-chart blue">
+			<svg viewBox="0 0 36 36">
 				<path class="circle-bg" d="M18 2.0845
 					a 15.9155 15.9155 0 0 1 0 31.831
 					a 15.9155 15.9155 0 0 1 0 -31.831"></path>
@@ -267,7 +267,7 @@ ${v.aboutMe}
 		var idIntern = id;
 		if (idIntern.indexOf && idIntern.indexOf('_') > -1)
 			idIntern = idIntern.substring(0, idIntern.indexOf('_'));
-		v.bgFriends = v.contactLink.status == 'Friends' ? '2' : '';
+		v.favorite = v.contactLink.status == 'Friends' ? ' favorite' : '';
 		v.distance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
 		v.birthday = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
 		v.classBGImg = 'class="bgColor"';
@@ -677,16 +677,7 @@ ${v.aboutMe}
 		var s = '', activeID = ui.navigation.getActiveID();
 		for (var i = 1; i < l.length; i++) {
 			var v = model.convert(new Contact(), l, i);
-			if (v.contactLink.status == 'Pending') {
-				if (v.contactLink.contactId == user.contact.id)
-					v.contactLink.status2 = '<img src="images/buttonFavoriteFilled.png"/><span>?</span>';
-				else {
-					v.contactLink.status2 = '<img src="images/buttonFavoriteFilled.png"/>';
-				}
-			}
 			var birth = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
-			if (!v.friends)
-				v.friends = v.contactLink.status == 'Friends' ? 'Filled' : '';
 			if (v.imageList)
 				v.image = global.serverImg + v.imageList;
 			else
