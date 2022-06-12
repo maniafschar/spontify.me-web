@@ -42,15 +42,15 @@ class pageInfo {
     <buttontext class="bgColor infoButton${v['feedback']}" onclick="pageInfo.toggleInfoBlock(&quot;#info6&quot;)">
 		${ui.l('info.feedback')}
     </buttontext>
-    <infoblock id="info6" style="display:none;">
+    <div id="info6" style="display:none;text-align:center;">
         <textarea placeholder="${ui.l('info.feedbackHint')}" maxlength="2000" id="feedbackText" style="height:10em;width:90%;"></textarea>
         <buttontext onclick="pageInfo.sendFeedback(ui.val(&quot;#feedbackText&quot;))"
             class="bgColor" style="margin-top:0.5em;">${ui.l('send')}
         </buttontext>
         <feedbackHint></feedbackHint>
-    </infoblock>
+    </div>
 	<buttontext class="bgColor infoButton" onclick="pageInfo.toggleMarketing()"${v.marketingDisplay}>${v.marketingTitle}</buttontext>
-	<infoblock id="info5" style="display:none;width:auto;margin-left:0;"></infoblock>
+	<div id="info5" style="display:none;margin-bottom:1em;"></div>
 	<buttontext onclick="pageInfo.socialShare()" id="socialShare" class="bgColor infoButton">
 		${ui.l('sendSocialShare')}
 	</buttontext>
@@ -234,7 +234,7 @@ class pageInfo {
 				responseType: 'json',
 				success(r) {
 					if (r.list)
-						e.innerHTML = (r.text ? '<div style="cursor:pointer;padding:0 0.5em 0.5em 0.5em"' + (r.action ? ' onclick="ui.navigation.autoOpen(&quot;' + r.action + '&quot;)"' : '') + '>' + r.text + '</div>' : '') + pageContact.listContacts(r.list);
+						e.innerHTML = (r.text ? '<div style="cursor:pointer;margin:0 0.5em;background:rgba(255,255,255,0.6);padding:1em;border-radius:0.5em;text-align:center;"' + (r.action ? ' onclick="ui.navigation.autoOpen(&quot;' + r.action + '&quot;)"' : '') + '>' + r.text + '</div>' : '') + pageContact.listContacts(r.list);
 					else if (r.html)
 						e.innerHTML = r.html;
 					ui.addFastButton('#info5');

@@ -243,6 +243,9 @@ class communication {
 						pageChat.initActiveChats();
 						pageLocation.event.init();
 						geoData.init();
+						e = ui.qa('.homeIconSearch');
+						e[0].style.display = 'none';
+						e[1].style.display = '';
 						bluetooth.stop();
 						bluetooth.requestAuthorization();
 						if (exec)
@@ -417,6 +420,9 @@ class communication {
 			ui.attr('content > *', 'menuIndex', null);
 			communication.currentCalls = [];
 			ui.navigation.goTo('home');
+			e = ui.qa('.homeIconSearch');
+			e[0].style.display = '';
+			e[1].style.display = 'none';
 			e = ui.q('head title');
 			var s = e.innerText;
 			if (s.indexOf(global.separator) > -1)

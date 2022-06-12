@@ -73,7 +73,7 @@ class ui {
 </container>`;
 	static templateLanding = v =>
 		global.template`<img src="images/splash.svg"/>
-		<landingtitle>findapp</landingtitle>
+		<landingtitle>spontify.me</landingtitle>
 		${v.infoAbout}
 		<landingsubtitle onclick="intro.openIntro()">${ui.l('intro.open')}</landingsubtitle>
 		<landingimages>
@@ -380,7 +380,7 @@ class ui {
 			}
 		},
 		goTo(id, event, back) {
-			if (!user.contact && id != 'home') {
+			if (!user.contact && id != 'home' && id != 'info') {
 				if (id == 'whattodo' || id == 'locations' || id == 'contacts') {
 					intro.openHint({ desc: id, pos: '10%,5em', size: '80%,auto', onclick: 'ui.navigation.goTo("login")' });
 					return;

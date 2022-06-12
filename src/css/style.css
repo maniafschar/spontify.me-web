@@ -38,7 +38,7 @@ h4 {
 	margin-top: 3em;
 	margin-bottom: 1em;
 	text-align: center;
-	color: rgb(11, 124, 190);
+	color: rgb(0, 94, 160);
 }
 
 body {
@@ -120,9 +120,8 @@ hint {
 hint .body,
 hint.body {
 	position: absolute;
-	background: rgba(11, 124, 190, 0.9);
+	background: rgba(255, 255, 255, 0.9);
 	padding: 1em;
-	color: white;
 	border-radius: 1em;
 	text-align: center;
 	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
@@ -151,12 +150,12 @@ hint hinky {
 
 hint hinky.top {
 	top: -0.5em;
-	border-bottom: solid 0.5em rgba(11, 124, 190, 0.9);
+	border-bottom: solid 0.5em rgba(0, 94, 160, 0.9);
 }
 
 hint hinky.bottom {
 	bottom: -0.5em;
-	border-top: solid 0.5em rgba(11, 124, 190, 0.9);
+	border-top: solid 0.5em rgba(0, 94, 160, 0.9);
 }
 
 ul li,
@@ -204,7 +203,7 @@ homeBody {
 	width: 100%;
 	display: block;
 	top: 50%;
-	margin-top: -15vh;
+	margin-top: -20vh;
 }
 
 whattodo navbutton {
@@ -274,7 +273,6 @@ login registerHint {
 	position: absolute;
 	margin-left: 5%;
 	width: 90%;
-	color: rgb(0, 0, 100);
 	left: 0;
 	bottom: 1em;
 	padding: 1em 0.5em;
@@ -477,6 +475,7 @@ input:checked+label:before {
 
 popup .multiple input:checked+label {
 	background: rgb(246, 255, 187) !important;
+	color: black;
 }
 
 popup .multiple {
@@ -517,7 +516,6 @@ field>label {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
-	color: rgb(0, 0, 100);
 }
 
 popup field>label {
@@ -543,7 +541,6 @@ explain {
 	font-size: 0.8em;
 	padding: 0.1em 1.1em 1em 1.1em;
 	display: block;
-	color: rgb(0, 0, 100);
 	line-height: 1.3;
 }
 
@@ -684,29 +681,29 @@ slider thumb val {
 .homeButton {
 	font-weight: bold;
 	cursor: pointer;
-	height: 8vh;
+	height: 13vh;
 	position: relative;
 	display: inline-block;
 	margin: 1.5vh 0;
-	border-radius: 0 4vh 4vh 0;
+	border-radius: 0 7vh 7vh 0;
 	box-shadow: 0 0 1em rgba(0, 0, 0, 0.1);
 	padding: 0;
 }
 
 .homeButton span {
 	display: inline-block;
-	margin: 3.25vh 0 0 1.5em;
+	margin: 5.5vh 0 0 1.5em;
 }
 
 .homeButton svg {
-	height: 6vh;
+	height: 8vh;
 	position: absolute;
-	right: 1em;
-	top: 1vh;
+	right: 1.7em;
+	top: 2.5vh;
 }
 
 .homeButton svg path {
-	fill: rgb(11, 124, 190);
+	fill: rgb(0, 94, 160);
 }
 
 whatToDoList {
@@ -1117,8 +1114,7 @@ alert {
 	text-align: center;
 	z-index: 999999;
 	border-radius: 1em;
-	color: white;
-	background-color: rgba(11, 124, 190, 0.9);
+	background-color: rgba(255, 255, 255, 0.9);
 	box-shadow: 0 0 2em rgba(0, 0, 0, 0.3);
 }
 
@@ -1453,11 +1449,10 @@ homeHeader {
 homeTitle {
 	white-space: nowrap;
 	display: inline-block;
-	padding-top: 10vh;
+	padding-top: 13vh;
 }
 
 homeSubTitle {
-	margin-top: 1em;
 	display: block;
 }
 
@@ -1510,12 +1505,15 @@ buttonIcon {
 	transition: all 0.4s ease-out;
 }
 
+buttonIcon span,
 buttonIcon img,
 buttonIcon svg {
 	width: 3em;
 	border: solid 0.15em white;
 	border-radius: 50%;
 	padding: 0.3em;
+	height: 3em;
+	line-height: 2.2;
 }
 
 .appInput {
@@ -2001,8 +1999,8 @@ tabHeader tab p {
 
 .tabActive {
 	opacity: 1 !important;
-	border-bottom: solid 1px rgb(0, 0, 100);
-	color: rgb(0, 0, 100);
+	border-bottom: solid 1px black;
+	color: black;
 }
 
 popup .tabActive {
@@ -2091,6 +2089,9 @@ infoblock {
 	margin-left: 2%;
 	margin-bottom: 1em;
 	display: block;
+	background: rgba(255, 255, 255, 0.6);
+	padding: 1em;
+	border-radius: 0.5em;
 }
 
 infoblock.overflow {
@@ -2110,7 +2111,7 @@ landingimages img {
 landingtitle {
 	font-size: 2em;
 	white-space: nowrap;
-	color: rgb(11, 124, 190);
+	color: rgb(0, 94, 160);
 	margin-top: -0.2em;
 	padding-bottom: 0.25em;
 	display: block;
@@ -2132,7 +2133,7 @@ landingsubject {
 }
 
 whattodotitle {
-	color: rgb(0, 0, 100);
+	color: rgb(0, 94, 160);
 	font-size: 1.1em;
 	font-weight: bold;
 	cursor: pointer;
@@ -2146,7 +2147,7 @@ whattodotitle {
 }
 
 infoblock landingsubtitle {
-	color: rgb(0, 0, 100);
+	color: rgb(0, 94, 160);
 	font-size: 1.1em;
 }
 
@@ -2172,7 +2173,7 @@ menu a {
 
 menu > div {
 	font-weight: bold;
-	color: rgb(11, 124, 190);
+	color: rgb(0, 94, 160);
 	padding-top: 0.75em;
 }
 

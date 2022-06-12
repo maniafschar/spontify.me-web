@@ -214,7 +214,7 @@ class pageSettings {
 	</div>
 </div>
 <buttontext class="bgColor settings2Button" onclick="pageSettings.toggleBlocked()">${ui.l('contacts.blocked')}</buttontext><br/>
-<infoblock id="blocked" style="display:none;"></infoblock>
+<div id="blocked" style="display:none;"></div>
 <buttontext onclick="pageSettings.deleteProfile()" class="bgColor settings2Button">${ui.l('settings.delete')}</buttontext><br/>
 <settingsNav onclick="ui.navigation.goTo(&quot;settings2&quot;,event,true)" style="float:left;">&lt;</settingsNav>`;
 

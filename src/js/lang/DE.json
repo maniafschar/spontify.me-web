@@ -338,6 +338,7 @@
 			"denyAddToGroup": "Du kannst Buddies erst dann zu Deinen Gruppen hinzufügen, wenn Ihr befreundet seid. Möchtest Du eine Freundschaftsanfrage senden?",
 			"friendshipTitle": "meine Buddies",
 			"friendsOfFriends": "Buddies meiner Buddies",
+			"matching": "Matching",
 			"recommendPostedToWall": "Deine Einladungen wurde erfolgreich an Deine Wand gepostet!",
 			"recommendPostedToWallError": "Du hast bereits vor {0} Stunden an Deine Wand gepostet. Du kannst nur einmal innerhalb von 12 Stunden posten.",
 			"relation": "Verbindung",
@@ -426,7 +427,7 @@
 			"1": "Was kostet mich die App?",
 			"1a": "Bei uns gibt es 2 Arten von Benutzern. Zum einen die Benutzer an sich und zum anderen die Gewerbetreibenden:<ul><li>Die Benutzer zahlen nichts und haben alle Funktionen sofort zur Verfügung. Es gibt keine versteckten Kosten.</li><li>Die Gewerbetreibenden können ihr Gewerbe hervorheben, indem sie den Benutzern spezielle Angebote unterbreiten, z. B. im Falle eines Restaurants einen kostenfreien Espresso bei einem Umsatz von 30 Euro. Die Art der Angebote ist dabei den Gewerbetreibenden selbst überlassen.</li></ul>",
 			"2": "Was passiert mit meinen Daten?",
-			"2a": "Wir möchten maximales Vertrauen gewinnen und sind in keiner Weise darauf aus, Daten zu sammeln und zu verkaufen. Unsere Überzeugung ist, das Benutzer und Gewerbetreibende auf Basis von ${appTitle} ein stabiles Ecosystem erschaffen, durch das alle einen großen Vorteil und keine Nachteile haben. Deswegen ist der Quellcode von findapp öffentlich einsehbar, so dass jeder im Code sehen kann, was gespeichert wird und wie die Daten weiter verarbeitet werden. Denn Quellcode findest Du hier:<br/><a href=\"https://github.com/maniafschar\" target=\"_blank\">https://github.com/maniafschar</a>",
+			"2a": "Wir möchten maximales Vertrauen gewinnen und sind in keiner Weise darauf aus, Daten zu sammeln und zu verkaufen. Unsere Überzeugung ist, das Benutzer und Gewerbetreibende auf Basis von ${appTitle} ein stabiles Ecosystem erschaffen, durch das alle einen großen Vorteil und keine Nachteile haben. Deswegen ist der Quellcode von ${appTitle} öffentlich einsehbar, so dass jeder im Code sehen kann, was gespeichert wird und wie die Daten weiter verarbeitet werden. Denn Quellcode findest Du hier:<br/><a href=\"https://github.com/maniafschar\" target=\"_blank\">https://github.com/maniafschar</a>",
 			"3": "Wie funktioniert das Geschäftsmodell von Euch?",
 			"3a": "Gewerbetreibende können zusätzliche Dienste einkaufen. Diese werden nur bei passenden Matches aktiv eingeblendet. Es existiert keine Werbung im klassischen Stil.",
 			"4": "Sehe ich also in der App überall Werbung?",
@@ -446,7 +447,7 @@
 			"feedback": "Feedback",
 			"feedbackHint": "Schreibe hier Dein Anliegen",
 			"feedbackUploadSuccess": "Vielen Dank, Dein Feedback wurde erfolgreich gesendet.<br/>Du findest es im Chat mit Susi Support wieder.",
-			"imprint": "JNet Quality Consulting GmbH<br/>Whistlerweg 27b<br/>81479 München<br/>Deutschland<br/>E-Mail: findapp@jq-consulting.de<br/>Internet: https://findapp.online<br/><br/>Geschäftsführer: Mani Afschar Yazdi<br/>Registergericht: Amtsgericht München<br/>Registernummer: HRB 135182",
+			"imprint": "JNet Quality Consulting GmbH<br/>Whistlerweg 27b<br/>81479 München<br/>Deutschland<br/>E-Mail: spontify.me@jq-consulting.de<br/>Internet: https://spontify.me<br/><br/>Geschäftsführer: Mani Afschar Yazdi<br/>Registergericht: Amtsgericht München<br/>Registernummer: HRB 135182",
 			"imprintTitle": "Impressum",
 			"infoOther": "Du bist {0}<br/>und verwendest die App Version ${appVersion}",
 			"legalTitle": "AGB",
@@ -463,7 +464,7 @@
 		},
 		"intro": {
 			"bluetooth": "<ul><li>Öffnest Du ${appTitle}, so scannt <b>Bluetooth Matching</b> Deine unmittelbare Umgebung nach passenden Buddies. Ist ein Match dabei, erhältst Du eine Nachricht</li><li>Es gibt noch viele andere Wege, wie wir matchen, z.B. wenn eine Buddy mit gleichen Interessen eine <b>Location</b> anschaut, die Du als <b>Favorit</b> gespeichert hast</li><li>Zudem zeigen <b>Guides</b> Buddies mit gleichen Interessen Ihre Sicht der Stadt</li></ul>",
-			"contacts": "Sobald Du eingeloggt bist, siehst Du hier die Kontakte in Deiner Umgebung.",
+			"contacts": "<b>Matching</b><br>Wir matchen Benutzer nach folgenden Kriterien, die Du in Deinen Einstellungen angeben kannst:<ul><li>Attribute, die Du an anderen schätzt</li><li>Alter</li><li>Geschlecht</li><li>Budget</li></ul>Sobald Du eingeloggt bist, siehst Du hier Leute in Deiner Umgebung.",
 			"detail": "Die Datailseite enthält<ul><li>Kontaktdaten</li><li>Beschreibung der Location</li><li>Erreichbarkeit der Location</li><li>Kartenansicht</li><li>diverse Schaltflächen um z.B. Locations zu Deinen Favoriten hinzuzufügen</li></ul>",
 			"home": "Manchmal möchte man aus dem Trott raus, Neues entdecken. ${appTitle} hilft<ul><li>dass Buddies mit <b>gleichen Interessen</b>, z.B. Hundeliebhaber oder Konzertgänger, sich finden</li><li>man durch <b>Guides</b> neue Locations und Events kennenlernt</li></ul>Dabei gehen wir wie folgt vor...",
 			"homeImage": "Setze Dein Profilbild, eine kurze Selbstbeschreibung und andere Infos in den Einstellungen.",
@@ -472,13 +473,13 @@
 			"listExplained": "Die Listen bestehen aus dem Bild, Infos und dem Schmetterling mit<ul><li>Entfernungsangabe inklusive Kompass</li><li>Kategorie</li><li>Favoritenstatus</li><li>Bewertung</li></ul>Klickst Du auf den Schmetterling, so kannst Du den Eintrag bewerten.",
 			"listFilter": "Die Listen kannst Du filtern nach<ul><li>Kategorien</li><li>Himmelsrichtungen</li><li>Ortsteile</li></ul>Im Gegensatz zur Suche, bei der die Anfrage neue Daten vom Server holt, agiert der Filter lediglich auf die bereits geladenen Listenelemente.",
 			"listMenu": "Die App ist immer gleich aufgebaut<ul><li>unten das Menü bestehend aus <b>Locations</b>, <b>Buddies</b>, <b>Suchen</b> und <b>Was geht?</b> (sobald Du eingeloggt bist, siehst Du alle)</li><li>klickst Du auf einer der Einträge, öffnet sich das Untermenü</li></ul>",
-			"locations": "Sobald Du eingeloggt bist, siehst Du hier die Kontakte in Deiner Umgebung.",
+			"locations": "<b>Locations${separator}Events</b><br>Hier gibt es Locations/Events<ul><li>Alter</li></ul>Sobald Du eingeloggt bist, siehst Du hier Locations/Events in Deiner Umgebung.",
 			"menuOpen": "Du bist hier wieder in der Liste und kannst durch einen Klick hier das Auswahlmenü wieder öffnen.",
 			"open": "Intro starten...",
 			"register": "Nach der Registrierung zeigen wir Dir, wie Du Dein Profil individualisieren kannst. Lieben Dank dass Du Dir die Zeit für die Intro genommen hast.",
 			"settings": "Nach dem Anmelden beschreibst<ul><li>Du Dich</li><li>das was Du an anderen magst</li><li>die Art von Locations, die Du magst</li></ul>Auf Grund dieser Angaben matchen wir passende Buddies und Locations für Dich.",
 			"settingsLoggedIn": "<ul><li>Ändere hier Dein Profilbild und gib weitere, allgemeine Infos an</li><li>Ein Wisch nach links und Du kannst Dich über diverse Attribute selbst beschreiben und angeben, was Du an anderen Menschen magst</li></ul>",
-			"whattodo": "Sobald Du eingeloggt bist, siehst Du hier die Kontakte in Deiner Umgebung."
+			"whattodo": "<b>Heute schon was vor?</b><br/>Sobald Du eingeloggt bist, kannst Du loslegen."
 		},
 		"landing": {
 			"block1Title": "Wie sieht der Alltag ohne ${appTitle} aus?",
@@ -722,7 +723,7 @@
 			"offers": "Angebote",
 			"ownTextHint": "hier kannst Du Dein Vorhaben genauer beschreiben",
 			"time": "Loslegen möchte ich ab",
-			"todayIWant": "Heute will ich..."
+			"todayIWant": "Heute schon was vor?"
 		},
 		"all": "in der Nähe",
 		"appSubTitle": "neue Leute <span class=\"colorHighlight\">hier</span> und <span class=\"colorHighlight\">heute</span>",

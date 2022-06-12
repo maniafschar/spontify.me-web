@@ -10,8 +10,11 @@ export { pageHome };
 class pageHome {
 	static template = v =>
 		global.template`<div>
-	<homeHeader>
-		<buttonIcon onclick="ui.navigation.goTo(&quot;search&quot;)" style="left:0;text-align:left;">
+	<homeHeader>	
+		<buttonIcon onclick="pageHome.openLanguage()" class="homeIconSearch">
+			<span class="lang">${v.lang}</span>
+		</buttonIcon>
+		<buttonIcon onclick="ui.navigation.goTo(&quot;search&quot;)" class="homeIconSearch" style="display:none;">
 			<img src="images/search.svg" />
 		</buttonIcon>
 		<buttonIcon onclick="ui.navigation.goTo(&quot;settings&quot;)" style="right:0;text-align:right;">
@@ -33,11 +36,11 @@ class pageHome {
 		</buttontext><br/>
 		<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;locations&quot;)" style="width:70%;">
 			<badge name="badgeLocations" class="bgColor pulse" style="left:-1.5em;top:-1.5em;">0</badge>
-			<span>${ui.l('events.title')}</span><img src="images/location.svg" onload="formFunc.image.svgInject(this)" />
+			<span>${ui.l('locations.title') + global.separator + ui.l('events.title')}</span><img src="images/location.svg" onload="formFunc.image.svgInject(this)" />
 		</buttontext><br/>
 		<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;contacts&quot;)" style="width:60%;">
 			<badge name="badgeContacts" class="bgColor pulse" style="top:-1.5em;right:-1.5em;">0</badge>
-			<span>${ui.l('contacts.title')}</span><img src="images/network.svg" onload="formFunc.image.svgInject(this)" />
+			<span>${ui.l('contacts.matching')}</span><img src="images/network.svg" onload="formFunc.image.svgInject(this)" />
 		</buttontext>
 		<homeStatus onclick="pageWhatToDo.wtd.open()"></homeStatus>
 	</homeBody>

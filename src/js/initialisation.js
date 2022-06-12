@@ -18,8 +18,6 @@ class initialisation {
 	static hideStatusBar = true;
 	static recoverInvoked = false;
 	static videoText = '';
-	//'<b style="color:black;font-weight:bold;">Deine Freunde sind noch nicht in findapp?</b><br/><br>Hier zeigen wir, wie Du sie zu findapp <b style="color:black;font-weight:bold;">einladen</b> kannst!',
-	//'<b style="color:black;font-weight:bold;">Langeweile zuhause?</b><br/><br>Hier zeigen wir, wie Du <b style="color:black;font-weight:bold;">spontan</b> etwas unternehmen kannst!',
 	static getStyle(oElm, strCssRule) {
 		var s = '';
 		if (document.defaultView && document.defaultView.getComputedStyle)
