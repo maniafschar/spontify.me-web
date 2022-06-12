@@ -199,7 +199,6 @@ class communication {
 							initialisation.setLanguage(user.contact.language);
 						else
 							lists.resetLists();
-						ui.navigation.openMenu();
 						if (user.contact.birthday && user.contact.birthday.trim().length > 8 && !exec) {
 							var d = new Date();
 							if (d.getMonth() == user.contact.birthday.substring(5, 7) - 1 && d.getDate() == user.contact.birthday.substring(8, 10)) {
@@ -244,6 +243,9 @@ class communication {
 						pageChat.initActiveChats();
 						pageLocation.event.init();
 						geoData.init();
+						e = ui.qa('.homeIconSearch');
+						e[0].style.display = 'none';
+						e[1].style.display = '';
 						bluetooth.stop();
 						bluetooth.requestAuthorization();
 						if (exec)
@@ -336,7 +338,7 @@ class communication {
 					else {
 						ui.navigation.hidePopup();
 						communication.login.removeCredentials();
-						ui.html('login', '<div style="padding:2em;text-align:center;">' + ui.l('login.recoverPasswordBody') + '<br/><br/><br/><buttontext onclick="pageLogin.init();" class="bgColor">&lt;</buttontext></div>');
+						ui.html('login', '<div style="padding:2em;text-align:center;">' + ui.l('login.recoverPasswordBody') + '<br/><br/><br/><buttontext onclick="pageLogin.init()" class="bgColor">&lt;</buttontext></div>');
 						setTimeout(pageLogin.init, 10000);
 					}
 				}
@@ -401,9 +403,8 @@ class communication {
 			pageSettings.currentSettings3 = null;
 			lists.resetLists();
 			communication.setApplicationIconBadgeNumber(0);
-			var e = ui.qa('badgeChats');
+			var e = ui.q('badgeChats');
 			ui.html(e, '0');
-			ui.css(e, 'display', 'none');
 			e = ui.qa('[name="badgeContacts"]');
 			ui.html(e, '0');
 			ui.css(e, 'display', 'none');
@@ -418,8 +419,10 @@ class communication {
 				communication.login.removeCredentials();
 			ui.attr('content > *', 'menuIndex', null);
 			communication.currentCalls = [];
-			ui.css(ui.q('navbar'), 'display', 'none');
 			ui.navigation.goTo('home');
+			e = ui.qa('.homeIconSearch');
+			e[0].style.display = '';
+			e[1].style.display = 'none';
 			e = ui.q('head title');
 			var s = e.innerText;
 			if (s.indexOf(global.separator) > -1)

@@ -26,61 +26,44 @@ class ui {
 	static labels = [];
 	static lastClick = '';
 	static templateMenuLocation = () =>
-		global.template`<div onclick="ui.navigation.toggleMenu();" style="border-radius:3em 0.5em 0 0;">
-    ${ui.l('locations.title')}
+		global.template`<div>
+		${ui.l('events.title')}
 </div>
 <container>
+	<a onclick="communication.loadList(ui.query.eventAll(),pageLocation.event.listEvents,&quot;locations&quot;,&quot;events&quot;)"
+		style="border-bottom:none;">
+		${ui.l('all')}
+	</a><a onclick="communication.loadList(ui.query.eventMatches(),pageLocation.event.listEvents,&quot;locations&quot;,&quot;matches&quot;)"
+		style="border-bottom:none;">
+		${ui.l('search.matches')}
+	</a><a onclick="communication.loadList(ui.query.eventMy(),pageLocation.event.listEventsMy,&quot;locations&quot;,&quot;eventsMy&quot;)"
+		style="border:none;">
+		${ui.l('events.myEvents')}
+	</a>
+</container><div style="margin-top:1em;">
+	${ui.l('locations.title')}
+</div><container>
     <a onclick="communication.loadList(ui.query.locationAll(),pageLocation.listLocation,&quot;locations&quot;,&quot;list&quot;)">
         ${ui.l('all')}
     </a><a onclick="communication.loadList(ui.query.locationMatches(),pageLocation.listLocation,&quot;locations&quot;,&quot;matches&quot;)">
         ${ui.l('search.matches')}
     </a><a onclick="communication.loadList(ui.query.locationFavorites(),pageLocation.listLocation,&quot;locations&quot;,&quot;favorites&quot;)">
         ${ui.l('locations.favoritesButton')}
-    </a>
-    <br />
-    <a onclick="communication.loadList(ui.query.locationVisits(),pageLocation.listLocation,&quot;locations&quot;,&quot;visits&quot;)">
+    </a><a onclick="communication.loadList(ui.query.locationVisits(),pageLocation.listLocation,&quot;locations&quot;,&quot;visits&quot;)">
         ${ui.l('title.history')}
-    </a><a class="nohover">&nbsp;</a><a onclick="pageLocation.edit()">
+    </a><a onclick="pageLocation.edit()">
         ${ui.l('locations.new')}
     </a>
-</container>
-<div>
-    ${ui.l('events.title')}
-</div>
-<container>
-    <a onclick="communication.loadList(ui.query.eventAll(),pageLocation.event.listEvents,&quot;locations&quot;,&quot;events&quot;)"
-        style="border-bottom:none;">
-        ${ui.l('all')}
-    </a><a onclick="communication.loadList(ui.query.eventMatches(),pageLocation.event.listEvents,&quot;locations&quot;,&quot;matches&quot;)"
-        style="border-bottom:none;">
-        ${ui.l('search.matches')}
-    </a><a onclick="communication.loadList(ui.query.eventMy(),pageLocation.event.listEventsMy,&quot;locations&quot;,&quot;eventsMy&quot;)"
-        style="border:none;">
-        ${ui.l('events.myEvents')}
-    </a>
-</container>`;
-	static templateMenuLocationLogoff = () =>
-		global.template`<div onclick="ui.navigation.toggleMenu()" style="border-radius:1em 1em 0 0;">
-	${ui.l('locations.title')}
-</div>
-<container>
-	<a onclick="communication.loadList(ui.query.locationAll(),pageLocation.listLocation,&quot;locations&quot;,&quot;list&quot;)" style="width:100%;border-bottom:none;">
-		${ui.l('all')}
-	</a>
 </container>`;
 	static templateMenuContacts = () =>
-		global.template`<div onclick="ui.navigation.toggleMenu()" style="border-radius:3em 0.5em 0 0;">
-	${ui.l('contacts.title')}
-</div>
-<container>
+		global.template`<container>
     <a onclick="communication.loadList(ui.query.contactAll(),pageContact.listContacts,&quot;contacts&quot;,&quot;list&quot;)">
 			${ui.l('all')}
     </a><a onclick="communication.loadList(ui.query.contactMatches(),pageContact.listContacts,&quot;contacts&quot;,&quot;matches&quot;)">
 		${ui.l('search.matches')}
     </a><a onclick="communication.loadList(ui.query.contactFriends(),pageContact.listContacts,&quot;contacts&quot;,&quot;friends&quot;)">
 		${ui.l('contacts.friendshipTitle')}
-    </a><br />
-    <a onclick="communication.loadList(ui.query.contactVisitees(),pageContact.listContacts,&quot;contacts&quot;,&quot;visits&quot;)">
+    </a><a onclick="communication.loadList(ui.query.contactVisitees(),pageContact.listContacts,&quot;contacts&quot;,&quot;visits&quot;)">
 		${ui.l('title.history')}
 	</a><a onclick="communication.loadList(ui.query.contactVisits(),pageContact.listVisits,&quot;contacts&quot;,&quot;profile&quot;)">
 		${ui.l('title.visits')}
@@ -90,13 +73,13 @@ class ui {
 </container>`;
 	static templateLanding = v =>
 		global.template`<img src="images/splash.svg"/>
-		<landingtitle>findapp</landingtitle>
+		<landingtitle>spontify.me</landingtitle>
 		${v.infoAbout}
 		<landingsubtitle onclick="intro.openIntro()">${ui.l('intro.open')}</landingsubtitle>
 		<landingimages>
-		<img onclick="ui.navigation.openHTML(&quot;https://play.google.com/store/apps/details?id=com.jq.findapp&quot;);"
+		<img onclick="ui.navigation.openHTML(&quot;https://play.google.com/store/apps/details?id=com.jq.findapp&quot;)"
 		src="images/storeGoogle.png" />
-		<img onclick="ui.navigation.openHTML(&quot;https://itunes.apple.com/de/app/id1508097300&quot;);"
+		<img onclick="ui.navigation.openHTML(&quot;https://itunes.apple.com/de/app/id1508097300&quot;)"
 		src="images/storeApple.png" />
 		</landingimages>`;
 	static addFastButton(id) {
@@ -105,6 +88,101 @@ class ui {
 			new FastButton(e[i]);
 			e[i].removeAttribute('onclick');
 		}
+	}
+	static getAttributes(compare, style) {
+		var result = {
+			budget: '',
+			text: '',
+			total: 0,
+			totalMatch: 0
+		};
+		var a, userAttr = user.contact.attrInterest || '';
+		if (compare.idDisplay) {
+			if (userAttr)
+				result.total += userAttr.split('\u0015').length;
+			if (compare.attr) {
+				a = compare.attr.split('\u0015');
+				for (var i = 0; i < a.length; i++) {
+					var attr = ui.attributes[parseInt(a[i], 10)];
+					if (userAttr.indexOf(a[i]) > -1) {
+						result.text += style == 'list' ? ', ' + attr : '<label class="multipleLabel highlight">' + attr + '</label>';
+						result.totalMatch++;
+					} else if (style != 'list')
+						result.text += '<label class="multipleLabel">' + attr + '</label>';
+				}
+			}
+			userAttr = user.contact.attrInterestEx ? ',' + user.contact.attrInterestEx.toLowerCase() + ',' : '';
+			if (userAttr)
+				result.total += userAttr.split(',').length - 2;
+			if (compare.attrEx) {
+				a = compare.attrEx.toLowerCase().split(',');
+				for (var i = 0; i < a.length; i++) {
+					if (userAttr.indexOf(',' + a[i].trim() + ',') > -1) {
+						result.text += style == 'list' ? ', ' + a[i].trim() : '<label class="multipleLabel highlight">' + a[i].trim() + '</label>';
+						result.totalMatch++;
+					} else if (style != 'list')
+						result.text += '<label class="multipleLabel">' + a[i].trim() + '</label>';
+				}
+			}
+		}
+		for (var i = 0; i < ui.categories.length; i++) {
+			userAttr = user.contact['attr' + i] || '';
+			var compareHasCat = compare.category ? compare.category.indexOf(i) > -1 : compare['attr' + i] || compare['attr' + i + 'Ex'];
+			if (userAttr && (compare.idDisplay || compareHasCat))
+				result.total += userAttr.split('\u0015').length;
+			if (compareHasCat) {
+				result.text += style == 'list' ? ', ' + ui.categories[i].label : '</div><div><label class="multipleLabel' + (userAttr ? ' highlight' : '') + '">' + ui.categories[i].label + '</label>';
+				if (userAttr)
+					result.totalMatch++;
+			}
+			if (compare['attr' + i]) {
+				a = compare['attr' + i].split('\u0015');
+				for (var i2 = 0; i2 < a.length; i2++) {
+					var attr = ui.categories[i].subCategories[parseInt(a[i2], 10)];
+					if (userAttr.indexOf(a[i2]) > -1) {
+						result.text += style == 'list' ? ', ' + attr : '<label class="multipleLabel highlight">' + attr + '</label>';
+						result.totalMatch++;
+					} else if (style != 'list')
+						result.text += '<label class="multipleLabel">' + attr + '</label>';
+				}
+			}
+			userAttr = user.contact['attr' + i + 'Ex'] ? ',' + user.contact['attr' + i + 'Ex'].toLowerCase() + ',' : '';
+			if (userAttr && (compare.idDisplay || compareHasCat))
+				result.total += userAttr.split(',').length - 2;
+			if (compare['attr' + i + 'Ex']) {
+				a = compare['attr' + i + 'Ex'].split(',');
+				for (var i2 = 0; i2 < a.length; i2++) {
+					if (userAttr.indexOf(',' + a[i2] + ',') > -1) {
+						result.text += style == 'list' ? ', ' + a[i2].trim() : '<label class="multipleLabel highlight">' + a[i2].trim() + '</label>';
+						result.totalMatch++;
+					} else if (style != 'list')
+						result.text += '<label class="multipleLabel">' + a[i2].trim() + '</label>';
+				}
+			}
+		}
+		if (user.contact.budget)
+			result.total += user.contact.budget.split('\u0015').length;
+		if (compare.budget) {
+			var userBudget = user.contact.budget || '';
+			var b = compare.budget.split('\u0015');
+			for (var i = 0; i < b.length; i++) {
+				var s = '', i2 = 0;
+				var max = 1 + parseInt(b[i]);
+				for (; i2 < max; i2++)
+					s += ui.l('budget');
+				if (max < 3) {
+					s += '<span style="opacity:0.3;">';
+					for (; i2 < 3; i2++)
+						s += ui.l('budget');
+					s += '</span>';
+				}
+				result.budget += '<label class="multipleLabel' + (userBudget.indexOf(b[i]) > -1 ? ' highlight' : '') + '">' + s + '</label>';
+			}
+			result.totalMatch += result.budget.split('highlight').length - 1;
+		}
+		if (result.text)
+			result.text = style == 'list' ? result.text.substring(2) : '<div>' + result.text + '</div>';
+		return result;
 	}
 	static getEvtPos(e, horizontal) {
 		if (!e)
@@ -124,7 +202,6 @@ class ui {
 	}
 	static navigation = {
 		animationEvent: null,
-		detailAnimation: null,
 		lastID: null,
 
 		animation(e, c, exec) {
@@ -281,6 +358,8 @@ class ui {
 				id = e.nodeName.toLowerCase();
 			if (id == 'whattodo' && ui.q('notifications:not([style*="none"])'))
 				id = 'notifications';
+			if (id == 'home' && ui.cssValue(id, 'display') == 'none')
+				ui.css(id, 'display', 'block');
 			return id;
 		},
 		goBack() {
@@ -301,6 +380,13 @@ class ui {
 			}
 		},
 		goTo(id, event, back) {
+			if (!user.contact && id != 'home' && id != 'info') {
+				if (id == 'whattodo' || id == 'locations' || id == 'contacts') {
+					intro.openHint({ desc: id, pos: '10%,5em', size: '80%,auto', onclick: 'ui.navigation.goTo("login")' });
+					return;
+				}
+				id = 'login';
+			}
 			geoData.headingClear();
 			if (ui.classContains('content', 'animated') || ui.classContains('menu', 'animated') || pageChat.close())
 				return;
@@ -323,6 +409,10 @@ class ui {
 				pageLogin.init();
 			else if (id == 'home')
 				pageHome.init();
+			else if (id == 'contacts')
+				pageContact.init();
+			else if (id == 'locations')
+				pageLocation.init();
 			else if (id == 'whattodo') {
 				pageWhatToDo.init();
 				if (oldID == 'notifications') {
@@ -331,66 +421,19 @@ class ui {
 				}
 			} else if (id == 'search')
 				pageSearch.init();
-			if (id != 'home')
-				ui.css('navbar', 'display', '');
 			pageChat.closeList();
-			if (ui.navigation.detailAnimation)
-				clearTimeout(ui.navigation.detailAnimation);
-			if (global.isBrowser() && id != 'home' && location.href.indexOf('#') < 0)
-				history.pushState(null, null, '#x');
 			if (event)
 				event.stopPropagation();
 			ui.navigation.hidePopup();
-			if (oldID == id) {
-				if (id == 'locations' || id == 'contacts') {
-					ui.navigation.toggleMenu(null, id);
-					if (user.contact && !user.contact.introState.menuOpen)
-						user.introState_session.menuOpen = user.introState_session.menuOpen + 1;
-				} else if (id == 'whattodo')
-					pageWhatToDo.openNotifications();
-				return;
-			}
-			ui.navigation.hideMenu(function () {
-				if ((id == 'locations' || id == 'contacts') && oldID != id && !ui.q(id + ' row'))
-					ui.navigation.toggleMenu(null, id);
-			});
+			ui.css('main>buttonIcon', 'display', id == 'home' ? 'none' : '');
 			var s = id;
 			if (s == 'detail' && oldID == 'notifications')
 				s = 'whattodo';
 			else if (s != 'whattodo' && s != 'locations' && s != 'contacts' && s != 'whattodo' && s != 'login' && s != 'info' && s != 'search' && s.indexOf('settings') < 0)
 				s = oldID;
-			var e = ui.q('navbar');
-			if (e) {
-				e = e.children;
-				for (var i = 1; i < e.length; i++) {
-					if (e[i].getAttribute && e[i].getAttribute('id')) {
-						if (e[i].getAttribute('id').toLowerCase().indexOf(s) > 2)
-							ui.classAdd(e[i], 'active');
-						else
-							ui.classRemove(e[i], 'active');
-					}
-				}
-			}
 			if (oldID != id) {
 				ui.navigation.fade(id, back);
-				if (user.contact && user.contact.introState.menuOpen && oldID == 'detail' && (id == 'locations' || id == 'contacts')) {
-					user.introState_session.goToList = user.introState_session.goToList + 1;
-					if (id == 'locations' && user.introState_session.goToList > 10 && user.introState_session.menuOpen == 0)
-						intro.openHint({ desc: 'menuOpen', pos: '10%,-5em', size: '80%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'bottom', onclick: 'ui.navigation.goTo("' + id + '")' }, true);
-				}
-				if (id == 'home') {
-					user.introState_session.goHome = user.introState_session.goHome + 1;
-					if (user.contact) {
-						if (!user.contact.introState.homeImage && user.introState_session.goHome > 2)
-							intro.openHint({ desc: 'homeImage', pos: '10%,17em', size: '80%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'top', onclick: 'ui.navigation.goTo("settings")' }, true);
-						else if (user.introState_session.goHome > 10) {
-							if (!user.contact.introState.homeLocation)
-								intro.openHint({ desc: 'homeLocation', pos: '5%,15em', size: '90%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'bottom', onclick: 'pageLocation.edit()' }, true);
-							else if (!user.contact.introState.homeInvite)
-								intro.openHint({ desc: 'homeInvite', pos: '5%,28em', size: '90%,auto', hinky: 'left:50%;margin-left:-8.1em;', hinkyClass: 'bottom', onclick: 'ui.css("infoblock","display","none");pageInfo.openSection=4;ui.navigation.goTo("info");' }, true);
-						}
-					}
-				}
+				ui.navigation.hideMenu();
 			}
 			ui.navigation.lastID = oldID;
 		},
@@ -412,9 +455,9 @@ class ui {
 			ui.classRemove(e, 'animated popupSlideIn popupSlideOut');
 		},
 		hideMenu(exec) {
-			if (ui.cssValue('menu', 'display') != 'none')
-				ui.navigation.toggleMenu(exec);
-			else if (exec)
+			if (ui.cssValue('menu', 'transform').indexOf('1') > 0)
+				ui.navigation.toggleMenu();
+			if (exec)
 				exec.call();
 		},
 		openAGB() {
@@ -432,12 +475,6 @@ class ui {
 				}
 			}
 			return e;
-		},
-		openMenu() {
-			var e = ui.qa('[name="navElem"]');
-			for (var i = 0; i < e.length; i++)
-				e[i].style.display = '';
-			ui.classRemove('navbar > navbutton', 'loggedOff');
 		},
 		openPopup(title, data, closeAction, modal, exec) {
 			intro.closeIntro();
@@ -486,39 +523,20 @@ class ui {
 			ui.html(e, s);
 			formFunc.initFields('popup');
 		},
-		toggleMenu(exec, activeID) {
+		toggleMenu(activeID) {
 			if (!activeID) {
 				activeID = ui.navigation.getActiveID();
 				if (activeID == 'notifications')
 					activeID = 'whattodo';
 			}
 			var e = ui.q('menu');
-			if (!e)
-				return;
-			if (activeID == 'locations') {
-				if (user.contact)
-					ui.html(e, ui.templateMenuLocation());
-				else
-					ui.html(e, ui.templateMenuLocationLogoff());
-			} else if (activeID == 'contacts')
+			if (activeID == 'locations')
+				ui.html(e, ui.templateMenuLocation());
+			else if (activeID == 'contacts')
 				ui.html(e, ui.templateMenuContacts());
 			ui.addFastButton('menu');
 			ui.classAdd(ui.qa('menu a')[parseInt(ui.q(activeID).getAttribute('menuIndex'))], 'menuHighlight');
-			var e2 = ui.qa('menu [name="badgeNotifications"]');
-			if (e2) {
-				var e3 = ui.q('navbar [name="badgeNotifications"]');
-				if (e3) {
-					ui.html(e2, e3.innerHTML);
-					ui.css(e2, 'display', e3.innerHTML > 0 ? 'block' : 'none');
-				}
-			}
-			var b = e.style.display == 'none';
-			ui.navigation.animation(e, 'menuSlide' + (b ? 'In' : 'Out'), function () {
-				if (!b)
-					ui.css(e, 'display', 'none');
-				if (exec)
-					exec.call();
-			});
+			ui.css(e, 'transform', e.style.transform.indexOf('1') > 0 ? 'scale(0)' : 'scale(1)')
 		}
 	};
 	static openDescription(event, id) {
@@ -712,16 +730,16 @@ class ui {
 	static swipe(e, exec, exclude) {
 		if (typeof e == 'string')
 			e = ui.q(e);
-		exclude = exclude ? exclude.toUpperCase() : '';
+		exclude = exclude ? ',' + exclude.toUpperCase() + ',' : '';
 		ui.on(e, 'touchstart', function (event) {
-			if (exclude.indexOf(event.target.nodeName) < 0 && exclude.indexOf(event.target.parentNode.nodeName) < 0) {
+			if (exclude.indexOf(',' + event.target.nodeName + ',') < 0 && exclude.indexOf(',' + event.target.parentNode.nodeName + ',') < 0) {
 				e.startX = event.changedTouches[0].pageX;
 				e.startY = event.changedTouches[0].pageY;
 				e.startTime = new Date().getTime();
 			}
 		});
 		ui.on(e, 'touchend', function (event) {
-			if (exclude.indexOf(event.target.nodeName) < 0 && exclude.indexOf(event.target.parentNode.nodeName) < 0) {
+			if (exclude.indexOf(',' + event.target.nodeName + ',') < 0 && exclude.indexOf(',' + event.target.parentNode.nodeName + ',') < 0) {
 				var distX = event.changedTouches[0].pageX - e.startX;
 				var distY = event.changedTouches[0].pageY - e.startY;
 				var elapsedTime = new Date().getTime() - e.startTime;
@@ -907,8 +925,8 @@ class formFunc {
 			if (file) {
 				var ePrev = ui.q('[name="' + name + '_disp"]');
 				ui.css(ePrev, 'z-index', 999);
-				var p = '<rotate onclick="formFunc.image.rotate(this);">&#8635;</rotate><img name="' + name + 'Preview"/>';
-				ui.html(ePrev, '<close onclick="formFunc.image.remove(&quot;' + name + '&quot;);">X</close>' + p + '<desc></desc>');
+				var p = '<rotate onclick="formFunc.image.rotate(this)">&#8635;</rotate><img name="' + name + 'Preview"/>';
+				ui.html(ePrev, '<close onclick="formFunc.image.remove(&quot;' + name + '&quot;)">X</close>' + p + '<desc></desc>');
 				formFunc.image.previewInternal(file, name);
 			} else
 				formFunc.image.remove(name);
@@ -1069,6 +1087,17 @@ class formFunc {
 			ctx.drawImage(image, x, y, wOrg, hOrg, 0, 0, w, h);
 			return { data: canvas.toDataURL('image/jpeg', 0.8), width: parseInt(w + 0.5), height: parseInt(h + 0.5) };
 		},
+		svgInject(img) {
+			communication.ajax({
+				url: img.src,
+				success(r) {
+					var parser = new DOMParser();
+					var xmlDoc = parser.parseFromString(r, "text/xml");
+					var svg = xmlDoc.getElementsByTagName('svg')[0];
+					img.parentNode.replaceChild(svg, img);
+				}
+			});
+		},
 		zoom(event, delta) {
 			var e = event.target;
 			if (e.nodeName != 'IMG') {
@@ -1117,13 +1146,13 @@ class formFunc {
 			e[i].onfocus = function () { document.body.scrollTop = 0; }
 			ui.on(e, 'keypress', formFunc.pressDefaultButton);
 			if ((e[i].type === 'checkbox' || e[i].type === 'radio') && (!e[i].nextSibling || e[i].nextSibling.nodeName.toLowerCase() !== 'label'))
-				e[i].outerHTML = e[i].outerHTML + '<label onclick="formFunc.toggleCheckbox(event);"' + (e[i].attributes['style'] ? ' style="' + e[i].attributes['style'].value + '"' : '') + (e[i].attributes['class'] ? ' class="' + e[i].attributes['class'].value + '"' : '') + '>' + e[i].attributes['label'].value + '</label>';
+				e[i].outerHTML = e[i].outerHTML + '<label onclick="formFunc.toggleCheckbox(event)"' + (e[i].attributes['style'] ? ' style="' + e[i].attributes['style'].value + '"' : '') + (e[i].attributes['class'] ? ' class="' + e[i].attributes['class'].value + '"' : '') + '>' + e[i].attributes['label'].value + '</label>';
 			else if (e[i].type === 'text' && e[i].getAttribute('choices')) {
 				var a = eval('formFunc.inputHelper.get' + e[i].getAttribute('choices') + '();');
 				var id2 = 'inputHelper' + e[i].id;
 				var s = '';
 				for (var i2 = 0; i2 < a.length; i2++)
-					s += '<input type="radio"' + (e[i].attributes['class'] ? ' class="' + e[i].attributes['class'].value + '"' : '') + ' label="' + a[i2] + '" name="' + id2 + '" transient="true" style="background:none;" onclick="pageSettings.setChoicesSelection(&quot;' + e[i].id + '&quot;,&quot;' + a[i2] + '&quot;);"/>';
+					s += '<input type="radio"' + (e[i].attributes['class'] ? ' class="' + e[i].attributes['class'].value + '"' : '') + ' label="' + a[i2] + '" name="' + id2 + '" transient="true" style="background:none;" onclick="pageSettings.setChoicesSelection(&quot;' + e[i].id + '&quot;,&quot;' + a[i2] + '&quot;)"/>';
 				var e2 = document.createElement('div');
 				e2.style = (e[i].style.display === 'none' ? 'display:none;' : '') + 'margin-top:0.5em;';
 				e2.id = id2;
@@ -1238,8 +1267,8 @@ class formFunc {
 					if (!global.isBrowser()) {
 						e[i].setAttribute('style', 'display:none;');
 						var s2 = e[i].getAttribute('name');
-						s = '<div name="' + s2 + '_appInput" class="appInput"><buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + s2 + '&quot;,true);">' + ui.l('camera.shoot') + '</buttontext>' +
-							'<buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + s2 + '&quot;);">' + ui.l('camera.select') + '</buttontext></div>';
+						s = '<div name="' + s2 + '_appInput" class="appInput"><buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + s2 + '&quot;,true)">' + ui.l('camera.shoot') + '</buttontext>' +
+							'<buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + s2 + '&quot;)">' + ui.l('camera.select') + '</buttontext></div>';
 					}
 					e[i].outerHTML = s + '<inputFile name="' + e[i].getAttribute('name') + '_disp" ' + (e[i].getAttribute('class') ? 'class="' + e[i].getAttribute('class') + '" ' : '') + (global.isBrowser() ? '' : ' style="display:none;"') + '><span>' + (e[i].getAttribute('hint') ? e[i].getAttribute('hint') : ui.l('fileUpload.select')) + '</span></inputFile>' + e[i].outerHTML;
 				}
@@ -1298,14 +1327,6 @@ class formFunc {
 		getAttributes5() {
 			return ui.categories[5].subCategories;
 		},
-		getBudget() {
-			var a = [];
-			a.push(ui.l('budget0'));
-			a.push(ui.l('budget1'));
-			a.push(ui.l('budget2'));
-			a.push(ui.l('budget3'));
-			return a;
-		},
 		getMessages() {
 			return pageWhatToDo.wtd.getMessages();
 		},
@@ -1331,7 +1352,7 @@ class formFunc {
 	static openChoices(id, exec) {
 		var e = ui.q('#' + id);
 		var v = e.getAttribute('valueEx');
-		ui.navigation.openPopup(e.parentNode.parentNode.children[0].innerText.trim(), '<input id="' + id + 'HelperPopup" type="text" multiple="' + e.getAttribute('multiplePopup') + '" value="' + e.value + '"/>' + (v == null ? '<br/>' : '<input type="text" id="' + id + 'HelperPopupEx" value="' + v + '" placeholder="' + ui.l('contacts.blockReason100') + '" style="margin-bottom:0.5em;"' + (e.getAttribute('maxEx') ? ' maxlength="' + e.getAttribute('maxEx') + '"' : '') + '/>') + '<buttontext onclick="formFunc.setChoices(&quot;' + id + '&quot;' + (exec ? ',' + exec : '') + ');" class="bgColor">' + ui.l('ready') + '</buttontext><popupHint></popupHint>');
+		ui.navigation.openPopup(e.parentNode.parentNode.children[0].innerText.trim(), '<input id="' + id + 'HelperPopup" type="text" multiple="' + e.getAttribute('multiplePopup') + '" value="' + e.value + '"/>' + (v == null ? '<br/>' : '<input type="text" id="' + id + 'HelperPopupEx" value="' + v + '" placeholder="' + ui.l('contacts.blockReason100') + '" style="margin-bottom:0.5em;"' + (e.getAttribute('maxEx') ? ' maxlength="' + e.getAttribute('maxEx') + '"' : '') + '/>') + '<buttontext onclick="formFunc.setChoices(&quot;' + id + '&quot;' + (exec ? ',' + exec : '') + ')" class="bgColor">' + ui.l('ready') + '</buttontext><popupHint></popupHint>');
 		formFunc.initFields('popup');
 	}
 	static pressDefaultButton(event) {

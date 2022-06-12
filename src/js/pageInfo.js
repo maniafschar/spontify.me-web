@@ -14,50 +14,50 @@ class pageInfo {
 	static sentFeedback = [];
 	static template = v =>
 		global.template`<div style="padding-top:1.5em;">
-    <buttontext class="bgColor infoButton" onclick="pageInfo.toggleInfoBlock(&quot;#info4&quot;);">
+    <buttontext class="bgColor infoButton" onclick="pageInfo.toggleInfoBlock(&quot;#info4&quot;)">
         ${ui.l('home.DescLink')}
     </buttontext>
     <infoblock id="info4" style="padding-top:0.5em;display:none;">
         ${v['infoAbout']}
-        <div id="infoVersion" onclick="pageInfo.openMap();" style="padding-top:1em;cursor:pointer;"></div>
+        <div id="infoVersion" onclick="pageInfo.openMap()" style="padding-top:1em;cursor:pointer;"></div>
     </infoblock>
-    <buttontext class="bgColor infoButton" onclick="pageInfo.toggleInfoBlock(&quot;#info1&quot;);">
+    <buttontext class="bgColor infoButton" onclick="pageInfo.toggleInfoBlock(&quot;#info1&quot;)">
 		${ui.l('info.legalTitle')}
     </buttontext>
     <infoblock id="info1" style="display:none;" class="overflow">
 		${ui.l('infoLegal')}
     </infoblock>
-    <buttontext class="bgColor infoButton" onclick="pageInfo.toggleInfoBlock(&quot;#info3&quot;);">
+    <buttontext class="bgColor infoButton" onclick="pageInfo.toggleInfoBlock(&quot;#info3&quot;)">
 		${ui.l('info.dsgvoTitle')}
     </buttontext>
     <infoblock id="info3" style="display:none;" class="overflow">
 		${ui.l('infoDSGVO')}
     </infoblock>
-    <buttontext class="bgColor infoButton" onclick="pageInfo.toggleInfoBlock(&quot;#info2&quot;);">
+    <buttontext class="bgColor infoButton" onclick="pageInfo.toggleInfoBlock(&quot;#info2&quot;)">
 		${ui.l('info.imprintTitle')}
     </buttontext>
     <infoblock id="info2" style="display:none;">
 		${ui.l('info.imprint')}
     </infoblock>
-    <buttontext class="bgColor infoButton${v['feedback']}" onclick="pageInfo.toggleInfoBlock(&quot;#info6&quot;);">
+    <buttontext class="bgColor infoButton${v['feedback']}" onclick="pageInfo.toggleInfoBlock(&quot;#info6&quot;)">
 		${ui.l('info.feedback')}
     </buttontext>
-    <infoblock id="info6" style="display:none;">
+    <div id="info6" style="display:none;text-align:center;">
         <textarea placeholder="${ui.l('info.feedbackHint')}" maxlength="2000" id="feedbackText" style="height:10em;width:90%;"></textarea>
-        <buttontext onclick="pageInfo.sendFeedback(ui.val(&quot;#feedbackText&quot;));"
-            class="bgColor2" style="margin-top:0.5em;">${ui.l('send')}
+        <buttontext onclick="pageInfo.sendFeedback(ui.val(&quot;#feedbackText&quot;))"
+            class="bgColor" style="margin-top:0.5em;">${ui.l('send')}
         </buttontext>
         <feedbackHint></feedbackHint>
-    </infoblock>
+    </div>
 	<buttontext class="bgColor infoButton" onclick="pageInfo.toggleMarketing()"${v.marketingDisplay}>${v.marketingTitle}</buttontext>
-	<infoblock id="info5" style="display:none;width:auto;margin:1em -0.5em;"></infoblock>
-	<buttontext onclick="pageInfo.socialShare();" id="socialShare" class="bgColor infoButton">
+	<div id="info5" style="display:none;margin-bottom:1em;"></div>
+	<buttontext onclick="pageInfo.socialShare()" id="socialShare" class="bgColor infoButton">
 		${ui.l('sendSocialShare')}
 	</buttontext>
 	<div style="text-align:center;color:white;padding-top:2em;">© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>
 </div>`;
 	static templateAbout = v =>
-		global.template`<landingsubtitle onclick="pageInfo.toggleInfoBlock(&quot;${v.parent} #landing0&quot;, event);" style="padding-top:0;">
+		global.template`<landingsubtitle onclick="pageInfo.toggleInfoBlock(&quot;${v.parent} #landing0&quot;, event)" style="padding-top:0;">
 	${ui.l('appSubTitle')}
 </landingsubtitle>
 <landingblock id="landing0">
@@ -234,7 +234,7 @@ class pageInfo {
 				responseType: 'json',
 				success(r) {
 					if (r.list)
-						e.innerHTML = (r.text ? '<div style="cursor:pointer;padding:0 0.5em 0.5em 0.5em"' + (r.action ? ' onclick="ui.navigation.autoOpen(&quot;' + r.action + '&quot;)"' : '') + '>' + r.text + '</div>' : '') + pageContact.listContacts(r.list);
+						e.innerHTML = (r.text ? '<div style="cursor:pointer;margin:0 0.5em;background:rgba(255,255,255,0.6);padding:1em;border-radius:0.5em;text-align:center;"' + (r.action ? ' onclick="ui.navigation.autoOpen(&quot;' + r.action + '&quot;)"' : '') + '>' + r.text + '</div>' : '') + pageContact.listContacts(r.list);
 					else if (r.html)
 						e.innerHTML = r.html;
 					ui.addFastButton('#info5');

@@ -5,6 +5,7 @@ import { global } from './global';
 import { lists } from './lists';
 import { Chat, Contact, model } from './model';
 import { pageContact } from './pageContact';
+import { pageLocation } from './pageLocation';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 
@@ -20,9 +21,9 @@ class pageChat {
 		global.template`<chatInput>
 	<chatMoreButton style="display:none;" onclick="pageChat.scrollToBottom()">v v v</chatMoreButton>
 	<chatButtons>
-		<buttontext class="bgColor" onclick="pageChat.askLink();">${ui.l('share')}</buttontext>
-		<buttontext class="bgColor" onclick="pageChat.askLocation();">${ui.l('chat.serviceLocation')}</buttontext>
-		<buttontext class="bgColor" onclick="pageChat.askImage();">${ui.l('picture')}</buttontext>
+		<buttontext class="bgColor" onclick="pageChat.askLink()">${ui.l('share')}</buttontext>
+		<buttontext class="bgColor" onclick="pageChat.askLocation()">${ui.l('chat.serviceLocation')}</buttontext>
+		<buttontext class="bgColor" onclick="pageChat.askImage()">${ui.l('picture')}</buttontext>
 		<buttontext class="bgColor quote" ${v.action}="pageChat.insertQuote(event);">${ui.l('quote')}</buttontext>
 	</chatButtons>
 	<textarea id="chatText" style="height:1.6em;" class="me" placeholder="${ui.l('chat.textHint')}"
@@ -47,7 +48,7 @@ class pageChat {
 		if (geoData.localized) {
 			var s = global.string.replaceInternalLinks(' :openPos(' + geoData.latlon.lat + ',' + geoData.latlon.lon + '): ');
 			s = s.replace(/onclick="ui.navigation.autoOpen/g, 'onclick="pageChat.doNothing');
-			ui.navigation.openPopup(ui.l('chat.askInsertCurrentLocationLink'), '<div style="text-align:center;margin-bottom:1em;"><div style="float:none;text-align:center;margin:1em 0;">' + s + '</div><buttontext class="bgColor" onclick="pageChat.insertLink();">' + ui.l('send') + '</buttontext></div>');
+			ui.navigation.openPopup(ui.l('chat.askInsertCurrentLocationLink'), '<div style="text-align:center;margin-bottom:1em;"><div style="float:none;text-align:center;margin:1em 0;">' + s + '</div><buttontext class="bgColor" onclick="pageChat.insertLink()">' + ui.l('send') + '</buttontext></div>');
 		} else
 			ui.navigation.openPopup(ui.l('attention'), ui.l('chat.serviceSendError'));
 	}
@@ -68,7 +69,7 @@ class pageChat {
 				s2 = s2.replace(/onclick="ui.navigation.autoOpen/g, 'onclick="pageChat.toggleInsertCopyLinkEntry');
 			else
 				s2 = s2.replace(/onclick="ui.navigation.autoOpen/g, 'onclick="pageChat.doNothing');
-			ui.navigation.openPopup(ui.l('chat.askInsertCopyLink' + (c > 1 ? 's' : '')), '<div style="text-align:center;margin:1em 0;">' + (c > 1 ? '<div id="askInsertCopyLinkHint">' + ui.l('chat.askInsertCopyLinksBody') + '</div>' : '') + '<div style="text-align:center;margin:1em 0;">' + s2 + '</div><buttontext class="bgColor" onclick="pageChat.insertLink(&quot;pressed&quot;);">' + ui.l('send') + '</buttontext></div>');
+			ui.navigation.openPopup(ui.l('chat.askInsertCopyLink' + (c > 1 ? 's' : '')), '<div style="text-align:center;margin:1em 0;">' + (c > 1 ? '<div id="askInsertCopyLinkHint">' + ui.l('chat.askInsertCopyLinksBody') + '</div>' : '') + '<div style="text-align:center;margin:1em 0;">' + s2 + '</div><buttontext class="bgColor" onclick="pageChat.insertLink(&quot;pressed&quot;)">' + ui.l('send') + '</buttontext></div>');
 			ui.classAdd('popup .chatLinks', 'pressed');
 		} else
 			ui.navigation.openPopup(ui.l('attention'), ui.l('link.sendError').replace('{0}', '<br/><buttontext class="bgColor" style="margin:1em;">' + ui.l('share') + '</buttontext><br/>'));
@@ -77,7 +78,7 @@ class pageChat {
 		if (document.activeElement)
 			document.activeElement.blur();
 		var popupVisible = ui.q('popupContent');
-		ui.navigation.openPopup(ui.l('chat.sendImg'), '<form name="chatImg" action="saveChatImage" style="padding:0 2em;"><input type="hidden" name="contactId2" value="' + ui.q('chat').getAttribute('i') + '"><div style="padding:1em;"><input name="image" type="file"/></div><div style="text-align:center;margin-bottom:1em;"></form><buttontext onclick="pageChat.sendChatImage();" class="bgColor" id="popupSendImage"' + (global.isBrowser() ? '' : ' style="display:none;"') + '>' + ui.l('send') + '</buttontext></div>');
+		ui.navigation.openPopup(ui.l('chat.sendImg'), '<form name="chatImg" action="saveChatImage" style="padding:0 2em;"><input type="hidden" name="contactId2" value="' + ui.q('chat').getAttribute('i') + '"><div style="padding:1em;"><input name="image" type="file"/></div><div style="text-align:center;margin-bottom:1em;"></form><buttontext onclick="pageChat.sendChatImage()" class="bgColor" id="popupSendImage"' + (global.isBrowser() ? '' : ' style="display:none;"') + '>' + ui.l('send') + '</buttontext></div>');
 		if (!popupVisible && global.isBrowser()) {
 			var e = ui.q('[name="image"]');
 			if (e)
@@ -89,7 +90,7 @@ class pageChat {
 		e.scrollTop = e.scrollTop + i;
 	}
 	static close(event, exec) {
-		if (event && event.target.parentNode.nodeName == 'LISTHINT')
+		if (event && event.target.nodeName != 'CHATINPUT')
 			return;
 		var e = ui.q('chat');
 		if (ui.cssValue(e, 'display') == 'none')
@@ -100,13 +101,15 @@ class pageChat {
 			ui.html(e, '');
 			ui.attr(e, 'i', null);
 			ui.attr(e, 'type', null);
+			if (ui.navigation.getActiveID() != 'home')
+				ui.css('main>buttonIcon', 'display', '');
+			var activeID = ui.navigation.getActiveID();
+			if (activeID == 'contacts')
+				pageContact.init();
+			else if (activeID == 'locations')
+				pageLocation.init();
 			if (exec && exec.call)
 				exec.call();
-			else {
-				var activeID = ui.navigation.getActiveID();
-				if ((activeID == 'contacts' || activeID == 'locations') && !ui.q(activeID + ' listBody') && ui.cssValue('chatUserList', 'display') == 'none')
-					ui.navigation.toggleMenu(null, activeID);
-			}
 		});
 		return true;
 	}
@@ -229,7 +232,6 @@ class pageChat {
 		});
 	}
 	static insertQuote(event) {
-		event.preventDefault();
 		communication.ajax({
 			url: global.server + 'action/quotation',
 			success(r) {
@@ -308,7 +310,7 @@ class pageChat {
 					e = ui.q('chat');
 					ui.css(e, 'display', 'none');
 					ui.attr(e, 'type', location ? 'location' : 'contact');
-					ui.html(e, '<listHeader onclick="ui.navigation.autoOpen(&quot;' + global.encParam((location ? 'l=' : 'p=') + id) + '&quot;);"><img /><chatName></chatName><chatDate></chatDate></listHeader><div></div>');
+					ui.html(e, '<listHeader onclick="ui.navigation.autoOpen(&quot;' + global.encParam((location ? 'l=' : 'p=') + id) + '&quot;)"><img /><chatName></chatName><chatDate></chatDate></listHeader><div></div>');
 					if (location) {
 						ui.classAdd(e, 'location');
 						var path = 'popup detail';
@@ -318,7 +320,7 @@ class pageChat {
 						e = ui.q('chat listHeader img');
 						ui.attr(e, 'src', ui.q(path + ' detailImg img').getAttribute('src'));
 						if (e.getAttribute('src').indexOf('.svg') > 0) {
-							ui.classAdd(e, 'bgColor2');
+							ui.classAdd(e, 'bgColor');
 							ui.css(e, 'padding', '0.6em');
 						}
 					} else {
@@ -334,7 +336,7 @@ class pageChat {
 								else {
 									var e2 = ui.q('chat[i="' + id + '"] listHeader img');
 									ui.attr(e2, 'src', 'images/contact.svg');
-									ui.classAdd(e2, 'bgColor2');
+									ui.classAdd(e2, 'bgColor');
 									ui.css(e2, 'padding', '0.6em');
 								}
 							}
@@ -343,12 +345,14 @@ class pageChat {
 					ui.navigation.hideMenu();
 					ui.navigation.hidePopup();
 					pageChat.closeList();
+					ui.css('main>buttonIcon', 'display', 'none');
 					ui.off('chatConversation', 'scroll', pageChat.reposition);
 					pageChat.detailChat(r, id);
 					ui.swipe('chatInput', function (dir) {
 						if (dir == 'up')
 							pageChat.close();
 					}, 'textarea');
+					ui.on('chatInput', 'click', pageChat.close);
 					ui.on('chatConversation', 'scroll', pageChat.reposition);
 					e = ui.q('home');
 					if (ui.cssValue(e, 'display') != 'none')
@@ -381,7 +385,7 @@ class pageChat {
 		}
 		if (user.contact.groups) {
 			ui.navigation.hideMenu();
-			var s = '<div class="smilyBox" style="margin-bottom:1em;"><buttontext onclick="pageChat.insertLinkInGroup();" class="bgColor" style="margin:1em;">' + ui.l('share') + '</buttontext><buttontext class="bgColor" onclick="pageChat.sendChatGroup();">' + ui.l('send') + '</buttontext></div>';
+			var s = '<div class="smilyBox" style="margin-bottom:1em;"><buttontext onclick="pageChat.insertLinkInGroup()" class="bgColor" style="margin:1em;">' + ui.l('share') + '</buttontext><buttontext class="bgColor" onclick="pageChat.sendChatGroup()">' + ui.l('send') + '</buttontext></div>';
 			var v = user.contact.chatTextGroups;
 			if (!v) {
 				v = ui.q('[name="groupdialog"]:checked');
@@ -422,7 +426,7 @@ class pageChat {
 		var e2 = ui.q('popupTitle');
 		if (e2 && e2.innerHTML.indexOf(ui.l('chat.sendImg')) == 0)
 			e2.innerHTML = e2.innerHTML.substring(0, e2.innerHTML.indexOf('<img')) + ' ' + e2.innerHTML.substring(e2.innerHTML.indexOf('<img'));
-		ui.navigation.openPopup(ui.l('chat.sendImg'), '<img src="images/buttonRotate.png" style="position:absolute;width:3em;" onclick="formFunc.image.rotate(this);"><img name="imagepreview" class="chatImgPreview" onclick="formFunc.image.rotate(this);"/><br/><buttontext onclick="pageChat.sendChatImage();" class="bgColor" style="margin-top:1em;">' + ui.l('ready') + '</buttontext><div class="chatSendImgPrevHint" style="bottom:5.5em;"></div><div class="chatSendImgPrevHint"></div>', 'formFunc.image.remove(&quot;image&quot;)', false, function () {
+		ui.navigation.openPopup(ui.l('chat.sendImg'), '<rotate onclick="formFunc.image.rotate(this)">&#8635;</rotate><img name="imagepreview" class="chatImgPreview" onclick="formFunc.image.rotate(this)"/><br/><buttontext onclick="pageChat.sendChatImage()" class="bgColor" style="margin-top:1em;">' + ui.l('ready') + '</buttontext><div class="chatSendImgPrevHint" style="bottom:5.5em;"></div><div class="chatSendImgPrevHint"></div>', 'formFunc.image.remove(&quot;image&quot;)', false, function () {
 			formFunc.image.previewInternal(e.files[0], e.getAttribute('name'));
 		});
 	}
@@ -521,8 +525,6 @@ class pageChat {
 		}
 	}
 	static sendChat(id, msg, event) {
-		if (event)
-			event.preventDefault();
 		if (!msg) {
 			formFunc.validation.filterWords(ui.q('#chatText'));
 			if (ui.q('chat errorHint'))

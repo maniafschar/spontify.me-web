@@ -16,19 +16,19 @@ class pageWhatToDo {
 		global.template`<notifications style="display:none;" class="mainBG"></notifications>
 <whattodotitle>
 	<date>${v.date}</date>
-	<navbutton onclick="pageWhatToDo.daily.next(false);" style="text-align:left;left:0;">&lt;</navbutton>
-	<navbutton onclick="pageWhatToDo.daily.refresh();" style="left:33%;">&nbsp;</navbutton>
-	<navbutton onclick="pageWhatToDo.daily.next(true);" style="text-align:right;right:0;">&gt;</navbutton>
+	<navbutton onclick="pageWhatToDo.daily.next(false)" style="text-align:left;left:0;">&lt;</navbutton>
+	<navbutton onclick="pageWhatToDo.daily.refresh()" style="left:33%;">&nbsp;</navbutton>
+	<navbutton onclick="pageWhatToDo.daily.next(true)" style="text-align:right;right:0;">&gt;</navbutton>
 </whattodotitle>
 <tabHeader style="max-width:94%;margin-left:3%;">
-	<tab class="tabActive" onclick="pageWhatToDo.daily.onClickTab(event,&quot;Birthdays&quot;);"
+	<tab class="tabActive" onclick="pageWhatToDo.daily.onClickTab(event,&quot;Birthdays&quot;)"
 		style="max-width:38%;">
 		<p>${ui.l('wtd.birthdays')}</p>
 	</tab>
-	<tab onclick="pageWhatToDo.daily.onClickTab(event,&quot;Offers&quot;);" style="max-width:38%;">
+	<tab onclick="pageWhatToDo.daily.onClickTab(event,&quot;Offers&quot;)" style="max-width:38%;">
 		<p>${ui.l('wtd.offers')}</p>
 	</tab>
-	<tab onclick="pageWhatToDo.daily.onClickTab(event,&quot;Events&quot;);" style="max-width:38%;">
+	<tab onclick="pageWhatToDo.daily.onClickTab(event,&quot;Events&quot;)" style="max-width:38%;">
 		<p>${ui.l('events.title')}</p>
 	</tab>
 </tabHeader>
@@ -37,18 +37,18 @@ class pageWhatToDo {
 	<whatToDoList id="dailyListOffers"></whatToDoList>
 	<whatToDoList id="dailyListEvents"></whatToDoList>
 </tabBody>
-<buttontext id="wtdListsButton" onclick="pageWhatToDo.wtd.open();" class="bgColor">${ui.l('wtd.todayIWant')}</buttontext>
+<buttontext id="wtdListsButton" onclick="pageWhatToDo.wtd.open()" class="bgColor">${ui.l('wtd.todayIWant')}</buttontext>
 <whatToDoLists>
-	<whattodotitle onclick="pageWhatToDo.wtd.open();"></whattodotitle>
+	<whattodotitle onclick="pageWhatToDo.wtd.open()"></whattodotitle>
 	<tabHeader style="max-width:94%;margin-left:3%;">
-		<tab class="tabActive" onclick="pageWhatToDo.wtd.onClickTab(event,&quot;Contacts&quot;);"
+		<tab class="tabActive" onclick="pageWhatToDo.wtd.onClickTab(event,&quot;Contacts&quot;)"
 			style="max-width:32%;">
 			<p>${ui.l('contacts.title')}</p>
 		</tab>
-		<tab onclick="pageWhatToDo.wtd.onClickTab(event,&quot;Locations&quot;);" style="max-width:32%;">
+		<tab onclick="pageWhatToDo.wtd.onClickTab(event,&quot;Locations&quot;)" style="max-width:32%;">
 			<p>${ui.l('locations.title')}</p>
 		</tab>
-		<tab onclick="pageWhatToDo.wtd.onClickTab(event,&quot;Events&quot;);" style="max-width:32%;">
+		<tab onclick="pageWhatToDo.wtd.onClickTab(event,&quot;Events&quot;)" style="max-width:32%;">
 			<p>${ui.l('events.title')}</p>
 		</tab>
 	</tabHeader>
@@ -85,10 +85,10 @@ class pageWhatToDo {
 	</value>
 </whatToDoDiv>
 <div style="padding-top:1em;text-align:center;">
-	<buttontext onclick="pageWhatToDo.wtd.save();" class="bgColor">
+	<buttontext onclick="pageWhatToDo.wtd.save()" class="bgColor">
 		${ui.l('wtd.action')}
 	</buttontext>
-	<buttontext onclick="pageWhatToDo.wtd.reset();" class="bgColor" style="${v['hideReset']}">
+	<buttontext onclick="pageWhatToDo.wtd.reset()" class="bgColor" style="${v['hideReset']}">
 		${ui.l('wtd.actionReset')}
 	</buttontext>
 </div>`;

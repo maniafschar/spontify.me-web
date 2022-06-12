@@ -19,10 +19,9 @@ class pageContact {
 	</badge>
 	<div>
 		<div>
-			${v.icons}
 			<text>
-				<title>${v.pseudonym}</title>
-				${v._message}
+				<title>${v.pseudonym}${v.birth}</title>
+				${v._message}<matchIndicator>${v.matchIndicator}</matchIndicator>
 			</text>
 		</div>
 		<imagelist>
@@ -30,101 +29,97 @@ class pageContact {
 		</imagelist>
 	</div>
 	</row>`;
-	static templateIcons = v =>
-		global.template`<icons onclick="rating.open(${v.id},&quot;contact&quot;,event);">
-    <gender class="${v.classBGIcons}">
-        ${v.gender}
-    </gender>
-    <distance class="${v.classBGIcons}">
-        <span>
-            ${v.dist}<km />
-        </span>
-    </distance>
-    <favorite class="${v.classBGIcons}">
-        <span><img src="images/buttonFavorite${v.friends}.png" class="favorite" /></span>
-    </favorite>
-    <rating class="${v.classBGIcons}">
-        <span>
-            ${v.ratingIcon}<percent />
-        </span>
-    </rating>
-</icons>`;
 	static templateDetail = v =>
 		global.template`${v.present}
-		<buttonIcon onclick="pageChat.open(${v.id})" style="right:1em;"><img src="images/buttonChat.png"/></buttonIcon>
-		<buttonIcon onclick="pageContact.toggleBlockUser(${v.id})" style="right:1em;top:6em;"><img src="images/buttonChat.png"/></buttonIcon>
-		<detailImg>
-			<img src="${v.image}" />
-			<detailTitle>
-				<title>
-					${v.pseudonym}${v.ageDisplay}
-				</title>
-				<subtitle>
-					${v.idDisplay}
-				</subtitle>
-			</detailTitle>
-			<detailDistance>
-				${v.gender}
-				${v.distance}<km />
-			</detailDistance>
-		</detailImg>
-		<text>
-			${v.birthdayToday}
-			${v.message}
-			${v.attributes}
-			${v.budget}
-			${v.aboutMe}
-		</text>
-		<detailButtons>
-			<buttonIcon name="buttonCopy"
-				onclick="pageChat.doCopyLink(event,&quot;p=${v.id}&quot;);"><img src="images/share.svg"/></buttonIcon>
-			<buttonIcon name="buttonGroups"
-				onclick="pageContact.groups.toggleGroups(${v.id});"><img src="images/group.svg"/></buttonIcon>
-			<buttonIcon name="buttonEvents"
-				onclick="pageLocation.event.toggle(${v.id});"><img src="images/event.svg"/></buttonIcon>
-			<buttonIcon name="buttonLocation"
-				onclick="pageContact.toggleLocation(${v.id});"><img src="images/location.svg"/></buttonIcon>
-		</detailButtons>
-		<text name="block" class="collapsed">
-			<detailTogglePanel>
-				${v.buddy}
-				<input type="radio" name="type" value="1" label="${ui.l('contacts.blockAction')}"
-					onclick="pageContact.showBlockText(${v.id});" checked="true" />
-				<input type="radio" name="type" value="2" label="${ui.l('contacts.blockAndReportAction')}"
-					onclick="pageContact.showBlockText(${v.id});" />
-				<br />
-				<div style="display:none;margin-top:0.5em;">
-					<input type="radio" name="reason" value="1" label="${ui.l('contacts.blockReason1')}" />
-					<input type="radio" name="reason" value="2" label="${ui.l('contacts.blockReason2')}" />
-					<input type="radio" name="reason" value="3" label="${ui.l('contacts.blockReason3')}" />
-					<input type="radio" name="reason" value="4" label="${ui.l('contacts.blockReason4')}" />
-					<input type="radio" name="reason" value="100" label="${ui.l('contacts.blockReason100')}" checked />
-				</div>
-				<textarea placeholder="${ui.l('contacts.blockDescHint')}" name="note" maxlength="250" style="display:none;"></textarea>
-				<buttontext onclick="pageContact.block(${v.id});" style="margin-top:0.5em;"
-					class="${v.classBGIcons}">${ui.l('save')}</buttontext>
-			</detailTogglePanel>
-		</text>
-		<text name="events" class="collapsed"></text>
-		<text name="groups" class="collapsed">
-			<detailTogglePanel><br /><buttontext onclick="pageContact.groups.addGroup(${v.id});"
-					class="${v.classBGIcons}" style="margin-top:1em;">${ui.l('group.newButton')}</buttontext>
-			</detailTogglePanel>
-		</text>
-		<text name="copy" class="collapsed">
-			<detailTogglePanel>${ui.l('copyLinkHint.contacts')}<br />
-				<buttontext onclick="pageInfo.socialShare();" style="margin-top:2em;${v.displaySocialShare}"
-					class="bgColor2">
-					${ui.l('sendSocialShareLocation')}
-				</buttontext>
-			</detailTogglePanel>
-		</text>
-		<text name="location" class="collapsed" style="padding:0;"></text>`;
+<detailHeader>
+	<detailImg>
+		<img src="${v.image}" />
+		<detailTitle>
+			<title>
+				${v.pseudonym}${v.ageDisplay}
+			</title>
+			<subtitle>
+				${v.idDisplay}
+			</subtitle>
+		</detailTitle>
+	</detailImg>
+	<action>
+		<buttonIcon onclick="pageChat.open(${v.id})"><img src="images/chat.svg"/></buttonIcon>
+		<buttonIcon style="margin-top:1em;" onclick="pageContact.toggleBlockUser(${v.id})"><img src="images/buttonFavorite.png"/></buttonIcon>
+		<matchIndicator${v.matchIndicatorClass}>
+			<svg viewBox="0 0 36 36" class="circular-chart blue">
+				<path class="circle-bg" d="M18 2.0845
+					a 15.9155 15.9155 0 0 1 0 31.831
+					a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+				<path class="circle" stroke-dasharray="${v.matchIndicatorPercent}, 100" d="M18 2.0845
+					a 15.9155 15.9155 0 0 1 0 31.831
+					a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+				<text x="18" y="21.35" class="percentage">${v.matchIndicator}</text>
+			</svg>
+		</matchIndicator>
+		<detailDistance>
+			${v.gender}
+			<km>${v.distance}</km>
+		</detailDistance>
+	</action>
+</detailHeader>
+<text>
+	${v.birthday}
+	${v.message}
+</text>
+${v.attributes}
+${v.budget}
+${v.aboutMe}
+<detailButtons style="margin-top:1em;">
+	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonCopy"
+		onclick="pageChat.doCopyLink(event,&quot;p=${v.id}&quot;)">${ui.l('share')}</buttontext>
+	<buttontext class="bgColor${v.blocked}${v.hideMe}${v.hideGroups}" name="buttonGroups"
+		onclick="pageContact.groups.toggleGroups(${v.id})">${ui.l('group.action')}</buttontext>
+	<buttontext class="bgColor${v.blocked}" name="buttonEvents"
+		onclick="pageLocation.event.toggle(${v.id})">${ui.l('events.title')}</buttontext>
+	<buttontext class="bgColor${v.blocked}" name="buttonLocation"
+		onclick="pageContact.toggleLocation(${v.id})">${ui.l('locations.title')}</buttontext>
+</detailButtons>
+<text name="block" class="collapsed">
+	<detailTogglePanel>
+		${v.buddy}
+		<input type="radio" name="type" value="1" label="${ui.l('contacts.blockAction')}"
+			onclick="pageContact.showBlockText(${v.id})" checked="true" />
+		<input type="radio" name="type" value="2" label="${ui.l('contacts.blockAndReportAction')}"
+			onclick="pageContact.showBlockText(${v.id})" />
+		<br />
+		<div style="display:none;margin-top:0.5em;">
+			<input type="radio" name="reason" value="1" label="${ui.l('contacts.blockReason1')}" />
+			<input type="radio" name="reason" value="2" label="${ui.l('contacts.blockReason2')}" />
+			<input type="radio" name="reason" value="3" label="${ui.l('contacts.blockReason3')}" />
+			<input type="radio" name="reason" value="4" label="${ui.l('contacts.blockReason4')}" />
+			<input type="radio" name="reason" value="100" label="${ui.l('contacts.blockReason100')}" checked />
+		</div>
+		<textarea placeholder="${ui.l('contacts.blockDescHint')}" name="note" maxlength="250" style="display:none;"></textarea>
+		<buttontext onclick="pageContact.block(${v.id})" style="margin-top:0.5em;"
+			class="bgColor">${ui.l('save')}</buttontext>
+	</detailTogglePanel>
+</text>
+<text name="events" class="collapsed"></text>
+<text name="groups" class="collapsed">
+	<detailTogglePanel><br /><buttontext onclick="pageContact.groups.addGroup(${v.id})"
+			class="bgColor" style="margin-top:1em;">${ui.l('group.newButton')}</buttontext>
+	</detailTogglePanel>
+</text>
+<text name="copy" class="collapsed">
+	<detailTogglePanel>${ui.l('copyLinkHint.contacts')}<br />
+		<buttontext onclick="pageInfo.socialShare()" style="margin-top:2em;${v.displaySocialShare}"
+			class="bgColor">
+			${ui.l('sendSocialShareLocation')}
+		</buttontext>
+	</detailTogglePanel>
+</text>
+<text name="location" class="collapsed" style="padding:0;"></text>`;
 	static templateGroups = v =>
 		global.template`<div>
     ${v.groups}
 </div>
-<buttontext style="margin-top:0.5em;" class="bgColor" onclick="pageContact.groups.showRename();">
+<buttontext style="margin-top:0.5em;" class="bgColor" onclick="pageContact.groups.showRename()">
     ${ui.l('rename')}
 </buttontext>
 <buttontext style="margin-top:0.5em;" class="bgColor"
@@ -137,9 +132,9 @@ class pageContact {
 <br />
 <div id="groupsRename" style="display:none;margin-top:2em;">
     <input type="text" style="width:40%;margin-right:0.5em;float:none;" />
-    <buttontext onclick="pageContact.groups.rename();" class="bgColor">${ui.l('save')}</buttontext>
+    <buttontext onclick="pageContact.groups.rename()" class="bgColor">${ui.l('save')}</buttontext>
 </div>
-<buttontext onclick="pageContact.groups.delete();" id="groupsDelete" style="display:none;margin-top:2em;"
+<buttontext onclick="pageContact.groups.delete()" id="groupsDelete" style="display:none;margin-top:2em;"
     class="bgColor">
     ${ui.l('confirmDelete')}
 </buttontext>`;
@@ -252,7 +247,6 @@ class pageContact {
 			success() {
 				ui.html('detail[i="' + id + '"] [name="block"] detailTogglePanel', ui.l('contacts.requestFriendship' + status.replace('2', '')));
 				communication.ping();
-				ui.attr('row[i="' + id + '"][class="contact"] icons favorite img', 'src', 'images/buttonFavorite' + (status == 'Friends' ? 'Filled' : '') + '.png');
 				var e = ui.qa(ui.q('detail').getAttribute('type') + ' row[i="' + id + '"] badge');
 				ui.html(e, '');
 				ui.css(e, 'display', 'none');
@@ -276,13 +270,14 @@ class pageContact {
 		v.bgFriends = v.contactLink.status == 'Friends' ? '2' : '';
 		v.distance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
 		v.birthday = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
-		v.classBGImg = 'class="bgColor2"';
-		v.classBGIcons = 'bgColor';
+		v.classBGImg = 'class="bgColor"';
 		if (v.birthday[0]) {
 			if (v.age)
 				v.ageDisplay = ' (' + v.age + ')';
 			if (v.birthday[1])
-				v.birthdayToday = '<div class="highlight">' + ui.l('contacts.birthdayToday') + '</div>';
+				v.birthday = '<div class="highlight">' + ui.l('contacts.birthdayToday') + '</div>' + v.birthday[0];
+			else
+				v.birthday = v.birthday[0];
 		} else
 			v.birthday = '';
 		if (v.guide)
@@ -303,24 +298,39 @@ class pageContact {
 		} else
 			v.buddy += '<buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + idIntern + ');">' + ui.l('contacts.requestFriendship') + '</buttontext>';
 		v.buddy += '</div>';
-		v.budget = pageLocation.budgetLabel(v.budget);
-		if (v.budget)
-			v.budget = '<label class="multipleLabel">' + v.budget + '</label>';
 		pageContact.addWTDMessage(v);
 		if (!details.getNextNavElement(true, v.id))
 			v.hideNext = 'display:none;';
 		if (!details.getNextNavElement(false, v.id))
 			v.hidePrevious = 'display:none;';
-		v.elementNo = details.getElementNo(v.id);
-		if (v.gender)
-			v.gender = '<img src="images/iconGender' + v.gender + '.svg" />';
-		v.attributes = pageContact.getMatchingAttributes(v.attr, v.attrEx, 'detail');
+		v.attr = ui.getAttributes(v, 'detail');
+		v.budget = v.attr.budget;
+		v.attributes = v.attr.text;
+		if (v.gender) {
+			if (v.age) {
+				var a;
+				if (v.gender == 1)
+					a = user.contact.ageMale;
+				else if (v.gender == 2)
+					a = user.contact.ageFemale;
+				else
+					a = user.contact.ageDivers;
+				if (a && v.age >= parseInt(a.split(',')[0]) && v.age <= parseInt(a.split(',')[1]))
+					v.matchIndicatorClass = ' class="pulse"';
+			}
+			v.gender = '<img src="images/gender' + v.gender + '.svg" />';
+		}
+		if (v.attr.totalMatch) {
+			v.matchIndicator = v.attr.totalMatch + '/' + v.attr.total;
+			v.matchIndicatorPercent = parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5);
+		} else
+			v.matchIndicatorClass = ' class="noDisp"';
 		v.hideGroups = v.contactLink.status == 'Friends' ? '' : ' noDisp';
 		v.hideMe = user.contact.id == v.id ? ' noDisp' : '';
 		if (v.image)
 			v.image = global.serverImg + v.image;
 		else
-			v.image = 'images/contact.svg" style="padding:3em;';
+			v.image = 'images/contact.svg" class="bgColor" style="padding:3em;';
 		if (v.rating > 0)
 			v.rating = '<div><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></ratingSelection></div>';
 		else
@@ -349,13 +359,12 @@ class pageContact {
 		if (!v.message && !v.attributes && !v.aboutMe && !v.rating)
 			v.dispBody = 'display:none;';
 		if (v.aboutMe)
-			v.aboutMe = '<text class="bgColor" style="margin-top:1em;">' + v.aboutMe + '</text>';
-		var sep = pageContact.templateDetail(v);
+			v.aboutMe = '<text class="highlight" style="margin-top:1em;">' + v.aboutMe + '</text>';
 		if (v.contactLink.status == 'Pending' && v.contactLink.contactId != user.contact.id)
 			setTimeout(function () {
 				pageContact.toggleBlockUser(id);
 			}, 1000);
-		return sep;
+		return pageContact.templateDetail(v);
 	}
 	static filterList() {
 		var activeID = ui.navigation.getActiveID();
@@ -392,11 +401,9 @@ class pageContact {
 			if (bd == 2) {
 				birth = global.date.formatDate(b);
 				birth = ui.l('contacts.bday').replace('{0}', birth.substring(0, birth.lastIndexOf(' ')));
-				birth += global.separator + ui.l('contacts.age').replace('{0}', age);
 				if (d2.getMonth() == d1.getMonth() && d2.getDate() == d1.getDate())
-					present = '<img src="images/iconBirthday.png"/>';
-			} else if (bd == 1)
-				birth = ui.l('contacts.age').replace('{0}', age);
+					present = '<img src="images/present.svg"/>';
+			}
 		}
 		return [birth, present, age];
 	}
@@ -434,41 +441,6 @@ class pageContact {
 				s += '<input type="radio" label="' + r[i] + '" name="filterContactsTown" onclick="pageContact.filterList();" deselect="true"/>';
 		}
 		return s ? '<div>' + s + '</div>' : '<div style="padding-bottom:1em;">' + ui.l('filterNoDifferentValues') + '</div>';
-	}
-	static getIcons(v) {
-		v.ratingIcon = !v.rating || v.rating <= 0 ? '' : parseInt(0.5 + v.rating);
-		if (v.gender)
-			v.gender = '<img src="images/iconGender' + v.gender + '.svg" />';
-		if (v.guide)
-			v.gender = v.gender + '<img src="images/guide.svg" />';
-		return pageContact.templateIcons(v);
-	}
-	static getMatchingAttributes(contactAttrib, contactAttribEx, style) {
-		var total = 0, s = '';
-		if (user.contact.attrInterest && contactAttrib) {
-			var a = contactAttrib.split('\u0015');
-			for (var i = 0; i < a.length; i++) {
-				if (user.contact.attrInterest.indexOf(a[i]) > -1) {
-					total++;
-					s += '<label class="multipleLabel highlight">' + ui.attributes[parseInt(a[i], 10)] + '</label>';
-				} else
-					s += '<label class="multipleLabel">' + ui.attributes[parseInt(a[i], 10)] + '</label>';
-			}
-		}
-		if (user.contact.attrInterestEx && contactAttribEx) {
-			var a = contactAttribEx.toLowerCase().split(',');
-			var c = ',' + user.contact.attrInterestEx.toLowerCase() + ',';
-			for (var i = 0; i < a.length; i++) {
-				if (c.indexOf(',' + a[i].trim() + ',') > -1) {
-					total++;
-					s += '<label class="multipleLabel highlight">' + a[i].trim() + '</label>';
-				} else
-					s += '<label class="multipleLabel">' + a[i].trim() + '</label>';
-			}
-		}
-		if (style == 'list')
-			return total ? ui.l('attribMatch' + (total > 1 ? 'es' : '')).replace('{0}', total) : '';
-		return s ? '<div>' + s + '</div>' : '';
 	}
 	static groups = {
 		addGroup(id) {
@@ -660,14 +632,14 @@ class pageContact {
 				if (friendship != 'Friends') {
 					if (!e.innerHTML.substring(0, e.innerHTML.indexOf('<br>'))) {
 						if (friendship != 'Terminated' && friendship != 'Terminated2')
-							e.innerHTML = ui.l('contacts.denyAddToGroup') + '<br/><buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + id + ');" style="margin-top:0.5em;">' + ui.l('contacts.requestFriendship') + '</buttontext>';
+							e.innerHTML = ui.l('contacts.denyAddToGroup') + '<br/><buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + id + ')" style="margin-top:0.5em;">' + ui.l('contacts.requestFriendship') + '</buttontext>';
 						else
 							e.innerHTML = ui.l('contacts.requestFriendship' + (friendship == 'Pending' ? 'AlreadySent' : 'Canceled'));
 					}
 					details.togglePanel(e.parentNode);
 					return;
 				}
-				e.innerHTML = user.contact.groups.replace(/<input/g, '<input onclick="pageContact.groups.addToGroup(event,' + id + ');"') + e.innerHTML;
+				e.innerHTML = user.contact.groups.replace(/<input/g, '<input onclick="pageContact.groups.addToGroup(event,' + id + ')"') + e.innerHTML;
 				formFunc.initFields(path);
 				communication.ajax({
 					url: global.server + 'db/list?query=contact_listGroupLink&search=' + encodeURIComponent('contactGroupLink.contactId2=' + id),
@@ -686,7 +658,13 @@ class pageContact {
 			}
 			details.togglePanel(e.parentNode);
 		}
-	};
+	}
+	static init() {
+		if (!ui.q('contacts').innerHTML)
+			lists.setListDivs('contacts');
+		if (!ui.q('contacts listResults row') && ui.cssValue('menu', 'transform').indexOf('1') < 0)
+			ui.navigation.toggleMenu('contacts');
+	}
 	static listContacts(l) {
 		if (!l || l.length < 2)
 			return '<noResult>' + ui.l('noResults.list').replace('{0}', ui.l('contacts.title')).replace('{1}', '') + '</noResult>';
@@ -713,16 +691,17 @@ class pageContact {
 				v.image = global.serverImg + v.imageList;
 			else
 				v.image = 'images/contact.svg" style="padding:1em;';
-			v.classBGImg = v.imageList ? '' : 'bgColor2';
-			v.classBGIcons = 'bgColor';
+			v.classBGImg = v.imageList ? '' : 'bgColor';
+			v.attr = ui.getAttributes(v, 'list');
+			if (v.attr.total && v.attr.totalMatch / v.attr.total > 0)
+				v.matchIndicator = parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5) + '%';
 			if (!v._message1)
-				v._message1 = pageContact.getMatchingAttributes(v.attr, v.attrEx, 'list');
-			if (v.birth)
-				v.birth = birth[0] ? global.separator + birth[2] : '';
+				v._message1 = v.attr.text;
+			if (birth)
+				v.birth = birth[0] ? ' (' + v.age + ')' : '';
 			if (!v._message2)
 				v._message2 = v.aboutMe;
-			v._message = v.birth ? v.birth + '<br/>' : '';
-			v._message += v._message1 ? v._message1 + '<br/>' : '';
+			v._message = v._message1 ? v._message1 + '<br/>' : '';
 			v._message += v._message2 ? v._message2 : '';
 			v.dist = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
 			if (!v._badgeDisp) {
@@ -731,7 +710,6 @@ class pageContact {
 			}
 			if (!v.badgeAction)
 				v.badgeAction = birth[1] ? '' : 'remove';
-			v.icons = pageContact.getIcons(v);
 			if (activeID == 'detail')
 				v.oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;)';
 			else if (activeID == 'settings3')
@@ -800,7 +778,7 @@ class pageContact {
 					p2 = s.indexOf(',pageLocation.detailLocationEvent)', p);
 					if (p2 > p) {
 						i = s.substring(p, p2).split(',')[1].replace(/\D/g, '');
-						s = s.substring(0, p) + ' onclick="ui.navigation.autoOpen(&quot;' + global.encParam('l=' + i) + '&quot;);"' + s.substring(p2 + 35);
+						s = s.substring(0, p) + ' onclick="ui.navigation.autoOpen(&quot;' + global.encParam('l=' + i) + '&quot;)"' + s.substring(p2 + 35);
 					}
 				}
 				if (s)

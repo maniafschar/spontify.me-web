@@ -10,17 +10,6 @@ import { user } from './user';
 export { details };
 
 class details {
-	static getElementNo(id) {
-		var list = ui.qa(ui.navigation.getActiveID() + ' [i]:not([filtered="true"])');
-		if (!list.length)
-			return '';
-		var i = 0;
-		for (; i < list.length; i++) {
-			if (list[i].getAttribute('i') == id)
-				break;
-		}
-		return (i + 1) + '/' + list.length;
-	}
 	static getNextNavElement(next, id) {
 		var activeID = ui.q(ui.navigation.getActiveID()).getAttribute('type');
 		if (activeID == 'contacts' || activeID == 'locations' || activeID == 'search') {
@@ -40,8 +29,6 @@ class details {
 		}
 	}
 	static open(type, id, action, callback) {
-		if (ui.navigation.detailAnimation)
-			clearTimeout(ui.navigation.detailAnimation);
 		ui.navigation.hideMenu();
 		communication.ajax({
 			url: global.server + 'action/one?query=' + action + '&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon,
@@ -74,11 +61,8 @@ class details {
 							formFunc.initFields('detail');
 							if (animate)
 								ui.navigation.animation(l, 'homeSlideIn');
-							if (ui.navigation.detailAnimation)
-								clearTimeout(ui.navigation.detailAnimation);
 							l.scrollTop = 0;
 							ui.css(l, 'opacity', 1);
-							ui.navigation.detailAnimation = setTimeout(details.scrollDown, 7000);
 							geoData.headingWatch();
 							if (type == 'locations' && !ui.q('locations').innerHTML) {
 								if (user.contact) {
@@ -140,21 +124,13 @@ class details {
 			});
 		}
 	}
-	static scrollDown() {
-		var e = ui.q('detail');
-		if (ui.cssValue(e, 'display') != 'none' && e.innerHTML)
-			ui.scrollTo(e, e.scrollHeight);
-		ui.navigation.detailAnimation = null;
-	}
 	static swipeLeft() {
 		var e = ui.q('detail').getAttribute('i');
 		if (e)
 			details.openDetailNav(true, e);
 	}
 	static swipeRight() {
-		var e = ui.q('navbar .active');
-		if (e)
-			e.click();
+		ui.navigation.goTo(ui.q('detail').getAttribute('type'));
 	}
 	static togglePanel(d) {
 		var path = ui.parents(d, 'popup') ? 'popup detail ' : 'detail ';

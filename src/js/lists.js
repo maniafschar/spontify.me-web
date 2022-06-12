@@ -10,7 +10,7 @@ class lists {
 	static data = [];
 
 	static templateList = v =>
-		global.template`<listHeader onclick="${v.action}">${v.img}<filters style="transform:scale(0);"></filters><listTitle></listTitle>${v.map}</listHeader>
+		global.template`<listHeader>${v.img}<filters style="transform:scale(0);"></filters><listTitle onclick="${v.action}"></listTitle>${v.map}</listHeader>
 <listScroll><a class="bgColor"></a></listScroll><listBody>${v.groups}<listResults></listResults></listBody>`;
 
 	static execFilter() {
@@ -42,29 +42,32 @@ class lists {
 		if (errorID == 'favorites')
 			s = s.replace('{1}', '<br/><br/><buttontext class="bgColor">' + ui.l('locations.favoritesButton') + '</buttontext><br/><br/>');
 		else if (errorID == 'matches' || errorID == 'whatToDo')
-			s = s.replace('{1}', '<br/><br/><buttontext onclick="pageSettings.open2();" class="bgColor">' + ui.l('Yes') + '</buttontext>');
+			s = s.replace('{1}', '<br/><br/><buttontext onclick="pageSettings.open2()" class="bgColor">' + ui.l('Yes') + '</buttontext>');
 		else if (errorID == 'friends')
 			s = s.replace('{1}', '<br/><br/><buttontext class="bgColor">' + ui.l('contacts.relation') + '</buttontext><br/><br/>');
 		else if (errorID.toLowerCase().indexOf('groups') > -1)
 			s = s.replace('{1}', '<br/><br/><buttontext class="bgColor">' + ui.l('group.action') + '</buttontext><br/><br/>');
 		else if (errorID == 'profile')
-			s = s.replace('{1}', '<br/><br/><buttontext onclick="ui.navigation.goTo(&quot;settings&quot;);" class="bgColor">' + ui.l('settings.edit') + '</buttontext>');
+			s = s.replace('{1}', '<br/><br/><buttontext onclick="ui.navigation.goTo(&quot;settings&quot;)" class="bgColor">' + ui.l('settings.edit') + '</buttontext>');
 		else if (errorID == 'search' && ui.val('[name="searchKeywords"]'))
-			s += '<br/><br/>' + ui.l('noResults.searchWithoutKeywords') + '<br/><br/><buttontext onclick="pageSearch.repeatSearch();" class="bgColor">' + ui.l('noResults.repeat') + '</buttontext>';
+			s += '<br/><br/>' + ui.l('noResults.searchWithoutKeywords') + '<br/><br/><buttontext onclick="pageSearch.repeatSearch()" class="bgColor">' + ui.l('noResults.repeat') + '</buttontext>';
 		return '<noResult>' + s.replace(/\{0\}/g, ui.l(activeID + '.title')).replace('{1}', '') + '</noResult>';
 	}
-	static openFilter(event, html) {
+	static toggleFilter(event, html) {
 		var activeID = ui.navigation.getActiveID();
-		if (!lists.data[activeID] || event.target.nodeName == 'LABEL' || event.target.nodeName == 'BUTTONTEXT' || ui.parents(event.target, 'map'))
+		var e = event ? event.target.nodeName : null;
+		if (!lists.data[activeID] || e == 'LABEL' || e == 'BUTTONTEXT' || event && ui.parents(event.target, 'map'))
 			return;
-		var e = ui.q(activeID + ' filters');
+		e = ui.q(activeID + ' filters');
 		if (!e.innerHTML) {
 			e.innerHTML = html.call();
 			formFunc.initFields(activeID + ' filters');
 		}
-		if (ui.cssValue(e, 'transform').indexOf('1') < 0)
+		if (ui.cssValue(e, 'transform').indexOf('1') < 0) {
+			if (ui.q('menu').style.transform.indexOf('1') > 0)
+				ui.navigation.toggleMenu();
 			ui.css(e, 'transform', 'scale(1)');
-		else
+		} else
 			ui.css(e, 'transform', 'scale(0)');
 	}
 	static removeListEntry(id) {
@@ -140,8 +143,8 @@ class lists {
 		var e = ui.q(id);
 		if (!e.innerHTML) {
 			var v = {};
-			v.action = action ? action : 'lists.openFilter(event, ' + (id == 'locations' ? 'pageLocation' : id == 'contacts' ? 'pageContact' : 'pageSearch') + '.getFilterFields)';
-			v.img = action ? '' : '<buttonIcon style="left:0;"><img src="images/search.svg"/></buttonIcon>';
+			v.action = action ? action : 'lists.toggleFilter(event, ' + (id == 'locations' ? 'pageLocation' : id == 'contacts' ? 'pageContact' : 'pageSearch') + '.getFilterFields)';
+			v.img = action ? '' : '<buttonIcon style="left:0;" onclick="' + v.action + '"><img src="images/search.svg"/></buttonIcon><buttonIcon style="right:0;" onclick="ui.navigation.toggleMenu()"><img src="images/menu.svg"/></buttonIcon>';
 			if (id == 'contacts')
 				v.groups = '<groups style="display:none;"></groups>';
 			else if (id == 'locations')
