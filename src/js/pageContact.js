@@ -47,7 +47,15 @@ class pageContact {
 		<buttonIcon onclick="pageChat.open(${v.id})"><img src="images/chat.svg"/></buttonIcon>
 		<buttonIcon style="margin-top:1em;" onclick="pageContact.toggleBlockUser(${v.id})"><img src="images/buttonFavorite.png"/></buttonIcon>
 		<matchIndicator${v.matchIndicatorClass}>
-			${v.matchIndicator}
+			<svg viewBox="0 0 36 36" class="circular-chart blue">
+				<path class="circle-bg" d="M18 2.0845
+					a 15.9155 15.9155 0 0 1 0 31.831
+					a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+				<path class="circle" stroke-dasharray="${v.matchIndicatorPercent}, 100" d="M18 2.0845
+					a 15.9155 15.9155 0 0 1 0 31.831
+					a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+				<text x="18" y="21.35" class="percentage">${v.matchIndicator}</text>
+			</svg>
 		</matchIndicator>
 		<detailDistance>
 			${v.gender}
@@ -298,7 +306,6 @@ ${v.aboutMe}
 		v.attr = ui.getAttributes(v, 'detail');
 		v.budget = v.attr.budget;
 		v.attributes = v.attr.text;
-		v.matchIndicator = v.attr.totalMatch + '/' + v.attr.total;
 		if (v.gender) {
 			if (v.age) {
 				var a;
@@ -313,6 +320,11 @@ ${v.aboutMe}
 			}
 			v.gender = '<img src="images/gender' + v.gender + '.svg" />';
 		}
+		if (v.attr.totalMatch) {
+			v.matchIndicator = v.attr.totalMatch + '/' + v.attr.total;
+			v.matchIndicatorPercent = parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5);
+		} else
+			v.matchIndicatorClass = ' class="noDisp"';
 		v.hideGroups = v.contactLink.status == 'Friends' ? '' : ' noDisp';
 		v.hideMe = user.contact.id == v.id ? ' noDisp' : '';
 		if (v.image)

@@ -633,7 +633,7 @@
 			"notYourself": "You can not vote yourself.",
 			"onlyFriends": "You can not vote this buddy, because you are no friends.",
 			"publish": "post also to my Facebook wall",
-			"save": "Vote for it!",
+			"save": "Vote",
 			"saved": "Your vote has been saved.",
 			"subTitle": "You can vote once per week and {0}:",
 			"title": "Vote ${separator}"

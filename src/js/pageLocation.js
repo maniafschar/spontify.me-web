@@ -49,7 +49,17 @@ class pageLocation {
 	<action>
 		<buttonIcon onclick="pageLocation.openChat(${v.id})"><img src="images/chat.svg"/></buttonIcon>
 		<buttonIcon style="margin-top:1em;" idFav="${v.locationFavorite.id ? v.locationFavorite.id : ''}" fav="${v.locationFavorite.favorite ? true : ''}" onclick="pageLocation.toggleFavorite(${v.id})"><img src="images/buttonFavorite.png"/></buttonIcon>
-		<matchIndicator>${v.matchIndicator}</matchIndicator>
+		<matchIndicator>
+			<svg viewBox="0 0 36 36" class="circular-chart blue">
+				<path class="circle-bg" d="M18 2.0845
+					a 15.9155 15.9155 0 0 1 0 31.831
+					a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+				<path class="circle" stroke-dasharray="${v.matchIndicatorPercent}, 100" d="M18 2.0845
+					a 15.9155 15.9155 0 0 1 0 31.831
+					a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+				<text x="18" y="21.35" class="percentage">${v.matchIndicator}</text>
+			</svg>
+		</matchIndicator>
 		<detailCompass>
 			<span a="${v.angle}" style="transform:rotate(${v.angle}deg);">&uarr;</span>
 			<km>${v.distance}</km>
@@ -473,10 +483,16 @@ ${v.hint}
 		}
 		v.attr = ui.getAttributes(v, 'detail');
 		v.budget = v.attr.budget;
-		v.matchIndicator = v.attr.totalMatch + '/' + v.attr.total;
+		if (v.attr.totalMatch) {
+			v.matchIndicator = v.attr.totalMatch + '/' + v.attr.total;
+			v.matchIndicatorPercent = parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5);
+		} else
+			v.matchIndicatorClass = ' class="noDisp"';
 		v.attributes = v.attr.text;
 		if (v.rating > 0)
 			v.rating = '<detailRating onclick="rating.open(' + v.locID + ',&quot;location&quot;,event)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></ratingSelection></detailRating>';
+		else
+			v.rating = '<div style="margin:1em 0;"><buttonText class="bgColor" onclick="rating.open(' + v.locID + ',&quot;location&quot;,event)">' + ui.l('rating.save') + '</buttonText></div>';
 		v.address = v.address.replace(/\n/g, '<br />');
 		if (v.ownerId && v.url)
 			v.description = (v.description ? v.description + ' ' : '') + ui.l('locations.clickForMoreDetails');

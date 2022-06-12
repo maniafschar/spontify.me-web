@@ -633,7 +633,7 @@
 			"notYourself": "Du kannst Dich selbst nicht bewerten.",
 			"onlyFriends": "Du kannst diesen Buddy nicht bewerten, da Ihr keine Freunde seid.",
 			"publish": "auch an meine Facebook Wand posten",
-			"save": "Bewerten!",
+			"save": "Bewerten",
 			"saved": "Deine Bewertung wurde gespeichert.",
 			"subTitle": "Du kannst eine Bewertung pro {0} und Woche abgeben:",
 			"title": "Bewertung${separator}"

@@ -127,9 +127,10 @@ class ui {
 		}
 		for (var i = 0; i < ui.categories.length; i++) {
 			userAttr = user.contact['attr' + i] || '';
-			if (userAttr)
+			var compareHasCat = compare.category ? compare.category.indexOf(i) > -1 : compare['attr' + i] || compare['attr' + i + 'Ex'];
+			if (userAttr && (compare.idDisplay || compareHasCat))
 				result.total += userAttr.split('\u0015').length;
-			if (compare['attr' + i] || compare['attr' + i + 'Ex']) {
+			if (compareHasCat) {
 				result.text += style == 'list' ? ', ' + ui.categories[i].label : '</div><div><label class="multipleLabel' + (userAttr ? ' highlight' : '') + '">' + ui.categories[i].label + '</label>';
 				if (userAttr)
 					result.totalMatch++;
@@ -146,7 +147,7 @@ class ui {
 				}
 			}
 			userAttr = user.contact['attr' + i + 'Ex'] ? ',' + user.contact['attr' + i + 'Ex'].toLowerCase() + ',' : '';
-			if (userAttr)
+			if (userAttr && (compare.idDisplay || compareHasCat))
 				result.total += userAttr.split(',').length - 2;
 			if (compare['attr' + i + 'Ex']) {
 				a = compare['attr' + i + 'Ex'].split(',');
