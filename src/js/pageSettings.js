@@ -350,11 +350,6 @@ class pageSettings {
 					pageSettings.init2();
 					pageSettings.currentSettings = pageSettings.getCurrentSettingsString();
 					pageHome.initHomeImage();
-					if (!user.contact.introState.settingsLoggedIn) {
-						setTimeout(function () {
-							intro.openHint({ desc: 'settingsLoggedIn', pos: '10%,-5em', size: '80%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'top', onclick: 'ui.navigation.goTo("settings2")' }, true);
-						}, 500);
-					}
 					if (exec)
 						exec.call()
 					ui.q('settings3').innerHTML = pageSettings.templateSettings3(v);

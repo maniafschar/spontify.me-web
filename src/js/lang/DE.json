@@ -463,6 +463,7 @@
 		},
 		"intro": {
 			"bluetooth": "<ul><li>Öffnest Du ${appTitle}, so scannt <b>Bluetooth Matching</b> Deine unmittelbare Umgebung nach passenden Buddies. Ist ein Match dabei, erhältst Du eine Nachricht</li><li>Es gibt noch viele andere Wege, wie wir matchen, z.B. wenn eine Buddy mit gleichen Interessen eine <b>Location</b> anschaut, die Du als <b>Favorit</b> gespeichert hast</li><li>Zudem zeigen <b>Guides</b> Buddies mit gleichen Interessen Ihre Sicht der Stadt</li></ul>",
+			"contacts": "Sobald Du eingeloggt bist, siehst Du hier die Kontakte in Deiner Umgebung.",
 			"detail": "Die Datailseite enthält<ul><li>Kontaktdaten</li><li>Beschreibung der Location</li><li>Erreichbarkeit der Location</li><li>Kartenansicht</li><li>diverse Schaltflächen um z.B. Locations zu Deinen Favoriten hinzuzufügen</li></ul>",
 			"home": "Manchmal möchte man aus dem Trott raus, Neues entdecken. ${appTitle} hilft<ul><li>dass Buddies mit <b>gleichen Interessen</b>, z.B. Hundeliebhaber oder Konzertgänger, sich finden</li><li>man durch <b>Guides</b> neue Locations und Events kennenlernt</li></ul>Dabei gehen wir wie folgt vor...",
 			"homeImage": "Setze Dein Profilbild, eine kurze Selbstbeschreibung und andere Infos in den Einstellungen.",
@@ -471,11 +472,13 @@
 			"listExplained": "Die Listen bestehen aus dem Bild, Infos und dem Schmetterling mit<ul><li>Entfernungsangabe inklusive Kompass</li><li>Kategorie</li><li>Favoritenstatus</li><li>Bewertung</li></ul>Klickst Du auf den Schmetterling, so kannst Du den Eintrag bewerten.",
 			"listFilter": "Die Listen kannst Du filtern nach<ul><li>Kategorien</li><li>Himmelsrichtungen</li><li>Ortsteile</li></ul>Im Gegensatz zur Suche, bei der die Anfrage neue Daten vom Server holt, agiert der Filter lediglich auf die bereits geladenen Listenelemente.",
 			"listMenu": "Die App ist immer gleich aufgebaut<ul><li>unten das Menü bestehend aus <b>Locations</b>, <b>Buddies</b>, <b>Suchen</b> und <b>Was geht?</b> (sobald Du eingeloggt bist, siehst Du alle)</li><li>klickst Du auf einer der Einträge, öffnet sich das Untermenü</li></ul>",
+			"locations": "Sobald Du eingeloggt bist, siehst Du hier die Kontakte in Deiner Umgebung.",
 			"menuOpen": "Du bist hier wieder in der Liste und kannst durch einen Klick hier das Auswahlmenü wieder öffnen.",
 			"open": "Intro starten...",
 			"register": "Nach der Registrierung zeigen wir Dir, wie Du Dein Profil individualisieren kannst. Lieben Dank dass Du Dir die Zeit für die Intro genommen hast.",
 			"settings": "Nach dem Anmelden beschreibst<ul><li>Du Dich</li><li>das was Du an anderen magst</li><li>die Art von Locations, die Du magst</li></ul>Auf Grund dieser Angaben matchen wir passende Buddies und Locations für Dich.",
-			"settingsLoggedIn": "<ul><li>Ändere hier Dein Profilbild und gib weitere, allgemeine Infos an</li><li>Ein Wisch nach links und Du kannst Dich über diverse Attribute selbst beschreiben und angeben, was Du an anderen Menschen magst</li></ul>"
+			"settingsLoggedIn": "<ul><li>Ändere hier Dein Profilbild und gib weitere, allgemeine Infos an</li><li>Ein Wisch nach links und Du kannst Dich über diverse Attribute selbst beschreiben und angeben, was Du an anderen Menschen magst</li></ul>",
+			"whattodo": "Sobald Du eingeloggt bist, siehst Du hier die Kontakte in Deiner Umgebung."
 		},
 		"landing": {
 			"block1Title": "Wie sieht der Alltag ohne ${appTitle} aus?",

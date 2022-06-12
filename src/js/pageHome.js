@@ -10,14 +10,14 @@ export { pageHome };
 class pageHome {
 	static template = v =>
 		global.template`<div>
-	<homeHeader onclick="ui.navigation.goTo(&quot;${v['oc']}&quot;)">
+	<homeHeader>
 		<buttonIcon onclick="ui.navigation.goTo(&quot;search&quot;)" style="left:0;text-align:left;">
 			<img src="images/search.svg" />
 		</buttonIcon>
 		<buttonIcon onclick="ui.navigation.goTo(&quot;settings&quot;)" style="right:0;text-align:right;">
 			<img src="images/contact.svg" />
 		</buttonIcon>
-		<homeTitle>
+		<homeTitle onclick="ui.navigation.goTo(&quot;settings&quot;)">
 			<logo>
 				<span>sp</span>
 				<img src="images/location.svg" onload="formFunc.image.svgInject(this)" />
@@ -37,7 +37,7 @@ class pageHome {
 		</buttontext><br/>
 		<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;contacts&quot;)" style="width:60%;">
 			<badge name="badgeContacts" class="bgColor pulse" style="top:-1.5em;right:-1.5em;">0</badge>
-			<span>${ui.l('contacts.title')}</span><img src="images/contact.svg" onload="formFunc.image.svgInject(this)" />
+			<span>${ui.l('contacts.title')}</span><img src="images/network.svg" onload="formFunc.image.svgInject(this)" />
 		</buttontext>
 		<homeStatus onclick="pageWhatToDo.wtd.open()"></homeStatus>
 	</homeBody>

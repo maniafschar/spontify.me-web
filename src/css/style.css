@@ -38,7 +38,7 @@ h4 {
 	margin-top: 3em;
 	margin-bottom: 1em;
 	text-align: center;
-	color: rgb(69, 109, 166);
+	color: rgb(11, 124, 190);
 }
 
 body {
@@ -120,7 +120,7 @@ hint {
 hint .body,
 hint.body {
 	position: absolute;
-	background: rgba(69, 109, 166, 0.9);
+	background: rgba(11, 124, 190, 0.9);
 	padding: 1em;
 	color: white;
 	border-radius: 1em;
@@ -151,12 +151,12 @@ hint hinky {
 
 hint hinky.top {
 	top: -0.5em;
-	border-bottom: solid 0.5em rgba(69, 109, 166, 0.9);
+	border-bottom: solid 0.5em rgba(11, 124, 190, 0.9);
 }
 
 hint hinky.bottom {
 	bottom: -0.5em;
-	border-top: solid 0.5em rgba(69, 109, 166, 0.9);
+	border-top: solid 0.5em rgba(11, 124, 190, 0.9);
 }
 
 ul li,
@@ -310,7 +310,7 @@ logo last {
 
 logo svg {
 	width: 1.4em;
-	margin: -0.35em -0.25em 0em -0.25em;
+	margin: -0.35em -0.15em 0em -0.15em;
 }
 
 logo svg path {
@@ -706,7 +706,7 @@ slider thumb val {
 }
 
 .homeButton svg path {
-	fill: rgb(69, 109, 166);
+	fill: rgb(11, 124, 190);
 }
 
 whatToDoList {
@@ -863,6 +863,10 @@ listScroll a {
 noResult {
 	line-height: 1.6;
 	padding: 1em;
+	display: block;
+	margin: 1em;
+	background: rgba(255, 255, 255, 0.6);
+	border-radius: 0.5em;
 }
 
 @-moz-document url-prefix(http: //),url-prefix(https://){
@@ -1114,7 +1118,7 @@ alert {
 	z-index: 999999;
 	border-radius: 1em;
 	color: white;
-	background-color: rgba(69, 109, 166, 0.9);
+	background-color: rgba(11, 124, 190, 0.9);
 	box-shadow: 0 0 2em rgba(0, 0, 0, 0.3);
 }
 
@@ -2106,7 +2110,7 @@ landingimages img {
 landingtitle {
 	font-size: 2em;
 	white-space: nowrap;
-	color: rgb(69, 109, 166);
+	color: rgb(11, 124, 190);
 	margin-top: -0.2em;
 	padding-bottom: 0.25em;
 	display: block;
@@ -2168,7 +2172,7 @@ menu a {
 
 menu > div {
 	font-weight: bold;
-	color: rgb(69, 109, 166);
+	color: rgb(11, 124, 190);
 	padding-top: 0.75em;
 }
 

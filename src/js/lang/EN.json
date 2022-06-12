@@ -464,6 +464,7 @@
 		"intro": {
 			"bluetooth": "<ul><li>If you open ${appTitle}, <b>Bluetooth Matching</b> scans your immediate surrounding for suitable buddies. If there is a match, you will receive a message</li><li>There are many other ways in which we match, e.g. when a buddy with the same interests looks at a <b>location</b> that you have saved as a <b>favorite</b></li><li>Additionally <b>Guide</b> show Buddies with similar interests their view of your city</li>",
 			"detail": "The detail page contains<ul><li>contact data</li><li>describtion of the location</li><li>reachability of the location</li><li>map</li><li>various buttons to e.g. add locations to your favorites.</li></ul>",
+			"contacts": "Sobald Du eingeloggt bist, siehst Du hier die Kontakte in Deiner Umgebung.",
 			"home": "Sometimes you want to get out of the rut and discover new things. ${appTitle} helps<ul><li>to match contacts with <b>same interests</b>, e.g. dog lovers or concert goers</li><li>to find new locations/events through <b>Guides</b></li></ul>We do it in the following way...",
 			"homeImage": "Add your profile picture, a short self-description and other information here.",
 			"homeInvite": "Invite your friends. The bigger the community, the more matches with:<ul><li>Buddies in your immediate vicinity via <b>Bluetooth Matching</b></li><li>for spontaneous activities with <b>Today I want...</b></li><li>for small events with buddies that suit you</li></ul>You can invite your friends on the Info page.",
@@ -471,11 +472,13 @@
 			"listExplained": "Lists consist of the picture, information and the butterfly with<ul><li>distance information including compass</li><li>category</li><li>favorite status</li><li>rating</li></ul>By clicking the butterfly, you can rate the entry.",
 			"listFilter": "Lists may be filtered by<ul><li>categories</li><li>cardinal directions</li><li>districts</li></ul> In contrast to the search, in which new data is fetched from the server, the filter only acts on the list elements that have already been loaded.",
 			"listMenu": "The app follows these concepts<ul><li>on the bottom you find the menu including <b>Locations</b>, <b>Buddies</b>, <b>Search</b> and <b>What's up?</b> (as soon as you are logged in, you see all of them)</li><li>Clicking on one of the menu items opens the submenu</li></ul>",
+			"locations": "Sobald Du eingeloggt bist, siehst Du hier die Kontakte in Deiner Umgebung.",
 			"menuOpen": "You are back to the list. Click here to re-open the menu.",
 			"open": "Start Intro...",
 			"register": "After registration, we will show you how you can individualize your profile. Thank you for taking the time for this intro.",
 			"settings": "After login, you describe<ul><li>yourself</li><li>what you like about others</li><li>the type of locations you prefer</li></ul>Based on these information we suggest suitable Buddies and Locations to you.",
-			"settingsLoggedIn": "<ul><li>Change your profile image and enter general information here</li><li>Swipe left to enter attributes that describe you and that you like about other people</li><li>provide yourself as a guide for people fitting your settings</li></ul>"
+			"settingsLoggedIn": "<ul><li>Change your profile image and enter general information here</li><li>Swipe left to enter attributes that describe you and that you like about other people</li><li>provide yourself as a guide for people fitting your settings</li></ul>",
+			"whattodo": "Sobald Du eingeloggt bist, siehst Du hier die Kontakte in Deiner Umgebung."
 		},
 		"landing": {
 			"block1Title": "What does everyday life look like without ${appTitle} aus?",

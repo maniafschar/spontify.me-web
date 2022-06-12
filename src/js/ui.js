@@ -380,6 +380,13 @@ class ui {
 			}
 		},
 		goTo(id, event, back) {
+			if (!user.contact && id != 'home') {
+				if (id == 'whattodo' || id == 'locations' || id == 'contacts') {
+					intro.openHint({ desc: id, pos: '10%,5em', size: '80%,auto', onclick: 'ui.navigation.goTo("login")' });
+					return;
+				}
+				id = 'login';
+			}
 			geoData.headingClear();
 			if (ui.classContains('content', 'animated') || ui.classContains('menu', 'animated') || pageChat.close())
 				return;

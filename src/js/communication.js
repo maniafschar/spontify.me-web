@@ -400,9 +400,8 @@ class communication {
 			pageSettings.currentSettings3 = null;
 			lists.resetLists();
 			communication.setApplicationIconBadgeNumber(0);
-			var e = ui.qa('badgeChats');
+			var e = ui.q('badgeChats');
 			ui.html(e, '0');
-			ui.css(e, 'display', 'none');
 			e = ui.qa('[name="badgeContacts"]');
 			ui.html(e, '0');
 			ui.css(e, 'display', 'none');
