@@ -844,7 +844,7 @@ listScroll {
 	width: 3em;
 	height: 7.5em;
 	right: 0;
-	margin-top: -3em;
+	margin-top: 1.25em;
 }
 
 listScroll a {

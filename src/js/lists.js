@@ -121,7 +121,7 @@ class lists {
 			ui.css(thumb, 'display', 'none');
 		else {
 			ui.css(thumb, 'display', 'block');
-			ui.css(thumb, 'top', (list.scrollTop / (l - h) * (h - ui.q(activeID + ' listScroll a').clientHeight) / h * 100) + '%');
+			ui.css(thumb, 'top', (list.scrollTop / (l - h) * (h - ui.q(activeID + ' listScroll').clientHeight / 2 - ui.q(activeID + ' listScroll a').clientHeight) / h * 100) + '%');
 		}
 	}
 	static resetLists() {

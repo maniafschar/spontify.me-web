@@ -27,7 +27,21 @@ class ui {
 	static lastClick = '';
 	static templateMenuLocation = () =>
 		global.template`<div>
-		${ui.l('events.title')}
+		${ui.l('locations.title')}
+</div><container>
+	<a onclick="communication.loadList(ui.query.locationAll(),pageLocation.listLocation,&quot;locations&quot;,&quot;list&quot;)">
+		${ui.l('all')}
+	</a><a onclick="communication.loadList(ui.query.locationMatches(),pageLocation.listLocation,&quot;locations&quot;,&quot;matches&quot;)">
+		${ui.l('search.matches')}
+	</a><a onclick="communication.loadList(ui.query.locationFavorites(),pageLocation.listLocation,&quot;locations&quot;,&quot;favorites&quot;)">
+		${ui.l('locations.favoritesButton')}
+	</a><a onclick="communication.loadList(ui.query.locationVisits(),pageLocation.listLocation,&quot;locations&quot;,&quot;visits&quot;)">
+		${ui.l('title.history')}
+	</a><a onclick="pageLocation.edit()">
+		${ui.l('locations.new')}
+	</a>
+</container><div style="margin-top:1em;">
+	${ui.l('events.title')}
 </div>
 <container>
 	<a onclick="communication.loadList(ui.query.eventAll(),pageLocation.event.listEvents,&quot;locations&quot;,&quot;events&quot;)"
@@ -40,20 +54,6 @@ class ui {
 		style="border:none;">
 		${ui.l('events.myEvents')}
 	</a>
-</container><div style="margin-top:1em;">
-	${ui.l('locations.title')}
-</div><container>
-    <a onclick="communication.loadList(ui.query.locationAll(),pageLocation.listLocation,&quot;locations&quot;,&quot;list&quot;)">
-        ${ui.l('all')}
-    </a><a onclick="communication.loadList(ui.query.locationMatches(),pageLocation.listLocation,&quot;locations&quot;,&quot;matches&quot;)">
-        ${ui.l('search.matches')}
-    </a><a onclick="communication.loadList(ui.query.locationFavorites(),pageLocation.listLocation,&quot;locations&quot;,&quot;favorites&quot;)">
-        ${ui.l('locations.favoritesButton')}
-    </a><a onclick="communication.loadList(ui.query.locationVisits(),pageLocation.listLocation,&quot;locations&quot;,&quot;visits&quot;)">
-        ${ui.l('title.history')}
-    </a><a onclick="pageLocation.edit()">
-        ${ui.l('locations.new')}
-    </a>
 </container>`;
 	static templateMenuContacts = () =>
 		global.template`<container>
