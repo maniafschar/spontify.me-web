@@ -26,8 +26,8 @@ class pageHome {
 				<img src="images/location.svg" onload="formFunc.image.svgInject(this)" />
 				<span>ntify</span><last>me</last>
 			</logo>
+			<homeSubTitle>${ui.l('appSubTitle')}</homeSubTitle>
 		</homeTitle>
-		<homeSubTitle>${ui.l('appSubTitle')}</homeSubTitle>
 	</homeHeader>
 	<homeBody>
 		<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;whattodo&quot;)" style="width:80%;">

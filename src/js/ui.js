@@ -485,11 +485,11 @@ class ui {
 			if (t && t == title)
 				ui.navigation.hidePopup();
 			else if (data) {
-				if (data.indexOf('<d') != 0)
+				if (data.indexOf('<d') != 0 && data.indexOf('<f') != 0)
 					data = '<div style="text-align:center;padding:1em;">' + data + '</div>';
 				data = '<popupContent ts="' + new Date().getTime() + '">' + data + '</popupContent>';
 				if (title)
-					data = '<popupTitle onclick="' + (closeAction ? 'if(' + closeAction + '!=false)' : '') + 'ui.navigation.openPopup();"' + (modal ? ' modal="true"' : '') + '>' + title + '</popupTitle>' + data;
+					data = '<popupTitle onclick="' + (closeAction ? 'if(' + closeAction + '!=false)' : '') + 'ui.navigation.openPopup();"' + (modal ? ' modal="true"' : '') + '><div>' + title + '</div></popupTitle>' + data;
 				var f = function () {
 					ui.navigation.setPopupContent(data);
 					ui.attr('popup', 'error', '');
