@@ -32,6 +32,8 @@ class user {
 	}
 	static save(data, success) {
 		if (user.contact && user.contact.id) {
+			if (!data.values)
+				data = { values: data };
 			data.classname = 'Contact';
 			data.id = user.contact.id;
 			communication.ajax({
@@ -39,7 +41,18 @@ class user {
 				url: global.server + 'db/one',
 				method: 'PUT',
 				body: data,
-				success: success
+				success() {
+					for (var k in data.values)
+						user.contact[k] = data.values[k];
+					if (typeof user.contact.filter == 'string')
+						user.contact.filter = JSON.parse(user.contact.filter);
+					if (typeof user.contact.introState == 'string')
+						user.contact.introState = JSON.parse(user.contact.introState);
+					if (typeof user.contact.storage == 'string')
+						user.contact.storage = JSON.parse(user.contact.storage);
+					if (success)
+						success.call();
+				}
 			});
 		}
 	}

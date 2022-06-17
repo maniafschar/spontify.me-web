@@ -28,7 +28,7 @@ class details {
 			}
 		}
 	}
-	static open(type, id, action, callback) {
+	static open(id, action, callback) {
 		ui.navigation.hideMenu();
 		communication.ajax({
 			url: global.server + 'action/one?query=' + action + '&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon,
@@ -41,9 +41,8 @@ class details {
 				}
 				var activeID = ui.navigation.getActiveID()
 				ui.css(activeID + ' row[i="' + id + '"] badge[action="remove"]', 'display', 'none');
-				if (!type)
-					callback(r, id);
-				else {
+				r = callback(r, id);
+				if (r) {
 					var l = ui.q('detail');
 					var animate = ui.classContains(l, 'animated');
 					var f = function () {
@@ -51,32 +50,29 @@ class details {
 							setTimeout(f, 50);
 							return;
 						}
-						r = callback(r, id);
-						if (r) {
-							ui.html(l, r);
-							ui.attr(l, 'i', id);
-							ui.attr(l, 'type', type);
-							if (activeID != 'detail')
-								ui.navigation.goTo('detail');
-							formFunc.initFields('detail');
-							if (animate)
-								ui.navigation.animation(l, 'homeSlideIn');
-							l.scrollTop = 0;
-							ui.css(l, 'opacity', 1);
-							geoData.headingWatch();
-							if (type == 'locations' && !ui.q('locations').innerHTML) {
-								if (user.contact) {
-									if (global.isBrowser())
-										history.pushState(null, null, window.location.origin);
-								} else {
-									var s = ui.q('detail .title').innerHTML;
-									if (s.indexOf('<span') > -1)
-										s = s.substring(0, s.indexOf('<span'));
-									if (global.isBrowser())
-										history.pushState(null, null, window.location.origin + '/loc_' + id + '_' + encodeURIComponent(s.replace(/\//g, '_')));
-									var e = ui.q('title'), s2 = e.innerHTML;
-									e.innerHTML = (s2.indexOf(global.separator) > -1 ? s2.substring(0, s2.indexOf(global.separator)) : s2) + global.separator + s;
-								}
+						ui.html(l, r);
+						ui.attr(l, 'i', id);
+						ui.attr(l, 'type', activeID);
+						if (activeID != 'detail')
+							ui.navigation.goTo('detail');
+						formFunc.initFields('detail');
+						if (animate)
+							ui.navigation.animation(l, 'homeSlideIn');
+						l.scrollTop = 0;
+						ui.css(l, 'opacity', 1);
+						geoData.headingWatch();
+						if (activeID == 'locations' && !ui.q('locations').innerHTML) {
+							if (user.contact) {
+								if (global.isBrowser())
+									history.pushState(null, null, window.location.origin);
+							} else {
+								var s = ui.q('detail .title').innerHTML;
+								if (s.indexOf('<span') > -1)
+									s = s.substring(0, s.indexOf('<span'));
+								if (global.isBrowser())
+									history.pushState(null, null, window.location.origin + '/loc_' + id + '_' + encodeURIComponent(s.replace(/\//g, '_')));
+								var e = ui.q('title'), s2 = e.innerHTML;
+								e.innerHTML = (s2.indexOf(global.separator) > -1 ? s2.substring(0, s2.indexOf(global.separator)) : s2) + global.separator + s;
 							}
 						}
 						geoData.updateCompass();
@@ -108,7 +104,7 @@ class details {
 				url: global.server + 'db/one?query=' + (next ? 'location_anonymousNextId' : 'location_anonymousPrevId') + '&id=' + id.substring(2),
 				success(r) {
 					if (r) {
-						details.open('locations', r, 'location_anonymousList&search=' + encodeURIComponent('location.id=' + r), pageLocation.detailLocationEvent);
+						details.open(r, 'location_anonymousList&search=' + encodeURIComponent('location.id=' + r), pageLocation.detailLocationEvent);
 						var f = function () {
 							ui.css(e, 'opacity', 0);
 							ui.css(e, 'webkitTransform', '');
@@ -155,7 +151,7 @@ class details {
 				e = e.parentNode;
 			var b = buttons.offsetHeight + buttons.offsetTop - e.offsetHeight / 2;
 			ui.toggleHeight(d);
-			if (e.scrollTop < b)
+			if (e.scrollTop < b && !ui.classContains(divID, 'popup'))
 				ui.scrollTo(e, b);
 			ui.classRemove(divID, 'collapsed');
 		}

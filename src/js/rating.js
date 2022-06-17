@@ -147,7 +147,7 @@ class rating {
 						s += '<ratingItem';
 						rate = '<rating><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v2.rating) + '%;">★★★★★</full></rating>';
 						if (v2.contactId != user.contact.id)
-							s += ' onclick="ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v2.contactId) + '&quot;)" style="cursor:pointer;"';
+							s += ' onclick="ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v2.contactId) + '&quot;,event)" style="cursor:pointer;"';
 						s += '>' + rate + date + ' ' + pseudonym + text + img + '</ratingItem>';
 					}
 					if (s) {

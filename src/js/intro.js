@@ -25,6 +25,7 @@ class intro {
 		ui.css(e, 'opacity', 0);
 		setTimeout(function () {
 			e.removeAttribute('style');
+			e.removeAttribute('i');
 			ui.html(e, '');
 		}, 400);
 	}
@@ -42,7 +43,18 @@ class intro {
 		}
 		var e = ui.q('hint'), body = ui.l('intro.' + data.desc) + (data.hinky ? '<hinky style="' + data.hinky + '" class="' + data.hinkyClass + '"></hinky>' : '')
 			+ (data.desc == 'home' ? '' : '<close onclick="intro.close(event)">x</close>');
+		if (data.desc == e.getAttribute('i')) {
+			intro.closeIntro();
+			return;
+		}
 		if (intro.currentStep < 0 || intro.currentStep == intro.steps.length - 1) {
+			if (e.getAttribute('i')) {
+				intro.closeIntro();
+				setTimeout(function () {
+					intro.openHint(data);
+				}, 400);
+				return;
+			}
 			ui.css(e, 'left', null);
 			ui.css(e, 'right', null);
 			ui.css(e, 'top', null);
@@ -73,14 +85,15 @@ class intro {
 			ui.css(e, 'bottom', '');
 			ui.css(e, 'top', data.pos.split(',')[1]);
 		}
-		e = ui.q('hint');
 		ui.attr(e, 'onclick', data.onclick ? data.onclick : 'intro.openIntro(event)');
+		ui.attr(e, 'i', data.desc);
+		ui.attr(e, 'timestamp', new Date().getTime());
 		ui.css(e, 'display', 'block');
-		setTimeout(function () { ui.css(e, 'opacity', 1); }, 400);
+		setTimeout(function () { ui.css(e, 'opacity', 1) }, 10);
 		if (save) {
 			intro.lastHint = parseInt(new Date().getTime() / 60000);
 			user.contact.introState[data.desc] = intro.lastHint;
-			user.save({ values: { introState: JSON.stringify(user.contact.introState) } });
+			user.save({ introState: JSON.stringify(user.contact.introState) });
 		}
 	}
 	static openIntro(event) {

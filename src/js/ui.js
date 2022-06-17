@@ -27,47 +27,38 @@ class ui {
 	static lastClick = '';
 	static templateMenuLocation = () =>
 		global.template`<div>
-		${ui.l('events.title')}
-</div>
-<container>
-	<a onclick="communication.loadList(ui.query.eventAll(),pageLocation.event.listEvents,&quot;locations&quot;,&quot;events&quot;)"
-		style="border-bottom:none;">
+		${ui.l('locations.title')}
+</div><container>
+	<a onclick="communication.loadList(ui.query.locationAll(),pageLocation.listLocation,&quot;locations&quot;,&quot;list&quot;)">
 		${ui.l('all')}
-	</a><a onclick="communication.loadList(ui.query.eventMatches(),pageLocation.event.listEvents,&quot;locations&quot;,&quot;matches&quot;)"
-		style="border-bottom:none;">
-		${ui.l('search.matches')}
-	</a><a onclick="communication.loadList(ui.query.eventMy(),pageLocation.event.listEventsMy,&quot;locations&quot;,&quot;eventsMy&quot;)"
-		style="border:none;">
-		${ui.l('events.myEvents')}
+	</a><a onclick="communication.loadList(ui.query.locationFavorites(),pageLocation.listLocation,&quot;locations&quot;,&quot;favorites&quot;)">
+		${ui.l('locations.favoritesButton')}
+	</a><a onclick="communication.loadList(ui.query.locationVisits(),pageLocation.listLocation,&quot;locations&quot;,&quot;visits&quot;)">
+		${ui.l('title.history')}
+	</a><a onclick="pageLocation.edit()">
+		${ui.l('locations.new')}
 	</a>
 </container><div style="margin-top:1em;">
-	${ui.l('locations.title')}
-</div><container>
-    <a onclick="communication.loadList(ui.query.locationAll(),pageLocation.listLocation,&quot;locations&quot;,&quot;list&quot;)">
-        ${ui.l('all')}
-    </a><a onclick="communication.loadList(ui.query.locationMatches(),pageLocation.listLocation,&quot;locations&quot;,&quot;matches&quot;)">
-        ${ui.l('search.matches')}
-    </a><a onclick="communication.loadList(ui.query.locationFavorites(),pageLocation.listLocation,&quot;locations&quot;,&quot;favorites&quot;)">
-        ${ui.l('locations.favoritesButton')}
-    </a><a onclick="communication.loadList(ui.query.locationVisits(),pageLocation.listLocation,&quot;locations&quot;,&quot;visits&quot;)">
-        ${ui.l('title.history')}
-    </a><a onclick="pageLocation.edit()">
-        ${ui.l('locations.new')}
-    </a>
+	${ui.l('events.title')}
+</div>
+<container>
+	<a onclick="communication.loadList(ui.query.eventAll(),pageLocation.event.listEvents,&quot;locations&quot;,&quot;events&quot;)">
+		${ui.l('all')}
+	</a><a onclick="communication.loadList(ui.query.eventMy(),pageLocation.event.listEventsMy,&quot;locations&quot;,&quot;eventsMy&quot;)">
+		${ui.l('events.myEvents')}
+	</a>
 </container>`;
 	static templateMenuContacts = () =>
 		global.template`<container>
     <a onclick="communication.loadList(ui.query.contactAll(),pageContact.listContacts,&quot;contacts&quot;,&quot;list&quot;)">
 			${ui.l('all')}
-    </a><a onclick="communication.loadList(ui.query.contactMatches(),pageContact.listContacts,&quot;contacts&quot;,&quot;matches&quot;)">
-		${ui.l('search.matches')}
     </a><a onclick="communication.loadList(ui.query.contactFriends(),pageContact.listContacts,&quot;contacts&quot;,&quot;friends&quot;)">
 		${ui.l('contacts.friendshipTitle')}
     </a><a onclick="communication.loadList(ui.query.contactVisitees(),pageContact.listContacts,&quot;contacts&quot;,&quot;visits&quot;)">
 		${ui.l('title.history')}
 	</a><a onclick="communication.loadList(ui.query.contactVisits(),pageContact.listVisits,&quot;contacts&quot;,&quot;profile&quot;)">
 		${ui.l('title.visits')}
-	</a><a onclick="pageContact.groups.open()" style="border-bottom:none;">
+	</a><a onclick="pageContact.groups.open()">
 		${ui.l('group.action')}
 	</a>
 </container>`;
@@ -219,9 +210,11 @@ class ui {
 			}, true);
 			ui.css(e, 'display', '');
 		},
-		autoOpen(id, closeAction) {
+		autoOpen(id, event) {
 			if (!id)
 				return false;
+			if (event)
+				event.stopPropagation();
 			var f = function () {
 				if (ui.q('#preloader'))
 					setTimeout(f, 500);
@@ -264,14 +257,14 @@ class ui {
 						}
 						if (id.indexOf('='))
 							id = id.substring(id.indexOf('=') + 1);
-						ui.navigation.openPopup(title, '<detail i="' + id + '" class="mainBG" type="' + type + '" style="padding:0;">' + s + '</detail>', closeAction);
+						ui.navigation.openPopup('', '<detail i="' + id + '" type="' + type + '" style="padding:0;">' + s + '</detail>');
 						geoData.updateCompass();
 						return '';
 					};
 					if (idIntern.indexOf('l=') == 0)
-						details.open('locations', idIntern.substring(2), 'location_list&search=' + encodeURIComponent('location.id=' + idIntern.substring(2)), o);
+						details.open(idIntern.substring(2), 'location_list&search=' + encodeURIComponent('location.id=' + idIntern.substring(2)), o);
 					else if (idIntern.indexOf('e=') == 0)
-						details.open('locations', idIntern.substring(2), 'event_list&search=' + encodeURIComponent('event.id=' + idIntern.substring(2)), o);
+						details.open(idIntern.substring(2), 'event_list&search=' + encodeURIComponent('event.id=' + idIntern.substring(2)), o);
 					else if (idIntern.indexOf('n=') == 0) {
 						communication.ajax({
 							url: global.server + 'db/one?query=contact_notification&search=contactNotification.id=' + id.substring(2),
@@ -291,7 +284,7 @@ class ui {
 							}
 						});
 					} else if (idIntern.indexOf('=') == 1)
-						details.open('contacts', idIntern.substring(2), 'contact_list&search=' + encodeURIComponent('contact.id=' + idIntern.substring(2)), o);
+						details.open(idIntern.substring(2), 'contact_list&search=' + encodeURIComponent('contact.id=' + idIntern.substring(2)), o);
 				}
 			};
 			f.call();
@@ -381,10 +374,13 @@ class ui {
 		},
 		goTo(id, event, back) {
 			if (!user.contact && id != 'home' && id != 'info') {
-				if (id == 'whattodo' || id == 'locations' || id == 'contacts') {
+				if (id == 'whattodo' || id == 'locations' || id == 'contacts' || id == 'settings' && !event) {
 					intro.openHint({ desc: id, pos: '10%,5em', size: '80%,auto', onclick: 'ui.navigation.goTo("login")' });
 					return;
 				}
+				var timestamp = ui.q('hint').getAttribute('timestamp');
+				if (timestamp && new Date().getTime() - timestamp < 500)
+					return;
 				id = 'login';
 			}
 			geoData.headingClear();
@@ -439,10 +435,12 @@ class ui {
 		},
 		hidePopup() {
 			ui.attr('popup', 'error', '');
-			if (ui.cssValue('popup', 'display') != 'none' && ui.q('popupTitle').getAttribute('modal') != 'true') {
-				var e = ui.q('popupTitle');
+			var e = ui.q('popupTitle');
+			if (!e || ui.cssValue('popup', 'display') != 'none' && e.getAttribute('modal') != 'true') {
 				if (e)
 					e.click();
+				else
+					ui.navigation.animation(ui.q('popup'), 'popupSlideOut', ui.navigation.hidePopupHard);
 				return true;
 			}
 			return false;
@@ -478,23 +476,25 @@ class ui {
 		},
 		openPopup(title, data, closeAction, modal, exec) {
 			intro.closeIntro();
-			var p = ui.q('popup'), visible = p.style.display != 'none';
-			if (ui.classContains(p, 'animated') || visible && ui.q('popupTitle').getAttribute('modal') == 'true')
+			var p = ui.q('popup'), pt = ui.q('popupTitle'), visible = p.style.display != 'none';
+			if (ui.classContains(p, 'animated') || visible && pt && pt.getAttribute('modal') == 'true')
 				return false;
 			if (global.isBrowser() && location.href.indexOf('#') < 0)
 				history.pushState(null, null, '#x');
-			var t = ui.q('popupTitle') ? ui.q('popupTitle').innerText : null;
+			var t = pt ? pt.innerText : null;
 			if (t && t == title)
 				ui.navigation.hidePopup();
 			else if (data) {
 				if (data.indexOf('<d') != 0)
 					data = '<div style="text-align:center;padding:1em;">' + data + '</div>';
-				data = '<popupTitle onclick="' + (closeAction ? 'if(' + closeAction + '!=false)' : '') + 'ui.navigation.openPopup();"' + (modal ? ' modal="true"' : '') + '>' + title + '</popupTitle><popupContent ts="' + new Date().getTime() + '">' + data + '</popupContent>';
+				data = '<popupContent ts="' + new Date().getTime() + '">' + data + '</popupContent>';
+				if (title)
+					data = '<popupTitle onclick="' + (closeAction ? 'if(' + closeAction + '!=false)' : '') + 'ui.navigation.openPopup();"' + (modal ? ' modal="true"' : '') + '>' + title + '</popupTitle>' + data;
 				var f = function () {
 					ui.navigation.setPopupContent(data);
 					ui.attr('popup', 'error', '');
 					ui.navigation.animation(p, visible ? 'slideDown' : 'popupSlideIn');
-					ui.css('popupContent', 'maxHeight', (ui.q('content').clientHeight - ui.q('popupTitle').clientHeight) + 'px');
+					ui.css('popupContent', 'maxHeight', (ui.q('content').clientHeight - (title ? ui.q('popupTitle').clientHeight : 0) - 2 * ui.emInPX) + 'px');
 					if (exec)
 						exec.call();
 				};
@@ -568,7 +568,7 @@ class ui {
 			return 'query=contact_list&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent(pageSearch.getSearchMatchesContact());
 		},
 		contactFriends() {
-			return 'query=contact_list&distance=100000&limit=500&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactLink.id is not null');
+			return 'query=contact_list&distance=100000&limit=500&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactLink.status=\'Friends\'');
 		},
 		contactVisitees() {
 			return 'query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactVisit.contactId2=contact.id and contactVisit.contactId=' + user.contact.id);
@@ -594,7 +594,7 @@ class ui {
 			return (user.contact ? 'query=location_list' : 'query=location_anonymousList') + '&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon;
 		},
 		locationFavorites() {
-			return 'query=location_list&distance=100000&limit=500&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('locationFavorite.id is not null');
+			return 'query=location_list&distance=100000&limit=500&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('locationFavorite.favorite=true');
 		},
 		locationMatches() {
 			return 'query=location_list&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent(pageSearch.getSearchMatchesLocation());
@@ -1328,7 +1328,7 @@ class formFunc {
 			return ui.categories[5].subCategories;
 		},
 		getMessages() {
-			return pageWhatToDo.wtd.getMessages();
+			return pageWhatToDo.getMessages();
 		},
 		getSubCategories0() {
 			return ui.categories[0].subCategories;
@@ -1369,7 +1369,7 @@ class formFunc {
 				d[k] = user.contact.storage[k];
 		}
 		user.contact.storage = d;
-		user.save({ values: { storage: JSON.stringify(user.contact.storage) } });
+		user.save({ storage: JSON.stringify(user.contact.storage) });
 	}
 	static resetError(e) {
 		if (e) {
@@ -1384,7 +1384,7 @@ class formFunc {
 	static saveDraft(key, value) {
 		if (value) {
 			user.contact.storage[key] = value;
-			user.save({ values: { storage: JSON.stringify(user.contact.storage) } });
+			user.save({ storage: JSON.stringify(user.contact.storage) });
 		} else
 			formFunc.removeDraft(key);
 	}

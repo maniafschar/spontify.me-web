@@ -30,6 +30,13 @@ html {
 	src: url(../font/Comfortaa-Regular.ttf) format('truetype');
 }
 
+@font-face {
+	font-family: 'Adelina';
+	font-style: regular;
+	font-weight: 400;
+	src: url(../font/Adelina-Regular.ttf) format('truetype');
+}
+
 h1,
 h2,
 h3,
@@ -122,7 +129,7 @@ hint.body {
 	position: absolute;
 	background: rgba(255, 255, 255, 0.9);
 	padding: 1em;
-	border-radius: 1em;
+	border-radius: 0.5em;
 	text-align: center;
 	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
 }
@@ -156,6 +163,11 @@ hint hinky.top {
 hint hinky.bottom {
 	bottom: -0.5em;
 	border-top: solid 0.5em rgba(0, 94, 160, 0.9);
+}
+
+hint>b {
+	margin-bottom: 0.5em;
+	display: inline-block;
 }
 
 ul li,
@@ -203,7 +215,7 @@ homeBody {
 	width: 100%;
 	display: block;
 	top: 50%;
-	margin-top: -20vh;
+	margin-top: -18vh;
 }
 
 whattodo navbutton {
@@ -290,6 +302,7 @@ login registerHint li {
 }
 
 logo {
+	font-family: Adelina;
 	font-size: 3em;
 	position: relative;
 	display: flex;
@@ -681,25 +694,30 @@ slider thumb val {
 .homeButton {
 	font-weight: bold;
 	cursor: pointer;
-	height: 13vh;
+	height: 12vh;
 	position: relative;
 	display: inline-block;
-	margin: 1.5vh 0;
-	border-radius: 0 7vh 7vh 0;
+	margin: 2vh 0;
+	border-radius: 0 6vh 6vh 0;
 	box-shadow: 0 0 1em rgba(0, 0, 0, 0.1);
 	padding: 0;
 }
 
 .homeButton span {
-	display: inline-block;
-	margin: 5.5vh 0 0 1.5em;
+	top: 5vh;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	right: 5em;
+	height: 2em;
+	position: absolute;
+	left: 1.5em;
 }
 
 .homeButton svg {
-	height: 8vh;
+	height: 6vh;
 	position: absolute;
 	right: 1.7em;
-	top: 2.5vh;
+	top: 3vh;
 }
 
 .homeButton svg path {
@@ -713,11 +731,6 @@ whatToDoList {
 
 whattodo tabBody {
 	padding: 0;
-}
-
-whatToDoBody {
-	display: block;
-	padding: 1em 2em;
 }
 
 #whatToDoLocation>img {
@@ -740,7 +753,7 @@ chat listHeader img {
 
 chat .sendButton {
 	float: right;
-	margin: 0.25em 0;
+	margin: 0.5em 0;
 }
 
 listHeader chatName {
@@ -753,19 +766,6 @@ listHeader chatDate {
 	position: absolute;
 	left: 0.75em;
 	line-height: 4;
-}
-
-chatButton {
-	position: absolute;
-	left: 0;
-	top: -1.8em;
-	z-index: 10;
-}
-
-chatButton .buttonIcon {
-	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
-	border-radius: 0 1.5em 1.5em 0;
-	margin: 0;
 }
 
 chatUserList {
@@ -844,7 +844,7 @@ listScroll {
 	width: 3em;
 	height: 7.5em;
 	right: 0;
-	margin-top: -3em;
+	margin-top: 1.1em;
 }
 
 listScroll a {
@@ -861,7 +861,7 @@ noResult {
 	line-height: 1.6;
 	padding: 1em;
 	display: block;
-	margin: 1em;
+	margin: 1em 1em 5em 1em;
 	background: rgba(255, 255, 255, 0.6);
 	border-radius: 0.5em;
 }
@@ -893,29 +893,33 @@ noResult {
 popup {
 	position: absolute;
 	z-index: 99999;
-	box-shadow: 0 0 2em rgba(0, 0, 0, 0.5);
 	width: 100%;
-	border-radius: 4em 1em;
-	overflow: hidden;
-	background: cadetblue;
+	top: 0;
+	left: 0;
+	padding: 1em;
+	text-align: center;
 }
 
 popupTitle {
-	color: white;
-	overflow: hidden;
-	height: 3em;
-	line-height: 3.3em;
 	position: relative;
-	width: 100%;
-	z-index: 99;
-	font-size: 1.3em;
-	text-align: center;
-	border-bottom: solid 0.06em rgba(255, 255, 255, 0.1);
-	overflow: hidden;
 	white-space: nowrap;
-	padding: 0 1em;
-	text-overflow: ellipsis;
-	display: block;
+	font-size: 1.3em;
+	display: inline-block;
+	background: cadetblue;
+	padding: 0.5em 1em;
+	border-radius: 0.5em 0.5em 0 0;
+}
+
+popuptitle::before {
+	box-shadow: 0 0 2em rgb(0 0 0 / 50%);
+	content: '';
+	z-index: -1;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	border-radius: 0.5em 0.5em 0 0;
 }
 
 popupHint {
@@ -926,36 +930,13 @@ popupHint {
 }
 
 popupContent {
-	border-radius: 0 0 4em 1em;
 	overflow-y: auto;
-	color: white;
 	display: block;
-}
-
-popupContent input,
-popupContent input[type="radio"]+label,
-popupContent input[type="checkbox"]+label,
-popupContent select,
-popupContent textarea,
-popupContent > :not(detail) value label,
-popupContent inputFile,
-popupContent slider thumb span {
-	color: rgba(255, 255, 255, 0.85);
-	background: rgba(255, 255, 255, 0.1);
-	border: none;
-}
-
-popupContent input[type="radio"]+label:hover,
-popupContent input[type="checkbox"]+label:hover {
-	color: white;
-}
-
-popupContent input:checked+label {
-	color: white;
-}
-
-popupContent > div {
-	border-radius: 0 0 4em 1em;
+	box-shadow: 0 0 2em rgba(0, 0, 0, 0.5);
+	border-radius: 0.5em;
+	overflow-x: hidden;
+	background: cadetblue;
+	border: solid transparent 0.5em;
 }
 
 ratingHint {
@@ -1025,10 +1006,8 @@ popupContent > :not(detail) ratingSelection {
 }
 
 .whatToDoTime {
-	float: none;
-	width: 3em;
-	margin-left: 1em;
-	min-width: 8em;
+	width: 8em;
+	margin-top: 0.25em;
 }
 
 eventListTitle {
@@ -1056,12 +1035,14 @@ badge {
 	display: none;
 	border-radius: 2em;
 	position: absolute;
-	top: -1.3em;
+	top: -0.5em;
 	text-align: center;
 	padding: 0.5em 1em;
 	z-index: 99;
 	box-shadow: 0 0 0.25em rgba(0, 0, 0, 0.3);
 	opacity: 0.9;
+	left: 100%;
+	margin-left: -2em;
 }
 
 badge img {
@@ -1453,18 +1434,19 @@ homeTitle {
 }
 
 homeSubTitle {
+	font-family: Adelina;
 	display: block;
+	font-size: 1.2em;
+	margin-top: 0.5em;
+	font-weight: bold;
 }
 
-homeImage {
-	height: 18vh;
-	max-height: 10em;
-	margin-top: 3vh;
-	margin-bottom: 1vh;
-	cursor: pointer;
-	position: relative;
-	display: block;
-	text-align: center;
+#homeIconBluetooth {
+	opacity: 0.4;
+}
+
+#homeIconBluetooth.active {
+	opacity: 1;
 }
 
 notifications {
@@ -1488,8 +1470,6 @@ buttontext {
 	line-height: 1;
 	margin: 0 0.25em;
 	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
 	vertical-align: middle;
 	color: black;
 	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
@@ -1667,10 +1647,8 @@ row imagelist {
 }
 
 chatButtons {
-	text-align: left;
-	margin-left: -0.25em;
-	padding: 0 0 0.25em 0 !important;
-	margin-right: -0.75em;
+	padding: 0.5em 0;
+	margin: 0 -0.5em;
 	white-space: nowrap;
 	overflow-x: auto;
 	display: block;
@@ -1712,7 +1690,7 @@ filterSeparator {
 }
 
 settingsNav {
-	opacity: 0.3;
+	color: white;
 	cursor: pointer;
 	padding: 1em;
 	font-size: 1.4em;
@@ -1788,13 +1766,21 @@ text {
 	border-radius: 0.5em;
 }
 
+text.popup {
+	position: absolute;
+	width: 70%;
+	left: 15%;
+	top: 5em;
+	background: rgba(255, 255, 255, 0.9);
+	box-shadow: 0 0 1em rgb(0 0 0 / 30%);
+	padding: 1.5em;
+}
+
 text.collapsed {
 	display: none;
 }
 
 detail detailTogglePanel {
-	padding: 1.5em;
-	margin: 0 !important;
 	display: block;
 }
 
@@ -1890,7 +1876,6 @@ detail detailHeader action matchIndicator svg .circle {
 }
 
 detail detailHeader action matchIndicator svg .percentage {
-	fill: #666;
 	font-family: sans-serif;
 	font-size: 0.5em;
 	text-anchor: middle;
@@ -1912,6 +1897,15 @@ detail detailHeader action matchIndicator span {
 detail detailHeader action buttonIcon {
 	position: relative;
 	display: inline-block;
+}
+
+detail detailHeader action buttonIcon .iconFavorite {
+	margin-top: 1em;
+}
+
+detail detailHeader action .favorite svg {
+	fill: rgb(246, 255, 187);
+	border-color: rgb(246, 255, 187);
 }
 
 detail detailRating {
@@ -2042,19 +2036,6 @@ progressbar {
 	background: rgba(246, 255, 187, 0.8);
 }
 
-homeStatus {
-	width: 100%;
-	display: block;
-	text-align: center;
-	position: relative;
-	cursor: pointer;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	padding: 0 1em;
-	line-height: 3em;
-}
-
 info {
 	text-align: left !important;
 }
@@ -2133,17 +2114,14 @@ landingsubject {
 }
 
 whattodotitle {
-	color: rgb(0, 94, 160);
-	font-size: 1.1em;
+	font-size: 1.2em;
 	font-weight: bold;
 	cursor: pointer;
-	height: 3em;
-	padding: 0.5em 1.5em;
-	line-height: 2;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	display: block;
+	margin: 1.5em 1em 1em 1em;
 }
 
 infoblock landingsubtitle {

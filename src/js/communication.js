@@ -271,20 +271,18 @@ class communication {
 				}
 			});
 		},
-		logoff(forEver) {
+		logoff() {
 			if (!user.contact)
 				return;
-			if (!global.isBrowser())
-				bluetooth.stop();
 			var token = window.localStorage.getItem('autoLogin');
-			token = forEver && token ? '?token=' + encodeURIComponent(Encryption.encPUB(token)) : '';
+			token = token ? '?token=' + encodeURIComponent(Encryption.encPUB(token)) : '';
 			communication.ajax({
 				url: global.server + 'authentication/logoff' + token,
 				error() {
-					communication.login.resetAfterLogoff(forEver);
+					communication.login.resetAfterLogoff();
 				},
 				success() {
-					communication.login.resetAfterLogoff(forEver);
+					communication.login.resetAfterLogoff();
 				}
 			});
 		},
@@ -311,7 +309,7 @@ class communication {
 				function (response) {
 					if (response.status == 'connected') {
 						if (user.contact && !response.authResponse)
-							user.save({ values: { fbToken: response.token } }, exec);
+							user.save({ fbToken: response.token }, exec);
 						else
 							FB.api({
 								path: '/me',
@@ -352,7 +350,7 @@ class communication {
 			else
 				formFunc.resetError(ui.q('[name="passwd"]'));
 			if (!ui.q('popup errorHint')) {
-				user.save({ values: { password: Encryption.encPUB(ui.val('popup [name="passwd"]')) } }, function () {
+				user.save({ password: Encryption.encPUB(ui.val('popup [name="passwd"]')) }, function () {
 					communication.login.removeCredentials();
 					user.password = ui.val('[name="passwd"]');
 					ui.attr('popupTitle', 'modal', '');
@@ -386,19 +384,17 @@ class communication {
 			window.localStorage.removeItem('login');
 			window.localStorage.removeItem('autoLogin');
 		},
-		resetAfterLogoff(forEver) {
+		resetAfterLogoff() {
 			user.reset();
 			bluetooth.stop();
 			ui.html('chatUserList', '');
 			initialisation.recoverInvoked = false;
 			pageLocation.locationsAdded = null;
-			pageWhatToDo.daily.date = new Date();
-			pageWhatToDo.daily.data = [];
 			user.reset();
 			pageChat.chatNews = [];
 			lists.data = [];
 			pageChat.copyLink = '';
-			pageWhatToDo.wtd.list = null;
+			pageWhatToDo.list = null;
 			pageSettings.currentSettings = null;
 			pageSettings.currentSettings3 = null;
 			lists.resetLists();
@@ -415,8 +411,7 @@ class communication {
 			ui.classAdd('#navHome', 'loggedOff');
 			ui.classAdd('#navLocations', 'loggedOff');
 			ui.classAdd('#navLogin', 'loggedOff');
-			if (forEver == true)
-				communication.login.removeCredentials();
+			communication.login.removeCredentials();
 			ui.attr('content > *', 'menuIndex', null);
 			communication.currentCalls = [];
 			ui.navigation.goTo('home');
@@ -455,7 +450,7 @@ class communication {
 		warningRegNotComplete() {
 			if (ui.q('popupHint').innerHTML) {
 				ui.attr('popupTitle', 'modal', '');
-				communication.login.logoff(true);
+				communication.login.logoff();
 			} else {
 				ui.html('popupHint', ui.l('register.notComplete'));
 				return false;
@@ -489,7 +484,7 @@ class communication {
 								return;
 						}
 					}
-					e2.setAttribute('onclick', 'communication.notification.clear();ui.navigation.autoOpen("' + e.additionalData.exec + '");');
+					e2.setAttribute('onclick', 'communication.notification.clear();ui.navigation.autoOpen("' + e.additionalData.exec + '",event)');
 				}
 				if (d.innerHTML)
 					ui.classAdd(e2, 'borderBottom');
@@ -528,7 +523,7 @@ class communication {
 			communication.notification.push.on('error', communication.notification.onError);
 		},
 		saveToken(e) {
-			user.save({ values: { pushSystem: global.getOS(), pushToken: e.registrationId } });
+			user.save({ pushSystem: global.getOS(), pushToken: e.registrationId });
 		}
 	};
 	static onError(r) {
@@ -600,16 +595,13 @@ class communication {
 							pageChat.initActiveChats();
 					}
 					total += chat;
-					e = ui.qa('badgeChats');
+					e = ui.q('badgeChats');
 					ui.html(e, chat);
 					ui.css(e, 'display', chat == 0 ? 'none' : 'block');
-					e = ui.qa('homeBody [name="badgeContacts"]');
-					ui.html(e, '' + chat);
-					ui.css(e, 'display', chat == 0 ? 'none' : 'block');
 					if (chat == 0)
-						ui.classRemove('chatButton', 'pulse');
+						ui.classRemove(e.parentNode, 'pulse');
 					else
-						ui.classRemove('chatButton', 'pulse');
+						ui.classRemove(e.parentNode, 'pulse');
 
 					e = ui.qa('[name="badgeNotifications"]');
 					total += r.notification;

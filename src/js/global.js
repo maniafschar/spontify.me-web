@@ -6,7 +6,7 @@ import { ui } from './ui';
 export { global };
 
 class global {
-	static appTitle = 'spontify me';
+	static appTitle = 'spontify.me';
 	static appVersion = '1.0.0';
 	static language = null;
 	static minLocations = 5;
@@ -289,7 +289,7 @@ class global {
 							if (!load[table])
 								load[table] = [];
 							load[table].push(id.substring(2));
-							s = s.substring(0, p + 1) + '<a class="chatLinks" name="autoOpen' + id.replace('=', '_') + '" onclick="ui.navigation.autoOpen(&quot;' + s.substring(p + 7, p2) + '&quot;);event.stopPropagation();"><img src="images/' + table + '.svg" class="bgColor"/><br/></a>' + s.substring(p2 + 3);
+							s = s.substring(0, p + 1) + '<a class="chatLinks" name="autoOpen' + id.replace('=', '_') + '" onclick="ui.navigation.autoOpen(&quot;' + s.substring(p + 7, p2) + '&quot;,event);"><img src="images/' + table + '.svg" class="bgColor"/><br/></a>' + s.substring(p2 + 3);
 						}
 					}
 				}

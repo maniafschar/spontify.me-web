@@ -40,8 +40,8 @@ class lists {
 			s = s.substring(0, p) + ui.l(s.substring(p + 2, p2)) + s.substring(p2 + 1);
 		}
 		if (errorID == 'favorites')
-			s = s.replace('{1}', '<br/><br/><buttontext class="bgColor">' + ui.l('locations.favoritesButton') + '</buttontext><br/><br/>');
-		else if (errorID == 'matches' || errorID == 'whatToDo')
+			s = s.replace('{1}', '<br/><br/><buttonIcon style="position:relative;left:50%;margin-left:-1.5em;"><img src="images/favorite.svg"/></buttonIcon><br/><br/>');
+		else if (errorID == 'matches' || errorID == 'whattodo')
 			s = s.replace('{1}', '<br/><br/><buttontext onclick="pageSettings.open2()" class="bgColor">' + ui.l('Yes') + '</buttontext>');
 		else if (errorID == 'friends')
 			s = s.replace('{1}', '<br/><br/><buttontext class="bgColor">' + ui.l('contacts.relation') + '</buttontext><br/><br/>');
@@ -116,12 +116,17 @@ class lists {
 		if (ui.cssValue(list, 'display') == 'none' || !thumb)
 			return;
 		list = ui.q(activeID + ' listBody');
-		var h = list.clientHeight, l = ui.q(activeID + ' listResults').clientHeight;
+		var h = list.clientHeight, l = 0, e = ui.qa(activeID + ' listBody>*');
+		for (var i = 0; i < e.length; i++)
+			l += e[i].clientHeight;
 		if (l <= h)
 			ui.css(thumb, 'display', 'none');
 		else {
 			ui.css(thumb, 'display', 'block');
-			ui.css(thumb, 'top', (list.scrollTop / (l - h) * (h - ui.q(activeID + ' listScroll a').clientHeight) / h * 100) + '%');
+			ui.css(thumb, 'top',
+				Math.min(list.scrollTop / (l - h), 1) // Percentage of scroll: 0 - 1
+				* (h - ui.q(activeID + ' listScroll').clientHeight / 2 - ui.q(activeID + ' listScroll a').clientHeight) / h * 100 // Total percentage of scrollable area, e.g. 0 - 86
+				+ '%');
 		}
 	}
 	static resetLists() {
@@ -144,7 +149,7 @@ class lists {
 		if (!e.innerHTML) {
 			var v = {};
 			v.action = action ? action : 'lists.toggleFilter(event, ' + (id == 'locations' ? 'pageLocation' : id == 'contacts' ? 'pageContact' : 'pageSearch') + '.getFilterFields)';
-			v.img = action ? '' : '<buttonIcon style="left:0;" onclick="' + v.action + '"><img src="images/search.svg"/></buttonIcon><buttonIcon style="right:0;" onclick="ui.navigation.toggleMenu()"><img src="images/menu.svg"/></buttonIcon>';
+			v.img = action ? '' : '<buttonIcon style="left:0;" onclick="' + v.action + '"><img src="images/search.svg"/></buttonIcon>' + (id == 'search' ? '' : '<buttonIcon style="right:0;" onclick="ui.navigation.toggleMenu()"><img src="images/menu.svg"/></buttonIcon>');
 			if (id == 'contacts')
 				v.groups = '<groups style="display:none;"></groups>';
 			else if (id == 'locations')
