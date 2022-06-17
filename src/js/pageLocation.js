@@ -206,7 +206,7 @@ ${v.hint}
 </field>
 <field>
 	<label>${ui.l('category')}</label>
-	<value>
+	<value style="text-align:center;">
 		<input type="checkbox" name="locationcategory" transient="true" value="0" onclick="pageLocation.setEditAttributes()" label="${ui.categories[0].label}" ${v.cat0}/>
 		<input type="checkbox" name="locationcategory" transient="true" value="1" onclick="pageLocation.setEditAttributes()" label="${ui.categories[1].label}" ${v.cat1}/>
 		<input type="checkbox" name="locationcategory" transient="true" value="2" onclick="pageLocation.setEditAttributes()" label="${ui.categories[2].label}" ${v.cat2}/>
@@ -217,20 +217,19 @@ ${v.hint}
 </field>
 <field>
 	<label>${ui.l('locations.subCategories')}</label>
-	<value id="loc_attrib" v0="${v.attr0}" v1="${v.attr1}" v2="${v.attr2}"
+	<value style="text-align:center;" id="loc_attrib" v0="${v.attr0}" v1="${v.attr1}" v2="${v.attr2}"
 		v3="${v.attr3}" v4="${v.attr4}" v5="${v.attr5}" v6="${v.attr6}">
 	</value>
 </field>
 <field ${v.hideOpenTimes}>
-	<label style="height:6em;" onclick="pageLocation.addOpenTimeRow()">
+	<label>
 		${ui.l('locations.opentimes')}
-		<br />
-		<openTimesAdd class="bgColor">+</openTimesAdd>
 	</label>
 	<value>
 		<openTimesEdit>
 			${v.ot}
 		</openTimesEdit>
+		<div><openTimesAdd class="bgColor" onclick="pageLocation.addOpenTimeRow()">+</openTimesAdd></div>
 		<input type="checkbox" style="width:100%;" name="openTimesBankholiday2" transient="true" value="1" label="${ui.l('locations.closedOnBankHoliday')}" ${v.bankHolidayCheck}/><br />
 		<input type="text" name="openTimesText" maxlength="100" placeholder="${ui.l('locations.shortDescOpenTimes')}" value="${v.openTimesText}" style="float: left;" />
 	</value>
@@ -365,7 +364,7 @@ ${v.hint}
 	</buttontext>
 </div>`;
 	static templateEditOpenTimes = v =>
-		global.template`<select style="width:25%;margin-bottom:0.5em;" name="openTimes.day${v.i}">
+		global.template`<select name="openTimes.day${v.i}">
 	<option value="1"${v.wd1}>${ui.l('weekday1')}</option>
 	<option value="2"${v.wd2}>${ui.l('weekday2')}</option>
 	<option value="3"${v.wd3}>${ui.l('weekday3')}</option>
@@ -375,11 +374,11 @@ ${v.hint}
 	<option value="0"${v.wd0}>${ui.l('weekday0')}</option>
 	<option value="x">${ui.l('delete')}</option>
 </select>
-<div>${ui.l('from')}</div>
-<input type="time" style="width:25%;" placeholder="HH:MM" value="${v.openAt}"
+<span>${ui.l('from')}</span>
+<input type="time" placeholder="HH:MM" value="${v.openAt}"
 	name="openTimes.openAt${v.i}" onblur="pageLocation.prefillOpenTimesFields(event,&quot;open&quot;);" />
-<div>${ui.l('to')}</div>
-<input type="time" style="width:25%;" placeholder="HH:MM" value="${v.closeAt}"
+<span>${ui.l('to')}</span>
+<input type="time" placeholder="HH:MM" value="${v.closeAt}"
 	name="openTimes.closeAt${v.i}" onblur="pageLocation.prefillOpenTimesFields(event,&quot;close&quot;);" />
 <input type="hidden" value="${v.id}" name="openTimes.id${v.i}" />`;
 	static addOpenTimeRow() {
@@ -389,9 +388,7 @@ ${v.hint}
 			v['wd' + ((parseInt(ui.q('[name="openTimes.day' + (v.i - 1) + '"]').value, 10) + 1) % 7)] = ' selected';
 		var e2 = document.createElement('div');
 		e2.innerHTML = pageLocation.templateEditOpenTimes(v);
-		var e = ui.q('openTimesEdit');
-		for (var i = 0; i < e2.childNodes.length; i++)
-			e.insertBefore(e2.childNodes[i], null);
+		ui.q('openTimesEdit').insertBefore(e2, null);
 	}
 	static closeLocationInputHelper() {
 		var e = ui.q('#locationNameInputHelper');
@@ -643,7 +640,7 @@ ${v.hint}
 			for (var i = 0; i < v.OT.length; i++) {
 				v.OT[i].i = '' + i;
 				v.OT[i]['wd' + v.OT[i].day] = ' selected';
-				v.ot += pageLocation.templateEditOpenTimes(v.OT[i]);
+				v.ot += '<div>' + pageLocation.templateEditOpenTimes(v.OT[i]) + '</div>';
 			}
 		} else {
 			v.hint = '<div style="margin-bottom:2em;">' + ui.l('locations.newHint') + '</div>';

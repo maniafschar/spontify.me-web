@@ -486,7 +486,7 @@ input:checked+label:before {
 	opacity: 0.8;
 }
 
-popup .multiple input:checked+label {
+popup input:checked+label {
 	background: rgb(246, 255, 187) !important;
 	color: black;
 }
@@ -529,10 +529,6 @@ field>label {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
-}
-
-popup field>label {
-	color: white;
 }
 
 settings,
@@ -1926,14 +1922,15 @@ openTimes row {
 }
 
 openTimesAdd {
-	top: 2.5em;
-	right: 1em;
 	line-height: 3em;
 	width: 3em;
 	height: 3em;
 	text-align: center;
 	border-radius: 50%;
-	position: absolute;
+	display: block;
+	position: relative;
+	left: 50%;
+	margin: 0.5em 0 1em -1.5em;
 }
 
 openTimes day {
@@ -1968,9 +1965,12 @@ openTimes to {
 }
 
 openTimesEdit > div {
-	display: inline-block;
+	display: flex;
 	padding-top: 0.38em;
-	text-align: center;
+}
+
+openTimesEdit > div span {
+	margin: 0 1em;
 }
 
 marketing span {
