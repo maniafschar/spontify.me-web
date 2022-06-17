@@ -305,11 +305,11 @@ logo {
 	font-family: Adelina;
 	font-size: 3em;
 	position: relative;
-	display: flex;
 }
 
 logo>* {
 	vertical-align: top;
+	float: left;
 }
 
 logo last {
@@ -320,8 +320,8 @@ logo last {
 }
 
 logo svg {
-	width: 1.4em;
-	margin: -0.35em -0.15em 0em -0.15em;
+	width: 1.32em;
+	margin: -0.13em -0.15em 0em -0.15em;
 }
 
 logo svg path {
@@ -894,28 +894,23 @@ popup {
 	left: 0;
 	padding: 1em;
 	text-align: center;
+	filter: drop-shadow(0 0 2em rgba(0, 0, 0, 0.4));
 }
 
 popupTitle {
 	position: relative;
 	white-space: nowrap;
 	font-size: 1.3em;
+	max-width: 90%;
 	display: inline-block;
 	background: cadetblue;
 	padding: 0.5em 1em;
 	border-radius: 0.5em 0.5em 0 0;
 }
 
-popuptitle::before {
-	box-shadow: 0 0 2em rgb(0 0 0 / 50%);
-	content: '';
-	z-index: -1;
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	border-radius: 0.5em 0.5em 0 0;
+popupTitle>div {
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 popupHint {
@@ -928,7 +923,6 @@ popupHint {
 popupContent {
 	overflow-y: auto;
 	display: block;
-	box-shadow: 0 0 2em rgba(0, 0, 0, 0.5);
 	border-radius: 0.5em;
 	overflow-x: hidden;
 	background: cadetblue;
@@ -1331,7 +1325,7 @@ detailCompass,
 detailDistance {
 	width: 6em;
 	height: 6em;
-	padding-top: 3em;
+	padding-top: 2.5em;
 	position: absolute;
 	bottom: 0;
 	left: 50%;
@@ -1342,8 +1336,8 @@ detailDistance {
 
 detailCompass span {
 	position: absolute;
-	font-size: 6em;
-	line-height: 1;
+	font-size: 4em;
+	line-height: 1.3;
 	width: 100%;
 	height: 100%;
 	left: 0;
@@ -1416,6 +1410,10 @@ home {
 	display: block;
 }
 
+home logo {
+	cursor: pointer;
+}
+
 homeHeader {
 	position: relative;
 	text-align: center;
@@ -1426,15 +1424,17 @@ homeHeader {
 homeTitle {
 	white-space: nowrap;
 	display: inline-block;
-	padding-top: 13vh;
+	margin-top: 13vh;
+	height: 4.7em;
 }
 
 homeSubTitle {
 	font-family: Adelina;
-	display: block;
 	font-size: 1.2em;
-	margin-top: 0.5em;
-	font-weight: bold;
+	position: absolute;
+	width: 100%;
+	left: 0;
+	bottom: 0;
 }
 
 #homeIconBluetooth {
@@ -1487,7 +1487,7 @@ buttonIcon svg {
 	width: 3em;
 	border: solid 0.15em white;
 	border-radius: 50%;
-	padding: 0.3em;
+	padding: 0.35em;
 	height: 3em;
 	line-height: 2.2;
 }
