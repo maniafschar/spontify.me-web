@@ -591,7 +591,7 @@ ${v.hint}
 					url: global.server + 'db/list?query=location_list&search=' + encodeURIComponent('location.contactId=' + user.contact.id),
 					responseType: 'json',
 					success(s) {
-						pageLocation.locationsAdded = s.length;
+						pageLocation.locationsAdded = s.length - 1;
 						pageLocation.edit(id);
 					}
 				});
@@ -602,8 +602,10 @@ ${v.hint}
 			else
 				pageLocation.editInternal(id, pageLocation.currentDetail);
 		} else {
-			ui.navigation.toggleMenu();
-			var e = ui.q('[name="id"]');
+			var e = ui.q('menu').style.transform;
+			if (e.indexOf('1') > -1)
+				ui.navigation.toggleMenu();
+			e = ui.q('[name="id"]');
 			if (!e || !e.value) {
 				if (ui.q('locations > div'))
 					ui.navigation.hideMenu();
