@@ -233,7 +233,6 @@ class pageChat {
 		});
 	}
 	static insertQuote(event) {
-		event.preventDefault();
 		communication.ajax({
 			url: global.server + 'action/quotation',
 			success(r) {

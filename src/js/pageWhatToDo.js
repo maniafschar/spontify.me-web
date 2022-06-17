@@ -135,7 +135,7 @@ class pageWhatToDo {
 										ui.css(e, 'display', 'none');
 										ui.attr(e, 'remove', true);
 									});
-								}, true);
+								});
 							};
 							ui.swipe(e, function (dir) {
 								if (dir == 'left' || dir == 'right')
