@@ -18,6 +18,7 @@ import { pageWhatToDo } from './pageWhatToDo';
 import { rating } from './rating';
 import { user } from './user';
 import { geoData } from './geoData';
+import { bluetooth } from './bluetooth';
 
 window.model = model;
 window.global = global;
@@ -41,3 +42,4 @@ window.communication = communication;
 window.FB = FB;
 window.rating = rating;
 window.geoData = geoData;
+window.bluetooth = bluetooth;

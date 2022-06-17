@@ -24,7 +24,7 @@ class pageLocation {
 		timeout: null
 	};
 	static templateList = v =>
-		global.template`<row onclick="details.open(&quot;locations&quot;,&quot;${v.id}&quot;,&quot;${v.query}&quot;,${v.render});" i="${v.id}" class="location">
+		global.template`<row onclick="details.open(&quot;${v.id}&quot;,&quot;${v.query}&quot;,${v.render});" i="${v.id}" class="location">
 			${v.present}
 	<div>
 		<div>
@@ -47,9 +47,9 @@ class pageLocation {
 		</detailTitle>
 	</detailImg>
 	<action>
-		<buttonIcon onclick="pageLocation.openChat(${v.id})"><img src="images/chat.svg"/></buttonIcon>
-		<buttonIcon class="iconFavorite${v.favorite}" idFav="${v.locationFavorite.id ? v.locationFavorite.id : ''}" fav="${v.locationFavorite.favorite ? true : ''}" onclick="pageLocation.toggleFavorite(${v.id})"><img src="images/favorite.svg" onload="formFunc.image.svgInject(this)"/></buttonIcon>
-		<matchIndicator>
+		<buttonIcon onclick="pageChat.open(${v.id},true)"><img src="images/chat.svg"/></buttonIcon>
+		<buttonIcon class="iconFavorite${v.favorite}" idFav="${v.locationFavorite.id ? v.locationFavorite.id : ''}" fav="${v.locationFavorite.favorite ? true : ''}" name="buttonFavorite" onclick="pageLocation.toggleFavorite(${v.id})"><img src="images/favorite.svg" onload="formFunc.image.svgInject(this)"/></buttonIcon>
+		<matchIndicator${v.matchIndicatorClass}>
 			<svg viewBox="0 0 36 36">
 				<path class="circle-bg" d="M18 2.0845
 					a 15.9155 15.9155 0 0 1 0 31.831
@@ -98,18 +98,13 @@ ${v.description}
 		onclick="ui.navigation.openHTML(&quot;https://google.com/search?q=${encodeURIComponent(v.name + ' ' + v.town)}&quot;)">Google</buttontext>
 </detailButtons>
 <text name="events" class="collapsed" ${v.urlNotActive}></text>
-<text name="favorite" class="collapsed">
-	${v.name} ${ui.l('locations.favorites')}<br /><br />
-</text>
 <text name="whattodo" class="collapsed">
 	<detailTogglePanel>
-		<div style="padding:0 0 2em 0;">${ui.l('wtd.inLocationTitle')}</div>
-		<div>${ui.l('wtd.time')}
-			<input type="time" id="messageTimeDetail" placeholder="HH:MM" class="whatToDoTime" style="margin:-0.5em 0 1em 0;"
-				value="${v.wtdTime}" />
+		<div style="margin-bottom:1.5em;">${ui.l('wtd.time')}<br/>
+			<input type="time" id="messageTimeDetail" placeholder="HH:MM" class="whatToDoTime" value="${v.wtdTime}" />
 		</div>
 		<buttontext class="bgColor"
-			onclick="pageWhatToDo.wtd.saveLocation(pageLocation.savedWhatToDo,&quot;${v.cat}&quot;,${v.locID})">
+			onclick="pageWhatToDo.saveLocation(pageLocation.savedWhatToDo,&quot;${v.cat}&quot;,${v.locID})">
 			${ui.l('message.buttonSave')}
 		</buttontext>
 	</detailTogglePanel>
@@ -129,7 +124,7 @@ ${v.description}
 <text name="participants" class="collapsed" style="padding:1em 0.5em 0 0.5em;"></text>`;
 	static templateDetailEvent = v =>
 		global.template`<text class="borderBottom${v.classParticipate}" ${v.oc}>
-		<div>${ui.l('events.createdBy')}<br/><a class="chatLinks" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;))"><img src="${v.imageEventOwner}"><br>${v.contact.pseudonym}</a></div>
+		<div>${ui.l('events.createdBy')}<br/><a class="chatLinks" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;),event)"><img src="${v.imageEventOwner}"><br>${v.contact.pseudonym}</a></div>
 		${v.eventLinkOpen}
 		<div>${v.date}${v.endDate}</div>
 		<div>${v.event.text}${v.eventMore}</div>
@@ -387,9 +382,6 @@ ${v.hint}
 <input type="time" style="width:25%;" placeholder="HH:MM" value="${v.closeAt}"
 	name="openTimes.closeAt${v.i}" onblur="pageLocation.prefillOpenTimesFields(event,&quot;close&quot;);" />
 <input type="hidden" value="${v.id}" name="openTimes.id${v.i}" />`;
-	static actionNotLoggedIn() {
-		ui.navigation.openPopup(ui.l('attention'), ui.l('locations.loginAction') + '<br/><br/><buttontext class="bgColor" onclick="pageLogin.goToLogin()">' + ui.l('login.action') + '</buttontext>');
-	}
 	static addOpenTimeRow() {
 		var v = {};
 		v.i = ui.qa('openTimesEdit select').length;
@@ -567,7 +559,7 @@ ${v.hint}
 		p = v._isOpen && v._isOpen > 0 ? 1 : v._openTimesEntries && v._openTimesEntries > 0 ? 0 : null;
 		if (v.openTimesBankholiday == true)
 			v.openTimesBankholiday = '<div>' + ui.l('locations.closedOnBankHoliday') + '</div>';
-		var wtd = pageWhatToDo.wtd.getCurrentMessage();
+		var wtd = pageWhatToDo.getCurrentMessage();
 		if (wtd && wtd.active) {
 			var d = global.date.getDate(wtd.time);
 			v.wtdTime = (d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
@@ -982,8 +974,6 @@ ${v.hint}
 						e.innerText = ui.l('events.participanteStop');
 					}
 					ui.navigation.hidePopup();
-					var d = global.date.getDate(id.split('_')[2]);
-					pageWhatToDo.daily.getArray('&t=' + ((d.getMonth() + 1) + '.' + d.getDate()) + '&')[2] = null;
 					pageLocation.event.init();
 				}
 			});
@@ -1120,10 +1110,6 @@ ${v.hint}
 			ui.navigation.openPopup(ui.l('events.stopParticipate'), ui.l('events.stopParticipateText') + '<br/><textarea id="stopParticipateReason" placeholder="' + ui.l('events.stopParticipateHint') + '" style="margin-top:0.5em;"></textarea><buttontext class="bgColor" style="margin-top:1em;" pID="' + e.getAttribute('pID') + '" s="' + e.getAttribute('s') + '" confirm="' + e.getAttribute('confirm') + '" onclick="pageLocation.event.participate(event,&quot;' + id + '&quot;)">' + ui.l('events.stopParticipateButton') + '</buttontext>');
 		},
 		toggle(id) {
-			if (!user.contact) {
-				pageLocation.actionNotLoggedIn();
-				return;
-			}
 			var d = ui.q('detail[i="' + id + '"] [name="events"]');
 			if (!d.innerHTML) {
 				var e = ui.q('popup:not([style*="none"]) detail');
@@ -1157,7 +1143,7 @@ ${v.hint}
 				s2 = global.date.getDateHint(v.startDate).replace('{ 0}', s2);
 				var oc = '<div style="text-align:left;margin-left:9em;overflow:hidden;"';
 				if (field == 'CONTACT')
-					oc += ' onclick="ui.navigation.autoOpen(&quot;' + global.encParam('e=' + idIntern) + '&quot;)"';
+					oc += ' onclick="ui.navigation.autoOpen(&quot;' + global.encParam('e=' + idIntern) + '&quot;,event)"';
 				else if (v.link)
 					oc += ' onclick="ui.navigation.openHTML(&quot;' + v.link + '&quot;)"';
 				oc += '>';
@@ -1191,7 +1177,7 @@ ${v.hint}
 				s += '<auxEvents' + (p.state == 1 ? ' class="participate"' : '') + ' style="' + (i > 1 ? 'display: none; ' : '') + '">' + s2 + text + '</auxEvents><div style="padding-top:0.5em;clear:both;">' + newButton + partButton + navButtons + '</div></div>';
 			}
 			if (s)
-				s = '<br/>' + ui.l('events.myEvents') + '<br/><br/>' + s;
+				s = ui.l('events.myEvents') + '<br/>' + s;
 			else
 				s = '<detailTogglePanel>' + ui.l('events.noEvents') + (newButton ? '<br/><br/>' + newButton : '') + '</detailTogglePanel>';
 			var e = ui.q('detail[i="' + id + '"] [name="events"]');
@@ -1306,9 +1292,12 @@ ${v.hint}
 		}
 		if (s)
 			s = s.substring(0, s.lastIndexOf(sep));
+		var map = '';
+		if (ui.navigation.getActiveID() == 'locations')
+			map = '<buttontext onclick="pageLocation.toggleMap()" style="margin:1em 0.25em;" class="bgColor">' + ui.l('filterLocMapButton') + '</buttontext>';
 		if (s)
-			return '<div>' + s + '</div><buttontext onclick="pageLocation.toggleMap()" style="margin:1em 0.25em;" class="bgColor">' + ui.l('filterLocMapButton') + '</buttontext>';
-		return '<div style="padding-bottom:1em;">' + ui.l('filterNoDifferentValues') + '</div>';
+			return '<div>' + s + '</div>' + map;
+		return '<div style="padding-bottom:1em;">' + ui.l('filterNoDifferentValues') + '</div>' + map;
 	}
 	static getOpenTimes(r) {
 		var s = '';
@@ -1416,13 +1405,6 @@ ${v.hint}
 			s += pageLocation.templateList(v);
 		}
 		return s;
-	}
-	static openChat(id) {
-		if (!user.contact) {
-			pageLocation.actionNotLoggedIn();
-			return;
-		}
-		pageChat.open(id, true);
 	}
 	static prefillAddress() {
 		if (geoData.localized && ui.q('input[name="name"]')) {
@@ -1683,15 +1665,6 @@ ${v.hint}
 			ui.toggleHeight(e);
 	}
 	static toggleFavorite(id) {
-		if (!user.contact) {
-			pageLocation.actionNotLoggedIn();
-			return;
-		}
-		var e = ui.q('detail[i="' + id + '"] [name="favorite"]');
-		if (!ui.classContains(e, 'collapsed')) {
-			details.togglePanel(e);
-			return;
-		}
 		var button = ui.q('detail[i="' + id + '"] [name="buttonFavorite"]');
 		var idFav = button.getAttribute('idFav');
 		var v = { classname: 'LocationFavorite' };
@@ -1708,17 +1681,10 @@ ${v.hint}
 				if (r)
 					ui.attr(button, 'idFav', r);
 				ui.attr(button, 'fav', v.values.favorite ? true : false);
-				if (r || v.values.favorite) {
-					ui.classRemove(button, 'bgColor');
-					ui.classAdd(button, 'bgColor2');
-					if (ui.classContains(e, 'collapsed'))
-						details.togglePanel(e);
-				} else {
-					ui.classRemove(button, 'bgColor2');
-					ui.classAdd(button, 'bgColor');
-					if (!ui.classContains(e, 'collapsed'))
-						details.togglePanel(e);
-				}
+				if (r || v.values.favorite)
+					ui.classAdd(button, 'favorite');
+				else
+					ui.classRemove(button, 'favorite');
 			}
 		});
 	}
@@ -1758,10 +1724,6 @@ ${v.hint}
 		});
 	}
 	static toggleWhatToDo(id) {
-		if (!user.contact) {
-			pageLocation.actionNotLoggedIn();
-			return;
-		}
 		details.togglePanel(ui.q('detail[i="' + id + '"] [name="whattodo"]'));
 	}
 }

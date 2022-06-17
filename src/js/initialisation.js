@@ -131,12 +131,12 @@ class initialisation {
 			geoData.pause();
 			if (!user.contact)
 				communication.setApplicationIconBadgeNumber(0);
-			user.save({ values: { active: false } });
+			user.save({ active: false });
 		});
 		ui.on(document, 'resume', function () {
 			global.paused = false;
 			geoData.init();
-			user.save({ values: { active: true } });
+			user.save({ active: true });
 			if (global.getParam('r'))
 				initialisation.showStartDialogs();
 		});
@@ -172,8 +172,12 @@ class initialisation {
 				event.preventDefault();
 		});
 		ui.on('detail', 'click', function (event) {
-			if (event.offsetX < event.target.clientWidth * 0.3)
-				ui.navigation.goTo(ui.q('detail').getAttribute('type'));
+			ui.navigation.goTo(ui.q('detail').getAttribute('type'));
+		});
+		ui.on('popup', 'click', function (event) {
+			var s = event.target.nodeName;
+			if (s != 'INPUT' && s != 'TEXTAREA')
+				ui.navigation.hidePopup();
 		});
 		ui.swipe('detail', function (dir) {
 			if (dir == 'left')
@@ -355,7 +359,7 @@ class initialisation {
 		if (exec)
 			exec.call();
 		if (user.contact && oldLang != global.language)
-			user.save({ values: { language: lang } });
+			user.save({ language: lang });
 		ui.navigation.hidePopup();
 	}
 	static showLocation() {
@@ -407,7 +411,7 @@ ${v['location.attr5Ex']}<br>`;
 					}
 				});
 			else
-				details.open('locations', id, 'location_anonymousList&search=' + encodeURIComponent('location.id=' + id), pageLocation.detailLocationEvent);
+				details.open(id, 'location_anonymousList&search=' + encodeURIComponent('location.id=' + id), pageLocation.detailLocationEvent);
 			var e = ui.q('home');
 			ui.css(e, 'display', 'none');
 			ui.classRemove(e, 'homeSlideIn animated');

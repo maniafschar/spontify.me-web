@@ -51,7 +51,7 @@
 			align-items: center;
 			transition: all .5s;
 			color: white;
-			padding-top: 7vh;
+			padding-top: 2vh;
 		}
 
 		preloader>logo {
@@ -117,7 +117,7 @@
 			<chat class="content mainBG"></chat>
 			<chatUserList style="display:none;"></chatUserList>
 		</content>
-		<buttonIcon onclick="ui.toggleHeight('chatUserList')" style="bottom:0;">
+		<buttonIcon onclick="pageChat.toggleUserList()" style="bottom:0;">
 			<badgeChats></badgeChats>
 			<img src="images/chat.svg" onload="formFunc.image.svgInject(this)" />
 		</buttonIcon>

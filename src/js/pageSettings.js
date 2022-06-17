@@ -105,12 +105,6 @@ class pageSettings {
 			<input type="radio" name="language" value="EN" label="English" ${v['langEN']} />
 		</value>
 	</field>
-	<field ${v['findMeDisplay']}>
-		<label>${ui.l('settings.findMe')}</label>
-		<value class="checkbox">
-			<input type="checkbox" name="findMe" value="true" label="${ui.l('settings.findMeCheckbox')}" ${v['findMe']} />
-		</value>
-	</field>
 	<field>
 		<label>${ui.l('settings.search')}</label>
 		<value class="checkbox">
@@ -119,8 +113,8 @@ class pageSettings {
 		</value>
 	</field>
 	<dialogButtons style="margin-top:1.5em;">
-		<buttontext onclick="communication.login.logoff(true)" class="bgColor">${ui.l('logoff.title')}</buttontext>
-		<buttontext onclick="ui.navigation.autoOpen(&quot;${v['autoOpen']}&quot;)" class="bgColor">${ui.l('settings.preview')}</buttontext>
+		<buttontext onclick="communication.login.logoff()" class="bgColor">${ui.l('logoff.title')}</buttontext>
+		<buttontext onclick="ui.navigation.autoOpen(&quot;${v['autoOpen']}&quot;,event)" class="bgColor">${ui.l('settings.preview')}</buttontext>
 	</dialogButtons>
 	<input type="hidden" name="verified" value="true" />
 </form>
@@ -267,7 +261,6 @@ class pageSettings {
 		s += ui.val('input[name="language"]:checked') + '\u0015';
 		s += (ui.q('input[name="search"]:checked') ? 1 : 0) + '\u0015';
 		s += (ui.q('input[name="guide"]:checked') ? 1 : 0) + '\u0015';
-		s += (ui.q('input[name="findMe"]:checked') ? 1 : 0) + '\u0015';
 		s += ui.val('input[name="pseudonym"]') + '\u0015';
 		var e = ui.qa('[name="budget"]');
 		for (var i = 0; i < e.length; i++) {
@@ -334,10 +327,6 @@ class pageSettings {
 						v['genderInterest2'] = 'checked';
 					if (v['contact.ageDivers'])
 						v['genderInterest3'] = 'checked';
-					if (v['contact.findMe'])
-						v['findMe'] = 'checked';
-					if (global.isBrowser())
-						v['findMeDisplay'] = 'style="display:none;"';
 					v['forever'] = window.localStorage.getItem('autoLogin') ? '' : 'display:none;';
 					ui.html('settings', pageSettings.templateSettings1(v));
 					formFunc.initFields('settings');
@@ -393,7 +382,7 @@ class pageSettings {
 	}
 	static postSave(goToID) {
 		if (pageSettings.currentSettings && pageSettings.currentSettings.split('\u0015')[0] != ui.val('input[name="email"]')) {
-			communication.login.logoff(true);
+			communication.login.logoff();
 			return;
 		}
 		user.contact.ageFemale = ui.val('input[name="ageFemale"]');
@@ -401,9 +390,7 @@ class pageSettings {
 		user.contact.ageDivers = ui.val('input[name="ageDivers"]');
 		user.contact.budget = ui.val('input[name="budget"]');
 		user.contact.pseudonym = ui.val('input[name="pseudonym"]');
-		user.contact.findMe = ui.val('input[name="findMe"]:checked') ? 1 : 0;
 		user.contact.gender = ui.val('input[name="gender"]:checked');
-		bluetooth.requestAuthorization();
 		ui.html('homeUsername', user.contact.pseudonym);
 		if (ui.q('[name="image_disp"] img')) {
 			communication.ajax({
@@ -515,7 +502,7 @@ class pageSettings {
 	static setChoicesSelection(id, v) {
 		ui.q('#' + id).value = v;
 		setTimeout(function () {
-			var e = ui.q('input[name="inputHelper' + id + '"]');
+			var e = ui.qa('input[name="inputHelper' + id + '"]');
 			for (var i = 0; i < e.length; i++)
 				e[i].checked = false;
 		}, 1000);

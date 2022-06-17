@@ -2,6 +2,7 @@ import { communication } from './communication';
 import { details } from './details';
 import { geoData } from './geoData';
 import { global } from './global';
+import { intro } from './intro';
 import { lists } from './lists';
 import { Chat, Contact, model } from './model';
 import { pageContact } from './pageContact';
@@ -232,6 +233,7 @@ class pageChat {
 		});
 	}
 	static insertQuote(event) {
+		event.preventDefault();
 		communication.ajax({
 			url: global.server + 'action/quotation',
 			success(r) {
@@ -310,7 +312,7 @@ class pageChat {
 					e = ui.q('chat');
 					ui.css(e, 'display', 'none');
 					ui.attr(e, 'type', location ? 'location' : 'contact');
-					ui.html(e, '<listHeader onclick="ui.navigation.autoOpen(&quot;' + global.encParam((location ? 'l=' : 'p=') + id) + '&quot;)"><img /><chatName></chatName><chatDate></chatDate></listHeader><div></div>');
+					ui.html(e, '<listHeader onclick="ui.navigation.autoOpen(&quot;' + global.encParam((location ? 'l=' : 'p=') + id) + '&quot;,event)"><img /><chatName></chatName><chatDate></chatDate></listHeader><div></div>');
 					if (location) {
 						ui.classAdd(e, 'location');
 						var path = 'popup detail';
@@ -329,7 +331,7 @@ class pageChat {
 							url: global.server + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + id),
 							responseType: 'json',
 							success(r2) {
-								ui.attr('chat[i="' + id + '"] listHeader img', 'onclick', 'ui.navigation.autoOpen("' + global.encParam('p=' + id) + '")');
+								ui.attr('chat[i="' + id + '"] listHeader img', 'onclick', 'ui.navigation.autoOpen("' + global.encParam('p=' + id) + '",event)');
 								ui.html('chat[i="' + id + '"] listHeader chatName', r2['contact.pseudonym']);
 								if (r2['contact.imageList'])
 									ui.attr('chat[i="' + id + '"] listHeader img', 'src', global.serverImg + r2['contact.imageList']);
@@ -476,7 +478,7 @@ class pageChat {
 			if (!v.seen)
 				v.classUnseen = ' class="unseen"';
 		} else if (v._pseudonym)
-			v.time = '<span onclick="ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.contactId) + '&quot;)">' + v._pseudonym + ' ' + v.time + '</span>';
+			v.time = '<span onclick="ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.contactId) + '&quot;,event)">' + v._pseudonym + ' ' + v.time + '</span>';
 		if (v.image)
 			v.note = '<img src="' + global.serverImg + v.image + '"/>';
 		else
@@ -525,6 +527,7 @@ class pageChat {
 		}
 	}
 	static sendChat(id, msg, event) {
+		event.preventDefault();
 		if (!msg) {
 			formFunc.validation.filterWords(ui.q('#chatText'));
 			if (ui.q('chat errorHint'))
@@ -616,5 +619,11 @@ class pageChat {
 			ui.classRemove(e, 'pressed');
 		else
 			ui.classAdd(e, 'pressed');
+	}
+	static toggleUserList() {
+		if (user.contact)
+			ui.toggleHeight('chatUserList');
+		else
+			intro.openHint({ desc: 'chatDescription', pos: '0.5em,-4em', size: '80%,auto' });
 	}
 };

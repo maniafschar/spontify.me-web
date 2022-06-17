@@ -76,7 +76,7 @@ class pageInfo {
 		<li>${ui.l('landing.block3_1')}</li>
 		<li>${ui.l('landing.block3_2')}</li>
 	</ul>
-	<a style="margin:2em 0 1em 0;color:rgb(0,0,100);display:block;cursor:pointer;${v['displayBlogButton']}" onclick="ui.navigation.openHTML(&quot;https://blog.findapp.online&quot;, &quot;blog_findapp&quot;)">${ui.l('info.link2blog')}</a>
+	<a style="margin:2em 0 1em 0;color:rgb(0,94,160);display:block;cursor:pointer;${v['displayBlogButton']}" onclick="ui.navigation.openHTML(&quot;https://blog.findapp.online&quot;, &quot;blog_findapp&quot;)">${ui.l('info.link2blog')}</a>
 </landingblock>
 <landingsubtitle onclick="pageInfo.toggleInfoBlock(&quot;${v.parent} #landing3&quot;, event);">
 	${ui.l('faq.title')}
@@ -234,7 +234,7 @@ class pageInfo {
 				responseType: 'json',
 				success(r) {
 					if (r.list)
-						e.innerHTML = (r.text ? '<div style="cursor:pointer;margin:0 0.5em;background:rgba(255,255,255,0.6);padding:1em;border-radius:0.5em;text-align:center;"' + (r.action ? ' onclick="ui.navigation.autoOpen(&quot;' + r.action + '&quot;)"' : '') + '>' + r.text + '</div>' : '') + pageContact.listContacts(r.list);
+						e.innerHTML = (r.text ? '<div style="cursor:pointer;margin:0 0.5em;background:rgba(255,255,255,0.6);padding:1em;border-radius:0.5em;text-align:center;"' + (r.action ? ' onclick="ui.navigation.autoOpen(&quot;' + r.action + '&quot;,event)"' : '') + '>' + r.text + '</div>' : '') + pageContact.listContacts(r.list);
 					else if (r.html)
 						e.innerHTML = r.html;
 					ui.addFastButton('#info5');

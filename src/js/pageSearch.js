@@ -124,17 +124,17 @@ class pageSearch {
 		if (ui.q('[name="searchMatchesOnly"]:checked'))
 			s = pageSearch.getSearchMatchesLocation();
 		var c = '', d = '';
-		var cats = ui.q('[name="searchCategories"]:checked');
-		if (cats) {
-			for (var i = 0; i < cats.length; i++) {
-				cats[i] = cats[i].value;
-				c += 'category like \'%' + cats[i] + '%\' or ';
+		var cats = [];
+		var e = ui.qa('[name="searchCategories"]:checked');
+		if (e) {
+			for (var i = 0; i < e.length; i++) {
+				cats.push(e[i].value);
+				c += 'category like \'%' + e[i].value + '%\' or ';
 			}
 		}
 		if (c)
 			s += (s ? ' and ' : '') + '(' + c.substring(0, c.length - 4) + ')';
 		else {
-			cats = [];
 			for (var i = 0; i < ui.categories.length; i++)
 				cats.push(i);
 		}
@@ -169,40 +169,40 @@ class pageSearch {
 	}
 	static getSearchMatchesContact() {
 		var search = '(' + global.getRegEx("contact.attr", user.contact.attrInterest) + ' or ' + global.getRegEx('contact.attrEx', user.contact.attrInterestEx) + ')';
-		var sMale = '', sFemale = '', sDivers = '';
+		var sMale = '', sFemale = '', sDivers = '', sContactInterestedInMyGender = ' and contact.' + (user.contact.gender == 2 ? 'ageFemale' : user.contact.gender == 3 ? 'ageDivers' : 'ageMale') + ' like \'%,%\'';
 		if (user.contact.ageMale && user.contact.ageMale != '18,99') {
 			var s = user.contact.ageMale.split(','), s2 = '';
-			if (s[0] > 0)
+			if (s[0] > 18)
 				s2 = 'contact.age>=' + s[0];
-			if (s[1] < 6)
+			if (s[1] < 99)
 				s2 += (s2 ? ' and ' : '') + 'contact.age<=' + s[1];
 			if (s2)
-				sMale = '(contact.gender=1 and contact.' + (user.contact.gender == 2 ? 'ageFemale' : user.contact.gender == 3 ? 'ageDivers' : 'ageMale') + ' like \'%,%\' and ' + s2 + ')';
+				sMale = '(contact.gender=1' + sContactInterestedInMyGender + ' and ' + s2 + ')';
 		}
 		if (!sMale && user.contact.ageMale)
-			sMale = 'contact.gender=1';
+			sMale = '(contact.gender=1' + sContactInterestedInMyGender + ')';
 		if (user.contact.ageFemale && user.contact.ageFemale != '18,99') {
 			var s = user.contact.ageFemale.split(','), s2 = '';
-			if (s[0] > 0)
+			if (s[0] > 18)
 				s2 = 'contact.age>=' + s[0];
-			if (s[1] < 6)
+			if (s[1] < 99)
 				s2 += (s2 ? ' and ' : '') + 'contact.age<=' + s[1];
 			if (s2)
-				sFemale = '(contact.gender=2 and contact.' + (user.contact.gender == 2 ? 'ageFemale' : user.contact.gender == 3 ? 'ageDivers' : 'ageMale') + ' like \'%,%\' and ' + s2 + ')';
+				sFemale = '(contact.gender=2' + sContactInterestedInMyGender + ' and ' + s2 + ')';
 		}
 		if (!sFemale && user.contact.ageFemale)
-			sFemale = 'contact.gender=2';
+			sFemale = '(contact.gender=2' + sContactInterestedInMyGender + ')';
 		if (user.contact.ageDivers && user.contact.ageDivers != '18,99') {
 			var s = user.contact.ageDivers.split(','), s2 = '';
-			if (s[0] > 0)
+			if (s[0] > 18)
 				s2 = 'contact.age>=' + s[0];
-			if (s[1] < 6)
+			if (s[1] < 99)
 				s2 += (s2 ? ' and ' : '') + 'contact.age<=' + s[1];
 			if (s2)
-				sFemale = '(contact.gender=3 and contact.' + (user.contact.gender == 2 ? 'ageFemale' : user.contact.gender == 3 ? 'ageDivers' : 'ageMale') + ' like \'%,%\' and ' + s2 + ')';
+				sDivers = '(contact.gender=3' + sContactInterestedInMyGender + ' and ' + s2 + ')';
 		}
 		if (!sDivers && user.contact.ageDivers)
-			sDivers = 'contact.gender=3';
+			sDivers = '(contact.gender=3' + sContactInterestedInMyGender + ')';
 		if (sMale || sFemale || sDivers) {
 			var s3 = sMale;
 			if (sFemale)
@@ -214,16 +214,18 @@ class pageSearch {
 			search += ' and (1=1)';
 		return search;
 	}
-	static getSearchMatchesLocation() {
+	static getSearchMatchesLocation(categories) {
 		var s = '';
 		if (user.contact.budget)
 			s += '(location.budget is null or location.budget=\'\' or REGEXP_LIKE(location.budget,\'' + user.contact.budget.replace(/\u0015/g, '|') + '\')=1) and (';
 		else
 			s += '(';
 		for (var i = 0; i < ui.categories.length; i++) {
-			if (user.contact['attr' + i] || user.contact['attr' + i + 'Ex'])
+			if ((user.contact['attr' + i] || user.contact['attr' + i + 'Ex']) && (!categories || categories.indexOf(i) > -1))
 				s += '(location.category like \'%' + i + '%\' and (' + global.getRegEx('location.attr' + i, user.contact['attr' + i]) + ' or ' +
 					global.getRegEx('location.attr' + i + 'Ex', user.contact['attr' + i + 'Ex']) + ')) or ';
+			else if (categories && categories.indexOf(i) > -1)
+				s += '(location.category like \'%' + i + '%\') or ';
 		}
 		if (s.length < 2)
 			return '';
@@ -277,7 +279,7 @@ class pageSearch {
 		f = ui.qa('search [name="searchCategories"]:checked');
 		for (var i = 0; i < f.length; i++)
 			s.categories.push(f[i].value);
-		user.save({ values: { filter: JSON.stringify(s) } },
+		user.save({ filter: JSON.stringify(s) },
 			function () {
 				user.contact.search = s;
 				var lola = 'latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&';

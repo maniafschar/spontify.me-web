@@ -1,5 +1,6 @@
 import { communication } from './communication';
 import { global } from './global';
+import { intro } from './intro';
 import { pageInfo } from './pageInfo';
 import { ui } from './ui';
 import { user } from './user';
@@ -94,7 +95,9 @@ class bluetooth {
 							}
 						}
 					);
-					bluetooth.restartScan();
+					ble.startScan([bluetooth.UUID_SERVICE], bluetooth.registerDevice, function (e) {
+						communication.sendError('ble scan: ' + JSON.stringify(e));
+					});
 				} else if (user.contact.findMe)
 					ui.navigation.openPopup(ui.l('attention'), ui.l('findMe.bluetoothDeactivated'));
 			})
@@ -112,13 +115,18 @@ class bluetooth {
 		if (!global.isBrowser())
 			window.localStorage.setItem('findMeIDs', '|');
 	}
-	static restartScan() {
-		if (user.contact.findMe && bluetooth.state) {
-			ble.startScan([bluetooth.UUID_SERVICE], bluetooth.registerDevice, function (e) {
-				communication.sendError('ble scan: ' + JSON.stringify(e));
-			});
-		} else
+	static toggle() {
+		if (global.isBrowser())
+			intro.openHint({ desc: 'bluetoothDescriptionBrowser', pos: '-0.5em,-4em', size: '80%,auto' });
+		else if (window.localStorage.getItem('findMeIDs')) {
+			user.save({ findMe: false });
 			bluetooth.stop();
+		} else {
+			user.save({ findMe: true });
+			bluetooth.requestAuthorization();
+			if (bluetooth.state != 'on')
+				ui.navigation.openPopup(ui.l('attention'), ui.l('findMe.bluetoothDeactivated'));
+		}
 	}
 	static stop() {
 		if (!global.isBrowser())

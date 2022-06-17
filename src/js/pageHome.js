@@ -17,7 +17,7 @@ class pageHome {
 		<buttonIcon onclick="ui.navigation.goTo(&quot;search&quot;)" class="homeIconSearch" style="display:none;">
 			<img src="images/search.svg" />
 		</buttonIcon>
-		<buttonIcon onclick="ui.navigation.goTo(&quot;settings&quot;)" style="right:0;text-align:right;">
+		<buttonIcon onclick="ui.navigation.goTo(&quot;settings&quot;,event)" style="right:0;text-align:right;">
 			<img src="images/contact.svg" />
 		</buttonIcon>
 		<homeTitle onclick="ui.navigation.goTo(&quot;settings&quot;)">
@@ -31,21 +31,22 @@ class pageHome {
 	</homeHeader>
 	<homeBody>
 		<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;whattodo&quot;)" style="width:80%;">
-			<badge name="badgeNotifications" class="bgColor pulse" style="right:-1.5em;top:8em;">0</badge>
-			<span>${ui.l('wtd.todayIWant')}</span><img src="images/rocket.svg" onload="formFunc.image.svgInject(this)" />
+			<span class="homeWTD">${ui.l('wtd.todayIWant')}</span><img src="images/rocket.svg" onload="formFunc.image.svgInject(this)" />
 		</buttontext><br/>
 		<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;locations&quot;)" style="width:70%;">
-			<badge name="badgeLocations" class="bgColor pulse" style="left:-1.5em;top:-1.5em;">0</badge>
+			<badge name="badgeLocations" class="bgColor pulse">0</badge>
 			<span>${ui.l('locations.title') + global.separator + ui.l('events.title')}</span><img src="images/location.svg" onload="formFunc.image.svgInject(this)" />
 		</buttontext><br/>
 		<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;contacts&quot;)" style="width:60%;">
-			<badge name="badgeContacts" class="bgColor pulse" style="top:-1.5em;right:-1.5em;">0</badge>
+			<badge name="badgeContacts" class="bgColor pulse">0</badge>
 			<span>${ui.l('contacts.matching')}</span><img src="images/network.svg" onload="formFunc.image.svgInject(this)" />
 		</buttontext>
-		<homeStatus onclick="pageWhatToDo.wtd.open()"></homeStatus>
 	</homeBody>
 	<buttonIcon onclick="ui.navigation.goTo(&quot;info&quot;)" style="bottom:0;left:50%;margin-left:-2em;">
 		<img src="images/info.svg" onload="formFunc.image.svgInject(this)" />
+	</buttonIcon>
+	<buttonIcon onclick="bluetooth.toggle()" id="homeIconBluetooth" style="bottom:0;right:0;">
+		<img src="images/bluetooth.svg" onload="formFunc.image.svgInject(this)" />
 	</buttonIcon>
 </div>`;
 	static init() {
@@ -53,7 +54,7 @@ class pageHome {
 		var contact = user.contact || new Contact();
 		if (e.innerHTML && e.getAttribute('loggedOn') == contact.id)
 			return;
-		var v = [];
+		var v = {};
 		v.username = contact.pseudonym ? contact.pseudonym : '';
 		v.oc = contact.id ? 'settings' : 'login';
 		v.lang = global.language;

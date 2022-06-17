@@ -80,7 +80,7 @@ ${v.aboutMe}
 	<buttontext class="bgColor${v.blocked}" name="buttonLocation"
 		onclick="pageContact.toggleLocation(${v.id})">${ui.l('locations.title')}</buttontext>
 </detailButtons>
-<text name="block" class="collapsed">
+<text name="block" class="popup collapsed">
 	<detailTogglePanel>
 		${v.buddy}
 		<input type="radio" name="type" value="1" label="${ui.l('contacts.blockAction')}"
@@ -343,11 +343,11 @@ ${v.aboutMe}
 				if (oc.indexOf('s:') == 0)
 					oc = ' onclick="' + oc.substring(2) + '"';
 				else if (oc == 'info' || oc.indexOf('m=') == 0)
-					oc = ' onclick="ui.navigation.autoOpen(&quot;' + oc + '&quot;);"';
+					oc = ' onclick="ui.navigation.autoOpen(&quot;' + oc + '&quot;,event)"';
 				else {
 					oc = global.decParam(oc);
 					if (oc && oc != 'p=' + v.id)
-						oc = ' onclick="ui.navigation.autoOpen(&quot;' + v.contactNotification.action + '&quot;);"';
+						oc = ' onclick="ui.navigation.autoOpen(&quot;' + v.contactNotification.action + '&quot;,event)"';
 					else
 						oc = '';
 				}
@@ -702,15 +702,15 @@ ${v.aboutMe}
 			if (!v.badgeAction)
 				v.badgeAction = birth[1] ? '' : 'remove';
 			if (activeID == 'detail')
-				v.oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;)';
+				v.oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)';
 			else if (activeID == 'settings3')
 				v.oc = 'pageSettings.unblockUser(' + v.id + ',' + v.contactBlock.id + ')';
 			else if (activeID == 'info')
-				v.oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;)';
+				v.oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)';
 			else if (v.contactNotification.id)
-				v.oc = 'details.open(&quot;contacts&quot;,' + v.id + ',&quot;contact_listNotification&search=' + encodeURIComponent('contactNotification.id=' + v.contactNotification.id) + '&quot;,pageContact.detail)';
+				v.oc = 'details.open(' + v.id + ',&quot;contact_listNotification&search=' + encodeURIComponent('contactNotification.id=' + v.contactNotification.id) + '&quot;,pageContact.detail)';
 			else
-				v.oc = 'details.open(&quot;contacts&quot;,' + v.id + ',&quot;contact_list&search=' + encodeURIComponent('contact.id=' + v.id) + '&quot;,pageContact.detail)';
+				v.oc = 'details.open(' + v.id + ',&quot;contact_list&search=' + encodeURIComponent('contact.id=' + v.id) + '&quot;,pageContact.detail)';
 			s += pageContact.templateList(v);
 		}
 		return s;
@@ -728,8 +728,12 @@ ${v.aboutMe}
 			success() {
 				if (ui.q('popupContent'))
 					ui.navigation.hidePopup();
-				else
-					ui.q('detail[i="' + id + '"] [name="block"]').innerHTML = ui.l('contacts.requestFriendshipSent');
+				else {
+					var e = ui.q('detail[i="' + id + '"] [name="block"]');
+					e.innerHTML = ui.l('contacts.requestFriendshipSent');
+					e.setAttribute('h', e.clientHeight);
+					setTimeout(function () { details.togglePanel(e) }, 5000);
+				}
 			}
 		});
 	}
@@ -764,17 +768,13 @@ ${v.aboutMe}
 		var e = ui.q('detail[i="' + id + '"] [name="location"]');
 		if (!e.innerHTML) {
 			communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent('location.contactId=' + id), function (l) {
-				var s = pageLocation.listLocation(l), p, p2, i;
-				while ((p = s.indexOf('onclick="details.open(')) > -1) {
-					p2 = s.indexOf(',pageLocation.detailLocationEvent)', p);
-					if (p2 > p) {
-						i = s.substring(p, p2).split(',')[1].replace(/\D/g, '');
-						s = s.substring(0, p) + ' onclick="ui.navigation.autoOpen(&quot;' + global.encParam('l=' + i) + '&quot;)"' + s.substring(p2 + 35);
-					}
-				}
-				if (s)
-					e.innerHTML = '<br/>' + ui.l('locations.my') + '<br/><br/>' + s;
-				else
+				var s = pageLocation.listLocation(l);
+				if (s) {
+					e.innerHTML = ui.l('locations.my') + '<br/>' + s;
+					var rows = ui.qa('detail[i="' + id + '"] [name="location"] row');
+					for (var i = 0; i < rows.length; i++)
+						rows[i].setAttribute('onclick', 'ui.navigation.autoOpen("' + global.encParam('l=' + rows[i].getAttribute('i')) + '",event)');
+				} else
 					e.innerHTML = '<detailTogglePanel>' + ui.l('locations.myNone') + '</detailTogglePanel>';
 				details.togglePanel(e);
 			});
