@@ -71,14 +71,6 @@ class pageWhatToDo {
 	static list = null;
 	static maxRadius = 50;
 	static resetCall = null;
-	static closeNotifications() {
-		ui.css('whattodobody', 'display', '');
-		var e = ui.q('notifications');
-		ui.navigation.hideMenu();
-		ui.navigation.animation(e, 'slideUp', function () {
-			ui.css(e, 'display', 'none');
-		});
-	}
 	static init() {
 		if (!ui.q('whattodo').innerHTML) {
 			communication.ajax({
@@ -158,70 +150,6 @@ class pageWhatToDo {
 			});
 		} else
 			pageWhatToDo.initListButton();
-	}
-	static getNotificationText(text, created) {
-		var s = global.date.formatDate(global.date.getDate(created));
-		var t = global.string.replaceLinks('http', text);
-		t = global.string.replaceLinks('https', t);
-		return [s, t];
-	}
-	static openNotifications() {
-		ui.scrollTo('whattodo', 0);
-		var e = ui.q('notifications');
-		if (!e.innerHTML || !ui.q('notifications listResults') || ui.q('[name="badgeNotifications"]').innerText != '0') {
-			communication.loadList('query=contact_listNotification&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&sort=false', function (l) {
-				var x = ui.q('[name="badgeNotifications"]').innerHTML;
-				l[0].push('_message1');
-				l[0].push('_message2');
-				l[0].push('_badge');
-				l[0].push('_badgeDisp');
-				for (var i = 1; i < l.length; i++) {
-					var v = model.convert(new Contact(), l, i);
-					var t = pageWhatToDo.getNotificationText(v.contactNotification.text, v.contactNotification.createdAt);
-					l[i].push(t[0]);
-					l[i].push(t[1]);
-					l[i].push(i <= x ? 1 : 0);
-					l[i].push(i <= x ? 'block' : 'none');
-				}
-				var s = pageContact.listContactsInternal(l);
-				if (!s)
-					s = '<div style="padding:1em;">' + ui.l('notification.noNewsYet') + '</div>';
-				lists.setListDivs('notifications', 'pageWhatToDo.closeNotifications()');
-				ui.html('notifications listResults', s);
-				ui.html('notifications listHeader listTitle', ui.l('wtd.myNotifications'));
-				ui.css(e, 'display', '');
-				ui.navigation.hideMenu();
-				ui.navigation.animation(e, 'slideDown', function () {
-					ui.css('whattodobody', 'display', 'none');
-				});
-				ui.addFastButton('notifications');
-				ui.css('notifications listScroll', 'display', '');
-				lists.repositionThumb('notifications');
-				if (l.length > 1) {
-					s = model.convert(new Contact(), l, 1).contactNotification.createdAt;
-					for (var i = 2; i < l.length; i++) {
-						var v = model.convert(new Contact(), l, i).contactNotification.createdAt;
-						if (v > s)
-							s = v;
-					}
-					if (s.indexOf('.') > 0)
-						s = s.substring(0, s.lastIndexOf('.'));
-					user.save({ notification: s }, communication.ping);
-				}
-			});
-		} else {
-			ui.navigation.hideMenu();
-			ui.css(e, 'display', '');
-			ui.navigation.animation(e, 'slideDown', function () {
-				ui.css('whattodobody', 'display', 'none');
-			});
-		}
-	}
-	static toggleNotifications() {
-		if (ui.cssValue('notifications', 'display') == 'none')
-			pageWhatToDo.openNotifications();
-		else
-			pageWhatToDo.closeNotifications();
 	}
 	static checkAttributeLocationsForList(id) {
 		for (var i = 0; i < 6; i++) {

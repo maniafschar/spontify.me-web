@@ -177,7 +177,7 @@ class initialisation {
 		});
 		ui.on('popup', 'click', function (event) {
 			var s = event.target.nodeName;
-			if (s != 'INPUT' && s != 'TEXTAREA')
+			if (s != 'INPUT' && s != 'TEXTAREA' && s != 'BUTTONTEXT' && !ui.parents(event.target, 'locationNameInputHelper'))
 				ui.navigation.hidePopup();
 		});
 		ui.swipe('detail', function (dir) {
@@ -222,25 +222,6 @@ class initialisation {
 			if (dir == 'up')
 				communication.notification.clear();
 		});
-		setTimeout(function () {
-			communication.ajax({
-				url: global.server + 'action/marketing/' + global.language,
-				responseType: 'json',
-				error() { },
-				success(e) {
-					pageInfo.initMarketing(e);
-					if (!e.text)
-						return;
-					var f = function () {
-						if (ui.cssValue('popup', 'display') != 'none' || ui.q('alert').innerHTML)
-							setTimeout(f, 3000);
-						//else
-						//communication.notification.open({ message: '<b>' + e.title + '</b><br/>' + e.text + (e.action ? ' ' + ui.l('locations.clickForMoreDetails') : ''), additionalData: { exec: e.action } });
-					};
-					f.call();
-				}
-			})
-		}, 8000);
 	}
 	static onLoad() {
 		if (global.isBrowser())

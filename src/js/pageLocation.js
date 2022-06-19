@@ -159,7 +159,7 @@ ${v.hint}
 	<label>${ui.l('name')}</label>
 	<value>
 		<input type="text" name="name" maxlength="100" value="${v.name}" />
-		<div id="locationNameInputHelper" style="display:none;"></div>
+		<locationNameInputHelper style="display:none;"></locationNameInputHelper>
 	</value>
 </field>
 <field>
@@ -391,7 +391,7 @@ ${v.hint}
 		ui.q('openTimesEdit').insertBefore(e2, null);
 	}
 	static closeLocationInputHelper() {
-		var e = ui.q('#locationNameInputHelper');
+		var e = ui.q('locationNameInputHelper');
 		if (e.innerHTML)
 			ui.toggleHeight(e);
 	}
@@ -1434,7 +1434,7 @@ ${v.hint}
 							}
 						}
 						if (s) {
-							ui.html('#locationNameInputHelper', '<ul>' + s + '</ul><div style="text-align:center;"><buttontext onclick="pageLocation.closeLocationInputHelper()" class="bgColor">' + ui.l('locations.closeInputHelper') + '</buttontext></div>');
+							ui.html('locationNameInputHelper', '<ul>' + s + '</ul><div style="text-align:center;"><buttontext onclick="pageLocation.closeLocationInputHelper()" class="bgColor">' + ui.l('locations.closeInputHelper') + '</buttontext></div>');
 							pageLocation.showLocationInputHelper();
 							ui.q('form input[name="name"]').onfocus = pageLocation.showLocationInputHelper;
 						}
@@ -1658,7 +1658,7 @@ ${v.hint}
 			ui.navigation.openHTML(global.server + 'qq?i=' + id + '&t=' + encodeURIComponent(ui.q('#taxNo').value) + '&v=' + encodeURIComponent(ui.q('[name="os0"]:checked').value));
 	}
 	static showLocationInputHelper(event) {
-		var e = ui.q('#locationNameInputHelper');
+		var e = ui.q('locationNameInputHelper');
 		if (e.innerHTML && ui.cssValue(e, 'display') == 'none' && (!event || !ui.q('form input[name="name"]').value))
 			ui.toggleHeight(e);
 	}
