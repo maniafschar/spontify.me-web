@@ -472,14 +472,18 @@ class communication {
 	static notification = {
 		push: null,
 
-		clear() {
-			var e = ui.q('alert');
-			ui.navigation.animation(e, 'homeSlideOut', function () {
-				if (!ui.classContains(e, 'homeSlideIn')) {
-					ui.html(e, '');
-					e.removeAttribute('style');
-				}
-			});
+		clear(e) {
+			if (e && ui.qa('alert>div').length > 1)
+				e.outerHTML = '';
+			else {
+				e = ui.q('alert');
+				ui.navigation.animation(e, 'homeSlideOut', function () {
+					if (!ui.classContains(e, 'homeSlideIn')) {
+						ui.html(e, '');
+						e.removeAttribute('style');
+					}
+				});
+			}
 		},
 		onError(e) {
 			ui.navigation.openPopup(ui.l('attention'), ui.l('pushTokenError').replace('{0}', e.message));
@@ -488,15 +492,23 @@ class communication {
 			if (e.message) {
 				var d = ui.q('alert');
 				var e2 = document.createElement('div');
-				if (e.additionalData && e.additionalData.exec) {
-					if (e.additionalData.exec.indexOf('chats') == 0) {
-						if (ui.q('chat[i="' + e.additionalData.exec.substring(5) + '"]')) {
-							pageChat.refresh();
-							if (ui.q('chat').style.display != 'none')
-								return;
+				if (e.additionalData) {
+					if (e.additionalData.exec) {
+						if (e.additionalData.exec.indexOf('chats') == 0) {
+							if (ui.q('chat[i="' + e.additionalData.exec.substring(5) + '"]')) {
+								pageChat.refresh();
+								if (ui.q('chat').style.display != 'none')
+									return;
+							}
 						}
+						e2.setAttribute('onclick', 'communication.notification.clear(this);ui.navigation.autoOpen("' + e.additionalData.exec + '",event)');
 					}
-					e2.setAttribute('onclick', 'communication.notification.clear();ui.navigation.autoOpen("' + e.additionalData.exec + '",event)');
+					if (e.additionalData.notificationId)
+						communication.ajax({
+							url: global.server + 'db/one',
+							method: 'PUT',
+							body: { classname: 'ContactNotification', id: e.additionalData.notificationId, values: { seen: true } }
+						});
 				}
 				if (d.innerHTML)
 					ui.classAdd(e2, 'borderBottom');
@@ -616,11 +628,9 @@ class communication {
 						ui.classRemove(e.parentNode, 'pulse');
 					else
 						ui.classRemove(e.parentNode, 'pulse');
-
-					e = ui.qa('[name="badgeNotifications"]');
-					total += r.notification;
+					e = ui.q('badgeNotifications');
 					ui.html(e, r.notification);
-					ui.css(e, 'display', r.notification == 0 ? 'none' : 'block');
+					ui.css(e.parentNode, 'display', r.notification == 0 ? 'none' : '');
 					pageChat.refreshActiveChat(r.chatUnseen);
 				}
 				e = ui.q('head title');

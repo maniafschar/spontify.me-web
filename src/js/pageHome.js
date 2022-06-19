@@ -1,7 +1,8 @@
+import { communication } from './communication';
 import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './initialisation';
-import { Contact } from './model';
+import { Contact, model } from './model';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 
@@ -42,6 +43,10 @@ class pageHome {
 			<span>${ui.l('contacts.matching')}</span><img src="images/network.svg" onload="formFunc.image.svgInject(this)" />
 		</buttontext>
 	</homeBody>
+	<buttonIcon onclick="pageHome.openNotifications()" style="bottom:0;left:0;display:none;" class="pulse">
+		<badgeNotifications></badgeNotifications>
+		<img src="images/news.svg" onload="formFunc.image.svgInject(this)" />
+	</buttonIcon>
 	<buttonIcon onclick="ui.navigation.goTo(&quot;info&quot;)" style="bottom:0;left:50%;margin-left:-2em;">
 		<img src="images/info.svg" onload="formFunc.image.svgInject(this)" />
 	</buttonIcon>
@@ -89,9 +94,22 @@ class pageHome {
 			'<div style="text-align:center;padding:2em 0;"><a class="langSelectImg bgColor' + (global.language == 'DE' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE">Deutsch</a>' +
 			'<a class="langSelectImg bgColor' + (global.language == 'EN' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</a></div>');
 	}
-	static showWTDOldMessages(button) {
-		button.style.display = 'none';
-		var e = button.nextSibling.style;
-		e.display = e.display == 'block' ? 'none' : 'block';
+	static openNotifications() {
+		communication.ajax({
+			url: global.server + 'action/notifications',
+			responseType: 'json',
+			success(r) {
+				var e = ui.q('badgeNotifications');
+				e.innerHTML = '0';
+				ui.css(e.parentNode, 'display', 'none');
+				for (var i = 1; i < r.length; i++) {
+					var v = model.convert(new Contact(), r, i);
+					var m = { message: global.date.formatDate(global.date.getDate(v.contactNotification.createdAt)) + '<br/>' + v.pseudonym + ' ' + v.contactNotification.text };
+					if (v.contactNotification.action)
+						m.additionalData = { exec: v.contactNotification.action };
+					communication.notification.open(m);
+				}
+			}
+		});
 	}
-};
+}

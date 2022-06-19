@@ -1011,14 +1011,13 @@ eventListTitle {
 	display: block;
 }
 
-badgeChats {
-	z-index: 11;
+badgeChats,
+badgeNotifications {
 	text-align: center;
 	position: absolute;
 	color: white;
-	line-height: 3.6;
-	width: 3.8em;
-	font-size: 0.8em;
+	line-height: 3;
+	width: 3em;
 }
 
 badge {
@@ -1402,10 +1401,6 @@ home {
 	display: block;
 }
 
-home logo {
-	cursor: pointer;
-}
-
 homeHeader {
 	position: relative;
 	text-align: center;
@@ -1414,6 +1409,7 @@ homeHeader {
 }
 
 homeTitle {
+	cursor: pointer;
 	white-space: nowrap;
 	display: inline-block;
 	margin-top: 13vh;

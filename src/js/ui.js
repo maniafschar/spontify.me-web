@@ -229,7 +229,7 @@ class ui {
 						ui.navigation.goTo('info');
 						return true;
 					}
-					if (id.indexOf('chat=') != 0 && id.indexOf('n=') != 0 && id.indexOf('m=') != 0) {
+					if (id.indexOf('chat=') != 0 && id.indexOf('m=') != 0) {
 						id = global.decParam(id);
 						if (!id)
 							return false;
@@ -265,25 +265,7 @@ class ui {
 						details.open(idIntern.substring(2), 'location_list&search=' + encodeURIComponent('location.id=' + idIntern.substring(2)), o);
 					else if (idIntern.indexOf('e=') == 0)
 						details.open(idIntern.substring(2), 'event_list&search=' + encodeURIComponent('event.id=' + idIntern.substring(2)), o);
-					else if (idIntern.indexOf('n=') == 0) {
-						communication.ajax({
-							url: global.server + 'db/one?query=contact_notification&search=contactNotification.id=' + id.substring(2),
-							responseType: 'json',
-							success(r) {
-								if (r && r.length > 1) {
-									var e = {}, v = model.convert(new Contact(), r, 1);
-									e.message = v.notification.text;
-									if (v.notification.contactId != user.contact.id)
-										e.message = v.pseudonym + ' ' + e.message;
-									if (v.notification.action) {
-										e.additionalData = {};
-										e.additionalData.exec = v.notification.action;
-									}
-									communication.notification.open(e);
-								}
-							}
-						});
-					} else if (idIntern.indexOf('=') == 1)
+					else if (idIntern.indexOf('=') == 1)
 						details.open(idIntern.substring(2), 'contact_list&search=' + encodeURIComponent('contact.id=' + idIntern.substring(2)), o);
 				}
 			};
