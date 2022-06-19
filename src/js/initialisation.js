@@ -177,7 +177,7 @@ class initialisation {
 		});
 		ui.on('popup', 'click', function (event) {
 			var s = event.target.nodeName;
-			if (s != 'INPUT' && s != 'TEXTAREA')
+			if (s != 'INPUT' && s != 'TEXTAREA' && s != 'BUTTONTEXT' && !ui.parents(event.target, 'locationNameInputHelper'))
 				ui.navigation.hidePopup();
 		});
 		ui.swipe('detail', function (dir) {
