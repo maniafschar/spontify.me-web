@@ -13,7 +13,7 @@ export { pageContact };
 
 class pageContact {
 	static templateList = v =>
-		global.template`<row onclick="${v.oc}" i="${v.id}" class="contact">
+		global.template`<row onclick="${v.oc}" i="${v.id}" class="contact${v.classFavorite}">
 	<badge class="bgColor" style="display:${v._badgeDisp};" action="${v.badgeAction}">
 		${v._badge}
 	</badge>
@@ -683,6 +683,8 @@ ${v.aboutMe}
 			else
 				v.image = 'images/contact.svg" style="padding:1em;';
 			v.classBGImg = v.imageList ? '' : 'bgColor';
+			if (v.contactLink.status == 'Friends')
+				v.classFavorite = ' favorite';
 			v.attr = ui.getAttributes(v, 'list');
 			if (v.attr.total && v.attr.totalMatch / v.attr.total > 0)
 				v.matchIndicator = parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5) + '%';

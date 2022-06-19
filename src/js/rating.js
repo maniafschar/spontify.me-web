@@ -55,7 +55,7 @@ class rating {
     </form>
 </div>`;
 	static templateHistory = v =>
-		global.template`<div onclick="rating.openHistory(&quot;${v.type}&quot;,${v.id})" style="margin:1em 0;cursor:pointer;">${ui.l('rating.history')}</div>
+		global.template`<buttontext onclick="rating.openHistory(&quot;${v.type}&quot;,${v.id})" class="bgColor" style="margin-bottom:1em;">${ui.l('rating.history')}</buttontext>
 <ratingHistory style="display:none;"></ratingHistory>`;
 
 	static click(x) {
@@ -140,7 +140,7 @@ class rating {
 					var s = '', date, pseudonym, text, img, rate;
 					for (var i = r.length - 1; i > 0; i--) {
 						var v = model.convert(t == 'location' ? new Location() : new Contact(), r, i), v2 = v[t + 'Rating'];
-						date = global.date.formatDate(v2.modifiedAt);
+						date = global.date.formatDate(v2.createdAt);
 						pseudonym = v.contactId == user.contact.id ? ui.l('you') : v.pseudonym || v.contact.pseudonym;
 						text = v2.text ? ': ' + v2.text : '';
 						img = v2.image ? '<br/><img src="' + global.serverImg + v2.image + '"/>' : '';

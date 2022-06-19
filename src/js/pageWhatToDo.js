@@ -28,19 +28,19 @@ class pageWhatToDo {
 	<whatToDoDiv id="whatToDoLocation" onclick="${v.locOC}" style="display:${v.locDisp};cursor:pointer;">
 		${v.locName}
 	</whatToDoDiv>
-	<whatToDoDiv style="margin-top:1em;">
+	<whatToDoDiv>
 		${ui.l('wtd.time')}<br/>
 		<value>
 			<input class="whatToDoTime" type="time" id="messageTime" placeholder="HH:MM" value="${v.timeValue}" />
 		</value>
 	</whatToDoDiv>
-	<whatToDoDiv style="margin-top:1em;">
+	<whatToDoDiv>
 		<value>
 			<input type="text" id="messageText" value="${v.currentText}" choices="Messages"
 				placeholder="${ui.l('wtd.ownTextHint')}" />
 		</value>
 	</whatToDoDiv>
-	<div style="margin-bottom:3em;">
+	<div style="margin-bottom:1em;">
 		<buttontext onclick="pageWhatToDo.save()" class="bgColor">
 			${ui.l('wtd.action')}
 		</buttontext>
@@ -391,12 +391,7 @@ class pageWhatToDo {
 	}
 	static saveInternal(cat, msg, locID, postfix) {
 		var currentWtd = pageWhatToDo.getCurrentMessage();
-		var time = new Date(), hour = ui.q('#messageTime' + (postfix ? postfix : '')).value.split(':'), budget = '';
-		var e = ui.qa('[name="messageBudget"]:checked');
-		for (var i = 0; i < e.length; i++)
-			budget += ',' + e[i].value;
-		if (budget)
-			budget = budget.substring(1);
+		var time = new Date(), hour = ui.q('#messageTime' + (postfix ? postfix : '')).value.split(':');
 		if (time.getHours() >= hour[0])
 			time.setDate(time.getDate() + 1);
 		time.setHours(hour[0]);
@@ -404,7 +399,7 @@ class pageWhatToDo {
 		time.setSeconds(0);
 		time.setMilliseconds(0);
 		msg = msg.replace(/</g, '&lt;');
-		var v = { classname: 'ContactWhatToDo', values: { active: true, keywords: cat, time: time.toISOString(), budget: budget, message: msg } };
+		var v = { classname: 'ContactWhatToDo', values: { active: true, keywords: cat, time: time.toISOString(), message: msg } };
 		if (locID)
 			v.values.locationId = locID;
 		if (currentWtd)
@@ -419,6 +414,7 @@ class pageWhatToDo {
 					currentWtd.keywords = cat;
 					currentWtd.message = msg;
 					currentWtd.time = time;
+					currentWtd.locationId = locID;
 				} else
 					pageWhatToDo.list.unshift({
 						active: true,
@@ -426,12 +422,14 @@ class pageWhatToDo {
 						id: id,
 						keywords: cat,
 						message: msg,
-						time: time
+						time: time,
+						locationId: locID
 					});
 				ui.q('#wtdListContacts').innerHTML = '';
 				ui.q('#wtdListLocations').innerHTML = '';
 				ui.q('#wtdListEvents').innerHTML = '';
-				ui.toggleHeight('whattodo>div');
+				if (ui.cssValue('whattodo', 'display') != 'none')
+					ui.toggleHeight('whattodo>div');
 				id = ui.q('whattodolists whattodolist[style*=block]').id;
 				if (id.indexOf('Contacts') > 0)
 					pageWhatToDo.loadListContacts();
@@ -440,10 +438,12 @@ class pageWhatToDo {
 				else
 					pageWhatToDo.loadListEvents();
 				pageWhatToDo.initListButton();
+				if (postfix == 'Detail')
+					ui.html(ui.navigation.getActiveID() + ' [name="whattodo"] detailTogglePanel', ui.l('wtd.setStatusLocation'));
 			}
 		});
 	}
-	static saveLocation(exec, cat, id) {
+	static saveLocation(cat, id) {
 		pageWhatToDo.saveInternal(cat, '', id, 'Detail');
 	}
 }
