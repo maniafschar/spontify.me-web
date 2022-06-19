@@ -285,29 +285,23 @@ class pageWhatToDo {
 		ui.html('whattodotitle', b);
 		ui.html('home .homeWTD', b);
 	}
+	static listContact(r) {
+		var s = pageContact.listContactsInternal(r);
+		ui.html('#wtdListContacts', s ? s : lists.getListNoResults('contacts', 'whattodo'));
+		if (s)
+			ui.addFastButton('#wtdListContacts');
+	}
 	static listEvents(r) {
 		var s = pageLocation.event.listEventsInternal(pageLocation.event.getCalendarList(r), new Date());
 		ui.html('#wtdListEvents', s ? s : lists.getListNoResults('events', 'whattodo'));
-		if (s) {
+		if (s)
 			ui.addFastButton('#wtdListEvents');
-			ui.q('#wtdListEvents').lastChild.style.marginBottom = 0;
-		}
 	}
 	static listLocation(r) {
 		var s = pageLocation.listLocationInternal(r);
 		ui.html('#wtdListLocations', s ? s : lists.getListNoResults('locations', 'whattodo'));
-		if (s) {
+		if (s)
 			ui.addFastButton('#wtdListLocations');
-			ui.q('#wtdListLocations').lastChild.style.marginBottom = 0;
-		}
-	}
-	static listContact(r) {
-		var s = pageContact.listContactsInternal(r);
-		ui.html('#wtdListContacts', s ? s : lists.getListNoResults('contacts', 'whattodo'));
-		if (s) {
-			ui.addFastButton('#wtdListContacts');
-			ui.q('#wtdListContacts').lastChild.style.marginBottom = 0;
-		}
 	}
 	static load(type, query, search, exec) {
 		var currentWtd = pageWhatToDo.getCurrentMessage();
