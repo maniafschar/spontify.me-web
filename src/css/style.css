@@ -1354,14 +1354,6 @@ detail detailDistance img {
 	opacity: 0.6;
 }
 
-row badge {
-	opacity: 0.9;
-	left: 0.5em;
-	top: 0;
-	opacity: 0.9;
-	border-radius: 0.5em 0;
-}
-
 a:link, a:visited {
 	text-decoration: none;
 }
@@ -1468,7 +1460,7 @@ buttontext {
 	white-space: nowrap;
 	vertical-align: middle;
 	color: black;
-	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
 }
 
 buttonIcon {
@@ -1579,6 +1571,21 @@ row {
 	transition: all 0.4s ease-out;
 }
 
+row > div {
+	text-align: left;
+	overflow: hidden;
+	cursor: pointer;
+	background: rgba(255, 255, 255, 0.85);
+	border-radius: 0.5em;
+	margin: 1em 0.5em 0.5em 1em;
+	height: 6em;
+	transition: all 0.4s ease-out;
+}
+
+row.favorite > div {
+	background: rgba(246, 255, 187, 0.7);
+}
+
 row text {
 	max-height: 5.5em;
 	overflow: hidden;
@@ -1596,6 +1603,39 @@ row matchIndicator {
 	right: 0.5em;
 	top: 0.5em;
 	opacity: 0.3;
+}
+
+row badge {
+	opacity: 0.9;
+	left: 0.5em;
+	top: 0;
+	opacity: 0.9;
+	border-radius: 0.5em 0;
+}
+
+row imagelist {
+	height: 6em;
+	width: 6em;
+	left: 0;
+	top: 0;
+	position: absolute;
+	text-align: center;
+	overflow: hidden;
+	margin: 0.5em;
+	border-radius: 0.5em;
+	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
+}
+
+row imagelist img {
+	height: 100%;
+	max-width: 100%;
+}
+
+row imagelist img.present {
+	position: absolute;
+	left: 0;
+	height: 2.5em;
+	border-radius: 0;
 }
 
 .participate::before {
@@ -1629,19 +1669,6 @@ detail .participate::before {
 	line-height: 1.7;
 }
 
-row imagelist {
-	height: 6em;
-	width: 6em;
-	left: 0;
-	top: 0;
-	position: absolute;
-	text-align: center;
-	overflow: hidden;
-	margin: 0.5em;
-	border-radius: 0.5em;
-	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
-}
-
 chatButtons {
 	padding: 0.5em 0;
 	margin: 0 -0.5em;
@@ -1652,18 +1679,6 @@ chatButtons {
 
 chat.location chatButtons {
 	display: none;
-}
-
-row imagelist img {
-	height: 100%;
-	max-width: 100%;
-}
-
-row imagelist img.present {
-	position: absolute;
-	left: 0;
-	height: 2.5em;
-	border-radius: 0;
 }
 
 .bgBonus {
@@ -1705,17 +1720,6 @@ subtitle {
 	position: absolute;
 	opacity: 0.6;
 	bottom: 0;
-}
-
-row > div {
-	text-align: left;
-	overflow: hidden;
-	cursor: pointer;
-	background: rgba(255, 255, 255, 0.85);
-	border-radius: 0.5em;
-	margin: 1em 0.5em 0.5em 1em;
-	height: 6em;
-	transition: all 0.4s ease-out;
 }
 
 auxEvents {

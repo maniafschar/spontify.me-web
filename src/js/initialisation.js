@@ -172,7 +172,8 @@ class initialisation {
 				event.preventDefault();
 		});
 		ui.on('detail', 'click', function (event) {
-			ui.navigation.goTo(ui.q('detail').getAttribute('type'));
+			if (event.target.nodeName != 'INPUT')
+				ui.navigation.goTo(ui.q('detail').getAttribute('type'));
 		});
 		ui.on('popup', 'click', function (event) {
 			var s = event.target.nodeName;

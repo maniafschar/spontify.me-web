@@ -24,7 +24,7 @@ class pageLocation {
 		timeout: null
 	};
 	static templateList = v =>
-		global.template`<row onclick="details.open(&quot;${v.id}&quot;,&quot;${v.query}&quot;,${v.render});" i="${v.id}" class="location">
+		global.template`<row onclick="details.open(&quot;${v.id}&quot;,&quot;${v.query}&quot;,${v.render});" i="${v.id}" class="location${v.classFavorite}">
 			${v.present}
 	<div>
 		<div>
@@ -104,8 +104,8 @@ ${v.description}
 			<input type="time" id="messageTimeDetail" placeholder="HH:MM" class="whatToDoTime" value="${v.wtdTime}" />
 		</div>
 		<buttontext class="bgColor"
-			onclick="pageWhatToDo.saveLocation(pageLocation.savedWhatToDo,&quot;${v.cat}&quot;,${v.locID})">
-			${ui.l('message.buttonSave')}
+			onclick="pageWhatToDo.saveLocation(&quot;${v.cat}&quot;,${v.locID})">
+			${ui.l('wtd.buttonSave')}
 		</buttontext>
 	</detailTogglePanel>
 </text>
@@ -591,7 +591,7 @@ ${v.hint}
 					url: global.server + 'db/list?query=location_list&search=' + encodeURIComponent('location.contactId=' + user.contact.id),
 					responseType: 'json',
 					success(s) {
-						pageLocation.locationsAdded = s.length;
+						pageLocation.locationsAdded = s.length - 1;
 						pageLocation.edit(id);
 					}
 				});
@@ -602,8 +602,10 @@ ${v.hint}
 			else
 				pageLocation.editInternal(id, pageLocation.currentDetail);
 		} else {
-			ui.navigation.toggleMenu();
-			var e = ui.q('[name="id"]');
+			var e = ui.q('menu').style.transform;
+			if (e.indexOf('1') > -1)
+				ui.navigation.toggleMenu();
+			e = ui.q('[name="id"]');
 			if (!e || !e.value) {
 				if (ui.q('locations > div'))
 					ui.navigation.hideMenu();
@@ -1386,6 +1388,8 @@ ${v.hint}
 			v = model.convert(new Location(), l, i);
 			v.locID = v.id;
 			v.classBGImg = v.imageList ? '' : 'bgColor';
+			if (v.locationFavorite.favorite)
+				v.classFavorite = ' favorite';
 			pageLocation.listInfos(v);
 			if (v.imageList)
 				v.image = global.serverImg + v.imageList;
@@ -1573,9 +1577,6 @@ ${v.hint}
 		}
 		formFunc.saveDraft('location' + ui.q('popup input[name="id"]').value, a);
 	}
-	static savedWhatToDo() {
-		ui.html(ui.navigation.getActiveID() + ' [name="whattodo"] detailTogglePanel', ui.l('message.setStatusLocation'));
-	}
 	static scrollMap() {
 		if (ui.cssValue('map', 'display') == 'none')
 			return;
@@ -1678,10 +1679,13 @@ ${v.hint}
 				if (r)
 					ui.attr(button, 'idFav', r);
 				ui.attr(button, 'fav', v.values.favorite ? true : false);
-				if (r || v.values.favorite)
+				if (v.values.favorite) {
 					ui.classAdd(button, 'favorite');
-				else
+					ui.classAdd('row.location[i="' + id + '"]', 'favorite');
+				} else {
 					ui.classRemove(button, 'favorite');
+					ui.classRemove('row.location[i="' + id + '"]', 'favorite');
+				}
 			}
 		});
 	}

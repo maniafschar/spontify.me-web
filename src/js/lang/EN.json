@@ -660,6 +660,7 @@
 			"hintContact": "Name, current status, self-description, and attributes will be searched.",
 			"matches": "to go with me",
 			"results": "{0} hits in",
+			"title": "Search",
 			"type": "Search in"
 		},
 		"settings": {
@@ -718,6 +719,7 @@
 			"autoNews": "wants to {1} {0}",
 			"autoNewsMe": "At {0} o'clock ",
 			"birthdays": "Birthdays",
+			"buttonSave": "Set as status message!",
 			"location": "I want to go there",
 			"locationLink": "in the location: {0}",
 			"myNotifications": "Notifications",
@@ -725,6 +727,8 @@
 			"noTimeEntered": "Please enter the time",
 			"offers": "Deals",
 			"ownTextHint": "Here you can describe what you want to do",
+			"setStatusEvent": "Your status has been updated, have fun event!",
+			"setStatusLocation": "Your status has been updated, a lot of fun in the Location!",
 			"time": "I want to start at",
 			"todayIWant": "Any plans for today?"
 		},
@@ -810,9 +814,6 @@
 		"marketing.radius": "Within (in KM)",
 		"marketing.time": "Time of notification",
 		"marketing.until": "Until",
-		"message.buttonSave": "Set as status message!",
-		"message.setStatusEvent": "Your status has been updated, have fun event!",
-		"message.setStatusLocation": "Your status has been updated, a lot of fun in the Location!",
 		"messagesTitle": "notifications ...",
 		"more": "more",
 		"multipleValus.tooMany": ". You can select a maximum of {0} entries<br/>Currently you have selected {1}.",

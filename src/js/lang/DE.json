@@ -659,6 +659,7 @@
 			"hintContact": "Name, aktueller Status, Selbstbeschreibung und Attribute werden durchsucht.",
 			"matches": "die zu mir passen",
 			"results": "{0} Treffer in",
+			"title": "Suche",
 			"type": "Suchen in"
 		},
 		"settings": {
@@ -717,6 +718,7 @@
 			"autoNews": "will um {1} {0}",
 			"autoNewsMe": "Um {0} Uhr ",
 			"birthdays": "Geburtstage",
+			"buttonSave": "Als Statusmeldung setzen!",
 			"location": "Da will ich hin",
 			"locationLink": "in der Location: {0}",
 			"myNotifications": "Benachrichtigungen",
@@ -724,6 +726,8 @@
 			"noTimeEntered": "Gib bitte die Zeit an",
 			"offers": "Angebote",
 			"ownTextHint": "hier kannst Du Dein Vorhaben genauer beschreiben",
+			"setStatusEvent": "Dein Status wurde aktualisiert, viel Spaß beim Event!",
+			"setStatusLocation": "Dein Status wurde aktualisiert, viel Spaß in der Location!",
 			"time": "Loslegen möchte ich ab",
 			"todayIWant": "Heute schon was vor?"
 		},
@@ -809,9 +813,6 @@
 		"marketing.radius": "Umkreis (in KM)",
 		"marketing.time": "Benachrichtigungszeit",
 		"marketing.until": "Bis",
-		"message.buttonSave": "Als Statusmeldung setzen!",
-		"message.setStatusEvent": "Dein Status wurde aktualisiert, viel Spaß beim Event!",
-		"message.setStatusLocation": "Dein Status wurde aktualisiert, viel Spaß in der Location!",
 		"messagesTitle": "Benachrichtigungen...",
 		"more": "mehr",
 		"multipleValus.tooMany": "Du kannst maximal {0} Einträge auswählen.<br/>Momentan hast Du {1} ausgewählt.",

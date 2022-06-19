@@ -28,16 +28,28 @@ class communication {
 			if (xmlhttp.readyState == 4) {
 				communication.lastCall += xmlhttp.status + ' ' + param.method + ' ' + param.url;
 				communication.hideProgressBar(param);
-				if (xmlhttp.status >= 200 && xmlhttp.status < 300) {
-					if (param.success)
-						param.success(param.responseType == 'json' ? JSON.parse(xmlhttp.responseText) : xmlhttp.responseText);
-				} else {
+				var errorHandler = function () {
 					xmlhttp.param = param;
 					if (param.error)
 						param.error(xmlhttp)
 					else
 						communication.onError(xmlhttp);
-				}
+				};
+				if (xmlhttp.status >= 200 && xmlhttp.status < 300) {
+					if (param.success) {
+						var response = xmlhttp.responseText;
+						if (param.responseType == 'json')
+							try {
+								response = JSON.parse(xmlhttp.responseText)
+							} catch (e) {
+								xmlhttp.error = e;
+								errorHandler.call();
+								return;
+							}
+						param.success(response);
+					}
+				} else
+					errorHandler.call();
 			}
 		};
 		if (!param.method)
@@ -456,7 +468,7 @@ class communication {
 				return false;
 			}
 		}
-	};
+	}
 	static notification = {
 		push: null,
 
@@ -525,11 +537,11 @@ class communication {
 		saveToken(e) {
 			user.save({ pushSystem: global.getOS(), pushToken: e.registrationId });
 		}
-	};
+	}
 	static onError(r) {
 		var s, status;
 		if (r.status == 401)
-			communication.login.resetAfterLogoff(true);
+			communication.login.resetAfterLogoff();
 		else if (r.status == 408) {
 			// timeout, do nothing, most probably app wake up from sleep modus
 		} else if (r.status < 200 || r.status > 501) {
@@ -541,6 +553,8 @@ class communication {
 			var s2 = 'Status:' + r.status;
 			if (r.responseText)
 				s2 += '\nresponse:' + r.responseText;
+			if (r.error)
+				s2 += '\nerror:' + r.error;
 			if (!r.status || r.status < 500)
 				communication.sendError('communication.onError:\n' + s2);
 			s = ui.l('error.text') + '<br/>Status:&nbsp;' + r.status;
