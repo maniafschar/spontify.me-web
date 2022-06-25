@@ -485,7 +485,7 @@
 			"register": "After registration, we will show you how you can individualize your profile. Thank you for taking the time for this intro.",
 			"settings": "<b>spontify.me</b><br/>Are you looking for more spontaneity in your life from time to time? For example if:<ul><li>Your friends don't have time, but you still want to do something</li><li>You are in a foreign city for business or pleasure</li><li>You like to organize events, to whom new people are welcome to join you and your friends</li></ul>spontify.me is the right app for you in such cases. We try our best to create friendships and spontaneity here and to suppress sex requests or the like.",
 			"settingsLoggedIn": "<ul><li>Change your profile image and enter general information here</li><li>Swipe left to enter attributes that describe you and that you like about other people</li><li>provide yourself as a guide for people fitting your settings</li></ul>",
-			"whattodo": "<b>Any plans for today?</b><br/>Would you like to do something spontaneously?<br/><br/>In contrast to events, you can indicate here what you would like to do today, e.g. go out to eat or visit a museum, etc.<br/><br/>The activity will be Buddies who suit you and are no further than 50 KM away. After 24 hours at the latest, the activity is deleted again."
+			"whatToDo": "<b>Any plans for today?</b><br/>Would you like to do something spontaneously?<br/><br/>In contrast to events, you can indicate here what you would like to do today, e.g. go out to eat or visit a museum, etc.<br/><br/>The activity will be Buddies who suit you and are no further than 50 KM away. After 24 hours at the latest, the activity is deleted again."
 		},
 		"landing": {
 			"block1Title": "What does everyday life look like without ${appTitle} aus?",
@@ -618,7 +618,7 @@
 			"events": "Both, official as well as privately organized Events from ${appTitle} users may be found here. You can enter Events, too. E.g. book a table at your favorite restaurant and invite friends here.",
 			"search": "No items found.",
 			"profile": "Your profile has not yet been clicked. Do you wish to make it more appealing?{1}",
-			"whattodo": "Currently, there are no {0} found for your what you want to do.${noResults.openSettings}",
+			"whatToDo": "Currently, there are no {0} found for your what you want to do.${noResults.openSettings}",
 			"searchWithoutKeywords": "Tip: You have searched with keywords. Do you want to repeat the search without keywords?",
 			"repeat": "Repeat without keywords"
 		},

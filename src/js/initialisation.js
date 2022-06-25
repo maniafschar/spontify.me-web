@@ -46,6 +46,7 @@ class initialisation {
 			initialisation.videoText = null;
 			return;
 		}
+		formFunc.image.replaceSVGs();
 		var f = function () {
 			if (ui.cssValue('content > *', 'display')) {
 				ui.css('preloader', 'opacity', 0);
@@ -58,9 +59,9 @@ class initialisation {
 						e.outerHTML = '';
 				}, 500);
 			} else
-				setTimeout(f, 500);
+				setTimeout(f, 200);
 		};
-		setTimeout(f, 2500);
+		setTimeout(f, 2000);
 		global.serverImg = global.server.substring(0, global.server.lastIndexOf('/', global.server.length - 2)) + '/med/';
 		window.onerror = function (message, url, line, column, error) {
 			if (url && (url.lastIndexOf('fmg.js') + 6 == url.length || url.lastIndexOf('lang') + 6 == url.lastIndexOf('.js')))
@@ -173,7 +174,7 @@ class initialisation {
 		});
 		ui.on('detail', 'click', function (event) {
 			if (event.target.nodeName != 'INPUT')
-				ui.navigation.goTo(ui.q('detail').getAttribute('type'));
+				ui.navigation.goTo(ui.q('detail').getAttribute('list'), null, true);
 		});
 		ui.on('popup', 'click', function (event) {
 			var s = event.target.nodeName;
@@ -195,28 +196,54 @@ class initialisation {
 		ui.swipe('settings3', function (dir) {
 			if (dir == 'right')
 				ui.navigation.goTo('settings2', null, true);
+			else if (dir == 'left')
+				ui.navigation.goTo('settings');
 		});
 		ui.swipe('settings', function (dir) {
-			if (dir == 'left')
+			if (dir == 'right')
+				ui.navigation.goTo('home', null, true);
+			else if (dir == 'left')
 				pageSettings.open2();
 		}, 'input,textarea,img,slider');
-		ui.swipe('contacts', function (dir, event) {
+		ui.swipe('search', function (dir) {
+			if (dir == 'right')
+				ui.navigation.goTo('home', null, true);
+		}, 'input,textarea,slider');
+		ui.swipe('login', function (dir) {
 			if (dir == 'left')
-				ui.navigation.openSwipeLeftUI(event);
+				ui.navigation.goTo('home');
 			else if (dir == 'right')
-				lists.removeListEntryUI(event);
+				ui.navigation.goTo('info', null, true);
+		}, 'input');
+		ui.swipe('home', function (dir) {
+			if (dir == 'left')
+				ui.navigation.goTo(user.contact ? 'whatToDo' : 'info');
+			else if (dir == 'right')
+				ui.navigation.goTo(user.contact ? 'contacts' : 'login', null, true);
 		}, 'input,listScroll');
-		ui.swipe('locations', function (dir, event) {
+		ui.swipe('contacts', function (dir) {
 			if (dir == 'left')
-				ui.navigation.openSwipeLeftUI(event);
+				ui.navigation.goTo('home');
 			else if (dir == 'right')
-				lists.removeListEntryUI(event);
+				ui.navigation.goTo('locations', null, true);
+		}, 'input,listScroll');
+		ui.swipe('locations', function (dir) {
+			if (dir == 'left')
+				ui.navigation.goTo('contacts');
+			else if (dir == 'right')
+				ui.navigation.goTo('whatToDo', null, true);
+		}, 'input,listScroll,map');
+		ui.swipe('whatToDo', function (dir) {
+			if (dir == 'left')
+				ui.navigation.goTo('locations');
+			else if (dir == 'right')
+				ui.navigation.goTo('home', null, true);
 		}, 'input,listScroll,map');
 		ui.swipe('info', function (dir) {
-			if (dir == 'left')
-				pageLogin.goToRegister();
+			if (dir == 'left' && !user.contact)
+				ui.navigation.goTo('login');
 			else if (dir == 'right')
-				pageLogin.goToRegister();
+				ui.navigation.goTo('home', null, true);
 		}, 'textarea');
 		ui.swipe('alert', function (dir) {
 			if (dir == 'up')
@@ -257,7 +284,7 @@ class initialisation {
 			}
 			ui.css('main', 'margin-left', (-w / 2) + 'px');
 			ui.css('main', 'width', w + 'px');
-			ui.classRemove('main', 'app');
+			ui.classRemove('body', 'app');
 			ui.attr('#imgStoreApple', 'src', 'images/storeApple.png');
 			ui.attr('#imgStoreGoogle', 'src', 'images/storeGoogle.png');
 		} else {
@@ -269,7 +296,7 @@ class initialisation {
 				f *= user.scale;
 			ui.css('main', 'margin-left', 0);
 			ui.css('main', 'width', '');
-			ui.classAdd('main', 'app');
+			ui.classAdd('body', 'app');
 		}
 		ui.css('body', 'font-size', f + 'px');
 		ui.emInPX = parseFloat(initialisation.getStyle(document.body, 'font-size'));

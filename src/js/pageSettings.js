@@ -338,7 +338,6 @@ class pageSettings {
 						ui.css(ui.q('#settingsInterest3').nextElementSibling, 'display', 'none');
 					pageSettings.init2();
 					pageSettings.currentSettings = pageSettings.getCurrentSettingsString();
-					pageHome.initHomeImage();
 					if (exec)
 						exec.call()
 					ui.q('settings3').innerHTML = pageSettings.templateSettings3(v);
@@ -399,7 +398,6 @@ class pageSettings {
 				success(r) {
 					user.contact.image = r['contact.image'];
 					user.contact.imageList = r['contact.imageList'];
-					pageHome.initHomeImage();
 				}
 			});
 		}
@@ -495,7 +493,7 @@ class pageSettings {
 			for (var i = 0; i < ui.categories.length; i++)
 				user.contact['attr' + i + 'Ex'] = ui.q('#CONTACTATTRIB' + i).getAttribute('valueEx');
 			bluetooth.reset();
-			ui.html('whattodo', '');
+			ui.html('whatToDo', '');
 			pageWhatToDo.init();
 		});
 	}

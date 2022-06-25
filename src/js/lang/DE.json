@@ -469,7 +469,7 @@
 			"bluetoothDescriptionBrowser": "<b>Bluetooth Matching</b><br/>Sobald Du unsere App installiert hast, kannst Du über Bluetooth Matching passende Buddies in Deiner unmittelbaren Umgebung finden.<br/>Der Browser ist noch zu blöd, der kann kein Bluetooth.",
 			"bluetoothDescriptionOff": "<b>Bluetooth Matching</b><br/>Dein Bluetooth ist ausgeschaltet. Aktiviere es, um Bluetooth Matching zu starten.",
 			"chatDescription": "<b>Chats</b><br/>Nach dem Einloggen siehst Du hier die Liste der Buddies, mit denen Du bereits gechattet hast.",
-			"contacts": "<b>Vernetzen</b><br/>Wir matchen Benutzer nach folgenden Kriterien, die Du in Deinen Einstellungen angeben kannst:<ul><li>Attribute, die Du an anderen schätzt</li><li>Alter</li><li>Geschlecht</li><li>Budget</li></ul>Logge Dich ein und Du siehst hier Buddies in Deiner Umgebung die ähnliche Interessen haben.",
+			"contacts": "<b>Vernetzen</b><br/>Wir matchen Benutzer nach folgenden Kriterien, die Du in Deinen Einstellungen angeben kannst:<ul><li>Attribute, die Du an anderen schätzt</li><li>Alter</li><li>Geschlecht</li><li>Budget</li></ul>",
 			"detail": "Die Datailseite enthält<ul><li>Kontaktdaten</li><li>Beschreibung der Location</li><li>Erreichbarkeit der Location</li><li>Kartenansicht</li><li>diverse Schaltflächen um z.B. Locations zu Deinen Favoriten hinzuzufügen</li></ul>",
 			"home": "Manchmal möchte man aus dem Trott raus, Neues entdecken. ${appTitle} hilft<ul><li>dass Buddies mit <b>gleichen Interessen</b>, z.B. Hundeliebhaber oder Konzertgänger, sich finden</li><li>man durch <b>Guides</b> neue Locations und Events kennenlernt</li></ul>Dabei gehen wir wie folgt vor...",
 			"homeImage": "Setze Dein Profilbild, eine kurze Selbstbeschreibung und andere Infos in den Einstellungen.",
@@ -482,9 +482,9 @@
 			"menuOpen": "Du bist hier wieder in der Liste und kannst durch einen Klick hier das Auswahlmenü wieder öffnen.",
 			"open": "Intro starten...",
 			"register": "Nach der Registrierung zeigen wir Dir, wie Du Dein Profil individualisieren kannst. Lieben Dank dass Du Dir die Zeit für die Intro genommen hast.",
-			"settings": "<b>spontify.me</b><br/>Bist Du ab und an auf der Suche nach mehr Spontanität in Deinem Leben? Zum Beispiel wenn:<ul><li>Deine Freunde leider keine Zeit haben, Du aber trotzdem etwas unternehmen möchtest</li><li>Du beruflich oder privat in einer fremden Stadt bist</li><li>Du gerne Events organisierst, zu denen sich neue Leute zu Dir und Deinen Freunden gesellen dürfen</li></ul>Für solche Fälle ist spontify.me die richtige App für Dich. Wir versuchen unser bestes, hier Freundschaften und Spontanität entstehen zu lassen und Sexanfragen oder Ähnliches zu unterdrücken.",
+			"settings": "<b>spontify.me</b><br/>Möchtest Du mehr Spontanität in Deinem Leben? Zum Beispiel wenn:<ul><li>Deine Freunde leider keine Zeit haben, Du aber trotzdem etwas unternehmen möchtest</li><li>Du beruflich oder privat in einer fremden Stadt bist</li><li>Du gerne Events organisierst, zu denen sich neue Leute zu Dir und Deinen Freunden gesellen dürfen</li></ul>Für solche Fälle ist spontify.me die richtige App für Dich. Wir versuchen unser bestes, hier Freundschaften und Spontanität entstehen zu lassen und Sexanfragen oder Ähnliches zu unterdrücken.",
 			"settingsLoggedIn": "<ul><li>Ändere hier Dein Profilbild und gib weitere, allgemeine Infos an</li><li>Ein Wisch nach links und Du kannst Dich über diverse Attribute selbst beschreiben und angeben, was Du an anderen Menschen magst</li></ul>",
-			"whattodo": "<b>Heute schon was vor?</b><br/>Möchtest Du spontan etwas unternehmen?<br/><br/>Im Gegensatz zu Events kannst Du hier angeben, was Du gerne heute machen möchtest, z.B. Essen gehen oder ein Museen besuchen, etc.<br/><br/>Die Aktivität wird Buddies, die zu Dir passen und nicht weiter als 50 KM entfernt sind, angezeigt. Nach spätestens 24 Stunden ist die Aktivität wieder gelöscht."
+			"whatToDo": "<b>Heute schon was vor?</b><br/>Möchtest Du spontan etwas unternehmen?<br/><br/>Im Gegensatz zu Events kannst Du hier angeben, was Du gerne heute machen möchtest, z.B. Essen gehen oder ein Museen besuchen, etc.<br/><br/>Die Aktivität wird Buddies, die zu Dir passen und nicht weiter als 50 KM entfernt sind, angezeigt. Nach spätestens 24 Stunden ist die Aktivität wieder gelöscht."
 		},
 		"landing": {
 			"block1Title": "Wie sieht der Alltag ohne ${appTitle} aus?",
@@ -617,7 +617,7 @@
 			"events": "Hier werden sowohl offizielle Events von Location Betreibern, als auch privat organisierte Events von ${appTitle} Nutzern gelistet. Du kannst auch Events einstellen, in dem Du z.B. einen Tisch im Deinen Lieblingsrestaurant reservierst.",
 			"search": "Keine Ergebnisse gefunden.",
 			"profile": "Dein Profil wurde noch nicht angeklickt. Möchtest Du es attraktiver gestallten?{1}",
-			"whattodo": "Keine {0} zu Deinem Vorhaben gefunden.${noResults.openSettings}",
+			"whatToDo": "Keine {0} zu Deinem Vorhaben gefunden.${noResults.openSettings}",
 			"searchWithoutKeywords": "Du hast nach Schlagwörtern gesucht. Möchtest Du Deine Suche ohne Schlagwörter wiederholen?",
 			"repeat": "Ohne Schlagwörter wiederholen"
 		},

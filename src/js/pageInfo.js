@@ -57,10 +57,7 @@ class pageInfo {
 	<div style="text-align:center;color:white;padding-top:2em;">© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>
 </div>`;
 	static templateAbout = v =>
-		global.template`<landingsubtitle onclick="pageInfo.toggleInfoBlock(&quot;${v.parent} #landing0&quot;, event)" style="padding-top:0;">
-	${ui.l('appSubTitle')}
-</landingsubtitle>
-<landingblock id="landing0">
+		global.template`<landingblock id="landing0">
 	<landingsubject style="padding-top:0;">${ui.l('landing.block1Title')}</landingsubject>
 	<ul>
 		<li>${ui.l('landing.block1_1')}</li>
@@ -76,7 +73,7 @@ class pageInfo {
 		<li>${ui.l('landing.block3_1')}</li>
 		<li>${ui.l('landing.block3_2')}</li>
 	</ul>
-	<a style="margin:2em 0 1em 0;color:rgb(0,94,160);display:block;cursor:pointer;${v['displayBlogButton']}" onclick="ui.navigation.openHTML(&quot;https://blog.findapp.online&quot;, &quot;blog_findapp&quot;)">${ui.l('info.link2blog')}</a>
+	<a style="margin:2em 0 1em 0;color:rgb(0,94,160);display:block;cursor:pointer;${v['displayBlogButton']}" onclick="ui.navigation.openHTML(&quot;https://blog.spontify.me&quot;, &quot;blog_spontifyme&quot;)">${ui.l('info.link2blog')}</a>
 </landingblock>
 <landingsubtitle onclick="pageInfo.toggleInfoBlock(&quot;${v.parent} #landing3&quot;, event);">
 	${ui.l('faq.title')}
