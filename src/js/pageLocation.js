@@ -21,6 +21,8 @@ class pageLocation {
 		markerLocation: null,
 		markerMe: null,
 		scrollTop: -1,
+		svgLocation: null,
+		svgMe: null,
 		timeout: null
 	};
 	static templateList = v =>
@@ -48,7 +50,7 @@ class pageLocation {
 	</detailImg>
 	<action>
 		<buttonIcon onclick="pageChat.open(${v.id},true)"><img src="images/chat.svg"/></buttonIcon>
-		<buttonIcon class="iconFavorite${v.favorite}" idFav="${v.locationFavorite.id ? v.locationFavorite.id : ''}" fav="${v.locationFavorite.favorite ? true : ''}" name="buttonFavorite" onclick="pageLocation.toggleFavorite(${v.id})"><img src="images/favorite.svg" onload="formFunc.image.svgInject(this)"/></buttonIcon>
+		<buttonIcon class="iconFavorite${v.favorite}" idFav="${v.locationFavorite.id ? v.locationFavorite.id : ''}" fav="${v.locationFavorite.favorite ? true : ''}" name="buttonFavorite" onclick="pageLocation.toggleFavorite(${v.id})"><img source="favorite.svg" /></buttonIcon>
 		<matchIndicator${v.matchIndicatorClass}>
 			<svg viewBox="0 0 36 36">
 				<path class="circle-bg" d="M18 2.0845
@@ -88,7 +90,7 @@ ${v.description}
 		onclick="pageChat.doCopyLink(event,&quot;${v.isEvent ? 'e' : 'l'}=${v.id}&quot;)">${ui.l('share')}</buttontext>
 	<buttontext class="bgColor${v.hideMeEvents}" name="buttonEvents"
 		onclick="pageLocation.event.toggle(${v.locID})">${ui.l('events.title')}</buttontext>
-	<buttontext class="bgColor" name="buttonWhattodo"
+	<buttontext class="bgColor" name="buttonWhatToDo"
 		onclick="pageLocation.toggleWhatToDo(${v.id})">${ui.l('wtd.location')}</buttontext>
 	<buttontext class="bgColor${v.hideMeMarketing}" name="buttonMarketing"
 		onclick="ui.navigation.openHTML(&quot;${global.server}locOwner?id=${v.id}&quot;,&quot;locOwn&quot;)">${ui.l('locations.marketing')}</buttontext>
@@ -98,7 +100,7 @@ ${v.description}
 		onclick="ui.navigation.openHTML(&quot;https://google.com/search?q=${encodeURIComponent(v.name + ' ' + v.town)}&quot;)">Google</buttontext>
 </detailButtons>
 <text name="events" class="collapsed" ${v.urlNotActive}></text>
-<text name="whattodo" class="collapsed">
+<text name="whatToDo" class="collapsed">
 	<detailTogglePanel>
 		<div style="margin-bottom:1.5em;">${ui.l('wtd.time')}<br/>
 			<input type="time" id="messageTimeDetail" placeholder="HH:MM" class="whatToDoTime" value="${v.wtdTime}" />
@@ -578,7 +580,15 @@ ${v.hint}
 				url: global.server + 'action/map?source=' + geoData.latlon.lat + ',' + geoData.latlon.lon + '&destination=' + v.latitude + ',' + v.longitude,
 				progressBar: false,
 				success(r) {
-					ui.attr('[i="' + v.id + '"] img.map', 'src', 'data:image/png;base64,' + r);
+					var x = 0, f = function () {
+						if (x++ > 20)
+							return;
+						if (!ui.q('[i="' + v.id + '"] img.map'))
+							setTimeout(f, 100);
+						else
+							ui.attr('[i="' + v.id + '"] img.map', 'src', 'data:image/png;base64,' + r);
+					};
+					f.call();
 				}
 			});
 		}
@@ -1116,7 +1126,7 @@ ${v.hint}
 					e = ui.q('detail');
 				var field = e.getAttribute('type');
 				communication.ajax({
-					url: global.server + 'db/list?query=event_list&search=' + encodeURIComponent('event.' + field.substring(0, field.length - 1) + 'Id=' + id),
+					url: global.server + 'db/list?query=event_list&search=' + encodeURIComponent('event.' + field + 'Id=' + id),
 					responseType: 'json',
 					success(r) {
 						pageLocation.event.toggleInternal(r, id, field);
@@ -1333,8 +1343,41 @@ ${v.hint}
 	static init() {
 		if (!ui.q('locations').innerHTML)
 			lists.setListDivs('locations');
-		if (!ui.q('locations listResults row') && ui.cssValue('menu', 'transform').indexOf('1') < 0)
-			ui.navigation.toggleMenu('locations');
+		if (!ui.q('locations listResults row')) {
+			var e = ui.q('menu');
+			if (ui.cssValue(e, 'transform').indexOf('1') > 0) {
+				if (e.getAttribute('type') != 'locations') {
+					ui.on('menu', 'transitionend', function () {
+						ui.navigation.toggleMenu('locations');
+					}, true);
+					setTimeout(function () { e.style.transform = 'scale(0)'; }, 10);
+				}
+			} else
+				ui.navigation.toggleMenu('locations');
+		}
+		if (!pageLocation.map.svgLocation)
+			communication.ajax({
+				url: '/images/location.svg',
+				success(r) {
+					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
+					e.setAttribute('fill', 'rgb(246, 255, 187)');
+					e.setAttribute('stroke', 'black');
+					e.setAttribute('stroke-width', '10');
+					pageLocation.map.svgLocation = 'data:image/svg+xml;base64,' + btoa(e.outerHTML);
+				}
+			});
+		if (!pageLocation.map.svgMe)
+			communication.ajax({
+				url: '/images/contact.svg',
+				success(r) {
+					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
+					e.setAttribute('fill', 'rgb(246, 255, 187)');
+					e.setAttribute('stroke', 'black');
+					e.setAttribute('stroke-width', '10');
+					pageLocation.map.svgMe = 'data:image/svg+xml;base64,' + btoa(e.outerHTML);
+				}
+			});
+
 	}
 	static isInPosition(position, angle) {
 		for (var e in position) {
@@ -1614,8 +1657,33 @@ ${v.hint}
 		} else
 			pageLocation.map.canvas = new google.maps.Map(document.getElementsByTagName("map")[0],
 				{ zoom: zoom, center: new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon), mapTypeId: google.maps.MapTypeId.ROADMAP });
-		pageLocation.map.markerMe = new google.maps.Marker({ map: pageLocation.map.canvas, title: d.name, contentString: '', icon: 'images/contact.svg', position: new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon) });
-		pageLocation.map.markerLocation = new google.maps.Marker({ map: pageLocation.map.canvas, title: d.name, contentString: '', icon: 'images/location.svg', position: new google.maps.LatLng(d.latitude, d.longitude) });
+		pageLocation.map.markerMe = new google.maps.Marker(
+			{
+				map: pageLocation.map.canvas,
+				title: d.name,
+				contentString: '',
+				icon: {
+					url: pageLocation.map.svgMe,
+					scaledSize: new google.maps.Size(60, 60),
+					origin: new google.maps.Point(0, 0),
+					anchor: new google.maps.Point(30, 60),
+					fillColor: '#F6FFBB'
+				},
+				position: new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon)
+			});
+		pageLocation.map.markerLocation = new google.maps.Marker(
+			{
+				map: pageLocation.map.canvas,
+				title: d.name, contentString: '',
+				icon: {
+					url: pageLocation.map.svgLocation,
+					scaledSize: new google.maps.Size(60, 60),
+					origin: new google.maps.Point(0, 0),
+					anchor: new google.maps.Point(30, 60),
+					fillColor: '#F6FFBB'
+				},
+				position: new google.maps.LatLng(d.latitude, d.longitude)
+			});
 	}
 	static selectFriend(c) {
 		ui.classRemove('.locationToFriend.selected', 'selected');
@@ -1695,13 +1763,12 @@ ${v.hint}
 			if (ui.cssValue('map', 'display') == 'none') {
 				ui.css('locations listBody', 'margin-top', '20em');
 				ui.css('locations listBody', 'padding-top', '0.5em');
-				ui.css('locations listHeader', 'box-shadow', '0 0 1em rgba(0, 0, 0, 0.3)');
 			} else {
 				ui.css('locations listBody', 'margin-top', '');
 				ui.css('locations listBody', 'padding-top', '');
-				ui.css('locations listHeader', 'box-shadow', '');
 			}
 			ui.toggleHeight('map', pageLocation.scrollMap);
+			lists.toggleFilter();
 			pageLocation.map.scrollTop = -1;
 			pageLocation.map.id = -1;
 			return;
@@ -1725,6 +1792,6 @@ ${v.hint}
 		});
 	}
 	static toggleWhatToDo(id) {
-		details.togglePanel(ui.q('detail[i="' + id + '"] [name="whattodo"]'));
+		details.togglePanel(ui.q('detail[i="' + id + '"] [name="whatToDo"]'));
 	}
 }

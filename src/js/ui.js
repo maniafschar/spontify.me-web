@@ -15,7 +15,6 @@ import { pageSearch } from './pageSearch';
 import { pageSettings } from './pageSettings';
 import { user } from './user';
 import { FastButton } from './fastbutton';
-import { Contact, model } from './model';
 
 export { ui, formFunc };
 
@@ -63,14 +62,12 @@ class ui {
 	</a>
 </container>`;
 	static templateLanding = v =>
-		global.template`<img src="images/splash.svg"/>
-		<landingtitle>spontify.me</landingtitle>
+		global.template`<img src="images/logo.svg" style="width:40%;margin-bottom:2em;cursor:pointer;" onclick="pageInfo.toggleInfoBlock(&quot;descbox #landing0&quot;, event)"/>
 		${v.infoAbout}
-		<landingsubtitle onclick="intro.openIntro()">${ui.l('intro.open')}</landingsubtitle>
 		<landingimages>
-		<img onclick="ui.navigation.openHTML(&quot;https://play.google.com/store/apps/details?id=com.jq.findapp&quot;)"
+		<img onclick="ui.navigation.openHTML(&quot;https://play.google.com/store/apps/details?id=com.jq.spontifyme&quot;)"
 		src="images/storeGoogle.png" />
-		<img onclick="ui.navigation.openHTML(&quot;https://itunes.apple.com/de/app/id1508097300&quot;)"
+		<img onclick="ui.navigation.openHTML(&quot;https://itunes.apple.com/de/app/id1630967898&quot;)"
 		src="images/storeApple.png" />
 		</landingimages>`;
 	static addFastButton(id) {
@@ -194,6 +191,8 @@ class ui {
 	static navigation = {
 		animationEvent: null,
 		lastID: null,
+		lastNavigation: null,
+		lastPopup: null,
 
 		animation(e, c, exec) {
 			if (typeof e == 'string')
@@ -244,16 +243,14 @@ class ui {
 					var o = function (r) {
 						if (!r)
 							return;
-						var s, title, type;
+						var s, type;
 						if (idIntern.indexOf('l') == 0 || idIntern.indexOf('e') == 0) {
 							s = pageLocation.detailLocationEvent(r, idIntern.substring(2));
-							title = r['location.name'];
-							type = 'locations';
+							type = 'location';
 						}
 						else {
 							s = pageContact.detail(r, idIntern.substring(2));
-							title = r['contact.pseudonym'];
-							type = 'contacts';
+							type = 'contact';
 						}
 						if (id.indexOf('='))
 							id = id.substring(id.indexOf('=') + 1);
@@ -273,34 +270,11 @@ class ui {
 		},
 		fade(id, back, exec) {
 			var oldID = ui.navigation.getActiveID();
-			if (oldID == 'notifications')
-				oldID = 'whattodo';
 			var currentDiv = ui.q(id);
 			var oldDiv = ui.q(oldID);
-			if (id == 'whattodo' && ui.q('notifications listResults') && ui.cssValue('whattodobody', 'display') == 'none')
-				ui.css('notifications', 'display', 'block');
-			if (oldID == 'home' || id == 'home') {
-				if (oldID == 'home')
-					ui.css(currentDiv, 'display', 'block');
-				ui.navigation.animation('home', 'homeSlide' + (id == 'home' ? 'In' : 'Out'), function () {
-					ui.css('home', 'display', id == 'home' ? 'block' : 'none');
-					ui.css(oldDiv, 'display', 'none');
-					if (exec)
-						exec.call();
-				});
-				return;
-			}
-			var o;
-			if (back || oldID == 'detail')
-				o = id == 'login' ? 'list' : 'detailBack';
-			else if (id == 'detail' || id == 'settings2' && oldID == 'settings' || id == 'settings3')
-				o = 'detail';
-			else
-				o = 'list';
+			var o = back ? 'detailBack' : 'detail';
 			ui.classAdd(currentDiv, o + 'SlideIn');
 			ui.css(currentDiv, 'display', 'block');
-			if (ui.q('main.app') && (id == 'locations' || id == 'contacts'))
-				ui.css('main', 'overflow', 'visible');
 			ui.navigation.animation('content', o + 'SlideOut', function () {
 				var e = ui.q('main');
 				ui.css(e, 'overflow', '');
@@ -331,7 +305,7 @@ class ui {
 				e = ui.q('content>.content:not([style*="none"])');
 			if (e)
 				id = e.nodeName.toLowerCase();
-			if (id == 'whattodo' && ui.q('notifications:not([style*="none"])'))
+			if (id == 'whatToDo' && ui.q('notifications:not([style*="none"])'))
 				id = 'notifications';
 			if (id == 'home' && ui.cssValue(id, 'display') == 'none')
 				ui.css(id, 'display', 'block');
@@ -355,24 +329,28 @@ class ui {
 			}
 		},
 		goTo(id, event, back) {
+			if (event)
+				event.stopPropagation();
+			if (ui.classContains('content', 'animated'))
+				return;
+			var oldID = ui.navigation.getActiveID();
 			if (!user.contact && id != 'home' && id != 'info') {
-				if (id == 'whattodo' || id == 'locations' || id == 'contacts' || id == 'settings' && !event) {
-					intro.openHint({ desc: id, pos: '10%,5em', size: '80%,auto', onclick: 'ui.navigation.goTo("login")' });
+				if (id == 'whatToDo' || id == 'locations' || id == 'contacts' || id == 'settings' && !event) {
+					intro.openHint({ desc: id, pos: '10%,5em', size: '80%,auto', onclick: 'ui.navigation.goTo("login",null,true)' });
 					return;
 				}
 				var timestamp = ui.q('hint').getAttribute('timestamp');
 				if (timestamp && new Date().getTime() - timestamp < 500)
 					return;
 				id = 'login';
+				if (oldID != 'info')
+					back = true;
 			}
 			geoData.headingClear();
-			if (ui.classContains('content', 'animated') || ui.classContains('menu', 'animated') || pageChat.close())
-				return;
 			if (document.activeElement)
 				document.activeElement.blur();
 			if (!intro.introMode)
 				intro.closeIntro();
-			var oldID = ui.navigation.getActiveID();
 			if (oldID == 'settings' && !pageSettings.save(id))
 				return;
 			if (!user.contact && oldID == 'login')
@@ -391,23 +369,18 @@ class ui {
 				pageContact.init();
 			else if (id == 'locations')
 				pageLocation.init();
-			else if (id == 'whattodo') {
+			else if (id == 'whatToDo')
 				pageWhatToDo.init();
-				if (oldID == 'notifications') {
-					pageWhatToDo.closeNotifications();
-					return;
-				}
-			} else if (id == 'search')
+			else if (id == 'search')
 				pageSearch.init();
+			ui.navigation.lastNavigation = back && id != 'home' && oldID != 'detail';
 			pageChat.closeList();
-			if (event)
-				event.stopPropagation();
 			ui.navigation.hidePopup();
 			ui.css('main>buttonIcon', 'display', id == 'home' ? 'none' : '');
 			var s = id;
 			if (s == 'detail' && oldID == 'notifications')
-				s = 'whattodo';
-			else if (s != 'whattodo' && s != 'locations' && s != 'contacts' && s != 'whattodo' && s != 'login' && s != 'info' && s != 'search' && s.indexOf('settings') < 0)
+				s = 'whatToDo';
+			else if (s != 'whatToDo' && s != 'locations' && s != 'contacts' && s != 'whatToDo' && s != 'login' && s != 'info' && s != 'search' && s.indexOf('settings') < 0)
 				s = oldID;
 			if (oldID != id) {
 				ui.navigation.fade(id, back);
@@ -423,6 +396,7 @@ class ui {
 					e.click();
 				else
 					ui.navigation.animation(ui.q('popup'), 'popupSlideOut', ui.navigation.hidePopupHard);
+				ui.navigation.lastPopup = null;
 				return true;
 			}
 			return false;
@@ -463,10 +437,10 @@ class ui {
 				return false;
 			if (global.isBrowser() && location.href.indexOf('#') < 0)
 				history.pushState(null, null, '#x');
-			var t = pt ? pt.innerText : null;
-			if (t && t == title)
+			if (visible && ui.navigation.lastPopup == title + '\u0015' + data)
 				ui.navigation.hidePopup();
 			else if (data) {
+				ui.navigation.lastPopup = title + '\u0015' + data;
 				if (data.indexOf('<d') != 0 && data.indexOf('<f') != 0)
 					data = '<div style="text-align:center;padding:1em;">' + data + '</div>';
 				data = '<popupContent ts="' + new Date().getTime() + '">' + data + '</popupContent>';
@@ -506,16 +480,14 @@ class ui {
 			formFunc.initFields('popup');
 		},
 		toggleMenu(activeID) {
-			if (!activeID) {
+			if (!activeID)
 				activeID = ui.navigation.getActiveID();
-				if (activeID == 'notifications')
-					activeID = 'whattodo';
-			}
 			var e = ui.q('menu');
 			if (activeID == 'locations')
 				ui.html(e, ui.templateMenuLocation());
 			else if (activeID == 'contacts')
 				ui.html(e, ui.templateMenuContacts());
+			e.setAttribute('type', activeID);
 			ui.addFastButton('menu');
 			ui.classAdd(ui.qa('menu a')[parseInt(ui.q(activeID).getAttribute('menuIndex'))], 'menuHighlight');
 			ui.css(e, 'transform', e.style.transform.indexOf('1') > 0 ? 'scale(0)' : 'scale(1)')
@@ -668,7 +640,7 @@ class ui {
 		ui.x(e, function (e2) {
 			value = window.getComputedStyle(e2, null).getPropertyValue(css);
 		});
-		return value;
+		return value ? value : '';
 	}
 	static html(e, value) {
 		ui.x(e, function (e2) {
@@ -1069,14 +1041,21 @@ class formFunc {
 			ctx.drawImage(image, x, y, wOrg, hOrg, 0, 0, w, h);
 			return { data: canvas.toDataURL('image/jpeg', 0.8), width: parseInt(w + 0.5), height: parseInt(h + 0.5) };
 		},
+		replaceSVGs() {
+			var imgs = ui.qa('img[source]');
+			if (imgs)
+				for (var i = 0; i < imgs.length; i++)
+					formFunc.image.svgInject(imgs[i]);
+		},
 		svgInject(img) {
 			communication.ajax({
-				url: img.src,
+				url: '/images/' + img.getAttribute('source'),
 				success(r) {
 					var parser = new DOMParser();
 					var xmlDoc = parser.parseFromString(r, "text/xml");
 					var svg = xmlDoc.getElementsByTagName('svg')[0];
-					img.parentNode.replaceChild(svg, img);
+					if (img && img.parentNode)
+						img.parentNode.replaceChild(svg, img);
 				}
 			});
 		},

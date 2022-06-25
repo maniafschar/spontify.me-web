@@ -11,7 +11,7 @@ export { details };
 
 class details {
 	static getNextNavElement(next, id) {
-		var activeID = ui.q(ui.navigation.getActiveID()).getAttribute('type');
+		var activeID = ui.q(ui.navigation.getActiveID()).getAttribute('list');
 		if (activeID == 'contacts' || activeID == 'locations' || activeID == 'search') {
 			var e = ui.q(activeID + ' [i="' + id + '"]');
 			if (e) {
@@ -52,10 +52,14 @@ class details {
 						}
 						ui.html(l, r);
 						ui.attr(l, 'i', id);
-						ui.attr(l, 'type', activeID);
+						if (activeID != 'detail') {
+							ui.attr(l, 'list', activeID);
+							ui.attr(l, 'type', action.indexOf('contact_') ? 'contact' : 'location');
+						}
 						if (activeID != 'detail')
 							ui.navigation.goTo('detail');
 						formFunc.initFields('detail');
+						formFunc.image.replaceSVGs();
 						if (animate)
 							ui.navigation.animation(l, 'homeSlideIn');
 						l.scrollTop = 0;
@@ -126,12 +130,12 @@ class details {
 			details.openDetailNav(true, e);
 	}
 	static swipeRight() {
-		ui.navigation.goTo(ui.q('detail').getAttribute('type'));
+		ui.navigation.goTo(ui.q('detail').getAttribute('list'), null, true);
 	}
 	static togglePanel(d) {
 		var path = ui.parents(d, 'popup') ? 'popup detail ' : 'detail ';
-		var panelName = d.getAttribute('name').replace('button', '').toLowerCase();
-		var divID = path + '[name="' + panelName + '"]';
+		var panelName = d.getAttribute('name').replace('button', '');
+		var divID = path + '[name="' + panelName.substring(0, 1).toLowerCase() + panelName.substring(1) + '"]';
 		var open = ui.classContains(divID, 'collapsed');
 		var e = ui.qa(path + 'text[name]');
 		var buttons = ui.q(path + 'detailButtons');

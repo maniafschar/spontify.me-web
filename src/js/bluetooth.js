@@ -71,7 +71,7 @@ class bluetooth {
 						blePeripheral.addCharacteristic(bluetooth.UUID_SERVICE, bluetooth.UUID_TX, blePeripheral.properties.WRITE, blePeripheral.permissions.WRITEABLE),
 						blePeripheral.addCharacteristic(bluetooth.UUID_SERVICE, bluetooth.UUID_RX, blePeripheral.properties.READ | blePeripheral.properties.NOTIFY, blePeripheral.permissions.READABLE),
 						blePeripheral.publishService(bluetooth.UUID_SERVICE),
-						blePeripheral.startAdvertising(bluetooth.UUID_SERVICE, 'findapp'),
+						blePeripheral.startAdvertising(bluetooth.UUID_SERVICE, 'spontifyme'),
 						blePeripheral.onWriteRequest(function (json) {
 							if (user.contact && user.contact.findMe) {
 								var id = bluetooth.decode(json.value);

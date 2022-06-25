@@ -22,36 +22,31 @@ class pageHome {
 			<img src="images/contact.svg" />
 		</buttonIcon>
 		<homeTitle onclick="ui.navigation.goTo(&quot;settings&quot;)">
-			<logo>
-				<span>sp</span>
-				<img src="images/location.svg" onload="formFunc.image.svgInject(this)" />
-				<span>ntify</span><last>me</last>
-			</logo>
-			<homeSubTitle>${ui.l('appSubTitle')}</homeSubTitle>
+			<img source="logo.svg" />
 		</homeTitle>
 	</homeHeader>
 	<homeBody>
-		<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;whattodo&quot;)" style="width:80%;">
-			<span class="homeWTD">${ui.l('wtd.todayIWant')}</span><img src="images/rocket.svg" onload="formFunc.image.svgInject(this)" />
+		<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;whatToDo&quot;)" style="width:80%;">
+			<span class="homeWTD">${ui.l('wtd.todayIWant')}</span><img source="rocket.svg" />
 		</buttontext><br/>
 		<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;locations&quot;)" style="width:70%;">
 			<badge name="badgeLocations" class="bgColor pulse">0</badge>
-			<span>${ui.l('locations.title') + global.separator + ui.l('events.title')}</span><img src="images/location.svg" onload="formFunc.image.svgInject(this)" />
+			<span>${ui.l('locations.title') + global.separator + ui.l('events.title')}</span><img source="location.svg" />
 		</buttontext><br/>
 		<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;contacts&quot;)" style="width:60%;">
 			<badge name="badgeContacts" class="bgColor pulse">0</badge>
-			<span>${ui.l('contacts.matching')}</span><img src="images/network.svg" onload="formFunc.image.svgInject(this)" />
+			<span>${ui.l('contacts.matching')}</span><img source="network.svg" />
 		</buttontext>
 	</homeBody>
 	<buttonIcon onclick="pageHome.openNotifications()" style="bottom:0;left:0;display:none;" class="pulse">
 		<badgeNotifications></badgeNotifications>
-		<img src="images/news.svg" onload="formFunc.image.svgInject(this)" />
+		<img source="news.svg" />
 	</buttonIcon>
-	<buttonIcon onclick="ui.navigation.goTo(&quot;info&quot;)" style="bottom:0;left:50%;margin-left:-2em;">
-		<img src="images/info.svg" onload="formFunc.image.svgInject(this)" />
+	<buttonIcon onclick="ui.navigation.goTo(&quot;info&quot;,event)" style="bottom:0;left:50%;margin-left:-2em;">
+		<img source="info.svg" />
 	</buttonIcon>
 	<buttonIcon onclick="bluetooth.toggle()" id="homeIconBluetooth" style="bottom:0;right:0;">
-		<img src="images/bluetooth.svg" onload="formFunc.image.svgInject(this)" />
+		<img source="bluetooth.svg" />
 	</buttonIcon>
 </div>`;
 	static init() {
@@ -59,35 +54,15 @@ class pageHome {
 		var contact = user.contact || new Contact();
 		if (e.innerHTML && e.getAttribute('loggedOn') == contact.id)
 			return;
-		var v = {};
-		v.username = contact.pseudonym ? contact.pseudonym : '';
-		v.oc = contact.id ? 'settings' : 'login';
-		v.lang = global.language;
-		e.innerHTML = pageHome.template(v);
+		e.innerHTML = pageHome.template({
+			lang: global.language
+		});
+		formFunc.image.replaceSVGs();
 		ui.attr(e, 'loggedOn', contact.id);
-		pageHome.initHomeImage();
 		ui.addFastButton('home');
 		formFunc.initFields('home');
 		initialisation.reposition();
 		ui.html('homeTown', geoData.currentTown);
-	}
-	static initHomeImage() {
-		var e = ui.qa('homeImage > img');
-		ui.css(e, 'padding', '');
-		if (user.contact) {
-			if (user.contact.image)
-				ui.attr(e, 'src', global.serverImg + user.contact.image);
-			else {
-				ui.attr(e, 'src', 'images/contact.svg');
-				ui.css(e, 'padding', '1em');
-			}
-			ui.classAdd(e, 'set');
-			ui.classAdd(e, 'bgColor');
-		} else {
-			ui.attr(e, 'src', 'images/splash.svg');
-			ui.classRemove(e, 'set');
-			ui.classRemove(e, 'bgColor');
-		}
 	}
 	static openLanguage() {
 		ui.navigation.openPopup(ui.l('langSelect'),

@@ -13,8 +13,8 @@ export { pageWhatToDo };
 
 class pageWhatToDo {
 	static template = v =>
-		global.template`<whattodotitle onclick="pageWhatToDo.open()"></whattodotitle>
-<div style="padding:0 1em;display:none;">
+		global.template`<whatToDoTitle onclick="pageWhatToDo.open()"></whatToDoTitle>
+<whatToDoInput style="display:none;">
 	<whatToDoDiv style="display:block;">
 	<value>
 		<input type="checkbox" value="0" name="wtdCategories" label="${ui.l('category0')}" ${v.checked0} />
@@ -48,7 +48,7 @@ class pageWhatToDo {
 			${ui.l('wtd.actionReset')}
 		</buttontext>
 	</div>
-</div>
+</whatToDoInput>
 <whatToDoLists>
 	<tabHeader style="max-width:94%;margin-left:3%;">
 		<tab class="tabActive" onclick="pageWhatToDo.onClickTab(event,&quot;Contacts&quot;)"
@@ -72,7 +72,7 @@ class pageWhatToDo {
 	static maxRadius = 50;
 	static resetCall = null;
 	static init() {
-		if (!ui.q('whattodo').innerHTML) {
+		if (!ui.q('whatToDo').innerHTML) {
 			communication.ajax({
 				url: global.server + 'db/list?query=contact_what2do',
 				responseType: 'json',
@@ -115,37 +115,17 @@ class pageWhatToDo {
 					} else
 						v.locDisp = 'none';
 					v[currentWtd.text ? 'msgButtonDisp' : 'msgBodyDisp'] = 'display:none;';
-					var f = null;
-					if (currentWtd.locationName) {
-						f = function () {
-							var e = ui.q('#whatToDoLocation');
-							var f = function (event) {
-								event.stopPropagation();
-								user.save({ messageLocationId: '' }, function () {
-									currentWtd.locationId = null;
-									ui.navigation.animation(e, 'homeSlideOut', function () {
-										ui.css(e, 'display', 'none');
-										ui.attr(e, 'remove', true);
-									});
-								});
-							};
-							ui.swipe(e, function (dir) {
-								if (dir == 'left' || dir == 'right')
-									f();
-							});
-						};
-					}
 					v.displayFacebookPublish = user.contact.facebookLink ? '' : 'display:none;';
 					v.date = global.date.formatDate(new Date(), 'weekdayLong');
 					v.date = global.date.getDateHint(new Date()).replace('{0}', v.date.substring(0, v.date.lastIndexOf(' ')));
-					ui.html('whattodo', pageWhatToDo.template(v));
+					ui.html('whatToDo', pageWhatToDo.template(v));
 					pageWhatToDo.initListButton();
 					if (ui.cssValue('whatToDoLists', 'display') != 'none') {
 						ui.css('#wtdListContacts', 'display', 'block');
 						pageWhatToDo.loadListContacts();
 					}
-					formFunc.initFields('whattodo');
-					ui.addFastButton('whattodo');
+					formFunc.initFields('whatToDo');
+					ui.addFastButton('whatToDo');
 				}
 			});
 		} else
@@ -203,31 +183,31 @@ class pageWhatToDo {
 		var b = pageWhatToDo.getCurrentMessage();
 		b = b && b.active;
 		ui.css('whatToDoLists', 'display', b ? '' : 'none');
-		ui.css('whattodo>div buttonText.reset', 'display', b ? '' : 'none');
+		ui.css('whatToDoInput buttonText.reset', 'display', b ? '' : 'none');
 		if (!b)
 			setTimeout(function () {
-				if (ui.cssValue('whattodo', 'display') != 'none' && ui.cssValue('whattodo>div', 'display') == 'none')
-					ui.toggleHeight('whattodo>div');
+				if (ui.cssValue('whatToDo', 'display') != 'none' && ui.cssValue('whatToDoInput', 'display') == 'none')
+					ui.toggleHeight('whatToDoInput');
 			}, 400);
 		b = pageWhatToDo.getDisplayMessage();
-		ui.html('whattodotitle', b);
+		ui.html('whatToDoTitle', b);
 		ui.html('home .homeWTD', b);
 	}
 	static listContact(r) {
 		var s = pageContact.listContactsInternal(r);
-		ui.html('#wtdListContacts', s ? s : lists.getListNoResults('contacts', 'whattodo'));
+		ui.html('#wtdListContacts', s ? s : lists.getListNoResults('contacts', 'whatToDo'));
 		if (s)
 			ui.addFastButton('#wtdListContacts');
 	}
 	static listEvents(r) {
 		var s = pageLocation.event.listEventsInternal(pageLocation.event.getCalendarList(r), new Date());
-		ui.html('#wtdListEvents', s ? s : lists.getListNoResults('events', 'whattodo'));
+		ui.html('#wtdListEvents', s ? s : lists.getListNoResults('events', 'whatToDo'));
 		if (s)
 			ui.addFastButton('#wtdListEvents');
 	}
 	static listLocation(r) {
 		var s = pageLocation.listLocationInternal(r);
-		ui.html('#wtdListLocations', s ? s : lists.getListNoResults('locations', 'whattodo'));
+		ui.html('#wtdListLocations', s ? s : lists.getListNoResults('locations', 'whatToDo'));
 		if (s)
 			ui.addFastButton('#wtdListLocations');
 	}
@@ -264,7 +244,7 @@ class pageWhatToDo {
 		}
 	}
 	static open() {
-		ui.toggleHeight('whattodo>div');
+		ui.toggleHeight('whatToDoInput');
 	}
 	static refresh() {
 		ui.html('#wtdListContacts', '');
@@ -303,7 +283,7 @@ class pageWhatToDo {
 		if (!ui.q('#messageTime').value)
 			formFunc.setError(ui.q('#messageTime'), 'wtd.noTimeEntered');
 		formFunc.validation.filterWords(ui.q('#messageText'));
-		if (ui.q('whattodo errorHint') && ui.q('whattodo errorHint').innerText)
+		if (ui.q('whatToDo errorHint') && ui.q('whatToDo errorHint').innerText)
 			return;
 		var cats = '';
 		for (var i = 0; i < e.length; i++)
@@ -350,9 +330,9 @@ class pageWhatToDo {
 				ui.q('#wtdListContacts').innerHTML = '';
 				ui.q('#wtdListLocations').innerHTML = '';
 				ui.q('#wtdListEvents').innerHTML = '';
-				if (ui.cssValue('whattodo', 'display') != 'none')
-					ui.toggleHeight('whattodo>div');
-				id = ui.q('whattodolists whattodolist[style*=block]').id;
+				if (ui.cssValue('whatToDo', 'display') != 'none')
+					ui.toggleHeight('whatToDoInput');
+				id = ui.q('whatToDolists whatToDolist[style*=block]').id;
 				if (id.indexOf('Contacts') > 0)
 					pageWhatToDo.loadListContacts();
 				else if (id.indexOf('Locations') > 0)
@@ -361,7 +341,7 @@ class pageWhatToDo {
 					pageWhatToDo.loadListEvents();
 				pageWhatToDo.initListButton();
 				if (postfix == 'Detail')
-					ui.html(ui.navigation.getActiveID() + ' [name="whattodo"] detailTogglePanel', ui.l('wtd.setStatusLocation'));
+					ui.html(ui.navigation.getActiveID() + ' [name="whatToDo"] detailTogglePanel', ui.l('wtd.setStatusLocation'));
 			}
 		});
 	}

@@ -41,7 +41,7 @@ class lists {
 		}
 		if (errorID == 'favorites')
 			s = s.replace('{1}', '<br/><br/><buttonIcon style="position:relative;left:50%;margin-left:-1.5em;"><img src="images/favorite.svg"/></buttonIcon><br/>');
-		else if (errorID == 'matches' || errorID == 'whattodo')
+		else if (errorID == 'matches' || errorID == 'whatToDo')
 			s = s.replace('{1}', '<br/><br/><buttontext onclick="pageSettings.open2()" class="bgColor">' + ui.l('Yes') + '</buttontext>');
 		else if (errorID == 'friends')
 			s = s.replace('{1}', '<br/><br/><buttontext class="bgColor">' + ui.l('contacts.relation') + '</buttontext><br/><br/>');
@@ -71,7 +71,7 @@ class lists {
 			ui.css(e, 'transform', 'scale(0)');
 	}
 	static removeListEntry(id) {
-		var activeID = ui.q('detail').getAttribute('type');
+		var activeID = ui.q('detail').getAttribute('list');
 		if (!activeID)
 			activeID = ui.navigation.getActiveID();
 		ui.attr(activeID + ' [i="' + id + '"]', 'remove', '1');
@@ -138,7 +138,7 @@ class lists {
 		ui.html('settings2', '');
 		ui.html('settings3', '');
 		ui.html('chat', '');
-		ui.html('whattodo', '');
+		ui.html('whatToDo', '');
 		ui.html('detail', '');
 		ui.html('notifications', '');
 		ui.html('info', '');

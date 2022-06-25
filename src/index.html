@@ -12,11 +12,11 @@
 	<meta name="keywords"
 		content="spontaneous, contact, bluetooth, social community, locations, events, buddies, chat, meet, organize events, party, dinner, guide" />
 	<meta http-equiv="Content-Security-Policy"
-		content="default-src * gap://ready file: https:; child-src * gap://ready file: https:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; script-src * 'unsafe-inline' 'unsafe-eval' file: https:" />
+		content="default-src * gap://ready file: https:; child-src * gap://ready file: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https:; script-src * 'unsafe-inline' 'unsafe-eval' file: https:" />
 	<meta name="robots" content="index,follow,noodp" />
 	<meta name="fragment" content="!" />
 	<meta name="google-site-verification" content="Sn53nvm_h2HJQo2WDjWXx9rjc0VRBKHTF1ohP1YuPX8" />
-	<meta name="apple-itunes-app" content="app-id=1508097300" />
+	<meta name="apple-itunes-app" content="app-id=1630967898" />
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="format-detection" content="telephone=no" />
 	<meta name="format-detection" content="date=no" />
@@ -24,8 +24,8 @@
 	<meta name="format-detection" content="email=no" />
 	<link rel="apple-touch-icon" href="https://spontify.me/icon.png">
 	<link rel="canonical" href="https://spontify.me/" />
-	<link rel="alternate" href="android-app://com.jq.findapp/https/findapp.online" />
-	<link rel="alternate" href="android-app://com.jq.findapp/findapp/*" />
+	<link rel="alternate" href="android-app://com.jq.spontifyme/https/spontify.me" />
+	<link rel="alternate" href="android-app://com.jq.spontifyme/spontifyme/*" />
 	<link rel="icon" type="image/x-icon" href="favicon.ico" />
 	<link rel="preload" as="style" href="css/style.css" />
 	<link rel="preload" as="script" href="js/fmg.js" />
@@ -50,23 +50,29 @@
 			justify-content: center;
 			align-items: center;
 			transition: all .5s;
-			color: white;
-			padding-top: 7vh;
 		}
 
-		preloader>logo {
-			animation: scaleOut 4s ease-in;
+		preloader>svg {
+			animation: scaleOut 3s ease-in;
+			width: 14em;
+		}
+
+		preloader>svg .claim {
+			display: none;
 		}
 
 		@keyframes scaleOut {
 			0% {
 				transform: scale(0);
-				opacity: 0.5;
+				opacity: 0;
+			}
+
+			40% {
+				opacity: 1;
 			}
 
 			100% {
-				transform: scale(4);
-				opacity: 1;
+				transform: scale(3);
 			}
 		}
 	</style>
@@ -74,12 +80,7 @@
 
 <body onload="initialisation.onLoad();">
 	<preloader class="mainBG">
-		<logo>
-			<span>sp</span>
-			<img src="images/location.svg" onload="formFunc.image.svgInject(this)" />
-			<span>ntify</span>
-			<last>me</last>
-		</logo>
+		<img source="logo.svg" />
 	</preloader>
 	<descbox onclick="ui.openDescription(event)" style="transform:scale(0);" class="mainBG"></descbox>
 	<add id="addLeft">
@@ -89,9 +90,9 @@
 	</add>
 	<add id="addRight">
 		<img id="imgStoreGoogle" style="margin-bottom:1em;"
-			onclick="ui.navigation.openHTML('https://play.google.com/store/apps/details?id=com.jq.findapp')" />
+			onclick="ui.navigation.openHTML('https://play.google.com/store/apps/details?id=com.jq.spontifyme')" />
 		<br />
-		<img id="imgStoreApple" onclick="ui.navigation.openHTML('https://itunes.apple.com/de/app/id1508097300')" />
+		<img id="imgStoreApple" onclick="ui.navigation.openHTML('https://itunes.apple.com/de/app/id1630967898')" />
 	</add>
 	<main style="display:none;" class="mainBG">
 		<progressbar style="display:none;">
@@ -102,8 +103,8 @@
 		</progressbar>
 		<popup style="display:none;"></popup>
 		<alert style="display:none;"></alert>
-		<home class="mainBG"></home>
 		<content>
+			<home class="mainBG"></home>
 			<login class="content"></login>
 			<locations class="content"></locations>
 			<contacts class="content"></contacts>
@@ -113,16 +114,17 @@
 			<settings class="content"></settings>
 			<settings2 class="content"></settings2>
 			<settings3 class="content" style="padding-top:0.5em;"></settings3>
-			<whattodo class="content"></whattodo>
+			<whatToDo class="content"></whatToDo>
 			<chat class="content mainBG"></chat>
 			<chatUserList style="display:none;"></chatUserList>
 		</content>
 		<buttonIcon onclick="pageChat.toggleUserList()" style="bottom:0;">
 			<badgeChats></badgeChats>
-			<img src="images/chat.svg" onload="formFunc.image.svgInject(this)" />
+			<img source="chat.svg" />
 		</buttonIcon>
-		<buttonIcon onclick="ui.navigation.goTo('home')" style="bottom:0;left:50%;margin-left:-2em;">
-			<img src="images/home.svg" onload="formFunc.image.svgInject(this)" />
+		<buttonIcon onclick="ui.navigation.goTo('home',null,!ui.navigation.lastNavigation)"
+			style="bottom:0;left:50%;margin-left:-2em;">
+			<img source="home.svg" />
 		</buttonIcon>
 		<hint></hint>
 		<menu style="transform:scale(0);"></menu>

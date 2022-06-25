@@ -45,7 +45,7 @@ class pageContact {
 	</detailImg>
 	<action>
 		<buttonIcon onclick="pageChat.open(${v.id})"><img src="images/chat.svg"/></buttonIcon>
-		<buttonIcon class="iconFavorite${v.favorite}" onclick="pageContact.toggleBlockUser(${v.id})"><img src="images/favorite.svg" onload="formFunc.image.svgInject(this)"/></buttonIcon>
+		<buttonIcon class="iconFavorite${v.favorite}" onclick="pageContact.toggleBlockUser(${v.id})"><img source="favorite.svg" /></buttonIcon>
 		<matchIndicator${v.matchIndicatorClass}>
 			<svg viewBox="0 0 36 36">
 				<path class="circle-bg" d="M18 2.0845
@@ -102,9 +102,8 @@ ${v.aboutMe}
 </text>
 <text name="events" class="collapsed"></text>
 <text name="groups" class="collapsed">
-	<detailTogglePanel><br /><buttontext onclick="pageContact.groups.addGroup(${v.id})"
-			class="bgColor" style="margin-top:1em;">${ui.l('group.newButton')}</buttontext>
-	</detailTogglePanel>
+	<detailTogglePanel></detailTogglePanel>
+	<buttontext onclick="pageContact.groups.addGroup(${v.id})" class="bgColor" style="margin-top:1em;">${ui.l('group.newButton')}</buttontext>
 </text>
 <text name="copy" class="collapsed">
 	<detailTogglePanel>${ui.l('copyLinkHint.contacts')}<br />
@@ -247,7 +246,7 @@ ${v.aboutMe}
 			success() {
 				ui.html('detail[i="' + id + '"] [name="block"] detailTogglePanel', ui.l('contacts.requestFriendship' + status.replace('2', '')));
 				communication.ping();
-				var e = ui.qa(ui.q('detail').getAttribute('type') + ' row[i="' + id + '"] badge');
+				var e = ui.qa(ui.q('detail').getAttribute('list') + ' row[i="' + id + '"] badge');
 				ui.html(e, '');
 				ui.css(e, 'display', 'none');
 				if (status == 'Friends') {
@@ -568,7 +567,7 @@ ${v.aboutMe}
 			});
 		},
 		saveGroup(id) {
-			var e = ui.q('[i="' + id + '"] [name="groups"] [name="name"]');
+			var e = ui.q('popup input[name="name"]');
 			if (!e.value)
 				return;
 			communication.ajax({
@@ -618,19 +617,19 @@ ${v.aboutMe}
 			}
 			var path = 'detail[i="' + id + '"] [name="groups"] detailTogglePanel';
 			var e = ui.q(path);
-			if (e.innerHTML.indexOf('<br') == 0) {
+			if (!e.innerHTML) {
 				if (!friendship) {
 					communication.ajax({
 						url: global.server + 'db/one?query=contact_listFriends&id=' + id,
 						responseType: 'json',
 						success(r) {
-							pageContact.groups.toggleGroups(id, r ? model.convert(new ContactLink(), r).status : -1);
+							pageContact.groups.toggleGroups(id, r ? model.convert(new ContactLink(), r).status : '');
 						}
 					});
 					return;
 				}
 				if (friendship != 'Friends') {
-					if (!e.innerHTML.substring(0, e.innerHTML.indexOf('<br>'))) {
+					if (!e.innerHTML) {
 						if (friendship != 'Terminated' && friendship != 'Terminated2')
 							e.innerHTML = ui.l('contacts.denyAddToGroup') + '<br/><buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + id + ')" style="margin-top:0.5em;">' + ui.l('contacts.requestFriendship') + '</buttontext>';
 						else
@@ -641,6 +640,7 @@ ${v.aboutMe}
 				}
 				e.innerHTML = user.contact.groups.replace(/<input/g, '<input onclick="pageContact.groups.addToGroup(event,' + id + ')"') + e.innerHTML;
 				formFunc.initFields(path);
+				ui.addFastButton('detail[i="' + id + '"] [name="groups"]');
 				communication.ajax({
 					url: global.server + 'db/list?query=contact_listGroupLink&search=' + encodeURIComponent('contactGroupLink.contactId2=' + id),
 					responseType: 'json',
@@ -662,8 +662,18 @@ ${v.aboutMe}
 	static init() {
 		if (!ui.q('contacts').innerHTML)
 			lists.setListDivs('contacts');
-		if (!ui.q('contacts listResults row') && ui.cssValue('menu', 'transform').indexOf('1') < 0)
-			ui.navigation.toggleMenu('contacts');
+		if (!ui.q('contacts listResults row')) {
+			var e = ui.q('menu');
+			if (ui.cssValue(e, 'transform').indexOf('1') > 0) {
+				if (e.getAttribute('type') != 'contacts') {
+					ui.on(e, 'transitionend', function () {
+						ui.navigation.toggleMenu('contacts');
+					}, true);
+					setTimeout(function () { e.style.transform = 'scale(0)'; }, 10);
+				}
+			} else
+				ui.navigation.toggleMenu('contacts');
+		}
 	}
 	static listContacts(l) {
 		if (!l || l.length < 2)

@@ -11,7 +11,7 @@ export { pageSearch };
 
 class pageSearch {
 	static templateSearch = v =>
-		global.template`<div style="padding:0 0.5em;">
+		global.template`<searchInput style="padding:0 0.5em;">
 	<field style="margin-bottom:0;">
 		<label>${ui.l('search.type')}</label>
 		<value>
@@ -73,7 +73,7 @@ class pageSearch {
 		<buttontext class="bgColor" onclick="pageSearch.saveSearch()" id="defaultButton">${ui.l('search.action')}</buttontext>
 	</dialogButtons>
 	<span class="error" style="text-align:center;display:block;padding:0 0 1em 0.5em;"></span>
-</div>`;
+</searchInput>`;
 	static getFilterFields() {
 		if (ui.q('search').getAttribute('type') == 'contacts')
 			return pageContact.getFilterFields();
@@ -81,14 +81,14 @@ class pageSearch {
 	}
 	static getSearchContact() {
 		var s = '', s2 = '';
-		if (ui.q('[name="searchMatchesOnly"]:checked'))
+		if (ui.q('searchInput contact [name="searchMatchesOnly"]:checked'))
 			s = pageSearch.getSearchMatchesContact();
-		var v = ui.q('[name="searchGender"]:checked');
+		var v = ui.q('searchInput [name="searchGender"]:checked');
 		if (v && v.checked)
 			s += ' and contact.gender=' + v.value;
-		if (ui.q('[name="searchGuide"]:checked'))
+		if (ui.q('searchInput [name="searchGuide"]:checked'))
 			s += ' and contact.guide=1';
-		v = ui.q('[name="searchAge"]').value;
+		v = ui.q('searchInput [name="searchAge"]').value;
 		if (v) {
 			v = v.split(',');
 			if (v[0] && v[0] > 18)
@@ -96,7 +96,7 @@ class pageSearch {
 			if (v[1] && v[1] < 99)
 				s += ' and contact.age<=' + v[1];
 		}
-		v = ui.val('[name="searchKeywords"]').trim();
+		v = ui.val('searchInput [name="searchKeywords"]').trim();
 		if (v) {
 			v = v.split(' ');
 			s += ' and (';
@@ -121,11 +121,11 @@ class pageSearch {
 	}
 	static getSearchLocation() {
 		var s = '';
-		if (ui.q('[name="searchMatchesOnly"]:checked'))
+		if (ui.q('searchInput location [name="searchMatchesOnly"]:checked'))
 			s = pageSearch.getSearchMatchesLocation();
 		var c = '', d = '';
 		var cats = [];
-		var e = ui.qa('[name="searchCategories"]:checked');
+		var e = ui.qa('searchInput [name="searchCategories"]:checked');
 		if (e) {
 			for (var i = 0; i < e.length; i++) {
 				cats.push(e[i].value);
@@ -138,7 +138,7 @@ class pageSearch {
 			for (var i = 0; i < ui.categories.length; i++)
 				cats.push(i);
 		}
-		var v = ui.val('[name="searchKeywords"]').trim();
+		var v = ui.val('searchInput [name="searchKeywords"]').trim();
 		if (v) {
 			v = v.split(' ');
 			for (var i = 0; i < v.length; i++) {
@@ -152,7 +152,7 @@ class pageSearch {
 						}
 					}
 					d += '(LOWER(location.name' + l + 'location.description' + l + 'location.address' + l + 'location.address2' + l + 'location.telephone' + l;
-					if (ui.val('[name="searchType"]:checked') == 'events')
+					if (ui.val('searchInput [name="searchType"]:checked') == 'events')
 						d += 'event.text' + l;
 					d = d.substring(0, d.lastIndexOf('LOWER'));
 					if (att)
@@ -251,7 +251,7 @@ class pageSearch {
 				v['typecontacts'] = 'checked="checked"';
 			lists.setListDivs('search');
 			var e = ui.q('search listBody');
-			e.innerHTML = '<searchInput>' + pageSearch.templateSearch(v) + '</searchInput>' + e.innerHTML;
+			e.innerHTML = pageSearch.templateSearch(v) + e.innerHTML;
 			formFunc.initFields('search');
 			ui.css('search searchInput', 'display', 'block');
 			pageSearch.selectType();

@@ -22,7 +22,6 @@
 	},
 	"dependencies": {
 		"crypto-js": "^4.1.1",
-		"jsencrypt": "^3.2.1",
-		"rxjs": "^7.5.2"
+		"jsencrypt": "^3.2.1"
 	}
 }
