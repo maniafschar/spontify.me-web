@@ -488,7 +488,7 @@ ${v.hint}
 		if (v.ownerId && v.url)
 			v.description = (v.description ? v.description + ' ' : '') + ui.l('locations.clickForMoreDetails');
 		if (v.description)
-			v.description = '<text style="margin:1em 0;" class="highlight">' + v.description + '</text>';
+			v.description = '<text style="margin:1em 0;" class="highlightBackground">' + v.description + '</text>';
 		if (ui.q('locations').innerHTML) {
 			if (!details.getNextNavElement(true, id))
 				v.hideNext = 'display:none;';
@@ -496,7 +496,7 @@ ${v.hint}
 				v.hidePrevious = 'display:none;';
 		}
 		if (v.bonus)
-			v.bonus = '<div class="highlight">' + ui.l('locations.bonus') + v.bonus + '<br/>' + ui.l('locations.bonusHint') + '</div>';
+			v.bonus = '<text style="margin:1em 0;" class="highlightBackground">' + ui.l('locations.bonus') + v.bonus + '<br/>' + ui.l('locations.bonusHint') + '</text>';
 		if (v.isEvent) {
 			v.copyLinkHint = ui.l('copyLinkHint.event');
 			if (v.event.contactId != user.contact.id)
@@ -894,7 +894,7 @@ ${v.hint}
 						t = t.substring(t.lastIndexOf(' ') + 1);
 						v.time = global.separator + t;
 						if (v.ownerId == v.contact.id)
-							v._message1 = '<span class="colorHighlight">' + v.event.text + '</span>';
+							v._message1 = '<span class="highlightColor">' + v.event.text + '</span>';
 						else
 							v._message1 = v.event.text;
 						v.locID = v.id;
@@ -1327,7 +1327,7 @@ ${v.hint}
 				var t = a[i2];
 				s += '<row'
 				if (i2 == today)
-					s += ' class="colorHighlight"';
+					s += ' class="highlightColor"';
 				s += '><day>' + d + '</day><times>' + t + '</times></row>';
 			}
 		}
@@ -1347,10 +1347,9 @@ ${v.hint}
 			var e = ui.q('menu');
 			if (ui.cssValue(e, 'transform').indexOf('1') > 0) {
 				if (e.getAttribute('type') != 'locations') {
-					ui.on('menu', 'transitionend', function () {
+					ui.on(e, 'transitionend', function () {
 						ui.navigation.toggleMenu('locations');
 					}, true);
-					setTimeout(function () { e.style.transform = 'scale(0)'; }, 10);
 				}
 			} else
 				ui.navigation.toggleMenu('locations');
@@ -1639,8 +1638,8 @@ ${v.hint}
 		}
 		if (id == pageLocation.map.id || !rows[i])
 			return;
-		ui.classRemove('locations listResults row div.highlight', 'highlight');
-		rows[i].children[0].classList = 'highlight';
+		ui.classRemove('locations listResults row div.highlightBackground', 'highlightBackground');
+		rows[i].children[0].classList = 'highlightBackground';
 		pageLocation.map.id = id;
 		var d = model.convert(new Location(), lists.data['locations'], i + 1);
 		var delta = ui.q('map').clientHeight / 320, x = 0.0625, zoom = 18;
@@ -1744,8 +1743,10 @@ ${v.hint}
 			method: idFav ? 'PUT' : 'POST',
 			body: v,
 			success(r) {
-				if (r)
+				if (r) {
 					ui.attr(button, 'idFav', r);
+					v.values.favorite = true;
+				}
 				ui.attr(button, 'fav', v.values.favorite ? true : false);
 				if (v.values.favorite) {
 					ui.classAdd(button, 'favorite');
@@ -1759,7 +1760,7 @@ ${v.hint}
 	}
 	static toggleMap() {
 		if (ui.q('map').getAttribute('created')) {
-			ui.classRemove('locations listResults row div.highlight', 'highlight');
+			ui.classRemove('locations listResults row div.highlightBackground', 'highlightBackground');
 			if (ui.cssValue('map', 'display') == 'none') {
 				ui.css('locations listBody', 'margin-top', '20em');
 				ui.css('locations listBody', 'padding-top', '0.5em');

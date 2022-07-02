@@ -93,7 +93,7 @@ class ui {
 				for (var i = 0; i < a.length; i++) {
 					var attr = ui.attributes[parseInt(a[i], 10)];
 					if (userAttr.indexOf(a[i]) > -1) {
-						result.text += style == 'list' ? ', ' + attr : '<label class="multipleLabel highlight">' + attr + '</label>';
+						result.text += style == 'list' ? ', ' + attr : '<label class="multipleLabel highlightBackground">' + attr + '</label>';
 						result.totalMatch++;
 					} else if (style != 'list')
 						result.text += '<label class="multipleLabel">' + attr + '</label>';
@@ -106,7 +106,7 @@ class ui {
 				a = compare.attrEx.toLowerCase().split(',');
 				for (var i = 0; i < a.length; i++) {
 					if (userAttr.indexOf(',' + a[i].trim() + ',') > -1) {
-						result.text += style == 'list' ? ', ' + a[i].trim() : '<label class="multipleLabel highlight">' + a[i].trim() + '</label>';
+						result.text += style == 'list' ? ', ' + a[i].trim() : '<label class="multipleLabel highlightBackground">' + a[i].trim() + '</label>';
 						result.totalMatch++;
 					} else if (style != 'list')
 						result.text += '<label class="multipleLabel">' + a[i].trim() + '</label>';
@@ -117,9 +117,12 @@ class ui {
 			userAttr = user.contact['attr' + i] || '';
 			var compareHasCat = compare.category ? compare.category.indexOf(i) > -1 : compare['attr' + i] || compare['attr' + i + 'Ex'];
 			if (userAttr && (compare.idDisplay || compareHasCat))
-				result.total += userAttr.split('\u0015').length;
+				result.total += userAttr.split('\u0015').length + 1;
 			if (compareHasCat) {
-				result.text += style == 'list' ? ', ' + ui.categories[i].label : '</div><div><label class="multipleLabel' + (userAttr ? ' highlight' : '') + '">' + ui.categories[i].label + '</label>';
+				if (style == 'list')
+					result.text += ', ' + ui.categories[i].label;
+				else
+					result.text += '</attributes><attributes><label class="multipleLabel' + (userAttr ? ' highlightBackground' : '') + '">' + ui.categories[i].label + '</label>';
 				if (userAttr)
 					result.totalMatch++;
 			}
@@ -128,7 +131,7 @@ class ui {
 				for (var i2 = 0; i2 < a.length; i2++) {
 					var attr = ui.categories[i].subCategories[parseInt(a[i2], 10)];
 					if (userAttr.indexOf(a[i2]) > -1) {
-						result.text += style == 'list' ? ', ' + attr : '<label class="multipleLabel highlight">' + attr + '</label>';
+						result.text += style == 'list' ? ', ' + attr : '<label class="multipleLabel highlightBackground">' + attr + '</label>';
 						result.totalMatch++;
 					} else if (style != 'list')
 						result.text += '<label class="multipleLabel">' + attr + '</label>';
@@ -141,7 +144,7 @@ class ui {
 				a = compare['attr' + i + 'Ex'].split(',');
 				for (var i2 = 0; i2 < a.length; i2++) {
 					if (userAttr.indexOf(',' + a[i2] + ',') > -1) {
-						result.text += style == 'list' ? ', ' + a[i2].trim() : '<label class="multipleLabel highlight">' + a[i2].trim() + '</label>';
+						result.text += style == 'list' ? ', ' + a[i2].trim() : '<label class="multipleLabel highlightBackground">' + a[i2].trim() + '</label>';
 						result.totalMatch++;
 					} else if (style != 'list')
 						result.text += '<label class="multipleLabel">' + a[i2].trim() + '</label>';
@@ -164,12 +167,13 @@ class ui {
 						s += ui.l('budget');
 					s += '</span>';
 				}
-				result.budget += '<label class="multipleLabel' + (userBudget.indexOf(b[i]) > -1 ? ' highlight' : '') + '">' + s + '</label>';
+				result.budget += '<label class="multipleLabel' + (userBudget.indexOf(b[i]) > -1 ? ' highlightBackground' : '') + '">' + s + '</label>';
 			}
-			result.totalMatch += result.budget.split('highlight').length - 1;
+			result.budget = '<attributes>' + result.budget + '</attributes>';
+			result.totalMatch += result.budget.split('highlightBackground').length - 1;
 		}
 		if (result.text)
-			result.text = style == 'list' ? result.text.substring(2) : '<div>' + result.text + '</div>';
+			result.text = style == 'list' ? result.text.substring(2) : '<attributes>' + result.text + '</attributes>';
 		return result;
 	}
 	static getEvtPos(e, horizontal) {
@@ -255,6 +259,7 @@ class ui {
 						if (id.indexOf('='))
 							id = id.substring(id.indexOf('=') + 1);
 						ui.navigation.openPopup('', '<detail i="' + id + '" type="' + type + '" style="padding:0;">' + s + '</detail>');
+						formFunc.image.replaceSVGs();
 						geoData.updateCompass();
 						return '';
 					};
@@ -305,8 +310,6 @@ class ui {
 				e = ui.q('content>.content:not([style*="none"])');
 			if (e)
 				id = e.nodeName.toLowerCase();
-			if (id == 'whatToDo' && ui.q('notifications:not([style*="none"])'))
-				id = 'notifications';
 			if (id == 'home' && ui.cssValue(id, 'display') == 'none')
 				ui.css(id, 'display', 'block');
 			return id;
@@ -363,8 +366,6 @@ class ui {
 				pageInfo.init();
 			else if (id == 'login')
 				pageLogin.init();
-			else if (id == 'home')
-				pageHome.init();
 			else if (id == 'contacts')
 				pageContact.init();
 			else if (id == 'locations')
@@ -378,9 +379,7 @@ class ui {
 			ui.navigation.hidePopup();
 			ui.css('main>buttonIcon', 'display', id == 'home' ? 'none' : '');
 			var s = id;
-			if (s == 'detail' && oldID == 'notifications')
-				s = 'whatToDo';
-			else if (s != 'whatToDo' && s != 'locations' && s != 'contacts' && s != 'whatToDo' && s != 'login' && s != 'info' && s != 'search' && s.indexOf('settings') < 0)
+			if (s != 'whatToDo' && s != 'locations' && s != 'contacts' && s != 'whatToDo' && s != 'login' && s != 'info' && s != 'search' && s.indexOf('settings') < 0)
 				s = oldID;
 			if (oldID != id) {
 				ui.navigation.fade(id, back);
@@ -482,15 +481,20 @@ class ui {
 		toggleMenu(activeID) {
 			if (!activeID)
 				activeID = ui.navigation.getActiveID();
-			var e = ui.q('menu');
-			if (activeID == 'locations')
-				ui.html(e, ui.templateMenuLocation());
-			else if (activeID == 'contacts')
-				ui.html(e, ui.templateMenuContacts());
-			e.setAttribute('type', activeID);
-			ui.addFastButton('menu');
-			ui.classAdd(ui.qa('menu a')[parseInt(ui.q(activeID).getAttribute('menuIndex'))], 'menuHighlight');
-			ui.css(e, 'transform', e.style.transform.indexOf('1') > 0 ? 'scale(0)' : 'scale(1)')
+			setTimeout(function () {
+				var e = ui.q('content>[class*="SlideIn"]');
+				if (e && activeID.toLowerCase() != e.nodeName.toLowerCase())
+					return;
+				var e = ui.q('menu');
+				if (activeID == 'locations')
+					ui.html(e, ui.templateMenuLocation());
+				else if (activeID == 'contacts')
+					ui.html(e, ui.templateMenuContacts());
+				e.setAttribute('type', activeID);
+				ui.addFastButton('menu');
+				ui.classAdd(ui.qa('menu a')[parseInt(ui.q(activeID).getAttribute('menuIndex'))], 'menuHighlight');
+				ui.css(e, 'transform', e.style.transform.indexOf('1') > 0 ? 'scale(0)' : 'scale(1)')
+			}, 10);
 		}
 	};
 	static openDescription(event, id) {
@@ -638,7 +642,14 @@ class ui {
 	static cssValue(e, css) {
 		var value;
 		ui.x(e, function (e2) {
-			value = window.getComputedStyle(e2, null).getPropertyValue(css);
+			if (document.defaultView && document.defaultView.getComputedStyle)
+				value = document.defaultView.getComputedStyle(e2, '').getPropertyValue(css);
+			else if (e2.currentStyle) {
+				css = css.replace(/\-(\w)/g, function (m, p) {
+					return p.toUpperCase();
+				});
+				value = e2.currentStyle[css];
+			}
 		});
 		return value ? value : '';
 	}
@@ -761,9 +772,15 @@ class ui {
 		}
 	}
 	static val(id) {
-		var e = ui.q(id);
-		if (e)
-			return e.value
+		var e = ui.qa(id);
+		if (e) {
+			if (e.length == 1)
+				return e[0].value
+			var s = '';
+			for (var i = 0; i < e.length; i++)
+				s += '\u0015' + e[i].value;
+			return s.substring(1);
+		}
 		return '';
 	}
 	static x(e, f) {

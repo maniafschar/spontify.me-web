@@ -53,23 +53,6 @@ class lists {
 			s += '<br/><br/>' + ui.l('noResults.searchWithoutKeywords') + '<br/><br/><buttontext onclick="pageSearch.repeatSearch()" class="bgColor">' + ui.l('noResults.repeat') + '</buttontext>';
 		return '<noResult>' + s.replace(/\{0\}/g, ui.l(activeID + '.title')).replace('{1}', '') + '</noResult>';
 	}
-	static toggleFilter(event, html) {
-		var activeID = ui.navigation.getActiveID();
-		var e = event ? event.target.nodeName : null;
-		if (!lists.data[activeID] || e == 'LABEL' || e == 'BUTTONTEXT' || event && ui.parents(event.target, 'map'))
-			return;
-		e = ui.q(activeID + ' filters');
-		if (!e.innerHTML) {
-			e.innerHTML = html.call();
-			formFunc.initFields(activeID + ' filters');
-		}
-		if (ui.cssValue(e, 'transform').indexOf('1') < 0) {
-			if (ui.q('menu').style.transform.indexOf('1') > 0)
-				ui.navigation.toggleMenu();
-			ui.css(e, 'transform', 'scale(1)');
-		} else
-			ui.css(e, 'transform', 'scale(0)');
-	}
 	static removeListEntry(id) {
 		var activeID = ui.q('detail').getAttribute('list');
 		if (!activeID)
@@ -131,7 +114,6 @@ class lists {
 	}
 	static resetLists() {
 		lists.data = [];
-		ui.html('home', '');
 		ui.html('locations', '');
 		ui.html('contacts', '');
 		ui.html('settings', '');
@@ -140,7 +122,6 @@ class lists {
 		ui.html('chat', '');
 		ui.html('whatToDo', '');
 		ui.html('detail', '');
-		ui.html('notifications', '');
 		ui.html('info', '');
 		ui.html('login', '');
 	}
@@ -204,5 +185,24 @@ class lists {
 		}
 		ui.css(id + ' listScroll', 'display', '');
 		lists.repositionThumb(id);
+	}
+	static toggleFilter(event, html) {
+		setTimeout(function () {
+			var activeID = ui.navigation.getActiveID();
+			var e = event ? event.target.nodeName : null;
+			if (!lists.data[activeID] || e == 'LABEL' || e == 'BUTTONTEXT' || event && ui.parents(event.target, 'map'))
+				return;
+			e = ui.q(activeID + ' filters');
+			if (!e.innerHTML) {
+				e.innerHTML = html.call();
+				formFunc.initFields(activeID + ' filters');
+			}
+			if (ui.cssValue(e, 'transform').indexOf('1') < 0) {
+				if (ui.q('menu').style.transform.indexOf('1') > 0)
+					ui.navigation.toggleMenu();
+				ui.css(e, 'transform', 'scale(1)');
+			} else
+				ui.css(e, 'transform', 'scale(0)');
+		}, 10);
 	}
 }

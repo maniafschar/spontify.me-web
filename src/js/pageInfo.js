@@ -202,9 +202,9 @@ class pageInfo {
 		}
 	}
 	static socialShare(extra) {
-		var msg = ui.l('info.socialShareText').replace('{0}', user.contact.pseudonym + ' ' + ui.l('or') + ' ' + user.contact.idDisplay).replace('{1}', user.contact.gender == 1 ? '🙋‍♂️' : '🙋‍♀️');
+		var msg = ui.l('info.socialShareText').replace('{0}', user.contact.idDisplay).replace('{1}', user.contact.gender == 1 ? '🙋‍♂️' : '🙋‍♀️');
 		if (global.isBrowser())
-			ui.navigation.openPopup(ui.l('sendSocialShare'), ui.l('info.socialShareBrowser') + '<textarea readonly="true" onclick="this.setSelectionRange(0, this.value.length)" style="padding:1em 0 0 0;text-align:center;background:transparent;height:16em;">' + msg + '</textarea>');
+			ui.navigation.openPopup(ui.l('sendSocialShare'), ui.l('info.socialShareBrowser') + '<infoblock class="selectable" style="margin-top:1em;">' + msg + '</infoblock>');
 		else {
 			window.plugins.socialsharing.shareWithOptions({
 				message: msg,

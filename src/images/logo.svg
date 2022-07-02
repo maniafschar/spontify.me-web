@@ -20,7 +20,7 @@
 
 			g.small .me {
 				display: block;
-				fill: rgba(255, 255, 255, 0.3);
+				fill: rgba(255, 255, 255, 0.5);
 				transform: scale(3.3) translate(-7.922em, -1.155em);
 			}
 

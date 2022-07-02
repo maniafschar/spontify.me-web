@@ -1,7 +1,6 @@
 import { communication } from './communication';
 import { global } from './global';
 import { intro } from './intro';
-import { pageInfo } from './pageInfo';
 import { ui } from './ui';
 import { user } from './user';
 
@@ -46,91 +45,87 @@ class bluetooth {
 		}
 	}
 	static requestAuthorization() {
-		if (global.isBrowser())
-			return;
-		if (!user.contact.findMe) {
-			bluetooth.stop();
-			return;
-		}
-		var isRunning = window.localStorage.getItem('findMeIDs');
 		bluetooth.reset();
-		if (isRunning)
-			return;
-		var notification = function () {
+		ui.q('#homeIconBluetooth').style.opacity = 1;
+		var stateListener = function () {
 			cordova.plugins.backgroundMode.enable();
 			cordova.plugins.backgroundMode.on('failure', function (e) {
 				communication.sendError('ble background mode: ' + JSON.stringify(e));
 			});
 			ble.startStateNotifications(function (state) {
 				bluetooth.state = state;
+				ui.q('#homeIconBluetooth').style.opacity = state == 'on' ? 1 : null;
 				if (state == 'on') {
 					if (ui.q('popupContent') && ui.q('popupContent').innerHTML.indexOf(ui.l('findMe.bluetoothDeactivated')) > -1)
 						ui.navigation.hidePopup();
-					Promise.all([
-						blePeripheral.createService(bluetooth.UUID_SERVICE),
-						blePeripheral.addCharacteristic(bluetooth.UUID_SERVICE, bluetooth.UUID_TX, blePeripheral.properties.WRITE, blePeripheral.permissions.WRITEABLE),
-						blePeripheral.addCharacteristic(bluetooth.UUID_SERVICE, bluetooth.UUID_RX, blePeripheral.properties.READ | blePeripheral.properties.NOTIFY, blePeripheral.permissions.READABLE),
-						blePeripheral.publishService(bluetooth.UUID_SERVICE),
-						blePeripheral.startAdvertising(bluetooth.UUID_SERVICE, 'spontifyme'),
-						blePeripheral.onWriteRequest(function (json) {
-							if (user.contact && user.contact.findMe) {
-								var id = bluetooth.decode(json.value);
-								if (id)
-									communication.ajax({
-										url: global.server + 'db/one',
-										method: 'POST',
-										body: {
-											classname: 'ContactBluetooth',
-											values: { contactId2: id }
-										}
-									});
-							}
-						})
-					]).then(
-						function () { },
-						function (e) {
-							if (e.indexOf('Advertising has already started') < 0) {
-								bluetooth.stop();
-								communication.sendError('ble peripheral: ' + JSON.stringify(e));
-							}
-						}
-					);
-					ble.startScan([bluetooth.UUID_SERVICE], bluetooth.registerDevice, function (e) {
-						communication.sendError('ble scan: ' + JSON.stringify(e));
-					});
+					bluetooth.scanStart();
 				} else if (user.contact.findMe)
 					ui.navigation.openPopup(ui.l('attention'), ui.l('findMe.bluetoothDeactivated'));
 			})
 		};
 		if (cordova.plugins.diagnostic.requestBluetoothAuthorization) {
 			try {
-				cordova.plugins.diagnostic.requestBluetoothAuthorization(notification);
+				cordova.plugins.diagnostic.requestBluetoothAuthorization(stateListener);
 			} catch (e) {
-				ui.navigation.openPopup(ui.l('attention'), ui.l('findMe.bluetoothDeactivated'));
+				ui.navigation.openPopup(ui.l('attention'), ui.l('findMe.bluetoothError').replace('{0}', e));
 			}
 		} else
-			notification.call();
+			stateListener.call();
 	}
 	static reset() {
 		if (!global.isBrowser())
 			window.localStorage.setItem('findMeIDs', '|');
 	}
+	static scanStart() {
+		Promise.all([
+			blePeripheral.createService(bluetooth.UUID_SERVICE),
+			blePeripheral.addCharacteristic(bluetooth.UUID_SERVICE, bluetooth.UUID_TX, blePeripheral.properties.WRITE, blePeripheral.permissions.WRITEABLE),
+			blePeripheral.addCharacteristic(bluetooth.UUID_SERVICE, bluetooth.UUID_RX, blePeripheral.properties.READ | blePeripheral.properties.NOTIFY, blePeripheral.permissions.READABLE),
+			blePeripheral.publishService(bluetooth.UUID_SERVICE),
+			blePeripheral.startAdvertising(bluetooth.UUID_SERVICE, 'spontifyme'),
+			blePeripheral.onWriteRequest(function (json) {
+				if (user.contact && user.contact.findMe) {
+					var id = bluetooth.decode(json.value);
+					if (id)
+						communication.ajax({
+							url: global.server + 'db/one',
+							method: 'POST',
+							body: {
+								classname: 'ContactBluetooth',
+								values: { contactId2: id }
+							}
+						});
+				}
+			})
+		]).then(
+			function () { },
+			function (e) {
+				if (e.indexOf('Advertising has already started') < 0) {
+					bluetooth.stop();
+					communication.sendError('ble peripheral: ' + JSON.stringify(e));
+				}
+			}
+		);
+		ble.startScan([bluetooth.UUID_SERVICE], bluetooth.registerDevice, function (e) {
+			communication.sendError('ble scan: ' + JSON.stringify(e));
+		});
+	}
 	static toggle() {
 		if (global.isBrowser())
 			intro.openHint({ desc: 'bluetoothDescriptionBrowser', pos: '-0.5em,-4em', size: '80%,auto' });
-		else if (window.localStorage.getItem('findMeIDs')) {
-			user.save({ findMe: false });
-			bluetooth.stop();
-		} else {
-			user.save({ findMe: true });
-			bluetooth.requestAuthorization();
-			if (bluetooth.state != 'on')
-				ui.navigation.openPopup(ui.l('attention'), ui.l('findMe.bluetoothDeactivated'));
-		}
+		else if (!user.contact)
+			intro.openHint({ desc: 'bluetoothDescriptionLoggedOff', pos: '-0.5em,-4em', size: '80%,auto' });
+		else if (window.localStorage.getItem('findMeIDs'))
+			user.save({ findMe: false }, bluetooth.stop);
+		else
+			user.save({ findMe: true }, bluetooth.requestAuthorization);
 	}
 	static stop() {
-		if (!global.isBrowser())
+		if (!global.isBrowser()) {
 			ble.stopScan();
+			ble.stopStateNotifications();
+		}
+		ui.q('#homeIconBluetooth').style.opacity = null;
 		window.localStorage.removeItem('findMeIDs');
 	}
 }

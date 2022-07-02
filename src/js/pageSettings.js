@@ -2,14 +2,13 @@ import { bluetooth } from './bluetooth';
 import { communication } from './communication';
 import { global } from './global';
 import { initialisation } from './initialisation';
-import { intro } from './intro';
 import { Contact, model } from './model';
-import { pageHome } from './pageHome';
 import { pageInfo } from './pageInfo';
 import { pageContact } from './pageContact';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 import { pageWhatToDo } from './pageWhatToDo';
+import { details } from './details';
 
 export { pageSettings };
 
@@ -114,7 +113,7 @@ class pageSettings {
 	</field>
 	<dialogButtons style="margin-top:1.5em;">
 		<buttontext onclick="communication.login.logoff()" class="bgColor">${ui.l('logoff.title')}</buttontext>
-		<buttontext onclick="ui.navigation.autoOpen(&quot;${v['autoOpen']}&quot;,event)" class="bgColor">${ui.l('settings.preview')}</buttontext>
+		<buttontext onclick="pageSettings.preview()" class="bgColor">${ui.l('settings.preview')}</buttontext>
 	</dialogButtons>
 	<input type="hidden" name="verified" value="true" />
 </form>
@@ -219,7 +218,7 @@ class pageSettings {
 			communication.login.checkUnique(ui.q('input[name="email"]'));
 	}
 	static deleteProfile() {
-		ui.navigation.openPopup(ui.l('settings.delete'), ui.l('deleteProfileHint') + '<br /><br /><textarea id="deleteAccountFeedback" placeholder="' + ui.l('deleteProfileFeedbackHint') + '" maxlength="2000"></textarea><div style="margin-top:1em;"><buttontext onclick="pageSettings.deleteProfileExec()" class="bgColor">' + ui.l('deleteProfileFinal') + '</buttontext><buttontext onclick="ui.navigation.hidePopup()" class="bgColor" style="margin-left:0.5em;">' + ui.l('deleteProfileCancel') + '</buttontext></div>');
+		ui.navigation.openPopup(ui.l('settings.delete'), ui.l('deleteProfileHint') + '<br /><br /><textarea id="deleteAccountFeedback" placeholder="' + ui.l('deleteProfileFeedbackHint') + '" maxlength="2000"></textarea><div style="margin-top:1em;"><buttontext onclick="pageSettings.deleteProfileExec()" class="bgColor">' + ui.l('deleteProfileFinal') + '</buttontext></div>');
 	}
 	static deleteProfileExec() {
 		if (ui.val('#deleteAccountFeedback'))
@@ -318,7 +317,6 @@ class pageSettings {
 						v['userImage'] = global.serverImg + user.contact.image;
 					else
 						v['userImage'] = 'images/defaultProfile.png';
-					v['autoOpen'] = global.encParam('p=' + user.contact.id);
 					if (v['contact.search'] == 1)
 						v['search'] = ' checked';
 					if (v['contact.ageMale'])
@@ -379,6 +377,12 @@ class pageSettings {
 		pageSettings.init();
 		ui.navigation.goTo('settings2');
 	}
+	static preview() {
+		if (pageSettings.currentSettings == pageSettings.getCurrentSettingsString())
+			details.open(user.contact.id, 'contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id), pageContact.detail);
+		else
+			pageSettings.save('autoOpen');
+	}
 	static postSave(goToID) {
 		if (pageSettings.currentSettings && pageSettings.currentSettings.split('\u0015')[0] != ui.val('input[name="email"]')) {
 			communication.login.logoff();
@@ -387,7 +391,7 @@ class pageSettings {
 		user.contact.ageFemale = ui.val('input[name="ageFemale"]');
 		user.contact.ageMale = ui.val('input[name="ageMale"]');
 		user.contact.ageDivers = ui.val('input[name="ageDivers"]');
-		user.contact.budget = ui.val('input[name="budget"]');
+		user.contact.budget = ui.val('input[name="budget"]:checked');
 		user.contact.pseudonym = ui.val('input[name="pseudonym"]');
 		user.contact.gender = ui.val('input[name="gender"]:checked');
 		ui.html('homeUsername', user.contact.pseudonym);
@@ -403,14 +407,17 @@ class pageSettings {
 		}
 		formFunc.image.remove('image');
 		pageSettings.currentSettings = pageSettings.getCurrentSettingsString();
-		pageSettings.reset();
-		if (goToID)
-			ui.navigation.goTo(goToID);
+		pageSettings.resetError();
+		if (goToID) {
+			if (goToID == 'autoOpen')
+				pageSettings.preview();
+			else ui.navigation.goTo(goToID);
+		}
 		var l = ui.val('[name="language"]:checked');
 		if (l != global.language)
 			initialisation.setLanguage(l);
 	}
-	static reset() {
+	static resetError() {
 		formFunc.resetError(ui.q('input[name="pseudonym"]'));
 		formFunc.resetError(ui.q('input[name="email"]'));
 		formFunc.resetError(ui.q('input[name="image"]'));
@@ -426,7 +433,7 @@ class pageSettings {
 		ui.navigation.hidePopup();
 	}
 	static save(goToID, saveNewEmail) {
-		pageSettings.reset();
+		pageSettings.resetError();
 		if (!user.contact || pageSettings.currentSettings == pageSettings.getCurrentSettingsString())
 			return true;
 		ui.html('#settingsHint', '');

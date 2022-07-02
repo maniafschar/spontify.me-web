@@ -18,18 +18,6 @@ class initialisation {
 	static hideStatusBar = true;
 	static recoverInvoked = false;
 	static videoText = '';
-	static getStyle(oElm, strCssRule) {
-		var s = '';
-		if (document.defaultView && document.defaultView.getComputedStyle)
-			s = document.defaultView.getComputedStyle(oElm, '').getPropertyValue(strCssRule);
-		else if (oElm.currentStyle) {
-			strCssRule = strCssRule.replace(/\-(\w)/g, function (strMatch, p1) {
-				return p1.toUpperCase();
-			});
-			s = oElm.currentStyle[strCssRule];
-		}
-		return s;
-	}
 	static init() {
 		if (!global.isBrowser() && initialisation.videoText) {
 			var e = ui.q('preloader');
@@ -149,7 +137,6 @@ class initialisation {
 		if (!global.isBrowser())
 			initialisation.initApp();
 		ui.html('head title', global.appTitle);
-		pageHome.init();
 		communication.login.autoLogin(initialisation.showStartDialogs);
 		window.onresize = initialisation.reposition;
 		ui.on(window, 'orientationchange', initialisation.reposition);
@@ -173,12 +160,19 @@ class initialisation {
 				event.preventDefault();
 		});
 		ui.on('detail', 'click', function (event) {
-			if (event.target.nodeName != 'INPUT')
-				ui.navigation.goTo(ui.q('detail').getAttribute('list'), null, true);
+			if (event.target.nodeName != 'INPUT') {
+				var p = ui.parents(event.target, 'text');
+				if (p && ui.classContains(p, 'popup') && !ui.classContains(p, 'collapsed'))
+					details.togglePanel(p);
+				else
+					ui.navigation.goTo(ui.q('detail').getAttribute('list'), null, true);
+			}
 		});
 		ui.on('popup', 'click', function (event) {
 			var s = event.target.nodeName;
-			if (s != 'INPUT' && s != 'TEXTAREA' && s != 'BUTTONTEXT' && !ui.parents(event.target, 'locationNameInputHelper'))
+			if (s != 'INPUT' && s != 'TEXTAREA' && s != 'BUTTONTEXT'
+				&& !ui.classContains(event.target, 'selectable')
+				&& !ui.parents(event.target, 'locationNameInputHelper'))
 				ui.navigation.hidePopup();
 		});
 		ui.swipe('detail', function (dir) {
@@ -299,7 +293,7 @@ class initialisation {
 			ui.classAdd('body', 'app');
 		}
 		ui.css('body', 'font-size', f + 'px');
-		ui.emInPX = parseFloat(initialisation.getStyle(document.body, 'font-size'));
+		ui.emInPX = parseFloat(ui.cssValue(document.body, 'font-size'));
 		if (!ui.q('main'))
 			return;
 		lists.repositionThumb();
@@ -364,6 +358,7 @@ class initialisation {
 		e[0].innerHTML = ui.l('home.DescLink');
 		e[1].innerHTML = global.appTitle + ' blog';
 		lists.resetLists();
+		ui.html('home', '');
 		pageHome.init();
 		if (exec)
 			exec.call();

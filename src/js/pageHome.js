@@ -12,10 +12,10 @@ class pageHome {
 	static template = v =>
 		global.template`<div>
 	<homeHeader>	
-		<buttonIcon onclick="pageHome.openLanguage()" class="homeIconSearch">
-			<span class="lang">${v.lang}</span>
+		<buttonIcon onclick="pageHome.openLanguage()" class="homeIconSearch"${v.classLanguage}>
+			<span class="lang">${v.language}</span>
 		</buttonIcon>
-		<buttonIcon onclick="ui.navigation.goTo(&quot;search&quot;)" class="homeIconSearch" style="display:none;">
+		<buttonIcon onclick="ui.navigation.goTo(&quot;search&quot;)" class="homeIconSearch"${v.classSearch}>
 			<img src="images/search.svg" />
 		</buttonIcon>
 		<buttonIcon onclick="ui.navigation.goTo(&quot;settings&quot;,event)" style="right:0;text-align:right;">
@@ -38,7 +38,7 @@ class pageHome {
 			<span>${ui.l('contacts.matching')}</span><img source="network.svg" />
 		</buttontext>
 	</homeBody>
-	<buttonIcon onclick="pageHome.openNotifications()" style="bottom:0;left:0;display:none;" class="pulse">
+	<buttonIcon onclick="pageHome.openNotifications()" style="bottom:0;left:0;display:none;" class="pulse highlight">
 		<badgeNotifications></badgeNotifications>
 		<img source="news.svg" />
 	</buttonIcon>
@@ -51,14 +51,14 @@ class pageHome {
 </div>`;
 	static init() {
 		var e = ui.q('home');
-		var contact = user.contact || new Contact();
-		if (e.innerHTML && e.getAttribute('loggedOn') == contact.id)
+		if (e.innerHTML)
 			return;
 		e.innerHTML = pageHome.template({
-			lang: global.language
+			language: global.language,
+			classLanguage: user.contact ? ' style="display:none;"' : '',
+			classSearch: user.contact ? '' : ' style="display:none;"'
 		});
 		formFunc.image.replaceSVGs();
-		ui.attr(e, 'loggedOn', contact.id);
 		ui.addFastButton('home');
 		formFunc.initFields('home');
 		initialisation.reposition();

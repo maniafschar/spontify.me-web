@@ -14,7 +14,7 @@ export { pageContact };
 class pageContact {
 	static templateList = v =>
 		global.template`<row onclick="${v.oc}" i="${v.id}" class="contact${v.classFavorite}">
-	<badge class="bgColor" style="display:${v._badgeDisp};" action="${v.badgeAction}">
+	<badge class="highlightBackground" style="display:${v._badgeDisp};" action="${v.badgeAction}">
 		${v._badge}
 	</badge>
 	<div>
@@ -63,9 +63,8 @@ class pageContact {
 		</detailDistance>
 	</action>
 </detailHeader>
-<text>
+<text${v.birthdayClass}>
 	${v.birthday}
-	${v.message}
 </text>
 ${v.attributes}
 ${v.budget}
@@ -144,10 +143,7 @@ ${v.aboutMe}
 				msg += v.message_locationId + '|';
 			var time = global.date.formatDate(v.message_time);
 			time = time.substring(time.lastIndexOf(' ') + 1);
-			msg = global.string.replaceNewsAdHoc(msg + time);
-			if (v.message && v.message.trim().length > 0)
-				msg += '<br/>' + v.message;
-			v._message1 = msg;
+			v._message1 = global.string.replaceNewsAdHoc(msg + time);
 		}
 	}
 	static ageFromSelected(e) {
@@ -273,14 +269,13 @@ ${v.aboutMe}
 		if (v.birthday[0]) {
 			if (v.age)
 				v.ageDisplay = ' (' + v.age + ')';
-			if (v.birthday[1])
-				v.birthday = '<div class="highlight">' + ui.l('contacts.birthdayToday') + '</div>' + v.birthday[0];
-			else
+			if (v.birthday[1]) {
+				v.birthday = ui.l('contacts.birthdayToday') + '<br/>' + v.birthday[0];
+				v.birthdayClass = ' class="highlightColor"';
+			} else
 				v.birthday = v.birthday[0];
 		} else
 			v.birthday = '';
-		if (v.guide)
-			v.birthday = ui.l('settings.guide') + (v.birthday ? '<br/>' + v.birthday : '');
 		v.buddy = '<div style="margin:0 0 1em 0;padding-bottom:1em;position:relative;" class="borderBottom">';
 		if (v.contactLink.id) {
 			if (v.contactLink.status == 'Pending') {
@@ -336,29 +331,10 @@ ${v.aboutMe}
 			v.rating = '';
 		if (global.isBrowser())
 			v.displaySocialShare = 'display:none;';
-		if (v.contactNotification.id) {
-			var oc = v.contactNotification.action;
-			if (oc) {
-				if (oc.indexOf('s:') == 0)
-					oc = ' onclick="' + oc.substring(2) + '"';
-				else if (oc == 'info' || oc.indexOf('m=') == 0)
-					oc = ' onclick="ui.navigation.autoOpen(&quot;' + oc + '&quot;,event)"';
-				else {
-					oc = global.decParam(oc);
-					if (oc && oc != 'p=' + v.id)
-						oc = ' onclick="ui.navigation.autoOpen(&quot;' + v.contactNotification.action + '&quot;,event)"';
-					else
-						oc = '';
-				}
-			} else
-				oc = '';
-			var t = pageWhatToDo.getNotificationText(v.contactNotification.text, v.contactNotification.createdAt);
-			v.message = '<div' + oc + '>' + t[0] + '<br/>' + t[1] + (oc ? global.separator + ui.l('more') : '') + '</div>';
-		}
-		if (!v.message && !v.attributes && !v.aboutMe && !v.rating)
+		if (!v.attributes && !v.aboutMe && !v.rating)
 			v.dispBody = 'display:none;';
 		if (v.aboutMe)
-			v.aboutMe = '<text class="highlight" style="margin-top:1em;">' + v.aboutMe + '</text>';
+			v.aboutMe = '<div style="margin-top:1em;">' + (v.guide ? '<b>' + ui.l('settings.guide') + '</b>' : '') + '<text class="highlightBackground">' + v.aboutMe + '</text></div>';
 		if (v.contactLink.status == 'Pending' && v.contactLink.contactId != user.contact.id)
 			setTimeout(function () {
 				pageContact.toggleBlockUser(id);
@@ -669,7 +645,6 @@ ${v.aboutMe}
 					ui.on(e, 'transitionend', function () {
 						ui.navigation.toggleMenu('contacts');
 					}, true);
-					setTimeout(function () { e.style.transform = 'scale(0)'; }, 10);
 				}
 			} else
 				ui.navigation.toggleMenu('contacts');
@@ -744,7 +719,6 @@ ${v.aboutMe}
 					var e = ui.q('detail[i="' + id + '"] [name="block"]');
 					e.innerHTML = ui.l('contacts.requestFriendshipSent');
 					e.setAttribute('h', e.clientHeight);
-					setTimeout(function () { details.togglePanel(e) }, 5000);
 				}
 			}
 		});

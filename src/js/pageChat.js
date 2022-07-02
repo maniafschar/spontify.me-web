@@ -355,14 +355,6 @@ class pageChat {
 					}, 'textarea');
 					ui.on('chatInput', 'click', pageChat.close);
 					ui.on('chatConversation', 'scroll', pageChat.reposition);
-					e = ui.q('home');
-					if (ui.cssValue(e, 'display') != 'none')
-						ui.navigation.animation(e, 'homeSlideOut', function () {
-							ui.css(e, 'display', 'none');
-							ui.css(e, 'opacity', 1);
-							ui.css('contacts', 'display', 'block');
-							ui.classAdd('#navContacts', 'active');
-						});
 					setTimeout(() => {
 						ui.css('chat', 'display', 'block');
 						pageChat.adjustTextarea(ui.q('#chatText'));
@@ -526,7 +518,8 @@ class pageChat {
 		}
 	}
 	static sendChat(id, msg, event) {
-		event.preventDefault();
+		if (event)
+			event.preventDefault();
 		if (!msg) {
 			formFunc.validation.filterWords(ui.q('#chatText'));
 			if (ui.q('chat errorHint'))
