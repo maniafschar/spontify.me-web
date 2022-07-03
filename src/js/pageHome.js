@@ -1,5 +1,4 @@
 import { communication } from './communication';
-import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './initialisation';
 import { Contact, model } from './model';
@@ -31,13 +30,13 @@ class pageHome {
 		</buttontext><br/>
 		<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;locations&quot;)" style="width:70%;">
 			<badge name="badgeLocations" class="bgColor pulse">0</badge>
-			<span>${ui.l('locations.title') + global.separator + ui.l('events.title')}</span><img source="location.svg" />
-		</buttontext><br/>
+			<span>${ui.l('locations.homeButton')}</span> <img source="location.svg" />
+		</buttontext ><br/>
 		<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;contacts&quot;)" style="width:60%;">
 			<badge name="badgeContacts" class="bgColor pulse">0</badge>
-			<span>${ui.l('contacts.matching')}</span><img source="network.svg" />
+			<span>${ui.l('contacts.homeButton')}</span><img source="network.svg" />
 		</buttontext>
-	</homeBody>
+	</homeBody >
 	<buttonIcon onclick="pageHome.openNotifications()" style="bottom:0;left:0;display:none;" class="pulse highlight">
 		<badgeNotifications></badgeNotifications>
 		<img source="news.svg" />
@@ -48,7 +47,7 @@ class pageHome {
 	<buttonIcon onclick="bluetooth.toggle()" id="homeIconBluetooth" style="bottom:0;right:0;">
 		<img source="bluetooth.svg" />
 	</buttonIcon>
-</div>`;
+</div > `;
 	static init() {
 		var e = ui.q('home');
 		if (e.innerHTML)
@@ -62,7 +61,6 @@ class pageHome {
 		ui.addFastButton('home');
 		formFunc.initFields('home');
 		initialisation.reposition();
-		ui.html('homeTown', geoData.currentTown);
 	}
 	static openLanguage() {
 		ui.navigation.openPopup(ui.l('langSelect'),

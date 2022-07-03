@@ -80,6 +80,7 @@ class ui {
 	static getAttributes(compare, style) {
 		var result = {
 			budget: '',
+			categories: '',
 			text: '',
 			total: 0,
 			totalMatch: 0
@@ -116,8 +117,10 @@ class ui {
 		for (var i = 0; i < ui.categories.length; i++) {
 			userAttr = user.contact['attr' + i] || '';
 			var compareHasCat = compare.category ? compare.category.indexOf(i) > -1 : compare['attr' + i] || compare['attr' + i + 'Ex'];
-			if (userAttr && (compare.idDisplay || compareHasCat))
+			if (userAttr && (compare.idDisplay || compareHasCat)) {
 				result.total += userAttr.split('\u0015').length + 1;
+				result.categories += '/' + ui.categories[i].label;
+			}
 			if (compareHasCat) {
 				if (style == 'list')
 					result.text += ', ' + ui.categories[i].label;
@@ -151,6 +154,8 @@ class ui {
 				}
 			}
 		}
+		if (result.categories)
+			result.categories = result.categories.substring(1);
 		if (user.contact.budget)
 			result.total += user.contact.budget.split('\u0015').length;
 		if (compare.budget) {

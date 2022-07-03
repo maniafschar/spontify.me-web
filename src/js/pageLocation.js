@@ -51,7 +51,11 @@ class pageLocation {
 	<action>
 		<buttonIcon onclick="pageChat.open(${v.id},true)"><img src="images/chat.svg"/></buttonIcon>
 		<buttonIcon class="iconFavorite${v.favorite}" idFav="${v.locationFavorite.id ? v.locationFavorite.id : ''}" fav="${v.locationFavorite.favorite ? true : ''}" name="buttonFavorite" onclick="pageLocation.toggleFavorite(${v.id})"><img source="favorite.svg" /></buttonIcon>
-		<matchIndicator${v.matchIndicatorClass}>
+		<detailCompass>
+			<span a="${v.angle}" style="transform:rotate(${v.angle}deg);">&uarr;</span>
+			<km>${v.distance}</km>
+		</detailCompass>
+		<matchIndicator onclick="pageLocation.toggleMatchIndicatorHint(${v.id}, event)">
 			<svg viewBox="0 0 36 36">
 				<path class="circle-bg" d="M18 2.0845
 					a 15.9155 15.9155 0 0 1 0 31.831
@@ -62,10 +66,6 @@ class pageLocation {
 				<text x="18" y="21.35" class="percentage">${v.matchIndicator}</text>
 			</svg>
 		</matchIndicator>
-		<detailCompass>
-			<span a="${v.angle}" style="transform:rotate(${v.angle}deg);">&uarr;</span>
-			<km>${v.distance}</km>
-		</detailCompass>
 	</action>
 </detailHeader>
 <text>
@@ -100,6 +100,9 @@ ${v.description}
 		onclick="ui.navigation.openHTML(&quot;https://google.com/search?q=${encodeURIComponent(v.name + ' ' + v.town)}&quot;)">Google</buttontext>
 </detailButtons>
 <text name="events" class="collapsed" ${v.urlNotActive}></text>
+<text name="matchIndicatorHint" class="popup collapsed" onclick="ui.navigation.goTo(&quot;settings2&quot;)">
+	${v.matchIndicatorHint}
+</text>
 <text name="whatToDo" class="collapsed">
 	<detailTogglePanel>
 		<div style="margin-bottom:1.5em;">${ui.l('wtd.time')}<br/>
@@ -478,7 +481,8 @@ ${v.hint}
 			v.matchIndicator = v.attr.totalMatch + '/' + v.attr.total;
 			v.matchIndicatorPercent = parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5);
 		} else
-			v.matchIndicatorClass = ' class="noDisp"';
+			v.matchIndicatorPercent = 0;
+		v.matchIndicatorHint = ui.l('locations.matchIndicatorHint').replace('{0}', v.attr.totalMatch).replace('{1}', v.attr.total).replace('{2}', v.matchIndicatorPercent).replace('{3}', v.attr.categories);
 		v.attributes = v.attr.text;
 		if (v.rating > 0)
 			v.rating = '<detailRating onclick="rating.open(' + v.locID + ',&quot;location&quot;,event)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></ratingSelection></detailRating>';
@@ -1359,9 +1363,9 @@ ${v.hint}
 				url: '/images/location.svg',
 				success(r) {
 					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
-					e.setAttribute('fill', 'rgb(246, 255, 187)');
+					e.setAttribute('fill', 'black');
 					e.setAttribute('stroke', 'black');
-					e.setAttribute('stroke-width', '10');
+					e.setAttribute('stroke-width', '60');
 					pageLocation.map.svgLocation = 'data:image/svg+xml;base64,' + btoa(e.outerHTML);
 				}
 			});
@@ -1370,9 +1374,9 @@ ${v.hint}
 				url: '/images/contact.svg',
 				success(r) {
 					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
-					e.setAttribute('fill', 'rgb(246, 255, 187)');
+					e.setAttribute('fill', 'black');
 					e.setAttribute('stroke', 'black');
-					e.setAttribute('stroke-width', '10');
+					e.setAttribute('stroke-width', '20');
 					pageLocation.map.svgMe = 'data:image/svg+xml;base64,' + btoa(e.outerHTML);
 				}
 			});
@@ -1638,8 +1642,8 @@ ${v.hint}
 		}
 		if (id == pageLocation.map.id || !rows[i])
 			return;
-		ui.classRemove('locations listResults row div.highlightBackground', 'highlightBackground');
-		rows[i].children[0].classList = 'highlightBackground';
+		ui.classRemove('locations listResults row div.highlightMap', 'highlightMap');
+		rows[i].children[0].classList = 'highlightMap';
 		pageLocation.map.id = id;
 		var d = model.convert(new Location(), lists.data['locations'], i + 1);
 		var delta = ui.q('map').clientHeight / 320, x = 0.0625, zoom = 18;
@@ -1663,10 +1667,9 @@ ${v.hint}
 				contentString: '',
 				icon: {
 					url: pageLocation.map.svgMe,
-					scaledSize: new google.maps.Size(60, 60),
+					scaledSize: new google.maps.Size(26, 26),
 					origin: new google.maps.Point(0, 0),
-					anchor: new google.maps.Point(30, 60),
-					fillColor: '#F6FFBB'
+					anchor: new google.maps.Point(13, 26)
 				},
 				position: new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon)
 			});
@@ -1676,10 +1679,9 @@ ${v.hint}
 				title: d.name, contentString: '',
 				icon: {
 					url: pageLocation.map.svgLocation,
-					scaledSize: new google.maps.Size(60, 60),
+					scaledSize: new google.maps.Size(40, 40),
 					origin: new google.maps.Point(0, 0),
-					anchor: new google.maps.Point(30, 60),
-					fillColor: '#F6FFBB'
+					anchor: new google.maps.Point(20, 40)
 				},
 				position: new google.maps.LatLng(d.latitude, d.longitude)
 			});
@@ -1791,6 +1793,12 @@ ${v.hint}
 				document.head.appendChild(script);
 			}
 		});
+	}
+	static toggleMatchIndicatorHint(id, event) {
+		var e = ui.q('detail[i="' + id + '"] [name="matchIndicatorHint"]');
+		var button = ui.parents(event.target, 'matchIndicator');
+		e.style.top = (button.offsetTop + button.offsetHeight) + 'px';
+		details.togglePanel(e);
 	}
 	static toggleWhatToDo(id) {
 		details.togglePanel(ui.q('detail[i="' + id + '"] [name="whatToDo"]'));

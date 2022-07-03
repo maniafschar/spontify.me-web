@@ -9,6 +9,7 @@ import { ui, formFunc } from './ui';
 import { user } from './user';
 import { pageWhatToDo } from './pageWhatToDo';
 import { details } from './details';
+import { intro } from './intro';
 
 export { pageSettings };
 
@@ -58,8 +59,6 @@ class pageSettings {
 				${v['birthdayDisplay2']} style="margin-top:0.5em;"/>
 			<input type="radio" name="birthdayDisplay" value="1" label="${ui.l('settings.showAge')}"
 				${v['birthdayDisplay1']} />
-			<input type="radio" name="birthdayDisplay" value="0" label="${ui.l('settings.showNoAge')}"
-				${v['birthdayDisplay0']} />
 		</value>
 	</field>
 	<field>
@@ -343,6 +342,25 @@ class pageSettings {
 					pageSettings.currentSettings3 = pageSettings.getCurrentSettings3String();
 				}
 			});
+			if (!user.contact.attr && !user.contact.attr
+				&& !user.contact.attrInterest && !user.contact.attrInterestEx
+				&& !user.contact.attr0 && !user.contact.attrEx0
+				&& !user.contact.attr1 && !user.contact.attrEx1
+				&& !user.contact.attr2 && !user.contact.attrEx2
+				&& !user.contact.attr3 && !user.contact.attrEx3
+				&& !user.contact.attr4 && !user.contact.attrEx4
+				&& !user.contact.attr5 && !user.contact.attrEx5) {
+				if (ui.navigation.getActiveID() == 'settings')
+					setTimeout(function () {
+						if (ui.navigation.getActiveID() == 'settings')
+							intro.openHint({ desc: 'goToSettings2', pos: '-1em,-5em', size: '60%,auto', onclick: 'ui.navigation.goTo(\'settings2\')' });
+					}, 10000);
+				else if (ui.navigation.getActiveID() == 'settings2')
+					setTimeout(function () {
+						if (ui.navigation.getActiveID() == 'settings2' && ui.cssValue('popup', 'display') == 'none')
+							intro.openHint({ desc: 'settings2', pos: '4em,8em', size: '40%,auto' });
+					}, 2000);
+			}
 			return true;
 		}
 	}

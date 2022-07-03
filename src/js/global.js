@@ -360,7 +360,7 @@ class global {
 	static template(parts) {
 		var res = parts[0];
 		for (var i = 1; i < parts.length; i++) {
-			if (arguments[i])
+			if (arguments[i] || arguments[i] == 0)
 				res += arguments[i];
 			res += parts[i];
 		}

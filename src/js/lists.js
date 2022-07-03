@@ -130,7 +130,7 @@ class lists {
 		if (!e.innerHTML) {
 			var v = {};
 			v.action = action ? action : 'lists.toggleFilter(event, ' + (id == 'locations' ? 'pageLocation' : id == 'contacts' ? 'pageContact' : 'pageSearch') + '.getFilterFields)';
-			v.img = action ? '' : '<buttonIcon style="left:0;" onclick="' + v.action + '"><img src="images/search.svg"/></buttonIcon>' + (id == 'search' ? '' : '<buttonIcon style="right:0;" onclick="ui.navigation.toggleMenu()"><img src="images/menu.svg"/></buttonIcon>');
+			v.img = action ? '' : '<buttonIcon style="left:0;" onclick="' + v.action + '"><img src="images/filter.svg"/></buttonIcon>' + (id == 'search' ? '' : '<buttonIcon style="right:0;" onclick="ui.navigation.toggleMenu()"><img src="images/menu.svg"/></buttonIcon>');
 			if (id == 'contacts')
 				v.groups = '<groups style="display:none;"></groups>';
 			else if (id == 'locations')

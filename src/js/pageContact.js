@@ -46,7 +46,11 @@ class pageContact {
 	<action>
 		<buttonIcon onclick="pageChat.open(${v.id})"><img src="images/chat.svg"/></buttonIcon>
 		<buttonIcon class="iconFavorite${v.favorite}" onclick="pageContact.toggleBlockUser(${v.id})"><img source="favorite.svg" /></buttonIcon>
-		<matchIndicator${v.matchIndicatorClass}>
+		<detailDistance>
+			${v.gender}
+			<km>${v.distance}</km>
+		</detailDistance>
+		<matchIndicator${v.matchIndicatorClass} onclick="pageContact.toggleMatchIndicatorHint(${v.id}, event)">
 			<svg viewBox="0 0 36 36">
 				<path class="circle-bg" d="M18 2.0845
 					a 15.9155 15.9155 0 0 1 0 31.831
@@ -57,10 +61,6 @@ class pageContact {
 				<text x="18" y="21.35" class="percentage">${v.matchIndicator}</text>
 			</svg>
 		</matchIndicator>
-		<detailDistance>
-			${v.gender}
-			<km>${v.distance}</km>
-		</detailDistance>
 	</action>
 </detailHeader>
 <text${v.birthdayClass}>
@@ -79,6 +79,9 @@ ${v.aboutMe}
 	<buttontext class="bgColor${v.blocked}" name="buttonLocation"
 		onclick="pageContact.toggleLocation(${v.id})">${ui.l('locations.title')}</buttontext>
 </detailButtons>
+<text name="matchIndicatorHint" class="popup collapsed" onclick="ui.navigation.goTo(&quot;settings2&quot;)">
+	${v.matchIndicatorHint}
+</text>
 <text name="block" class="popup collapsed">
 	<detailTogglePanel>
 		${v.buddy}
@@ -301,7 +304,7 @@ ${v.aboutMe}
 		v.budget = v.attr.budget;
 		v.attributes = v.attr.text;
 		if (v.gender) {
-			if (v.age) {
+			if (v.age && v.attr.totalMatch) {
 				var a;
 				if (v.gender == 1)
 					a = user.contact.ageMale;
@@ -318,7 +321,8 @@ ${v.aboutMe}
 			v.matchIndicator = v.attr.totalMatch + '/' + v.attr.total;
 			v.matchIndicatorPercent = parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5);
 		} else
-			v.matchIndicatorClass = ' class="noDisp"';
+			v.matchIndicatorPercent = 0;
+		v.matchIndicatorHint = ui.l('contacts.matchIndicatorHint').replace('{0}', v.attr.totalMatch).replace('{1}', v.attr.total).replace('{2}', v.matchIndicatorPercent);
 		v.hideGroups = v.contactLink.status == 'Friends' ? '' : ' noDisp';
 		v.hideMe = user.contact.id == v.id ? ' noDisp' : '';
 		if (v.image)
@@ -766,5 +770,11 @@ ${v.aboutMe}
 			});
 		} else
 			details.togglePanel(e);
+	}
+	static toggleMatchIndicatorHint(id, event) {
+		var e = ui.q('detail[i="' + id + '"] [name="matchIndicatorHint"]');
+		var button = ui.parents(event.target, 'matchIndicator');
+		e.style.top = (button.offsetTop + button.offsetHeight) + 'px';
+		details.togglePanel(e);
 	}
 }

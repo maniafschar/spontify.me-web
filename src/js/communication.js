@@ -13,6 +13,7 @@ import { pageSettings } from './pageSettings';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 import { pageLocation } from './pageLocation';
+import { intro } from './intro';
 
 export { communication, FB };
 
@@ -249,6 +250,22 @@ class communication {
 							bluetooth.stop();
 							if (user.contact.findMe)
 								bluetooth.requestAuthorization();
+						}
+						if (!user.contact.aboutMe && !user.contact.budget
+							&& !user.contact.gender && !user.contact.birthday
+							&& !user.contact.ageMale && !user.contact.ageFemale && !user.contact.ageDivers
+							&& !user.contact.attr && !user.contact.attr
+							&& !user.contact.attrInterest && !user.contact.attrInterestEx
+							&& !user.contact.attr0 && !user.contact.attrEx0
+							&& !user.contact.attr1 && !user.contact.attrEx1
+							&& !user.contact.attr2 && !user.contact.attrEx2
+							&& !user.contact.attr3 && !user.contact.attrEx3
+							&& !user.contact.attr4 && !user.contact.attrEx4
+							&& !user.contact.attr5 && !user.contact.attrEx5) {
+							setTimeout(function () {
+								if (ui.navigation.getActiveID() == 'home')
+									intro.openHint({ desc: 'goToSettings', pos: '-0.5em,5em', size: '60%,auto', hinky: 'right:1em;', hinkyClass: 'top', onclick: 'ui.navigation.goTo(\'settings\')' });
+							}, 2000);
 						}
 						if (exec)
 							exec.call();
