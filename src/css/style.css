@@ -143,13 +143,14 @@ alert close {
 	position: absolute;
 	right: 0;
 	top: 0;
-	opacity: 0.4;
 	width: 6em;
 	height: 6em;
 	text-align: right;
 	padding-right: 0.5em;
 	z-index: 9;
 	cursor: pointer;
+	font-weight: bold;
+	color: white;
 }
 
 hint>b {

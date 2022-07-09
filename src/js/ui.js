@@ -77,8 +77,11 @@ class ui {
 			totalMatch: 0,
 			textAttributes() {
 				var s = this.attributesUser.toString(style);
-				for (var i = 0; i < this.attributesCategories.length; i++)
-					s += this.attributesCategories[i].toString(style);
+				for (var i = 0; i < this.attributesCategories.length; i++) {
+					var s2 = this.attributesCategories[i].toString(style);
+					if (s2)
+						s += (s && style == 'list' ? ', ' : '') + s2;
+				}
 				return s;
 			}
 		};

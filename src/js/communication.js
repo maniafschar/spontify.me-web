@@ -199,6 +199,7 @@ class communication {
 						user.email = u;
 						user.password = p;
 						user.init(v);
+						lists.resetLists();
 						try {
 							user.contact.storage = user.contact.storage ? JSON.parse(user.contact.storage) : {};
 						} catch (e) {
@@ -405,19 +406,17 @@ class communication {
 			window.localStorage.removeItem('autoLogin');
 		},
 		resetAfterLogoff() {
-			user.reset();
 			bluetooth.stop();
 			ui.html('chatUserList', '');
 			initialisation.recoverInvoked = false;
 			pageLocation.locationsAdded = null;
-			user.reset();
 			pageChat.chatNews = [];
 			lists.data = [];
 			pageChat.copyLink = '';
 			pageWhatToDo.list = null;
 			pageSettings.currentSettings = null;
 			pageSettings.currentSettings3 = null;
-			lists.resetLists();
+			user.reset();
 			communication.setApplicationIconBadgeNumber(0);
 			var e = ui.q('badgeChats');
 			ui.html(e, '0');
@@ -429,8 +428,8 @@ class communication {
 			communication.login.removeCredentials();
 			ui.attr('content > *', 'menuIndex', null);
 			communication.currentCalls = [];
-			ui.navigation.goTo('home');
-			ui.html('info', '');
+			ui.navigation.goTo('home', null, true);
+			setTimeout(lists.resetLists, 500);
 			e = ui.qa('.homeIconSearch');
 			e[0].style.display = '';
 			e[1].style.display = 'none';
