@@ -185,9 +185,9 @@ class pageInfo {
 				},
 				success(r) {
 					pageInfo.sentFeedback.push(text);
+					pageChat.initActiveChats();
 					var e = ui.q('feedbackHint');
 					if (e) {
-						pageChat.initActiveChats();
 						ui.css(e.parentNode, 'height', '');
 						ui.html(e, ui.l('info.feedbackUploadSuccess'));
 						setTimeout(function () {

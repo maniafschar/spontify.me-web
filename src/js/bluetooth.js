@@ -44,7 +44,11 @@ class bluetooth {
 			}
 		}
 	}
-	static requestAuthorization() {
+	static hidePopup() {
+		if (ui.q('popupContent') && ui.q('popupContent').innerHTML.indexOf(ui.l('findMe.bluetoothDeactivated')) > -1)
+			ui.navigation.hidePopup();
+	}
+	static requestAuthorization(logon) {
 		bluetooth.reset();
 		ui.q('#homeIconBluetooth').style.opacity = 1;
 		var stateListener = function () {
@@ -52,13 +56,16 @@ class bluetooth {
 			cordova.plugins.backgroundMode.on('failure', function (e) {
 				communication.sendError('ble background mode: ' + JSON.stringify(e));
 			});
+			var showHint = !logon;
 			ble.startStateNotifications(function (state) {
 				bluetooth.state = state;
 				ui.q('#homeIconBluetooth').style.opacity = state == 'on' ? 1 : null;
 				if (state == 'on') {
-					if (ui.q('popupContent') && ui.q('popupContent').innerHTML.indexOf(ui.l('findMe.bluetoothDeactivated')) > -1)
-						ui.navigation.hidePopup();
+					bluetooth.hidePopup();
 					bluetooth.scanStart();
+					if (showHint)
+						intro.openHint({ desc: 'bluetoothOn', pos: '-0.5em,-4.5em', size: 'auto,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
+					showHint = false;
 				} else if (user.contact.findMe)
 					ui.navigation.openPopup(ui.l('attention'), ui.l('findMe.bluetoothDeactivated'));
 			})
@@ -112,9 +119,9 @@ class bluetooth {
 	}
 	static toggle() {
 		if (global.isBrowser())
-			intro.openHint({ desc: 'bluetoothDescriptionBrowser', pos: '-0.5em,-4em', size: '80%,auto' });
+			intro.openHint({ desc: 'bluetoothDescriptionBrowser', pos: '-0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
 		else if (!user.contact)
-			intro.openHint({ desc: 'bluetoothDescriptionLoggedOff', pos: '-0.5em,-4em', size: '80%,auto' });
+			intro.openHint({ desc: 'bluetoothDescriptionLoggedOff', pos: '-0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
 		else if (window.localStorage.getItem('findMeIDs'))
 			user.save({ findMe: false }, bluetooth.stop);
 		else
@@ -124,6 +131,9 @@ class bluetooth {
 		if (!global.isBrowser()) {
 			ble.stopScan();
 			ble.stopStateNotifications();
+			bluetooth.hidePopup();
+			if (ui.q('hint[i="bluetoothOn"]'))
+				intro.closeHint();
 		}
 		ui.q('#homeIconBluetooth').style.opacity = null;
 		window.localStorage.removeItem('findMeIDs');

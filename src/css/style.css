@@ -96,7 +96,8 @@ body.app>main hint {
 
 body.app>main home buttonIcon,
 body.app>main chatUserList,
-body.app>main>buttonIcon {
+body.app>main>buttonIcon,
+body.app>main hint {
 	margin-bottom: constant(safe-area-inset-bottom);
 	margin-bottom: env(safe-area-inset-bottom);
 }
@@ -146,31 +147,31 @@ alert close {
 	width: 6em;
 	height: 6em;
 	text-align: right;
-	padding: 0.5em 1em;
+	padding-right: 0.5em;
 	z-index: 9;
 	cursor: pointer;
 }
 
-hint hinky {
+hint>b {
+	margin-bottom: 0.5em;
+	display: inline-block;
+}
+
+hinky {
 	position: absolute;
 	border-right: solid 0.5em transparent;
 	border-left: solid 0.5em transparent;
 	z-index: 0;
 }
 
-hint hinky.top {
+hinky.top {
 	top: -0.5em;
 	border-bottom: solid 0.5em rgba(255, 255, 255, 0.9);
 }
 
-hint hinky.bottom {
+hinky.bottom {
 	bottom: -0.5em;
 	border-top: solid 0.5em rgba(255, 255, 255, 0.9);
-}
-
-hint>b {
-	margin-bottom: 0.5em;
-	display: inline-block;
 }
 
 ul li,
@@ -754,7 +755,7 @@ whatToDoList {
 }
 
 #whatToDoLocation>img {
-	border-radius: 50% 0.5em;
+	border-radius: 0.5em;
 }
 
 chat {
@@ -837,7 +838,7 @@ chatUserList img {
 
 errorHint {
 	text-align: center;
-	color: red;
+	color: rgb(255, 240, 100);
 	position: relative;
 	z-index: 0;
 	display: block;
@@ -943,7 +944,7 @@ popupTitle>div {
 popupHint {
 	padding: 0.5em;
 	text-align: center;
-	color: red;
+	color: rgb(255, 240, 100);
 	display: block;
 }
 
@@ -1271,7 +1272,7 @@ chatMessage time {
 }
 
 .chatLinks img {
-	border-radius: 50%;
+	border-radius: 0.5em;
 	height: 4.8em;
 	margin-bottom: -0.5em;
 }
@@ -1395,7 +1396,7 @@ form {
 
 .ratingBonusImg {
 	width: 55%;
-	border-radius: 50%;
+	border-radius: 0.5em;
 }
 
 ratingBonusCaption {
@@ -1586,12 +1587,6 @@ descbox {
 	margin-left: -5.5em;
 }
 
-.newsImage {
-	max-width: 10em;
-	border-radius: 50%;
-	margin-top: 0.5em;
-}
-
 .internalLink {
 	margin: -1em 0;
 	padding: 1em 0;
@@ -1601,11 +1596,6 @@ descbox {
 
 homeImage img {
 	height: 100%;
-}
-
-homeImage img.set {
-	border-radius: 50%;
-	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
 }
 
 row {
@@ -1642,6 +1632,7 @@ row text {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	display: inline-block;
+	padding: 0.5em;
 }
 
 row matchIndicator {
@@ -1810,8 +1801,6 @@ img {
 
 text {
 	position: relative;
-	width: 100%;
-	padding: 0.5em;
 	color: black;
 	display: block;
 	overflow: hidden;
@@ -1821,11 +1810,12 @@ text {
 text.popup {
 	position: absolute;
 	max-width: 90%;
-	right: 1em;
-	top: 9em;
-	background: rgba(255, 255, 255, 0.9);
-	box-shadow: 0 0 1em rgb(0 0 0 / 30%);
-	padding: 1.5em;
+	background: rgba(255, 255, 255, 0.95);
+	box-shadow: 0 0 1em rgb(0, 0, 0, 0.3);
+}
+
+text.popup>div {
+	margin: 1.5em;
 }
 
 text.collapsed {
@@ -1834,6 +1824,7 @@ text.collapsed {
 
 detail detailTogglePanel {
 	display: block;
+	margin: 0.5em;
 }
 
 detail {
@@ -1880,6 +1871,15 @@ detail detailImg {
 detail detailImg img {
 	width: 100%;
 	border-radius: 0.25em;
+}
+
+detail>div>text.highlightBackground {
+	padding: 0.5em;
+}
+
+detail text.matchIndicatorAttributesHint {
+	left: 10%;
+	width: 80%;
 }
 
 detail>img.present {
@@ -2133,6 +2133,10 @@ attributesDisplay {
 	position: relative;
 }
 
+.attributeFade {
+	opacity: 0.35;
+}
+
 settings3 .infoButton {
 	margin: 0 0.5em 1em 0.5em;
 }
@@ -2222,7 +2226,7 @@ menu a {
 	cursor: pointer;
 }
 
-menu>div {
+menu title {
 	font-weight: bold;
 	color: rgb(0, 94, 160);
 	padding-top: 0.75em;

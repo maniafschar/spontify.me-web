@@ -133,12 +133,12 @@ class details {
 		ui.navigation.goTo(ui.q('detail').getAttribute('list'), null, true);
 	}
 	static togglePanel(d) {
-		var path = ui.parents(d, 'popup') ? 'popup detail ' : 'detail ';
+		var path = ui.parents(d, 'popup') ? 'popup detail' : 'detail';
 		var panelName = d.getAttribute('name').replace('button', '');
-		var divID = path + '[name="' + panelName.substring(0, 1).toLowerCase() + panelName.substring(1) + '"]';
+		var divID = path + '>[name="' + panelName.substring(0, 1).toLowerCase() + panelName.substring(1) + '"]';
 		var open = ui.classContains(divID, 'collapsed');
-		var e = ui.qa(path + 'text[name]');
-		var buttons = ui.q(path + 'detailButtons');
+		var e = ui.qa(path + '>text[name]:not(.popup)');
+		var buttons = ui.q(path + '>detailButtons');
 		for (var i = 0; i < e.length; i++) {
 			if (!ui.classContains(e[i], 'collapsed')) {
 				ui.toggleHeight(e[i], function () {

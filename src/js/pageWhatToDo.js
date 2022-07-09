@@ -183,7 +183,7 @@ class pageWhatToDo {
 		var b = pageWhatToDo.getCurrentMessage();
 		b = b && b.active;
 		ui.css('whatToDoLists', 'display', b ? '' : 'none');
-		ui.css('whatToDoInput buttonText.reset', 'display', b ? '' : 'none');
+		ui.css('whatToDoInput buttontext.reset', 'display', b ? '' : 'none');
 		if (!b)
 			setTimeout(function () {
 				if (ui.cssValue('whatToDo', 'display') != 'none' && ui.cssValue('whatToDoInput', 'display') == 'none')

@@ -354,9 +354,7 @@ class initialisation {
 				ui.labels['infoLegal'] = r[1];
 			}
 		});
-		var e = ui.qa('#addLeft > buttontext');
-		e[0].innerHTML = ui.l('home.DescLink');
-		e[1].innerHTML = global.appTitle + ' blog';
+		ui.q('#addLeft > buttontext').innerHTML = global.appTitle + ' blog';
 		lists.resetLists();
 		ui.html('home', '');
 		pageHome.init();

@@ -4,7 +4,6 @@ import { geoData } from './geoData';
 import { global } from './global';
 import { lists } from './lists';
 import { pageLocation } from './pageLocation';
-import { pageWhatToDo } from './pageWhatToDo';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 import { model, Contact, ContactGroupLink, ContactBlock, ContactGroup, ContactLink } from './model';
@@ -79,11 +78,14 @@ ${v.aboutMe}
 	<buttontext class="bgColor${v.blocked}" name="buttonLocation"
 		onclick="pageContact.toggleLocation(${v.id})">${ui.l('locations.title')}</buttontext>
 </detailButtons>
-<text name="matchIndicatorHint" class="popup collapsed" onclick="ui.navigation.goTo(&quot;settings2&quot;)">
-	${v.matchIndicatorHint}
+<text name="matchIndicatorHint" class="popup" style="display:none;" onclick="ui.toggleHeight(this)">
+	<div>${v.matchIndicatorHint}</div>
 </text>
-<text name="block" class="popup collapsed">
-	<detailTogglePanel>
+<text class="popup matchIndicatorAttributesHint" style="display:none;" onclick="ui.toggleHeight(this)">
+	<div></div>
+</text>
+<text name="block" class="popup" style="display:none;right:1em;top:8em;" onclick="ui.toggleHeight(this)">
+	<div>
 		${v.buddy}
 		<input type="radio" name="type" value="1" label="${ui.l('contacts.blockAction')}"
 			onclick="pageContact.showBlockText(${v.id})" checked="true" />
@@ -100,7 +102,7 @@ ${v.aboutMe}
 		<textarea placeholder="${ui.l('contacts.blockDescHint')}" name="note" maxlength="250" style="display:none;"></textarea>
 		<buttontext onclick="pageContact.block(${v.id})" style="margin-top:0.5em;"
 			class="bgColor">${ui.l('save')}</buttontext>
-	</detailTogglePanel>
+	</div>
 </text>
 <text name="events" class="collapsed"></text>
 <text name="groups" class="collapsed">
@@ -301,8 +303,8 @@ ${v.aboutMe}
 		if (!details.getNextNavElement(false, v.id))
 			v.hidePrevious = 'display:none;';
 		v.attr = ui.getAttributes(v, 'detail');
-		v.budget = v.attr.budget;
-		v.attributes = v.attr.text;
+		v.budget = v.attr.budget.toString();
+		v.attributes = v.attr.textAttributes();
 		if (v.gender) {
 			if (v.age && v.attr.totalMatch) {
 				var a;
@@ -323,6 +325,8 @@ ${v.aboutMe}
 		} else
 			v.matchIndicatorPercent = 0;
 		v.matchIndicatorHint = ui.l('contacts.matchIndicatorHint').replace('{0}', v.attr.totalMatch).replace('{1}', v.attr.total).replace('{2}', v.matchIndicatorPercent);
+		if (v.matchIndicatorClass)
+			v.matchIndicatorHint += '<br/>' + ui.l('contacts.matchIndicatorHintPulse');
 		v.hideGroups = v.contactLink.status == 'Friends' ? '' : ' noDisp';
 		v.hideMe = user.contact.id == v.id ? ' noDisp' : '';
 		if (v.image)
@@ -678,7 +682,7 @@ ${v.aboutMe}
 			if (v.attr.total && v.attr.totalMatch / v.attr.total > 0)
 				v.matchIndicator = parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5) + '%';
 			if (!v._message1)
-				v._message1 = v.attr.text;
+				v._message1 = v.attr.textAttributes();
 			if (birth)
 				v.birth = birth[0] ? ' (' + v.age + ')' : '';
 			if (!v._message2)
@@ -719,11 +723,8 @@ ${v.aboutMe}
 			success() {
 				if (ui.q('popupContent'))
 					ui.navigation.hidePopup();
-				else {
-					var e = ui.q('detail[i="' + id + '"] [name="block"]');
-					e.innerHTML = ui.l('contacts.requestFriendshipSent');
-					e.setAttribute('h', e.clientHeight);
-				}
+				else
+					ui.q('detail[i="' + id + '"] [name="block"] buttontext').outerHTML = '<span style="text-align:center;">' + ui.l('contacts.requestFriendshipAlreadySent') + '</span>';
 			}
 		});
 	}
@@ -752,7 +753,7 @@ ${v.aboutMe}
 				}
 			});
 		}
-		details.togglePanel(e);
+		ui.toggleHeight(e);
 	}
 	static toggleLocation(id) {
 		var e = ui.q('detail[i="' + id + '"] [name="location"]');
@@ -775,6 +776,7 @@ ${v.aboutMe}
 		var e = ui.q('detail[i="' + id + '"] [name="matchIndicatorHint"]');
 		var button = ui.parents(event.target, 'matchIndicator');
 		e.style.top = (button.offsetTop + button.offsetHeight) + 'px';
-		details.togglePanel(e);
+		e.style.right = '1em';
+		ui.toggleHeight(e);
 	}
 }

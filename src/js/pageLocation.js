@@ -71,11 +71,11 @@ class pageLocation {
 <text>
 	${v.telOpenTag}${v.address}<br/>${v.tel}${v.telCloseTag}
 </text>
+${v.attributes}
 ${v.eventDetails}
 ${v.description}
 <text>
 	${v.bonus}
-	${v.attributes}
 	${v.budget}
 	${v.rating}
 	${v.parking}
@@ -100,8 +100,11 @@ ${v.description}
 		onclick="ui.navigation.openHTML(&quot;https://google.com/search?q=${encodeURIComponent(v.name + ' ' + v.town)}&quot;)">Google</buttontext>
 </detailButtons>
 <text name="events" class="collapsed" ${v.urlNotActive}></text>
-<text name="matchIndicatorHint" class="popup collapsed" onclick="ui.navigation.goTo(&quot;settings2&quot;)">
-	${v.matchIndicatorHint}
+<text name="matchIndicatorHint" class="popup" style="display:none;" onclick="ui.toggleHeight(this)">
+	<div>${v.matchIndicatorHint}</div>
+</text>
+<text class="popup matchIndicatorAttributesHint" style="display:none;" onclick="ui.toggleHeight(this)">
+	<div></div>
 </text>
 <text name="whatToDo" class="collapsed">
 	<detailTogglePanel>
@@ -476,23 +479,23 @@ ${v.hint}
 			v.telCloseTag = '</a>';
 		}
 		v.attr = ui.getAttributes(v, 'detail');
-		v.budget = v.attr.budget;
+		v.budget = v.attr.budget.toString();
 		if (v.attr.totalMatch) {
 			v.matchIndicator = v.attr.totalMatch + '/' + v.attr.total;
 			v.matchIndicatorPercent = parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5);
 		} else
 			v.matchIndicatorPercent = 0;
 		v.matchIndicatorHint = ui.l('locations.matchIndicatorHint').replace('{0}', v.attr.totalMatch).replace('{1}', v.attr.total).replace('{2}', v.matchIndicatorPercent).replace('{3}', v.attr.categories);
-		v.attributes = v.attr.text;
+		v.attributes = v.attr.textAttributes();
 		if (v.rating > 0)
 			v.rating = '<detailRating onclick="rating.open(' + v.locID + ',&quot;location&quot;,event)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></ratingSelection></detailRating>';
 		else
-			v.rating = '<div style="margin:1em 0;"><buttonText class="bgColor" onclick="rating.open(' + v.locID + ',&quot;location&quot;,event)">' + ui.l('rating.save') + '</buttonText></div>';
+			v.rating = '<div style="margin:1em 0;"><buttontext class="bgColor" onclick="rating.open(' + v.locID + ',&quot;location&quot;,event)">' + ui.l('rating.save') + '</buttontext></div>';
 		v.address = v.address.replace(/\n/g, '<br />');
 		if (v.ownerId && v.url)
 			v.description = (v.description ? v.description + ' ' : '') + ui.l('locations.clickForMoreDetails');
 		if (v.description)
-			v.description = '<text style="margin:1em 0;" class="highlightBackground">' + v.description + '</text>';
+			v.description = '<div style="margin-top:1em;"><text class="highlightBackground">' + v.description + '</text></div>';
 		if (ui.q('locations').innerHTML) {
 			if (!details.getNextNavElement(true, id))
 				v.hideNext = 'display:none;';
@@ -1395,12 +1398,11 @@ ${v.hint}
 		}
 	}
 	static listInfos(v) {
-
 		v.attr = ui.getAttributes(v, 'list');
 		if (v.attr.total && v.attr.totalMatch / v.attr.total > 0)
 			v.matchIndicator = parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5) + '%';
 		if (!v._message1)
-			v._message1 = v.attr.text;
+			v._message1 = v.attr.textAttributes();
 		if (!v._message2)
 			v._message2 = v.description;
 		if (v.parkingOption) {
@@ -1798,7 +1800,8 @@ ${v.hint}
 		var e = ui.q('detail[i="' + id + '"] [name="matchIndicatorHint"]');
 		var button = ui.parents(event.target, 'matchIndicator');
 		e.style.top = (button.offsetTop + button.offsetHeight) + 'px';
-		details.togglePanel(e);
+		e.style.right = '1em';
+		ui.toggleHeight(e);
 	}
 	static toggleWhatToDo(id) {
 		details.togglePanel(ui.q('detail[i="' + id + '"] [name="whatToDo"]'));

@@ -22,7 +22,7 @@
 	<meta name="format-detection" content="date=no" />
 	<meta name="format-detection" content="address=no" />
 	<meta name="format-detection" content="email=no" />
-	<link rel="apple-touch-icon" href="https://spontify.me/icon.png">
+	<link rel="apple-touch-icon" href="https://spontify.me/images/icon.png">
 	<link rel="canonical" href="https://spontify.me/" />
 	<link rel="alternate" href="android-app://com.jq.spontifyme/https/spontify.me" />
 	<link rel="alternate" href="android-app://com.jq.spontifyme/spontifyme/*" />
@@ -82,9 +82,7 @@
 	<preloader class="mainBG">
 		<img source="logo.svg" />
 	</preloader>
-	<descbox onclick="ui.openDescription(event)" style="transform:scale(0);" class="mainBG"></descbox>
 	<add id="addLeft">
-		<buttontext class="bgColor" onclick="ui.openDescription(event,1)"></buttontext>
 		<buttontext class="bgColor" onclick="ui.navigation.openHTML('https://blog.spontify.me', 'blog_spontifyme')">
 		</buttontext>
 	</add>
@@ -127,7 +125,10 @@
 			<img source="home.svg" />
 		</buttonIcon>
 		<hint></hint>
-		<menu style="transform:scale(0);"></menu>
+		<menu style="transform:scale(0);">
+			<hinky class="top" style="right:1.5em;"></hinky>
+			<div></div>
+		</menu>
 	</main>
 </body>
 

@@ -358,7 +358,7 @@ class pageSettings {
 				else if (ui.navigation.getActiveID() == 'settings2')
 					setTimeout(function () {
 						if (ui.navigation.getActiveID() == 'settings2' && ui.cssValue('popup', 'display') == 'none')
-							intro.openHint({ desc: 'settings2', pos: '4em,8em', size: '40%,auto' });
+							intro.openHint({ desc: 'settings2', pos: '1.5em,9em', size: '40%,auto', hinkyClass: 'top', hinky: 'left:1em' });
 					}, 2000);
 			}
 			return true;

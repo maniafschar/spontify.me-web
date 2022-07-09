@@ -147,7 +147,7 @@ class pageLogin {
 		if (ui.q('login .dialogFieldError'))
 			p.value = '';
 		else
-			communication.login.login(u.value, p.value, ui.q('[name="autoLogin"]:checked'), null, true);
+			communication.login.login(u.value, p.value, ui.q('[name="autoLogin"]:checked'));
 	}
 	static getDraft() {
 		var v = window.localStorage.getItem('login');
@@ -200,7 +200,8 @@ class pageLogin {
 			communication.login.recoverPasswordSendEmail(email.value, pseudonym.value);
 	}
 	static recoverPasswordSetNew() {
-		ui.navigation.openPopup(ui.l('login.changePassword'), '<span style="padding-bottom:1em;display:block;">' + ui.l('login.changePasswordBody') + '</span><field><label>' + ui.l('login.password') + '</label><value><input type="password" name="passwd" maxlength="30"></value></div><dialogButtons><buttontext class="bgColor" onclick="communication.login.recoverPasswordSetNew()">' + ui.l('login.changePassword') + '</buttontext></dialogButtons><popupHint></popupHint>', 'communication.login.warningRegNotComplete()', true);
+		if (!ui.navigation.openPopup(ui.l('login.changePassword'), '<span style="padding-bottom:1em;display:block;">' + ui.l('login.changePasswordBody') + '</span><field><label>' + ui.l('login.password') + '</label><value><input type="password" name="passwd" maxlength="30"></value></div><dialogButtons><buttontext class="bgColor" onclick="communication.login.recoverPasswordSetNew()">' + ui.l('login.changePassword') + '</buttontext></dialogButtons><popupHint></popupHint>', 'communication.login.warningRegNotComplete()', true))
+			setTimeout(pageLogin.recoverPasswordSetNew, 500);
 	}
 	static register() {
 		formFunc.validation.email(ui.q('input[name="email"]'));

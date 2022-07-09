@@ -5,7 +5,6 @@ import { global } from './global';
 import { DragObject } from './initialisation';
 import { intro } from './intro';
 import { pageChat } from './pageChat';
-import { pageHome } from './pageHome';
 import { pageInfo } from './pageInfo';
 import { pageLocation } from './pageLocation';
 import { pageLogin } from './pageLogin';
@@ -25,9 +24,9 @@ class ui {
 	static labels = [];
 	static lastClick = '';
 	static templateMenuLocation = () =>
-		global.template`<div>
+		global.template`<title>
 		${ui.l('locations.title')}
-</div><container>
+</title><container>
 	<a onclick="communication.loadList(ui.query.locationAll(),pageLocation.listLocation,&quot;locations&quot;,&quot;list&quot;)">
 		${ui.l('all')}
 	</a><a onclick="communication.loadList(ui.query.locationFavorites(),pageLocation.listLocation,&quot;locations&quot;,&quot;favorites&quot;)">
@@ -37,9 +36,9 @@ class ui {
 	</a><a onclick="pageLocation.edit()">
 		${ui.l('locations.new')}
 	</a>
-</container><div style="margin-top:1em;">
+</container><title style="margin-top:1em;">
 	${ui.l('events.title')}
-</div>
+</title>
 <container>
 	<a onclick="communication.loadList(ui.query.eventAll(),pageLocation.event.listEvents,&quot;locations&quot;,&quot;events&quot;)">
 		${ui.l('all')}
@@ -61,15 +60,6 @@ class ui {
 		${ui.l('group.action')}
 	</a>
 </container>`;
-	static templateLanding = v =>
-		global.template`<img src="images/logo.svg" style="width:40%;margin-bottom:2em;cursor:pointer;" onclick="pageInfo.toggleInfoBlock(&quot;descbox #landing0&quot;, event)"/>
-		${v.infoAbout}
-		<landingimages>
-		<img onclick="ui.navigation.openHTML(&quot;https://play.google.com/store/apps/details?id=com.jq.spontifyme&quot;)"
-		src="images/storeGoogle.png" />
-		<img onclick="ui.navigation.openHTML(&quot;https://itunes.apple.com/de/app/id1630967898&quot;)"
-		src="images/storeApple.png" />
-		</landingimages>`;
 	static addFastButton(id) {
 		var e = ui.qa(id + ' [onclick]');
 		for (var i = 0; i < e.length; i++) {
@@ -79,39 +69,43 @@ class ui {
 	}
 	static getAttributes(compare, style) {
 		var result = {
-			budget: '',
+			attributesCategories: [],
+			attributesUser: new Attribute('user'),
+			budget: new Attribute('budget'),
 			categories: '',
-			text: '',
 			total: 0,
-			totalMatch: 0
+			totalMatch: 0,
+			textAttributes() {
+				var s = this.attributesUser.toString(style);
+				for (var i = 0; i < this.attributesCategories.length; i++)
+					s += this.attributesCategories[i].toString(style);
+				return s;
+			}
 		};
 		var a, userAttr = user.contact.attrInterest || '';
+		var add2List = function (label, highlight, list) {
+			var l = { label: label };
+			if (highlight) {
+				l.class = 'highlightBackground';
+				result.totalMatch++;
+			}
+			list.list.push(l);
+		};
 		if (compare.idDisplay) {
 			if (userAttr)
 				result.total += userAttr.split('\u0015').length;
 			if (compare.attr) {
 				a = compare.attr.split('\u0015');
-				for (var i = 0; i < a.length; i++) {
-					var attr = ui.attributes[parseInt(a[i], 10)];
-					if (userAttr.indexOf(a[i]) > -1) {
-						result.text += style == 'list' ? ', ' + attr : '<label class="multipleLabel highlightBackground">' + attr + '</label>';
-						result.totalMatch++;
-					} else if (style != 'list')
-						result.text += '<label class="multipleLabel">' + attr + '</label>';
-				}
+				for (var i = 0; i < a.length; i++)
+					add2List(ui.attributes[parseInt(a[i], 10)], userAttr.indexOf(a[i]) > -1, result.attributesUser);
 			}
 			userAttr = user.contact.attrInterestEx ? ',' + user.contact.attrInterestEx.toLowerCase() + ',' : '';
 			if (userAttr)
 				result.total += userAttr.split(',').length - 2;
 			if (compare.attrEx) {
 				a = compare.attrEx.toLowerCase().split(',');
-				for (var i = 0; i < a.length; i++) {
-					if (userAttr.indexOf(',' + a[i].trim() + ',') > -1) {
-						result.text += style == 'list' ? ', ' + a[i].trim() : '<label class="multipleLabel highlightBackground">' + a[i].trim() + '</label>';
-						result.totalMatch++;
-					} else if (style != 'list')
-						result.text += '<label class="multipleLabel">' + a[i].trim() + '</label>';
-				}
+				for (var i = 0; i < a.length; i++)
+					add2List(a[i].trim(), userAttr.indexOf(',' + a[i].trim() + ',') > -1, result.attributesUser);
 			}
 		}
 		for (var i = 0; i < ui.categories.length; i++) {
@@ -121,37 +115,21 @@ class ui {
 				result.total += userAttr.split('\u0015').length + 1;
 				result.categories += '/' + ui.categories[i].label;
 			}
-			if (compareHasCat) {
-				if (style == 'list')
-					result.text += ', ' + ui.categories[i].label;
-				else
-					result.text += '</attributes><attributes><label class="multipleLabel' + (userAttr ? ' highlightBackground' : '') + '">' + ui.categories[i].label + '</label>';
-				if (userAttr)
-					result.totalMatch++;
-			}
+			result.attributesCategories.push(new Attribute('category' + i));
+			if (compareHasCat)
+				add2List(ui.categories[i].label, userAttr, result.attributesCategories[i]);
 			if (compare['attr' + i]) {
 				a = compare['attr' + i].split('\u0015');
-				for (var i2 = 0; i2 < a.length; i2++) {
-					var attr = ui.categories[i].subCategories[parseInt(a[i2], 10)];
-					if (userAttr.indexOf(a[i2]) > -1) {
-						result.text += style == 'list' ? ', ' + attr : '<label class="multipleLabel highlightBackground">' + attr + '</label>';
-						result.totalMatch++;
-					} else if (style != 'list')
-						result.text += '<label class="multipleLabel">' + attr + '</label>';
-				}
+				for (var i2 = 0; i2 < a.length; i2++)
+					add2List(ui.categories[i].subCategories[parseInt(a[i2], 10)], userAttr.indexOf(a[i2]) > -1, result.attributesCategories[i]);
 			}
 			userAttr = user.contact['attr' + i + 'Ex'] ? ',' + user.contact['attr' + i + 'Ex'].toLowerCase() + ',' : '';
 			if (userAttr && (compare.idDisplay || compareHasCat))
 				result.total += userAttr.split(',').length - 2;
 			if (compare['attr' + i + 'Ex']) {
 				a = compare['attr' + i + 'Ex'].split(',');
-				for (var i2 = 0; i2 < a.length; i2++) {
-					if (userAttr.indexOf(',' + a[i2] + ',') > -1) {
-						result.text += style == 'list' ? ', ' + a[i2].trim() : '<label class="multipleLabel highlightBackground">' + a[i2].trim() + '</label>';
-						result.totalMatch++;
-					} else if (style != 'list')
-						result.text += '<label class="multipleLabel">' + a[i2].trim() + '</label>';
-				}
+				for (var i2 = 0; i2 < a.length; i2++)
+					add2List(a[i2].trim(), userAttr.indexOf(',' + a[i2] + ',') > -1, result.attributesCategories[i]);
 			}
 		}
 		if (result.categories)
@@ -172,13 +150,9 @@ class ui {
 						s += ui.l('budget');
 					s += '</span>';
 				}
-				result.budget += '<label class="multipleLabel' + (userBudget.indexOf(b[i]) > -1 ? ' highlightBackground' : '') + '">' + s + '</label>';
+				add2List(s, userBudget.indexOf(b[i]) > -1, result.budget);
 			}
-			result.budget = '<attributes>' + result.budget + '</attributes>';
-			result.totalMatch += result.budget.split('highlightBackground').length - 1;
 		}
-		if (result.text)
-			result.text = style == 'list' ? result.text.substring(2) : '<attributes>' + result.text + '</attributes>';
 		return result;
 	}
 	static getEvtPos(e, horizontal) {
@@ -358,7 +332,7 @@ class ui {
 			if (document.activeElement)
 				document.activeElement.blur();
 			if (!intro.introMode)
-				intro.closeIntro();
+				intro.closeHint();
 			if (oldID == 'settings' && !pageSettings.save(id))
 				return;
 			if (!user.contact && oldID == 'login')
@@ -435,7 +409,7 @@ class ui {
 			return e;
 		},
 		openPopup(title, data, closeAction, modal, exec) {
-			intro.closeIntro();
+			intro.closeHint();
 			var p = ui.q('popup'), pt = ui.q('popupTitle'), visible = p.style.display != 'none';
 			if (ui.classContains(p, 'animated') || visible && pt && pt.getAttribute('modal') == 'true')
 				return false;
@@ -490,11 +464,11 @@ class ui {
 				var e = ui.q('content>[class*="SlideIn"]');
 				if (e && activeID.toLowerCase() != e.nodeName.toLowerCase())
 					return;
-				var e = ui.q('menu');
 				if (activeID == 'locations')
-					ui.html(e, ui.templateMenuLocation());
+					ui.html(ui.q('menu>div'), ui.templateMenuLocation());
 				else if (activeID == 'contacts')
-					ui.html(e, ui.templateMenuContacts());
+					ui.html(ui.q('menu>div'), ui.templateMenuContacts());
+				e = ui.q('menu');
 				e.setAttribute('type', activeID);
 				ui.addFastButton('menu');
 				ui.classAdd(ui.qa('menu a')[parseInt(ui.q(activeID).getAttribute('menuIndex'))], 'menuHighlight');
@@ -502,26 +476,57 @@ class ui {
 			}, 10);
 		}
 	};
-	static openDescription(event, id) {
-		if (ui.classContains(event.target, 'avatar'))
-			return;
-		var e = ui.q('descbox');
-		if (id && e.getAttribute('cid') != id) {
-			if (!e.innerHTML || e.getAttribute('lang') != global.language) {
-				var v = {};
-				v.parent = 'descbox';
-				v.infoAbout = pageInfo.templateAbout(v);
-				e.innerHTML = ui.templateLanding(v);
-				ui.attr(e, 'lang', global.language);
-				ui.q('descbox #landing0').style.display = 'block';
+	static openMatchingAttributes(button) {
+		var e = ui.q('detail .matchIndicatorAttributesHint');
+		if (e.style.display == 'none') {
+			var attr = new Attribute(button.getAttribute('type')), index = ',';
+			for (var i = 0; i < button.children.length; i++) {
+				var label = button.children[i].innerHTML.trim();
+				attr.list.push({ label: label, class: ui.classContains(button.children[i], 'highlightBackground') ? 'highlightBackground' : '' });
+				index += label + ',';
 			}
-			if (ui.cssValue(e, 'transform').indexOf('0') > 0)
-				ui.css(e, 'transform', 'scale(1)');
-			ui.attr(e, 'cid', id);
-		} else {
-			ui.css(e, 'transform', 'scale(0)');
-			ui.attr(e, 'cid', '');
+			var add2List = function (s) {
+				console.log(s + ' vs. ' + index)
+				if (s && index.indexOf(',' + s + ',') < 0)
+					attr.list.push({ label: s, class: 'attributeFade' });
+			}
+			if (button.getAttribute('type') == 'user') {
+				var a = user.contact.attrInterest.split('\u0015');
+				for (var i = 0; i < a.length; i++)
+					add2List(ui.attributes[parseInt(a[i], 10)]);
+				a = user.contact.attrInterestEx.split(',');
+				for (var i = 0; i < a.length; i++)
+					add2List(a[i].trim());
+			} else if (button.getAttribute('type').indexOf('category') == 0) {
+				var a = user.contact['attr' + button.getAttribute('type').substring(8)].split('\u0015');
+				var sub = ui.categories[parseInt(button.getAttribute('type').substring(8), 10)].subCategories;
+				for (var i = 0; i < a.length; i++)
+					add2List(sub[parseInt(a[i], 10)]);
+				a = user.contact['attr' + button.getAttribute('type').substring(8) + 'Ex'].split(',');
+				for (var i = 0; i < a.length; i++)
+					add2List(a[i].trim());
+			} else {
+				var a = user.contact.budget.split('\u0015');
+				for (var i = 0; i < a.length; i++) {
+					var s = '', i2 = 0;
+					var max = 1 + parseInt(a[i]);
+					for (; i2 < max; i2++)
+						s += ui.l('budget');
+					if (max < 3) {
+						s += '<span style="opacity:0.3;">';
+						for (; i2 < 3; i2++)
+							s += ui.l('budget');
+						s += '</span>';
+					}
+					add2List(s);
+				}
+			}
+			ui.q('detail .matchIndicatorAttributesHint>div').innerHTML = attr.toString();
+			e.style.top = (button.offsetTop + 2 * ui.emInPX) + 'px';
+			e.style.height = '';
+			e.removeAttribute('h');
 		}
+		ui.toggleHeight(e);
 	}
 	static query = {
 		contactAll() {
@@ -749,30 +754,30 @@ class ui {
 			e.style.display = 'block';
 			e.style.height = 0;
 			setTimeout(function () {
-				e.style.height = e.getAttribute('h') + 'px';
 				ui.on(e, 'transitionend', function () {
+					e.removeAttribute('toggle');
 					e.style.overflow = o;
 					e.style.transition = t;
 					e.style.height = '';
 					e.style.display = '';
 					if (exec)
 						exec.call();
-					e.removeAttribute('toggle');
 				}, true);
+				e.style.height = e.getAttribute('h') + 'px';
 			}, 50);
 		} else {
 			e.style.transition = 'height .4s ease-in';
 			e.style.height = e.offsetHeight + 'px';
 			setTimeout(function () {
-				e.style.height = 0;
 				ui.on(e, 'transitionend', function () {
+					e.removeAttribute('toggle');
 					e.style.overflow = o;
 					e.style.transition = t;
 					e.style.display = 'none';
 					if (exec)
 						exec.call();
-					e.removeAttribute('toggle');
 				}, true);
+				e.style.height = 0;
 			}, 50);
 		}
 	}
@@ -800,6 +805,35 @@ class ui {
 			f(e);
 	}
 };
+
+class Attribute {
+	list = [];
+	type;
+	constructor(type) {
+		this.type = type;
+	}
+	toString(style) {
+		var s = '', first;
+		if (this.type.indexOf('category') == 0)
+			first = this.list.shift();
+		this.list.sort(function (a, b) { return a.label > b.label ? 1 : -1 });
+		if (first)
+			this.list.unshift(first);
+		for (var i = 0; i < this.list.length; i++) {
+			if (style == 'list') {
+				if (this.list[i].class)
+					s += ', ' + this.list[i].label;
+			} else
+				s += '<label class="multipleLabel' + (this.list[i].class ? ' ' + this.list[i].class : '') + '">' + this.list[i].label + '</label>';
+		}
+		if (s) {
+			if (style == 'list')
+				return s.substring(2);
+			return '<attributes type="' + this.type + '" onclick="ui.openMatchingAttributes(this)">' + s + '</attributes>';
+		}
+		return '';
+	}
+}
 
 class formFunc {
 	static cameraField = null;

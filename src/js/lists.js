@@ -10,7 +10,7 @@ class lists {
 	static data = [];
 
 	static templateList = v =>
-		global.template`<listHeader>${v.img}<filters style="transform:scale(0);"></filters><listTitle onclick="${v.action}"></listTitle>${v.map}</listHeader>
+		global.template`<listHeader>${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5em;"></hinky><div></div></filters><listTitle onclick="${v.action}"></listTitle>${v.map}</listHeader>
 <listScroll><a class="bgColor"></a></listScroll><listBody>${v.groups}<listResults></listResults></listBody>`;
 
 	static execFilter() {
@@ -192,11 +192,12 @@ class lists {
 			var e = event ? event.target.nodeName : null;
 			if (!lists.data[activeID] || e == 'LABEL' || e == 'BUTTONTEXT' || event && ui.parents(event.target, 'map'))
 				return;
-			e = ui.q(activeID + ' filters');
+			e = ui.q(activeID + ' filters>div');
 			if (!e.innerHTML) {
 				e.innerHTML = html.call();
 				formFunc.initFields(activeID + ' filters');
 			}
+			e = ui.q(activeID + ' filters');
 			if (ui.cssValue(e, 'transform').indexOf('1') < 0) {
 				if (ui.q('menu').style.transform.indexOf('1') > 0)
 					ui.navigation.toggleMenu();

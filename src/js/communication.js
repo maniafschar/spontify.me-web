@@ -120,7 +120,7 @@ class communication {
 					ui.navigation.hidePopup();
 					ui.html(divID + ' listResults', s);
 					if (divID != 'search')
-						ui.html(divID + ' filters', '');
+						ui.html(divID + ' filters>div', '');
 					if (menuIndex > -1)
 						ui.attr(divID, 'menuIndex', menuIndex);
 					ui.addFastButton(divID);
@@ -249,7 +249,7 @@ class communication {
 						if (!global.isBrowser()) {
 							bluetooth.stop();
 							if (user.contact.findMe)
-								bluetooth.requestAuthorization();
+								bluetooth.requestAuthorization(true);
 						}
 						if (!user.contact.aboutMe && !user.contact.budget
 							&& !user.contact.gender && !user.contact.birthday
@@ -261,14 +261,15 @@ class communication {
 							&& !user.contact.attr2 && !user.contact.attrEx2
 							&& !user.contact.attr3 && !user.contact.attrEx3
 							&& !user.contact.attr4 && !user.contact.attrEx4
-							&& !user.contact.attr5 && !user.contact.attrEx5) {
+							&& !user.contact.attr5 && !user.contact.attrEx5
+							&& !exec) {
 							setTimeout(function () {
 								if (ui.navigation.getActiveID() == 'home')
 									intro.openHint({ desc: 'goToSettings', pos: '-0.5em,5em', size: '60%,auto', hinky: 'right:1em;', hinkyClass: 'top', onclick: 'ui.navigation.goTo(\'settings\')' });
 							}, 2000);
 						}
 						if (exec)
-							exec.call();
+							setTimeout(exec, 1500);
 					} else {
 						user.reset();
 						communication.login.removeCredentials();
@@ -309,7 +310,7 @@ class communication {
 			window.cordova.plugins.SignInWithApple.signin(
 				{ requestedScopes: [0, 1] },
 				function (data) {
-					data.name = data.fullName.givenName + (data.fullName.middleName ? data.fullName.middleName + ' ' : '') + data.fullName.familyName;
+					data.name = data.fullName.givenName + ' ' + (data.fullName.middleName ? data.fullName.middleName + ' ' : '') + data.fullName.familyName;
 					data.id = data.user;
 					delete data.fullName;
 					delete data.user;
@@ -607,7 +608,7 @@ class communication {
 				user.contact.tsVisits = r.visit;
 				var chat = 0;
 				if (r.chatNew) {
-					var chatNew = 0;
+					var chatNew = false;
 					for (var i in r.chatNew) {
 						var e2 = ui.q('chatUserList [i="' + i + '"] badge');
 						chat += r.chatNew[i];
@@ -615,11 +616,12 @@ class communication {
 							if (ui.q('chat[i="' + i + '"]'))
 								pageChat.refresh();
 							else {
-								chatNew += r.chatNew[i];
+								chatNew = true;
 								ui.html(e2, r.chatNew[i]);
 								ui.css(e2, 'display', 'block');
 							}
-						}
+						} else if (!e2)
+							chatNew = true;
 					}
 					if (chatNew)
 						pageChat.initActiveChats();
