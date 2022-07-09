@@ -40,7 +40,9 @@ class intro {
 			if (intro.introMode == 1)
 				intro.introMode = 0;
 		}
-		var e = ui.q('hint'), body = ui.l('intro.' + data.desc) + (data.hinky ? '<hinky style="' + data.hinky + '" class="' + data.hinkyClass + '"></hinky>' : '')
+		var e = ui.q('hint'), body = ui.l('intro.' + data.desc)
+			+ (user.contact || ui.navigation.getActiveID() != 'home' ? '' : '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;login&quot;,null,true)">' + ui.l('login.action') + '</buttontext>')
+			+ (data.hinky ? '<hinky style="' + data.hinky + '" class="' + data.hinkyClass + '"></hinky>' : '')
 			+ (data.desc == 'home' ? '' : '<close onclick="intro.close(event)">x</close>');
 		if (data.desc == e.getAttribute('i')) {
 			intro.closeHint();

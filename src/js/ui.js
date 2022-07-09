@@ -318,7 +318,7 @@ class ui {
 			var oldID = ui.navigation.getActiveID();
 			if (!user.contact && id != 'home' && id != 'info') {
 				if (id == 'whatToDo' || id == 'locations' || id == 'contacts' || id == 'settings' && !event) {
-					intro.openHint({ desc: id, pos: '10%,5em', size: '80%,auto', onclick: 'ui.navigation.goTo("login",null,true)' });
+					intro.openHint({ desc: id, pos: '10%,5em', size: '80%,auto' });
 					return;
 				}
 				var timestamp = ui.q('hint').getAttribute('timestamp');
@@ -1107,11 +1107,14 @@ class formFunc {
 			communication.ajax({
 				url: '/images/' + img.getAttribute('source'),
 				success(r) {
-					var parser = new DOMParser();
-					var xmlDoc = parser.parseFromString(r, "text/xml");
-					var svg = xmlDoc.getElementsByTagName('svg')[0];
-					if (img && img.parentNode)
+					if (img && img.parentNode) {
+						var parser = new DOMParser();
+						var xmlDoc = parser.parseFromString(r, "text/xml");
+						var svg = xmlDoc.getElementsByTagName('svg')[0];
 						img.parentNode.replaceChild(svg, img);
+						if (global.language != 'DE' && img.getAttribute('source') == 'logo.svg')
+							ui.classAdd('hometitle svg>g', 'en');
+					}
 				}
 			});
 		},

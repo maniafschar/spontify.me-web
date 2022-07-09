@@ -642,6 +642,7 @@ dialogButtons {
 	position: relative;
 	margin: 0 1em;
 	padding: 1em 2em;
+	cursor: pointer;
 }
 
 .langSelectImg.pressed::before,
