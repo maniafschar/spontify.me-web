@@ -311,6 +311,10 @@ class ui {
 			if (ui.classContains('content', 'animated'))
 				return;
 			var oldID = ui.navigation.getActiveID();
+			if (oldID == 'info' && id == 'home' && !user.contact && pageInfo.openSection == -2) {
+				id = 'login';
+				pageInfo.openSection = -1;
+			}
 			if (!user.contact && id != 'home' && id != 'info') {
 				if (id == 'whatToDo' || id == 'locations' || id == 'contacts' || id == 'settings' && !event) {
 					intro.openHint({ desc: id, pos: '10%,5em', size: '80%,auto' });

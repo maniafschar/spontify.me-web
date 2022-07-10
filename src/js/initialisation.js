@@ -234,10 +234,13 @@ class initialisation {
 				ui.navigation.goTo('home', null, true);
 		}, 'input,listScroll,map');
 		ui.swipe('info', function (dir) {
-			if (dir == 'left' && !user.contact)
-				ui.navigation.goTo('login');
-			else if (dir == 'right')
-				ui.navigation.goTo('home', null, true);
+			if (dir == 'right') {
+				if (pageInfo.openSection == -2) {
+					ui.navigation.goTo('login', null, true);
+					pageInfo.openSection = -1;
+				} else
+					ui.navigation.goTo('home', null, true);
+			}
 		}, 'textarea');
 		ui.swipe('alert', function (dir) {
 			if (dir == 'up')
