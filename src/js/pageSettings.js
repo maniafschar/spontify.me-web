@@ -188,7 +188,7 @@ class pageSettings {
 <settingsNav onclick="ui.navigation.goTo(&quot;settings3&quot;,event)" style="float:right;">></settingsNav>`;
 	static templateSettings3 = v =>
 		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#settings3Notifications&quot;)">${ui.l('wtd.myNotifications')}</buttontext><br/>
-<div class="notification" id="settings3Notifications" style="display:none;">
+<div class="notification" id="settings3Notifications" style="display:none;padding-top:0.25em;">
 	<div style="margin:0 0.5em 1em 0.5em;">
 		<form name="myProfile3">
 			<input type="checkbox" value="true" name="notificationChat" label="${ui.l('notification.chat')}" ${v['contact.notificationChat']}>

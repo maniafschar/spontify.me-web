@@ -17,7 +17,7 @@ class pageInfo {
     <buttontext class="bgColor infoButton" onclick="pageInfo.toggleInfoBlock(&quot;#info4&quot;)">
         ${ui.l('home.DescLink')}
     </buttontext>
-    <infoblock id="info4" style="padding-top:0.5em;display:none;">
+    <infoblock id="info4" style="display:none;">
         ${v['infoAbout']}
         <div id="infoVersion" onclick="pageInfo.openMap()" style="padding-top:1em;cursor:pointer;"></div>
     </infoblock>
