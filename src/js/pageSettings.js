@@ -429,7 +429,7 @@ class pageSettings {
 		if (goToID) {
 			if (goToID == 'autoOpen')
 				pageSettings.preview();
-			else ui.navigation.goTo(goToID);
+			else ui.navigation.goTo(goToID, null, true);
 		}
 		var l = ui.val('[name="language"]:checked');
 		if (l != global.language)

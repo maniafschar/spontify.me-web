@@ -171,10 +171,8 @@ class pageLogin {
 			ui.navigation.goTo('login', null, true);
 	}
 	static init() {
-		if (ui.q('login').innerHTML.indexOf('loginBodyDiv') < 0) {
+		if (ui.q('login').innerHTML.indexOf('loginBodyDiv') < 0)
 			ui.q('login').innerHTML = pageLogin.templateTabs();
-			ui.addFastButton('login');
-		}
 		if (pageLogin.lastTab == 1)
 			pageLogin.setLoginFormTab1();
 		else if (pageLogin.lastTab == 2)

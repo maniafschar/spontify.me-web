@@ -145,7 +145,6 @@ class pageChat {
 			}
 			d = ui.q('chat[i="' + id + '"] chatConversation');
 			d.innerHTML = d.innerHTML + s;
-			ui.addFastButton('chat');
 		} else if (ui.q('chat').getAttribute('type') == 'location') {
 			v = new Chat();
 			v.contactId = pageChat.admin.id;
@@ -290,7 +289,6 @@ class pageChat {
 			s += '<div onclick="pageChat.open(' + v.id + ')" i="' + v.id + '"><badge class="bgColor"' + (v._unseen > 0 ? ' style="display:block;"' : '') + '>' + v._unseen + '</badge><img src="' + v.image + '"' + (v.imageList ? '' : ' class="bgColor" style="padding:0.6em;"') + '/><span>' + v.pseudonym + '<br/>' + global.date.formatDate(v._maxDate) + '</span></div>';
 		}
 		ui.q('chatUserList').innerHTML = s;
-		ui.addFastButton('chatUserList');
 	}
 	static open(id, location) {
 		if (ui.q('chat[i="' + id + '"]')) {
@@ -449,7 +447,6 @@ class pageChat {
 							pageChat.showScrollButton();
 						else
 							pageChat.scrollToBottom();
-						ui.addFastButton('chat');
 					}
 				}
 			});

@@ -114,7 +114,6 @@ class pageInfo {
 				v.url = v.url + '?c=' + user.contact.id;
 			e.innerHTML = pageInfo.template(v) + e.innerHTML;
 			formFunc.initFields('info');
-			ui.addFastButton('info');
 			ui.css(ui.q('info landingsubtitle'), 'display', 'none');
 			if (!user.contact)
 				ui.css('#socialShare', 'display', 'none');
@@ -234,7 +233,6 @@ class pageInfo {
 						e.innerHTML = (r.text ? '<div style="cursor:pointer;margin:0 0.5em;background:rgba(255,255,255,0.6);padding:1em;border-radius:0.5em;text-align:center;"' + (r.action ? ' onclick="ui.navigation.autoOpen(&quot;' + r.action + '&quot;,event)"' : '') + '>' + r.text + '</div>' : '') + pageContact.listContacts(r.list);
 					else if (r.html)
 						e.innerHTML = r.html;
-					ui.addFastButton('#info5');
 					ui.toggleHeight(e);
 				}
 			});

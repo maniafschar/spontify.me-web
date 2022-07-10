@@ -123,7 +123,6 @@ class communication {
 						ui.html(divID + ' filters>div', '');
 					if (menuIndex > -1)
 						ui.attr(divID, 'menuIndex', menuIndex);
-					ui.addFastButton(divID);
 					ui.q(divID + ' listBody').scrollTop = 0;
 					lists.setListHint(divID);
 				}
@@ -529,7 +528,6 @@ class communication {
 				e.message = global.string.replaceLinks('https', e.message);
 				e2.innerHTML = e.message;
 				d.insertBefore(e2, d.children[0]);
-				ui.addFastButton('alert');
 				if (d.style.display != 'block')
 					ui.navigation.animation(d, 'homeSlideIn');
 				communication.ping();

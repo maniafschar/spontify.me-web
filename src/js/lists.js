@@ -136,7 +136,6 @@ class lists {
 			else if (id == 'locations')
 				v.map = '<map style="display:none;"></map>';
 			e.innerHTML = lists.templateList(v);
-			ui.addFastButton(id);
 			new DragObject(ui.q(id + ' listScroll')).ondrag = function (event, top) {
 				var activeID = ui.navigation.getActiveID();
 				if (ui.q(activeID + ' listScroll').offsetTop == top.y)

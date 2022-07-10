@@ -1588,7 +1588,6 @@ ${v.hint}
 								break;
 							}
 						}
-						ui.addFastButton('locations [i="' + id + '"]');
 						return '&nbsp;';
 					});
 					ui.navigation.goTo('locations', null, true);

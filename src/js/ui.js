@@ -13,7 +13,6 @@ import { pageWhatToDo } from './pageWhatToDo';
 import { pageSearch } from './pageSearch';
 import { pageSettings } from './pageSettings';
 import { user } from './user';
-import { FastButton } from './fastbutton';
 
 export { ui, formFunc };
 
@@ -60,13 +59,6 @@ class ui {
 		${ui.l('group.action')}
 	</a>
 </container>`;
-	static addFastButton(id) {
-		var e = ui.qa(id + ' [onclick]');
-		for (var i = 0; i < e.length; i++) {
-			new FastButton(e[i]);
-			e[i].removeAttribute('onclick');
-		}
-	}
 	static getAttributes(compare, style) {
 		var result = {
 			attributesCategories: [],
@@ -473,7 +465,6 @@ class ui {
 					ui.html(ui.q('menu>div'), ui.templateMenuContacts());
 				e = ui.q('menu');
 				e.setAttribute('type', activeID);
-				ui.addFastButton('menu');
 				ui.classAdd(ui.qa('menu a')[parseInt(ui.q(activeID).getAttribute('menuIndex'))], 'menuHighlight');
 				ui.css(e, 'transform', e.style.transform.indexOf('1') > 0 ? 'scale(0)' : 'scale(1)')
 			}, 10);
@@ -1297,7 +1288,6 @@ class formFunc {
 				}
 			}
 		}
-		ui.addFastButton(id);
 	}
 	static initSliderDrag(o) {
 		if (o) {

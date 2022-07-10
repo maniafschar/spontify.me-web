@@ -125,7 +125,6 @@ class pageWhatToDo {
 						pageWhatToDo.loadListContacts();
 					}
 					formFunc.initFields('whatToDo');
-					ui.addFastButton('whatToDo');
 				}
 			});
 		} else
@@ -196,20 +195,14 @@ class pageWhatToDo {
 	static listContact(r) {
 		var s = pageContact.listContactsInternal(r);
 		ui.html('#wtdListContacts', s ? s : lists.getListNoResults('contacts', 'whatToDo'));
-		if (s)
-			ui.addFastButton('#wtdListContacts');
 	}
 	static listEvents(r) {
 		var s = pageLocation.event.listEventsInternal(pageLocation.event.getCalendarList(r), new Date());
 		ui.html('#wtdListEvents', s ? s : lists.getListNoResults('events', 'whatToDo'));
-		if (s)
-			ui.addFastButton('#wtdListEvents');
 	}
 	static listLocation(r) {
 		var s = pageLocation.listLocationInternal(r);
 		ui.html('#wtdListLocations', s ? s : lists.getListNoResults('locations', 'whatToDo'));
-		if (s)
-			ui.addFastButton('#wtdListLocations');
 	}
 	static load(type, query, search, exec) {
 		var currentWtd = pageWhatToDo.getCurrentMessage();

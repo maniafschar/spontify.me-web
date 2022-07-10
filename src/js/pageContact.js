@@ -624,7 +624,6 @@ ${v.aboutMe}
 				}
 				e.innerHTML = user.contact.groups.replace(/<input/g, '<input onclick="pageContact.groups.addToGroup(event,' + id + ')"') + e.innerHTML;
 				formFunc.initFields(path);
-				ui.addFastButton('detail[i="' + id + '"] [name="groups"]');
 				communication.ajax({
 					url: global.server + 'db/list?query=contact_listGroupLink&search=' + encodeURIComponent('contactGroupLink.contactId2=' + id),
 					responseType: 'json',

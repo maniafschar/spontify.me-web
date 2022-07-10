@@ -58,7 +58,6 @@ class pageHome {
 			classSearch: user.contact ? '' : ' style="display:none;"'
 		});
 		formFunc.image.replaceSVGs();
-		ui.addFastButton('home');
 		formFunc.initFields('home');
 		initialisation.reposition();
 	}
