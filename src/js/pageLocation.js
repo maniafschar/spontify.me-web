@@ -72,11 +72,11 @@ class pageLocation {
 	${v.telOpenTag}${v.address}<br/>${v.tel}${v.telCloseTag}
 </text>
 ${v.attributes}
+${v.budget}
 ${v.eventDetails}
 ${v.description}
 <text>
 	${v.bonus}
-	${v.budget}
 	${v.rating}
 	${v.parking}
 	<openTimes></openTimes>

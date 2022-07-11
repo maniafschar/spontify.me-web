@@ -160,20 +160,28 @@ class initialisation {
 				event.preventDefault();
 		});
 		ui.on('detail', 'click', function (event) {
-			if (event.target.nodeName != 'INPUT') {
-				var p = ui.parents(event.target, 'text');
-				if (p && ui.classContains(p, 'popup') && !ui.classContains(p, 'collapsed'))
-					details.togglePanel(p);
-				else
-					ui.navigation.goTo(ui.q('detail').getAttribute('list'), null, true);
+			var e = event.target;
+			if (e.nodeName != 'INPUT') {
+				while (e && e.getAttribute) {
+					if (e.getAttribute('onclick'))
+						return;
+					e = e.parentNode;
+				}
+				ui.navigation.goTo(ui.q('detail').getAttribute('list'), null, true);
 			}
 		});
 		ui.on('popup', 'click', function (event) {
-			var s = event.target.nodeName;
-			if (s != 'INPUT' && s != 'TEXTAREA' && s != 'BUTTONTEXT'
-				&& !ui.classContains(event.target, 'selectable')
-				&& !ui.parents(event.target, 'locationNameInputHelper'))
+			var e = event.target;
+			if (e.nodeName != 'INPUT' && e.nodeName != 'TEXTAREA'
+				&& !ui.classContains(e, 'selectable')
+				&& !ui.parents(e, 'locationNameInputHelper')) {
+				while (e && e.getAttribute) {
+					if (e.getAttribute('onclick'))
+						return;
+					e = e.parentNode;
+				}
 				ui.navigation.hidePopup();
+			}
 		});
 		ui.swipe('detail', function (dir) {
 			if (dir == 'left')

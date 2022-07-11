@@ -465,13 +465,14 @@ class pageChat {
 			v.class = ' class="me"';
 			if (!v.seen)
 				v.classUnseen = ' class="unseen"';
-		} else if (v._pseudonym)
-			v.time = '<span onclick="ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.contactId) + '&quot;,event)">' + v._pseudonym + ' ' + v.time + '</span>';
+		} else if (v._pseudonym) {
+			v.oc = ' onclick="ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.contactId) + '&quot;,event)"';
+			v.time = '<span' + v.oc + '>' + v._pseudonym + ' ' + v.time + '</span>';
+		}
 		if (v.image)
-			v.note = '<img src="' + global.serverImg + v.image + '"/>';
+			v.note = '<note style="padding:0;"><img src="' + global.serverImg + v.image + '"/></note>';
 		else
-			v.note = pageChat.formatTextMsg(v.note, v.contactId);
-		v.note = '<note' + (v.image ? ' style="padding:0;"' : '') + '>' + v.note + '</note>';
+			v.note = '<note' + (v.oc ? v.oc : '') + '>' + pageChat.formatTextMsg(v.note, v.contactId) + '</note>';
 		return (v.dateTitle ? v.dateTitle : '') + pageChat.templateMessage(v);
 	}
 	static reposition() {

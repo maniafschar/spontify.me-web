@@ -484,7 +484,6 @@ class ui {
 				index += label + ',';
 			}
 			var add2List = function (s) {
-				console.log(s + ' vs. ' + index)
 				if (s && index.indexOf(',' + s + ',') < 0)
 					attr.list.push({ label: s, class: 'attributeFade' });
 			}
