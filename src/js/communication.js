@@ -197,7 +197,6 @@ class communication {
 						user.email = u;
 						user.password = p;
 						user.init(v);
-						lists.resetLists();
 						try {
 							user.contact.storage = user.contact.storage ? JSON.parse(user.contact.storage) : {};
 						} catch (e) {
@@ -236,6 +235,7 @@ class communication {
 						}
 						if (ui.navigation.getActiveID() != 'home')
 							ui.navigation.goTo('home');
+						setTimeout(lists.resetLists, 500);
 						communication.ping();
 						setTimeout(communication.notification.register, 900);
 						pageWhatToDo.init();
@@ -426,7 +426,7 @@ class communication {
 			communication.login.removeCredentials();
 			ui.attr('content > *', 'menuIndex', null);
 			communication.currentCalls = [];
-			ui.navigation.goTo('home', null, true);
+			ui.navigation.goTo('home');
 			setTimeout(lists.resetLists, 500);
 			e = ui.qa('.homeIconSearch');
 			e[0].style.display = '';

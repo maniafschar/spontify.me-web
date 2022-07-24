@@ -168,8 +168,7 @@ class ui {
 	}
 	static navigation = {
 		animationEvent: null,
-		lastID: null,
-		lastNavigation: null,
+		lastPage: null,
 		lastPopup: null,
 
 		animation(e, c, exec) {
@@ -234,9 +233,9 @@ class ui {
 			ui.css('main>#buttonFavorite', 'display', id == 'detail' ? '' : 'none');
 		},
 		fade(id, back, exec) {
-			var oldID = ui.navigation.getActiveID();
+			var currentID = ui.navigation.getActiveID();
 			var currentDiv = ui.q(id);
-			var oldDiv = ui.q(oldID);
+			var oldDiv = ui.q(currentID);
 			var o = back ? 'detailBack' : 'detail';
 			ui.classAdd(currentDiv, o + 'SlideIn');
 			ui.css(currentDiv, 'display', 'block');
@@ -274,6 +273,15 @@ class ui {
 				ui.css(id, 'display', 'block');
 			return id;
 		},
+		getDirection(id, currentID) {
+			if (currentID == 'detail' ||
+				id == 'home' && currentID != 'login' ||
+				id == 'login' ||
+				id == 'settings' && currentID == 'settings2' ||
+				id == 'settings2' && currentID == 'settings3')
+				return true;
+			return false;
+		},
 		goBack() {
 			if (ui.cssValue('popup', 'display') != 'none')
 				ui.navigation.hidePopup();
@@ -291,15 +299,16 @@ class ui {
 					ui.navigation.goTo('home');
 			}
 		},
-		goTo(id, event, back) {
+		goTo(id, event) {
 			if (event)
 				event.stopPropagation();
 			if (ui.classContains('content', 'animated'))
 				return;
-			var oldID = ui.navigation.getActiveID();
-			if (id == 'home' && oldID == 'detail')
+			var currentID = ui.navigation.getActiveID();
+			var back = ui.navigation.getDirection(id, currentID);
+			if (id == 'home' && currentID == 'detail')
 				id = ui.q('detail').getAttribute('list');
-			if (oldID == 'info' && id == 'home' && !user.contact && pageInfo.openSection == -2) {
+			if (currentID == 'info' && id == 'home' && !user.contact && pageInfo.openSection == -2) {
 				id = 'login';
 				pageInfo.openSection = -1;
 			}
@@ -312,7 +321,7 @@ class ui {
 				if (timestamp && new Date().getTime() - timestamp < 500)
 					return;
 				id = 'login';
-				if (oldID != 'info')
+				if (currentID != 'info')
 					back = true;
 			}
 			geoData.headingClear();
@@ -320,15 +329,15 @@ class ui {
 				document.activeElement.blur();
 			if (!intro.introMode)
 				intro.closeHint();
-			if (oldID == 'settings' && !pageSettings.save(id))
+			if (currentID == 'settings' && !pageSettings.save(id))
 				return;
-			if (!user.contact && oldID == 'login')
+			if (!user.contact && currentID == 'login')
 				pageLogin.saveDraft();
-			if (oldID == 'settings3')
+			if (currentID == 'settings3')
 				pageSettings.save3();
-			if (id.indexOf('settings') == 0 && pageSettings.init(function () { ui.navigation.goTo(id, event, back); }))
+			if (id.indexOf('settings') == 0 && pageSettings.init(function () { ui.navigation.goTo(id); }))
 				return;
-			else if (id == 'info')
+			if (id == 'info')
 				pageInfo.init();
 			else if (id == 'login')
 				pageLogin.init();
@@ -340,13 +349,12 @@ class ui {
 				pageWhatToDo.init();
 			else if (id == 'search')
 				pageSearch.init();
-			ui.navigation.lastNavigation = back && id != 'home' && oldID != 'detail';
 			pageChat.closeList();
 			ui.navigation.hidePopup();
 			var s = id;
 			if (s != 'whatToDo' && s != 'locations' && s != 'contacts' && s != 'whatToDo' && s != 'login' && s != 'info' && s != 'search' && s.indexOf('settings') < 0)
-				s = oldID;
-			if (oldID != id) {
+				s = currentID;
+			if (currentID != id) {
 				if (id == 'home')
 					ui.css('main>buttonIcon', 'display', 'none');
 				else if (id != 'detail')
@@ -354,7 +362,7 @@ class ui {
 				ui.navigation.fade(id, back, function () { ui.navigation.displayMainButtons(id); });
 				ui.navigation.hideMenu();
 			}
-			ui.navigation.lastID = oldID;
+			ui.navigation.lastPage = currentID;
 		},
 		hidePopup() {
 			ui.attr('popup', 'error', '');

@@ -84,9 +84,9 @@ ${v.aboutMe}
 	<div>
 		${v.buddy}
 		<input type="radio" name="type" value="1" label="${ui.l('contacts.blockAction')}"
-			onclick="pageContact.showBlockText(${v.id})" checked="true" />
+			onclick="pageContact.showBlockText()" checked="true" />
 		<input type="radio" name="type" value="2" label="${ui.l('contacts.blockAndReportAction')}"
-			onclick="pageContact.showBlockText(${v.id})" />
+			onclick="pageContact.showBlockText()" />
 		<br />
 		<div style="display:none;margin-top:0.5em;">
 			<input type="radio" name="reason" value="1" label="${ui.l('contacts.blockReason1')}" />
@@ -96,7 +96,7 @@ ${v.aboutMe}
 			<input type="radio" name="reason" value="100" label="${ui.l('contacts.blockReason100')}" checked />
 		</div>
 		<textarea placeholder="${ui.l('contacts.blockDescHint')}" name="note" maxlength="250" style="display:none;"></textarea>
-		<buttontext onclick="pageContact.block(${v.id})" style="margin-top:0.5em;"
+		<buttontext onclick="pageContact.block()" style="margin-top:0.5em;"
 			class="bgColor">${ui.l('save')}</buttontext>
 	</div>
 </text>
@@ -181,26 +181,26 @@ ${v.aboutMe}
 			}
 		}
 	}
-	static block(id) {
-		var path = 'detail[i="' + id + '"] [name="block"]';
+	static block() {
+		var path = 'detail [name="block"]';
 		formFunc.resetError(ui.q(path + ' [name="note"]'));
 		var bi = ui.q(path).getAttribute('blockID');
 		if (ui.q(path + ' [name="type"]').checked)
-			pageContact.blockUser(bi, id, 0, '');
+			pageContact.blockUser(bi, 0, '');
 		else {
 			var n = ui.q(path + ' [name="note"]');
 			if (!n.value && ui.q(path + ' [name="reason"][value="100"]:checked')) {
 				formFunc.setError(n, 'contacts.blockActionHint');
 				return;
 			}
-			pageContact.blockUser(bi, id, ui.val(path + ' [name="reason"]:checked'), n.value);
+			pageContact.blockUser(bi, ui.val(path + ' [name="reason"]:checked'), n.value);
 		}
 	}
-	static blockUser(blockID, id, reason, note) {
+	static blockUser(blockID, reason, note) {
 		var v = {
 			classname: 'ContactBlock',
 			values: {
-				contactId2: id,
+				contactId2: ui.q('detail').getAttribute('i'),
 				reason: reason,
 				note: note
 			}
@@ -221,7 +221,7 @@ ${v.aboutMe}
 						e.outerHTML = '';
 						lists.setListHint('contacts');
 					}
-					ui.navigation.goTo('contacts', null, true);
+					ui.navigation.goTo('contacts');
 					var e = lists.data['contacts'];
 					if (e) {
 						for (var i = 1; i < e.length; i++) {
@@ -736,10 +736,10 @@ ${v.aboutMe}
 			}
 		});
 	}
-	static showBlockText(id) {
-		var s = ui.q('detail[i="' + id + '"] [name="block"] [name="type"]:checked').value == 2 ? 'block' : 'none';
-		ui.css(ui.q('detail[i="' + id + '"] [name="block"] [name="reason"]').parentNode, 'display', s);
-		ui.css('detail[i="' + id + '"] [name="block"] [name="note"]', 'display', s);
+	static showBlockText() {
+		var s = ui.q('detail [name="block"] [name="type"]:checked').value == 2 ? 'block' : 'none';
+		ui.css(ui.q('detail [name="block"] [name="reason"]').parentNode, 'display', s);
+		ui.css('detail [name="block"] [name="note"]', 'display', s);
 	}
 	static toggleBlockUser(id) {
 		var divID = 'detail[i="' + id + '"] [name="block"]';
@@ -755,13 +755,14 @@ ${v.aboutMe}
 						if (v.contactBlock.reason != 0)
 							ui.q(divID + ' [name="reason"][value="' + v.contactBlock.reason + '"]').checked = true;
 						ui.q(divID + ' textarea').value = v.reason;
-						pageContact.showBlockText(id);
+						pageContact.showBlockText();
 					} else
 						ui.attr(e, 'blockID', 0);
 				}
 			});
 		}
 		e.style.right = (ui.q('body').offsetWidth - ui.q('main').offsetLeft - ui.q('main').offsetWidth + ui.emInPX) + 'px';
+		e.style.maxWidth = (ui.q('main').offsetWidth * 0.9) + 'px';
 		ui.toggleHeight(e);
 	}
 	static toggleLocation(id) {

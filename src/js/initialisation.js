@@ -168,7 +168,7 @@ class initialisation {
 						return;
 					e = e.parentNode;
 				}
-				ui.navigation.goTo(ui.q('detail').getAttribute('list'), null, true);
+				ui.navigation.goTo(ui.q('detail').getAttribute('list'));
 			}
 		});
 		ui.on('popup', 'click', function (event) {
@@ -192,63 +192,63 @@ class initialisation {
 		}, 'detailButtons');
 		ui.swipe('settings2', function (dir) {
 			if (dir == 'right')
-				ui.navigation.goTo('settings', null, true);
+				ui.navigation.goTo('settings');
 			else if (dir == 'left')
 				ui.navigation.goTo('settings3');
 		});
 		ui.swipe('settings3', function (dir) {
 			if (dir == 'right')
-				ui.navigation.goTo('settings2', null, true);
+				ui.navigation.goTo('settings2');
 			else if (dir == 'left')
 				ui.navigation.goTo('settings');
 		});
 		ui.swipe('settings', function (dir) {
 			if (dir == 'right')
-				ui.navigation.goTo('home', null, true);
+				ui.navigation.goTo('home');
 			else if (dir == 'left')
 				pageSettings.open2();
 		}, 'input,textarea,img,slider');
 		ui.swipe('search', function (dir) {
 			if (dir == 'right')
-				ui.navigation.goTo('home', null, true);
+				ui.navigation.goTo('home');
 		}, 'input,textarea,slider');
 		ui.swipe('login', function (dir) {
 			if (dir == 'left')
 				ui.navigation.goTo('home');
 			else if (dir == 'right')
-				ui.navigation.goTo('info', null, true);
+				ui.navigation.goTo('info');
 		}, 'input');
 		ui.swipe('home', function (dir) {
 			if (dir == 'left')
 				ui.navigation.goTo(user.contact ? 'whatToDo' : 'info');
 			else if (dir == 'right')
-				ui.navigation.goTo(user.contact ? 'contacts' : 'login', null, true);
+				ui.navigation.goTo(user.contact ? 'contacts' : 'login');
 		}, 'input,listScroll');
 		ui.swipe('contacts', function (dir) {
 			if (dir == 'left')
 				ui.navigation.goTo('home');
 			else if (dir == 'right')
-				ui.navigation.goTo('locations', null, true);
+				ui.navigation.goTo('locations');
 		}, 'input,listScroll');
 		ui.swipe('locations', function (dir) {
 			if (dir == 'left')
 				ui.navigation.goTo('contacts');
 			else if (dir == 'right')
-				ui.navigation.goTo('whatToDo', null, true);
+				ui.navigation.goTo('whatToDo');
 		}, 'input,listScroll,map');
 		ui.swipe('whatToDo', function (dir) {
 			if (dir == 'left')
 				ui.navigation.goTo('locations');
 			else if (dir == 'right')
-				ui.navigation.goTo('home', null, true);
+				ui.navigation.goTo('home');
 		}, 'input,listScroll,map');
 		ui.swipe('info', function (dir) {
 			if (dir == 'right') {
 				if (pageInfo.openSection == -2) {
-					ui.navigation.goTo('login', null, true);
+					ui.navigation.goTo('login');
 					pageInfo.openSection = -1;
 				} else
-					ui.navigation.goTo('home', null, true);
+					ui.navigation.goTo('home');
 			}
 		}, 'textarea');
 		ui.swipe('alert', function (dir) {

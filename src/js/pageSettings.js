@@ -184,7 +184,7 @@ class pageSettings {
             valueEx="${v['att5Ex']}" value="${v['att5']}" max="60" maxEx="250" />
     </attributesDisplay>
 </div>
-<settingsNav onclick="ui.navigation.goTo(&quot;settings&quot;,event,true)" style="float:left;">&lt;</settingsNav>
+<settingsNav onclick="ui.navigation.goTo(&quot;settings&quot;,event)" style="float:left;">&lt;</settingsNav>
 <settingsNav onclick="ui.navigation.goTo(&quot;settings3&quot;,event)" style="float:right;">></settingsNav>`;
 	static templateSettings3 = v =>
 		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#settings3Notifications&quot;)">${ui.l('wtd.myNotifications')}</buttontext><br/>
@@ -208,7 +208,7 @@ class pageSettings {
 <buttontext class="bgColor settings2Button" onclick="pageSettings.toggleBlocked()">${ui.l('contacts.blocked')}</buttontext><br/>
 <div id="blocked" style="display:none;"></div>
 <buttontext onclick="pageSettings.deleteProfile()" class="bgColor settings2Button">${ui.l('settings.delete')}</buttontext><br/>
-<settingsNav onclick="ui.navigation.goTo(&quot;settings2&quot;,event,true)" style="float:left;">&lt;</settingsNav>`;
+<settingsNav onclick="ui.navigation.goTo(&quot;settings2&quot;,event)" style="float:left;">&lt;</settingsNav>`;
 
 	static checkUnique() {
 		if (user.email == ui.val('input[name="email"]'))
@@ -430,7 +430,7 @@ class pageSettings {
 			if (goToID == 'autoOpen')
 				pageSettings.preview();
 			else
-				ui.navigation.goTo(goToID, null, goToID != 'settings2');
+				ui.navigation.goTo(goToID);
 		}
 		var l = ui.val('[name="language"]:checked');
 		if (l != global.language)

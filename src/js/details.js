@@ -117,7 +117,7 @@ class details {
 			details.openDetailNav(true, e);
 	}
 	static swipeRight() {
-		ui.navigation.goTo(ui.q('detail').getAttribute('list'), null, true);
+		ui.navigation.goTo(ui.q('detail').getAttribute('list'));
 	}
 	static toggleFavorite() {
 		var e = ui.q('detail');

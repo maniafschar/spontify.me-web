@@ -721,7 +721,7 @@ slider thumb val {
 	display: inline-block;
 	margin: 1.25em 0;
 	border-radius: 0 2.5em 2.5em 0;
-	box-shadow: 0 0 1em rgba(0, 0, 0, 0.1);
+	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
 	padding: 0;
 }
 
@@ -744,14 +744,13 @@ slider thumb val {
 }
 
 .homeButton svg path {
-	fill: black;
-	stroke: black;
+	fill: rgb(61, 46, 86);
+	stroke: rgb(61, 46, 86);
 }
 
 whatToDoInput {
 	display: block;
 	position: absolute;
-	background: rgba(0, 0, 0, 0.1);
 	z-index: 9;
 	margin: 1em;
 	border-radius: 1em;
@@ -948,7 +947,7 @@ popup {
 	left: 0;
 	padding: 1em 1em 2em 1em;
 	text-align: center;
-	filter: drop-shadow(0 0 2em rgba(0, 0, 0, 0.4));
+	filter: drop-shadow(0 0 2em rgba(0, 0, 0, 0.3));
 }
 
 popupTitle {
@@ -1288,7 +1287,6 @@ chatMessage time {
 	position: absolute;
 	top: -0.2em;
 	font-size: 0.8em;
-	color: rgba(0, 0, 0, 0.6);
 }
 
 chatMessage.me time {
@@ -1335,7 +1333,7 @@ chatMessage time {
 	text-align: center;
 	width: 100%;
 	left: 0;
-	text-shadow: 0 0 0.5em rgba(0, 0, 0, 0.5);
+	text-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
 }
 
 chatInput {
@@ -1656,7 +1654,7 @@ row>div {
 	text-align: left;
 	overflow: hidden;
 	cursor: pointer;
-	background: rgba(0, 0, 0, 0.2);
+	background: rgba(0, 0, 0, 0.1);
 	border-radius: 0.5em;
 	margin: 1em 0.5em 0.5em 1em;
 	height: 6em;

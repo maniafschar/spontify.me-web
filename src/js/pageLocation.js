@@ -1592,7 +1592,7 @@ ${v.hint}
 						}
 						return '&nbsp;';
 					});
-					ui.navigation.goTo('locations', null, true);
+					ui.navigation.goTo('locations');
 					formFunc.removeDraft('location' + id);
 				}
 			});

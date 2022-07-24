@@ -167,8 +167,8 @@ class pageLogin {
 			ui.navigation.goTo('login');
 	}
 	static goToRegister() {
-		if (ui.navigation.lastID == 'login')
-			ui.navigation.goTo('login', null, true);
+		if (ui.navigation.lastPage == 'login')
+			ui.navigation.goTo('login');
 	}
 	static init() {
 		if (ui.q('login').innerHTML.indexOf('loginBodyDiv') < 0)
