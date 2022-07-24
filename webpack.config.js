@@ -29,5 +29,12 @@ module.exports = {
 	},
 	experiments: {
 		topLevelAwait: true
+	},
+	devServer: {
+		static: {
+			directory: path.join(__dirname, 'dist'),
+		},
+		compress: true,
+		port: 9000,
 	}
 }

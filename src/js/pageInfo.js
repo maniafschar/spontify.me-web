@@ -42,7 +42,7 @@ class pageInfo {
     <buttontext class="bgColor infoButton${v['feedback']}" onclick="pageInfo.toggleInfoBlock(&quot;#info6&quot;)">
 		${ui.l('info.feedback')}
     </buttontext>
-    <div id="info6" style="display:none;text-align:center;">
+    <div id="info6" style="display:none;">
         <textarea placeholder="${ui.l('info.feedbackHint')}" maxlength="2000" id="feedbackText"></textarea>
         <buttontext onclick="pageInfo.sendFeedback(ui.val(&quot;#feedbackText&quot;))"
             class="bgColor" style="margin-top:0.5em;">${ui.l('send')}
@@ -73,7 +73,7 @@ class pageInfo {
 		<li>${ui.l('landing.block3_1')}</li>
 		<li>${ui.l('landing.block3_2')}</li>
 	</ul>
-	<a style="margin:2em 0 1em 0;color:rgb(0,94,160);display:block;cursor:pointer;${v['displayBlogButton']}" onclick="ui.navigation.openHTML(&quot;https://blog.spontify.me&quot;, &quot;blog_spontifyme&quot;)">${ui.l('info.link2blog')}</a>
+	<a style="margin:2em 0 1em 0;display:block;cursor:pointer;${v['displayBlogButton']}" onclick="ui.navigation.openHTML(&quot;https://blog.spontify.me&quot;, &quot;blog_spontifyme&quot;)">${ui.l('info.link2blog')}</a>
 </landingblock>
 <landingsubtitle onclick="pageInfo.toggleInfoBlock(&quot;${v.parent} #landing3&quot;, event);">
 	${ui.l('faq.title')}

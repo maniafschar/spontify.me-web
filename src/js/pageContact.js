@@ -17,14 +17,14 @@ class pageContact {
 		${v._badge}
 	</badge>
 	<div>
-		<div>
-			<text>
-				<title>${v.pseudonym}${v.birth}</title>
-				${v._message}<matchIndicator>${v.matchIndicator}</matchIndicator>
-			</text>
-		</div>
+		<text>
+			<title>${v.pseudonym}${v.birth}</title>
+			${v._message}
+		</text>
+		<extra>${v.extra}</extra>
 		<imagelist>
 			<img src="${v.image}" class="${v.classBGImg}" />
+			${lists.iconFavorite}
 		</imagelist>
 	</div>
 	</row>`;
@@ -41,10 +41,6 @@ class pageContact {
 				${v.idDisplay}
 			</subtitle>
 		</detailTitle>
-	</detailImg>
-	<action>
-		<buttonIcon onclick="pageChat.open(${v.id})"><img src="images/chat.svg"/></buttonIcon>
-		<buttonIcon class="iconFavorite${v.favorite}" onclick="pageContact.toggleBlockUser(${v.id})"><img source="favorite.svg" /></buttonIcon>
 		<detailDistance>
 			${v.gender}
 			<km>${v.distance}</km>
@@ -60,7 +56,7 @@ class pageContact {
 				<text x="18" y="21.35" class="percentage">${v.matchIndicator}</text>
 			</svg>
 		</matchIndicator>
-	</action>
+	</detailImg>
 </detailHeader>
 <text${v.birthdayClass}>
 	${v.birthday}
@@ -84,7 +80,7 @@ ${v.aboutMe}
 <text class="popup matchIndicatorAttributesHint" style="display:none;" onclick="ui.toggleHeight(this)">
 	<div></div>
 </text>
-<text name="block" class="popup" style="display:none;right:1em;top:8em;" onclick="ui.toggleHeight(this)">
+<text name="block" class="popup" style="display:none;right:1em;bottom:4em;position:fixed;" onclick="pageContact.closeFavorite(event)">
 	<div>
 		${v.buddy}
 		<input type="radio" name="type" value="1" label="${ui.l('contacts.blockAction')}"
@@ -239,24 +235,33 @@ ${v.aboutMe}
 			}
 		});
 	}
+	static closeFavorite(event) {
+		var e = event.target;
+		if (e.nodeName != 'TEXTAREA' && e.nodeName != 'INPUT') {
+			while (e && e.getAttribute) {
+				if (e.getAttribute('onclick') && e.nodeName != 'TEXT')
+					return;
+				e = e.parentNode;
+			}
+			ui.toggleHeight(ui.q('detail [name="block"]'));
+		}
+	}
 	static confirmFriendship(linkId, status, id) {
 		communication.ajax({
 			url: global.server + 'db/one',
 			method: 'PUT',
 			body: { classname: 'ContactLink', id: linkId, values: { status: status } },
 			success() {
-				ui.html('detail[i="' + id + '"] [name="block"] detailTogglePanel', ui.l('contacts.requestFriendship' + status.replace('2', '')));
+				ui.toggleHeight(ui.q('detail [name="block"]'));
 				communication.ping();
 				var e = ui.qa(ui.q('detail').getAttribute('list') + ' row[i="' + id + '"] badge');
 				ui.html(e, '');
 				ui.css(e, 'display', 'none');
 				if (status == 'Friends') {
-					ui.classAdd('detail[i="' + id + '"] [name="buttonBlock"]', 'bgColor2');
-					ui.classRemove('detail[i="' + id + '"] [name="buttonBlock"]', 'bgColor');
+					ui.classAdd('main>#buttonFavorite', 'highlight');
 					ui.classRemove('detail[i="' + id + '"] [name="buttonGroups"]', 'noDisp');
 				} else {
-					ui.classRemove('detail[i="' + id + '"] [name="buttonBlock"]', 'bgColor2');
-					ui.classAdd('detail[i="' + id + '"] [name="buttonBlock"]', 'bgColor');
+					ui.classRemove('main>#buttonFavorite', 'highlight');
 					ui.classAdd('detail[i="' + id + '"] [name="buttonGroups"]', 'noDisp');
 				}
 			}
@@ -267,7 +272,6 @@ ${v.aboutMe}
 		var idIntern = id;
 		if (idIntern.indexOf && idIntern.indexOf('_') > -1)
 			idIntern = idIntern.substring(0, idIntern.indexOf('_'));
-		v.favorite = v.contactLink.status == 'Friends' ? ' favorite' : '';
 		v.distance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
 		v.birthday = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
 		v.classBGImg = 'class="bgColor"';
@@ -342,11 +346,15 @@ ${v.aboutMe}
 		if (!v.attributes && !v.aboutMe && !v.rating)
 			v.dispBody = 'display:none;';
 		if (v.aboutMe)
-			v.aboutMe = '<div style="margin-top:1em;">' + (v.guide ? '<b>' + ui.l('settings.guide') + '</b>' : '') + '<text class="highlightBackground">' + v.aboutMe + '</text></div>';
+			v.aboutMe = '<div style="margin-top:1em;">' + (v.guide ? '<b>' + ui.l('settings.guide') + '</b><br/>' : '') + '<text class="highlightBackground">' + v.aboutMe + '</text></div>';
 		if (v.contactLink.status == 'Pending' && v.contactLink.contactId != user.contact.id)
 			setTimeout(function () {
 				pageContact.toggleBlockUser(id);
 			}, 1000);
+		if (v.contactLink.status == 'Friends')
+			ui.classAdd('main>#buttonFavorite', 'highlight');
+		else
+			ui.classRemove('main>#buttonFavorite', 'highlight');
 		return pageContact.templateDetail(v);
 	}
 	static filterList() {
@@ -678,8 +686,9 @@ ${v.aboutMe}
 			if (v.contactLink.status == 'Friends')
 				v.classFavorite = ' favorite';
 			v.attr = ui.getAttributes(v, 'list');
+			v.extra = (v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) + 'km<br/>' : '');
 			if (v.attr.total && v.attr.totalMatch / v.attr.total > 0)
-				v.matchIndicator = parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5) + '%';
+				v.extra += parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5) + '%';
 			if (!v._message1)
 				v._message1 = v.attr.textAttributes();
 			if (birth)
@@ -752,6 +761,7 @@ ${v.aboutMe}
 				}
 			});
 		}
+		e.style.right = (ui.q('body').offsetWidth - ui.q('main').offsetLeft - ui.q('main').offsetWidth + ui.emInPX) + 'px';
 		ui.toggleHeight(e);
 	}
 	static toggleLocation(id) {
@@ -775,7 +785,7 @@ ${v.aboutMe}
 		var e = ui.q('detail[i="' + id + '"] [name="matchIndicatorHint"]');
 		var button = ui.parents(event.target, 'matchIndicator');
 		e.style.top = (button.offsetTop + button.offsetHeight) + 'px';
-		e.style.right = '1em';
+		e.style.left = '5%';
 		ui.toggleHeight(e);
 	}
 }

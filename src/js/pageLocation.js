@@ -29,44 +29,40 @@ class pageLocation {
 		global.template`<row onclick="details.open(&quot;${v.id}&quot;,&quot;${v.query}&quot;,${v.render});" i="${v.id}" class="location${v.classFavorite}">
 			${v.present}
 	<div>
-		<div>
 			<text class="${v.classParticipate}">
 				<title>${v.name}</title>
-				${v._message}<matchIndicator>${v.matchIndicator}</matchIndicator>
+				${v._message}
 			</text>
-		</div>
+			<extra>${v.extra}</extra>
 		<imagelist>
 			<img src="${v.image}" class="${v.classBGImg}" />
+			${lists.iconFavorite}
 		</imagelist>
 	</div>
 </row>`;
 	static templateDetail = v =>
-		global.template`<detailHeader>
+		global.template`<detailHeader idFav="${v.locationFavorite.id ? v.locationFavorite.id : ''}" >
 	<detailImg>
 		<img src="${v.image}" />
 		<detailTitle>
 			<title>${v.name}</title>
 		</detailTitle>
-	</detailImg>
-	<action>
-		<buttonIcon onclick="pageChat.open(${v.id},true)"><img src="images/chat.svg"/></buttonIcon>
-		<buttonIcon class="iconFavorite${v.favorite}" idFav="${v.locationFavorite.id ? v.locationFavorite.id : ''}" fav="${v.locationFavorite.favorite ? true : ''}" name="buttonFavorite" onclick="pageLocation.toggleFavorite(${v.id})"><img source="favorite.svg" /></buttonIcon>
 		<detailCompass>
 			<span a="${v.angle}" style="transform:rotate(${v.angle}deg);">&uarr;</span>
 			<km>${v.distance}</km>
 		</detailCompass>
 		<matchIndicator onclick="pageLocation.toggleMatchIndicatorHint(${v.id}, event)">
 			<svg viewBox="0 0 36 36">
-				<path class="circle-bg" d="M18 2.0845
-					a 15.9155 15.9155 0 0 1 0 31.831
-					a 15.9155 15.9155 0 0 1 0 -31.831"></path>
-				<path class="circle" stroke-dasharray="${v.matchIndicatorPercent}, 100" d="M18 2.0845
-					a 15.9155 15.9155 0 0 1 0 31.831
-					a 15.9155 15.9155 0 0 1 0 -31.831"></path>
-				<text x="18" y="21.35" class="percentage">${v.matchIndicator}</text>
+			<path class="circle-bg" d="M18 2.0845
+			a 15.9155 15.9155 0 0 1 0 31.831
+			a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+			<path class="circle" stroke-dasharray="${v.matchIndicatorPercent}, 100" d="M18 2.0845
+			a 15.9155 15.9155 0 0 1 0 31.831
+			a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+			<text x="18" y="21.35" class="percentage">${v.matchIndicator}</text>
 			</svg>
 		</matchIndicator>
-	</action>
+	</detailImg>
 </detailHeader>
 <text>
 	${v.telOpenTag}${v.address}<br/>${v.tel}${v.telCloseTag}
@@ -550,7 +546,6 @@ ${v.hint}
 			v.hideMeEvents = ' noDisp';
 			v.hideMeMarketing = ' noDisp';
 		} else {
-			v.favorite = v.locationFavorite.favorite ? ' favorite' : '';
 			if (global.isBrowser())
 				v.copyLinkHint = ui.l('copyLinkHint.location');
 			else
@@ -599,6 +594,10 @@ ${v.hint}
 				}
 			});
 		}
+		if (v.locationFavorite.favorite)
+			ui.classAdd('main>#buttonFavorite', 'highlight');
+		else
+			ui.classRemove('main>#buttonFavorite', 'highlight');
 		return pageLocation.templateDetail(v);
 	}
 	static edit(id) {
@@ -1399,8 +1398,12 @@ ${v.hint}
 	}
 	static listInfos(v) {
 		v.attr = ui.getAttributes(v, 'list');
+		v.extra = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance < 10 ? 1 : 0).replace('.', ',') + 'km<br/>' : '';
 		if (v.attr.total && v.attr.totalMatch / v.attr.total > 0)
-			v.matchIndicator = parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5) + '%';
+			v.extra += parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5) + '%<br/>';
+		if (v._geolocationDistance)
+			v.extra += '<compass style="transform:rotate('
+				+ geoData.getAngel(geoData.latlon, { lat: v.latitude, lon: v.longitude }) + 'deg);"></compass>';
 		if (!v._message1)
 			v._message1 = v.attr.textAttributes();
 		if (!v._message2)
@@ -1733,11 +1736,11 @@ ${v.hint}
 			ui.toggleHeight(e);
 	}
 	static toggleFavorite(id) {
-		var button = ui.q('detail[i="' + id + '"] [name="buttonFavorite"]');
-		var idFav = button.getAttribute('idFav');
+		var button = ui.q('main>#buttonFavorite');
+		var idFav = ui.q('detailHeader').getAttribute('idFav');
 		var v = { classname: 'LocationFavorite' };
 		if (idFav) {
-			v.values = { favorite: button.getAttribute('fav') == 'true' ? false : true };
+			v.values = { favorite: ui.classContains(button, 'highlight') ? false : true };
 			v.id = idFav;
 		} else
 			v.values = { locationId: id };
@@ -1747,15 +1750,15 @@ ${v.hint}
 			body: v,
 			success(r) {
 				if (r) {
-					ui.attr(button, 'idFav', r);
+					ui.attr('detailHeader', 'idFav', r);
 					v.values.favorite = true;
 				}
 				ui.attr(button, 'fav', v.values.favorite ? true : false);
 				if (v.values.favorite) {
-					ui.classAdd(button, 'favorite');
+					ui.classAdd(button, 'highlight');
 					ui.classAdd('row.location[i="' + id + '"]', 'favorite');
 				} else {
-					ui.classRemove(button, 'favorite');
+					ui.classRemove(button, 'highlight');
 					ui.classRemove('row.location[i="' + id + '"]', 'favorite');
 				}
 			}
@@ -1775,6 +1778,7 @@ ${v.hint}
 			lists.toggleFilter();
 			pageLocation.map.scrollTop = -1;
 			pageLocation.map.id = -1;
+			ui.classRemove('locations listResults row div.highlightMap', 'highlightMap');
 			return;
 		}
 		ui.attr('map', 'created', new Date().getTime());
@@ -1799,7 +1803,7 @@ ${v.hint}
 		var e = ui.q('detail[i="' + id + '"] [name="matchIndicatorHint"]');
 		var button = ui.parents(event.target, 'matchIndicator');
 		e.style.top = (button.offsetTop + button.offsetHeight) + 'px';
-		e.style.right = '1em';
+		e.style.left = '5%';
 		ui.toggleHeight(e);
 	}
 	static toggleWhatToDo(id) {

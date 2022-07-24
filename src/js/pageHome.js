@@ -11,13 +11,13 @@ class pageHome {
 	static template = v =>
 		global.template`<div>
 	<homeHeader>	
-		<buttonIcon onclick="pageHome.openLanguage()" class="homeIconSearch"${v.classLanguage}>
+		<buttonIcon onclick="pageHome.openLanguage()" class="homeIconSearch left top"${v.classLanguage}>
 			<span class="lang">${v.language}</span>
 		</buttonIcon>
-		<buttonIcon onclick="ui.navigation.goTo(&quot;search&quot;)" class="homeIconSearch"${v.classSearch}>
+		<buttonIcon onclick="ui.navigation.goTo(&quot;search&quot;)" class="homeIconSearch left top"${v.classSearch}>
 			<img src="images/search.svg" />
 		</buttonIcon>
-		<buttonIcon onclick="ui.navigation.goTo(&quot;settings&quot;,event)" style="right:0;text-align:right;">
+		<buttonIcon onclick="ui.navigation.goTo(&quot;settings&quot;,event)" class="right top">
 			<img src="images/contact.svg" />
 		</buttonIcon>
 		<homeTitle onclick="ui.navigation.goTo(&quot;settings&quot;)">
@@ -37,14 +37,14 @@ class pageHome {
 			<span>${ui.l('contacts.homeButton')}</span><img source="network.svg" />
 		</buttontext>
 	</homeBody >
-	<buttonIcon onclick="pageHome.openNotifications()" style="bottom:0;left:0;display:none;" class="pulse highlight">
+	<buttonIcon onclick="pageHome.openNotifications()" class="left bottom pulse highlight" style="display:none;">
 		<badgeNotifications></badgeNotifications>
 		<img source="news.svg" />
 	</buttonIcon>
-	<buttonIcon onclick="ui.navigation.goTo(&quot;info&quot;,event)" style="bottom:0;left:50%;margin-left:-2em;">
+	<buttonIcon onclick="ui.navigation.goTo(&quot;info&quot;,event)" class="center bottom">
 		<img source="info.svg" />
 	</buttonIcon>
-	<buttonIcon onclick="bluetooth.toggle()" id="homeIconBluetooth" style="bottom:0;right:0;">
+	<buttonIcon onclick="bluetooth.toggle()" id="homeIconBluetooth" class="right bottom">
 		<img source="bluetooth.svg" />
 	</buttonIcon>
 </div > `;

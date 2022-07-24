@@ -1,3 +1,4 @@
+import { communication } from './communication';
 import { global } from './global';
 import { DragObject } from './initialisation';
 import { Contact, Location, model } from './model';
@@ -8,6 +9,7 @@ export { lists };
 
 class lists {
 	static data = [];
+	static iconFavorite;
 
 	static templateList = v =>
 		global.template`<listHeader>${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5em;"></hinky><div></div></filters><listTitle onclick="${v.action}"></listTitle>${v.map}</listHeader>
@@ -52,6 +54,17 @@ class lists {
 		else if (errorID == 'search' && ui.val('[name="searchKeywords"]'))
 			s += '<br/><br/>' + ui.l('noResults.searchWithoutKeywords') + '<br/><br/><buttontext onclick="pageSearch.repeatSearch()" class="bgColor">' + ui.l('noResults.repeat') + '</buttontext>';
 		return '<noResult>' + s.replace(/\{0\}/g, ui.l(activeID + '.title')).replace('{1}', '') + '</noResult>';
+	}
+	static init() {
+		if (!lists.iconFavorite)
+			communication.ajax({
+				url: '/images/favorite.svg',
+				success(r) {
+					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
+					lists.iconFavorite = e.outerHTML;
+				}
+			});
+
 	}
 	static removeListEntry(id) {
 		var activeID = ui.q('detail').getAttribute('list');
@@ -130,7 +143,7 @@ class lists {
 		if (!e.innerHTML) {
 			var v = {};
 			v.action = action ? action : 'lists.toggleFilter(event, ' + (id == 'locations' ? 'pageLocation' : id == 'contacts' ? 'pageContact' : 'pageSearch') + '.getFilterFields)';
-			v.img = action ? '' : '<buttonIcon style="left:0;" onclick="' + v.action + '"><img src="images/filter.svg"/></buttonIcon>' + (id == 'search' ? '' : '<buttonIcon style="right:0;" onclick="ui.navigation.toggleMenu()"><img src="images/menu.svg"/></buttonIcon>');
+			v.img = action ? '' : '<buttonIcon class="left top" onclick="' + v.action + '"><img src="images/filter.svg"/></buttonIcon>' + (id == 'search' ? '' : '<buttonIcon class="right top" onclick="ui.navigation.toggleMenu()"><img src="images/menu.svg"/></buttonIcon>');
 			if (id == 'contacts')
 				v.groups = '<groups style="display:none;"></groups>';
 			else if (id == 'locations')

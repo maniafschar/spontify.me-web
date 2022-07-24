@@ -3,6 +3,7 @@ import { geoData } from './geoData';
 import { global } from './global';
 import { intro } from './intro';
 import { lists } from './lists';
+import { pageContact } from './pageContact';
 import { pageLocation } from './pageLocation';
 import { ui, formFunc } from './ui';
 import { user } from './user';
@@ -54,7 +55,7 @@ class details {
 						ui.attr(l, 'i', id);
 						if (activeID != 'detail') {
 							ui.attr(l, 'list', activeID);
-							ui.attr(l, 'type', action.indexOf('contact_') ? 'contact' : 'location');
+							ui.attr(l, 'type', action.indexOf('contact_') == 0 ? 'contact' : 'location');
 						}
 						if (activeID != 'detail')
 							ui.navigation.goTo('detail');
@@ -131,6 +132,13 @@ class details {
 	}
 	static swipeRight() {
 		ui.navigation.goTo(ui.q('detail').getAttribute('list'), null, true);
+	}
+	static toggleFavorite() {
+		var e = ui.q('detail');
+		if (e.getAttribute('type') == 'location')
+			pageLocation.toggleFavorite(e.getAttribute('i'));
+		else
+			pageContact.toggleBlockUser(e.getAttribute('i'));
 	}
 	static togglePanel(d) {
 		var path = ui.parents(d, 'popup') ? 'popup detail' : 'detail';

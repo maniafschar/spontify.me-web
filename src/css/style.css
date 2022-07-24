@@ -42,7 +42,7 @@ body {
 	position: fixed;
 	width: 100%;
 	height: 100%;
-	color: black;
+	color: white;
 	line-height: 1.5em;
 	background: white;
 	-webkit-text-size-adjust: none;
@@ -70,6 +70,11 @@ main {
 	left: 50%;
 	overflow: hidden;
 	box-shadow: 0 0 5em rgba(0, 0, 0, 0.3);
+}
+
+main>#buttonFavorite {
+	bottom: 0.5em;
+	right: 0.5em;
 }
 
 body.app>main {
@@ -119,6 +124,10 @@ add#addRight {
 	right: 0;
 }
 
+add img {
+	cursor: pointer;
+}
+
 hint {
 	opacity: 0;
 	position: absolute;
@@ -126,6 +135,7 @@ hint {
 	display: none;
 	transition: all 0.4s ease-in;
 	line-height: 1.5;
+	color: black;
 }
 
 hint .body,
@@ -203,7 +213,8 @@ subCatTitle {
 }
 
 .mainBG {
-	background: linear-gradient(120deg, rgb(203, 186, 204) 0%, rgb(60, 90, 110) 100%);
+	/*background: linear-gradient(120deg, rgb(103, 97, 217) 0%, rgb(61, 26, 116) 100%);*/
+	background: linear-gradient(120deg, rgb(143, 127, 197) 0%, rgb(61, 46, 86) 100%);
 	background-size: 100% 100%;
 }
 
@@ -233,12 +244,12 @@ whatToDo navbutton {
 }
 
 .bgColor {
-	background: linear-gradient(rgb(246, 255, 187) 0%, rgb(210, 230, 158) 100%) center center / 100% no-repeat;
+	background: linear-gradient(rgb(255, 223, 78) 0%, rgb(240, 195, 49) 100%) center center / 100% no-repeat;
 }
 
 a.bgColor:hover,
 buttontext.bgColor:hover {
-	background: rgb(246, 255, 187);
+	background: rgb(255, 223, 78);
 }
 
 .bgWeb {
@@ -298,7 +309,6 @@ groups {
 
 filters {
 	position: absolute;
-	line-height: 1;
 	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
 	background: rgba(255, 255, 255, 0.9);
 	padding: 1em 1em 0 1em;
@@ -366,6 +376,7 @@ inputFile {
 	border-radius: 0.5em;
 	background: rgba(255, 255, 255, 0.85);
 	display: block;
+	color: black;
 }
 
 inputFile img {
@@ -462,6 +473,7 @@ input[type="checkbox"]+label {
 	margin-right: 0.25em;
 	margin-bottom: 0.5em;
 	left: -0.25em;
+	color: black;
 	background: rgba(255, 255, 255, 0.85);
 	min-height: 2em;
 	border-radius: 0.5em;
@@ -493,7 +505,7 @@ input:checked+label:before {
 }
 
 popup input:checked+label {
-	background: rgb(246, 255, 187) !important;
+	background: rgb(255, 223, 78) !important;
 	color: black;
 }
 
@@ -511,6 +523,7 @@ popup .multiple {
 	border-radius: 0.5em;
 	background: rgba(255, 255, 255, 0.85);
 	margin: 0.25em;
+	color: black;
 }
 
 textarea {
@@ -551,6 +564,11 @@ settings3 {
 	padding: 0 0 5em 0;
 	text-align: left !important;
 	overflow-y: auto;
+}
+
+#info6 {
+	margin-top: -0.5em;
+	text-align: center;
 }
 
 explain {
@@ -686,6 +704,7 @@ slider thumb span {
 	top: 0;
 	height: 100%;
 	width: 2.5em;
+	color: black;
 	text-align: center;
 	border-radius: 0.75em;
 	background: rgba(255, 255, 255, 0.85);
@@ -715,7 +734,6 @@ slider thumb val {
 	position: absolute;
 	left: 1.25em;
 	height: 2em;
-	font-weight: bold;
 }
 
 .homeButton svg {
@@ -726,14 +744,14 @@ slider thumb val {
 }
 
 .homeButton svg path {
-	fill: rgb(0, 40, 140);
-	stroke: rgb(0, 40, 140);
+	fill: black;
+	stroke: black;
 }
 
 whatToDoInput {
 	display: block;
 	position: absolute;
-	background: cadetblue;
+	background: rgba(0, 0, 0, 0.1);
 	z-index: 9;
 	margin: 1em;
 	border-radius: 1em;
@@ -811,6 +829,7 @@ chatUserList>div {
 	cursor: pointer;
 	position: relative;
 	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
+	color: black;
 }
 
 chatUserList badge {
@@ -849,6 +868,10 @@ errorHint {
 
 value.checkbox errorHint {
 	margin-top: -0.5em;
+}
+
+.popup errorHint {
+	color: red;
 }
 
 listHeader {
@@ -934,9 +957,10 @@ popupTitle {
 	font-size: 1.3em;
 	max-width: 90%;
 	display: inline-block;
-	background: cadetblue;
+	background: rgba(255, 255, 255, 0.9);
 	padding: 0.5em 1em;
 	border-radius: 0.5em 0.5em 0 0;
+	color: black;
 }
 
 popupTitle>div {
@@ -956,8 +980,9 @@ popupContent {
 	display: block;
 	border-radius: 0.5em;
 	overflow-x: hidden;
-	background: cadetblue;
+	background: rgba(255, 255, 255, 0.9);
 	border: solid transparent 0.5em;
+	color: black;
 }
 
 ratingHint {
@@ -1008,7 +1033,7 @@ ratingSelection full {
 	left: 0;
 	overflow: hidden;
 	top: 0;
-	color: rgba(246, 255, 187, 0.8);
+	color: rgba(255, 223, 78, 0.8);
 }
 
 ratingSelection span {
@@ -1077,7 +1102,7 @@ badge span {
 	font-weight: bold;
 	height: 100%;
 	line-height: 2.5em;
-	color: rgb(246, 255, 187);
+	color: rgb(255, 223, 78);
 }
 
 popup badge {
@@ -1196,7 +1221,7 @@ emoji {
 }
 
 chatMessage .unseen {
-	color: rgb(246, 255, 187) !important;
+	color: rgb(255, 223, 78) !important;
 }
 
 chatMessage {
@@ -1240,6 +1265,7 @@ chatMessage note {
 	margin: 0 -1px;
 	display: block;
 	background: rgba(220, 240, 255, 0.8);
+	color: black;
 }
 
 chatMessage note a {
@@ -1255,7 +1281,6 @@ chatMessage.me note {
 
 chatMessage note img {
 	max-width: 100%;
-	z-index: 9999;
 	position: relative;
 }
 
@@ -1277,7 +1302,6 @@ chatMessage time {
 .chatLinks img {
 	border-radius: 0.5em;
 	height: 4.8em;
-	margin-bottom: -0.5em;
 }
 
 .chatLinks.pressed::before {
@@ -1359,9 +1383,9 @@ detailDistance {
 	height: 6em;
 	padding-top: 2.5em;
 	position: absolute;
-	bottom: 6em;
+	top: 1em;
 	left: 50%;
-	margin-left: -2.5em;
+	margin-left: -3em;
 	opacity: 0.9;
 	line-height: 1;
 }
@@ -1381,7 +1405,7 @@ detailCompass span {
 detail detailDistance img {
 	height: 4em;
 	position: absolute;
-	left: 1em;
+	left: 0;
 	top: 1em;
 	opacity: 0.6;
 }
@@ -1504,35 +1528,52 @@ buttonIcon {
 	position: absolute;
 	cursor: pointer;
 	display: flex;
-	padding: 0.5em;
+	padding: 0.3em;
 	text-align: center;
 	z-index: 99;
 	transition: all 0.4s ease-out;
 	color: white;
+	border: solid 0.15em white;
+	border-radius: 50%;
 }
+
+buttonIcon.left {
+	left: 0.5em;
+}
+
+buttonIcon.center {
+	left: 50%;
+	margin-left: -1.3em;
+}
+
+buttonIcon.right {
+	right: 0.5em;
+}
+
+buttonIcon.top {
+	top: 0.5em;
+}
+
+buttonIcon.bottom {
+	bottom: 0.5em;
+}
+
 
 buttonIcon span,
 buttonIcon img,
 buttonIcon svg {
-	width: 3em;
-	border: solid 0.15em white;
-	border-radius: 50%;
-	padding: 0.35em;
-	height: 3em;
+	width: 2em;
+	height: 2em;
 	line-height: 2.2;
 }
 
 buttonIcon.highlight {
-	color: rgb(246, 255, 187);
+	color: rgb(255, 223, 78);
+	border: solid 0.15em rgb(255, 223, 78);
 }
 
 buttonIcon.highlight svg {
-	background: transparent;
-	border: solid 0.15em rgb(246, 255, 187);
-}
-
-buttonIcon.highlight svg {
-	fill: rgb(246, 255, 187);
+	fill: rgb(255, 223, 78);
 }
 
 .appInput {
@@ -1615,22 +1656,20 @@ row>div {
 	text-align: left;
 	overflow: hidden;
 	cursor: pointer;
-	background: rgba(255, 255, 255, 0.75);
+	background: rgba(0, 0, 0, 0.2);
 	border-radius: 0.5em;
 	margin: 1em 0.5em 0.5em 1em;
 	height: 6em;
 	transition: all 0.4s ease-out;
 }
 
-row.favorite>div {
-	background: rgba(255, 255, 225, 0.75);
-}
+row.favorite>div {}
 
 row text {
 	max-height: 5.5em;
 	overflow: hidden;
-	left: 7em;
-	right: 0.5em;
+	left: 6.75em;
+	right: 3.5em;
 	width: auto;
 	position: absolute;
 	white-space: nowrap;
@@ -1639,11 +1678,12 @@ row text {
 	padding: 0.5em;
 }
 
-row matchIndicator {
+row extra {
 	position: absolute;
-	right: 0.5em;
-	top: 0.5em;
-	opacity: 0.3;
+	right: 1.25em;
+	top: 1.5em;
+	text-align: right;
+	opacity: 0.6;
 }
 
 row badge {
@@ -1680,6 +1720,23 @@ row imagelist img.present {
 	left: 0;
 	height: 2.5em;
 	border-radius: 0;
+}
+
+row imagelist svg {
+	position: absolute;
+	right: 0.25em;
+	bottom: 0.25em;
+	width: 1.5em;
+	display: none;
+}
+
+row.favorite imagelist svg {
+	display: inline;
+}
+
+row compass {
+	top: 1.75em;
+	right: -0.25em;
 }
 
 .participate::before {
@@ -1731,7 +1788,7 @@ chat.location chatButtons {
 }
 
 .highlightColor {
-	color: rgb(246, 255, 187);
+	color: rgb(255, 223, 78);
 }
 
 eventOutdated {
@@ -1805,7 +1862,6 @@ img {
 
 text {
 	position: relative;
-	color: black;
 	display: block;
 	overflow: hidden;
 	border-radius: 0.5em;
@@ -1816,6 +1872,7 @@ text.popup {
 	max-width: 90%;
 	background: rgba(255, 255, 255, 0.95);
 	box-shadow: 0 0 1em rgb(0, 0, 0, 0.3);
+	color: black;
 }
 
 text.popup>div {
@@ -1862,10 +1919,11 @@ detail detailButtons buttonIcon {
 detail detailHeader {
 	display: flex;
 	margin-bottom: 1em;
+	position: relative;
 }
 
 detail detailImg {
-	width: 80%;
+	width: 100%;
 	padding: 0.75em 0.75em 0 0.75em;
 	background: white;
 	border-radius: 0.5em;
@@ -1878,7 +1936,8 @@ detail detailImg img {
 }
 
 detail>div>text.highlightBackground {
-	padding: 0.5em;
+	padding: 0.5em 1em;
+	display: inline-block;
 }
 
 detail text.matchIndicatorAttributesHint {
@@ -1900,46 +1959,47 @@ detail detailHeader action {
 	padding-left: 1em;
 }
 
-detail detailHeader action matchIndicator {
+detail detailHeader matchIndicator {
 	position: absolute;
 	height: 5em;
-	bottom: 0;
+	bottom: 3em;
 	width: 5em;
 	left: 50%;
-	margin-left: -2em;
+	margin-left: -2.5em;
 	cursor: pointer;
 }
 
-detail detailHeader action matchIndicator svg {
+detail detailHeader matchIndicator svg {
 	display: block;
 	margin: 10px auto;
 	max-width: 80%;
 	max-height: 250px;
 }
 
-detail detailHeader action matchIndicator svg .circle-bg {
+detail detailHeader matchIndicator svg .circle-bg {
 	fill: none;
 	stroke: white;
 	opacity: 0.6;
 	stroke-width: 3.8;
 }
 
-detail detailHeader action matchIndicator svg .circle {
+detail detailHeader matchIndicator svg .circle {
 	fill: none;
 	stroke-width: 2.8;
 	stroke-linecap: round;
 	animation: progress 1s ease-out forwards;
-	stroke: rgb(246, 255, 187);
+	stroke: rgb(255, 223, 78);
 }
 
-detail detailHeader action matchIndicator svg .percentage {
+detail detailHeader matchIndicator svg .percentage {
 	font-family: sans-serif;
 	font-size: 0.5em;
 	text-anchor: middle;
 	font-family: Comfortaa;
+	fill: white;
 }
 
-detail detailHeader action matchIndicator span {
+detail detailHeader matchIndicator span {
 	width: 3em;
 	height: 3em;
 	display: inline-block;
@@ -1949,20 +2009,6 @@ detail detailHeader action matchIndicator span {
 	margin-left: -1em;
 	border-radius: 2em;
 	border: solid 0.75em rgba(255, 255, 255, 0.6);
-}
-
-detail detailHeader action buttonIcon {
-	position: relative;
-	display: inline-block;
-}
-
-detail detailHeader action buttonIcon .iconFavorite {
-	margin-top: 1em;
-}
-
-detail detailHeader action .favorite svg {
-	fill: rgb(246, 255, 187);
-	border-color: rgb(246, 255, 187);
 }
 
 detail detailRating {
@@ -2054,8 +2100,7 @@ tabHeader tab p {
 
 .tabActive {
 	opacity: 1 !important;
-	border-bottom: solid 1px black;
-	color: black;
+	border-bottom: solid 1px white;
 }
 
 popup .tabActive {
@@ -2087,14 +2132,13 @@ progressbar {
 	position: absolute;
 	left: 0;
 	top: 0;
-	width: 100%;
+	right: 1em;
 	z-index: 999999;
 	height: 0.75em;
-	padding-right: 1em;
 }
 
 .highlightBackground {
-	background: rgba(246, 255, 187, 0.8) !important;
+	background: rgba(255, 223, 78, 0.8) !important;
 }
 
 .highlightMap::before {
@@ -2150,7 +2194,7 @@ infoblock {
 	position: relative;
 	width: 96%;
 	display: block;
-	background: rgba(255, 255, 255, 0.6);
+	background: rgba(0, 0, 0, 0.1);
 	border: solid 1em transparent;
 	border-radius: 0.5em;
 	margin: -0.5em 0 1em 2%;
@@ -2163,7 +2207,6 @@ infoblock.overflow {
 }
 
 #feedbackText {
-	margin-top: -0.5em;
 	height: 10em;
 	width: 96%;
 	z-index: 0;
@@ -2189,7 +2232,7 @@ landingtitle {
 }
 
 landingsubtitle {
-	color: rgb(246, 255, 187);
+	color: rgb(255, 223, 78);
 	font-size: 1.3em;
 	padding: 0.5em 0;
 	margin-bottom: 0.5em;
@@ -2222,7 +2265,7 @@ infoblock landingsubtitle {
 menu {
 	border-radius: 1em 0 0 1em;
 	box-shadow: 0 0 3em rgba(0, 0, 0, 0.3);
-	background: rgba(255, 255, 255, 0.85);
+	background: rgba(255, 255, 255, 0.9);
 	position: absolute;
 	top: 3.7em;
 	z-index: 9999999;
@@ -2230,6 +2273,7 @@ menu {
 	padding: 1.25em 2em;
 	transition: all .4s ease-out;
 	transform-origin: top right;
+	color: black;
 }
 
 menu a {
@@ -2431,10 +2475,9 @@ progressbar>* {
 	width: 1em;
 	height: 1em;
 	border-radius: 0.5em;
-	animation-name: bounce_followingBallsG;
+	animation-name: progressbarBalls;
 	animation-duration: 2.9s;
 	animation-iteration-count: infinite;
-	animation-direction: linear;
 }
 
 progressbar ball1 {
@@ -2453,9 +2496,9 @@ progressbar ball4 {
 	animation-delay: 0.87s;
 }
 
-@keyframes bounce_followingBallsG {
+@keyframes progressbarBalls {
 	0% {
-		left: 0px;
+		left: 0;
 	}
 
 	50% {
@@ -2463,6 +2506,6 @@ progressbar ball4 {
 	}
 
 	100% {
-		left: 0px;
+		left: 0;
 	}
 }

@@ -71,6 +71,11 @@ class pageWhatToDo {
 	static list = null;
 	static maxRadius = 50;
 	static resetCall = null;
+	static lastUpdate = {
+		contacts: 0,
+		locations: 0,
+		events: 0
+	}
 	static init() {
 		if (!ui.q('whatToDo').innerHTML) {
 			communication.ajax({
@@ -193,14 +198,17 @@ class pageWhatToDo {
 		ui.html('home .homeWTD', b);
 	}
 	static listContact(r) {
+		pageWhatToDo.lastUpdate.contacts = new Date().getTime();
 		var s = pageContact.listContactsInternal(r);
 		ui.html('#wtdListContacts', s ? s : lists.getListNoResults('contacts', 'whatToDo'));
 	}
 	static listEvents(r) {
+		pageWhatToDo.lastUpdate.events = new Date().getTime();
 		var s = pageLocation.event.listEventsInternal(pageLocation.event.getCalendarList(r), new Date());
 		ui.html('#wtdListEvents', s ? s : lists.getListNoResults('events', 'whatToDo'));
 	}
 	static listLocation(r) {
+		pageWhatToDo.lastUpdate.locations = new Date().getTime();
 		var s = pageLocation.listLocationInternal(r);
 		ui.html('#wtdListLocations', s ? s : lists.getListNoResults('locations', 'whatToDo'));
 	}
@@ -227,7 +235,7 @@ class pageWhatToDo {
 		ui.css('#wtdListEvents', 'display', '');
 		var e = ui.q('#wtdList' + id);
 		e.style.display = 'block';
-		if (!e.innerHTML) {
+		if (!e.innerHTML || pageWhatToDo.lastUpdate[id.toLowerCase()] < new Date().getTime() - 120000) {
 			if (id == 'Locations')
 				pageWhatToDo.loadListLocations();
 			else if (id == 'Contacts')
@@ -238,20 +246,6 @@ class pageWhatToDo {
 	}
 	static open() {
 		ui.toggleHeight('whatToDoInput');
-	}
-	static refresh() {
-		ui.html('#wtdListContacts', '');
-		ui.html('#wtdListLocations', '');
-		ui.html('#wtdListEvents', '');
-		pageWhatToDo.initListButton();
-		if (ui.cssValue('whatToDoLists', 'display') != 'none') {
-			if (ui.cssValue('#wtdListLocations', 'display') != 'none')
-				pageWhatToDo.loadListLocations();
-			else if (ui.cssValue('#wtdListContacts', 'display') != 'none')
-				pageWhatToDo.loadListContacts();
-			else if (ui.cssValue('#wtdListEvents', 'display') != 'none')
-				pageWhatToDo.loadListEvents();
-		}
 	}
 	static reset() {
 		var currentWtd = pageWhatToDo.getCurrentMessage();

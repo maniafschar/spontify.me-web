@@ -116,13 +116,15 @@
 			<chat class="content mainBG"></chat>
 			<chatUserList style="display:none;"></chatUserList>
 		</content>
-		<buttonIcon onclick="pageChat.toggleUserList()" style="bottom:0;">
+		<buttonIcon onclick="pageChat.toggleUserList()" class="left bottom">
 			<badgeChats></badgeChats>
 			<img source="chat.svg" />
 		</buttonIcon>
-		<buttonIcon onclick="ui.navigation.goTo('home',null,!ui.navigation.lastNavigation)"
-			style="bottom:0;left:50%;margin-left:-2em;">
+		<buttonIcon onclick="ui.navigation.goTo('home',null,!ui.navigation.lastNavigation)" class="center bottom">
 			<img source="home.svg" />
+		</buttonIcon>
+		<buttonIcon onclick="details.toggleFavorite()" class="right bottom" id="buttonFavorite">
+			<img source="favorite.svg" />
 		</buttonIcon>
 		<hint></hint>
 		<menu style="transform:scale(0);">

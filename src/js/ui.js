@@ -247,6 +247,10 @@ class ui {
 			};
 			f.call();
 		},
+		displayMainButtons(id) {
+			ui.css('main>buttonIcon', 'display', id == 'home' ? 'none' : '');
+			ui.css('main>#buttonFavorite', 'display', id == 'detail' ? '' : 'none');
+		},
 		fade(id, back, exec) {
 			var oldID = ui.navigation.getActiveID();
 			var currentDiv = ui.q(id);
@@ -311,6 +315,8 @@ class ui {
 			if (ui.classContains('content', 'animated'))
 				return;
 			var oldID = ui.navigation.getActiveID();
+			if (id == 'home' && oldID == 'detail')
+				id = ui.q('detail').getAttribute('list');
 			if (oldID == 'info' && id == 'home' && !user.contact && pageInfo.openSection == -2) {
 				id = 'login';
 				pageInfo.openSection = -1;
@@ -355,12 +361,15 @@ class ui {
 			ui.navigation.lastNavigation = back && id != 'home' && oldID != 'detail';
 			pageChat.closeList();
 			ui.navigation.hidePopup();
-			ui.css('main>buttonIcon', 'display', id == 'home' ? 'none' : '');
 			var s = id;
 			if (s != 'whatToDo' && s != 'locations' && s != 'contacts' && s != 'whatToDo' && s != 'login' && s != 'info' && s != 'search' && s.indexOf('settings') < 0)
 				s = oldID;
 			if (oldID != id) {
-				ui.navigation.fade(id, back);
+				if (id == 'home')
+					ui.css('main>buttonIcon', 'display', 'none');
+				else if (id != 'detail')
+					ui.css('main>#buttonFavorite', 'display', 'none');
+				ui.navigation.fade(id, back, function () { ui.navigation.displayMainButtons(id); });
 				ui.navigation.hideMenu();
 			}
 			ui.navigation.lastID = oldID;

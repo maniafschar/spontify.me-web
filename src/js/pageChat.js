@@ -102,8 +102,7 @@ class pageChat {
 			ui.html(e, '');
 			ui.attr(e, 'i', null);
 			ui.attr(e, 'type', null);
-			if (ui.navigation.getActiveID() != 'home')
-				ui.css('main>buttonIcon', 'display', '');
+			ui.navigation.displayMainButtons(ui.navigation.getActiveID());
 			var activeID = ui.navigation.getActiveID();
 			if (activeID == 'contacts')
 				pageContact.init();
@@ -611,7 +610,10 @@ class pageChat {
 			ui.classAdd(e, 'pressed');
 	}
 	static toggleUserList() {
-		if (user.contact)
+		if (ui.navigation.getActiveID() == 'detail') {
+			var e = ui.q('detail');
+			pageChat.open(e.getAttribute('i'), e.getAttribute('type') == 'location');
+		} else if (user.contact)
 			ui.toggleHeight('chatUserList');
 		else
 			intro.openHint({ desc: 'chatDescription', pos: '0.5em,-4em', size: '80%,auto' });
