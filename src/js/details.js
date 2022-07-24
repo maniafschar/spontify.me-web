@@ -40,11 +40,17 @@ class details {
 					lists.removeListEntry(id);
 					return;
 				}
-				var activeID = ui.navigation.getActiveID()
+				var activeID = ui.navigation.getActiveID();
 				ui.css(activeID + ' row[i="' + id + '"] badge[action="remove"]', 'display', 'none');
 				r = callback(r, id);
 				if (r) {
 					var l = ui.q('detail');
+					if (activeID == 'detail')
+						ui.navigation.animation(l, 'homeSlideOut', function () {
+							ui.css(l, 'opacity', 0);
+							ui.css(l, 'transform', '');
+							ui.css(l, 'marginLeft', 0);
+						});
 					var animate = ui.classContains(l, 'animated');
 					var f = function () {
 						if (ui.classContains(l, 'animated')) {
@@ -56,9 +62,8 @@ class details {
 						if (activeID != 'detail') {
 							ui.attr(l, 'list', activeID);
 							ui.attr(l, 'type', action.indexOf('contact_') == 0 ? 'contact' : 'location');
-						}
-						if (activeID != 'detail')
 							ui.navigation.goTo('detail');
+						}
 						formFunc.initFields('detail');
 						formFunc.image.replaceSVGs();
 						if (animate)
@@ -97,31 +102,12 @@ class details {
 			return;
 		var oc = details.getNextNavElement(next, id);
 		if (oc) {
+			ui.navigation.hidePopup();
 			oc.click();
 			ui.navigation.animation(e, 'detail' + (next ? '' : 'Back') + 'SlideOut', function () {
 				ui.css(e, 'opacity', 0);
-				ui.css(e, 'webkitTransform', '');
 				ui.css(e, 'transform', '');
 				ui.css(e, 'marginLeft', 0);
-			});
-		} else if (ui.navigation.getActiveID() == 'locations' && !ui.q('locations').innerHTML) {
-			communication.ajax({
-				url: global.server + 'db/one?query=' + (next ? 'location_anonymousNextId' : 'location_anonymousPrevId') + '&id=' + id.substring(2),
-				success(r) {
-					if (r) {
-						details.open(r, 'location_anonymousList&search=' + encodeURIComponent('location.id=' + r), pageLocation.detailLocationEvent);
-						var f = function () {
-							ui.css(e, 'opacity', 0);
-							ui.css(e, 'webkitTransform', '');
-							ui.css(e, 'transform', '');
-							ui.css(e, 'marginLeft', 0);
-						};
-						if (noAnimation)
-							f.call();
-						else
-							ui.navigation.animation(e, 'detail' + (next ? '' : 'Back') + 'SlideOut', f);
-					}
-				}
 			});
 		}
 	}

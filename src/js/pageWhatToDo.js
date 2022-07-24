@@ -14,7 +14,7 @@ export { pageWhatToDo };
 class pageWhatToDo {
 	static template = v =>
 		global.template`<whatToDoTitle onclick="pageWhatToDo.open()"></whatToDoTitle>
-<whatToDoInput style="display:none;">
+<whatToDoInput class="mainBG" style="display:none;">
 	<whatToDoDiv style="display:block;">
 	<value>
 		<input type="checkbox" value="0" name="wtdCategories" label="${ui.l('category0')}" ${v.checked0} />

@@ -558,8 +558,7 @@ ${v.hint}
 		if (global.isBrowser())
 			v.displaySocialShare = 'display: none; ';
 		p = v._isOpen && v._isOpen > 0 ? 1 : v._openTimesEntries && v._openTimesEntries > 0 ? 0 : null;
-		if (v.openTimesBankholiday == true)
-			v.openTimesBankholiday = '<div>' + ui.l('locations.closedOnBankHoliday') + '</div>';
+		v.openTimesBankholiday = v.openTimesBankholiday ? '<div>' + ui.l('locations.closedOnBankHoliday') + '</div>' : '';
 		var wtd = pageWhatToDo.getCurrentMessage();
 		if (wtd && wtd.active) {
 			var d = global.date.getDate(wtd.time);

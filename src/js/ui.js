@@ -218,31 +218,13 @@ class ui {
 						return;
 					}
 					var idIntern = id.indexOf('&') > 0 ? id.substring(0, id.indexOf('&')) : id;
-					var o = function (r) {
-						if (!r)
-							return;
-						var s, type;
-						if (idIntern.indexOf('l') == 0 || idIntern.indexOf('e') == 0) {
-							s = pageLocation.detailLocationEvent(r, idIntern.substring(2));
-							type = 'location';
-						}
-						else {
-							s = pageContact.detail(r, idIntern.substring(2));
-							type = 'contact';
-						}
-						if (id.indexOf('='))
-							id = id.substring(id.indexOf('=') + 1);
-						ui.navigation.openPopup('', '<detail i="' + id + '" type="' + type + '" style="padding:0;">' + s + '</detail>');
-						formFunc.image.replaceSVGs();
-						geoData.updateCompass();
-						return '';
-					};
+					ui.navigation.hidePopup();
 					if (idIntern.indexOf('l=') == 0)
-						details.open(idIntern.substring(2), 'location_list&search=' + encodeURIComponent('location.id=' + idIntern.substring(2)), o);
+						details.open(idIntern.substring(2), 'location_list&search=' + encodeURIComponent('location.id=' + idIntern.substring(2)), pageLocation.detailLocationEvent);
 					else if (idIntern.indexOf('e=') == 0)
-						details.open(idIntern.substring(2), 'event_list&search=' + encodeURIComponent('event.id=' + idIntern.substring(2)), o);
+						details.open(idIntern.substring(2), 'event_list&search=' + encodeURIComponent('event.id=' + idIntern.substring(2)), pageLocation.detailLocationEvent);
 					else if (idIntern.indexOf('=') == 1)
-						details.open(idIntern.substring(2), 'contact_list&search=' + encodeURIComponent('contact.id=' + idIntern.substring(2)), o);
+						details.open(idIntern.substring(2), 'contact_list&search=' + encodeURIComponent('contact.id=' + idIntern.substring(2)), pageContact.detail);
 				}
 			};
 			f.call();
@@ -265,7 +247,7 @@ class ui {
 				ui.css(oldDiv, 'display', 'none');
 				ui.css(oldDiv, 'marginLeft', 0);
 				ui.classRemove(currentDiv, o + 'SlideIn');
-				ui.css(currentDiv, 'webkitTransform', '');
+				ui.css(currentDiv, 'transform', '');
 				if (exec)
 					exec.call();
 				if (user.contact) {
