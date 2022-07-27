@@ -554,9 +554,9 @@ class pageSettings {
 			method: 'DELETE',
 			body: { classname: 'ContactBlock', id: blockId },
 			success() {
-				ui.q('#blocked [i="' + id + '"]').outerHTML = '';
+				ui.q('settings3 #blocked [i="' + id + '"]').outerHTML = '';
 				ui.navigation.hidePopup();
-				ui.q('infoblock#blocked').removeAttribute('h');
+				ui.q('settings3 #blocked').removeAttribute('h');
 				if (!ui.q('settings3 #blocked row'))
 					ui.css('settings3 #blocked', 'display', 'none');
 			}

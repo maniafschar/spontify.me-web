@@ -205,6 +205,7 @@ ${v.aboutMe}
 				note: note
 			}
 		};
+		var id = ui.q('detail').getAttribute('i');
 		if (blockID > 0)
 			v.id = blockID;
 		communication.ajax({

@@ -35,7 +35,6 @@ h4 {
 	margin-top: 3em;
 	margin-bottom: 1em;
 	text-align: center;
-	color: rgb(0, 94, 160);
 }
 
 body {
@@ -213,8 +212,7 @@ subCatTitle {
 }
 
 .mainBG {
-	/*background: linear-gradient(120deg, rgb(103, 97, 217) 0%, rgb(61, 26, 116) 100%);*/
-	background: linear-gradient(120deg, rgb(143, 127, 197) 0%, rgb(61, 46, 86) 100%);
+	background: linear-gradient(120deg, rgb(111, 174, 212) 0%, rgb(0, 100, 140) 100%);
 	background-size: 100% 100%;
 }
 
@@ -234,22 +232,13 @@ homeBody {
 	margin-top: -8em;
 }
 
-whatToDo navbutton {
-	opacity: 0.3;
-	cursor: pointer;
-	width: 33%;
-	display: inline-block;
-	position: absolute;
-	margin: 0 0.5em;
-}
-
 .bgColor {
-	background: linear-gradient(rgb(255, 223, 78) 0%, rgb(240, 195, 49) 100%) center center / 100% no-repeat;
+	background: linear-gradient(rgb(252, 251, 104) 0%, rgb(220, 220, 69) 100%) center center / 100% no-repeat;
 }
 
 a.bgColor:hover,
 buttontext.bgColor:hover {
-	background: rgb(255, 223, 78);
+	background: rgb(252, 251, 104);
 }
 
 .bgWeb {
@@ -286,8 +275,8 @@ whatToDo:before {
 	top: 0;
 	right: 0;
 	bottom: 0;
-	opacity: 0.07;
-	margin: 4em;
+	opacity: 0.05;
+	margin: 30%;
 }
 
 contacts:before {
@@ -334,6 +323,7 @@ login registerHint {
 	border-radius: 1em;
 	transition: all 0.4s ease-out 0s;
 	transform: scale(0);
+	color: black;
 }
 
 login registerHint li {
@@ -505,7 +495,7 @@ input:checked+label:before {
 }
 
 popup input:checked+label {
-	background: rgb(255, 223, 78) !important;
+	background: rgb(252, 251, 104) !important;
 	color: black;
 }
 
@@ -721,7 +711,7 @@ slider thumb val {
 	display: inline-block;
 	margin: 1.25em 0;
 	border-radius: 0 2.5em 2.5em 0;
-	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+	box-shadow: 0 0 2em rgba(0, 0, 0, 0.2);
 	padding: 0;
 }
 
@@ -744,8 +734,8 @@ slider thumb val {
 }
 
 .homeButton svg path {
-	fill: rgb(61, 46, 86);
-	stroke: rgb(61, 46, 86);
+	fill: rgb(0, 100, 140);
+	stroke: rgb(0, 100, 140);
 }
 
 whatToDoInput {
@@ -1032,7 +1022,7 @@ ratingSelection full {
 	left: 0;
 	overflow: hidden;
 	top: 0;
-	color: rgba(255, 223, 78, 0.8);
+	color: rgba(252, 251, 104, 0.8);
 }
 
 ratingSelection span {
@@ -1101,7 +1091,7 @@ badge span {
 	font-weight: bold;
 	height: 100%;
 	line-height: 2.5em;
-	color: rgb(255, 223, 78);
+	color: rgb(252, 251, 104);
 }
 
 popup badge {
@@ -1220,7 +1210,7 @@ emoji {
 }
 
 chatMessage .unseen {
-	color: rgb(255, 223, 78) !important;
+	color: rgb(252, 251, 104) !important;
 }
 
 chatMessage {
@@ -1519,7 +1509,7 @@ buttontext {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	color: black;
-	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
+	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.2);
 }
 
 buttonIcon {
@@ -1566,12 +1556,12 @@ buttonIcon svg {
 }
 
 buttonIcon.highlight {
-	color: rgb(255, 223, 78);
-	border: solid 0.15em rgb(255, 223, 78);
+	color: rgb(252, 251, 104);
+	border: solid 0.15em rgb(252, 251, 104);
 }
 
 buttonIcon.highlight svg {
-	fill: rgb(255, 223, 78);
+	fill: rgb(252, 251, 104);
 }
 
 .appInput {
@@ -1654,14 +1644,12 @@ row>div {
 	text-align: left;
 	overflow: hidden;
 	cursor: pointer;
-	background: rgba(0, 0, 0, 0.1);
+	background: rgba(0, 0, 0, 0.05);
 	border-radius: 0.5em;
 	margin: 1em 0.5em 0.5em 1em;
 	height: 6em;
 	transition: all 0.4s ease-out;
 }
-
-row.favorite>div {}
 
 row text {
 	max-height: 5.5em;
@@ -1674,6 +1662,10 @@ row text {
 	text-overflow: ellipsis;
 	display: inline-block;
 	padding: 0.5em;
+}
+
+row text title {
+	padding-right: 1em;
 }
 
 row extra {
@@ -1786,7 +1778,7 @@ chat.location chatButtons {
 }
 
 .highlightColor {
-	color: rgb(255, 223, 78);
+	color: rgb(252, 251, 104);
 }
 
 eventOutdated {
@@ -1936,6 +1928,7 @@ detail detailImg img {
 detail>div>text.highlightBackground {
 	padding: 0.5em 1em;
 	display: inline-block;
+	color: black;
 }
 
 detail text.matchIndicatorAttributesHint {
@@ -1986,7 +1979,7 @@ detail detailHeader matchIndicator svg .circle {
 	stroke-width: 2.8;
 	stroke-linecap: round;
 	animation: progress 1s ease-out forwards;
-	stroke: rgb(255, 223, 78);
+	stroke: rgb(252, 251, 104);
 }
 
 detail detailHeader matchIndicator svg .percentage {
@@ -2123,7 +2116,6 @@ tabBody {
 	width: 100%;
 	display: block;
 	margin-bottom: 1em;
-	padding-top: 1.25em;
 }
 
 progressbar {
@@ -2136,7 +2128,7 @@ progressbar {
 }
 
 .highlightBackground {
-	background: rgba(255, 223, 78, 0.8) !important;
+	background: rgba(252, 251, 104, 0.8) !important;
 }
 
 .highlightMap::before {
@@ -2192,7 +2184,7 @@ infoblock {
 	position: relative;
 	width: 96%;
 	display: block;
-	background: rgba(0, 0, 0, 0.1);
+	background: rgba(0, 0, 0, 0.05);
 	border: solid 1em transparent;
 	border-radius: 0.5em;
 	margin: -0.5em 0 1em 2%;
@@ -2230,7 +2222,7 @@ landingtitle {
 }
 
 landingsubtitle {
-	color: rgb(255, 223, 78);
+	color: rgb(252, 251, 104);
 	font-size: 1.3em;
 	padding: 0.5em 0;
 	margin-bottom: 0.5em;

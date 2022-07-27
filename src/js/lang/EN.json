@@ -325,7 +325,7 @@
 			"blockAction": "Block",
 			"blockActionHint": "Please explain why you want to report the Buddy!",
 			"blockAndReportAction": "Block and Report",
-			"blockDescHint": "Give your reason why you want to report him!",
+			"blockDescHint": "Give your reason for reporting!",
 			"blocked": "blocked buddies",
 			"blockedAction": "This buddy has now been blocked. You can unlock him in the last page of your settings.",
 			"blockReason1": "does not exist",

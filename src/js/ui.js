@@ -249,13 +249,6 @@ class ui {
 				ui.css(currentDiv, 'transform', '');
 				if (exec)
 					exec.call();
-				if (user.contact) {
-					var e = ui.q('login');
-					if (e.innerHTML) {
-						ui.css(e, 'display', 'none');
-						ui.html(e, '');
-					}
-				}
 			});
 		},
 		getActiveID() {
@@ -272,15 +265,6 @@ class ui {
 			if (id == 'home' && ui.cssValue(id, 'display') == 'none')
 				ui.css(id, 'display', 'block');
 			return id;
-		},
-		getDirection(id, currentID) {
-			if (currentID == 'detail' ||
-				id == 'home' && currentID != 'login' ||
-				id == 'login' ||
-				id == 'settings' && currentID == 'settings2' ||
-				id == 'settings2' && currentID == 'settings3')
-				return true;
-			return false;
 		},
 		goBack() {
 			if (ui.cssValue('popup', 'display') != 'none')
@@ -299,19 +283,19 @@ class ui {
 					ui.navigation.goTo('home');
 			}
 		},
-		goTo(id, event) {
-			if (event)
-				event.stopPropagation();
+		goTo(id, direction) {
 			if (ui.classContains('content', 'animated'))
 				return;
 			var currentID = ui.navigation.getActiveID();
-			var back = ui.navigation.getDirection(id, currentID);
 			if (id == 'home' && currentID == 'detail')
 				id = ui.q('detail').getAttribute('list');
 			if (currentID == 'info' && id == 'home' && !user.contact && pageInfo.openSection == -2) {
+				// AGBs opened from login, go back to login
 				id = 'login';
-				pageInfo.openSection = -1;
+				direction = 'foreward';
 			}
+			if (pageInfo.openSection == -2)
+				pageInfo.openSection = -1;
 			if (!user.contact && id != 'home' && id != 'info') {
 				if (id == 'whatToDo' || id == 'locations' || id == 'contacts' || id == 'settings' && !event) {
 					intro.openHint({ desc: id, pos: '10%,5em', size: '80%,auto' });
@@ -321,8 +305,6 @@ class ui {
 				if (timestamp && new Date().getTime() - timestamp < 500)
 					return;
 				id = 'login';
-				if (currentID != 'info')
-					back = true;
 			}
 			geoData.headingClear();
 			if (document.activeElement)
@@ -351,15 +333,21 @@ class ui {
 				pageSearch.init();
 			pageChat.closeList();
 			ui.navigation.hidePopup();
-			var s = id;
-			if (s != 'whatToDo' && s != 'locations' && s != 'contacts' && s != 'whatToDo' && s != 'login' && s != 'info' && s != 'search' && s.indexOf('settings') < 0)
-				s = currentID;
 			if (currentID != id) {
 				if (id == 'home')
 					ui.css('main>buttonIcon', 'display', 'none');
 				else if (id != 'detail')
 					ui.css('main>#buttonFavorite', 'display', 'none');
-				ui.navigation.fade(id, back, function () { ui.navigation.displayMainButtons(id); });
+				ui.navigation.fade(id,
+					direction == 'backward' ||
+					direction != 'foreward' && (
+						currentID == 'detail' ||
+						id == 'home' && currentID != 'login' ||
+						id == 'info' && currentID == 'login' ||
+						id == 'login' ||
+						id == 'settings' && currentID == 'settings2' ||
+						id == 'settings2' && currentID == 'settings3'),
+					function () { ui.navigation.displayMainButtons(id); });
 				ui.navigation.hideMenu();
 			}
 			ui.navigation.lastPage = currentID;

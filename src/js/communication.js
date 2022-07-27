@@ -233,11 +233,13 @@ class communication {
 								communication.sendError('script_correction: ' + ex);
 							}
 						}
-						if (ui.navigation.getActiveID() != 'home')
+						if (ui.navigation.getActiveID() != 'home') {
+							setTimeout(function () { ui.html('login', ''); }, 500);
 							ui.navigation.goTo('home');
-						setTimeout(lists.resetLists, 500);
+						}
+						lists.resetLists();
 						communication.ping();
-						setTimeout(communication.notification.register, 900);
+						setTimeout(communication.notification.register, 100);
 						pageWhatToDo.init();
 						pageChat.initActiveChats();
 						pageLocation.event.init();
@@ -427,7 +429,7 @@ class communication {
 			ui.attr('content > *', 'menuIndex', null);
 			communication.currentCalls = [];
 			ui.navigation.goTo('home');
-			setTimeout(lists.resetLists, 500);
+			lists.resetLists();
 			e = ui.qa('.homeIconSearch');
 			e[0].style.display = '';
 			e[1].style.display = 'none';

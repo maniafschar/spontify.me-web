@@ -136,7 +136,6 @@ class lists {
 		ui.html('whatToDo', '');
 		ui.html('detail', '');
 		ui.html('info', '');
-		ui.html('login', '');
 	}
 	static setListDivs(id, action) {
 		var e = ui.q(id);

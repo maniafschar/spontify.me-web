@@ -222,19 +222,19 @@ class initialisation {
 			if (dir == 'left')
 				ui.navigation.goTo(user.contact ? 'whatToDo' : 'info');
 			else if (dir == 'right')
-				ui.navigation.goTo(user.contact ? 'contacts' : 'login');
+				ui.navigation.goTo(user.contact ? 'contacts' : 'login', 'backward');
 		}, 'input,listScroll');
 		ui.swipe('contacts', function (dir) {
 			if (dir == 'left')
-				ui.navigation.goTo('home');
+				ui.navigation.goTo('home', 'foreward');
 			else if (dir == 'right')
-				ui.navigation.goTo('locations');
+				ui.navigation.goTo('locations', 'backward');
 		}, 'input,listScroll');
 		ui.swipe('locations', function (dir) {
 			if (dir == 'left')
 				ui.navigation.goTo('contacts');
 			else if (dir == 'right')
-				ui.navigation.goTo('whatToDo');
+				ui.navigation.goTo('whatToDo', 'backward');
 		}, 'input,listScroll,map');
 		ui.swipe('whatToDo', function (dir) {
 			if (dir == 'left')
@@ -243,13 +243,10 @@ class initialisation {
 				ui.navigation.goTo('home');
 		}, 'input,listScroll,map');
 		ui.swipe('info', function (dir) {
-			if (dir == 'right') {
-				if (pageInfo.openSection == -2) {
-					ui.navigation.goTo('login');
-					pageInfo.openSection = -1;
-				} else
-					ui.navigation.goTo('home');
-			}
+			if (dir == 'left' && !user.contact)
+				ui.navigation.goTo('login', 'foreward');
+			else if (dir == 'right')
+				ui.navigation.goTo('home');
 		}, 'textarea');
 		ui.swipe('alert', function (dir) {
 			if (dir == 'up')

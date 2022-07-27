@@ -325,7 +325,7 @@
 			"blockAction": "Blockieren",
 			"blockActionHint": "Bitte begründe warum Du den Buddy melden möchtest!",
 			"blockAndReportAction": "Blockieren und melden",
-			"blockDescHint": "Begründe Deine Entscheidung ihn zu melden!",
+			"blockDescHint": "Begründe Deine Entscheidung!",
 			"blocked": "Geblockte Buddies",
 			"blockedAction": "Dieser Buddy wurde nun blockiert. Dort kannst Du ihn in Deinen Einstelungen auf der letzten Seite wieder entsperren.",
 			"blockReason1": "existiert nicht",
