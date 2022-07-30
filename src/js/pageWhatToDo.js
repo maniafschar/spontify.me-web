@@ -1,7 +1,7 @@
 import { communication } from './communication';
 import { global } from './global';
 import { lists } from './lists';
-import { Contact, ContactWhatToDo, model } from './model';
+import { ContactWhatToDo, model } from './model';
 import { pageLocation } from './pageLocation';
 import { pageContact } from './pageContact';
 import { pageSearch } from './pageSearch';

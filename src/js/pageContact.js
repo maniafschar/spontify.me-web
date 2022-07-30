@@ -6,7 +6,7 @@ import { lists } from './lists';
 import { pageLocation } from './pageLocation';
 import { formFunc, ui } from './ui';
 import { user } from './user';
-import { model, Contact, ContactGroupLink, ContactBlock, ContactGroup, ContactLink } from './model';
+import { model, Contact, ContactBlock, ContactGroup, ContactLink } from './model';
 
 export { pageContact };
 
