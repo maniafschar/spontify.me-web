@@ -109,7 +109,6 @@ body.app>main hint {
 add {
 	display: none;
 	bottom: 0;
-	z-index: 9999;
 	position: absolute;
 	text-align: center;
 	padding: 1.5em;
@@ -130,7 +129,7 @@ add img {
 hint {
 	opacity: 0;
 	position: absolute;
-	z-index: 99999;
+	z-index: 5;
 	display: none;
 	transition: all 0.4s ease-in;
 	line-height: 1.5;
@@ -156,7 +155,6 @@ alert close {
 	height: 6em;
 	text-align: right;
 	padding-right: 0.5em;
-	z-index: 9;
 	cursor: pointer;
 	font-weight: bold;
 	color: white;
@@ -253,7 +251,6 @@ content {
 	height: 100%;
 	position: relative;
 	display: block;
-	z-index: 1;
 }
 
 .content {
@@ -300,12 +297,11 @@ filters {
 	position: absolute;
 	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
 	background: rgba(255, 255, 255, 0.9);
-	padding: 1em 1em 0 1em;
+	padding: 1em 1em 0.5em 1em;
 	border-radius: 0 1em 1em 0;
 	top: 3.7em;
 	left: 0;
 	transition: all 0.4s ease-out 0s;
-	z-index: 9;
 	max-width: 90%;
 	transform-origin: top left;
 }
@@ -318,7 +314,6 @@ login registerHint {
 	bottom: 1em;
 	padding: 1em 0.5em;
 	background: rgba(255, 255, 255, 0.9);
-	z-index: 99;
 	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
 	border-radius: 1em;
 	transition: all 0.4s ease-out 0s;
@@ -384,7 +379,7 @@ inputFile close {
 	top: 0;
 	right: 0;
 	width: 4em;
-	z-index: 9;
+	z-index: 2;
 	text-align: right;
 	padding: 0.5em 0.75em;
 	color: white;
@@ -412,7 +407,7 @@ inputFile rotate {
 	padding: 0.25em;
 	color: white;
 	top: 0;
-	z-index: 9;
+	z-index: 2;
 	filter: drop-shadow(0 0 0.05em rgba(0, 0, 0, 0.8));
 }
 
@@ -429,7 +424,6 @@ input {
 	font-family: Comfortaa, Verdana, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 	height: 2em;
 	padding: 0em 0.75em;
-	z-index: 99;
 	border-radius: 0.5em;
 	background: rgba(255, 255, 255, 0.85);
 	vertical-align: top;
@@ -603,13 +597,6 @@ locationNameInputHelper {
 	background-color: rgba(200, 200, 200, 0.1);
 }
 
-.facebook {
-	top: 3em;
-	position: absolute;
-	z-index: 999;
-	opacity: 1 !important;
-	right: 2.75em;
-}
 
 .noDisp {
 	display: none !important;
@@ -663,8 +650,7 @@ dialogButtons {
 	top: 0;
 	font-weight: bold;
 	font-size: 3em;
-	text-shadow: 0 0 0.5em rgba(0, 0, 0, 0.9);
-	color: rgba(255, 255, 255, 0.9);
+	color: rgba(0, 0, 0, 0.3);
 }
 
 slider {
@@ -741,7 +727,7 @@ slider thumb val {
 whatToDoInput {
 	display: block;
 	position: absolute;
-	z-index: 9;
+	z-index: 1;
 	margin: 1em;
 	border-radius: 1em;
 	padding: 1em;
@@ -769,7 +755,7 @@ whatToDoList {
 }
 
 chat {
-	z-index: 99999;
+	z-index: 2;
 }
 
 chat listHeader img {
@@ -805,7 +791,7 @@ chatUserList {
 	bottom: 4em;
 	overflow-x: hidden;
 	overflow-y: auto;
-	z-index: 99999;
+	z-index: 5;
 	max-height: 23em;
 }
 
@@ -849,7 +835,7 @@ chatUserList img {
 
 errorHint {
 	text-align: center;
-	color: rgb(255, 240, 100);
+	color: rgb(0, 100, 140);
 	position: relative;
 	z-index: 0;
 	display: block;
@@ -859,14 +845,10 @@ value.checkbox errorHint {
 	margin-top: -0.5em;
 }
 
-.popup errorHint {
-	color: red;
-}
-
 listHeader {
 	text-align: center;
 	position: relative;
-	z-index: 99999;
+	z-index: 1;
 	display: block;
 }
 
@@ -878,7 +860,7 @@ listResults {
 listScroll {
 	display: none;
 	position: absolute;
-	z-index: 9;
+	z-index: 1;
 	width: 3em;
 	height: 7.5em;
 	right: 0;
@@ -931,7 +913,7 @@ url-prefix(https:) {
 
 popup {
 	position: absolute;
-	z-index: 99999;
+	z-index: 5;
 	width: 100%;
 	top: 0;
 	left: 0;
@@ -1022,13 +1004,18 @@ ratingSelection full {
 	left: 0;
 	overflow: hidden;
 	top: 0;
-	color: rgba(252, 251, 104, 0.8);
+	color: rgb(252, 251, 104);
 }
 
 ratingSelection span {
 	width: 2em;
 	display: inline-block;
 	position: relative;
+}
+
+popup rating full,
+popup ratingSelection full {
+	color: rgb(0, 100, 140);
 }
 
 popupContent> :not(detail) ratingSelection {
@@ -1071,7 +1058,7 @@ badge {
 	top: -0.5em;
 	text-align: center;
 	padding: 0.5em 1em;
-	z-index: 99;
+	z-index: 2;
 	box-shadow: 0 0 0.25em rgba(0, 0, 0, 0.3);
 	opacity: 0.9;
 	left: 100%;
@@ -1112,7 +1099,7 @@ chatMoreButton {
 	right: 0;
 	padding: 0.5em 1em;
 	border-radius: 2em 0 0 2em;
-	z-index: 9;
+	z-index: 2;
 	color: white;
 	display: block;
 	font-size: 1.5em;
@@ -1126,7 +1113,7 @@ alert {
 	right: 1em;
 	left: 1em;
 	text-align: center;
-	z-index: 999999;
+	z-index: 6;
 	border-radius: 1em;
 	background-color: rgba(255, 255, 255, 0.9);
 	box-shadow: 0 0 2em rgba(0, 0, 0, 0.3);
@@ -1148,7 +1135,6 @@ chatConversation {
 	overflow-x: hidden;
 	position: absolute;
 	width: 100%;
-	z-index: 1;
 	transition: opacity .4s;
 }
 
@@ -1191,7 +1177,7 @@ emoji {
 	left: 50%;
 	margin-left: 1em;
 	top: -1em;
-	z-index: 9;
+	z-index: 2;
 }
 
 .chatLinks {
@@ -1245,7 +1231,6 @@ chatMessage note {
 	padding: 0.75em 1em;
 	border-radius: 0.5em 0 0 0.5em;
 	position: relative;
-	z-index: 99999;
 	max-width: 90%;
 	float: right;
 	box-sizing: initial;
@@ -1300,7 +1285,6 @@ chatMessage time {
 .chatImg {
 	margin-top: -4em;
 	position: relative;
-	z-index: 1;
 	border-radius: 1.5em !important;
 	float: left;
 	max-width: 100%;
@@ -1442,7 +1426,6 @@ home {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	z-index: 9999;
 	overflow: hidden;
 	display: block;
 }
@@ -1486,7 +1469,7 @@ homeSubTitle {
 
 notifications {
 	position: absolute;
-	z-index: 999;
+	z-index: 3;
 	width: 100%;
 	left: 0;
 	overflow: hidden;
@@ -1518,7 +1501,7 @@ buttonIcon {
 	display: flex;
 	padding: 0.3em;
 	text-align: center;
-	z-index: 99;
+	z-index: 2;
 	transition: all 0.4s ease-out;
 	color: white;
 	border: solid 0.15em white;
@@ -1580,26 +1563,6 @@ add buttontext {
 	width: 100%;
 	text-align: center;
 	margin: 1em 0 0 0;
-}
-
-descbox {
-	position: fixed;
-	max-width: 40em;
-	top: 1%;
-	z-index: 99999999;
-	display: inline-block;
-	background: white;
-	box-shadow: 0px 0px 5em rgba(0, 0, 0, 0.3);
-	padding: 1em;
-	border-radius: 1em;
-	transition: all 0.4s ease-out 0s;
-	text-align: center;
-	line-height: 1.6;
-	max-height: 98%;
-	overflow: auto;
-	left: 0;
-	right: 0;
-	margin: 0 auto;
 }
 
 .newsInDetail {
@@ -1880,14 +1843,14 @@ detail detailTogglePanel {
 
 detail {
 	height: 100%;
-	z-index: 99999;
 	text-align: center;
 	position: relative;
 	width: 100%;
 	overflow-x: hidden;
 	overflow-y: auto;
 	display: block;
-	padding: 1em 1em 4em 1em;
+	padding: 1em 1em 6em 1em;
+	z-index: 2;
 }
 
 detail badge {
@@ -1938,7 +1901,7 @@ detail text.matchIndicatorAttributesHint {
 
 detail>img.present {
 	position: absolute;
-	z-index: 99;
+	z-index: 2;
 	left: -0.5em;
 	margin-top: -0.5em;
 	height: 4em;
@@ -2123,7 +2086,7 @@ progressbar {
 	left: 0;
 	top: 0;
 	right: 1em;
-	z-index: 999999;
+	z-index: 6;
 	height: 0.75em;
 }
 
@@ -2151,7 +2114,7 @@ info {
 	position: relative;
 	margin: 1em 0 0 0;
 	border-radius: 0 2em 2em 0;
-	z-index: 9;
+	z-index: 1;
 }
 
 .settings2Button {
@@ -2258,7 +2221,7 @@ menu {
 	background: rgba(255, 255, 255, 0.9);
 	position: absolute;
 	top: 3.7em;
-	z-index: 9999999;
+	z-index: 7;
 	right: 0;
 	padding: 1.25em 2em;
 	transition: all .4s ease-out;
@@ -2350,28 +2313,6 @@ menu title {
 .popupSlideOut {
 	transform-origin: right top;
 	animation-name: popupSlideOut;
-}
-
-@keyframes listSlideOut {
-	0% {
-		transform: none;
-	}
-
-	100% {
-		transform: rotate3d(0, 0, 1, -90deg);
-	}
-}
-
-.listSlideOut {
-	animation-duration: 1.5s !important;
-	transform-origin: right top;
-	animation-name: listSlideOut;
-}
-
-.listSlideIn {
-	animation-duration: 1.5s !important;
-	transform: rotate3d(0, 0, 1, 90deg);
-	transform-origin: right top;
 }
 
 @keyframes homeSlideIn {

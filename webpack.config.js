@@ -11,7 +11,7 @@ module.exports = {
 	optimization: {
 		minimize: true
 	},
-	target: 'es5',
+	target: ['web', 'es5'],
 	module: {
 		rules: [
 			{

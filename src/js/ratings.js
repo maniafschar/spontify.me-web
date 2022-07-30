@@ -4,10 +4,9 @@ import { Contact, Location, model } from './model';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 
-export { rating };
+export { ratings };
 
-class rating {
-	static ratings = null;
+class ratings {
 	static templateBonus = v =>
 		global.template`<div style="text-align:center;padding-top:1em;font-size:1.2em;">
 	<div style="padding:0 1em;">
@@ -26,17 +25,17 @@ class rating {
 	<div style="color:red;${v.hidePaid}">
 		${ui.l('locations.ratedBonusPagePaidOut')}
 	</div>
-	<a class="${v.bg} fmg_text_button" onclick="rating.confirmBonusPaidOut(${v['locationRating.id']})" style="border-radius:8em;margin:0 1em;${v.hideButton}">${v.button}</a>
+	<a class="${v.bg} fmg_text_button" onclick="ratings.confirmBonusPaidOut(${v['locationRating.id']})" style="border-radius:8em;margin:0 1em;${v.hideButton}">${v.button}</a>
 	<br/><br/>
 </div>`;
 	static templateForm = v =>
 		global.template`<ratingSelection>
-    <empty><span>☆</span><span onclick="rating.click(2)">☆</span><span
-            onclick="rating.click(3)">☆</span><span onclick="rating.click(4)">☆</span><span
-            onclick="rating.click(5)">☆</span></empty>
-    <full><span onclick="rating.click(1)">★</span><span onclick="rating.click(2)">★</span><span
-            onclick="rating.click(3)">★</span><span onclick="rating.click(4)">★</span><span
-            onclick="rating.click(5)" style="display:none;">★</span></full>
+    <empty><span>☆</span><span onclick="ratings.click(2)">☆</span><span
+            onclick="ratings.click(3)">☆</span><span onclick="ratings.click(4)">☆</span><span
+            onclick="ratings.click(5)">☆</span></empty>
+    <full><span onclick="ratings.click(1)">★</span><span onclick="ratings.click(2)">★</span><span
+            onclick="ratings.click(3)">★</span><span onclick="ratings.click(4)">★</span><span
+            onclick="ratings.click(5)" style="display:none;">★</span></full>
 </ratingSelection>
 <div style="clear:both;text-align:center;padding:0.5em 1em 0 1em;margin-bottom:0.5em;">
     <form name="ratingForm">
@@ -50,12 +49,12 @@ class rating {
         <field class="${v.showImage}" style="margin:0.5em 0 0 0;">
             <input type="file" name="image" accept=".gif, .png, .jpg" />
         </field>
-        <buttontext onclick="rating.save(this)" type="${v.type}" oId="${v.id}"
+        <buttontext onclick="ratings.save()" oId="${v.id}"
             class="${v.bg}" style="margin-top:0.5em;">${ui.l('rating.save')}</buttontext>
     </form>
 </div>`;
 	static templateHistory = v =>
-		global.template`<buttontext onclick="rating.openHistory(&quot;${v.type}&quot;,${v.id})" class="bgColor" style="margin-bottom:1em;">${ui.l('rating.history')}</buttontext>
+		global.template`<buttontext onclick="ratings.openHistory(&quot;${v.type}&quot;,${v.id})" class="bgColor" style="margin-bottom:1em;">${ui.l('rating.history')}</buttontext>
 <ratingHistory style="display:none;"></ratingHistory>`;
 
 	static click(x) {
@@ -79,7 +78,7 @@ class rating {
 		});
 	}
 	static getForm(id, t, file, owner) {
-		var v = [], draft = formFunc.getDraft('rating' + t + id);
+		var v = {}, draft = formFunc.getDraft('rating' + t + id);
 		v.id = id;
 		v.owner = owner ? owner : '';
 		v.type = t;
@@ -88,7 +87,7 @@ class rating {
 		v.showImage = t == 'location' && file != false ? '' : ' noDisp';
 		if (draft)
 			v.draft = draft['RATING_' + t + '.TEXT'];
-		return rating.templateForm(v);
+		return ratings.templateForm(v);
 	}
 	static open(id, t, event) {
 		var name = ui.q('detail:not([style*="none"]) title, [i="' + id + '"] title').innerText.trim();
@@ -109,7 +108,7 @@ class rating {
 				}
 				if (r._lastRating && (new Date().getTime() - f) / 86400000 < 7) {
 					if (t == 'location' && new Date().getTime() - f < 7200000 && r[3]) {
-						rating.showRatedBonusPage(r._lastRating.split(' ')[3]);
+						ratings.showRatedBonusPage(r._lastRating.split(' ')[3]);
 						return;
 					}
 					f = '<ratingHint>' + ui.l('rating.lastRate').replace('{0}', global.date.formatDate(f)).replace('{1}', '<br/><br/><rating><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + parseInt(r._lastRating.split(' ')[2])) + '%;">★★★★★</full></rating><br/><br/>') + '</ratingHint>';
@@ -118,15 +117,15 @@ class rating {
 				else if (t == 'contact' && r._contactLink != 1)
 					f = '<ratingHint>' + ui.l('rating.onlyFriends') + '<br/><buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + id + ')" style="margin:1em 0;">' + ui.l('contacts.requestFriendship') + '</buttontext></ratingHint>';
 				else
-					f = rating.getForm(id, t, true, r._ownerId);
+					f = ratings.getForm(id, t, true, r._ownerId);
 				ui.html('detail [name="favLoc"]', '');
 				if (r._one || r._two || r._three || r._four) {
 					r.id = id;
 					r.type = t;
 					r.classBG = 'bgColor';
-					ui.navigation.openPopup(ui.l('rating.title') + name, '<div style="padding:1em 0 0 0;text-align:center;">' + f + rating.templateHistory(r) + '</div>', 'rating.saveDraft()');
+					ui.navigation.openPopup(ui.l('rating.title') + name, '<div style="padding:1em 0 0 0;text-align:center;">' + f + ratings.templateHistory(r) + '</div>', 'ratings.saveDraft()');
 				} else
-					ui.navigation.openPopup(ui.l('rating.title') + name, '<div style="padding:1em 0 0 0;text-align:center;">' + f + (f.indexOf('</buttontext>') < 0 ? '<buttontext class="bgColor" onclick="ui.navigation.hidePopup()" style="margin-bottom:1em;">' + ui.l('ready') + '</buttontext>' : '') + '</div>', 'rating.saveDraft()');
+					ui.navigation.openPopup(ui.l('rating.title') + name, '<div style="padding:1em 0 0 0;text-align:center;">' + f + (f.indexOf('</buttontext>') < 0 ? '<buttontext class="bgColor" onclick="ui.navigation.hidePopup()" style="margin-bottom:1em;">' + ui.l('ready') + '</buttontext>' : '') + '</div>', 'ratings.saveDraft()');
 			}
 		});
 	}
@@ -152,7 +151,7 @@ class rating {
 					}
 					if (s) {
 						ui.html('ratingHistory', s);
-						rating.openHistory();
+						ratings.openHistory();
 					}
 				}
 			});
@@ -166,7 +165,7 @@ class rating {
 				e[i].innerText = '' + parseInt(0.5 + s[2]);
 		}
 		if (r.type == 'location' && r.ratings)
-			rating.showRatedBonusPage(r.id);
+			ratings.showRatedBonusPage(r.id);
 		else
 			ui.navigation.hidePopup();
 		formFunc.removeDraft('rating' + r.type + r.cid);
@@ -174,7 +173,7 @@ class rating {
 		if (e)
 			e.innerHTML = ui.l('rating.saved');
 	}
-	static save(button) {
+	static save() {
 		var e = ui.q('[name="text"]');
 		ui.classRemove(e, 'dialogFieldError');
 		if (ui.val('popup [name="rating"]') < 25 && !e.value) {
@@ -189,14 +188,14 @@ class rating {
 			owner: ui.val('#owner')
 		};
 		var v = formFunc.getForm('ratingForm');
-		v.classname = button.getAttribute('type') == 'location' ? 'LocationRating' : 'ContactRating';
+		v.classname = 'LocationRating';
 		communication.ajax({
 			url: global.server + 'db/one',
 			method: 'POST',
 			body: v,
 			success(r) {
 				data.id = r;
-				rating.postSave(data);
+				ratings.postSave(data);
 			}
 		});
 	}
@@ -227,7 +226,7 @@ class rating {
 				v['hidePaid'] = v['rating_location.paid'] == 1 ? '' : 'display:none;';
 				v['text'] = ui.l('locations.ratedBonusPage').replace('{0}', time ? ui.l('locations.ratedBonusPageTime').replace('{0}', time) : ui.l('locations.ratedBonusPageTimeJustNow'));
 				v['button'] = ui.l('locations.ratedBonusPageButton').replace('{0}', '<br/><br/>' + v['location.bonus'] + '<br/><br/>');
-				ui.navigation.openPopup(ui.l('rating.title') + v['location.name'], rating.templateBonus(v));
+				ui.navigation.openPopup(ui.l('rating.title') + v['location.name'], ratings.templateBonus(v));
 			}
 		});
 	}

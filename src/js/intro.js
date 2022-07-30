@@ -113,11 +113,6 @@ class intro {
 			intro.closeHint();
 			return;
 		}
-		if (ui.cssValue('descbox', 'transform').indexOf('1') > -1) {
-			var e = ui.q('descbox');
-			if (e)
-				e.click();
-		}
 		if (!event) {
 			intro.currentStep = -1;
 			if (ui.cssValue('home', 'display') == 'none')

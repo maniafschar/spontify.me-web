@@ -76,7 +76,55 @@ class pageWhatToDo {
 		locations: 0,
 		events: 0
 	}
-	static init() {
+	static checkAttributeLocationsForList(id) {
+		for (var i = 0; i < 6; i++) {
+			if (user.contact['attr' + i] || user.contact['attr' + i + 'Ex'][i])
+				return true;
+		}
+		ui.html('#wtdList' + id, lists.getListNoResults(id.toLowerCase(), 'matches'));
+		return false;
+	}
+	static checkAttributeContactsForList() {
+		if (!user.contact.attrInterest && !user.contact.attrInterestEx) {
+			ui.html('#wtdListContacts', lists.getListNoResults('contacts', 'matches'));
+			return false;
+		}
+		return true;
+	}
+	static getCurrentMessage() {
+		if (pageWhatToDo.list && pageWhatToDo.list[0] && global.date.getDate(pageWhatToDo.list[0].time).getTime() > new Date().getTime() - 3600000)
+			return pageWhatToDo.list[0];
+	}
+	static getDisplayMessage() {
+		var currentMessage = pageWhatToDo.getCurrentMessage();
+		if (!currentMessage || !currentMessage.active)
+			return ui.l('wtd.todayIWant');
+		var s = global.date.getDate(currentMessage.time), cats = currentMessage.keywords.split(',');
+		s = s.getHours() + ':' + (s.getMinutes() < 10 ? '0' : '') + s.getMinutes();
+		s = ui.l('wtd.autoNewsMe').replace('{0}', s);
+		for (var i = 0; i < cats.length; i++)
+			s += ui.l('category' + cats[i]) + (i < cats.length - 1 ? ' ' + ui.l('or') + ' ' : '');
+		return s;
+	}
+	static getMessages() {
+		var list = [];
+		if (pageWhatToDo.list) {
+			for (var i = 0; i < pageWhatToDo.list.length; i++) {
+				if (pageWhatToDo.list[i].message)
+					list.push(pageWhatToDo.list[i].message);
+			}
+		}
+		return list;
+	}
+	static getSearchContact() {
+		var cats = pageWhatToDo.getCurrentMessage().keywords.split(','), s = '';
+		for (var i = 0; i < cats.length; i++)
+			s += '(length(contact.attr' + cats[i] + ')>0 or length(contact.attr' + cats[i] + 'Ex)>0) or ';
+		if (s.length > 0)
+			return ' and (' + s.substring(0, s.length - 4) + ')';
+		return '';
+	}
+	static init(exec) {
 		if (!ui.q('whatToDo').innerHTML) {
 			communication.ajax({
 				url: global.server + 'db/list?query=contact_what2do',
@@ -130,58 +178,13 @@ class pageWhatToDo {
 						pageWhatToDo.loadListContacts();
 					}
 					formFunc.initFields('whatToDo');
+					if (exec)
+						exec.call();
 				}
 			});
-		} else
-			pageWhatToDo.initListButton();
-	}
-	static checkAttributeLocationsForList(id) {
-		for (var i = 0; i < 6; i++) {
-			if (user.contact['attr' + i] || user.contact['attr' + i + 'Ex'][i])
-				return true;
+			return true;
 		}
-		ui.html('#wtdList' + id, lists.getListNoResults(id.toLowerCase(), 'matches'));
-		return false;
-	}
-	static checkAttributeContactsForList() {
-		if (!user.contact.attrInterest && !user.contact.attrInterestEx) {
-			ui.html('#wtdListContacts', lists.getListNoResults('contacts', 'matches'));
-			return false;
-		}
-		return true;
-	}
-	static getCurrentMessage() {
-		if (pageWhatToDo.list && pageWhatToDo.list[0] && global.date.getDate(pageWhatToDo.list[0].time).getTime() > new Date().getTime() - 3600000)
-			return pageWhatToDo.list[0];
-	}
-	static getDisplayMessage() {
-		var currentMessage = pageWhatToDo.getCurrentMessage();
-		if (!currentMessage || !currentMessage.active)
-			return ui.l('wtd.todayIWant');
-		var s = global.date.getDate(currentMessage.time), cats = currentMessage.keywords.split(',');
-		s = s.getHours() + ':' + (s.getMinutes() < 10 ? '0' : '') + s.getMinutes();
-		s = ui.l('wtd.autoNewsMe').replace('{0}', s);
-		for (var i = 0; i < cats.length; i++)
-			s += ui.l('category' + cats[i]) + (i < cats.length - 1 ? ' ' + ui.l('or') + ' ' : '');
-		return s;
-	}
-	static getMessages() {
-		var list = [];
-		if (pageWhatToDo.list) {
-			for (var i = 0; i < pageWhatToDo.list.length; i++) {
-				if (pageWhatToDo.list[i].message)
-					list.push(pageWhatToDo.list[i].message);
-			}
-		}
-		return list;
-	}
-	static getSearchContact() {
-		var cats = pageWhatToDo.getCurrentMessage().keywords.split(','), s = '';
-		for (var i = 0; i < cats.length; i++)
-			s += '(length(contact.attr' + cats[i] + ')>0 or length(contact.attr' + cats[i] + 'Ex)>0) or ';
-		if (s.length > 0)
-			return ' and (' + s.substring(0, s.length - 4) + ')';
-		return '';
+		pageWhatToDo.initListButton();
 	}
 	static initListButton() {
 		var b = pageWhatToDo.getCurrentMessage();
@@ -276,7 +279,7 @@ class pageWhatToDo {
 		for (var i = 0; i < e.length; i++)
 			cats += ',' + e[i].value;
 		cats = cats.substring(1);
-		pageWhatToDo.saveInternal(cats, ui.q('#messageText').value, ui.q('#whatToDoLocation').getAttribute('remove') ? false : null);
+		pageWhatToDo.saveInternal(cats, ui.q('#messageText').value);
 	}
 	static saveInternal(cat, msg, locID, postfix) {
 		var currentWtd = pageWhatToDo.getCurrentMessage();
@@ -327,8 +330,10 @@ class pageWhatToDo {
 				else
 					pageWhatToDo.loadListEvents();
 				pageWhatToDo.initListButton();
-				if (postfix == 'Detail')
+				if (locID) {
 					ui.html(ui.navigation.getActiveID() + ' [name="whatToDo"] detailTogglePanel', ui.l('wtd.setStatusLocation'));
+					ui.q('whatToDo').innerHTML = '';
+				}
 			}
 		});
 	}

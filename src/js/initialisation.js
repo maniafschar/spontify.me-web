@@ -309,10 +309,8 @@ class initialisation {
 		if (wOrg / w > 1.6) {
 			ui.css('add', 'width', ((wOrg - w) / 2) + 'px');
 			ui.css('add', 'display', 'block');
-		} else {
+		} else
 			ui.css('add', 'display', '');
-			ui.html('descbox', '');
-		}
 	}
 	static setLanguage(lang, exec) {
 		if (global.language == lang)

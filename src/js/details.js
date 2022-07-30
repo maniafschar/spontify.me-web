@@ -3,6 +3,7 @@ import { geoData } from './geoData';
 import { global } from './global';
 import { intro } from './intro';
 import { lists } from './lists';
+import { pageChat } from './pageChat';
 import { pageContact } from './pageContact';
 import { pageLocation } from './pageLocation';
 import { ui, formFunc } from './ui';
@@ -31,6 +32,10 @@ class details {
 	}
 	static open(id, action, callback) {
 		ui.navigation.hideMenu();
+		if (ui.navigation.getActiveID() == 'chat' && ui.q('detail:not([style*="none"])[i="' + id + '"]')) {
+			pageChat.close();
+			return;
+		}
 		communication.ajax({
 			url: global.server + 'action/one?query=' + action + '&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon,
 			responseType: 'json',
@@ -44,32 +49,32 @@ class details {
 				ui.css(activeID + ' row[i="' + id + '"] badge[action="remove"]', 'display', 'none');
 				r = callback(r, id);
 				if (r) {
-					var l = ui.q('detail');
+					var d = ui.q('detail');
 					if (activeID == 'detail')
-						ui.navigation.animation(l, 'homeSlideOut', function () {
-							ui.css(l, 'opacity', 0);
-							ui.css(l, 'transform', '');
-							ui.css(l, 'marginLeft', 0);
+						ui.navigation.animation(d, 'homeSlideOut', function () {
+							ui.css(d, 'opacity', 0);
+							ui.css(d, 'transform', '');
+							ui.css(d, 'marginLeft', 0);
 						});
-					var animate = ui.classContains(l, 'animated');
+					var animate = ui.classContains(d, 'animated');
 					var f = function () {
-						if (ui.classContains(l, 'animated')) {
+						if (ui.classContains(d, 'animated')) {
 							setTimeout(f, 50);
 							return;
 						}
-						ui.html(l, r);
-						ui.attr(l, 'i', id);
+						ui.html(d, r);
+						ui.attr(d, 'i', id);
 						if (activeID != 'detail') {
-							ui.attr(l, 'list', activeID);
-							ui.attr(l, 'type', action.indexOf('contact_') == 0 ? 'contact' : 'location');
+							ui.attr(d, 'list', activeID);
+							ui.attr(d, 'type', action.indexOf('contact_') == 0 ? 'contact' : 'location');
 							ui.navigation.goTo('detail');
 						}
 						formFunc.initFields('detail');
 						formFunc.image.replaceSVGs();
 						if (animate)
-							ui.navigation.animation(l, 'homeSlideIn');
-						l.scrollTop = 0;
-						ui.css(l, 'opacity', 1);
+							ui.navigation.animation(d, 'homeSlideIn');
+						d.scrollTop = 0;
+						ui.css(d, 'opacity', 1);
 						geoData.headingWatch();
 						if (activeID == 'locations' && !ui.q('locations').innerHTML) {
 							if (user.contact) {
@@ -81,7 +86,8 @@ class details {
 									s = s.substring(0, s.indexOf('<span'));
 								if (global.isBrowser())
 									history.pushState(null, null, window.location.origin + '/loc_' + id + '_' + encodeURIComponent(s.replace(/\//g, '_')));
-								var e = ui.q('title'), s2 = e.innerHTML;
+								var e = ui.q('title');
+								var s2 = e.innerHTML;
 								e.innerHTML = (s2.indexOf(global.separator) > -1 ? s2.substring(0, s2.indexOf(global.separator)) : s2) + global.separator + s;
 							}
 						}

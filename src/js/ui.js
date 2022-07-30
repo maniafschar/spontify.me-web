@@ -171,14 +171,14 @@ class ui {
 		lastPage: null,
 		lastPopup: null,
 
-		animation(e, c, exec) {
+		animation(e, animation, exec) {
 			if (typeof e == 'string')
 				e = ui.q(e);
 			if (ui.classContains(e, 'animated'))
 				return;
-			var s = 'listSlideOut popupSlideOut menuSlideOut homeSlideOut detailSlideOut detailBackSlideOut listSlideIn popupSlideIn menuSlideIn homeSlideIn detailSlideIn detailBackSlideIn slideUp slideDown';
+			var s = 'popupSlideOut homeSlideOut detailSlideOut detailBackSlideOut popupSlideIn homeSlideIn detailSlideIn detailBackSlideIn slideUp slideDown';
 			ui.classRemove(e, s);
-			ui.classAdd(e, c + ' animated');
+			ui.classAdd(e, animation + ' animated');
 			ui.on(e, ui.navigation.animationEvent, function () {
 				ui.classRemove(e, 'animated ' + s);
 				if (exec)
@@ -229,31 +229,31 @@ class ui {
 			f.call();
 		},
 		displayMainButtons(id) {
-			ui.css('main>buttonIcon', 'display', id == 'home' ? 'none' : '');
+			ui.css('main>buttonIcon', 'display', id == 'home' || id == 'chat' ? 'none' : '');
 			ui.css('main>#buttonFavorite', 'display', id == 'detail' ? '' : 'none');
 		},
 		fade(id, back, exec) {
-			var currentID = ui.navigation.getActiveID();
-			var currentDiv = ui.q(id);
-			var oldDiv = ui.q(currentID);
+			var oldID = ui.navigation.getActiveID();
+			var newDiv = ui.q(id);
+			var oldDiv = ui.q(oldID);
 			var o = back ? 'detailBack' : 'detail';
-			ui.classAdd(currentDiv, o + 'SlideIn');
-			ui.css(currentDiv, 'display', 'block');
+			ui.classAdd(newDiv, o + 'SlideIn');
+			ui.css(newDiv, 'display', 'block');
 			ui.navigation.animation('content', o + 'SlideOut', function () {
 				var e = ui.q('main');
 				ui.css(e, 'overflow', '');
 				e.scrollTop = 0;
 				ui.css(oldDiv, 'display', 'none');
 				ui.css(oldDiv, 'marginLeft', 0);
-				ui.classRemove(currentDiv, o + 'SlideIn');
-				ui.css(currentDiv, 'transform', '');
+				ui.classRemove(newDiv, o + 'SlideIn');
+				ui.css(newDiv, 'transform', '');
 				if (exec)
 					exec.call();
 			});
 		},
 		getActiveID() {
 			var id = 'home';
-			if (ui.cssValue(id, 'display') != 'none') {
+			if (ui.cssValue(id, 'display') != 'none' && !ui.q('content.animated')) {
 				ui.css('content>.content', 'display', 'none');
 				return id;
 			}
@@ -262,6 +262,8 @@ class ui {
 				e = ui.q('content>.content:not([style*="none"])');
 			if (e)
 				id = e.nodeName.toLowerCase();
+			if (id == 'detail' && ui.q('content>chat:not([style*="none"])'))
+				id = 'chat';
 			if (id == 'home' && ui.cssValue(id, 'display') == 'none')
 				ui.css(id, 'display', 'block');
 			return id;
@@ -317,7 +319,8 @@ class ui {
 				pageLogin.saveDraft();
 			if (currentID == 'settings3')
 				pageSettings.save3();
-			if (id.indexOf('settings') == 0 && pageSettings.init(function () { ui.navigation.goTo(id); }))
+			if (id.indexOf('settings') == 0 && pageSettings.init(function () { ui.navigation.goTo(id); })
+				|| id == 'whatToDo' && pageWhatToDo.init(function () { ui.navigation.goTo(id); }))
 				return;
 			if (id == 'info')
 				pageInfo.init();
@@ -327,10 +330,10 @@ class ui {
 				pageContact.init();
 			else if (id == 'locations')
 				pageLocation.init();
-			else if (id == 'whatToDo')
-				pageWhatToDo.init();
 			else if (id == 'search')
 				pageSearch.init();
+			else if (id == 'chat')
+				pageChat.init();
 			pageChat.closeList();
 			ui.navigation.hidePopup();
 			if (currentID != id) {

@@ -484,9 +484,9 @@ ${v.hint}
 		v.matchIndicatorHint = ui.l('locations.matchIndicatorHint').replace('{0}', v.attr.totalMatch).replace('{1}', v.attr.total).replace('{2}', v.matchIndicatorPercent).replace('{3}', v.attr.categories);
 		v.attributes = v.attr.textAttributes();
 		if (v.rating > 0)
-			v.rating = '<detailRating onclick="rating.open(' + v.locID + ',&quot;location&quot;,event)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></ratingSelection></detailRating>';
+			v.rating = '<detailRating onclick="ratings.open(' + v.locID + ',&quot;location&quot;,event)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></ratingSelection></detailRating>';
 		else
-			v.rating = '<div style="margin:1em 0;"><buttontext class="bgColor" onclick="rating.open(' + v.locID + ',&quot;location&quot;,event)">' + ui.l('rating.save') + '</buttontext></div>';
+			v.rating = '<div style="margin:1em 0;"><buttontext class="bgColor" onclick="ratings.open(' + v.locID + ',&quot;location&quot;,event)">' + ui.l('rating.save') + '</buttontext></div>';
 		v.address = v.address.replace(/\n/g, '<br />');
 		if (v.ownerId && v.url)
 			v.description = (v.description ? v.description + ' ' : '') + ui.l('locations.clickForMoreDetails');

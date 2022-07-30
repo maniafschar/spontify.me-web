@@ -210,6 +210,9 @@ class pageChat {
 		}
 		return 0;
 	}
+	static init() {
+		ui.css('main>buttonIcon', 'display', 'none');
+	}
 	static initActiveChats() {
 		if (!pageChat.admin.image) {
 			communication.ajax({
@@ -343,7 +346,7 @@ class pageChat {
 					ui.navigation.hideMenu();
 					ui.navigation.hidePopup();
 					pageChat.closeList();
-					ui.css('main>buttonIcon', 'display', 'none');
+					pageChat.init();
 					ui.off('chatConversation', 'scroll', pageChat.reposition);
 					pageChat.detailChat(r, id);
 					ui.swipe('chatInput', function (dir) {
