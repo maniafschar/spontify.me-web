@@ -17,12 +17,12 @@ class pageWhatToDo {
 <whatToDoInput class="mainBG" style="display:none;">
 	<whatToDoDiv style="display:block;">
 	<value>
-		<input type="checkbox" value="0" name="wtdCategories" label="${ui.l('category0')}" ${v.checked0} />
-		<input type="checkbox" value="1" name="wtdCategories" label="${ui.l('category1')}" ${v.checked1} />
-		<input type="checkbox" value="2" name="wtdCategories" label="${ui.l('category2')}" ${v.checked2} />
-		<input type="checkbox" value="3" name="wtdCategories" label="${ui.l('category3')}" ${v.checked3} />
-		<input type="checkbox" value="4" name="wtdCategories" label="${ui.l('category4')}" ${v.checked4} />
-		<input type="checkbox" value="5" name="wtdCategories" label="${ui.l('category5')}" ${v.checked5} />
+		<input type="checkbox" value="0" name="wtdCategories" label="${ui.categories[0].verb}" ${v.checked0} />
+		<input type="checkbox" value="1" name="wtdCategories" label="${ui.categories[1].verb}" ${v.checked1} />
+		<input type="checkbox" value="2" name="wtdCategories" label="${ui.categories[2].verb}" ${v.checked2} />
+		<input type="checkbox" value="3" name="wtdCategories" label="${ui.categories[3].verb}" ${v.checked3} />
+		<input type="checkbox" value="4" name="wtdCategories" label="${ui.categories[4].verb}" ${v.checked4} />
+		<input type="checkbox" value="5" name="wtdCategories" label="${ui.categories[5].verb}" ${v.checked5} />
 	</value>
 	</whatToDoDiv>
 	<whatToDoDiv id="whatToDoLocation" onclick="${v.locOC}" style="display:${v.locDisp};cursor:pointer;">
@@ -103,7 +103,7 @@ class pageWhatToDo {
 		s = s.getHours() + ':' + (s.getMinutes() < 10 ? '0' : '') + s.getMinutes();
 		s = ui.l('wtd.autoNewsMe').replace('{0}', s);
 		for (var i = 0; i < cats.length; i++)
-			s += ui.l('category' + cats[i]) + (i < cats.length - 1 ? ' ' + ui.l('or') + ' ' : '');
+			s += ui.categories[cats[i]].verb + (i < cats.length - 1 ? ' ' + ui.l('or') + ' ' : '');
 		return s;
 	}
 	static getMessages() {

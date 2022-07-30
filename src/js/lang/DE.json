@@ -2,6 +2,7 @@
 	"categories": [
 		{
 			"label": "Shopping",
+			"verb": "Shoppen gehen",
 			"subCategories": [
 				"Schuhe",
 				"Kleider",
@@ -27,6 +28,7 @@
 		},
 		{
 			"label": "Kultur",
+			"verb": "Kultur genießen",
 			"subCategories": [
 				"Theater",
 				"Oper",
@@ -56,6 +58,7 @@
 		},
 		{
 			"label": "Restaurant",
+			"verb": "Essen gehen",
 			"subCategories": [
 				"Thai",
 				"Vietnamesisch",
@@ -86,6 +89,7 @@
 		},
 		{
 			"label": "Attraktion",
+			"verb": "Attraktion anschauen",
 			"subCategories": [
 				"Monument",
 				"Museum",
@@ -104,6 +108,7 @@
 		},
 		{
 			"label": "Nachtleben",
+			"verb": "Ausgehen",
 			"subCategories": [
 				"Punk",
 				"Rock",
@@ -139,6 +144,7 @@
 		},
 		{
 			"label": "Sport/Hobby",
+			"verb": "Sport/Hobby widmen",
 			"subCategories": [
 				"Joggen",
 				"Laufen",
@@ -756,12 +762,6 @@
 		"camera.select": "Auswählen",
 		"camera.shoot": "Aufnehmen",
 		"category": "Kategorie",
-		"category0": "Shoppen gehen",
-		"category1": "Kultur genießen",
-		"category2": "Essen gehen",
-		"category3": "Attraktion anschauen",
-		"category4": "Ausgehen",
-		"category5": "Sport/Hobby widmen",
 		"choices.select": "Klicke hier zum auswählen...",
 		"confirmDelete": "Endgültig löschen?",
 		"copyLinkHint.event": "Dieses Event kannst Du nun im Chat einfügen.",

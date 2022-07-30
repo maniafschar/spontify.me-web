@@ -2,6 +2,7 @@
 	"categories": [
 		{
 			"label": "Shopping",
+			"verb": "go shopping",
 			"subCategories": [
 				"Footwear",
 				"Clothes",
@@ -27,6 +28,7 @@
 		},
 		{
 			"label": "Culture",
+			"verb": "enjoy culture",
 			"subCategories": [
 				"Theater",
 				"Opera",
@@ -56,6 +58,7 @@
 		},
 		{
 			"label": "Restaurant",
+			"verb": "go for dinner",
 			"subCategories": [
 				"Thai",
 				"Vietnamese",
@@ -86,6 +89,7 @@
 		},
 		{
 			"label": "Attraction",
+			"verb": "visit attractions",
 			"subCategories": [
 				"Monument",
 				"Museum",
@@ -104,6 +108,7 @@
 		},
 		{
 			"label": "Nightlife",
+			"verb": "enjoy nightlife",
 			"subCategories": [
 				"Punk",
 				"Rock",
@@ -139,6 +144,7 @@
 		},
 		{
 			"label": "Sport/Hobby",
+			"verb": "work out/dedicate hobby",
 			"subCategories": [
 				"Jogging",
 				"Walking",
@@ -756,12 +762,6 @@
 		"camera.select": "Select",
 		"camera.shoot": "Shoot",
 		"category": "Category",
-		"category0": "go shopping",
-		"category1": "enjoy culture",
-		"category2": "go for dinner",
-		"category3": "visit attractions",
-		"category4": "enjoy nightlife",
-		"category5": "work out/dedicate hobby",
 		"choices.select": "Click here to choose...",
 		"confirmDelete": "Delete forever?",
 		"copyLinkHint.event": "This event may now be inserted in chats.",

@@ -263,7 +263,7 @@ class global {
 				else {
 					var cat = '';
 					for (var i2 = 0; i2 < extracted.categories.length; i2++)
-						cat += ui.l('category' + extracted.categories[i2]) + (i2 < extracted.categories.length - 1 ? ' ' + ui.l('or') + ' ' : '');
+						cat += ui.categories[extracted.categories[i2]].verb + (i2 < extracted.categories.length - 1 ? ' ' + ui.l('or') + ' ' : '');
 					s = ui.l('wtd.autoNews').replace('{0}', cat).replace('{1}', extracted.time);
 				}
 			}
