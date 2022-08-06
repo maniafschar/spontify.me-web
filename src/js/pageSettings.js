@@ -277,6 +277,16 @@ class pageSettings {
 			s2 = s2.substring(1);
 		return s2;
 	}
+	static hasAttributes() {
+		return user.contact.attr || user.contact.attr
+			|| user.contact.attrInterest || user.contact.attrInterestEx
+			|| user.contact.attr0 || user.contact.attrEx0
+			|| user.contact.attr1 || user.contact.attrEx1
+			|| user.contact.attr2 || user.contact.attrEx2
+			|| user.contact.attr3 || user.contact.attrEx3
+			|| user.contact.attr4 || user.contact.attrEx4
+			|| user.contact.attr5 || user.contact.attrEx5;
+	}
 	static init(exec) {
 		if (!ui.q('settings').innerHTML) {
 			communication.ajax({
@@ -333,7 +343,6 @@ class pageSettings {
 						ui.css(ui.q('#settingsInterest1').nextElementSibling, 'display', 'none');
 					if (!v['contact.ageDivers'])
 						ui.css(ui.q('#settingsInterest3').nextElementSibling, 'display', 'none');
-					pageSettings.init2();
 					pageSettings.currentSettings = pageSettings.getCurrentSettingsString();
 					if (exec)
 						exec.call()
@@ -342,27 +351,17 @@ class pageSettings {
 					pageSettings.currentSettings3 = pageSettings.getCurrentSettings3String();
 				}
 			});
-			if (!user.contact.attr && !user.contact.attr
-				&& !user.contact.attrInterest && !user.contact.attrInterestEx
-				&& !user.contact.attr0 && !user.contact.attrEx0
-				&& !user.contact.attr1 && !user.contact.attrEx1
-				&& !user.contact.attr2 && !user.contact.attrEx2
-				&& !user.contact.attr3 && !user.contact.attrEx3
-				&& !user.contact.attr4 && !user.contact.attrEx4
-				&& !user.contact.attr5 && !user.contact.attrEx5) {
-				if (ui.navigation.getActiveID() == 'settings')
-					setTimeout(function () {
-						if (ui.navigation.getActiveID() == 'settings')
-							intro.openHint({ desc: 'goToSettings2', pos: '-1em,-5em', size: '60%,auto', onclick: 'ui.navigation.goTo(\'settings2\')' });
-					}, 10000);
-				else if (ui.navigation.getActiveID() == 'settings2')
-					setTimeout(function () {
-						if (ui.navigation.getActiveID() == 'settings2' && ui.cssValue('popup', 'display') == 'none')
-							intro.openHint({ desc: 'settings2', pos: '1.5em,9em', size: '40%,auto', hinkyClass: 'top', hinky: 'left:1em' });
-					}, 2000);
-			}
 			return true;
 		}
+		var e = function () {
+			if (!pageSettings.hasAttributes()) {
+				if (ui.navigation.getActiveID() == 'settings')
+					intro.openHint({ desc: 'goToSettings2', pos: '-1em,-5em', size: '60%,auto', onclick: 'ui.navigation.goTo(\'settings2\')' });
+				else
+					setTimeout(e, 5000);
+			}
+		};
+		setTimeout(e, 10000);
 	}
 	static init2() {
 		var v = [];
@@ -376,6 +375,16 @@ class pageSettings {
 			v['att' + i + 'Ex'] = user.contact['attr' + i + 'Ex'] ? user.contact['attr' + i + 'Ex'].replace(/\u0015/g, ',') : '';
 		ui.html('settings2', pageSettings.templateSettings2(v));
 		formFunc.initFields('settings2');
+		var e = function () {
+			if (!pageSettings.hasAttributes()) {
+				if (ui.navigation.getActiveID() == 'settings2') {
+					if (ui.cssValue('popup', 'display') == 'none')
+						intro.openHint({ desc: 'settings2', pos: '1.5em,9em', size: '40%,auto', hinkyClass: 'top', hinky: 'left:1em' });
+				} else
+					setTimeout(e, 1000);
+			}
+		}
+		setTimeout(e, 2000);
 	}
 	static listContactsBlocked(l) {
 		l[0].push('_message1');
@@ -392,8 +401,7 @@ class pageSettings {
 		ui.toggleHeight(e);
 	}
 	static open2() {
-		pageSettings.init();
-		ui.navigation.goTo('settings2');
+		pageSettings.init(function () { ui.navigation.goTo('settings2'); });
 	}
 	static preview() {
 		if (pageSettings.currentSettings == pageSettings.getCurrentSettingsString())

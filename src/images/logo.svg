@@ -29,7 +29,7 @@
 			g.small .me {
 				display: block;
 				fill: rgba(255, 255, 255, 0.7);
-				transform: scale(3.3) translate(-8.52em, -1.158em);
+				transform: scale(3.3) translate(-8.575em, -1.156em);
 			}
 
 			g.pure {

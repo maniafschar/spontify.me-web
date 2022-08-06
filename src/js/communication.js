@@ -255,14 +255,7 @@ class communication {
 						if (!user.contact.aboutMe && !user.contact.budget
 							&& !user.contact.gender && !user.contact.birthday
 							&& !user.contact.ageMale && !user.contact.ageFemale && !user.contact.ageDivers
-							&& !user.contact.attr && !user.contact.attr
-							&& !user.contact.attrInterest && !user.contact.attrInterestEx
-							&& !user.contact.attr0 && !user.contact.attrEx0
-							&& !user.contact.attr1 && !user.contact.attrEx1
-							&& !user.contact.attr2 && !user.contact.attrEx2
-							&& !user.contact.attr3 && !user.contact.attrEx3
-							&& !user.contact.attr4 && !user.contact.attrEx4
-							&& !user.contact.attr5 && !user.contact.attrEx5
+							&& !pageSettings.hasAttributes()
 							&& !exec) {
 							setTimeout(function () {
 								if (ui.navigation.getActiveID() == 'home')

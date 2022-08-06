@@ -330,6 +330,8 @@ class ui {
 				pageContact.init();
 			else if (id == 'locations')
 				pageLocation.init();
+			else if (id == 'settings2')
+				pageSettings.init2();
 			else if (id == 'search')
 				pageSearch.init();
 			else if (id == 'chat')
