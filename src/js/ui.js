@@ -1439,6 +1439,7 @@ class formFunc {
 				}
 				var error = document.createElement('errorHint');
 				error.innerHTML = s;
+				error.classList.add('highlightColor');
 				e2.append(error);
 			}
 			e2 = e2.parentNode;
@@ -1495,8 +1496,8 @@ class formFunc {
 		return x;
 	}
 	static validation = {
-		badWords: ' anal | anus | arsch| ass |bdsm|blowjob| boob|bukkake|bumse|busen| cock | cum |cunnilingus|dildo|ejacul|ejakul|erection|erektion|faschis|fascis|fick|fuck|goebbels|göring|hakenkreuz|himmler|hitler|hure| möse |nazi|neger|nsdap|nutte|orgasm|penis|porn|pussy|queer|schwanz| sex |sucker|tits|titten|vagina|vibrator|vögeln|whore|wigger|wixer'.split('|'),
-		badWordsReplacement: null,
+		badWords: [],
+		badWordsReplacement: [],
 
 		birthday(s) {
 			formFunc.resetError(s);
@@ -1541,17 +1542,18 @@ class formFunc {
 			var s = e.value;
 			if (s) {
 				s = ' ' + s + ' ';
-				if (!formFunc.validation.badWordsReplacement) {
-					formFunc.validation.badWordsReplacement = [];
-					for (var i = 0; i < formFunc.validation.badWords.length; i++) {
-						var s2 = '';
-						for (var i2 = 0; i2 < formFunc.validation.badWords[i].length; i2++)
-							s2 += formFunc.validation.badWords[i].charAt(i2) == ' ' ? ' ' : '*';
+				if (formFunc.validation.badWords.length == 0) {
+					var words = ' anal | anus | arsch| ass |bdsm|blowjob| boob|bukkake|bumse|busen| cock | cum |cunnilingus|dildo|ejacul|ejakul|erection|erektion|faschis|fascis|fick|fuck|goebbels|göring|hakenkreuz|himmler|hitler|hure| möse |nazi|neger|nsdap|nutte|orgasm|penis|porn|pussy|queer|schwanz| sex |sucker|tits|titten|vagina|vibrator|vögeln|whore|wigger|wixer'.split('|');
+					for (var i = 0; i < words.length; i++) {
+						var s2 = '', i3 = 0;
+						for (var i2 = 0; i2 < words[i].length; i2++)
+							s2 += words[i].charAt(i2) == ' ' ? '$' + ++i3 : '*';
 						formFunc.validation.badWordsReplacement.push(s2);
+						formFunc.validation.badWords.push(new RegExp(words[i].replace(/ /g, '([$£€.,;:_*&%#"\'!? -+)(}{\\][])'), 'ig'));
 					}
 				}
 				for (var i = 0; i < formFunc.validation.badWords.length; i++)
-					s = s.replace(new RegExp(formFunc.validation.badWords[i], 'ig'), formFunc.validation.badWordsReplacement[i]);
+					s = s.replace(formFunc.validation.badWords[i], formFunc.validation.badWordsReplacement[i]);
 			}
 			if (!s || s == ' ' + e.value + ' ')
 				formFunc.resetError(e);

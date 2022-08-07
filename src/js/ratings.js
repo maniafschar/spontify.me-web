@@ -45,7 +45,7 @@ class ratings {
         <input type="hidden" name="${v.column}" value="${v.id}" />
         <input type="hidden" name="rating" value="80" />
         <textarea maxlength="250" placeholder="${ui.l('locations.shortDesc')}" name="text" ${v.textareaStyle}>${v.draft}</textarea>
-        <errorHint></errorHint>
+        <errorHint class="highlightColor"></errorHint>
         <field class="${v.showImage}" style="margin:0.5em 0 0 0;">
             <input type="file" name="image" accept=".gif, .png, .jpg" />
         </field>
