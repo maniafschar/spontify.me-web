@@ -70,7 +70,7 @@ ${v.aboutMe}
 	<buttontext class="bgColor${v.blocked}${v.hideMe}${v.hideGroups}" name="buttonGroups"
 		onclick="pageContact.groups.toggleGroups(${v.id})">${ui.l('group.action')}</buttontext>
 	<buttontext class="bgColor${v.blocked}" name="buttonEvents"
-		onclick="pageLocation.event.toggle(${v.id})">${ui.l('events.title')}</buttontext>
+		onclick="events.toggle(${v.id})">${ui.l('events.title')}</buttontext>
 	<buttontext class="bgColor${v.blocked}" name="buttonLocation"
 		onclick="pageContact.toggleLocation(${v.id})">${ui.l('locations.title')}</buttontext>
 </detailButtons>
@@ -113,7 +113,7 @@ ${v.aboutMe}
 		</buttontext>
 	</detailTogglePanel>
 </text>
-<text name="location" class="collapsed" style="padding:0;"></text>`;
+<text name="location" class="collapsed list"></text>`;
 	static templateGroups = v =>
 		global.template`<div>
     ${v.groups}
@@ -182,7 +182,7 @@ ${v.aboutMe}
 		}
 	}
 	static block() {
-		var path = 'detail [name="block"]';
+		var path = 'detail card:last-child [name="block"]';
 		formFunc.resetError(ui.q(path + ' [name="note"]'));
 		var bi = ui.q(path).getAttribute('blockID');
 		if (ui.q(path + ' [name="type"]').checked)
@@ -200,12 +200,12 @@ ${v.aboutMe}
 		var v = {
 			classname: 'ContactBlock',
 			values: {
-				contactId2: ui.q('detail').getAttribute('i'),
+				contactId2: ui.q('detail card:last-child').getAttribute('i'),
 				reason: reason,
 				note: note
 			}
 		};
-		var id = ui.q('detail').getAttribute('i');
+		var id = ui.q('detail card:last-child').getAttribute('i');
 		if (blockID > 0)
 			v.id = blockID;
 		communication.ajax({
@@ -244,7 +244,7 @@ ${v.aboutMe}
 					return;
 				e = e.parentNode;
 			}
-			ui.toggleHeight(ui.q('detail [name="block"]'));
+			ui.toggleHeight(ui.q('detail card:last-child [name="block"]'));
 		}
 	}
 	static confirmFriendship(linkId, status, id) {
@@ -253,17 +253,17 @@ ${v.aboutMe}
 			method: 'PUT',
 			body: { classname: 'ContactLink', id: linkId, values: { status: status } },
 			success() {
-				ui.toggleHeight(ui.q('detail [name="block"]'));
+				ui.toggleHeight(ui.q('detail card:last-child [name="block"]'));
 				communication.ping();
 				var e = ui.qa(ui.q('detail').getAttribute('list') + ' row[i="' + id + '"] badge');
 				ui.html(e, '');
 				ui.css(e, 'display', 'none');
 				if (status == 'Friends') {
 					ui.classAdd('main>#buttonFavorite', 'highlight');
-					ui.classRemove('detail[i="' + id + '"] [name="buttonGroups"]', 'noDisp');
+					ui.classRemove('detail card:last-child[i="' + id + '"] [name="buttonGroups"]', 'noDisp');
 				} else {
 					ui.classRemove('main>#buttonFavorite', 'highlight');
-					ui.classAdd('detail[i="' + id + '"] [name="buttonGroups"]', 'noDisp');
+					ui.classAdd('detail card:last-child[i="' + id + '"] [name="buttonGroups"]', 'noDisp');
 				}
 			}
 		});
@@ -275,7 +275,6 @@ ${v.aboutMe}
 			idIntern = idIntern.substring(0, idIntern.indexOf('_'));
 		v.distance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
 		v.birthday = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
-		v.classBGImg = 'class="bgColor"';
 		if (v.birthday[0]) {
 			if (v.age)
 				v.ageDisplay = ' (' + v.age + ')';
@@ -337,7 +336,7 @@ ${v.aboutMe}
 		if (v.image)
 			v.image = global.serverImg + v.image;
 		else
-			v.image = 'images/contact.svg" class="bgColor" style="padding:3em;';
+			v.image = 'images/contact.svg" class="mainBG" style="padding:8em;';
 		if (v.rating > 0)
 			v.rating = '<div><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></ratingSelection></div>';
 		else
@@ -347,7 +346,7 @@ ${v.aboutMe}
 		if (!v.attributes && !v.aboutMe && !v.rating)
 			v.dispBody = 'display:none;';
 		if (v.aboutMe)
-			v.aboutMe = '<div style="margin-top:1em;">' + (v.guide ? '<b>' + ui.l('settings.guide') + '</b><br/>' : '') + '<text class="highlightBackground">' + v.aboutMe + '</text></div>';
+			v.aboutMe = '<div style="margin-top:1em;">' + (v.guide ? '<b>' + ui.l('settings.guide') + '</b><br/>' : '') + '<text class="highlightBackground description">' + v.aboutMe + '</text></div>';
 		if (v.contactLink.status == 'Pending' && v.contactLink.contactId != user.contact.id)
 			setTimeout(function () {
 				pageContact.toggleBlockUser(id);
@@ -386,7 +385,7 @@ ${v.aboutMe}
 	static getBirthday(b, bd) {
 		var birth = '', present = '', age = 0;
 		if (b) {
-			var d1 = global.date.getDate(b), d2 = new Date();
+			var d1 = global.date.server2Local(b), d2 = new Date();
 			age = d2.getYear() - d1.getYear();
 			if (d2.getMonth() < d1.getMonth() || d2.getMonth() == d1.getMonth() && d2.getDate() < d1.getDate())
 				age--;
@@ -453,7 +452,7 @@ ${v.aboutMe}
 					method: d.id ? 'DELETE' : 'POST',
 					pos: e.getAttribute('value'),
 					success(r) {
-						var e2 = ui.q('detail[i="' + id + '"] [name="groups"] input[value="' + this.pos + '"]');
+						var e2 = ui.q('detail card:last-child[i="' + id + '"] [name="groups"] input[value="' + this.pos + '"]');
 						if (d.id) {
 							ui.attr(e2, 'gllID', null);
 							ui.attr(e2, 'checked', null);
@@ -683,7 +682,7 @@ ${v.aboutMe}
 				v.image = global.serverImg + v.imageList;
 			else
 				v.image = 'images/contact.svg" style="padding:1em;';
-			v.classBGImg = v.imageList ? '' : 'bgColor';
+			v.classBGImg = v.imageList ? '' : 'mainBG';
 			if (v.contactLink.status == 'Friends')
 				v.classFavorite = ' favorite';
 			v.attr = ui.getAttributes(v, 'list');
@@ -733,17 +732,17 @@ ${v.aboutMe}
 				if (ui.q('popupContent'))
 					ui.navigation.hidePopup();
 				else
-					ui.q('detail[i="' + id + '"] [name="block"] buttontext').outerHTML = '<span style="text-align:center;">' + ui.l('contacts.requestFriendshipAlreadySent') + '</span>';
+					ui.q('detail card:last-child[i="' + id + '"] [name="block"] buttontext').outerHTML = '<span style="text-align:center;">' + ui.l('contacts.requestFriendshipAlreadySent') + '</span>';
 			}
 		});
 	}
 	static showBlockText() {
-		var s = ui.q('detail [name="block"] [name="type"]:checked').value == 2 ? 'block' : 'none';
-		ui.css(ui.q('detail [name="block"] [name="reason"]').parentNode, 'display', s);
-		ui.css('detail [name="block"] [name="note"]', 'display', s);
+		var s = ui.q('detail card:last-child [name="block"] [name="type"]:checked').value == 2 ? 'block' : 'none';
+		ui.css(ui.q('detail card:last-child [name="block"] [name="reason"]').parentNode, 'display', s);
+		ui.css('detail card:last-child [name="block"] [name="note"]', 'display', s);
 	}
 	static toggleBlockUser(id) {
-		var divID = 'detail[i="' + id + '"] [name="block"]';
+		var divID = 'detail card:last-child[i="' + id + '"] [name="block"]';
 		var e = ui.q(divID);
 		if (!e.getAttribute('blockID')) {
 			communication.ajax({
@@ -767,13 +766,13 @@ ${v.aboutMe}
 		ui.toggleHeight(e);
 	}
 	static toggleLocation(id) {
-		var e = ui.q('detail[i="' + id + '"] [name="location"]');
+		var e = ui.q('detail card:last-child[i="' + id + '"] [name="location"]');
 		if (!e.innerHTML) {
 			communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent('location.contactId=' + id), function (l) {
 				var s = pageLocation.listLocation(l);
 				if (s) {
 					e.innerHTML = ui.l('locations.my') + '<br/>' + s;
-					var rows = ui.qa('detail[i="' + id + '"] [name="location"] row');
+					var rows = ui.qa('detail card:last-child[i="' + id + '"] [name="location"] row');
 					for (var i = 0; i < rows.length; i++)
 						rows[i].setAttribute('onclick', 'ui.navigation.autoOpen("' + global.encParam('l=' + rows[i].getAttribute('i')) + '",event)');
 				} else
@@ -784,7 +783,7 @@ ${v.aboutMe}
 			details.togglePanel(e);
 	}
 	static toggleMatchIndicatorHint(id, event) {
-		var e = ui.q('detail[i="' + id + '"] [name="matchIndicatorHint"]');
+		var e = ui.q('detail card:last-child[i="' + id + '"] [name="matchIndicatorHint"]');
 		var button = ui.parents(event.target, 'matchIndicator');
 		e.style.top = (button.offsetTop + button.offsetHeight) + 'px';
 		e.style.left = '5%';

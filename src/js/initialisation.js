@@ -166,7 +166,7 @@ class initialisation {
 						return;
 					e = e.parentNode;
 				}
-				ui.navigation.goTo(ui.q('detail').getAttribute('list'));
+				ui.navigation.goTo('home');
 			}
 		});
 		ui.on('popup', 'click', function (event) {
@@ -179,6 +179,9 @@ class initialisation {
 						return;
 					e = e.parentNode;
 				}
+				e = ui.q('popup');
+				if (e.getAttribute('close'))
+					eval(e.getAttribute('close'));
 				ui.navigation.hidePopup();
 			}
 		});
@@ -204,7 +207,7 @@ class initialisation {
 			if (dir == 'right')
 				ui.navigation.goTo('home');
 			else if (dir == 'left')
-				pageSettings.open2();
+				ui.navigation.goTo('settings2');
 		}, 'input,textarea,img,slider');
 		ui.swipe('search', function (dir) {
 			if (dir == 'right')

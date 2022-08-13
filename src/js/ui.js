@@ -39,9 +39,9 @@ class ui {
 	${ui.l('events.title')}
 </title>
 <container>
-	<a onclick="communication.loadList(ui.query.eventAll(),pageLocation.event.listEvents,&quot;locations&quot;,&quot;events&quot;)">
+	<a onclick="communication.loadList(ui.query.eventAll(),events.listEvents,&quot;locations&quot;,&quot;events&quot;)">
 		${ui.l('all')}
-	</a><a onclick="communication.loadList(ui.query.eventMy(),pageLocation.event.listEventsMy,&quot;locations&quot;,&quot;eventsMy&quot;)">
+	</a><a onclick="communication.loadList(ui.query.eventMy(),events.listEventsMy,&quot;locations&quot;,&quot;eventsMy&quot;)">
 		${ui.l('events.myEvents')}
 	</a>
 </container>`;
@@ -289,8 +289,24 @@ class ui {
 			if (ui.classContains('content', 'animated'))
 				return;
 			var currentID = ui.navigation.getActiveID();
-			if (id == 'home' && currentID == 'detail')
+			if (id == 'home' && currentID == 'detail') {
+				var e = ui.q('detail>div');
+				var x = parseInt(ui.cssValue(e, 'margin-left')) / ui.q('content').clientWidth;
+				if (x < 0) {
+					ui.on(e, 'transitionend', function () {
+						ui.css(e, 'transition', 'none');
+						e.lastChild.outerHTML = '';
+						var x = e.clientWidth / ui.q('content').clientWidth;
+						ui.css(e, 'width', x == 2 ? '' : ((x - 1) * 100) + '%');
+						setTimeout(function () {
+							ui.css(e, 'transition', null);
+						}, 50);
+					}, true);
+					ui.css(e, 'margin-left', ((x + 1) * 100) + '%');
+					return;
+				}
 				id = ui.q('detail').getAttribute('list');
+			}
 			if (currentID == 'info' && id == 'home' && !user.contact && pageInfo.openSection == -2) {
 				// AGBs opened from login, go back to login
 				id = 'login';
@@ -319,7 +335,7 @@ class ui {
 				pageLogin.saveDraft();
 			if (currentID == 'settings3')
 				pageSettings.save3();
-			if (id.indexOf('settings') == 0 && pageSettings.init(function () { ui.navigation.goTo(id); })
+			if (id == 'settings' && pageSettings.init(function () { ui.navigation.goTo(id); })
 				|| id == 'whatToDo' && pageWhatToDo.init(function () { ui.navigation.goTo(id); }))
 				return;
 			if (id == 'info')
@@ -361,10 +377,7 @@ class ui {
 			ui.attr('popup', 'error', '');
 			var e = ui.q('popupTitle');
 			if (!e || ui.cssValue('popup', 'display') != 'none' && e.getAttribute('modal') != 'true') {
-				if (e)
-					e.click();
-				else
-					ui.navigation.animation(ui.q('popup'), 'popupSlideOut', ui.navigation.hidePopupHard);
+				ui.navigation.animation(ui.q('popup'), 'popupSlideOut', ui.navigation.hidePopupHard);
 				ui.navigation.lastPopup = null;
 				return true;
 			}
@@ -414,9 +427,9 @@ class ui {
 					data = '<div style="text-align:center;padding:1em;">' + data + '</div>';
 				data = '<popupContent ts="' + new Date().getTime() + '">' + data + '</popupContent>';
 				if (title)
-					data = '<popupTitle onclick="' + (closeAction ? 'if(' + closeAction + '!=false)' : '') + 'ui.navigation.openPopup();"' + (modal ? ' modal="true"' : '') + '><div>' + title + '</div></popupTitle>' + data;
+					data = '<popupTitle' + (modal ? ' modal="true"' : '') + '><div>' + title + '</div></popupTitle>' + data;
 				var f = function () {
-					ui.navigation.setPopupContent(data);
+					ui.navigation.setPopupContent(data, closeAction);
 					ui.attr('popup', 'error', '');
 					ui.navigation.animation(p, visible ? 'slideDown' : 'popupSlideIn');
 					ui.css('popupContent', 'maxHeight', (ui.q('content').clientHeight - (title ? ui.q('popupTitle').clientHeight : 0) - 2 * ui.emInPX) + 'px');
@@ -442,11 +455,15 @@ class ui {
 			ui.classAdd(e, 'tabActive');
 			return e;
 		},
-		setPopupContent(s) {
+		setPopupContent(s, closeAction) {
 			var e = ui.q('popup');
 			ui.css(e, 'display', 'none');
 			ui.html(e, s);
 			formFunc.initFields('popup');
+			if (closeAction)
+				e.setAttribute('close', closeAction);
+			else
+				e.removeAttribute('close');
 		},
 		toggleMenu(activeID) {
 			if (!activeID)
@@ -467,7 +484,7 @@ class ui {
 		}
 	};
 	static openMatchingAttributes(button) {
-		var e = ui.q('detail .matchIndicatorAttributesHint');
+		var e = ui.q('detail card:last-child .matchIndicatorAttributesHint');
 		if (e.style.display == 'none') {
 			var attr = new Attribute(button.getAttribute('type')), index = ',';
 			for (var i = 0; i < button.children.length; i++) {
@@ -510,7 +527,7 @@ class ui {
 					add2List(s);
 				}
 			}
-			ui.q('detail .matchIndicatorAttributesHint>div').innerHTML = attr.toString();
+			ui.q('detail card:last-child .matchIndicatorAttributesHint>div').innerHTML = attr.toString();
 			e.style.top = (button.offsetTop + 2 * ui.emInPX) + 'px';
 			e.style.height = '';
 			e.removeAttribute('h');
@@ -534,7 +551,7 @@ class ui {
 			communication.ajax({
 				url: global.server + 'db/one',
 				method: 'PUT',
-				body: { classname: 'Contact', id: user.contact.id, values: { visitPage: new Date().toISOString() } }
+				body: { classname: 'Contact', id: user.contact.id, values: { visitPage: global.date.local2server(new Date()) } }
 			});
 			return 'query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactVisit.contactId=contact.id and contactVisit.contactId2=' + user.contact.id);
 		},

@@ -5,24 +5,52 @@
 	"main": "../js/fmg.js",
 	"private": true,
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build": "webpack --mode=production --node-env=production",
+		"build:dev": "webpack --mode=development",
+		"build:prod": "webpack --mode=production --node-env=production",
+		"watch": "webpack --watch",
+		"serve": "webpack serve"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
-		"@babel/core": "^7.14.5",
+		"@babel/core": "^7.18.10",
 		"@babel/plugin-transform-runtime": "^7.14.5",
-		"@babel/preset-env": "^7.14.5",
-		"babel-loader": "^8.2.2",
+		"@babel/preset-env": "^7.18.10",
+		"@swc/core": "^1.2.226",
+		"@swc/wasm": "^1.2.226",
+		"@webpack-cli/generators": "^2.5.0",
+		"assert": "^2.0.0",
+		"babel-loader": "^8.2.5",
 		"bable-loader": "0.0.1-security",
+		"browserify-zlib": "^0.2.0",
+		"buffer": "^6.0.3",
+		"constants-browserify": "^1.0.0",
+		"crypto-browserify": "^3.12.0",
+		"css-loader": "^6.7.1",
+		"esbuild": "^0.15.1",
 		"expose-loader": "^3.0.0",
-		"webpack-cli": "^4.9.2",
-		"webpack-dev-server": "^4.9.3"
+		"fs": "^0.0.1-security",
+		"https-browserify": "^1.0.0",
+		"os-browserify": "^0.3.0",
+		"path-browserify": "^1.0.1",
+		"process": "^0.11.10",
+		"querystring-es3": "^0.2.1",
+		"stream-browserify": "^3.0.0",
+		"stream-http": "^3.2.0",
+		"style-loader": "^3.3.1",
+		"uglify-js": "^3.16.3",
+		"url": "^0.11.0",
+		"util": "^0.12.4",
+		"vm-browserify": "^1.1.2",
+		"webpack": "^5.74.0",
+		"webpack-cli": "^4.10.0",
+		"webpack-dev-server": "^4.10.0"
 	},
 	"dependencies": {
 		"crypto-js": "^4.1.1",
-		"jsencrypt": "^3.2.1",
-		"webpack": "^5.74.0"
+		"jsencrypt": "^3.2.1"
 	}
 }

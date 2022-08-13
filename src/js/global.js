@@ -20,24 +20,37 @@ class global {
 		formatDate(d, type) {
 			if (!d)
 				return '';
-			var d2 = global.date.getDate(d);
+			var d2 = global.date.server2Local(d);
 			if (d2 instanceof Date)
 				return ui.l('weekday' + (type ? 'Long' : '') + d2.getDay()) + ' ' + d2.getDate() + '.' + (d2.getMonth() + 1) + '.' + (d2.getFullYear() + ' ').slice(-3) + d2.getHours() + ':' + ('0' + d2.getMinutes()).slice(-2);
 			return d2;
 		},
-		getDate(d) {
-			if (!d)
-				return d;
-			if (d instanceof Date)
+		getDateFilelds(d) {
+			if (d instanceof Date) {
+				return {
+					year: d.getFullYear(),
+					month: ('0' + (d.getMonth() + 1)).slice(-2),
+					day: ('0' + d.getDate()).slice(-2),
+					hour: ('0' + d.getHours()).slice(-2),
+					minute: ('0' + d.getMinutes()).slice(-2),
+					second: ('0' + d.getSeconds()).slice(-2),
+					time: true
+				};
+			}
+			if (d.year && d.day)
 				return d;
 			if (d.indexOf('-') < 0 && d.length == 8)
-				return new Date(Date.UTC(d.substring(0, 4), parseInt(d.substring(4, 6)) - 1, d.substring(6, 8)));
+				d = d.substring(0, 4) + '-' + d.substring(4, 6) + '-' + d.substring(6);
 			var p1 = d.indexOf('-'), p2 = d.indexOf('-', p1 + 1), p3 = d.replace('T', ' ').indexOf(' '), p4 = d.indexOf(':'), p5 = d.indexOf(':', p4 + 1), p6 = d.indexOf('.');
-			if (p4 < 0)
-				return new Date(Date.UTC(d.substring(0, p1), d.substring(p1 + 1, p2) - 1, d.substring(p2 + 1), 23, 59, 59));
-			if (p6 < 0)
-				p6 = d.length;
-			return new Date(Date.UTC(d.substring(0, p1), d.substring(p1 + 1, p2) - 1, d.substring(p2 + 1, p3), d.substring(p3 + 1, p4), d.substring(p4 + 1, p5), d.substring(p5 + 1, p6)));
+			return {
+				year: d.substring(0, p1),
+				month: d.substring(p1 + 1, p2),
+				day: d.substring(p2 + 1, p3 < 0 ? d.length : p3),
+				hour: p4 < 0 ? 0 : d.substring(p3 + 1, p4),
+				minute: p4 < 0 ? 0 : d.substring(p4 + 1, p5 > 0 ? p5 : d.length),
+				second: p5 < 0 ? 0 : d.substring(p5 + 1, p6 < 0 ? d.length : p6),
+				time: p4 > 0
+			};
 		},
 		getDateHint(d) {
 			var today = new Date(), l;
@@ -67,6 +80,23 @@ class global {
 			var yearStart = new Date(d.getFullYear(), 0, 1);
 			var weekNo = Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
 			return [d.getFullYear(), weekNo];
+		},
+		local2server(d) {
+			if (!d)
+				return d;
+			if (!(d instanceof Date)) {
+				d = global.date.getDateFilelds(d);
+				d = new Date(d.year, parseInt(d.month) - 1, d.day, d.hour, d.minute, d.second);
+			}
+			return d.toISOString();
+		},
+		server2Local(d) {
+			if (!d)
+				return d;
+			if (d instanceof Date)
+				return d;
+			d = global.date.getDateFilelds(d);
+			return new Date(Date.UTC(d.year, parseInt(d.month) - 1, d.day, d.hour, d.minute, d.second));
 		}
 	};
 

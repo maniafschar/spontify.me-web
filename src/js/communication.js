@@ -13,6 +13,7 @@ import { ui, formFunc } from './ui';
 import { user } from './user';
 import { pageLocation } from './pageLocation';
 import { intro } from './intro';
+import { events } from './events';
 
 export { communication, FB };
 
@@ -242,7 +243,7 @@ class communication {
 						setTimeout(communication.notification.register, 100);
 						pageWhatToDo.init();
 						pageChat.initActiveChats();
-						pageLocation.event.init();
+						events.init();
 						geoData.init();
 						var e = ui.qa('.homeIconSearch');
 						e[0].style.display = 'none';

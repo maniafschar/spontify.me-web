@@ -40,13 +40,12 @@ class ratings {
 <div style="clear:both;text-align:center;padding:0.5em 1em 0 1em;margin-bottom:0.5em;">
     <form name="ratingForm">
         <input type="hidden" id="owner" value="${v.owner}" />
-        <input type="hidden" id="type" value="${v.type}" />
         <input type="hidden" id="cid" value="${v.id}" />
-        <input type="hidden" name="${v.column}" value="${v.id}" />
+        <input type="hidden" name="locationId" value="${v.id}" />
         <input type="hidden" name="rating" value="80" />
         <textarea maxlength="250" placeholder="${ui.l('locations.shortDesc')}" name="text" ${v.textareaStyle}>${v.draft}</textarea>
         <errorHint class="highlightColor"></errorHint>
-        <field class="${v.showImage}" style="margin:0.5em 0 0 0;">
+        <field style="margin:0.5em 0 0 0;">
             <input type="file" name="image" accept=".gif, .png, .jpg" />
         </field>
         <buttontext onclick="ratings.save()" oId="${v.id}"
@@ -54,7 +53,7 @@ class ratings {
     </form>
 </div>`;
 	static templateHistory = v =>
-		global.template`<buttontext onclick="ratings.openHistory(&quot;${v.type}&quot;,${v.id})" class="bgColor" style="margin-bottom:1em;">${ui.l('rating.history')}</buttontext>
+		global.template`<buttontext onclick="ratings.openHistory(${v.id})" class="bgColor" style="margin-bottom:1em;">${ui.l('rating.history')}</buttontext>
 <ratingHistory style="display:none;"></ratingHistory>`;
 
 	static click(x) {
@@ -77,51 +76,38 @@ class ratings {
 			}
 		});
 	}
-	static getForm(id, t, file, owner) {
-		var v = {}, draft = formFunc.getDraft('rating' + t + id);
+	static getForm(id, owner) {
+		var v = {}, draft = formFunc.getDraft('rating' + id);
 		v.id = id;
 		v.owner = owner ? owner : '';
-		v.type = t;
 		v.bg = 'bgColor';
-		v.column = t == 'location' ? 'locationId' : 'contactId2';
-		v.showImage = t == 'location' && file != false ? '' : ' noDisp';
 		if (draft)
-			v.draft = draft['RATING_' + t + '.TEXT'];
+			v.draft = draft.values.text;
 		return ratings.templateForm(v);
 	}
-	static open(id, t, event) {
-		var name = ui.q('detail:not([style*="none"]) title, [i="' + id + '"] title').innerText.trim();
-		if (!user.contact) {
-			ui.navigation.openPopup(ui.l('rating.title') + name, ui.l('rating.login') + '<br/><br/><buttontext class="bgColor" onclick="pageLogin.goToLogin()">' + ui.l('login.action') + '</buttontext>');
-			return;
-		}
-		event.stopPropagation();
+	static open(id) {
 		communication.ajax({
-			url: global.server + 'db/one?query=' + t + '_ratingOverview&id=' + id,
-			responseType: 'json',
+			url: global.server + 'db/one?query=location_ratingOverview&id=' + id,
 			success(r) {
+				r = r ? JSON.parse(r) : {};
 				var f = r._lastRating;
 				if (f) {
 					f = f.split(' ');
 					f = f[0] + ' ' + f[1];
-					f = global.date.getDate(f);
+					f = global.date.server2Local(f);
 				}
 				if (r._lastRating && (new Date().getTime() - f) / 86400000 < 7) {
-					if (t == 'location' && new Date().getTime() - f < 7200000 && r[3]) {
+					if (new Date().getTime() - f < 7200000 && r[3]) {
 						ratings.showRatedBonusPage(r._lastRating.split(' ')[3]);
 						return;
 					}
 					f = '<ratingHint>' + ui.l('rating.lastRate').replace('{0}', global.date.formatDate(f)).replace('{1}', '<br/><br/><rating><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + parseInt(r._lastRating.split(' ')[2])) + '%;">★★★★★</full></rating><br/><br/>') + '</ratingHint>';
-				} else if (t == 'contact' && id == user.contact.id)
-					f = '<ratingHint>' + ui.l('rating.notYourself') + '</ratingHint>';
-				else if (t == 'contact' && r._contactLink != 1)
-					f = '<ratingHint>' + ui.l('rating.onlyFriends') + '<br/><buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + id + ')" style="margin:1em 0;">' + ui.l('contacts.requestFriendship') + '</buttontext></ratingHint>';
-				else
-					f = ratings.getForm(id, t, true, r._ownerId);
-				ui.html('detail [name="favLoc"]', '');
+				} else
+					f = ratings.getForm(id, r._ownerId);
+				ui.html('detail card:last-child [name="favLoc"]', '');
+				var name = ui.q('detail:not([style*="none"]) card:last-child title, [i="' + id + '"] title').innerText.trim();
 				if (r._one || r._two || r._three || r._four) {
 					r.id = id;
-					r.type = t;
 					r.classBG = 'bgColor';
 					ui.navigation.openPopup(ui.l('rating.title') + name, '<div style="padding:1em 0 0 0;text-align:center;">' + f + ratings.templateHistory(r) + '</div>', 'ratings.saveDraft()');
 				} else
@@ -129,16 +115,16 @@ class ratings {
 			}
 		});
 	}
-	static openHistory(t, id) {
+	static openHistory(id) {
 		if (!ui.q('ratingHistory').innerHTML) {
 			ui.html('ratingHistory', '.');
 			communication.ajax({
-				url: global.server + 'db/list?query=' + t + '_rating&search=' + encodeURIComponent(t + (t == 'location' ? '.id=' : 'Rating.contactId2=') + id),
+				url: global.server + 'db/list?query=location_rating&search=' + encodeURIComponent('location.id=' + id),
 				responseType: 'json',
 				success(r) {
 					var s = '', date, pseudonym, text, img, rate;
 					for (var i = r.length - 1; i > 0; i--) {
-						var v = model.convert(t == 'location' ? new Location() : new Contact(), r, i), v2 = v[t + 'Rating'];
+						var v = model.convert(new Location(), r, i), v2 = v['locationRating'];
 						date = global.date.formatDate(v2.createdAt);
 						pseudonym = v.contactId == user.contact.id ? ui.l('you') : v.pseudonym || v.contact.pseudonym;
 						text = v2.text ? ': ' + v2.text : '';
@@ -159,19 +145,10 @@ class ratings {
 			ui.toggleHeight('ratingHistory');
 	}
 	static postSave(r) {
-		var e = ui.qa('[name="r' + r.type.substring(0, 1) + r.cid + '"]');
-		for (var i = 0; i < e.length; i++) {
-			if (e[i].innerText == '-')
-				e[i].innerText = '' + parseInt(0.5 + s[2]);
-		}
-		if (r.type == 'location' && r.ratings)
+		formFunc.removeDraft('rating' + r.cid);
+		if (r.ratings)
 			ratings.showRatedBonusPage(r.id);
-		else
-			ui.navigation.hidePopup();
-		formFunc.removeDraft('rating' + r.type + r.cid);
-		e = ui.q('#inlineRating' + r.cid);
-		if (e)
-			e.innerHTML = ui.l('rating.saved');
+		ui.navigation.hidePopup();
 	}
 	static save() {
 		var e = ui.q('[name="text"]');
@@ -182,7 +159,6 @@ class ratings {
 			return;
 		}
 		var data = {
-			type: ui.val('#type'),
 			cid: ui.val('#cid'),
 			ratings: ui.val('[name="ratings"]'),
 			owner: ui.val('#owner')
@@ -200,14 +176,15 @@ class ratings {
 		});
 	}
 	static saveDraft() {
-		formFunc.saveDraft('rating' + ui.val('#type') + ui.val('#cid'), formFunc.getForm('ratingForm'));
+		var f = formFunc.getForm('ratingForm');
+		formFunc.saveDraft('rating' + ui.val('#cid'), f.values.text ? f : null);
 	}
 	static showRatedBonusPage(id) {
 		communication.ajax({
 			url: global.server + 'db/one?query=locationRating&search=' + encodeURIComponent('locationRating.id=' + id + ' and locationRating.contactId=' + user.contact.id),
 			responseType: 'json',
 			success(v) {
-				var time = v['rating_location.modifiedAt'] ? ((new Date().getTime() - global.date.getDate(v['rating_location.modifiedAt'])) / 60000).toFixed(0) : 0;
+				var time = v['rating_location.modifiedAt'] ? ((new Date().getTime() - global.date.server2Local(v['rating_location.modifiedAt'])) / 60000).toFixed(0) : 0;
 				if (time < 3)
 					time = null;
 				if (user.contact.image)

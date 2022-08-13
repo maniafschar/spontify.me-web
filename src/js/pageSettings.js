@@ -116,7 +116,7 @@ class pageSettings {
 	</dialogButtons>
 	<input type="hidden" name="verified" value="true" />
 </form>
-<settingsNav onclick="pageSettings.open2(event)" style="float:right;">></settingsNav>`;
+<settingsNav onclick="ui.navigation.goTo(&quot;settings2&quot;)" style="float:right;">></settingsNav>`;
 	static templateSettings2 = v =>
 		global.template`<div style="padding-top:1em;text-align:center;">${ui.l('attributesHint')}</div>
 <div>
@@ -399,9 +399,6 @@ class pageSettings {
 		var e = ui.q('#blocked');
 		e.innerHTML = s ? s : '<div style="padding:0.5em;">' + ui.l('noResults.block') + '</div>';
 		ui.toggleHeight(e);
-	}
-	static open2() {
-		pageSettings.init(function () { ui.navigation.goTo('settings2'); });
 	}
 	static preview() {
 		if (pageSettings.currentSettings == pageSettings.getCurrentSettingsString())

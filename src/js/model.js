@@ -188,6 +188,7 @@ class Event extends BaseEntity {
 	startDate;
 	text;
 	type;
+	visibility;
 }
 
 class EventParticipate extends BaseEntity {

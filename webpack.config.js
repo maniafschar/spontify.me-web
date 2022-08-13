@@ -12,29 +12,29 @@ module.exports = {
 		minimize: true
 	},
 	target: ['web', 'es5'],
-	module: {
-		rules: [
-			{
-				test: /\.m?js$/,
-				exclude: /(node_modules|bower_components)/,
-				use: {
-					loader: 'babel-loader',
-					options: {
-						presets: ['@babel/preset-env'],
-						plugins: ['@babel/plugin-transform-runtime']
-					}
-				}
-			}
-		]
-	},
-	experiments: {
-		topLevelAwait: true
-	},
 	devServer: {
 		static: {
 			directory: path.join(__dirname, 'dist'),
 		},
-		compress: true,
-		port: 9000,
+		compress: false,
+		port: 9000
+	},
+	plugins: [
+	],
+	module: {
+		rules: [
+			{
+				test: /\.(m?js|jsx)$/i,
+				loader: 'babel-loader'
+			},
+			{
+				test: /\.css$/i,
+				use: ['style-loader', 'css-loader']
+			},
+			{
+				test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
+				type: 'asset'
+			}
+		]
 	}
 }

@@ -50,90 +50,73 @@ class details {
 				r = callback(r, id);
 				if (r) {
 					var d = ui.q('detail');
-					if (activeID == 'detail')
-						ui.navigation.animation(d, 'homeSlideOut', function () {
-							ui.css(d, 'opacity', 0);
-							ui.css(d, 'transform', '');
-							ui.css(d, 'marginLeft', 0);
-						});
-					var animate = ui.classContains(d, 'animated');
-					var f = function () {
-						if (ui.classContains(d, 'animated')) {
-							setTimeout(f, 50);
-							return;
+					r = '<card i="' + id + '" type="' + (action.indexOf('contact_') == 0 ? 'contact' : 'location') + '">' + r + '</card>';
+					if (activeID == 'detail') {
+						var c = document.createElement('div');
+						c.innerHTML = r;
+						var e = ui.q('detail>div');
+						ui.css(e, 'transition', 'none');
+						e.appendChild(c.children[0]);
+						var x = e.clientWidth / ui.q('content').clientWidth;
+						ui.css(e, 'width', ((x + 1) * 100) + '%');
+						setTimeout(function () {
+							ui.css(e, 'transition', null);
+							ui.css(e, 'margin-left', (-x * 100) + '%');
+						}, 50);
+					} else {
+						ui.html(d, '<div>' + r + '</div>');
+						ui.navigation.goTo('detail');
+					}
+					if (activeID != 'detail')
+						ui.attr(d, 'list', activeID);
+					formFunc.initFields('detail');
+					formFunc.image.replaceSVGs();
+					d.scrollTop = 0;
+					ui.css(d, 'opacity', 1);
+					geoData.headingWatch();
+					if (activeID == 'locations' && !ui.q('locations').innerHTML) {
+						if (user.contact) {
+							if (global.isBrowser())
+								history.pushState(null, null, window.location.origin);
+						} else {
+							var s = ui.q('detail card:last-child .title').innerHTML;
+							if (s.indexOf('<span') > -1)
+								s = s.substring(0, s.indexOf('<span'));
+							var e = ui.q('title');
+							var s2 = e.innerHTML;
+							e.innerHTML = (s2.indexOf(global.separator) > -1 ? s2.substring(0, s2.indexOf(global.separator)) : s2) + global.separator + s;
 						}
-						ui.html(d, r);
-						ui.attr(d, 'i', id);
-						if (activeID != 'detail') {
-							ui.attr(d, 'list', activeID);
-							ui.attr(d, 'type', action.indexOf('contact_') == 0 ? 'contact' : 'location');
-							ui.navigation.goTo('detail');
-						}
-						formFunc.initFields('detail');
-						formFunc.image.replaceSVGs();
-						if (animate)
-							ui.navigation.animation(d, 'homeSlideIn');
-						d.scrollTop = 0;
-						ui.css(d, 'opacity', 1);
-						geoData.headingWatch();
-						if (activeID == 'locations' && !ui.q('locations').innerHTML) {
-							if (user.contact) {
-								if (global.isBrowser())
-									history.pushState(null, null, window.location.origin);
-							} else {
-								var s = ui.q('detail .title').innerHTML;
-								if (s.indexOf('<span') > -1)
-									s = s.substring(0, s.indexOf('<span'));
-								if (global.isBrowser())
-									history.pushState(null, null, window.location.origin + '/loc_' + id + '_' + encodeURIComponent(s.replace(/\//g, '_')));
-								var e = ui.q('title');
-								var s2 = e.innerHTML;
-								e.innerHTML = (s2.indexOf(global.separator) > -1 ? s2.substring(0, s2.indexOf(global.separator)) : s2) + global.separator + s;
-							}
-						}
-						geoData.updateCompass();
-					};
-					if (animate)
-						setTimeout(f, 400);
-					else
-						f.call();
-					intro.introMode = 0;
+					}
+					geoData.updateCompass();
 				}
 			}
 		});
 	}
-	static openDetailNav(next, id, noAnimation) {
+	static openDetailNav(next, id) {
 		var e = ui.q('detail');
 		if (ui.classContains(e, 'animated') || ui.classContains('content', 'animated'))
 			return;
 		var oc = details.getNextNavElement(next, id);
-		if (oc) {
-			ui.navigation.hidePopup();
+		if (oc)
 			oc.click();
-			ui.navigation.animation(e, 'detail' + (next ? '' : 'Back') + 'SlideOut', function () {
-				ui.css(e, 'opacity', 0);
-				ui.css(e, 'transform', '');
-				ui.css(e, 'marginLeft', 0);
-			});
-		}
 	}
 	static swipeLeft() {
-		var e = ui.q('detail').getAttribute('i');
+		var e = ui.q('detail card:last-child').getAttribute('i');
 		if (e)
 			details.openDetailNav(true, e);
 	}
 	static swipeRight() {
-		ui.navigation.goTo(ui.q('detail').getAttribute('list'));
+		ui.navigation.goTo('home');
 	}
 	static toggleFavorite() {
-		var e = ui.q('detail');
+		var e = ui.q('detail card:last-child');
 		if (e.getAttribute('type') == 'location')
 			pageLocation.toggleFavorite(e.getAttribute('i'));
 		else
 			pageContact.toggleBlockUser(e.getAttribute('i'));
 	}
 	static togglePanel(d) {
-		var path = ui.parents(d, 'popup') ? 'popup detail' : 'detail';
+		var path = 'detail card:last-child';
 		var panelName = d.getAttribute('name').replace('button', '');
 		var divID = path + '>[name="' + panelName.substring(0, 1).toLowerCase() + panelName.substring(1) + '"]';
 		var open = ui.classContains(divID, 'collapsed');
@@ -151,8 +134,6 @@ class details {
 		}
 		if (open) {
 			e = ui.q(path);
-			if (path.indexOf('popup') > -1)
-				e = e.parentNode;
 			var b = buttons.offsetHeight + buttons.offsetTop - e.offsetHeight / 2;
 			ui.toggleHeight(d);
 			if (e.scrollTop < b && !ui.classContains(divID, 'popup'))

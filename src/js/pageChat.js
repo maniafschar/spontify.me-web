@@ -492,7 +492,7 @@ class pageChat {
 	static saveDraft() {
 		var e = ui.q('#chatText');
 		if (e)
-			formFunc.saveDraft('chat' + ui.q('chat').getAttribute('i'), pageChat.oldCleverTip == e.value ? '' : e.value);
+			formFunc.saveDraft('chat' + ui.q('chat').getAttribute('i'), pageChat.oldCleverTip == e.value ? null : e.value);
 	}
 	static saveGroupText() {
 		user.contact.chatTextGroups = ui.val('#groupChatText');
@@ -614,7 +614,7 @@ class pageChat {
 	}
 	static toggleUserList() {
 		if (ui.navigation.getActiveID() == 'detail') {
-			var e = ui.q('detail');
+			var e = ui.q('detail card:last-child');
 			pageChat.open(e.getAttribute('i'), e.getAttribute('type') == 'location');
 		} else if (user.contact)
 			ui.toggleHeight('chatUserList');

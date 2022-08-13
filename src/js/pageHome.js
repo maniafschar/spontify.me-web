@@ -76,7 +76,7 @@ class pageHome {
 				ui.css(e.parentNode, 'display', 'none');
 				for (var i = 1; i < r.length; i++) {
 					var v = model.convert(new Contact(), r, i);
-					var m = { message: global.date.formatDate(global.date.getDate(v.contactNotification.createdAt)) + '<br/>' + v.pseudonym + ' ' + v.contactNotification.text };
+					var m = { message: global.date.formatDate(global.date.server2Local(v.contactNotification.createdAt)) + '<br/>' + v.pseudonym + ' ' + v.contactNotification.text };
 					if (v.contactNotification.action)
 						m.additionalData = { exec: v.contactNotification.action };
 					communication.notification.open(m);

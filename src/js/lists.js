@@ -44,7 +44,7 @@ class lists {
 		if (errorID == 'favorites')
 			s = s.replace('{1}', '<br/><br/><buttonIcon style="position:relative;left:50%;margin-left:-1.5em;"><img src="images/favorite.svg"/></buttonIcon><br/>');
 		else if (errorID == 'matches' || errorID == 'whatToDo')
-			s = s.replace('{1}', '<br/><br/><buttontext onclick="pageSettings.open2()" class="bgColor">' + ui.l('Yes') + '</buttontext>');
+			s = s.replace('{1}', '<br/><br/><buttontext onclick="ui.navigation.goTo(&quot;settings2&quot;)" class="bgColor">' + ui.l('Yes') + '</buttontext>');
 		else if (errorID == 'friends')
 			s = s.replace('{1}', '<br/><br/><buttontext class="bgColor">' + ui.l('contacts.relation') + '</buttontext><br/><br/>');
 		else if (errorID.toLowerCase().indexOf('groups') > -1)
@@ -71,8 +71,8 @@ class lists {
 		if (!activeID)
 			activeID = ui.navigation.getActiveID();
 		ui.attr(activeID + ' [i="' + id + '"]', 'remove', '1');
-		if (ui.q('detail [i="' + id + '"]'))
-			ui.q('detail [i="' + id + '"]').outerHTML = '';
+		if (ui.q('detail card:last-child [i="' + id + '"]'))
+			ui.q('detail card:last-child [i="' + id + '"]').outerHTML = '';
 		var l = lists.data[activeID];
 		for (var i = l.length - 1; i > 0; i--) {
 			if (id == model.convert(activeID == 'locations' ? new Location() : new Contact(), l, i).id)
@@ -121,7 +121,7 @@ class lists {
 			ui.css(thumb, 'display', 'block');
 			ui.css(thumb, 'top',
 				Math.min(list.scrollTop / (l - h), 1) // Percentage of scroll: 0 - 1
-				* (h - ui.q(activeID + ' listScroll').clientHeight / 2 - ui.q(activeID + ' listScroll a').clientHeight) / h * 100 // Total percentage of scrollable area, e.g. 0 - 86
+				* (h - ui.q(activeID + ' listScroll a').clientHeight - ui.q(activeID + ' listHeader').clientHeight) / h * 100 // Total percentage of scrollable area, e.g. 0 - 86
 				+ '%');
 		}
 	}

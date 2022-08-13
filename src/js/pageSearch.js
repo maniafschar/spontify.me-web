@@ -6,6 +6,7 @@ import { pageContact } from './pageContact';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 import { geoData } from './geoData';
+import { events } from './events';
 
 export { pageSearch };
 
@@ -288,7 +289,7 @@ class pageSearch {
 				else if (s.type == 'locations')
 					communication.loadList(lola + 'query=location_list&search=' + encodeURIComponent(pageSearch.getSearchLocation()), pageLocation.listLocation, 'search', 'search');
 				else
-					communication.loadList(lola + 'query=event_listCurrent&search=' + encodeURIComponent(pageSearch.getSearchLocation()), pageLocation.event.listEvents, 'search', 'search');
+					communication.loadList(lola + 'query=event_listCurrent&search=' + encodeURIComponent(pageSearch.getSearchLocation()), events.listEvents, 'search', 'search');
 			});
 	}
 	static selectType() {

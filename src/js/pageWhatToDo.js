@@ -8,6 +8,7 @@ import { pageSearch } from './pageSearch';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 import { geoData } from './geoData';
+import { events } from './events';
 
 export { pageWhatToDo };
 
@@ -92,14 +93,14 @@ class pageWhatToDo {
 		return true;
 	}
 	static getCurrentMessage() {
-		if (pageWhatToDo.list && pageWhatToDo.list[0] && global.date.getDate(pageWhatToDo.list[0].time).getTime() > new Date().getTime() - 3600000)
+		if (pageWhatToDo.list && pageWhatToDo.list[0] && global.date.server2Local(pageWhatToDo.list[0].time).getTime() > new Date().getTime() - 3600000)
 			return pageWhatToDo.list[0];
 	}
 	static getDisplayMessage() {
 		var currentMessage = pageWhatToDo.getCurrentMessage();
 		if (!currentMessage || !currentMessage.active)
 			return ui.l('wtd.todayIWant');
-		var s = global.date.getDate(currentMessage.time), cats = currentMessage.keywords.split(',');
+		var s = global.date.server2Local(currentMessage.time), cats = currentMessage.keywords.split(',');
 		s = s.getHours() + ':' + (s.getMinutes() < 10 ? '0' : '') + s.getMinutes();
 		s = ui.l('wtd.autoNewsMe').replace('{0}', s);
 		for (var i = 0; i < cats.length; i++)
@@ -136,10 +137,10 @@ class pageWhatToDo {
 					clearTimeout(pageWhatToDo.resetCall);
 					var currentWtd = pageWhatToDo.getCurrentMessage();
 					if (currentWtd && currentWtd.active)
-						pageWhatToDo.resetCall = setTimeout(pageWhatToDo.reset, global.date.getDate(currentWtd.time).getTime() - new Date().getTime() + 3600000);
+						pageWhatToDo.resetCall = setTimeout(pageWhatToDo.reset, global.date.server2Local(currentWtd.time).getTime() - new Date().getTime() + 3600000);
 					var v = {}, currentWtd = pageWhatToDo.getCurrentMessage() || {};
 					if (currentWtd.time) {
-						var d = global.date.getDate(currentWtd.time);
+						var d = global.date.server2Local(currentWtd.time);
 						v.timeValue = (d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
 					} else {
 						var h = (new Date().getHours() + 1) % 24;
@@ -207,7 +208,7 @@ class pageWhatToDo {
 	}
 	static listEvents(r) {
 		pageWhatToDo.lastUpdate.events = new Date().getTime();
-		var s = pageLocation.event.listEventsInternal(pageLocation.event.getCalendarList(r), new Date());
+		var s = events.listEventsInternal(events.getCalendarList(r), new Date());
 		ui.html('#wtdListEvents', s ? s : lists.getListNoResults('events', 'whatToDo'));
 	}
 	static listLocation(r) {

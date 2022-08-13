@@ -834,6 +834,10 @@ errorHint {
 	display: block;
 }
 
+popup errorHint {
+	color: red !important;
+}
+
 value.checkbox errorHint {
 	margin-top: -0.5em;
 }
@@ -855,16 +859,16 @@ listScroll {
 	position: absolute;
 	z-index: 1;
 	width: 3em;
-	height: 7.5em;
+	height: 5.5em;
 	right: 0;
-	margin-top: 1.1em;
+	margin-top: 2em;
 }
 
 listScroll a {
 	position: absolute;
 	width: 1.2em;
 	height: 1.5em;
-	top: 3em;
+	top: 2em;
 	right: 0;
 	border-radius: 1em 0 0 1em;
 	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
@@ -875,7 +879,6 @@ noResult {
 	padding: 1em;
 	display: block;
 	margin: 1em 1em 5em 1em;
-	background: rgba(255, 255, 255, 0.6);
 	border-radius: 0.5em;
 }
 
@@ -935,7 +938,7 @@ popupTitle>div {
 popupHint {
 	padding: 0.5em;
 	text-align: center;
-	color: rgb(255, 240, 100);
+	color: red;
 	display: block;
 }
 
@@ -1177,12 +1180,7 @@ emoji {
 .chatLinks {
 	text-align: center;
 	display: inline-block;
-	width: 7em;
-	height: 6.5em;
-	border-radius: 1em;
-	overflow: hidden;
 	white-space: nowrap;
-	text-overflow: ellipsis;
 	margin: 0 0.5em;
 	padding-top: 0.5em;
 	cursor: pointer;
@@ -1631,6 +1629,18 @@ row extra {
 	top: 1.5em;
 	text-align: right;
 	opacity: 0.6;
+	text-align: center;
+}
+
+row.participate extra::before {
+	content: '✓';
+	position: absolute;
+	font-size: 6em;
+	opacity: 0.3;
+	color: rgb(252, 251, 104);
+	top: -0.07em;
+	right: -0.1em;
+	line-height: 1;
 }
 
 row badge {
@@ -1675,6 +1685,7 @@ row imagelist svg {
 	bottom: 0.25em;
 	width: 1.5em;
 	display: none;
+	fill: rgb(252, 251, 104);
 }
 
 row.favorite imagelist svg {
@@ -1682,25 +1693,33 @@ row.favorite imagelist svg {
 }
 
 row compass {
-	top: 1.75em;
-	right: -0.25em;
+	top: initial;
+	right: initial;
+	width: 100%;
+	display: block;
+	margin-top: -0.25em;
 }
 
-.participate::before {
-	display: block;
-	content: '✓';
-	position: absolute;
-	right: 3.75em;
-	top: 0.2em;
-	font-weight: bold;
-	font-size: 2em;
-	line-height: 1;
-	opacity: 0.5;
+detail .participate {
+	position: relative;
 }
 
 detail .participate::before {
-	top: 0.1em;
-	right: 0.2em;
+	content: '✓';
+	position: absolute;
+	font-size: 6em;
+	opacity: 0.3;
+	color: rgb(252, 251, 104);
+	bottom: 0.4em;
+	right: 50%;
+	margin-right: -0.4em;
+	line-height: 1;
+}
+
+detail auxEvents.participate::before {
+	right: 0;
+	bottom: 0;
+	margin-right: 0;
 }
 
 .itemTitle,
@@ -1776,13 +1795,17 @@ auxEvents {
 	float: left;
 	width: 100%;
 	position: relative;
-	padding: 0.5em 1em 1.5em 1em;
+	padding-bottom: 1em;
+	text-align: left;
+	cursor: pointer;
 }
 
 auxEvents>img {
 	height: 8em;
-	border-radius: 4em;
+	border-radius: 0.5em;
+	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
 	float: left;
+	margin-right: 1em;
 }
 
 map {
@@ -1814,6 +1837,12 @@ text {
 	border-radius: 0.5em;
 }
 
+text.description {
+	display: inline-block;
+	padding: 0.5em 1em;
+	color: black;
+}
+
 text.popup {
 	position: absolute;
 	max-width: 90%;
@@ -1823,7 +1852,7 @@ text.popup {
 }
 
 text.popup>div {
-	margin: 1.5em;
+	margin: 0.5em;
 }
 
 text.collapsed {
@@ -1836,15 +1865,23 @@ detail detailTogglePanel {
 }
 
 detail {
+	z-index: 2;
+}
+
+detail>div {
+	display: flex;
+	overflow-x: hidden;
+	transition: all 0.5s ease-out 0s;
 	height: 100%;
-	text-align: center;
-	position: relative;
-	width: 100%;
+}
+
+detail card {
 	overflow-x: hidden;
 	overflow-y: auto;
-	display: block;
 	padding: 1em 1em 6em 1em;
-	z-index: 2;
+	height: 100%;
+	width: 100%;
+	position: relative;
 }
 
 detail badge {
@@ -1965,6 +2002,11 @@ detail detailRating {
 	display: block;
 	position: relative;
 	cursor: pointer;
+}
+
+detail text.list {
+	padding: 0;
+	margin: 0 -1em;
 }
 
 openTimes row {
