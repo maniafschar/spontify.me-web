@@ -14,7 +14,7 @@ module.exports = {
 	target: ['web', 'es5'],
 	devServer: {
 		static: {
-			directory: path.join(__dirname, 'dist'),
+			directory: path.join(__dirname, 'dist')
 		},
 		compress: false,
 		port: 9000

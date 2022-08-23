@@ -272,30 +272,26 @@ class initialisation {
 	static reposition() {
 		if (!ui.q('body div'))
 			return;
-		var w1 = window.innerWidth ? window.innerWidth : screen.width;
-		var h1 = window.innerHeight ? window.innerHeight : screen.height;
-		var wOrg = !window.orientation ? w1 : Math.abs(window.orientation) == 90 ? Math.max(h1, w1) : Math.min(h1, w1), w = wOrg;
+		var wOrg = global.getDevice() == 'computer' ?
+			Math.min(window.innerWidth, window.innerHeight) :
+			Math.min(screen.availWidth, screen.availHeight), w = wOrg;
 		var f = 16;
+		if (w < 600)
+			f = w / 600 * f;
+		else if (w < 1200)
+			w = 600;
+		else {
+			f = f + (w - 1200) / 1800 * f;
+			w = w * 0.5;
+		}
 		if (global.getDevice() == 'computer') {
 			ui.css('.bgWeb', 'display', 'block');
-			if (w < 600)
-				f = w / 600 * f;
-			else if (w < 1200)
-				w = 600;
-			else {
-				f = f + (w - 1200) / 1800 * f;
-				w = w * 0.5;
-			}
 			ui.css('main', 'margin-left', (-w / 2) + 'px');
 			ui.css('main', 'width', w + 'px');
 			ui.classRemove('body', 'app');
 			ui.attr('#imgStoreApple', 'src', 'images/storeApple.png');
 			ui.attr('#imgStoreGoogle', 'src', 'images/storeGoogle.png');
 		} else {
-			if (global.getDevice() == 'phone')
-				f = 14;
-			if (w > 600)
-				f = f + w / 600;
 			if (global.getDevice() == 'phone' && user.scale)
 				f *= user.scale;
 			ui.css('main', 'margin-left', 0);
