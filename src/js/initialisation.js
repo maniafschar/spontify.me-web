@@ -292,6 +292,10 @@ class initialisation {
 			ui.attr('#imgStoreApple', 'src', 'images/storeApple.png');
 			ui.attr('#imgStoreGoogle', 'src', 'images/storeGoogle.png');
 		} else {
+			if (global.getDevice() == 'phone' && screen.availWidth < screen.availHeight)
+				f = 14;
+			if (w > 600)
+				f = f + w / 600;
 			if (global.getDevice() == 'phone' && user.scale)
 				f *= user.scale;
 			ui.css('main', 'margin-left', 0);

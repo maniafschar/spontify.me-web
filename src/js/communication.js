@@ -19,7 +19,6 @@ export { communication, FB };
 
 class communication {
 	static currentCalls = [];
-	static lastCall = '';
 	static pingExec = null;
 	static sentErrors = [];
 
@@ -27,7 +26,6 @@ class communication {
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function () {
 			if (xmlhttp.readyState == 4) {
-				communication.lastCall += xmlhttp.status + ' ' + param.method + ' ' + param.url;
 				communication.hideProgressBar(param);
 				var errorHandler = function () {
 					xmlhttp.param = param;
@@ -55,7 +53,6 @@ class communication {
 		};
 		if (!param.method)
 			param.method = 'GET';
-		communication.lastCall = param.method + ' ' + param.url;
 		xmlhttp.open(param.method, param.url, true);
 		if (param.url.indexOf(global.server.substring(0, global.server.lastIndexOf('/', global.server.length - 2))) == 0) {
 			var d = new Date();
@@ -557,21 +554,30 @@ class communication {
 		else if (r.status == 408) {
 			// timeout, do nothing, most probably app wake up from sleep modus
 		} else if (r.status < 200 || r.status > 501) {
-			s = ui.l('error.noNetworkConnection');
+			try {
+				s = ui.l('error.noNetworkConnection');
+			} catch (e) { }
 			status = r.status;
 			if (status == 0)
 				status = 1;
 		} else {
 			var s2 = 'Status:' + r.status;
+			if (r.param) {
+				s2 += '\n: ' + r.param.method + ' ' + r.param.url;
+				if (r.param.body)
+					s2 += '\nbody: ' + JSON.stringify(r.param.body);
+			}
 			if (r.responseText)
-				s2 += '\nresponse:' + r.responseText;
+				s2 += '\nresponse: ' + r.responseText;
 			if (r.error)
-				s2 += '\nerror:' + r.error;
+				s2 += '\nerror: ' + r.error;
 			if (!r.status || r.status < 500)
 				communication.sendError('communication.onError:\n' + s2);
-			s = ui.l('error.text') + '<br/>Status:&nbsp;' + r.status;
+			try {
+				s = ui.l('error.text') + '<br/>Status:&nbsp;' + r.status;
+			} catch (e) { }
 		}
-		if (r.param.progressBar != false) {
+		if (r.param.progressBar != false && s) {
 			if (ui.q('popupHint') && ui.q('popup').style.display != 'none')
 				ui.html('popupHint', s);
 			else if (ui.q('popup').getAttribute('error') != status) {
@@ -657,7 +663,6 @@ class communication {
 		body += '\n\nLOCALIZED\n\t' + geoData.localized;
 		body += '\n\nLANG\n\t' + global.language;
 		body += '\n\nLASTCLICK\n\t' + ui.lastClick.replace(/\n/g, '\n\t');
-		body += '\n\nLASTCALL\n\t' + communication.lastCall.replace(/\n/g, '\n\t');
 		try {
 			body += '\n\nSTACK\n\t' + new Error().stack.replace(/\n/g, '\n\t');
 		} catch (e) {

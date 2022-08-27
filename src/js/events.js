@@ -118,8 +118,8 @@ ${v.eventLinkClose}
 			v[v.endDate ? 'endDate' : 'date'] += '&nbsp;</eventOutdated>';
 		} else {
 			var x = { id: v.id.split('_')[0], date: v.id.split('_')[1] };
-			var d = global.date.getDateFilelds(x.date);
-			var d2 = global.date.getDateFilelds(v.event.startDate);
+			var d = global.date.getDateFields(x.date);
+			var d2 = global.date.getDateFields(v.event.startDate);
 			d.hour = d2.hour;
 			d.minute = d2.minute;
 			v.date = global.date.formatDate(d);
@@ -364,7 +364,7 @@ ${v.eventLinkClose}
 					v.id = v.event.id;
 					v.classFavorite = v.locationFavorite.favorite ? ' favorite' : '';
 					if (!outdated) {
-						var d = global.date.getDateFilelds(v.event.startDate);
+						var d = global.date.getDateFields(v.event.startDate);
 						if (events.getParticipation({ id: v.id, date: d.year + '-' + d.month + '-' + d.day }).state == 1)
 							v.classFavorite += ' participate';
 						v.id += '_' + d.year + '-' + d.month + '-' + d.day;
@@ -417,7 +417,7 @@ ${v.eventLinkClose}
 				d.values.reason = s;
 			}
 		} else {
-			id.d = global.date.getDateFilelds(id.date);
+			id.d = global.date.getDateFields(id.date);
 			d.values.state = 1;
 			d.values.eventId = id.id;
 			d.values.eventDate = id.d.year + '-' + id.d.month + '-' + id.d.day;
@@ -600,7 +600,7 @@ ${v.eventLinkClose}
 			v = a[i];
 			v.bg = bg;
 			var s2 = global.date.formatDate(v.event.startDate, 'weekdayLong');
-			var date = global.date.getDateFilelds(v.event.startDate);
+			var date = global.date.getDateFields(v.event.startDate);
 			date = date.year + '-' + date.month + '-' + date.day;
 			var idIntern = v.event.id + '_' + date;
 			s2 = global.date.getDateHint(v.event.startDate).replace('{0}', s2);

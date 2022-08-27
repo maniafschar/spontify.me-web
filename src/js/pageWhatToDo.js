@@ -79,7 +79,7 @@ class pageWhatToDo {
 	}
 	static checkAttributeLocationsForList(id) {
 		for (var i = 0; i < 6; i++) {
-			if (user.contact['attr' + i] || user.contact['attr' + i + 'Ex'][i])
+			if (user.contact['attr' + i] || user.contact['attr' + i + 'Ex'])
 				return true;
 		}
 		ui.html('#wtdList' + id, lists.getListNoResults(id.toLowerCase(), 'matches'));

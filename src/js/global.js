@@ -25,7 +25,7 @@ class global {
 				return ui.l('weekday' + (type ? 'Long' : '') + d2.getDay()) + ' ' + d2.getDate() + '.' + (d2.getMonth() + 1) + '.' + (d2.getFullYear() + ' ').slice(-3) + d2.getHours() + ':' + ('0' + d2.getMinutes()).slice(-2);
 			return d2;
 		},
-		getDateFilelds(d) {
+		getDateFields(d) {
 			if (d instanceof Date) {
 				return {
 					year: d.getFullYear(),
@@ -85,7 +85,7 @@ class global {
 			if (!d)
 				return d;
 			if (!(d instanceof Date)) {
-				d = global.date.getDateFilelds(d);
+				d = global.date.getDateFields(d);
 				d = new Date(d.year, parseInt(d.month) - 1, d.day, d.hour, d.minute, d.second);
 			}
 			return d.toISOString();
@@ -95,7 +95,7 @@ class global {
 				return d;
 			if (d instanceof Date)
 				return d;
-			d = global.date.getDateFilelds(d);
+			d = global.date.getDateFields(d);
 			return new Date(Date.UTC(d.year, parseInt(d.month) - 1, d.day, d.hour, d.minute, d.second));
 		}
 	};

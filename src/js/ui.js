@@ -1520,9 +1520,9 @@ class formFunc {
 			formFunc.resetError(s);
 			if (s.value.trim().length > 0) {
 				try {
-					var n = new Date(), d = global.date.getDate(s.value);
-					var a = n.getFullYear() - d.getFullYear();
-					if (n.getMonth() < d.getMonth() || (n.getMonth() == d.getMonth() && n.getDate() < d.getDate()))
+					var n = new Date(), d = global.date.getDateFields(s.value);
+					var a = n.getFullYear() - d.year;
+					if (n.getMonth() + 1 < d.month || (n.getMonth() + 1 == d.month && n.getDate() < d.day))
 						a--;
 					var min = 18, max = 100;
 					if (a < min || a > max) {
