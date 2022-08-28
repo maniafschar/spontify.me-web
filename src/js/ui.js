@@ -478,7 +478,7 @@ class ui {
 					ui.html(ui.q('menu>div'), ui.templateMenuContacts());
 				e = ui.q('menu');
 				e.setAttribute('type', activeID);
-				ui.classAdd(ui.qa('menu a')[parseInt(ui.q(activeID).getAttribute('menuIndex'))], 'menuHighlight');
+				ui.classAdd(ui.qa('menu a')[parseInt(ui.q(activeID).getAttribute('menuIndex'))], 'highlightMenu');
 				ui.css(e, 'transform', e.style.transform.indexOf('1') > 0 ? 'scale(0)' : 'scale(1)')
 			}, 10);
 		}

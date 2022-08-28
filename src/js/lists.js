@@ -171,10 +171,10 @@ class lists {
 	static setListHint(id) {
 		var e = ui.q(id + ' listHeader listTitle');
 		if (e) {
-			ui.classRemove('menu a', 'menuHighlight');
-			ui.classAdd(ui.qa('menu a')[parseInt(ui.q(ui.navigation.getActiveID()).getAttribute('menuIndex'))], 'menuHighlight');
+			ui.classRemove('menu a', 'highlightMenu');
+			ui.classAdd(ui.qa('menu a')[parseInt(ui.q(ui.navigation.getActiveID()).getAttribute('menuIndex'))], 'highlightMenu');
 			var rows = ui.qa(id + ' row'), x = 0;
-			var s = ui.q('menu .menuHighlight');
+			var s = ui.q('menu .highlightMenu');
 			if (s)
 				s = s.innerHTML;
 			if (s) {

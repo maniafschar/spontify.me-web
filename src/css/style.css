@@ -2270,6 +2270,12 @@ menu a {
 	position: relative;
 	padding: 0.75em 0;
 	cursor: pointer;
+	color: rgba(0, 0, 0, 0.6);
+}
+
+menu a:hover,
+menu a.highlightMenu {
+	color: black;
 }
 
 menu title {
