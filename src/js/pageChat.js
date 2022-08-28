@@ -293,11 +293,10 @@ class pageChat {
 		ui.q('chatUserList').innerHTML = s;
 	}
 	static open(id, location) {
-		if (ui.q('chat[i="' + id + '"]')) {
-			if (ui.cssValue('popup', 'display') == 'none')
-				pageChat.close();
-			else
-				ui.navigation.hidePopup();
+		if (id.indexOf && id.indexOf('_') > 0)
+			id = id.substring(0, id.indexOf('_'));
+		if (ui.q('chat[i="' + id + '"][type="' + (location ? 'location' : 'contact') + ']')) {
+			pageChat.close();
 			return;
 		}
 		communication.ajax({

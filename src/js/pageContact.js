@@ -67,8 +67,8 @@ ${v.aboutMe}
 <detailButtons style="margin-top:1em;">
 	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonCopy"
 		onclick="pageChat.doCopyLink(event,&quot;p=${v.id}&quot;)">${ui.l('share')}</buttontext>
-	<buttontext class="bgColor${v.blocked}${v.hideMe}${v.hideGroups}" name="buttonGroups"
-		onclick="pageContact.groups.toggleGroups(${v.id})">${ui.l('group.action')}</buttontext>
+	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonGroups"
+		onclick="pageContact.groups.toggleGroups(${v.id},&quot;${v.contactLinkStatus}&quot;)">${ui.l('group.action')}</buttontext>
 	<buttontext class="bgColor${v.blocked}" name="buttonEvents"
 		onclick="events.toggle(${v.id})">${ui.l('events.title')}</buttontext>
 	<buttontext class="bgColor${v.blocked}" name="buttonLocation"
@@ -125,7 +125,7 @@ ${v.aboutMe}
     onclick="document.getElementById(&quot;groupsRename&quot;).style.display=&quot;none&quot;;var e=document.getElementById(&quot;groupsDelete&quot;).style;e.display=e.display==&quot;none&quot;?&quot;&quot;:&quot;none&quot;;">
     ${ui.l('delete')}
 </buttontext>
-<buttontext style="margin-top:0.5em;" class="bgColor" onclick="pageChat.openGroup()">
+<buttontext style="margin-top:0.5em;display:none;" class="bgColor" onclick="pageChat.openGroup()">
     ${ui.l('chat.groupTitle')}
 </buttontext>
 <br />
@@ -331,7 +331,6 @@ ${v.aboutMe}
 		v.matchIndicatorHint = ui.l('contacts.matchIndicatorHint').replace('{0}', v.attr.totalMatch).replace('{1}', v.attr.total).replace('{2}', v.matchIndicatorPercent);
 		if (v.matchIndicatorClass)
 			v.matchIndicatorHint += '<br/>' + ui.l('contacts.matchIndicatorHintPulse');
-		v.hideGroups = v.contactLink.status == 'Friends' ? '' : ' noDisp';
 		v.hideMe = user.contact.id == v.id ? ' noDisp' : '';
 		if (v.image)
 			v.image = global.serverImg + v.image;
@@ -355,6 +354,8 @@ ${v.aboutMe}
 			ui.classAdd('main>#buttonFavorite', 'highlight');
 		else
 			ui.classRemove('main>#buttonFavorite', 'highlight');
+		if (v.contactLink)
+			v.contactLinkStatus = v.contactLink.status;
 		return pageContact.templateDetail(v);
 	}
 	static filterList() {
@@ -607,19 +608,9 @@ ${v.aboutMe}
 				});
 				return;
 			}
-			var path = 'detail[i="' + id + '"] [name="groups"] detailTogglePanel';
+			var path = 'detail card:last-child[i="' + id + '"] [name="groups"] detailTogglePanel';
 			var e = ui.q(path);
 			if (!e.innerHTML) {
-				if (!friendship) {
-					communication.ajax({
-						url: global.server + 'db/one?query=contact_listFriends&id=' + id,
-						responseType: 'json',
-						success(r) {
-							pageContact.groups.toggleGroups(id, r ? model.convert(new ContactLink(), r).status : '');
-						}
-					});
-					return;
-				}
 				if (friendship != 'Friends') {
 					if (!e.innerHTML) {
 						if (friendship != 'Terminated' && friendship != 'Terminated2')
@@ -627,6 +618,7 @@ ${v.aboutMe}
 						else
 							e.innerHTML = ui.l('contacts.requestFriendship' + (friendship == 'Pending' ? 'AlreadySent' : 'Canceled'));
 					}
+					ui.css(path.substring(0, path.lastIndexOf(' ')) + '>buttontext', 'display', 'none');
 					details.togglePanel(e.parentNode);
 					return;
 				}
@@ -666,8 +658,6 @@ ${v.aboutMe}
 		}
 	}
 	static listContacts(l) {
-		if (!l || l.length < 2)
-			return '<noResult>' + ui.l('noResults.list').replace('{0}', ui.l('contacts.title')).replace('{1}', '') + '</noResult>';
 		var activeID = ui.navigation.getActiveID()
 		if (activeID == 'search')
 			ui.attr('search', 'type', 'contacts');

@@ -36,8 +36,8 @@ class lists {
 		}
 	}
 	static getListNoResults(activeID, errorID) {
-		var s = ui.l('noResults.' + errorID), p = s.indexOf('${');
-		if (p > -1) {
+		var s = ui.l('noResults.' + errorID), p;
+		while ((p = s.indexOf('${')) > -1) {
 			var p2 = s.indexOf('}', p);
 			s = s.substring(0, p) + ui.l(s.substring(p + 2, p2)) + s.substring(p2 + 1);
 		}

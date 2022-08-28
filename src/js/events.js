@@ -112,6 +112,7 @@ ${v.eventLinkClose}
 			var s = global.date.formatDate(v.event.endDate);
 			v.endDate = ' (' + ui.l('events.type_' + v.event.type) + ' ' + ui.l('to') + ' ' + s.substring(s.indexOf(' ') + 1, s.lastIndexOf(' ')) + ')';
 		}
+		var state;
 		if (('' + v.id).indexOf('_') < 0) {
 			v.date = global.date.formatDate(v.event.startDate);
 			v.date = '<eventOutdated>&nbsp;' + v.date;
@@ -124,7 +125,8 @@ ${v.eventLinkClose}
 			d.minute = d2.minute;
 			v.date = global.date.formatDate(d);
 			v.eventParticipationButtons = events.getParticipateButton(x, v);
-			if (events.getParticipation(x).state == 1)
+			state = events.getParticipation(x).state;
+			if (state == 1)
 				v.classParticipate = ' participate';
 		}
 		if (v.ownerId && v.event.link) {
@@ -138,9 +140,9 @@ ${v.eventLinkClose}
 			v.maxParticipants = ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
 		if (v.event.confirm == 1) {
 			v.eventMustBeConfirmed = '<br/>' + ui.l('events.participationMustBeConfirmed');
-			if (p.state == 1)
+			if (state == 1)
 				v.eventMustBeConfirmed = v.eventMustBeConfirmed + '<br/>' + ui.l('events.confirmed');
-			else if (p.state == -1)
+			else if (state == -1)
 				v.eventMustBeConfirmed = v.eventMustBeConfirmed + '<br/>' + ui.l('events.canceled');
 		}
 		if (v.contact.imageList)
