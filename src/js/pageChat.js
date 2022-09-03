@@ -225,7 +225,7 @@ class pageChat {
 			});
 		}
 		communication.ajax({
-			url: global.server + 'db/list?query=contact_listChat',
+			url: global.server + 'db/list?query=contact_listChat&limit=0',
 			responseType: 'json',
 			progressBar: false,
 			success(r) {
@@ -303,6 +303,8 @@ class pageChat {
 			url: global.server + 'action/chat/' + (location ? true : false) + '/' + id + '/true',
 			responseType: 'json',
 			success(r) {
+				if (!r || r.length < 1)
+					return;
 				var f = function () {
 					var e = ui.q('chatUserList [i="' + id + '"] badge');
 					ui.html(e, '0');

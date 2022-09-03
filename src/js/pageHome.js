@@ -9,45 +9,43 @@ export { pageHome };
 
 class pageHome {
 	static template = v =>
-		global.template`<div>
-	<homeHeader>	
-		<buttonIcon onclick="pageHome.openLanguage()" class="homeIconSearch left top"${v.classLanguage}>
-			<span class="lang">${v.language}</span>
-		</buttonIcon>
-		<buttonIcon onclick="ui.navigation.goTo(&quot;search&quot;)" class="homeIconSearch left top"${v.classSearch}>
-			<img src="images/search.svg" />
-		</buttonIcon>
-		<buttonIcon onclick="ui.navigation.goTo(&quot;settings&quot;,event)" class="right top">
-			<img src="images/contact.svg" />
-		</buttonIcon>
-		<homeTitle onclick="ui.navigation.goTo(&quot;settings&quot;)">
-			<img source="logo.svg" />
-		</homeTitle>
-	</homeHeader>
-	<homeBody>
-		<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;whatToDo&quot;)" style="width:80%;">
-			<span class="homeWTD">${ui.l('wtd.todayIWant')}</span><img source="rocket.svg" />
-		</buttontext><br/>
-		<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;locations&quot;)" style="width:70%;">
-			<badge name="badgeLocations" class="bgColor pulse">0</badge>
-			<span>${ui.l('locations.homeButton')}</span> <img source="location.svg" />
-		</buttontext ><br/>
-		<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;contacts&quot;)" style="width:60%;">
-			<badge name="badgeContacts" class="bgColor pulse">0</badge>
-			<span>${ui.l('contacts.homeButton')}</span><img source="network.svg" />
-		</buttontext>
-	</homeBody >
-	<buttonIcon onclick="pageHome.openNotifications()" class="left bottom pulse highlight" style="display:none;">
-		<badgeNotifications></badgeNotifications>
-		<img source="news.svg" />
+		global.template`<homeHeader>	
+	<buttonIcon onclick="pageHome.openLanguage()" class="homeIconSearch left top"${v.classLanguage}>
+		<span class="lang">${v.language}</span>
 	</buttonIcon>
-	<buttonIcon onclick="ui.navigation.goTo(&quot;info&quot;,event)" class="center bottom">
-		<img source="info.svg" />
+	<buttonIcon onclick="ui.navigation.goTo(&quot;search&quot;)" class="homeIconSearch left top"${v.classSearch}>
+		<img src="images/search.svg" />
 	</buttonIcon>
-	<buttonIcon onclick="bluetooth.toggle()" id="homeIconBluetooth" class="right bottom">
-		<img source="bluetooth.svg" />
+	<buttonIcon onclick="ui.navigation.goTo(&quot;settings&quot;,event)" class="right top">
+		<img src="images/contact.svg" />
 	</buttonIcon>
-</div > `;
+	<homeTitle onclick="ui.navigation.goTo(&quot;settings&quot;)">
+		<img source="logo.svg" />
+	</homeTitle>
+</homeHeader>
+<homeBody>
+	<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;whatToDo&quot;)" style="width:80%;">
+		<span class="homeWTD">${ui.l('wtd.todayIWant')}</span><img source="rocket.svg" />
+	</buttontext><br/>
+	<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;locations&quot;)" style="width:70%;">
+		<badge name="badgeLocations" class="bgColor pulse">0</badge>
+		<span>${ui.l('locations.homeButton')}</span> <img source="location.svg" />
+	</buttontext ><br/>
+	<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;contacts&quot;)" style="width:60%;">
+		<badge name="badgeContacts" class="bgColor pulse">0</badge>
+		<span>${ui.l('contacts.homeButton')}</span><img source="network.svg" />
+	</buttontext>
+</homeBody >
+<buttonIcon onclick="pageHome.openNotifications()" class="left bottom pulse highlight" style="display:none;">
+	<badgeNotifications></badgeNotifications>
+	<img source="news.svg" />
+</buttonIcon>
+<buttonIcon onclick="ui.navigation.goTo(&quot;info&quot;,event)" class="center bottom">
+	<img source="info.svg" />
+</buttonIcon>
+<buttonIcon onclick="bluetooth.toggle()" id="homeIconBluetooth" class="right bottom">
+	<img source="bluetooth.svg" />
+</buttonIcon>`;
 	static init() {
 		var e = ui.q('home');
 		if (e.innerHTML)

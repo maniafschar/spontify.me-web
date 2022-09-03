@@ -228,6 +228,7 @@ homeBody {
 	display: block;
 	top: 50%;
 	margin-top: -8em;
+	text-align: left;
 }
 
 .bgColor {
@@ -304,6 +305,8 @@ filters {
 	transition: all 0.4s ease-out 0s;
 	max-width: 90%;
 	transform-origin: top left;
+	z-index: 1;
+	color: black;
 }
 
 login registerHint {
@@ -1412,16 +1415,6 @@ detailTitle {
 	color: black;
 }
 
-home {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	overflow: hidden;
-	display: block;
-}
-
 homeHeader {
 	position: relative;
 	text-align: center;
@@ -1552,7 +1545,6 @@ buttonIcon.highlight svg {
 }
 
 add buttontext {
-	width: 100%;
 	text-align: center;
 	margin: 1em 0 0 0;
 }
@@ -1630,6 +1622,10 @@ row extra {
 	text-align: right;
 	opacity: 0.6;
 	text-align: center;
+}
+
+row extra img {
+	height: 1em;
 }
 
 row.participate extra::before {
@@ -1849,6 +1845,7 @@ text.popup {
 	background: rgba(255, 255, 255, 0.95);
 	box-shadow: 0 0 1em rgb(0, 0, 0, 0.3);
 	color: black;
+	z-index: 1;
 }
 
 text.popup>div {
@@ -2136,9 +2133,9 @@ progressbar {
 	right: 50%;
 	margin-right: -0.75em;
 	top: 0.7em;
-	opacity: 0.5;
+	opacity: 0.25;
 	font-size: 5em;
-	color: white;
+	color: rgb(252, 251, 104);
 }
 
 info {

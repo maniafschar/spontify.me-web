@@ -98,8 +98,8 @@ class initialisation {
 			FB.oauthCallback(e.url)
 		});
 		window.open = cordova.InAppBrowser.open;
-		ui.on('content > *, home', 'click', function (event) {
-			if (event.screenY > 0 && event.screenY < parseInt(ui.cssValue('main', 'padding-top')) + 5 * ui.emInPX) {
+		ui.on('content > *', 'click', function (event) {
+			if ((ui.classContains(event.target, 'content') || !event.target.onclick && !event.target.parentElement.onclick && event.target.nodeName != 'INPUT') && event.screenY > 0 && event.screenY < parseInt(ui.cssValue('main', 'padding-top')) + 5 * ui.emInPX) {
 				event.preventDefault();
 				initialisation.hideStatusBar = !initialisation.hideStatusBar;
 				initialisation.statusBar();
@@ -130,7 +130,7 @@ class initialisation {
 		});
 	}
 	static initPostProcessor() {
-		ui.css('content > .content', 'display', 'none');
+		ui.css('content>:not(home).content', 'display', 'none');
 		ui.css('main>buttonIcon', 'display', 'none');
 		ui.css('main', 'display', '');
 		if (!global.isBrowser())
@@ -307,8 +307,8 @@ class initialisation {
 		if (!ui.q('main'))
 			return;
 		lists.repositionThumb();
-		if (wOrg / w > 1.6) {
-			ui.css('add', 'width', ((wOrg - w) / 2) + 'px');
+		if (window.innerWidth / w > 1.6) {
+			ui.css('add', 'width', ((window.innerWidth - w) / 2) + 'px');
 			ui.css('add', 'display', 'block');
 		} else
 			ui.css('add', 'display', '');

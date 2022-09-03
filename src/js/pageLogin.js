@@ -27,6 +27,7 @@ class pageLogin {
 		</value>
 	</field>
 	<dialogButtons>
+		<br/>
 		<buttontext onclick="pageLogin.fromForm()" class="bgColor" id="defaultButton">
 			${ui.l('login.action')}
 		</buttontext>
@@ -53,13 +54,8 @@ class pageLogin {
 				<input type="email" name="email" value="${v.email}" maxlength="100" />
 			</value>
 		</field>
-		<field id="pseudonymRow">
-			<label>${ui.l('pseudonym')}</label>
-			<value>
-				<input type="text" name="pseudonym" value="${v.pseudonym}" maxlength="30" />
-			</value>
-		</field>
 		<dialogButtons style="margin-top:0.5em;">
+			<br/>
 			<buttontext onclick="pageLogin.recoverPasswordSendEmail()" class="bgColor" id="defaultButton">
 			${ui.l('login.recoverPassword')}
 			</buttontext>
@@ -106,7 +102,8 @@ class pageLogin {
         </value>
     </field>
     <dialogButtons>
-        <buttontext onclick="pageLogin.register()" class="bgColor" id="defaultButton">
+		<br/>
+		<buttontext onclick="pageLogin.register()" class="bgColor" id="defaultButton">
 			${ui.l('login.register')}
         </buttontext>
         <br /><br />
@@ -186,16 +183,12 @@ class pageLogin {
 	}
 	static recoverPasswordSendEmail() {
 		var email = ui.q('input[name="email"]');
-		var pseudonym = ui.q('input[name="pseudonym"]');
 		formFunc.resetError(email);
-		formFunc.resetError(pseudonym);
 		var b = -1;
 		if (!email.value)
 			b = formFunc.setError(email, 'settings.noEmail');
-		if (!pseudonym.value)
-			b = formFunc.setError(pseudonym, 'register.errorPseudonym');
 		if (b == -1 && formFunc.validation.email(email) == -1)
-			communication.login.recoverPasswordSendEmail(email.value, pseudonym.value);
+			communication.login.recoverPasswordSendEmail(email.value);
 	}
 	static recoverPasswordSetNew() {
 		if (!ui.navigation.openPopup(ui.l('login.changePassword'), '<span style="padding-bottom:1em;display:block;">' + ui.l('login.changePasswordBody') + '</span><field><label>' + ui.l('login.password') + '</label><value><input type="password" name="passwd" maxlength="30"></value></div><dialogButtons><buttontext class="bgColor" onclick="communication.login.recoverPasswordSetNew()">' + ui.l('login.changePassword') + '</buttontext></dialogButtons><popupHint></popupHint>', 'communication.login.warningRegNotComplete()', true))

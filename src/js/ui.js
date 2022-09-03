@@ -21,7 +21,6 @@ class ui {
 	static categories = [];
 	static emInPX = 0;
 	static labels = [];
-	static lastClick = '';
 	static templateMenuLocation = () =>
 		global.template`<title>
 		${ui.l('locations.title')}
@@ -254,7 +253,7 @@ class ui {
 		getActiveID() {
 			var id = 'home';
 			if (ui.cssValue(id, 'display') != 'none' && !ui.q('content.animated')) {
-				ui.css('content>.content', 'display', 'none');
+				ui.css('content>:not(home).content', 'display', 'none');
 				return id;
 			}
 			var e = ui.q('content>[class*="SlideIn"]');
@@ -289,6 +288,10 @@ class ui {
 			if (ui.classContains('content', 'animated'))
 				return;
 			var currentID = ui.navigation.getActiveID();
+			if (id == 'home' && currentID == 'chat') {
+				pageChat.close();
+				return;
+			}
 			if (id == 'home' && currentID == 'detail') {
 				var e = ui.q('detail>div');
 				var x = parseInt(ui.cssValue(e, 'margin-left')) / ui.q('content').clientWidth;
@@ -306,6 +309,10 @@ class ui {
 					return;
 				}
 				id = ui.q('detail').getAttribute('list');
+				if (!ui.q(id).innerHTML) {
+					var e = ui.q('content>:not(detail).content:not([style*="none"])');
+					id = e ? e.tagName.toLowerCase() : 'home';
+				}
 			}
 			if (currentID == 'info' && id == 'home' && !user.contact && pageInfo.openSection == -2) {
 				// AGBs opened from login, go back to login
@@ -542,7 +549,7 @@ class ui {
 			return 'query=contact_list&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent(pageSearch.getSearchMatchesContact());
 		},
 		contactFriends() {
-			return 'query=contact_list&distance=100000&limit=500&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactLink.status=\'Friends\'');
+			return 'query=contact_list&distance=100000&limit=0&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactLink.status=\'Friends\'');
 		},
 		contactVisitees() {
 			return 'query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactVisit.contactId2=contact.id and contactVisit.contactId=' + user.contact.id);
@@ -568,7 +575,7 @@ class ui {
 			return (user.contact ? 'query=location_list' : 'query=location_anonymousList') + '&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon;
 		},
 		locationFavorites() {
-			return 'query=location_list&distance=100000&limit=500&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('locationFavorite.favorite=true');
+			return 'query=location_list&distance=100000&limit=0&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('locationFavorite.favorite=true');
 		},
 		locationMatches() {
 			return 'query=location_list&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent(pageSearch.getSearchMatchesLocation());
@@ -1600,4 +1607,4 @@ class formFunc {
 				formFunc.resetError(s);
 		}
 	}
-};
+}

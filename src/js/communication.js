@@ -339,12 +339,12 @@ class communication {
 				}, { scope: 'email' }
 			);
 		},
-		recoverPasswordSendEmail(email, pseudonym) {
+		recoverPasswordSendEmail(email) {
 			communication.ajax({
-				url: global.server + 'authentication/recoverSendEmail?email=' + encodeURIComponent(Encryption.encPUB(email)) + '&name=' + encodeURIComponent(Encryption.encPUB(pseudonym)),
+				url: global.server + 'authentication/recoverSendEmail?email=' + encodeURIComponent(Encryption.encPUB(email)),
 				success(r) {
-					if (r == 'nok')
-						ui.navigation.openPopup(ui.l('login.recoverPassword'), ui.l('login.recoverPasswordError'));
+					if (r.indexOf('nok:') == 0)
+						ui.navigation.openPopup(ui.l('login.recoverPassword'), ui.l('login.recoverPasswordError' + r.substring(4)));
 					else {
 						ui.navigation.hidePopup();
 						communication.login.removeCredentials();
@@ -561,18 +561,19 @@ class communication {
 			if (status == 0)
 				status = 1;
 		} else {
-			var s2 = 'Status:' + r.status;
+			var s2 = '';
 			if (r.param) {
-				s2 += '\n: ' + r.param.method + ' ' + r.param.url;
+				s2 += '\n' + r.param.method + ' ' + r.param.url;
 				if (r.param.body)
 					s2 += '\nbody: ' + JSON.stringify(r.param.body);
 			}
+			s2 += '\nstatus: ' + r.status;
 			if (r.responseText)
 				s2 += '\nresponse: ' + r.responseText;
 			if (r.error)
 				s2 += '\nerror: ' + r.error;
 			if (!r.status || r.status < 500)
-				communication.sendError('communication.onError:\n' + s2);
+				communication.sendError('communication.onError' + s2);
 			try {
 				s = ui.l('error.text') + '<br/>Status:&nbsp;' + r.status;
 			} catch (e) { }
@@ -621,9 +622,9 @@ class communication {
 						} else if (!e2)
 							chatNew = true;
 					}
-					if (chatNew)
-						pageChat.initActiveChats();
 				}
+				if (chatNew || r.chat != ui.qa('chatUserList>div').length)
+					pageChat.initActiveChats();
 				total += chat;
 				e = ui.q('badgeChats');
 				ui.html(e, chat);
@@ -662,7 +663,6 @@ class communication {
 		body += '\n\nVERSION\n\t' + global.appVersion;
 		body += '\n\nLOCALIZED\n\t' + geoData.localized;
 		body += '\n\nLANG\n\t' + global.language;
-		body += '\n\nLASTCLICK\n\t' + ui.lastClick.replace(/\n/g, '\n\t');
 		try {
 			body += '\n\nSTACK\n\t' + new Error().stack.replace(/\n/g, '\n\t');
 		} catch (e) {

@@ -643,14 +643,14 @@ ${v.hint}
 				s += '<input type="radio" label="' + r[i] + '" name="filterLocationTown"' + m;
 			s += sep;
 		}
-		if (s)
-			s = s.substring(0, s.lastIndexOf(sep));
 		var map = '';
 		if (ui.navigation.getActiveID() == 'locations')
-			map = '<buttontext onclick="pageLocation.toggleMap()" style="margin:1em 0.25em;" class="bgColor">' + ui.l('filterLocMapButton') + '</buttontext>';
+			map = '<br/><buttontext onclick="pageLocation.toggleMap()" style="margin:1em 0.25em;" class="bgColor">' + ui.l('filterLocMapButton') + '</buttontext>';
 		if (s)
-			return '<div>' + s + '</div>' + map;
-		return '<div style="padding-bottom:1em;">' + ui.l('filterNoDifferentValues') + '</div>' + map;
+			s = s.substring(0, s.lastIndexOf(sep));
+		else
+			s = map ? ui.l('filterNoDifferentValues') : '<div style="padding-bottom:0.5em;">' + ui.l('filterNoDifferentValues') + '</div>';
+		return s + map;
 	}
 	static getOpenTimes(r) {
 		var s = '';

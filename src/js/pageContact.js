@@ -82,7 +82,7 @@ ${v.aboutMe}
 </text>
 <text name="block" class="popup" style="display:none;right:1em;bottom:4em;position:fixed;" onclick="pageContact.closeFavorite(event)">
 	<div>
-		${v.buddy}
+		${v.link}
 		<input type="radio" name="type" value="1" label="${ui.l('contacts.blockAction')}"
 			onclick="pageContact.showBlockText()" checked="true" />
 		<input type="radio" name="type" value="2" label="${ui.l('contacts.blockAndReportAction')}"
@@ -214,22 +214,18 @@ ${v.aboutMe}
 			method: blockID > 0 ? 'PUT' : 'POST',
 			body: v,
 			success() {
-				if (ui.q('popupContent'))
-					ui.navigation.hidePopup();
-				else {
-					var e = ui.q('contacts [i="' + id + '"]');
-					if (e) {
-						e.outerHTML = '';
-						lists.setListHint('contacts');
-					}
-					ui.navigation.goTo('contacts');
-					var e = lists.data['contacts'];
-					if (e) {
-						for (var i = 1; i < e.length; i++) {
-							if (model.convert(new ContactBlock(), e, i).id == id) {
-								e.splice(i, 1);
-								break;
-							}
+				var e = ui.q('contacts [i="' + id + '"]');
+				if (e) {
+					e.outerHTML = '';
+					lists.setListHint('contacts');
+				}
+				ui.navigation.goTo('contacts');
+				var e = lists.data['contacts'];
+				if (e) {
+					for (var i = 1; i < e.length; i++) {
+						if (model.convert(new Contact(), e, i).id == id) {
+							e.splice(i, 1);
+							break;
 						}
 					}
 				}
@@ -285,22 +281,22 @@ ${v.aboutMe}
 				v.birthday = v.birthday[0];
 		} else
 			v.birthday = '';
-		v.buddy = '<div style="margin:0 0 1em 0;padding-bottom:1em;position:relative;" class="borderBottom">';
+		v.link = '<div style="margin:0 0 1em 0;padding-bottom:1em;position:relative;" class="borderBottom">';
 		if (v.contactLink.id) {
 			if (v.contactLink.status == 'Pending') {
 				if (v.contactLink.contactId != user.contact.id)
-					v.buddy += '<div style="margin-bottom:0.5em;">' + ui.l('contacts.requestFriendshipHint') + '</div><buttontext class="bgColor" onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;Friends&quot;,' + id + ')" style="margin:0 0.5em;">' + ui.l('contacts.requestFriendshipConfirm') + '</buttontext><buttontext class="bgColor" onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;Rejected&quot;,' + id + ');" style="margin:0 0.5em;">' + ui.l('contacts.requestFriendshipReject') + '</buttontext>';
+					v.link += '<div style="margin-bottom:0.5em;">' + ui.l('contacts.requestFriendshipHint') + '</div><buttontext class="bgColor" onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;Friends&quot;,' + id + ')" style="margin:0 0.5em;">' + ui.l('contacts.requestFriendshipConfirm') + '</buttontext><buttontext class="bgColor" onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;Rejected&quot;,' + id + ');" style="margin:0 0.5em;">' + ui.l('contacts.requestFriendshipReject') + '</buttontext>';
 				else
-					v.buddy += '<span style="text-align:center;">' + ui.l('contacts.requestFriendshipAlreadySent') + '</span>';
+					v.link += '<span style="text-align:center;">' + ui.l('contacts.requestFriendshipAlreadySent') + '</span>';
 			} else if (v.contactLink.status == 'Friends')
-				v.buddy += '<buttontext class="bgColor" onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;' + (v.contactLink.contactId == user.contact.id ? 'Terminated' : 'Terminated2') + '&quot;,' + id + ')">' + ui.l('contacts.terminateFriendship') + '</buttontext>';
+				v.link += '<buttontext class="bgColor" onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;' + (v.contactLink.contactId == user.contact.id ? 'Terminated' : 'Terminated2') + '&quot;,' + id + ')">' + ui.l('contacts.terminateFriendship') + '</buttontext>';
 			else if (v.contactLink.status == 'Terminated' && v.contactLink.contactId == user.contact.id || v.contactLink.status == 'Terminated2' && v.contactLink.contactId2 == user.contact.id)
-				v.buddy += '<buttontext class="bgColor" onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;Friends&quot;,' + id + ')">' + ui.l('contacts.requestFriendshipRestart') + '</buttontext>';
+				v.link += '<buttontext class="bgColor" onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;Friends&quot;,' + id + ')">' + ui.l('contacts.requestFriendshipRestart') + '</buttontext>';
 			else
-				v.buddy += ui.l('contacts.requestFriendshipCanceled');
+				v.link += ui.l('contacts.requestFriendshipCanceled');
 		} else
-			v.buddy += '<buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + idIntern + ');">' + ui.l('contacts.requestFriendship') + '</buttontext>';
-		v.buddy += '</div>';
+			v.link += '<buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + idIntern + ');">' + ui.l('contacts.requestFriendship') + '</buttontext>';
+		v.link += '</div>';
 		pageContact.addWTDMessage(v);
 		if (!details.getNextNavElement(true, v.id))
 			v.hideNext = 'display:none;';
@@ -363,7 +359,7 @@ ${v.aboutMe}
 		var d = lists.data[activeID];
 		if (!d)
 			return;
-		var bu = ui.q(activeID + ' filters [name="buddies"]:checked');
+		var bu = ui.q(activeID + ' filters [name="friends"]:checked');
 		if (bu)
 			bu = bu.value;
 		var ge = ui.q(activeID + ' filters [name="gender"]:checked');
@@ -424,7 +420,7 @@ ${v.aboutMe}
 				s += '<input type="radio" deselect="true" onclick="pageContact.filterList();" label="' + ui.l('divers') + '" value="3" name="gender"/>';
 		}
 		if (f && nF)
-			s += '<input type="checkbox" onclick="pageContact.filterList();" name="buddies" value="1" label="' + ui.l('contacts.title') + '"/>';
+			s += '<input type="checkbox" onclick="pageContact.filterList();" name="friends" value="1" label="' + ui.l('contacts.title') + '"/>';
 		if (nF == false && r.length > 1) {
 			r = r.sort();
 			if (s)
@@ -432,7 +428,7 @@ ${v.aboutMe}
 			for (var i = 0; i < r.length; i++)
 				s += '<input type="radio" label="' + r[i] + '" name="filterContactsTown" onclick="pageContact.filterList();" deselect="true"/>';
 		}
-		return s ? '<div>' + s + '</div>' : '<div style="padding-bottom:1em;">' + ui.l('filterNoDifferentValues') + '</div>';
+		return s ? s : '<div style="padding-bottom:0.5em;">' + ui.l('filterNoDifferentValues') + '</div>';
 	}
 	static groups = {
 		addGroup(id) {
@@ -614,7 +610,7 @@ ${v.aboutMe}
 				if (friendship != 'Friends') {
 					if (!e.innerHTML) {
 						if (friendship != 'Terminated' && friendship != 'Terminated2')
-							e.innerHTML = ui.l('contacts.denyAddToGroup') + '<br/><buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + id + ')" style="margin-top:0.5em;">' + ui.l('contacts.requestFriendship') + '</buttontext>';
+							e.innerHTML = ui.l('contacts.denyAddToGroup');
 						else
 							e.innerHTML = ui.l('contacts.requestFriendship' + (friendship == 'Pending' ? 'AlreadySent' : 'Canceled'));
 					}
@@ -676,9 +672,11 @@ ${v.aboutMe}
 			if (v.contactLink.status == 'Friends')
 				v.classFavorite = ' favorite';
 			v.attr = ui.getAttributes(v, 'list');
-			v.extra = (v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) + 'km<br/>' : '');
+			v.extra = (v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) + 'km' : '') + '<br/>';
 			if (v.attr.total && v.attr.totalMatch / v.attr.total > 0)
 				v.extra += parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5) + '%';
+			if (v.gender)
+				v.extra += '<br/><img src="images/gender' + v.gender + '.svg" />';
 			if (!v._message1)
 				v._message1 = v.attr.textAttributes();
 			if (birth)

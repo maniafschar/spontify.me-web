@@ -40,7 +40,7 @@ class details {
 			url: global.server + 'action/one?query=' + action + '&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon,
 			responseType: 'json',
 			success(r) {
-				if (!r || r.length < 1) {
+				if (!r || Object.keys(r).length < 1) {
 					ui.navigation.openPopup(ui.l('attention'), ui.l('error.detailNotFound'));
 					lists.removeListEntry(id);
 					return;

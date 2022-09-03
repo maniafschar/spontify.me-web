@@ -204,7 +204,7 @@ class lists {
 			if (!lists.data[activeID] || e == 'LABEL' || e == 'BUTTONTEXT' || event && ui.parents(event.target, 'map'))
 				return;
 			e = ui.q(activeID + ' filters>div');
-			if (!e.innerHTML) {
+			if (!e.innerHTML && html) {
 				e.innerHTML = html.call();
 				formFunc.initFields(activeID + ' filters');
 			}
@@ -215,6 +215,6 @@ class lists {
 				ui.css(e, 'transform', 'scale(1)');
 			} else
 				ui.css(e, 'transform', 'scale(0)');
-		}, 10);
+		}, 50);
 	}
 }
