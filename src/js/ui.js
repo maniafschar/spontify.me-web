@@ -1557,6 +1557,7 @@ class formFunc {
 		},
 		email(s) {
 			if (s) {
+				s.value = s.value.replace(/[^\p{L}\p{N}^\-_.@]/gu, '');
 				var f = s.value.indexOf('@');
 				var l = s.value.lastIndexOf('@');
 				var ld = s.value.lastIndexOf('.');
