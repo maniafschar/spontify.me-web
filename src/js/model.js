@@ -167,6 +167,7 @@ class ContactWhatToDo extends BaseEntity {
 }
 
 class Chat extends BaseEntity {
+	action;
 	contactId;
 	contactId2;
 	image;

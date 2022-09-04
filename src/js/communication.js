@@ -4,7 +4,7 @@ import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './initialisation';
 import { lists } from './lists';
-import { Contact } from './model';
+import { Contact, model } from './model';
 import { pageChat } from './pageChat';
 import { pageLogin } from './pageLogin';
 import { pageWhatToDo } from './pageWhatToDo';
@@ -413,7 +413,7 @@ class communication {
 			ui.html(e, '0');
 			ui.css(e, 'display', 'none');
 			ui.classRemove(e.parentNode, 'pulse highlight');
-			e = ui.qa('[name="badgeNotifications"]');
+			e = ui.q('badgeNotifications');
 			ui.html(e, '0');
 			ui.css(e.parentNode, 'display', 'none');
 			communication.login.removeCredentials();
@@ -464,67 +464,70 @@ class communication {
 		}
 	}
 	static notification = {
+		data: [],
 		push: null,
 
 		clear(event) {
-			if (event && ui.qa('alert>div').length > 1) {
-				event.stopPropagation();
-				event.target.outerHTML = '';
-			} else {
-				var e = ui.q('alert');
-				ui.navigation.animation(e, 'homeSlideOut', function () {
-					if (!ui.classContains(e, 'homeSlideIn')) {
-						ui.html(e, '');
-						e.removeAttribute('style');
-					}
-				});
-			}
+			var e = ui.q('alert');
+			ui.navigation.animation(e, 'homeSlideOut', function () {
+				if (!ui.classContains(e, 'homeSlideIn')) {
+					ui.html(e, '');
+					e.removeAttribute('style');
+					if (communication.notification.data.length > 0 && ui.navigation.getActiveID() == 'home')
+						communication.notification.open();
+				}
+			});
 		},
 		onError(e) {
 			ui.navigation.openPopup(ui.l('attention'), ui.l('pushTokenError').replace('{0}', e.message));
 		},
 		open(e) {
-			if (e.message && !ui.q('alert>div[message="' + encodeURIComponent(e.message) + '"]'
-				+ (e.additionalData ? '[exec="' + encodeURIComponent(e.additionalData.exec) + '"]' : ''))) {
-				var d = ui.q('alert');
-				var e2 = document.createElement('div'), action = 'communication.notification.clear(event)';
-				e2.setAttribute('message', encodeURIComponent(e.message));
-				if (e.additionalData) {
-					e2.setAttribute('exec', encodeURIComponent(e.additionalData.exec));
-					if (e.additionalData.exec) {
-						if (e.additionalData.exec.indexOf('chat') == 0
-							&& ui.q('chat[i="' + e.additionalData.exec.substring(5) + '"]')
-							&& ui.q('chat').style.display != 'none') {
-							pageChat.refresh();
-							return;
-						}
-						action += ';ui.navigation.autoOpen("' + e.additionalData.exec + '",event)';
-					}
-					if (e.additionalData.notificationId)
-						communication.ajax({
-							url: global.server + 'db/one',
-							method: 'PUT',
-							body: { classname: 'ContactNotification', id: e.additionalData.notificationId, values: { seen: true } }
-						});
-				}
-				e2.setAttribute('onclick', action);
-				if (d.innerHTML)
-					ui.classAdd(e2, 'borderBottom');
-				else {
-					var e3 = document.createElement('close');
-					e3.setAttribute('onclick', 'communication.notification.clear()');
-					e3.innerHTML = 'x';
-					d.insertBefore(e3, null);
-				}
-				e.message = global.string.replaceLinks('http', e.message);
-				e.message = global.string.replaceLinks('https', e.message);
-				e2.innerHTML = e.message;
-				d.insertBefore(e2, d.children[0]);
-				if (d.style.display != 'block')
-					ui.navigation.animation(d, 'homeSlideIn');
-				communication.ping();
+			if (e) {
+				communication.notification.data.push(e);
+				communication.setApplicationIconBadgeNumber(e.count);
 			}
-			communication.setApplicationIconBadgeNumber(e.count);
+			var d = ui.q('alert');
+			if (d.innerHTML)
+				return;
+			e = communication.notification.data.splice(0, 1)[0];
+			var e2 = document.createElement('div'), action = 'communication.notification.clear(event)';
+			e2.setAttribute('message', encodeURIComponent(e.message));
+			if (e.additionalData) {
+				e2.setAttribute('exec', encodeURIComponent(e.additionalData.exec));
+				if (e.additionalData.exec) {
+					if (e.additionalData.exec.indexOf('chat') == 0
+						&& ui.q('chat[i="' + e.additionalData.exec.substring(5) + '"]')
+						&& ui.q('chat').style.display != 'none') {
+						pageChat.refresh();
+						return;
+					}
+					action += ';ui.navigation.autoOpen("' + e.additionalData.exec + '",event)';
+				}
+				if (e.additionalData.notificationId)
+					communication.ajax({
+						url: global.server + 'db/one',
+						method: 'PUT',
+						body: { classname: 'ContactNotification', id: e.additionalData.notificationId, values: { seen: true } },
+						success() {
+							communication.ping();
+						}
+					});
+			}
+			e2.setAttribute('onclick', action);
+			if (d.innerHTML)
+				ui.classAdd(e2, 'borderBottom');
+			else {
+				var e3 = document.createElement('close');
+				e3.setAttribute('onclick', 'communication.notification.clear()');
+				e3.innerHTML = 'x';
+				d.insertBefore(e3, null);
+			}
+			e.message = global.string.replaceLinks('http', e.message);
+			e.message = global.string.replaceLinks('https', e.message);
+			e2.innerHTML = e.message;
+			d.insertBefore(e2, d.children[0]);
+			if (d.style.display != 'block')
+				ui.navigation.animation(d, 'homeSlideIn');
 		},
 		register() {
 			if (global.isBrowser())
@@ -634,8 +637,26 @@ class communication {
 				else
 					ui.classAdd(e.parentNode, 'pulse highlight');
 				e = ui.q('badgeNotifications');
+				if (r.notification != e.innerHTML) {
+					communication.ajax({
+						url: global.server + 'db/list?query=contact_listNotification&search=' + encodeURIComponent('contactNotification.seen=false'),
+						responseType: 'json',
+						success(r) {
+							communication.notification.data = [];
+							for (var i = 1; i < r.length; i++) {
+								var v = model.convert(new Contact(), r, i);
+								var m = { message: global.date.formatDate(global.date.server2Local(v.contactNotification.createdAt)) + '<br/>' + v.pseudonym + ' ' + v.contactNotification.text };
+								if (v.contactNotification.action)
+									m.additionalData = { exec: v.contactNotification.action };
+								m.additionalData.notificationId = v.contactNotification.id;
+								communication.notification.data.push(m);
+							}
+						}
+					});
+				}
 				ui.html(e, r.notification);
 				ui.css(e.parentNode, 'display', r.notification == 0 ? 'none' : '');
+				total += r.notification;
 				pageChat.refreshActiveChat(r.chatUnseen);
 				if (total > 0)
 					ui.q('head title').innerHTML = total + global.separator + global.appTitle;

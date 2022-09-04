@@ -154,10 +154,11 @@ alert close {
 	width: 6em;
 	height: 6em;
 	text-align: right;
-	padding-right: 0.5em;
+	padding-right: 0.75em;
 	cursor: pointer;
 	font-weight: bold;
-	color: white;
+	z-index: 1;
+	color: rgba(0, 0, 0, 0.2);
 }
 
 hint>b {

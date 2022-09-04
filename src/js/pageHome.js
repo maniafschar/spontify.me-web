@@ -36,7 +36,7 @@ class pageHome {
 		<span>${ui.l('contacts.homeButton')}</span><img source="network.svg" />
 	</buttontext>
 </homeBody >
-<buttonIcon onclick="pageHome.openNotifications()" class="left bottom pulse highlight" style="display:none;">
+<buttonIcon onclick="communication.notification.open()" class="left bottom pulse highlight" style="display:none;">
 	<badgeNotifications></badgeNotifications>
 	<img source="news.svg" />
 </buttonIcon>
@@ -63,23 +63,5 @@ class pageHome {
 		ui.navigation.openPopup(ui.l('langSelect'),
 			'<div style="text-align:center;padding:2em 0;"><a class="langSelectImg bgColor' + (global.language == 'DE' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE">Deutsch</a>' +
 			'<a class="langSelectImg bgColor' + (global.language == 'EN' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</a></div>');
-	}
-	static openNotifications() {
-		communication.ajax({
-			url: global.server + 'action/notifications',
-			responseType: 'json',
-			success(r) {
-				var e = ui.q('badgeNotifications');
-				e.innerHTML = '0';
-				ui.css(e.parentNode, 'display', 'none');
-				for (var i = 1; i < r.length; i++) {
-					var v = model.convert(new Contact(), r, i);
-					var m = { message: global.date.formatDate(global.date.server2Local(v.contactNotification.createdAt)) + '<br/>' + v.pseudonym + ' ' + v.contactNotification.text };
-					if (v.contactNotification.action)
-						m.additionalData = { exec: v.contactNotification.action };
-					communication.notification.open(m);
-				}
-			}
-		});
 	}
 }

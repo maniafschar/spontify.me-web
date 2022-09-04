@@ -165,9 +165,10 @@ class pageChat {
 	}
 	static doNothing() {
 	}
-	static formatTextMsg(s, b) {
-		if (!s)
+	static formatTextMsg(v) {
+		if (!v.note)
 			return '';
+		var s = v.note;
 		if (s.indexOf(' :open') == 0 && s.lastIndexOf('): ') == s.length - 3)
 			return global.string.replaceInternalLinks(s);
 		s = s.trim();
@@ -176,8 +177,8 @@ class pageChat {
 		s = global.string.replaceLinks('https', s);
 		s = s.replace(/\n/g, '<br/>');
 		s = global.string.replaceEmoji(s);
-		if (b == 3 && s.indexOf('[[') == 0 && s.indexOf(']]') > 2)
-			s = '<a onclick="' + s.substring(2, s.indexOf(']]')) + '">' + s.substring(s.indexOf(']]') + 2).trim() + '</a>';
+		if (v.contactId == 3 && v.action)
+			s = '<a onclick="' + v.action + '">' + s + '</a>';
 		return s;
 	}
 	static getSelectionBoundary(el, start) {
@@ -475,7 +476,7 @@ class pageChat {
 		if (v.image)
 			v.note = '<note style="padding:0;"><img src="' + global.serverImg + v.image + '"/></note>';
 		else
-			v.note = '<note' + (v.oc ? v.oc : '') + '>' + pageChat.formatTextMsg(v.note, v.contactId) + '</note>';
+			v.note = '<note' + (v.oc ? v.oc : '') + '>' + pageChat.formatTextMsg(v) + '</note>';
 		return (v.dateTitle ? v.dateTitle : '') + pageChat.templateMessage(v);
 	}
 	static reposition() {
