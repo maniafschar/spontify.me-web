@@ -1,6 +1,6 @@
 import { communication } from './communication';
 import { global } from './global';
-import { Contact, Location, model } from './model';
+import { Location, model } from './model';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 

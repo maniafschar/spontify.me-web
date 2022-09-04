@@ -251,7 +251,7 @@ ${v.aboutMe}
 			success() {
 				ui.toggleHeight(ui.q('detail card:last-child [name="block"]'));
 				communication.ping();
-				var e = ui.qa(ui.q('detail').getAttribute('list') + ' row[i="' + id + '"] badge');
+				var e = ui.qa(ui.q('detail').getAttribute('from') + ' row[i="' + id + '"] badge');
 				ui.html(e, '');
 				ui.css(e, 'display', 'none');
 				if (status == 'Friends') {

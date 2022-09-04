@@ -67,7 +67,7 @@ class lists {
 
 	}
 	static removeListEntry(id) {
-		var activeID = ui.q('detail').getAttribute('list');
+		var activeID = ui.q('detail').getAttribute('from');
 		if (!activeID)
 			activeID = ui.navigation.getActiveID();
 		ui.attr(activeID + ' [i="' + id + '"]', 'remove', '1');

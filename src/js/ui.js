@@ -308,11 +308,13 @@ class ui {
 					ui.css(e, 'margin-left', ((x + 1) * 100) + '%');
 					return;
 				}
-				id = ui.q('detail').getAttribute('list');
-				if (!ui.q(id).innerHTML) {
-					var e = ui.q('content>:not(detail).content:not([style*="none"])');
-					id = e ? e.tagName.toLowerCase() : 'home';
-				}
+			}
+			if (id == 'home') {
+				id = ui.q(currentID).getAttribute('from');
+				if (!id)
+					id = 'home';
+				else if (!direction)
+					direction = 'backward';
 			}
 			if (currentID == 'info' && id == 'home' && !user.contact && pageInfo.openSection == -2) {
 				// AGBs opened from login, go back to login
@@ -367,16 +369,19 @@ class ui {
 					ui.css('main>buttonIcon', 'display', 'none');
 				else if (id != 'detail')
 					ui.css('main>#buttonFavorite', 'display', 'none');
-				ui.navigation.fade(id,
-					direction == 'backward' ||
+				var back = direction == 'backward' ||
 					direction != 'foreward' && (
 						currentID == 'detail' ||
 						id == 'home' && currentID != 'login' ||
 						id == 'info' && currentID == 'login' ||
 						id == 'login' ||
 						id == 'settings' && currentID == 'settings2' ||
-						id == 'settings2' && currentID == 'settings3'),
-					function () { ui.navigation.displayMainButtons(id); });
+						id == 'settings2' && currentID == 'settings3');
+				if (!back && !(currentID == 'whattodo' && id == 'locations'
+					|| currentID == 'locations' && id == 'contacts'
+					|| currentID == 'info' && id == 'login'))
+					ui.attr(id, 'from', currentID);
+				ui.navigation.fade(id, back, function () { ui.navigation.displayMainButtons(id); });
 				ui.navigation.hideMenu();
 			}
 			ui.navigation.lastPage = currentID;

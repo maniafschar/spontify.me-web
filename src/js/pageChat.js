@@ -306,6 +306,7 @@ class pageChat {
 			success(r) {
 				if (!r || r.length < 1)
 					return;
+				ui.attr('chat', 'from', ui.navigation.getActiveID());
 				var f = function () {
 					var e = ui.q('chatUserList [i="' + id + '"] badge');
 					ui.html(e, '0');

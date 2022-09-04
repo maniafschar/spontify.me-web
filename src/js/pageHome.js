@@ -1,7 +1,5 @@
-import { communication } from './communication';
 import { global } from './global';
 import { initialisation } from './initialisation';
-import { Contact, model } from './model';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 

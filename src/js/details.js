@@ -1,7 +1,6 @@
 import { communication } from './communication';
 import { geoData } from './geoData';
 import { global } from './global';
-import { intro } from './intro';
 import { lists } from './lists';
 import { pageChat } from './pageChat';
 import { pageContact } from './pageContact';
@@ -13,7 +12,7 @@ export { details };
 
 class details {
 	static getNextNavElement(next, id) {
-		var activeID = ui.q(ui.navigation.getActiveID()).getAttribute('list');
+		var activeID = ui.q(ui.navigation.getActiveID()).getAttribute('from');
 		if (activeID == 'contacts' || activeID == 'locations' || activeID == 'search') {
 			var e = ui.q(activeID + ' [i="' + id + '"]');
 			if (e) {
@@ -67,8 +66,6 @@ class details {
 						ui.html(d, '<div>' + r + '</div>');
 						ui.navigation.goTo('detail');
 					}
-					if (activeID != 'detail')
-						ui.attr(d, 'list', activeID);
 					formFunc.initFields('detail');
 					formFunc.image.replaceSVGs();
 					d.scrollTop = 0;

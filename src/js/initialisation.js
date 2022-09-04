@@ -5,7 +5,6 @@ import { global } from './global';
 import { lists } from './lists';
 import { pageHome } from './pageHome';
 import { pageLocation } from './pageLocation';
-import { pageSettings } from './pageSettings';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 
