@@ -188,7 +188,7 @@ class communication {
 			user.contact.id = 0;
 			user.password = p;
 			communication.ajax({
-				url: global.server + 'authentication/login?os=' + global.getOS() + '&device=' + global.getDevice() + '&version=' + global.appVersion + '&email=' + encodeURIComponent(Encryption.encPUB(u)) + (autoLogin ? '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()) : ''),
+				url: global.server + 'authentication/login?os=' + global.getOS() + '&device=' + global.getDevice() + '&version=' + global.appVersion + '&timezoneOffset=' + new Date().getTimezoneOffset() + '&email=' + encodeURIComponent(Encryption.encPUB(u)) + (autoLogin ? '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()) : ''),
 				responseType: 'json',
 				success(v) {
 					if (v && v['contact.verified']) {
@@ -467,13 +467,13 @@ class communication {
 		data: [],
 		push: null,
 
-		clear(event) {
+		clear(closeOnly) {
 			var e = ui.q('alert');
 			ui.navigation.animation(e, 'homeSlideOut', function () {
 				if (!ui.classContains(e, 'homeSlideIn')) {
 					ui.html(e, '');
 					e.removeAttribute('style');
-					if (communication.notification.data.length > 0 && ui.navigation.getActiveID() == 'home')
+					if (!closeOnly && communication.notification.data.length > 0 && ui.navigation.getActiveID() == 'home')
 						communication.notification.open();
 				}
 			});
@@ -490,7 +490,7 @@ class communication {
 			if (d.innerHTML)
 				return;
 			e = communication.notification.data.splice(0, 1)[0];
-			var e2 = document.createElement('div'), action = 'communication.notification.clear(event)';
+			var e2 = document.createElement('div'), action = 'communication.notification.clear()';
 			e2.setAttribute('message', encodeURIComponent(e.message));
 			if (e.additionalData) {
 				e2.setAttribute('exec', encodeURIComponent(e.additionalData.exec));

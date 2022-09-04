@@ -359,6 +359,7 @@ class ui {
 				pageSearch.init();
 			else if (id == 'chat')
 				pageChat.init();
+			communication.notification.clear(true);
 			pageChat.closeList();
 			ui.navigation.hidePopup();
 			if (currentID != id) {
