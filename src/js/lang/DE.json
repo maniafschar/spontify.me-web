@@ -614,7 +614,7 @@
 			"recoverPasswordBody": "Eine Email wurde versendet. Mit deren Hilfe kannst Du Dich wieder einloggen.",
 			"recoverPasswordErrorEmail": "Deine Email ist nicht registriert.",
 			"recoverPasswordErrorSpam": "Die Funktion wurde zu oft aufgerufen.",
-			"recoverPasswordErrorTime": "Du hast bereits die Zurücksetzung angefordert. Dein Passwort kannst Du nur einmal am Tag zurückseetzen.",
+			"recoverPasswordErrorTime": "Du hast bereits die Zurücksetzung angefordert. Dein Passwort kannst Du nur einmal am Tag zurücksetzen.",
 			"register": "Registrieren",
 			"title": "Login"
 		},

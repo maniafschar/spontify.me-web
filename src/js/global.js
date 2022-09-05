@@ -2,6 +2,7 @@ import { communication } from './communication';
 import { geoData } from './geoData';
 import { Contact, Location, model } from './model';
 import { ui } from './ui';
+import { user } from './user';
 
 export { global };
 
@@ -209,6 +210,13 @@ class global {
 	}
 	static isBrowser() {
 		return window.cordova ? false : true;
+	}
+	static openStore(os) {
+		if (!os)
+			os = user.contact.os;
+		ui.navigation.openHTML(os == 'android' ?
+			'https://play.google.com/store/apps/details?id=com.jq.spontifyme' :
+			'https://itunes.apple.com/app/id1630967898');
 	}
 	static string = {
 		emoji: /\p{Extended_Pictographic}/ug,
