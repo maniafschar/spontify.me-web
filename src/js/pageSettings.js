@@ -47,7 +47,7 @@ class pageSettings {
 	<field>
 		<label>${ui.l('settings.aboutMe')}</label>
 		<value>
-			<textarea name="aboutMe" maxlength="250">${v['contact.aboutMe']}</textarea>
+			<textarea name="aboutMe" maxlength="1000">${v['contact.aboutMe']}</textarea>
 		</value>
 	</field>
 	<field>

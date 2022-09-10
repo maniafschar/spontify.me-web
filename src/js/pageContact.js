@@ -341,7 +341,7 @@ ${v.aboutMe}
 		if (!v.attributes && !v.aboutMe && !v.rating)
 			v.dispBody = 'display:none;';
 		if (v.aboutMe)
-			v.aboutMe = '<div style="margin-top:1em;">' + (v.guide ? '<b>' + ui.l('settings.guide') + '</b><br/>' : '') + '<text class="highlightBackground description">' + v.aboutMe + '</text></div>';
+			v.aboutMe = '<div style="margin-top:1em;">' + (v.guide ? '<b>' + ui.l('settings.guide') + '</b><br/>' : '') + '<text class="description">' + v.aboutMe.replace(/\n/g, '<br/>') + '</text></div>';
 		if (v.contactLink.status == 'Pending' && v.contactLink.contactId != user.contact.id)
 			setTimeout(function () {
 				pageContact.toggleBlockUser(id);

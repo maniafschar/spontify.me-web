@@ -759,7 +759,7 @@ whatToDoList {
 }
 
 chat {
-	z-index: 2;
+	z-index: 3;
 }
 
 chat listHeader img {
@@ -1053,8 +1053,12 @@ badgeChats,
 badgeNotifications {
 	text-align: center;
 	position: absolute;
-	line-height: 2.1;
+	line-height: 2;
 	width: 2em;
+}
+
+badgeNotifications {
+	padding-top: 0.1em;
 }
 
 badge {
@@ -1843,7 +1847,7 @@ text {
 text.description {
 	display: inline-block;
 	padding: 0.5em 1em;
-	color: black;
+	background: rgba(0, 0, 0, 0.075);
 }
 
 text.popup {

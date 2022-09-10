@@ -485,12 +485,13 @@ class communication {
 			if (e) {
 				communication.notification.data.push(e);
 				communication.setApplicationIconBadgeNumber(e.count);
+				ui.css(ui.q('badgeNotifications').parentElement, 'display', '');
 			}
 			var d = ui.q('alert');
 			if (d.innerHTML)
 				return;
 			e = communication.notification.data.splice(0, 1)[0];
-			var e2 = document.createElement('div'), action = 'communication.notification.clear()';
+			var e2 = document.createElement('div'), action;
 			e2.setAttribute('message', encodeURIComponent(e.message));
 			if (e.additionalData) {
 				e2.setAttribute('exec', encodeURIComponent(e.additionalData.exec));
@@ -501,7 +502,7 @@ class communication {
 						pageChat.refresh();
 						return;
 					}
-					action += ';ui.navigation.autoOpen("' + e.additionalData.exec + '",event)';
+					action = 'communication.notification.clear(true);ui.navigation.autoOpen("' + e.additionalData.exec + '",event)';
 				}
 				if (e.additionalData.notificationId)
 					communication.ajax({
@@ -513,7 +514,7 @@ class communication {
 						}
 					});
 			}
-			e2.setAttribute('onclick', action);
+			e2.setAttribute('onclick', action ? action : 'communication.notification.clear()');
 			if (d.innerHTML)
 				ui.classAdd(e2, 'borderBottom');
 			else {
@@ -528,6 +529,8 @@ class communication {
 			d.insertBefore(e2, d.children[0]);
 			if (d.style.display != 'block')
 				ui.navigation.animation(d, 'homeSlideIn');
+			if (!communication.notification.data.length)
+				ui.css(ui.q('badgeNotifications').parentElement, 'display', 'none');
 		},
 		register() {
 			if (global.isBrowser())

@@ -157,7 +157,7 @@ ${v.hint}
 <field>
 	<label>${ui.l('description')}</label>
 	<value>
-		<textarea name="description">${v.description}</textarea>
+		<textarea name="description" maxlength="1000">${v.description}</textarea>
 	</value>
 </field>
 <field>
@@ -399,7 +399,7 @@ ${v.hint}
 		if (v.ownerId && v.url)
 			v.description = (v.description ? v.description + ' ' : '') + ui.l('locations.clickForMoreDetails');
 		if (v.description)
-			v.description = '<div style="margin-top:1em;"><text class="highlightBackground description">' + v.description + '</text></div>';
+			v.description = '<div style="margin-top:1em;"><text class="description">' + v.description.replace(/\n/g, '<br/>') + '</text></div>';
 		if (ui.q('locations').innerHTML) {
 			if (!details.getNextNavElement(true, id))
 				v.hideNext = 'display:none;';
@@ -467,21 +467,25 @@ ${v.hint}
 	}
 	static edit(id) {
 		if (id) {
-			if (pageLocation.locationsAdded == null) {
-				communication.ajax({
-					url: global.server + 'db/list?query=location_list&search=' + encodeURIComponent('location.contactId=' + user.contact.id),
-					responseType: 'json',
-					success(s) {
-						pageLocation.locationsAdded = s.length - 1;
-						pageLocation.edit(id);
-					}
-				});
-				return;
-			}
-			if (pageLocation.locationsAdded <= global.minLocations)
-				ui.navigation.openPopup(ui.l('attention'), ui.l('locations.editHint').replace('{0}', pageLocation.locationsAdded) + '<br/><br/><buttontext class="bgColor" onclick="pageLocation.edit()">' + ui.l('locations.new') + '</buttontext>');
-			else
+			if (model.convert(new Location(), pageLocation.currentDetail).contactId == user.contact.id)
 				pageLocation.editInternal(id, pageLocation.currentDetail);
+			else {
+				if (pageLocation.locationsAdded == null) {
+					communication.ajax({
+						url: global.server + 'db/list?query=location_list&search=' + encodeURIComponent('location.contactId=' + user.contact.id),
+						responseType: 'json',
+						success(s) {
+							pageLocation.locationsAdded = s.length - 1;
+							pageLocation.edit(id);
+						}
+					});
+					return;
+				}
+				if (pageLocation.locationsAdded <= global.minLocations)
+					ui.navigation.openPopup(ui.l('attention'), ui.l('locations.editHint').replace('{0}', pageLocation.locationsAdded) + '<br/><br/><buttontext class="bgColor" onclick="pageLocation.edit()">' + ui.l('locations.new') + '</buttontext>');
+				else
+					pageLocation.editInternal(id, pageLocation.currentDetail);
+			}
 		} else {
 			var e = ui.q('menu').style.transform;
 			if (e.indexOf('1') > -1)
@@ -1037,7 +1041,7 @@ ${v.hint}
 			for (var i = 0; i < cats.length; i++) {
 				var v = ui.q('#loc_attrib').getAttribute('v' + cats[i].value);
 				var v2 = ui.val('[name="attr' + cats[i].value + 'Ex"]');
-				s += '<subCatTitle>' + ui.categories[cats[i].value].label + '</subCatTitle><input id="ATTRIBS' + cats[i].value + '" type="text" multiple="SubCategories' + cats[i].value + '" value="' + (v ? v : '') + '"/><input name="attr' + cats[i].value + 'Ex" value="' + (v2 ? v2 : '') + '" type="text" maxlength="250" placeholder="' + ui.l('contacts.blockReason100') + '" style="margin-bottom:1em;"/>';
+				s += '<subCatTitle>' + ui.categories[cats[i].value].label + '</subCatTitle><input id="ATTRIBS' + cats[i].value + '" type="text" multiple="SubCategories' + cats[i].value + '" value="' + (v ? v : '') + '"/><input name="attr' + cats[i].value + 'Ex" value="' + (v2 ? v2 : '') + '" type="text" maxlength="1000" placeholder="' + ui.l('contacts.blockReason100') + '" style="margin-bottom:1em;"/>';
 			}
 			ui.html('#loc_attrib', s);
 			formFunc.initFields('#loc_attrib');
