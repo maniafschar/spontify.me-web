@@ -1497,7 +1497,7 @@ buttonIcon {
 	display: flex;
 	padding: 0.3em;
 	text-align: center;
-	z-index: 2;
+	z-index: 3;
 	transition: all 0.4s ease-out;
 	color: white;
 	border: solid 0.15em white;

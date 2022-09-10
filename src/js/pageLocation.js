@@ -322,7 +322,6 @@ ${v.hint}
 					ui.navigation.hidePopup();
 					if (classname == 'Location') {
 						ui.navigation.goTo('locations');
-						ui.q('#dl_' + id).outerHTML = '';
 						setTimeout(function () {
 							lists.removeListEntry(id);
 						}, 700);

@@ -474,7 +474,7 @@
 		},
 		"intro": {
 			"bluetooth": "<ul><li>If you open ${appTitle}, <b>Bluetooth Matching</b> scans your immediate surrounding for suitable Spontis. If there is a match, you will receive a message</li><li>There are many other ways in which we match, e.g. when a Sponti with the same interests looks at a <b>location</b> that you have saved as a <b>favorite</b></li><li>Additionally <b>Guide</b> show Spontis with similar interests their view of your city</li>",
-			"bluetoothDescriptionBrowser": "<b>Bluetooth Matching</b><br/>As soon as you have installed our app, you can find suitable Spontis in your immediate vicinity via Bluetooth matching. The browser doesn't support Bluetooth.",
+			"bluetoothDescriptionBrowser": "<b>Bluetooth Matching</b><br/>As soon as you have installed the app, you can find suitable Spontis in your immediate vicinity via Bluetooth matching. The browser doesn't support Bluetooth.",
 			"bluetoothDescriptionLoggedOff": "<b>Bluetooth Matching</b><br/>Log in to find suitable Spontis in your immediate vicinity via Bluetooth matching.",
 			"bluetoothDescriptionOff": "<b>Bluetooth Matching</b><br/>Your Bluetooth is turned off. Activate it to start Bluetooth matching.",
 			"bluetoothOn": "Bluetooth Matching activated",
