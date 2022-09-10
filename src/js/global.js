@@ -268,22 +268,11 @@ class global {
 			}
 			return s;
 		},
-		replaceLinks(protocol, s) {
-			protocol = protocol + '://';
-			var p = -1, p2, s2;
-			while ((p = s.indexOf(protocol, p + 1)) > -1) {
-				p2 = s.indexOf(' ', p);
-				if (p2 < 0 || p2 > s.indexOf('\n', p))
-					p2 = s.indexOf('\n', p);
-				if (p2 < 0)
-					p2 = s.length;
-				if (s.indexOf('"', p) < p2)
-					p2 = s.indexOf('"', p);
-				if (p2 > p + protocol.length && s.substring(p, p2).indexOf('.') > 0) {
-					s2 = '<a onclick="ui.navigation.openHTML(&quot;' + s.substring(p, p2) + '&quot;);event.stopPropagation();" class="internalLink">' + s.substring(p, p2) + '</a>';
-					s = s.substring(0, p) + s2 + s.substring(p2);
-					p += s2.length;
-				}
+		replaceLinks(s) {
+			var match = s.match(/https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)/g);
+			if (match) {
+				for (var i = 0; i < match.length; i++)
+					s = s.replaceAll(match[i], '<a onclick="ui.navigation.openHTML(&quot;' + match[i] + '&quot;);event.stopPropagation();" class="internalLink">' + match[i] + '</a>');
 			}
 			return s;
 		},

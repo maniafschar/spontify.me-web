@@ -173,8 +173,7 @@ class pageChat {
 			return global.string.replaceInternalLinks(s);
 		s = s.trim();
 		s = s.replace(/</g, '&lt;');
-		s = global.string.replaceLinks('http', s);
-		s = global.string.replaceLinks('https', s);
+		s = global.string.replaceLinks(s);
 		s = s.replace(/\n/g, '<br/>');
 		s = global.string.replaceEmoji(s);
 		if (v.contactId == 3 && v.action)

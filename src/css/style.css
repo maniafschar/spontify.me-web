@@ -1578,13 +1578,6 @@ add buttontext {
 	margin-left: -5.5em;
 }
 
-.internalLink {
-	margin: -1em 0;
-	padding: 1em 0;
-	color: rgb(0, 255, 255);
-	cursor: pointer;
-}
-
 homeImage img {
 	height: 100%;
 }
@@ -1873,7 +1866,7 @@ detail detailTogglePanel {
 }
 
 detail {
-	z-index: 2;
+	z-index: 3;
 }
 
 detail>div {

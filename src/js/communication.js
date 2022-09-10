@@ -523,8 +523,7 @@ class communication {
 				e3.innerHTML = 'x';
 				d.insertBefore(e3, null);
 			}
-			e.message = global.string.replaceLinks('http', e.message);
-			e.message = global.string.replaceLinks('https', e.message);
+			e.message = global.string.replaceLinks(e.message);
 			e2.innerHTML = e.message;
 			d.insertBefore(e2, d.children[0]);
 			if (d.style.display != 'block')
