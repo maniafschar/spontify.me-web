@@ -736,6 +736,7 @@
 			"autoNewsMe": "At {0} o'clock ",
 			"birthdays": "Birthdays",
 			"buttonSave": "Set as status message!",
+			"error": "Matching others for \"Any plans for today?\" needs:<ul><li>Your birthday/age</li><li>Your gender</li><li>Your \"Interested in\" details</li></ ul>Please complete this information, then you can get started here.",
 			"location": "I want to go there",
 			"locationLink": "in the location: {0}",
 			"myNotifications": "Notifications",

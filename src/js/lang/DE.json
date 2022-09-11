@@ -736,6 +736,7 @@
 			"autoNewsMe": "Um {0} Uhr ",
 			"birthdays": "Geburtstage",
 			"buttonSave": "Als Statusmeldung setzen!",
+			"error": "Das Matching in \"Heute schon was vor?\" benötigt:<ul><li>Dein Geburtstag/Alter</li><li>Dein Geschlecht</li><li>Deine \"Interessiert an\" Angaben</li></ul>Ergänze diese Angaben bitte, dann kannst Du hier loslegen.",
 			"location": "Da will ich hin",
 			"locationLink": "in der Location: {0}",
 			"myNotifications": "Benachrichtigungen",

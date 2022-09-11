@@ -266,6 +266,10 @@ class pageWhatToDo {
 		}
 	}
 	static save() {
+		if ((!user.contact.ageMale && !user.contact.ageFemale && !user.contact.ageDivers) || !user.contact.age || !user.contact.gender) {
+			ui.navigation.openPopup(ui.l('attention'), ui.l('wtd.error') + '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.edit') + '</buttontext>');
+			return;
+		}
 		formFunc.resetError(ui.q('[name="wtdCategories"]'));
 		formFunc.resetError(ui.q('[name="messageTime"]'));
 		var e = ui.qa('[name="wtdCategories"]:checked');
