@@ -267,7 +267,7 @@ class pageWhatToDo {
 	}
 	static save() {
 		if ((!user.contact.ageMale && !user.contact.ageFemale && !user.contact.ageDivers) || !user.contact.age || !user.contact.gender) {
-			ui.navigation.openPopup(ui.l('attention'), ui.l('wtd.error') + '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.edit') + '</buttontext>');
+			ui.navigation.openPopup(ui.l('attention'), ui.l('wtd.error').replace('{0}', ui.l('wtd.todayIWant')) + '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.edit') + '</buttontext>');
 			return;
 		}
 		formFunc.resetError(ui.q('[name="wtdCategories"]'));
