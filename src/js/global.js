@@ -326,7 +326,7 @@ class global {
 				for (var i = 0; i < load[table].length; i++)
 					search += ' or ' + table + '.id=' + load[table][i];
 				communication.loadList('query=' + table + '_list&distance=100000&search=' + encodeURIComponent('(' + search.substring(4) + ')'), function (l) {
-					var processed = [], t = l[0][0].substring(0, l[0][0].indexOf('.'));
+					var s, e, processed = [], t = l[0][0].substring(0, l[0][0].indexOf('.'));
 					for (var i = 1; i < l.length; i++) {
 						var v = model.convert(t == 'contact' ? new Contact() : new Location(), l, i);
 						var img = v.imageList;
@@ -334,8 +334,8 @@ class global {
 							img = v.event.imageList;
 						if (img)
 							img = global.serverImg + img;
-						var s = t == 'contact' ? v.pseudonym : t == 'location' ? v.name : v.text;
-						var e = ui.qa('[name="autoOpen' + (t == 'contact' ? 'p' : t == 'event' ? 'e' : 'l') + '_' + v.id + '"] > img');
+						s = t == 'contact' ? v.pseudonym : t == 'location' ? v.name : v.text;
+						e = ui.qa('[name="autoOpen' + (t == 'contact' ? 'p' : t == 'event' ? 'e' : 'l') + '_' + v.id + '"] > img');
 						processed[v.id] = 1;
 						if (img) {
 							ui.attr(e, 'src', img);
@@ -349,12 +349,12 @@ class global {
 							e[i2].nextSibling.outerHTML = '<br/>' + s;
 						}
 					}
-					var s = search.substring(search.indexOf('(') + 1, search.indexOf(')')).split(t + '.id=');
+					s = search.substring(search.indexOf('(') + 1, search.indexOf(')')).split(t + '.id=');
 					for (var i = 0; i < s.length; i++) {
 						if (s[i].indexOf(' ') > 0)
 							s[i] = s[i].substring(0, s[i].indexOf(' '));
 						if (s[i] && !processed[s[i]]) {
-							var e = ui.q('[name="autoOpen' + (t == 'contact' ? 'p' : t == 'event' ? 'e' : 'l') + '_' + s[i] + '"]');
+							e = ui.q('[name="autoOpen' + (t == 'contact' ? 'p' : t == 'event' ? 'e' : 'l') + '_' + s[i] + '"]');
 							ui.html(e, ui.l('entry.removed'));
 							ui.attr(e, 'onclick', '');
 							ui.attr(e, 'name', '');
