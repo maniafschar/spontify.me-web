@@ -479,6 +479,7 @@
 			"bluetoothDescriptionOff": "<b>Bluetooth Matching</b><br/>Your Bluetooth is turned off. Activate it to start Bluetooth matching.",
 			"bluetoothOn": "Bluetooth Matching activated",
 			"chatDescription": "<b>Chats</b><br/>After logging in, you will see the list of Spontis with whom you have already chatted.",
+			"contactFavorite": "Here you can send friend requests or block other Spontis.",
 			"contacts": "<b>Networking</b><br/>We match users according to the following criteria, which you can specify in your settings:<ul><li>Attributes you value in others</li><li>Age</li><li>Gender</li><li >Budget</li><li>Locations that you like together</li></ul>Don't forget <b>Bluetooth Matching</b>, which suggests like minded people within 10 meters arround you.",
 			"detail": "The detail page contains<ul><li>contact data</li><li>describtion of the location</li><li>reachability of the location</li><li>map</li><li>various buttons to e.g. add locations to your favorites.</li></ul>",
 			"goToSettings": "Let's create your profile so that you can also get good matches here.<br/>Clicking on the profile icon will take you to your profile.",

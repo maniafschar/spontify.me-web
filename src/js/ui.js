@@ -510,22 +510,24 @@ class ui {
 					attr.list.push({ label: s, class: 'attributeFade' });
 			}
 			if (button.getAttribute('type') == 'user') {
-				var a = user.contact.attrInterest.split('\u0015');
+				var a = user.contact.attrInterest ? user.contact.attrInterest.split('\u0015') : [];
 				for (var i = 0; i < a.length; i++)
 					add2List(ui.attributes[parseInt(a[i], 10)]);
-				a = user.contact.attrInterestEx.split(',');
+				a = user.contact.attrInterestEx ? user.contact.attrInterestEx.split(',') : [];
 				for (var i = 0; i < a.length; i++)
 					add2List(a[i].trim());
 			} else if (button.getAttribute('type').indexOf('category') == 0) {
-				var a = user.contact['attr' + button.getAttribute('type').substring(8)].split('\u0015');
+				var a = user.contact['attr' + button.getAttribute('type').substring(8)];
+				a = a ? a.split('\u0015') : [];
 				var sub = ui.categories[parseInt(button.getAttribute('type').substring(8), 10)].subCategories;
 				for (var i = 0; i < a.length; i++)
 					add2List(sub[parseInt(a[i], 10)]);
-				a = user.contact['attr' + button.getAttribute('type').substring(8) + 'Ex'].split(',');
+				a = user.contact['attr' + button.getAttribute('type').substring(8) + 'Ex'];
+				a = a ? a.split(',') : [];
 				for (var i = 0; i < a.length; i++)
 					add2List(a[i].trim());
 			} else {
-				var a = user.contact.budget.split('\u0015');
+				var a = user.contact.budget ? user.contact.budget.split('\u0015') : [];
 				for (var i = 0; i < a.length; i++) {
 					var s = '', i2 = 0;
 					var max = 1 + parseInt(a[i]);

@@ -805,7 +805,7 @@ ${v.hint}
 					url: global.server + 'action/google?param=' + encodeURIComponent('latlng=' + geoData.latlon.lat + ',' + geoData.latlon.lon),
 					responseType: 'json',
 					success(r) {
-						if (r.formatted)
+						if (r.formatted && !ui.val('[name="address"]'))
 							ui.html('[name="address"]', r.formatted);
 					}
 				});

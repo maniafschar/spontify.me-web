@@ -1,6 +1,7 @@
 import { communication } from './communication';
 import { geoData } from './geoData';
 import { global } from './global';
+import { intro } from './intro';
 import { lists } from './lists';
 import { pageChat } from './pageChat';
 import { pageContact } from './pageContact';
@@ -109,6 +110,8 @@ class details {
 		var e = ui.q('detail card:last-child');
 		if (e.getAttribute('type') == 'location')
 			pageLocation.toggleFavorite(e.getAttribute('i'));
+		else if (user.contact.id == e.getAttribute('i'))
+			intro.openHint({ desc: 'contactFavorite', pos: '-0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
 		else
 			pageContact.toggleBlockUser(e.getAttribute('i'));
 	}
