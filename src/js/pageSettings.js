@@ -350,19 +350,19 @@ class pageSettings {
 					ui.q('settings3').innerHTML = pageSettings.templateSettings3(v);
 					formFunc.initFields('settings3');
 					pageSettings.currentSettings3 = pageSettings.getCurrentSettings3String();
+					var e = function () {
+						if (!pageSettings.hasAttributes()) {
+							if (ui.navigation.getActiveID() == 'settings')
+								intro.openHint({ desc: 'goToSettings2', pos: '-1em,-5em', size: '60%,auto', onclick: 'ui.navigation.goTo(\'settings2\')' });
+							else
+								setTimeout(e, 5000);
+						}
+					};
+					setTimeout(e, 10000);
 				}
 			});
 			return true;
 		}
-		var e = function () {
-			if (!pageSettings.hasAttributes()) {
-				if (ui.navigation.getActiveID() == 'settings')
-					intro.openHint({ desc: 'goToSettings2', pos: '-1em,-5em', size: '60%,auto', onclick: 'ui.navigation.goTo(\'settings2\')' });
-				else
-					setTimeout(e, 5000);
-			}
-		};
-		setTimeout(e, 10000);
 	}
 	static init2() {
 		var v = [];
