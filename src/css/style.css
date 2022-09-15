@@ -856,6 +856,7 @@ listHeader {
 	text-align: center;
 	position: relative;
 	z-index: 1;
+	height: 3.5em;
 	display: block;
 }
 
@@ -1357,21 +1358,23 @@ compass {
 
 detailCompass,
 detailDistance {
-	width: 6em;
-	height: 6em;
-	padding-top: 2.5em;
+	width: 5em;
+	height: 5em;
+	padding-top: 2em;
 	position: absolute;
 	top: 1em;
 	left: 50%;
-	margin-left: -3em;
+	margin-left: -2.5em;
 	opacity: 0.9;
 	line-height: 1;
+	background: rgba(0, 0, 0, 0.2);
+	border-radius: 2.5em;
 }
 
 detailCompass span {
 	position: absolute;
 	font-size: 4em;
-	line-height: 1.3;
+	line-height: 1.2;
 	width: 100%;
 	height: 100%;
 	left: 0;
@@ -1381,11 +1384,11 @@ detailCompass span {
 }
 
 detail detailDistance img {
-	height: 4em;
+	height: 3em;
 	position: absolute;
 	left: 0;
 	top: 1em;
-	opacity: 0.6;
+	opacity: 0.4;
 }
 
 a:link,
@@ -1960,6 +1963,8 @@ detail detailHeader matchIndicator svg {
 	margin: 10px auto;
 	max-width: 80%;
 	max-height: 250px;
+	background: rgba(0, 0, 0, 0.2);
+	border-radius: 2.5em;
 }
 
 detail detailHeader matchIndicator svg .circle-bg {

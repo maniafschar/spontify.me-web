@@ -116,8 +116,7 @@ class communication {
 					ui.navigation.hideMenu();
 					ui.navigation.hidePopup();
 					ui.html(divID + ' listResults', s);
-					if (divID != 'search')
-						ui.html(divID + ' filters>div', '');
+					ui.html(divID + ' filters>div', '');
 					if (menuIndex > -1)
 						ui.attr(divID, 'menuIndex', menuIndex);
 					ui.q(divID + ' listBody').scrollTop = 0;
@@ -247,8 +246,7 @@ class communication {
 						e[1].style.display = '';
 						if (!global.isBrowser()) {
 							bluetooth.stop();
-							if (user.contact.findMe)
-								bluetooth.requestAuthorization(true);
+							bluetooth.requestAuthorization(true);
 						}
 						if (!user.contact.aboutMe && !user.contact.budget
 							&& !user.contact.gender && !user.contact.birthday
@@ -482,15 +480,19 @@ class communication {
 			ui.navigation.openPopup(ui.l('attention'), ui.l('pushTokenError').replace('{0}', e.message));
 		},
 		open(e) {
-			if (e) {
+			if (e && e.additionalData && e.additionalData.notificationId) {
 				communication.notification.data.push(e);
 				communication.setApplicationIconBadgeNumber(e.count);
 				ui.css(ui.q('badgeNotifications').parentElement, 'display', '');
+				return;
 			}
 			var d = ui.q('alert');
 			if (d.innerHTML)
 				return;
-			e = communication.notification.data.splice(0, 1)[0];
+			if (e)
+				communication.ping();
+			else
+				e = communication.notification.data.splice(0, 1)[0];
 			var e2 = document.createElement('div'), action;
 			e2.setAttribute('message', encodeURIComponent(e.message));
 			if (e.additionalData) {

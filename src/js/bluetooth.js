@@ -27,7 +27,7 @@ class bluetooth {
 		return a.buffer;
 	}
 	static registerDevice(device) {
-		if (user.contact && user.contact.findMe && device && device.id) {
+		if (user.contact && device && device.id) {
 			if (window.localStorage.getItem('findMeIDs') && window.localStorage.getItem('findMeIDs').indexOf('|' + device.id + '|') < 0) {
 				window.localStorage.setItem('findMeIDs', window.localStorage.getItem('findMeIDs') + device.id + '|');
 				ble.connect(device.id, function () {
@@ -66,7 +66,7 @@ class bluetooth {
 					if (showHint)
 						intro.openHint({ desc: 'bluetoothOn', pos: '-0.5em,-4.5em', size: 'auto,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
 					showHint = false;
-				} else if (user.contact.findMe)
+				} else
 					ui.navigation.openPopup(ui.l('attention'), ui.l('findMe.bluetoothDeactivated'));
 			})
 		};
@@ -91,7 +91,7 @@ class bluetooth {
 			blePeripheral.publishService(bluetooth.UUID_SERVICE),
 			blePeripheral.startAdvertising(bluetooth.UUID_SERVICE, 'spontifyme'),
 			blePeripheral.onWriteRequest(function (json) {
-				if (user.contact && user.contact.findMe) {
+				if (user.contact) {
 					var id = bluetooth.decode(json.value);
 					if (id)
 						communication.ajax({
@@ -123,12 +123,12 @@ class bluetooth {
 		else if (!user.contact)
 			intro.openHint({ desc: 'bluetoothDescriptionLoggedOff', pos: '-0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
 		else if (window.localStorage.getItem('findMeIDs'))
-			user.save({ findMe: false }, bluetooth.stop);
+			bluetooth.stop();
 		else {
 			if ((!user.contact.ageMale && !user.contact.ageFemale && !user.contact.ageDivers) || !user.contact.age || !user.contact.gender)
 				ui.navigation.openPopup(ui.l('attention'), ui.l('wtd.error').replace('{0}', ui.l('wtd.bluetoothMatching')) + '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.edit') + '</buttontext>');
 			else
-				user.save({ findMe: true }, bluetooth.requestAuthorization);
+				bluetooth.requestAuthorization();
 		}
 	}
 	static stop() {

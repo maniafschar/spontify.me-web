@@ -91,8 +91,11 @@ class pageChat {
 		e.scrollTop = e.scrollTop + i;
 	}
 	static close(event, exec) {
-		if (event && event.target.nodeName != 'CHATINPUT')
-			return;
+		if (event) {
+			var s = event.target.nodeName.toLowerCase();
+			if (event.target.onclick || s == 'textarea' || s == 'img' || s == 'note')
+				return;
+		}
 		var e = ui.q('chat');
 		if (ui.cssValue(e, 'display') == 'none')
 			return false;
@@ -313,7 +316,7 @@ class pageChat {
 					e = ui.q('chat');
 					ui.css(e, 'display', 'none');
 					ui.attr(e, 'type', location ? 'location' : 'contact');
-					ui.html(e, '<listHeader onclick="ui.navigation.autoOpen(&quot;' + global.encParam((location ? 'l=' : 'p=') + id) + '&quot;,event)"><img /><chatName></chatName><chatDate></chatDate></listHeader><div></div>');
+					ui.html(e, '<listHeader><img /><chatName></chatName><chatDate></chatDate></listHeader><div></div>');
 					if (location) {
 						ui.classAdd(e, 'location');
 						var path = 'popup detail';
@@ -351,11 +354,6 @@ class pageChat {
 					pageChat.init();
 					ui.off('chatConversation', 'scroll', pageChat.reposition);
 					pageChat.detailChat(r, id);
-					ui.swipe('chatInput', function (dir) {
-						if (dir == 'up')
-							pageChat.close();
-					}, 'textarea');
-					ui.on('chatInput', 'click', pageChat.close);
 					ui.on('chatConversation', 'scroll', pageChat.reposition);
 					setTimeout(() => {
 						ui.css('chat', 'display', 'block');

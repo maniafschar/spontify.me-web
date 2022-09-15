@@ -81,7 +81,7 @@ class Contact extends BaseEntity {
 	birthdayDisplay;
 	budget;
 	filter;
-	findMe;
+	findMe; // TODO rm on 0.2.0
 	gender;
 	guide;
 	idDisplay;

@@ -3,6 +3,7 @@ import { details } from './details';
 import { geoData } from './geoData';
 import { global } from './global';
 import { lists } from './lists';
+import { pageChat } from './pageChat';
 import { pageHome } from './pageHome';
 import { pageLocation } from './pageLocation';
 import { ui, formFunc } from './ui';
@@ -168,6 +169,7 @@ class initialisation {
 				ui.navigation.goTo('home');
 			}
 		});
+		ui.on('chat', 'click', pageChat.close);
 		ui.on('popup', 'click', function (event) {
 			var e = event.target;
 			if (e.nodeName != 'INPUT' && e.nodeName != 'TEXTAREA'
@@ -295,8 +297,8 @@ class initialisation {
 				f = 14;
 			if (w > 600)
 				f = f + w / 600;
-			if (global.getDevice() == 'phone' && user.scale)
-				f *= user.scale;
+			if (global.getDevice() == 'phone')
+				f *= 1.1;
 			ui.css('main', 'margin-left', 0);
 			ui.css('main', 'width', '');
 			ui.classAdd('body', 'app');
