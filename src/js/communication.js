@@ -200,7 +200,7 @@ class communication {
 							user.contact.storage = {};
 						}
 						ui.css('progressbar', 'display', 'none');
-						communication.notification.clear();
+						communication.notification.clear(true);
 						if (global.language != user.contact.language)
 							initialisation.setLanguage(user.contact.language);
 						if (user.contact.birthday && user.contact.birthday.trim().length > 8 && !exec) {
