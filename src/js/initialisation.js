@@ -170,6 +170,16 @@ class initialisation {
 			}
 		});
 		ui.on('chat', 'click', pageChat.close);
+		ui.swipe('chat', function (dir, event) {
+			if (dir == 'up') {
+				if (ui.parents(event.target, 'chatConversation')) {
+					var e = ui.q('chatConversation');
+					if (e.lastChild.offsetHeight + e.lastChild.offsetTop > e.scrollTop + e.offsetHeight)
+						return;
+				}
+				pageChat.close();
+			}
+		});
 		ui.on('popup', 'click', function (event) {
 			var e = event.target;
 			if (e.nodeName != 'INPUT' && e.nodeName != 'TEXTAREA'
