@@ -101,7 +101,7 @@ ${v.eventPrice}
 <div>${v.maxParticipants}${v.eventMustBeConfirmed}</div>
 <span id="eventParticipants"></span>
 ${v.eventLinkClose}
-<div style="margin-top:1em;">${v.eventParticipationButtons}</div>
+${v.eventParticipationButtons}
 </text>`;
 
 	static detail(v) {
@@ -112,7 +112,29 @@ ${v.eventLinkClose}
 			var s = global.date.formatDate(v.event.endDate);
 			v.endDate = ' (' + ui.l('events.type_' + v.event.type) + ' ' + ui.l('to') + ' ' + s.substring(s.indexOf(' ') + 1, s.lastIndexOf(' ')) + ')';
 		}
-		var state;
+		var state, endDate = global.date.server2Local(v.event.endDate), today = new Date();
+		today.setHours(0);
+		today.setMinutes(0);
+		today.setSeconds(0);
+		if (('' + v.id).indexOf('_') < 0 && endDate.getFullYear() > today.getFullYear() || endDate.getFullYear() == today.getFullYear() &&
+			(endDate.getMonth() > today.getMonth() || endDate.getMonth() == today.getMonth() &&
+				endDate.getDate() >= today.getDate())) {
+			var d = global.date.server2Local(v.event.startDate);
+			if (v.event.type == 'w1') {
+				while (d < today)
+					d.setDate(d.getDate() + 7);
+			} else if (v.event.type == 'w2') {
+				while (d < today)
+					d.setDate(d.getDate() + 14);
+			} else if (v.event.type == 'm') {
+				while (d < today)
+					d.setMonth(d.getMonth() + 1);
+			} else if (v.event.type == 'y') {
+				while (d < today)
+					d.setFullYear(d.getFullYear() + 1);
+			}
+			v.id = v.id + '_' + d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+		}
 		if (('' + v.id).indexOf('_') < 0) {
 			v.date = global.date.formatDate(v.event.startDate);
 			v.date = '<eventOutdated>&nbsp;' + v.date;
@@ -296,6 +318,8 @@ ${v.eventLinkClose}
 			text += '<buttontext pID="' + (participation.id ? participation.id : '') + '" s="' + (participation.id ? participation.state : '') + '" confirm="' + v.event.confirm + '" class="bgColor" onclick="events.participate(event,' + JSON.stringify(p).replace(/"/g, '&quot;') + ')" max="' + (v.maxParticipants ? v.maxParticipants : 0) + '">' + ui.l('events.participante' + (participation.state == 1 ? 'Stop' : '')) + '</buttontext>';
 		if (v.CP && v.CP.length > 1)
 			text += '<buttontext class="bgColor" onclick="events.toggleParticipants(event,' + JSON.stringify(p) + ',' + v.event.confirm + ')">' + ui.l('events.participants') + '</buttontext>';
+		if (text)
+			text = '<div style="margin-top:1em;">' + text + '</div>';
 		return text;
 	}
 	static getParticipation(p) {

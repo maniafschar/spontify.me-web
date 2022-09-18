@@ -641,7 +641,7 @@ class communication {
 				else
 					ui.classAdd(e.parentNode, 'pulse highlight');
 				e = ui.q('badgeNotifications');
-				if (r.notification != e.innerHTML) {
+				if (r.notification != communication.notification.data.length) {
 					communication.ajax({
 						url: global.server + 'db/list?query=contact_listNotification&search=' + encodeURIComponent('contactNotification.seen=false'),
 						responseType: 'json',

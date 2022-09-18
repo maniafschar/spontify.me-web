@@ -1725,6 +1725,12 @@ detail auxEvents.participate::before {
 	margin-right: 0;
 }
 
+detail .event {
+	padding: 0.5em 1em;
+	background: rgba(0, 0, 0, 0.075);
+	margin-top: 1em;
+}
+
 .itemTitle,
 .itemTitle div {
 	overflow: hidden;
