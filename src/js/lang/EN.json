@@ -399,7 +399,7 @@
 			"myEvents": "Favourite Events",
 			"new": "Add new event",
 			"newHint": "Small events, for example, you've reserved a table at a restaurant, and also larger events are welcome.",
-			"next": "Next {0}",
+			"next": "Coming {0}",
 			"noEvents": "At the moment, no Events found.",
 			"noMarks": "No one has marked the event so far.",
 			"noParticipant": "Up to now, no one takes part in the ",
@@ -665,7 +665,7 @@
 		},
 		"register": {
 			"errorPseudonym": "The name must be at least 8 characters.",
-			"errorPseudonymSyntax": "Only characters a-z, digits 0-9, space and following special characters are allowed: - _ . + * # § $ % & / ( ) [ ] { } ^ = ? ! \\ .",
+			"errorPseudonymSyntax": "Only characters a-z, digits 0-9, space and following special characters are allowed: - _ . + * # § $ % & / ^ \\",
 			"notComplete": "Your registration is not complete. Only complete registered profiles are visible here in ${appTitle} to other Spontis.",
 			"success": "Thank you for your registration.<br/>An email was just sent to you. Please, click on the login link.",
 			"title": "Registration"

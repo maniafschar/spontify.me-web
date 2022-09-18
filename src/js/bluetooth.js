@@ -123,12 +123,12 @@ class bluetooth {
 		else if (!user.contact)
 			intro.openHint({ desc: 'bluetoothDescriptionLoggedOff', pos: '-0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
 		else if (window.localStorage.getItem('findMeIDs'))
-			bluetooth.stop();
+			user.save({ findMe: false }, bluetooth.stop);
 		else {
 			if ((!user.contact.ageMale && !user.contact.ageFemale && !user.contact.ageDivers) || !user.contact.age || !user.contact.gender)
 				ui.navigation.openPopup(ui.l('attention'), ui.l('wtd.error').replace('{0}', ui.l('wtd.bluetoothMatching')) + '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.edit') + '</buttontext>');
 			else
-				bluetooth.requestAuthorization();
+				user.save({ findMe: true }, bluetooth.requestAuthorization);
 		}
 	}
 	static stop() {

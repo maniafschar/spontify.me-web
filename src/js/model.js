@@ -81,7 +81,7 @@ class Contact extends BaseEntity {
 	birthdayDisplay;
 	budget;
 	filter;
-	findMe; // TODO rm on 0.2.0
+	findMe;
 	gender;
 	guide;
 	idDisplay;
@@ -174,6 +174,7 @@ class Chat extends BaseEntity {
 	locationId;
 	note;
 	seen;
+	textId;
 }
 
 class Event extends BaseEntity {

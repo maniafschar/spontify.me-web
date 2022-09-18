@@ -128,7 +128,7 @@ class communication {
 	}
 	static login = {
 		regexPseudonym: /[^A-Za-zÀ-ÿ]/,
-		regexPW: /[^a-zA-ZÀ-ÿ0-9-_.+*#§$%&/(){}\[\]\^=?! \\]/,
+		regexPW: /[^a-zA-ZÀ-ÿ0-9-_.+*#§$%&/\\ \^']/,
 
 		autoLogin(exec) {
 			if (!global.getParam('r')) {
@@ -610,11 +610,11 @@ class communication {
 				e.innerHTML = global.appTitle;
 				if (!user.contact || r.userId != user.contact.id)
 					return;
-				var total = 0;
 				user.contact.tsVisits = r.visit;
+				var total = 0;
+				var chatNew = false;
 				var chat = 0;
 				if (r.chatNew) {
-					var chatNew = false;
 					for (var i in r.chatNew) {
 						var e2 = ui.q('chatUserList [i="' + i + '"] badge');
 						chat += r.chatNew[i];

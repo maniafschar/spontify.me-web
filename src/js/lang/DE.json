@@ -399,7 +399,7 @@
 			"myEvents": "meine Events",
 			"new": "Neues Event hinzufügen",
 			"newHint": "Kleine Events, z.B. Du hast einen Tisch in einem Restaurant reserviert, und auch größere Events sind willkommen.",
-			"next": "Nächsten {0}",
+			"next": "Kommenden {0}",
 			"noEvents": "Momentan wurden keine Events gefunden.",
 			"noMarks": "Keiner hat sich das Event bis jetzt vorgemerkt.",
 			"noParticipant": "Keiner nimmt bis jetzt an dem Event teil.",
@@ -665,7 +665,7 @@
 		},
 		"register": {
 			"errorPseudonym": "Der Name muss mindestens 8-stellig sein.",
-			"errorPseudonymSyntax": "Nur Buchstaben a-z, Ziffern 0-9, Leerzeichen und folgende Sonderzeichen sind erlaubt: - _ . + * # § $ % & / ( ) [ ] { } ^ = ? ! \\ .",
+			"errorPseudonymSyntax": "Nur Buchstaben a-z, Ziffern 0-9, Leerzeichen und folgende Sonderzeichen sind erlaubt: - _ . + * # § $ % & / ^ \\",
 			"notComplete": "Du hast Deine Registrierung nicht abgeschlossen. Erst wenn Du die Registrierung abschliesst, bist Du in ${appTitle} für andere sichtbar.",
 			"success": "Vielen Dank für Deine Registrierung.<br/>Eine Email wurde Dir soeben zugesendet. In dieser stehen Deine Login Daten.",
 			"title": "Anmeldung"
