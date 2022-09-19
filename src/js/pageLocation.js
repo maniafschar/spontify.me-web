@@ -64,22 +64,22 @@ class pageLocation {
 		</matchIndicator>
 	</detailImg>
 </detailHeader>
+${v.eventDetails}
+${v.description}
 <text>
 	${v.telOpenTag}${v.address}<br/>${v.tel}${v.telCloseTag}
 </text>
 ${v.attributes}
 ${v.budget}
-${v.eventDetails}
-${v.description}
 <text>
-	${v.bonus}
-	${v.rating}
-	${v.parking}
-	<openTimes></openTimes>
-	<div>${v.openTimesBankholiday}</div>
-	<div>${v.openTimesText}</div>
+${v.bonus}
+${v.rating}
+${v.parking}
+<openTimes></openTimes>
+<div>${v.openTimesBankholiday}</div>
+<div>${v.openTimesText}</div>
 </text>
-<img class="map" i="${v.id}"
+<img class="map"
 	onclick="ui.navigation.openHTML(&quot;https://maps.google.com/maps/dir/${geoData.latlon.lat},${geoData.latlon.lon}/${v.latitude},${v.longitude}&quot;)" />
 <detailButtons>
 	<buttontext class="bgColor${v.pressedCopyButton}" name="buttonCopy"
@@ -124,8 +124,7 @@ ${v.description}
 </text>
 <text name="marketing" class="collapsed">
 	<detailTogglePanel></detailTogglePanel>
-</text>
-<text name="participants" class="collapsed" style="padding:1em 0.5em 0 0.5em;"></text>`;
+</text>`;
 	static templateEdit = v =>
 		global.template`<form name="editElement">
 <input type="hidden" name="id" transient="true" value="${v.id}" />
@@ -398,7 +397,7 @@ ${v.hint}
 		if (v.ownerId && v.url)
 			v.description = (v.description ? v.description + ' ' : '') + ui.l('locations.clickForMoreDetails');
 		if (v.description)
-			v.description = '<div style="margin-top:1em;"><text class="description">' + v.description.replace(/\n/g, '<br/>') + '</text></div>';
+			v.description = '<text class="description">' + v.description.replace(/\n/g, '<br/>') + '</text>';
 		if (ui.q('locations').innerHTML) {
 			if (!details.getNextNavElement(true, id))
 				v.hideNext = 'display:none;';

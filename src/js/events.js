@@ -116,9 +116,9 @@ ${v.eventParticipationButtons}
 		today.setHours(0);
 		today.setMinutes(0);
 		today.setSeconds(0);
-		if (('' + v.id).indexOf('_') < 0 && endDate.getFullYear() > today.getFullYear() || endDate.getFullYear() == today.getFullYear() &&
+		if (('' + v.id).indexOf('_') < 0 && (endDate.getFullYear() > today.getFullYear() || endDate.getFullYear() == today.getFullYear() &&
 			(endDate.getMonth() > today.getMonth() || endDate.getMonth() == today.getMonth() &&
-				endDate.getDate() >= today.getDate())) {
+				endDate.getDate() >= today.getDate()))) {
 			var d = global.date.server2Local(v.event.startDate);
 			if (v.event.type == 'w1') {
 				while (d < today)
@@ -319,7 +319,7 @@ ${v.eventParticipationButtons}
 		if (v.CP && v.CP.length > 1)
 			text += '<buttontext class="bgColor" onclick="events.toggleParticipants(event,' + JSON.stringify(p) + ',' + v.event.confirm + ')">' + ui.l('events.participants') + '</buttontext>';
 		if (text)
-			text = '<div style="margin-top:1em;">' + text + '</div>';
+			text = '<div style="margin:1em 0;">' + text + '</div><text name="participants" style="margin:0 -1em;"></text>';
 		return text;
 	}
 	static getParticipation(p) {
@@ -667,14 +667,13 @@ ${v.eventParticipationButtons}
 	static toggleParticipants(event, id, confirm) {
 		if (event.stopPropagation)
 			event.stopPropagation();
-		var d = id.substring(id.lastIndexOf('_') + 1), i = id.substring(id.indexOf('_') + 1, id.lastIndexOf('_'));
 		var e = ui.q('detail card:last-child[i="' + id + '"] [name="participants"]');
 		if (e.innerHTML)
-			details.togglePanel(e);
+			ui.toggleHeight(e);
 		else {
-			communication.loadList('query=event_list&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + i + ' and eventParticipate.eventDate=\'' + d + '\''), function (l) {
-				e.innerHTML = l.length < 2 ? '<div style="margin-bottom:1em;">' + ui.l('events.no' + (confirm == 1 ? 'Participant' : 'Marks')) + '</div>' : '<div style="padding:0;margin:0;"><div style="margin-bottom:1em;">' + ui.l('events.participants') + '</div>' + pageContact.listContactsInternal(l) + '</div>';
-				details.togglePanel(e);
+			communication.loadList('query=event_participate&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id.split('_')[0] + ' and eventParticipate.eventDate=\'' + id.split('_')[1] + '\''), function (l) {
+				e.innerHTML = l.length < 2 ? '<div style="margin-bottom:1em;">' + ui.l('events.no' + (confirm == 1 ? 'Participant' : 'Marks')) + '</div>' : pageContact.listContactsInternal(l);
+				ui.toggleHeight(e);
 				return '&nbsp;';
 			});
 		}

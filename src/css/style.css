@@ -1713,7 +1713,7 @@ detail .participate::before {
 	font-size: 6em;
 	opacity: 0.3;
 	color: rgb(252, 251, 104);
-	bottom: 0.4em;
+	top: 1.3em;
 	right: 50%;
 	margin-right: -0.4em;
 	line-height: 1;
@@ -1728,7 +1728,8 @@ detail auxEvents.participate::before {
 detail .event {
 	padding: 0.5em 1em;
 	background: rgba(0, 0, 0, 0.075);
-	margin-top: 1em;
+	margin: 1em -1em;
+	border-radius: 0;
 }
 
 .itemTitle,
@@ -1847,8 +1848,8 @@ text {
 }
 
 text.description {
-	display: inline-block;
-	padding: 0.5em 1em;
+	margin: 1em -1em;
+	padding: 1em;
 	background: rgba(0, 0, 0, 0.075);
 }
 
