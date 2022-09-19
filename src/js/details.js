@@ -108,9 +108,12 @@ class details {
 	}
 	static toggleFavorite() {
 		var e = ui.q('detail card:last-child');
-		if (e.getAttribute('type') == 'location')
-			pageLocation.toggleFavorite(e.getAttribute('i'));
-		else if (user.contact.id == e.getAttribute('i'))
+		if (e.getAttribute('type') == 'location') {
+			var id = e.getAttribute('i');
+			if (('' + id).indexOf('_') > 0)
+				id = id.substring(0, id.indexOf('_'));
+			pageLocation.toggleFavorite(id);
+		} else if (user.contact.id == e.getAttribute('i'))
 			intro.openHint({ desc: 'contactFavorite', pos: '-0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
 		else
 			pageContact.toggleBlockUser(e.getAttribute('i'));
