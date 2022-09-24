@@ -62,6 +62,10 @@ class ui {
 	static buttonIcon(e, image, click) {
 		if (typeof e == 'string')
 			e = ui.q('buttonIcon' + e);
+		if (!e) {
+			communication.sendError('buttonIcon ' + e + ' - ' + image + ' - ' + click);
+			return;
+		}
 		e.innerHTML = image.indexOf('<') == 0 ? image : '<img source="' + image + '.svg" />';
 		e.setAttribute('onclick', click);
 		ui.classRemove(e, 'pulse highlight bluetoothInactive');

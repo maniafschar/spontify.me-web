@@ -74,26 +74,30 @@ class lists {
 		if (ui.q('detail card:last-child [i="' + id + '"]'))
 			ui.q('detail card:last-child [i="' + id + '"]').outerHTML = '';
 		var l = lists.data[activeID];
-		for (var i = l.length - 1; i > 0; i--) {
-			if (id == model.convert(activeID == 'locations' ? new Location() : new Contact(), l, i).id)
-				l.splice(i, 1);
+		if (l) {
+			for (var i = l.length - 1; i > 0; i--) {
+				if (id == model.convert(activeID == 'locations' ? new Location() : new Contact(), l, i).id)
+					l.splice(i, 1);
+			}
 		}
 		var e = ui.q(activeID + ' row[i="' + id + '"]');
-		ui.navigation.animation(e, 'homeSlideOut', function () {
-			if (e.nextSibling) {
-				var e2 = e.nextSibling;
-				e2.style.transition = 'none';
-				e2.style.marginTop = e.offsetHeight + 'px';
-				setTimeout(function () {
-					e2.style.transition = '';
-					e2.style.marginTop = 0;
-				}, 100);
-			}
-			e.outerHTML = '';
-			lists.setListHint(activeID);
-			if (!ui.q(activeID + ' row'))
-				ui.navigation.toggleMenu();
-		});
+		if (e) {
+			ui.navigation.animation(e, 'homeSlideOut', function () {
+				if (e.nextSibling) {
+					var e2 = e.nextSibling;
+					e2.style.transition = 'none';
+					e2.style.marginTop = e.offsetHeight + 'px';
+					setTimeout(function () {
+						e2.style.transition = '';
+						e2.style.marginTop = 0;
+					}, 100);
+				}
+				e.outerHTML = '';
+				lists.setListHint(activeID);
+				if (!ui.q(activeID + ' row'))
+					ui.navigation.toggleMenu();
+			});
+		}
 	}
 	static removeListEntryUI(event) {
 		var e = ui.parents(event.target, 'row');

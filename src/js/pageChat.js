@@ -129,6 +129,8 @@ class pageChat {
 				pageWhatToDo.init();
 			else if (activeID == 'home')
 				pageHome.init();
+			else if (activeID == 'detail')
+				details.init();
 			else if (activeID == 'settings' || activeID == 'settings2' || activeID == 'settings3')
 				pageSettings.init();
 			if (exec && exec.call)
@@ -635,12 +637,12 @@ class pageChat {
 			ui.classAdd(e, 'pressed');
 	}
 	static toggleUserList() {
-		if (ui.navigation.getActiveID() == 'detail') {
-			var e = ui.q('detail card:last-child');
+		var e = ui.q('detail card:last-child');
+		if (ui.navigation.getActiveID() == 'detail' && user.contact.id != e.getAttribute('i'))
 			pageChat.open(e.getAttribute('i'), e.getAttribute('type') == 'location');
-		} else if (user.contact)
+		else if (user.contact)
 			ui.toggleHeight('chatUserList');
 		else
-			intro.openHint({ desc: 'chatDescription', pos: '0.5em,-4em', size: '80%,auto' });
+			intro.openHint({ desc: 'chatDescription', pos: '0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1em;' });
 	}
 };

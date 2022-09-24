@@ -73,7 +73,8 @@ class pageLogin {
     <field>
         <label>${ui.l('pseudonym')}</label>
         <value>
-			<input type="text" name="pseudonym" value="${v.pseudonym}" maxlength="30" />
+			<input type="text" name="pseudonym" value="${v.pseudonym}" maxlength="30"
+				onblur="pageLogin.validatePseudonym()" />
 			<input type="text" name="name" value="" maxlength="30" />
 			<input type="hidden" name="language" />
 			<input type="hidden" name="os" />
@@ -98,7 +99,8 @@ class pageLogin {
     <field>
         <label>${ui.l('info.legalTitle')}</label>
         <value>
-            <input type="checkbox" value="true" ${v.agb} name="agb" label="${ui.l('login.legal')}" />
+            <input type="checkbox" value="true" ${v.agb} name="agb" label="${ui.l('login.legal')}"
+				onclick="pageLogin.validateAGB()" />
         </value>
     </field>
     <dialogButtons>
@@ -147,7 +149,7 @@ class pageLogin {
 			communication.login.login(u.value, p.value, ui.q('[name="autoLogin"]:checked'));
 	}
 	static getDraft() {
-		var v = window.localStorage.getItem('login');
+		var v = window.localStorage && window.localStorage.getItem('login');
 		if (v)
 			try {
 				return JSON.parse(v);
@@ -198,22 +200,11 @@ class pageLogin {
 	}
 	static register() {
 		formFunc.validation.email(ui.q('input[name="email"]'));
-		var e = ui.q('input[name="pseudonym"]');
-		e.value = communication.login.getRealPseudonym(e.value);
-		if (e.value.length < 8)
-			formFunc.setError(e, 'register.errorPseudonym');
-		else if (e.value.match(communication.login.regexPW))
-			formFunc.setError(e, 'register.errorPseudonymSyntax');
-		else
-			formFunc.validation.filterWords(e);
-		e = ui.q('input[name="agb"]');
-		if (e.checked)
-			formFunc.resetError(e);
-		else
-			formFunc.setError(e, 'settings.noAGB');
+		pageLogin.validatePseudonym();
+		pageLogin.validateAGB();
 		formFunc.validation.birthday(ui.q('input[name="birthday"]'));
 		if (!ui.q('[name=loginRegister] errorHint')) {
-			e = ui.q('input[name="name"]');
+			var e = ui.q('input[name="name"]');
 			if (e)
 				ui.attr(e, 'name', 'time');
 			ui.q('input[name="time"]').value = new Date().getTime() - pageLogin.timestamp;
@@ -304,5 +295,22 @@ class pageLogin {
 		formFunc.initFields('#loginBodyDiv');
 		ui.css('input[name="name"]', 'position', 'absolute');
 		ui.css('input[name="name"]', 'right', '200%');
+	}
+	static validateAGB() {
+		var e = ui.q('input[name="agb"]');
+		if (e.checked)
+			formFunc.resetError(e);
+		else
+			formFunc.setError(e, 'settings.noAGB');
+	}
+	static validatePseudonym() {
+		var e = ui.q('input[name="pseudonym"]');
+		e.value = communication.login.getRealPseudonym(e.value);
+		if (e.value.length < 8)
+			formFunc.setError(e, 'register.errorPseudonym');
+		else if (e.value.match(communication.login.regexPW))
+			formFunc.setError(e, 'register.errorPseudonymSyntax');
+		else
+			formFunc.validation.filterWords(e);
 	}
 }

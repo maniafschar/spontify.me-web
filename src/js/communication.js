@@ -135,7 +135,7 @@ class communication {
 
 		autoLogin(exec) {
 			if (!global.getParam('r')) {
-				var token = window.localStorage.getItem('autoLogin');
+				var token = window.localStorage && window.localStorage.getItem('autoLogin');
 				if (token) {
 					communication.ajax({
 						url: global.server + 'authentication/loginAuto?token=' + encodeURIComponent(Encryption.encPUB(token)) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
@@ -286,7 +286,7 @@ class communication {
 		logoff() {
 			if (!user.contact)
 				return;
-			var token = window.localStorage.getItem('autoLogin');
+			var token = window.localStorage && window.localStorage.getItem('autoLogin');
 			token = token ? '?token=' + encodeURIComponent(Encryption.encPUB(token)) : '';
 			communication.ajax({
 				url: global.server + 'authentication/logoff' + token,
@@ -686,12 +686,7 @@ class communication {
 		body += '\n\nOS\n\t' + global.getOS();
 		body += '\n\nVERSION\n\t' + global.appVersion;
 		body += '\n\nLOCALIZED\n\t' + geoData.localized;
-		body += '\n\nLANG\n\t' + global.language;
-		try {
-			body += '\n\nSTACK\n\t' + new Error().stack.replace(/\n/g, '\n\t');
-		} catch (e) {
-			body += '\n\nSTACK\n\t' + e;
-		}
+		body += '\n\nLANG' + global.language;
 		communication.ajax({
 			url: global.server + 'action/notify',
 			method: 'POST',

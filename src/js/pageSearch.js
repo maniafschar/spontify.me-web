@@ -260,7 +260,7 @@ class pageSearch {
 		}
 		ui.css('main>buttonIcon', 'display', 'none');
 		ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
-		ui.buttonIcon('.left.top', 'filter', 'lists.toggleFilter(event, pageSearch.getFilterFields)');
+		ui.buttonIcon('.top.left', 'filter', 'lists.toggleFilter(event, pageSearch.getFilterFields)');
 		pageChat.buttonChat();
 	}
 	static repeatSearch() {

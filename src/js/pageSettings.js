@@ -336,7 +336,6 @@ class pageSettings {
 						v['genderInterest2'] = 'checked';
 					if (v['contact.ageDivers'])
 						v['genderInterest3'] = 'checked';
-					v['forever'] = window.localStorage.getItem('autoLogin') ? '' : 'display:none;';
 					ui.html('settings', pageSettings.templateSettings1(v));
 					formFunc.initFields('settings');
 					if (!v['contact.ageFemale'])

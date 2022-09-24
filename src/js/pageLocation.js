@@ -685,8 +685,8 @@ ${v.hint}
 	static init() {
 		ui.css('main>buttonIcon', 'display', 'none');
 		ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
-		ui.buttonIcon('.right.top', 'menu', 'ui.navigation.toggleMenu()');
-		ui.buttonIcon('.left.top', 'filter', 'lists.toggleFilter(event, pageLocation.getFilterFields)');
+		ui.buttonIcon('.top.right', 'menu', 'ui.navigation.toggleMenu()');
+		ui.buttonIcon('.top.left', 'filter', 'lists.toggleFilter(event, pageLocation.getFilterFields)');
 		pageChat.buttonChat();
 		if (!ui.q('locations').innerHTML)
 			lists.setListDivs('locations');
