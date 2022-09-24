@@ -352,6 +352,7 @@
 			"relation": "Verbindung",
 			"requestFriendship": "Freundschaftsanfrage senden",
 			"requestFriendshipAlreadySent": "Freundschaftsanfrage versendet, warte auf Bestätigung.",
+			"requestFriendshipCanceled": "Freundschaftsanfrage abgebrochen",
 			"requestFriendshipConfirm": "Bestätigen",
 			"requestFriendshipFriends": "Freundschaft bestätigt!",
 			"requestFriendshipHint": "Bitte bestätige nur Spontis, die Du tatsächlich kennst und mit denen Du auch gerne etwas unternimmst! Im Zweifel, lehne die Anfrage ab!",

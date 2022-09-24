@@ -86,6 +86,14 @@ class details {
 						}
 					}
 					geoData.updateCompass();
+					ui.css('main>buttonIcon', 'display', 'none');
+					ui.buttonIcon('.bottom.right', 'favorite', 'details.toggleFavorite()');
+					ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
+					pageChat.buttonChat();
+					if (ui.classContains('detail card:last-child detailHeader', 'favorite'))
+						ui.classAdd('main>buttonIcon.bottom.right', 'highlight');
+					else
+						ui.classRemove('main>buttonIcon.bottom.right', 'highlight');
 				}
 			}
 		});

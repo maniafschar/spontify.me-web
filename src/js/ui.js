@@ -13,6 +13,7 @@ import { pageWhatToDo } from './pageWhatToDo';
 import { pageSearch } from './pageSearch';
 import { pageSettings } from './pageSettings';
 import { user } from './user';
+import { pageHome } from './pageHome';
 
 export { ui, formFunc };
 
@@ -58,6 +59,15 @@ class ui {
 		${ui.l('group.action')}
 	</a>
 </container>`;
+	static buttonIcon(e, image, click) {
+		if (typeof e == 'string')
+			e = ui.q('buttonIcon' + e);
+		e.innerHTML = image.indexOf('<') == 0 ? image : '<img source="' + image + '.svg" />';
+		e.setAttribute('onclick', click);
+		ui.classRemove(e, 'pulse highlight bluetoothInactive');
+		e.style.display = '';
+		formFunc.image.replaceSVGs();
+	}
 	static getAttributes(compare, style) {
 		var result = {
 			attributesCategories: [],
@@ -227,10 +237,6 @@ class ui {
 			};
 			f.call();
 		},
-		displayMainButtons(id) {
-			ui.css('main>buttonIcon', 'display', id == 'home' || id == 'chat' ? 'none' : '');
-			ui.css('main>#buttonFavorite', 'display', id == 'detail' ? '' : 'none');
-		},
 		fade(id, back, exec) {
 			var oldID = ui.navigation.getActiveID();
 			var newDiv = ui.q(id);
@@ -349,6 +355,8 @@ class ui {
 				return;
 			if (id == 'info')
 				pageInfo.init();
+			else if (id == 'home')
+				pageHome.init();
 			else if (id == 'login')
 				pageLogin.init();
 			else if (id == 'contacts')
@@ -365,10 +373,6 @@ class ui {
 			pageChat.closeList();
 			ui.navigation.hidePopup();
 			if (currentID != id) {
-				if (id == 'home')
-					ui.css('main>buttonIcon', 'display', 'none');
-				else if (id != 'detail')
-					ui.css('main>#buttonFavorite', 'display', 'none');
 				var back = direction == 'backward' ||
 					direction != 'foreward' && (
 						currentID == 'detail' ||
@@ -381,7 +385,7 @@ class ui {
 					|| currentID == 'locations' && id == 'contacts'
 					|| currentID == 'info' && id == 'login'))
 					ui.attr(id, 'from', currentID);
-				ui.navigation.fade(id, back, function () { ui.navigation.displayMainButtons(id); });
+				ui.navigation.fade(id, back);
 				ui.navigation.hideMenu();
 			}
 			ui.navigation.lastPage = currentID;

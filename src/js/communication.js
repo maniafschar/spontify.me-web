@@ -14,6 +14,7 @@ import { user } from './user';
 import { pageLocation } from './pageLocation';
 import { intro } from './intro';
 import { events } from './events';
+import { pageHome } from './pageHome';
 
 export { communication, FB };
 
@@ -30,11 +31,13 @@ class communication {
 				var errorHandler = function () {
 					xmlhttp.param = param;
 					if (param.error)
-						param.error(xmlhttp)
+						param.error(xmlhttp);
 					else
 						communication.onError(xmlhttp);
 				};
 				if (xmlhttp.status >= 200 && xmlhttp.status < 300) {
+					if (communication.pingExec == null && xmlhttp.responseURL.indexOf('/ping') != xmlhttp.responseURL.length - 5)
+						communication.ping();
 					if (param.success) {
 						var response = xmlhttp.responseText;
 						if (param.responseType == 'json')
@@ -230,7 +233,9 @@ class communication {
 								communication.sendError('script_correction: ' + ex);
 							}
 						}
-						if (ui.navigation.getActiveID() != 'home') {
+						if (ui.navigation.getActiveID() == 'home')
+							pageHome.init();
+						else {
 							setTimeout(function () { ui.html('login', ''); }, 500);
 							ui.navigation.goTo('home');
 						}
@@ -241,9 +246,6 @@ class communication {
 						pageChat.initActiveChats();
 						events.init();
 						geoData.init();
-						var e = ui.qa('.homeIconSearch');
-						e[0].style.display = 'none';
-						e[1].style.display = '';
 						if (!global.isBrowser()) {
 							bluetooth.stop();
 							bluetooth.requestAuthorization(true);
@@ -399,7 +401,6 @@ class communication {
 			ui.html('chatUserList', '');
 			initialisation.recoverInvoked = false;
 			pageLocation.locationsAdded = null;
-			pageChat.chatNews = [];
 			lists.data = [];
 			pageChat.copyLink = '';
 			pageWhatToDo.list = null;
@@ -407,21 +408,11 @@ class communication {
 			pageSettings.currentSettings3 = null;
 			user.reset();
 			communication.setApplicationIconBadgeNumber(0);
-			var e = ui.q('badgeChats');
-			ui.html(e, '0');
-			ui.css(e, 'display', 'none');
-			ui.classRemove(e.parentNode, 'pulse highlight');
-			e = ui.q('badgeNotifications');
-			ui.html(e, '0');
-			ui.css(e.parentNode, 'display', 'none');
 			communication.login.removeCredentials();
 			ui.attr('content > *', 'menuIndex', null);
 			communication.currentCalls = [];
 			ui.navigation.goTo('home');
 			lists.resetLists();
-			e = ui.qa('.homeIconSearch');
-			e[0].style.display = '';
-			e[1].style.display = 'none';
 			ui.html('head title', global.appTitle);
 		},
 		toServer(os, u, exec) {
@@ -483,7 +474,6 @@ class communication {
 			if (e && e.additionalData && e.additionalData.notificationId) {
 				communication.notification.data.push(e);
 				communication.setApplicationIconBadgeNumber(e.count);
-				ui.css(ui.q('badgeNotifications').parentElement, 'display', '');
 				return;
 			}
 			var d = ui.q('alert');
@@ -492,7 +482,7 @@ class communication {
 			if (e)
 				communication.ping();
 			else
-				e = communication.notification.data.splice(0, 1)[0];
+				e = communication.notification.data[0];
 			var e2 = document.createElement('div'), action;
 			e2.setAttribute('message', encodeURIComponent(e.message));
 			if (e.additionalData) {
@@ -530,8 +520,6 @@ class communication {
 			d.insertBefore(e2, d.children[0]);
 			if (d.style.display != 'block')
 				ui.navigation.animation(d, 'homeSlideIn');
-			if (!communication.notification.data.length)
-				ui.css(ui.q('badgeNotifications').parentElement, 'display', 'none');
 		},
 		register() {
 			if (global.isBrowser())
@@ -598,12 +586,19 @@ class communication {
 	static ping() {
 		if (!user.contact || !user.contact.id)
 			return;
+		if (communication.pingExec == null) {
+			communication.pingExec = setTimeout(communication.ping, 10);
+			return;
+		}
 		communication.ajax({
 			url: global.server + 'action/ping',
 			progressBar: false,
 			responseType: 'json',
-			success(r) {
+			error() {
 				clearTimeout(communication.pingExec);
+				communication.pingExec = null;
+			},
+			success(r) {
 				if (ui.q('popup').getAttribute('error'))
 					ui.navigation.hidePopup();
 				var e = ui.q('head title');
@@ -633,14 +628,15 @@ class communication {
 				if (chatNew || r.chat != ui.qa('chatUserList>div').length)
 					pageChat.initActiveChats();
 				total += chat;
+				pageChat.newChats = chat == 0 ? '' : '' + chat;
 				e = ui.q('badgeChats');
-				ui.html(e, chat);
-				ui.css(e, 'display', chat == 0 ? 'none' : 'block');
-				if (chat == 0)
-					ui.classRemove(e.parentNode, 'pulse highlight');
-				else
-					ui.classAdd(e.parentNode, 'pulse highlight');
-				e = ui.q('badgeNotifications');
+				if (e) {
+					ui.html(e, pageChat.newChats);
+					if (pageChat.newChats)
+						ui.classAdd(e.parentNode, 'pulse highlight');
+					else
+						ui.classRemove(e.parentNode, 'pulse highlight');
+				}
 				if (r.notification != communication.notification.data.length) {
 					communication.ajax({
 						url: global.server + 'db/list?query=contact_listNotification&search=' + encodeURIComponent('contactNotification.seen=false'),
@@ -655,11 +651,14 @@ class communication {
 								m.additionalData.notificationId = v.contactNotification.id;
 								communication.notification.data.push(m);
 							}
+							var e = ui.q('badgeNotifications');
+							if (e) {
+								ui.html(e, communication.notification.data.length);
+								ui.css(e.parentNode, 'display', communication.notification.data.length ? '' : 'none');
+							}
 						}
 					});
 				}
-				ui.html(e, r.notification);
-				ui.css(e.parentNode, 'display', r.notification == 0 ? 'none' : '');
 				total += r.notification;
 				pageChat.refreshActiveChat(r.chatUnseen);
 				if (total > 0)

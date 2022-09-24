@@ -6,15 +6,20 @@ import { intro } from './intro';
 import { lists } from './lists';
 import { Chat, Contact, model } from './model';
 import { pageContact } from './pageContact';
+import { pageHome } from './pageHome';
+import { pageInfo } from './pageInfo';
 import { pageLocation } from './pageLocation';
+import { pageSearch } from './pageSearch';
+import { pageSettings } from './pageSettings';
+import { pageWhatToDo } from './pageWhatToDo';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 
 export { pageChat };
 
 class pageChat {
-	static chatNews = [];
 	static copyLink = '';
+	static newChats = '';
 	static oldCleverTip = '';
 	static admin = { id: 3, image: '' };
 
@@ -86,14 +91,20 @@ class pageChat {
 				e.click();
 		}
 	}
+	static buttonChat() {
+		var e = ui.q('buttonIcon.bottom.left');
+		ui.buttonIcon(e, '<badgeChats>' + pageChat.newChats + '</badgeChats><img source="chat.svg" />', 'pageChat.toggleUserList()');
+		if (pageChat.newChats)
+			ui.classAdd(e, 'pulse highlight');
+	}
 	static chatAdjustScrollTop(i) {
 		var e = ui.q('chatConversation');
 		e.scrollTop = e.scrollTop + i;
 	}
 	static close(event, exec) {
 		if (event) {
-			var s = event.target.nodeName.toLowerCase();
-			if (event.target.onclick || s == 'textarea' || s == 'img' || s == 'note')
+			var s = event.target.nodeName;
+			if (event.target.onclick || event.target.onmousedown || s == 'TEXTAREA' || s == 'IMG' || s == 'NOTE')
 				return;
 		}
 		var e = ui.q('chat');
@@ -105,12 +116,21 @@ class pageChat {
 			ui.html(e, '');
 			ui.attr(e, 'i', null);
 			ui.attr(e, 'type', null);
-			ui.navigation.displayMainButtons(ui.navigation.getActiveID());
 			var activeID = ui.navigation.getActiveID();
 			if (activeID == 'contacts')
 				pageContact.init();
 			else if (activeID == 'locations')
 				pageLocation.init();
+			else if (activeID == 'info')
+				pageInfo.init();
+			else if (activeID == 'search')
+				pageSearch.init();
+			else if (activeID == 'settings')
+				pageSettings.init();
+			else if (activeID == 'whattodo')
+				pageWhatToDo.init();
+			else if (activeID == 'home')
+				pageHome.init();
 			if (exec && exec.call)
 				exec.call();
 		});
@@ -237,6 +257,8 @@ class pageChat {
 		});
 	}
 	static insertQuote(event) {
+		event.preventDefault();
+		event.stopPropagation();
 		communication.ajax({
 			url: global.server + 'action/quotation',
 			success(r) {

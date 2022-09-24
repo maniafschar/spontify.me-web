@@ -10,6 +10,7 @@ import { user } from './user';
 import { pageWhatToDo } from './pageWhatToDo';
 import { details } from './details';
 import { intro } from './intro';
+import { pageChat } from './pageChat';
 
 export { pageSettings };
 
@@ -184,8 +185,8 @@ class pageSettings {
             valueEx="${v['att5Ex']}" value="${v['att5']}" max="60" maxEx="250" />
     </attributesDisplay>
 </div>
-<settingsNav onclick="ui.navigation.goTo(&quot;settings&quot;,event)" style="float:left;">&lt;</settingsNav>
-<settingsNav onclick="ui.navigation.goTo(&quot;settings3&quot;,event)" style="float:right;">></settingsNav>`;
+<settingsNav onclick="ui.navigation.goTo(&quot;settings&quot;)" style="float:left;">&lt;</settingsNav>
+<settingsNav onclick="ui.navigation.goTo(&quot;settings3&quot;)" style="float:right;">></settingsNav>`;
 	static templateSettings3 = v =>
 		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#settings3Notifications&quot;)">${ui.l('wtd.myNotifications')}</buttontext><br/>
 <div class="notification" id="settings3Notifications" style="display:none;padding-top:0.25em;">
@@ -208,7 +209,7 @@ class pageSettings {
 <buttontext class="bgColor settings2Button" onclick="pageSettings.toggleBlocked()">${ui.l('contacts.blocked')}</buttontext><br/>
 <div id="blocked" style="display:none;"></div>
 <buttontext onclick="pageSettings.deleteProfile()" class="bgColor settings2Button">${ui.l('settings.delete')}</buttontext><br/>
-<settingsNav onclick="ui.navigation.goTo(&quot;settings2&quot;,event)" style="float:left;">&lt;</settingsNav>`;
+<settingsNav onclick="ui.navigation.goTo(&quot;settings2&quot;)" style="float:left;">&lt;</settingsNav>`;
 
 	static checkUnique() {
 		if (user.email == ui.val('input[name="email"]'))
@@ -350,6 +351,7 @@ class pageSettings {
 					ui.q('settings3').innerHTML = pageSettings.templateSettings3(v);
 					formFunc.initFields('settings3');
 					pageSettings.currentSettings3 = pageSettings.getCurrentSettings3String();
+					pageSettings.init();
 					var e = function () {
 						if (!pageSettings.hasAttributes()) {
 							if (ui.navigation.getActiveID() == 'settings')
@@ -363,6 +365,9 @@ class pageSettings {
 			});
 			return true;
 		}
+		ui.css('main>buttonIcon', 'display', 'none');
+		ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
+		pageChat.buttonChat();
 	}
 	static init2() {
 		var v = [];
@@ -386,6 +391,9 @@ class pageSettings {
 			}
 		}
 		setTimeout(e, 2000);
+		ui.css('main>buttonIcon', 'display', 'none');
+		ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
+		pageChat.buttonChat();
 	}
 	static listContactsBlocked(l) {
 		l[0].push('_message1');

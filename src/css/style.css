@@ -71,11 +71,6 @@ main {
 	box-shadow: 0 0 5em rgba(0, 0, 0, 0.3);
 }
 
-main>#buttonFavorite {
-	bottom: 0.5em;
-	right: 0.5em;
-}
-
 body.app>main {
 	left: 0;
 	right: 0;
@@ -1458,14 +1453,6 @@ homeSubTitle {
 	bottom: 0;
 }
 
-#homeIconBluetooth {
-	opacity: 0.4;
-}
-
-#homeIconBluetooth.active {
-	opacity: 1;
-}
-
 notifications {
 	position: absolute;
 	z-index: 3;
@@ -1544,6 +1531,10 @@ buttonIcon.highlight {
 
 buttonIcon.highlight svg {
 	fill: rgb(252, 251, 104);
+}
+
+buttonIcon.bluetoothInactive {
+	opacity: 0.4;
 }
 
 .appInput {
@@ -1851,6 +1842,14 @@ text.description {
 	margin: 1em -1em;
 	padding: 1em;
 	background: rgba(0, 0, 0, 0.075);
+}
+
+guide {
+	font-weight: bold;
+	margin-bottom: -1em;
+	margin-top: 1em;
+	position: relative;
+	display: block;
 }
 
 text.popup {

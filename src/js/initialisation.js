@@ -131,7 +131,6 @@ class initialisation {
 	}
 	static initPostProcessor() {
 		ui.css('content>:not(home).content', 'display', 'none');
-		ui.css('main>buttonIcon', 'display', 'none');
 		ui.css('main', 'display', '');
 		if (!global.isBrowser())
 			initialisation.initApp();
@@ -179,12 +178,10 @@ class initialisation {
 				}
 				pageChat.close();
 			}
-		});
+		}, 'textarea');
 		ui.on('popup', 'click', function (event) {
 			var e = event.target;
-			if (e.nodeName != 'INPUT' && e.nodeName != 'TEXTAREA'
-				&& !ui.classContains(e, 'selectable')
-				&& !ui.parents(e, 'locationNameInputHelper')) {
+			if (ui.parents(e, 'popupTitle') || !ui.q('popup input')) {
 				while (e && e.getAttribute) {
 					if (e.getAttribute('onclick'))
 						return;

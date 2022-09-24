@@ -352,6 +352,7 @@
 			"relation": "Relation",
 			"requestFriendship": "Send friendship request!",
 			"requestFriendshipAlreadySent": "Friendship request sent, wait for confirmance!",
+			"requestFriendshipCanceled": "Friendship request canceled",
 			"requestFriendshipConfirm": "Confirm",
 			"requestFriendshipFriends": "Friendship confirmed!",
 			"requestFriendshipHint": "Please confirm only Spontis that you actually know and with whom you like to do something! When in doubt, reject the request!",

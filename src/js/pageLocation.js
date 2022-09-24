@@ -41,7 +41,7 @@ class pageLocation {
 	</div>
 </row>`;
 	static templateDetail = v =>
-		global.template`<detailHeader idFav="${v.locationFavorite.id ? v.locationFavorite.id : ''}" >
+		global.template`<detailHeader idFav="${v.locationFavorite.id ? v.locationFavorite.id : ''}" class="${v.favorite}">
 	<detailImg>
 		<img src="${v.image}" />
 		<detailTitle>
@@ -419,6 +419,8 @@ ${v.hint}
 				v.hideMeMarketing = ' noDisp';
 			v.editAction = 'pageLocation.edit(' + v.locID + ')';
 		}
+		if (v.locationFavorite.favorite)
+			v.favorite = 'favorite';
 		if (global.isBrowser())
 			v.displaySocialShare = 'display: none; ';
 		p = v._isOpen && v._isOpen > 0 ? 1 : v._openTimesEntries && v._openTimesEntries > 0 ? 0 : null;
@@ -440,27 +442,21 @@ ${v.hint}
 		for (var i = 0; i < v.category.length; i++)
 			v.cat = v.cat + ',' + v.category.substring(i, i + 1);
 		v.cat = v.cat.substring(1);
-		if (user.contact) {
-			communication.ajax({
-				url: global.server + 'action/map?source=' + geoData.latlon.lat + ',' + geoData.latlon.lon + '&destination=' + v.latitude + ',' + v.longitude,
-				progressBar: false,
-				success(r) {
-					var x = 0, f = function () {
-						if (x++ > 20)
-							return;
-						if (!ui.q('[i="' + v.id + '"] img.map'))
-							setTimeout(f, 100);
-						else
-							ui.attr('[i="' + v.id + '"] img.map', 'src', 'data:image/png;base64,' + r);
-					};
-					f.call();
-				}
-			});
-		}
-		if (v.locationFavorite.favorite)
-			ui.classAdd('main>#buttonFavorite', 'highlight');
-		else
-			ui.classRemove('main>#buttonFavorite', 'highlight');
+		communication.ajax({
+			url: global.server + 'action/map?source=' + geoData.latlon.lat + ',' + geoData.latlon.lon + '&destination=' + v.latitude + ',' + v.longitude,
+			progressBar: false,
+			success(r) {
+				var x = 0, f = function () {
+					if (x++ > 20)
+						return;
+					if (!ui.q('[i="' + v.id + '"] img.map'))
+						setTimeout(f, 100);
+					else
+						ui.attr('[i="' + v.id + '"] img.map', 'src', 'data:image/png;base64,' + r);
+				};
+				f.call();
+			}
+		});
 		return pageLocation.templateDetail(v);
 	}
 	static edit(id) {
@@ -687,6 +683,11 @@ ${v.hint}
 		}
 	}
 	static init() {
+		ui.css('main>buttonIcon', 'display', 'none');
+		ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
+		ui.buttonIcon('.right.top', 'menu', 'ui.navigation.toggleMenu()');
+		ui.buttonIcon('.left.top', 'filter', 'lists.toggleFilter(event, pageLocation.getFilterFields)');
+		pageChat.buttonChat();
 		if (!ui.q('locations').innerHTML)
 			lists.setListDivs('locations');
 		if (!ui.q('locations listResults row')) {
@@ -722,7 +723,6 @@ ${v.hint}
 					pageLocation.map.svgMe = 'data:image/svg+xml;base64,' + btoa(e.outerHTML);
 				}
 			});
-
 	}
 	static isInPosition(position, angle) {
 		for (var e in position) {
@@ -921,8 +921,8 @@ ${v.hint}
 				body: v,
 				success() {
 					communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent('location.id=' + id), function (l) {
-						var e = ui.q('locations [i="' + id + '"]'), l2 = lists.data['locations'];
-						e.outerHTML = pageLocation.listLocation(l);
+						ui.html('locations [i="' + id + '"]', pageLocation.listLocation(l));
+						var l2 = lists.data['locations'];
 						for (var i = 1; i < l2.length; i++) {
 							var v = model.convert(new Location(), l2, i);
 							if (v.id == id) {
@@ -1075,7 +1075,7 @@ ${v.hint}
 			ui.toggleHeight(e);
 	}
 	static toggleFavorite(id) {
-		var button = ui.q('main>#buttonFavorite');
+		var button = ui.q('main>buttonIcon.bottom.right');
 		var idFav = ui.q('detailHeader').getAttribute('idFav');
 		var v = { classname: 'LocationFavorite' };
 		if (idFav) {

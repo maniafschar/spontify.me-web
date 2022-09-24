@@ -176,6 +176,8 @@ class pageLogin {
 			pageLogin.setLoginFormTab2();
 		else if (pageLogin.lastTab == 3)
 			pageLogin.setLoginFormTab3();
+		ui.css('main>buttonIcon', 'display', 'none');
+		ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
 	}
 	static toggleRegistrationHints() {
 		var e = ui.q('registerHint');

@@ -130,6 +130,9 @@ class pageInfo {
 		}
 		ui.html('#infoVersion', ui.l('info.infoOther').replace('{0}', '<span id="infoLocalized"></span>'));
 		pageInfo.updateLocalisation();
+		ui.css('main>buttonIcon', 'display', 'none');
+		ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
+		pageChat.buttonChat();
 	}
 	static initMarketing(d) {
 		pageInfo.marketingTitle = d.title;

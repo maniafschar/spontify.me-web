@@ -9,6 +9,7 @@ import { formFunc, ui } from './ui';
 import { user } from './user';
 import { geoData } from './geoData';
 import { events } from './events';
+import { pageChat } from './pageChat';
 
 export { pageWhatToDo };
 
@@ -186,6 +187,9 @@ class pageWhatToDo {
 			return true;
 		}
 		pageWhatToDo.initListButton();
+		ui.css('main>buttonIcon', 'display', 'none');
+		ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
+		pageChat.buttonChat();
 	}
 	static initListButton() {
 		var b = pageWhatToDo.getCurrentMessage();

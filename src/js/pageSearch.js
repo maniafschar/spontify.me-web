@@ -7,6 +7,7 @@ import { ui, formFunc } from './ui';
 import { user } from './user';
 import { geoData } from './geoData';
 import { events } from './events';
+import { pageChat } from './pageChat';
 
 export { pageSearch };
 
@@ -242,9 +243,9 @@ class pageSearch {
 				for (var i = 0; i < user.contact.filter.categories.length; i++)
 					v['categories' + user.contact.filter.categories[i]] = 'checked=checked';
 				if (user.contact.filter.matchesOnly)
-					v['matchesOnly'] = 'checked=checked';
+					v.matchesOnly = 'checked=checked';
 				if (user.contact.filter.guide)
-					v['guide'] = 'checked=checked';
+					v.guide = 'checked=checked';
 				v['gender' + user.contact.filter.gender] = 'checked=checked';
 				v.keywords = user.contact.filter.keywords;
 				v.age = user.contact.filter.age;
@@ -257,25 +258,29 @@ class pageSearch {
 			ui.css('search searchInput', 'display', 'block');
 			pageSearch.selectType();
 		}
+		ui.css('main>buttonIcon', 'display', 'none');
+		ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
+		ui.buttonIcon('.left.top', 'filter', 'lists.toggleFilter(event, pageSearch.getFilterFields)');
+		pageChat.buttonChat();
 	}
 	static repeatSearch() {
 		ui.q('[name="searchKeywords"]').value = '';
 		pageSearch.saveSearch();
 	}
 	static saveSearch() {
-		var f = ui.q('[name="searchAge"]');
+		var f = ui.q('searchInput [name="searchAge"]');
 		if (f.value != f.getAttribute('min') + ',' + f.getAttribute('max') && !user.contact.age) {
 			ui.navigation.openPopup(ui.l('attention'), ui.l('search.ageWithoutBDay') + '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('Yes') + '</buttontext>');
 			return;
 		}
 		var s = {
 			categories: [],
-			type: ui.val('[name="searchType"]:checked'),
-			matchesOnly: ui.q('[name="searchMatchesOnly"]:checked') ? true : false,
-			keywords: ui.val('[name="searchKeywords"]'),
-			gender: ui.val('[name="searchGender"]:checked'),
-			age: ui.val('[name="searchAge"]'),
-			guide: ui.val('[name="searchGuide"]:checked')
+			type: ui.val('searchInput [name="searchType"]:checked'),
+			matchesOnly: ui.q('searchInput>[style*="block"] [name="searchMatchesOnly"]:checked') ? true : false,
+			keywords: ui.val('searchInput [name="searchKeywords"]'),
+			gender: ui.val('searchInput [name="searchGender"]:checked'),
+			age: ui.val('searchInput [name="searchAge"]'),
+			guide: ui.val('searchInput [name="searchGuide"]:checked')
 		};
 		f = ui.qa('search [name="searchCategories"]:checked');
 		for (var i = 0; i < f.length; i++)

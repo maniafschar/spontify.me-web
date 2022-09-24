@@ -50,7 +50,6 @@ class bluetooth {
 	}
 	static requestAuthorization(logon) {
 		bluetooth.reset();
-		ui.q('#homeIconBluetooth').style.opacity = 1;
 		var stateListener = function () {
 			cordova.plugins.backgroundMode.enable();
 			cordova.plugins.backgroundMode.on('failure', function (e) {
@@ -59,7 +58,13 @@ class bluetooth {
 			var showHint = !logon;
 			ble.startStateNotifications(function (state) {
 				bluetooth.state = state;
-				ui.q('#homeIconBluetooth').style.opacity = state == 'on' ? 1 : null;
+				if (ui.navigation.getActiveID() == 'home') {
+					if (state == 'on')
+						ui.classRemove('buttonIcon.bottom.right', 'bluetoothInactive');
+					else
+						ui.classAdd('buttonIcon.bottom.right', 'bluetoothInactive');
+				}
+				ui.q('main>buttonIcon.bottom.right').style.opacity = state == 'on' ? null : 0.4;
 				if (state == 'on') {
 					bluetooth.hidePopup();
 					bluetooth.scanStart();

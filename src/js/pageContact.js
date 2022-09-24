@@ -6,7 +6,8 @@ import { lists } from './lists';
 import { pageLocation } from './pageLocation';
 import { formFunc, ui } from './ui';
 import { user } from './user';
-import { model, Contact, ContactBlock, ContactGroup, ContactLink } from './model';
+import { model, Contact, ContactGroup } from './model';
+import { pageChat } from './pageChat';
 
 export { pageContact };
 
@@ -30,7 +31,7 @@ class pageContact {
 	</row>`;
 	static templateDetail = v =>
 		global.template`${v.present}
-<detailHeader>
+<detailHeader class="${v.favorite}">
 	<detailImg>
 		<img src="${v.image}" />
 		<detailTitle>
@@ -58,12 +59,12 @@ class pageContact {
 		</matchIndicator>
 	</detailImg>
 </detailHeader>
+${v.aboutMe}
 <text${v.birthdayClass}>
 	${v.birthday}
 </text>
 ${v.attributes}
 ${v.budget}
-${v.aboutMe}
 <detailButtons style="margin-top:1em;">
 	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonCopy"
 		onclick="pageChat.doCopyLink(event,&quot;p=${v.id}&quot;)">${ui.l('share')}</buttontext>
@@ -255,10 +256,10 @@ ${v.aboutMe}
 				ui.html(e, '');
 				ui.css(e, 'display', 'none');
 				if (status == 'Friends') {
-					ui.classAdd('main>#buttonFavorite', 'highlight');
+					ui.classAdd('main>buttonIcon.bottom.right', 'highlight');
 					ui.classRemove('detail card:last-child[i="' + id + '"] [name="buttonGroups"]', 'noDisp');
 				} else {
-					ui.classRemove('main>#buttonFavorite', 'highlight');
+					ui.classRemove('main>buttonIcon.bottom.right', 'highlight');
 					ui.classAdd('detail card:last-child[i="' + id + '"] [name="buttonGroups"]', 'noDisp');
 				}
 			}
@@ -297,6 +298,8 @@ ${v.aboutMe}
 		} else
 			v.link += '<buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + idIntern + ');">' + ui.l('contacts.requestFriendship') + '</buttontext>';
 		v.link += '</div>';
+		if (v.contactLink.status == 'Friends')
+			v.favorite = 'favorite';
 		pageContact.addWTDMessage(v);
 		if (!details.getNextNavElement(true, v.id))
 			v.hideNext = 'display:none;';
@@ -341,15 +344,15 @@ ${v.aboutMe}
 		if (!v.attributes && !v.aboutMe && !v.rating)
 			v.dispBody = 'display:none;';
 		if (v.aboutMe)
-			v.aboutMe = '<div style="margin-top:1em;">' + (v.guide ? '<b>' + ui.l('settings.guide') + '</b><br/>' : '') + '<text class="description">' + v.aboutMe.replace(/\n/g, '<br/>') + '</text></div>';
+			v.aboutMe = (v.guide ? '<guide>' + ui.l('settings.guide') + '</guide>' : '') + '<text class="description">' + v.aboutMe.replace(/\n/g, '<br/>') + '</text>';
 		if (v.contactLink.status == 'Pending' && v.contactLink.contactId != user.contact.id)
 			setTimeout(function () {
 				pageContact.toggleBlockUser(id);
 			}, 1000);
 		if (v.contactLink.status == 'Friends')
-			ui.classAdd('main>#buttonFavorite', 'highlight');
+			ui.classAdd('main>buttonIcon.bottom.right', 'highlight');
 		else
-			ui.classRemove('main>#buttonFavorite', 'highlight');
+			ui.classRemove('main>buttonIcon.bottom.right', 'highlight');
 		if (v.contactLink)
 			v.contactLinkStatus = v.contactLink.status;
 		return pageContact.templateDetail(v);
@@ -639,6 +642,11 @@ ${v.aboutMe}
 		}
 	}
 	static init() {
+		ui.css('main>buttonIcon', 'display', 'none');
+		ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
+		ui.buttonIcon('.right.top', 'menu', 'ui.navigation.toggleMenu()');
+		ui.buttonIcon('.left.top', 'filter', 'lists.toggleFilter(event, pageContact.getFilterFields)');
+		pageChat.buttonChat();
 		if (!ui.q('contacts').innerHTML)
 			lists.setListDivs('contacts');
 		if (!ui.q('contacts listResults row')) {

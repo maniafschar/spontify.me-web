@@ -12,7 +12,7 @@ class lists {
 	static iconFavorite;
 
 	static templateList = v =>
-		global.template`<listHeader>${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5em;"></hinky><div></div></filters><listTitle onclick="${v.action}"></listTitle>${v.map}</listHeader>
+		global.template`<listHeader>${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5em;"></hinky><div></div></filters><listTitle></listTitle>${v.map}</listHeader>
 <listScroll><a class="bgColor"></a></listScroll><listBody>${v.groups}<listResults></listResults></listBody>`;
 
 	static execFilter() {
@@ -137,12 +137,10 @@ class lists {
 		ui.html('detail', '');
 		ui.html('info', '');
 	}
-	static setListDivs(id, action) {
+	static setListDivs(id) {
 		var e = ui.q(id);
 		if (!e.innerHTML) {
 			var v = {};
-			v.action = action ? action : 'lists.toggleFilter(event, ' + (id == 'locations' ? 'pageLocation' : id == 'contacts' ? 'pageContact' : 'pageSearch') + '.getFilterFields)';
-			v.img = action ? '' : '<buttonIcon class="left top" onclick="' + v.action + '"><img src="images/filter.svg"/></buttonIcon>' + (id == 'search' ? '' : '<buttonIcon class="right top" onclick="ui.navigation.toggleMenu()"><img src="images/menu.svg"/></buttonIcon>');
 			if (id == 'contacts')
 				v.groups = '<groups style="display:none;"></groups>';
 			else if (id == 'locations')
