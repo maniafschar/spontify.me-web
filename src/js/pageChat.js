@@ -125,12 +125,12 @@ class pageChat {
 				pageInfo.init();
 			else if (activeID == 'search')
 				pageSearch.init();
-			else if (activeID == 'settings')
-				pageSettings.init();
 			else if (activeID == 'whattodo')
 				pageWhatToDo.init();
 			else if (activeID == 'home')
 				pageHome.init();
+			else if (activeID == 'settings' || activeID == 'settings2' || activeID == 'settings3')
+				pageSettings.init();
 			if (exec && exec.call)
 				exec.call();
 		});

@@ -64,7 +64,6 @@ class bluetooth {
 					else
 						ui.classAdd('buttonIcon.bottom.right', 'bluetoothInactive');
 				}
-				ui.q('main>buttonIcon.bottom.right').style.opacity = state == 'on' ? null : 0.4;
 				if (state == 'on') {
 					bluetooth.hidePopup();
 					bluetooth.scanStart();
@@ -144,7 +143,7 @@ class bluetooth {
 			if (ui.q('hint[i="bluetoothOn"]'))
 				intro.closeHint();
 		}
-		ui.q('#homeIconBluetooth').style.opacity = null;
+		ui.classAdd('buttonIcon.bottom.right', 'bluetoothInactive');
 		window.localStorage.removeItem('findMeIDs');
 	}
 }

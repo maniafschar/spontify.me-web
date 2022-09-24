@@ -85,17 +85,17 @@ body.app>main {
 }
 
 body.app>main alert,
-body.app>main popup,
+body.app>main>buttonIcon,
+body.app>main hint,
 body.app>main menu,
-body.app>main progressbar,
-body.app>main hint {
+body.app>main popup,
+body.app>main progressbar {
 	margin-top: constant(safe-area-inset-top);
 	margin-top: env(safe-area-inset-top);
 }
 
-body.app>main home buttonIcon,
-body.app>main chatUserList,
 body.app>main>buttonIcon,
+body.app>main chatUserList,
 body.app>main hint {
 	margin-bottom: constant(safe-area-inset-bottom);
 	margin-bottom: env(safe-area-inset-bottom);
