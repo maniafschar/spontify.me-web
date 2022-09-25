@@ -375,17 +375,10 @@
 			"url": "The URL is incorrect."
 		},
 		"events": {
-			"canceled": "You have canceled your participation!",
+			"canceled": "You have canceled your participation: ",
 			"confirm": "Spontis must confirm participation",
 			"confirmLabel": "Confirmation",
-			"countParticipants": "{0} of {1} places occupied",
 			"createdBy": "Event created by",
-			"date": "Date",
-			"duration": "Duration",
-			"duration1": "30 minutes",
-			"duration2": "1 hour",
-			"duration3": "2 hours",
-			"duration4": "4 hours",
 			"end": "End date",
 			"errorDate": "Please enter the date.",
 			"errorDateEndFormat": "Please enter a correct end date.",

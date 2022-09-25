@@ -98,8 +98,10 @@ ${v.hint}
 ${v.eventLinkOpen}
 <div>${v.date}${v.endDate}</div>
 <div>${v.event.text}${v.eventMore}</div>
-${v.eventPrice}
-<div>${v.maxParticipants}${v.eventMustBeConfirmed}</div>
+<div>${v.eventMustBeConfirmed}</div>
+<div>${v.eventPrice}</div>
+<div>${v.maxParticipants}</div>
+<div>${v.reason}</div>
 <span id="eventParticipants"></span>
 ${v.eventLinkClose}
 ${v.eventParticipationButtons}
@@ -113,7 +115,7 @@ ${v.eventParticipationButtons}
 			var s = global.date.formatDate(v.event.endDate);
 			v.endDate = ' (' + ui.l('events.type_' + v.event.type) + ' ' + ui.l('to') + ' ' + s.substring(s.indexOf(' ') + 1, s.lastIndexOf(' ')) + ')';
 		}
-		var state, endDate = global.date.server2Local(v.event.endDate), today = new Date();
+		var endDate = global.date.server2Local(v.event.endDate), today = new Date();
 		today.setHours(0);
 		today.setMinutes(0);
 		today.setSeconds(0);
@@ -148,11 +150,21 @@ ${v.eventParticipationButtons}
 			d.minute = d2.minute;
 			v.date = global.date.formatDate(d);
 			v.eventParticipationButtons = events.getParticipateButton(x, v);
-			state = events.getParticipation(x).state;
-			if (state == 1)
+			var p = events.getParticipation(x);
+			if (p.state == 1)
 				v.classParticipate = ' participate';
-			else if (state == -1)
+			else if (p.state == -1 && v.event.confirm == 1) {
 				v.classParticipate = ' canceled';
+				v.reason = ui.l('events.canceled') + p.reason;
+			}
+			communication.ajax({
+				url: global.server + 'db/list?query=contact_eventParticipateCount&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + x.id + ' and eventParticipate.eventDate=\'' + x.date + '\''),
+				responseType: 'json',
+				success(r) {
+					if (r[1][0])
+						ui.q('detail card[i="' + v.id + '"] participantCount').innerHTML = r[1][0] + ' ';
+				}
+			});
 		}
 		if (v.ownerId && v.event.link) {
 			v.eventLinkOpen = '<a onclick="ui.navigation.openHTML(&quot;' + v.event.link + '&quot;)">';
@@ -164,7 +176,7 @@ ${v.eventParticipationButtons}
 		if (v.event.maxParticipants)
 			v.maxParticipants = ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
 		if (v.event.confirm == 1)
-			v.eventMustBeConfirmed = '<br/>' + ui.l('events.participationMustBeConfirmed');
+			v.eventMustBeConfirmed = ui.l('events.participationMustBeConfirmed');
 		if (v.contact.imageList)
 			v.imageEventOwner = global.serverImg + v.contact.imageList;
 		else
@@ -311,12 +323,11 @@ ${v.eventParticipationButtons}
 	}
 	static getParticipateButton(p, v) {
 		var participation = events.getParticipation(p);
-		var text = '';
-		if (participation.state == 1 || participation.state == null || !v.event.confirm)
+		var text = '<div style="margin:1em 0;">';
+		if (!v.event.confirm || participation.state != -1)
 			text += '<buttontext pID="' + (participation.id ? participation.id : '') + '" s="' + (participation.id ? participation.state : '') + '" confirm="' + v.event.confirm + '" class="bgColor" onclick="events.participate(event,' + JSON.stringify(p).replace(/"/g, '&quot;') + ')" max="' + (v.maxParticipants ? v.maxParticipants : 0) + '">' + ui.l('events.participante' + (participation.state == 1 ? 'Stop' : '')) + '</buttontext>';
-		text += '<buttontext class="bgColor" onclick="events.toggleParticipants(event,' + JSON.stringify(p).replace(/"/g, '&quot;') + ',' + v.event.confirm + ')">' + ui.l('events.participants') + '</buttontext>';
-		if (text)
-			text = '<div style="margin:1em 0;">' + text + '</div><text name="participants" style="margin:0 -1em;"></text>';
+		text += '<buttontext class="bgColor" onclick="events.toggleParticipants(event,' + JSON.stringify(p).replace(/"/g, '&quot;') + ',' + v.event.confirm + ')"><participantCount></participantCount>' + ui.l('events.participants') + '</buttontext>';
+		text += '</div><text name="participants" style="margin:0 -1em;"></text>';
 		return text;
 	}
 	static getParticipation(p) {
@@ -391,7 +402,7 @@ ${v.eventParticipationButtons}
 						var state = events.getParticipation({ id: v.id, date: d.year + '-' + d.month + '-' + d.day }).state;
 						if (state == 1)
 							v.classFavorite += ' participate';
-						else if (state == -1)
+						else if (state == -1 && v.event.confirm == 1)
 							v.classFavorite += ' canceled';
 						v.id += '_' + d.year + '-' + d.month + '-' + d.day;
 					}

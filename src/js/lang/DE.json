@@ -375,17 +375,10 @@
 			"url": "Die angegebene URL ist fehlerhaft."
 		},
 		"events": {
-			"canceled": "Du hast Deine Teilnahme abgesagt!",
+			"canceled": "Du hast Deine Teilnahme abgesagt: ",
 			"confirm": "Spontis müssen die Teilnahme bestätigen",
 			"confirmLabel": "Bestätigung",
-			"countParticipants": "{0} von {1} Plätzen belegt",
 			"createdBy": "Event erstellt von",
-			"date": "Termin",
-			"duration": "Dauer",
-			"duration1": "30 Minuten",
-			"duration2": "1 Stunde",
-			"duration3": "2 Stunden",
-			"duration4": "4 Stunden",
 			"end": "Endtermin",
 			"errorDate": "Bitte gib den Termin an.",
 			"errorDateEndFormat": "Bitte gib ein korrektes Enddatum an.",
