@@ -163,6 +163,11 @@ ${v.eventParticipationButtons}
 				success(r) {
 					if (r[1][0])
 						ui.q('detail card[i="' + v.id + '"] participantCount').innerHTML = r[1][0] + ' ';
+					if (!v.event.maxParticipants || r[1][0] < v.event.maxParticipants) {
+						var e = ui.q('detail card:last-child buttontext[pID]');
+						if (e)
+							e.style.display = '';
+					}
 				}
 			});
 		}
@@ -323,9 +328,10 @@ ${v.eventParticipationButtons}
 	}
 	static getParticipateButton(p, v) {
 		var participation = events.getParticipation(p);
+		if (v.event.confirm && participation.state == -1)
+			return '';
 		var text = '<div style="margin:1em 0;">';
-		if (!v.event.confirm || participation.state != -1)
-			text += '<buttontext pID="' + (participation.id ? participation.id : '') + '" s="' + (participation.id ? participation.state : '') + '" confirm="' + v.event.confirm + '" class="bgColor" onclick="events.participate(event,' + JSON.stringify(p).replace(/"/g, '&quot;') + ')" max="' + (v.maxParticipants ? v.maxParticipants : 0) + '">' + ui.l('events.participante' + (participation.state == 1 ? 'Stop' : '')) + '</buttontext>';
+		text += '<buttontext pID="' + (participation.id ? participation.id : '') + '" s="' + (participation.id ? participation.state : '') + '" confirm="' + v.event.confirm + '" class="bgColor" onclick="events.participate(event,' + JSON.stringify(p).replace(/"/g, '&quot;') + ')" max="' + (v.maxParticipants ? v.maxParticipants : 0) + '" style="display:none;">' + ui.l('events.participante' + (participation.state == 1 ? 'Stop' : '')) + '</buttontext>';
 		text += '<buttontext class="bgColor" onclick="events.toggleParticipants(event,' + JSON.stringify(p).replace(/"/g, '&quot;') + ',' + v.event.confirm + ')"><participantCount></participantCount>' + ui.l('events.participants') + '</buttontext>';
 		text += '</div><text name="participants" style="margin:0 -1em;"></text>';
 		return text;
@@ -472,8 +478,10 @@ ${v.eventParticipationButtons}
 						ui.classAdd('detail card:last-child .event', 'canceled');
 						ui.classAdd('row[i="' + id.id + '_' + id.date + '"]', 'canceled');
 						ui.q('detail card:last-child buttontext[pID="' + participateID + '"]').outerHTML = '';
-					} else
+					} else {
+						ui.attr(button, 's', '-1');
 						button.innerText = ui.l('events.participante');
+					}
 				} else {
 					ui.attr(button, 's', '1');
 					button.innerText = ui.l('events.participanteStop');
