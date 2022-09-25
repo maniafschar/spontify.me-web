@@ -410,6 +410,7 @@ class communication {
 			communication.setApplicationIconBadgeNumber(0);
 			communication.login.removeCredentials();
 			ui.attr('content > *', 'menuIndex', null);
+			communication.notification.data = [];
 			communication.currentCalls = [];
 			ui.navigation.goTo('home');
 			lists.resetLists();

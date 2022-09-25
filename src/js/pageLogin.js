@@ -37,6 +37,7 @@ class pageLogin {
 		</buttontext>
 		<br />
 		<br />
+		<br />
 		<buttontext onclick="communication.login.openApple()" class="loginExternal"
 			style="background:black;color:white;${v['hideApple']}">
 			<svg xmlns="http://www.w3.org/2000/svg" width="1em" viewBox="0 0 170 170" version="1.1" height="1em">
