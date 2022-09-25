@@ -15,23 +15,7 @@ class initialisation {
 	static execLocation = null;
 	static hideStatusBar = true;
 	static recoverInvoked = false;
-	static videoText = '';
 	static init() {
-		if (!global.isBrowser() && initialisation.videoText) {
-			var e = ui.q('preloader');
-			var s = e.innerHTML;
-			initialisation.statusBar();
-			e.innerHTML = '<div id="videoIntro" style="text-align:center;font-size:1.3em;padding:0 1em 2em 1em;line-height:2em;transition:opacity .5s ease-out;">' + initialisation.videoText + '</div>';
-			setTimeout(function () {
-				ui.css('#videoIntro', 'opacity', 0);
-				setTimeout(function () {
-					e.innerHTML = s;
-					initialisation.init();
-				}, 500);
-			}, 5000);
-			initialisation.videoText = null;
-			return;
-		}
 		formFunc.image.replaceSVGs();
 		var f = function () {
 			if (ui.cssValue('content > *', 'display')) {
@@ -181,7 +165,7 @@ class initialisation {
 		}, 'textarea');
 		ui.on('popup', 'click', function (event) {
 			var e = event.target;
-			if (ui.parents(e, 'popupTitle') || !ui.q('popup input')) {
+			if (ui.parents(e, 'popupTitle') || !ui.q('popup input') && !ui.q('popup textarea')) {
 				while (e && e.getAttribute) {
 					if (e.getAttribute('onclick'))
 						return;
@@ -312,10 +296,8 @@ class initialisation {
 		}
 		ui.css('body', 'font-size', f + 'px');
 		ui.emInPX = parseFloat(ui.cssValue(document.body, 'font-size'));
-		if (!ui.q('main'))
-			return;
 		lists.repositionThumb();
-		if (window.innerWidth / w > 1.6) {
+		if (window.innerWidth / w > 1.8) {
 			ui.css('add', 'width', ((window.innerWidth - w) / 2) + 'px');
 			ui.css('add', 'display', 'block');
 		} else

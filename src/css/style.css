@@ -1626,14 +1626,28 @@ row extra img {
 	height: 1em;
 }
 
-row.participate extra::before {
+.participate::before {
 	content: '✓';
+	color: rgb(252, 251, 104);
+}
+
+.canceled::before {
+	content: '✗';
+	color: rgb(180, 0, 0);
+	margin-top: -0.1em;
+}
+
+row.canceled::before {
+	margin-right: 0.1em;
+}
+
+row.participate::before,
+row.canceled::before {
 	position: absolute;
 	font-size: 6em;
 	opacity: 0.3;
-	color: rgb(252, 251, 104);
-	top: -0.07em;
-	right: -0.1em;
+	top: 0.2em;
+	right: 0.1em;
 	line-height: 1;
 }
 
@@ -1694,26 +1708,21 @@ row compass {
 	margin-top: -0.25em;
 }
 
-detail .participate {
-	position: relative;
-}
-
-detail .participate::before {
-	content: '✓';
+detail .participate::before,
+detail .canceled::before {
 	position: absolute;
 	font-size: 6em;
 	opacity: 0.3;
-	color: rgb(252, 251, 104);
-	top: 1.3em;
-	right: 50%;
-	margin-right: -0.4em;
+	top: 1.2em;
 	line-height: 1;
+	width: 100%;
+	right: 0;
 }
 
-detail auxEvents.participate::before {
-	right: 0;
-	bottom: 0;
-	margin-right: 0;
+detail auxEvents.participate::before,
+detail auxEvents.canceled::before {
+	text-align: right;
+	top: 0;
 }
 
 detail .event {

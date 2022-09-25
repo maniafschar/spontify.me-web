@@ -79,7 +79,7 @@
 	</style>
 </head>
 
-<body onload="initialisation.onLoad();">
+<body>
 	<preloader class="mainBG">
 		<img source="logo.svg" />
 	</preloader>
@@ -116,11 +116,11 @@
 			<whatToDo class="content"></whatToDo>
 			<chatUserList style="display:none;"></chatUserList>
 		</content>
-		<buttonIcon class="top left"> </buttonIcon>
-		<buttonIcon class="top right"> </buttonIcon>
-		<buttonIcon class="bottom left"> </buttonIcon>
-		<buttonIcon class="bottom center"> </buttonIcon>
-		<buttonIcon class="bottom right"> </buttonIcon>
+		<buttonIcon class="top left"></buttonIcon>
+		<buttonIcon class="top right"></buttonIcon>
+		<buttonIcon class="bottom left"></buttonIcon>
+		<buttonIcon class="bottom center"></buttonIcon>
+		<buttonIcon class="bottom right"></buttonIcon>
 		<hint></hint>
 		<menu style="transform:scale(0);">
 			<hinky class="top" style="right:1.5em;"></hinky>
@@ -128,5 +128,9 @@
 		</menu>
 	</main>
 </body>
+
+<script>
+	initialisation.onLoad()
+</script>
 
 </html>

@@ -234,7 +234,7 @@ class ui {
 					if (idIntern.indexOf('l=') == 0)
 						details.open(idIntern.substring(2), 'location_list&search=' + encodeURIComponent('location.id=' + idIntern.substring(2)), pageLocation.detailLocationEvent);
 					else if (idIntern.indexOf('e=') == 0)
-						details.open(idIntern.substring(2), 'event_list&search=' + encodeURIComponent('event.id=' + idIntern.substring(2)), pageLocation.detailLocationEvent);
+						details.open(idIntern.substring(2), 'location_listEvent&search=' + encodeURIComponent('event.id=' + idIntern.substring(2)), pageLocation.detailLocationEvent);
 					else if (idIntern.indexOf('=') == 1)
 						details.open(idIntern.substring(2), 'contact_list&search=' + encodeURIComponent('contact.id=' + idIntern.substring(2)), pageContact.detail);
 				}
@@ -278,21 +278,7 @@ class ui {
 			return id;
 		},
 		goBack() {
-			if (ui.cssValue('popup', 'display') != 'none')
-				ui.navigation.hidePopup();
-			else if (ui.cssValue('chat', 'display') != 'none')
-				pageChat.close();
-			else {
-				var id = ui.navigation.getActiveID();
-				if (id == 'detail')
-					details.swipeRight();
-				else if (id == 'settings2')
-					ui.navigation.goTo('settings');
-				else if (id == 'settings3')
-					ui.navigation.goTo('settings2');
-				else
-					ui.navigation.goTo('home');
-			}
+			ui.navigation.goTo('home');
 		},
 		goTo(id, direction) {
 			if (ui.classContains('content', 'animated'))
@@ -579,13 +565,13 @@ class ui {
 			return 'query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactVisit.contactId=contact.id and contactVisit.contactId2=' + user.contact.id);
 		},
 		eventAll() {
-			return 'query=event_listCurrent&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon;
+			return 'query=location_listEventCurrent&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon;
 		},
 		eventMatches() {
-			return 'query=event_listCurrent&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent(pageSearch.getSearchMatchesLocation());
+			return 'query=location_listEventCurrent&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent(pageSearch.getSearchMatchesLocation());
 		},
 		eventMy() {
-			return 'query=event_list&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('event.contactId=' + user.contact.id);
+			return 'query=location_listEvent&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('event.contactId=' + user.contact.id);
 		},
 		locationAll() {
 			return (user.contact ? 'query=location_list' : 'query=location_anonymousList') + '&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon;
@@ -768,6 +754,7 @@ class ui {
 			var d = e.style.display;
 			e.style.opacity = 0;
 			e.style.display = 'block';
+			e.style.height = '';
 			e.style.position = 'absolute';
 			e.setAttribute('h', e.offsetHeight);
 			e.style.position = p;

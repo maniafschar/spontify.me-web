@@ -1,8 +1,9 @@
 import { communication } from "./communication";
 import { details } from "./details";
+import { geoData } from "./geoData";
 import { global } from "./global";
 import { lists } from "./lists";
-import { EventParticipate, Location, model } from "./model";
+import { Contact, Location, model } from "./model";
 import { pageContact } from "./pageContact";
 import { pageLocation } from "./pageLocation";
 import { formFunc, ui } from "./ui";
@@ -150,6 +151,8 @@ ${v.eventParticipationButtons}
 			state = events.getParticipation(x).state;
 			if (state == 1)
 				v.classParticipate = ' participate';
+			else if (state == -1)
+				v.classParticipate = ' canceled';
 		}
 		if (v.ownerId && v.event.link) {
 			v.eventLinkOpen = '<a onclick="ui.navigation.openHTML(&quot;' + v.event.link + '&quot;)">';
@@ -160,13 +163,8 @@ ${v.eventParticipationButtons}
 			v.eventPrice = '<div>' + ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2)) + '</div>';
 		if (v.event.maxParticipants)
 			v.maxParticipants = ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
-		if (v.event.confirm == 1) {
+		if (v.event.confirm == 1)
 			v.eventMustBeConfirmed = '<br/>' + ui.l('events.participationMustBeConfirmed');
-			if (state == 1)
-				v.eventMustBeConfirmed = v.eventMustBeConfirmed + '<br/>' + ui.l('events.confirmed');
-			else if (state == -1)
-				v.eventMustBeConfirmed = v.eventMustBeConfirmed + '<br/>' + ui.l('events.canceled');
-		}
 		if (v.contact.imageList)
 			v.imageEventOwner = global.serverImg + v.contact.imageList;
 		else
@@ -316,8 +314,7 @@ ${v.eventParticipationButtons}
 		var text = '';
 		if (participation.state == 1 || participation.state == null || !v.event.confirm)
 			text += '<buttontext pID="' + (participation.id ? participation.id : '') + '" s="' + (participation.id ? participation.state : '') + '" confirm="' + v.event.confirm + '" class="bgColor" onclick="events.participate(event,' + JSON.stringify(p).replace(/"/g, '&quot;') + ')" max="' + (v.maxParticipants ? v.maxParticipants : 0) + '">' + ui.l('events.participante' + (participation.state == 1 ? 'Stop' : '')) + '</buttontext>';
-		if (v.CP && v.CP.length > 1)
-			text += '<buttontext class="bgColor" onclick="events.toggleParticipants(event,' + JSON.stringify(p) + ',' + v.event.confirm + ')">' + ui.l('events.participants') + '</buttontext>';
+		text += '<buttontext class="bgColor" onclick="events.toggleParticipants(event,' + JSON.stringify(p).replace(/"/g, '&quot;') + ',' + v.event.confirm + ')">' + ui.l('events.participants') + '</buttontext>';
 		if (text)
 			text = '<div style="margin:1em 0;">' + text + '</div><text name="participants" style="margin:0 -1em;"></text>';
 		return text;
@@ -333,12 +330,12 @@ ${v.eventParticipationButtons}
 	}
 	static init() {
 		communication.ajax({
-			url: global.server + 'db/list?query=event_participate&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id),
+			url: global.server + 'db/list?query=contact_listEventParticipate&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id),
 			responseType: 'json',
 			success(r) {
 				events.participations = [];
 				for (var i = 1; i < r.length; i++)
-					events.participations.push(model.convert(new EventParticipate(), r, i));
+					events.participations.push(model.convert(new Contact(), r, i).eventParticipate);
 			}
 		});
 	}
@@ -391,8 +388,11 @@ ${v.eventParticipationButtons}
 					v.classFavorite = v.locationFavorite.favorite ? ' favorite' : '';
 					if (!outdated) {
 						var d = global.date.getDateFields(v.event.startDate);
-						if (events.getParticipation({ id: v.id, date: d.year + '-' + d.month + '-' + d.day }).state == 1)
+						var state = events.getParticipation({ id: v.id, date: d.year + '-' + d.month + '-' + d.day }).state;
+						if (state == 1)
 							v.classFavorite += ' participate';
+						else if (state == -1)
+							v.classFavorite += ' canceled';
 						v.id += '_' + d.year + '-' + d.month + '-' + d.day;
 					}
 					v.classBGImg = v.imageList ? '' : bg;
@@ -412,7 +412,7 @@ ${v.eventParticipationButtons}
 					v._geolocationDistance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 10 ? 0 : 1).replace('.', ',') : '';
 					v.type = 'Event';
 					v.render = 'pageLocation.detailLocationEvent';
-					v.query = 'event_list&search=' + encodeURIComponent('event.id=' + v.event.id);
+					v.query = 'location_listEvent&search=' + encodeURIComponent('event.id=' + v.event.id);
 					s += pageLocation.templateList(v);
 				}
 			}
@@ -433,14 +433,13 @@ ${v.eventParticipationButtons}
 			d.values.state = button.getAttribute('s') == 1 ? -1 : 1;
 			d.id = participateID;
 			if (button.getAttribute('confirm') == 1) {
-				var s = ui.q('#stopParticipateReason').val;
-				if (!s) {
-					events.stopParticipate(id);
+				if (!ui.q('#stopParticipateReason')) {
+					ui.navigation.openPopup(ui.l('events.stopParticipate'), ui.l('events.stopParticipateText') + '<br/><textarea id="stopParticipateReason" placeholder="' + ui.l('events.stopParticipateHint') + '" style="margin-top:0.5em;"></textarea><buttontext class="bgColor" style="margin-top:1em;" pID="' + button.getAttribute('pID') + '" s="' + button.getAttribute('s') + '" confirm="1" onclick="events.participate(event,' + JSON.stringify(id).replace(/"/g, '&quot;') + ')">' + ui.l('events.stopParticipateButton') + '</buttontext>');
 					return;
 				}
-				if (s.trim().length == 0)
+				if (!ui.q('#stopParticipateReason').value)
 					return;
-				d.values.reason = s;
+				d.values.reason = ui.q('#stopParticipateReason').value;
 			}
 		} else {
 			id.d = global.date.getDateFields(id.date);
@@ -456,20 +455,24 @@ ${v.eventParticipationButtons}
 				if (r)
 					ui.attr(button, 'pID', r);
 				if (button.getAttribute('s') == '1') {
-					if (button.getAttribute('confirm') == '1')
-						button.parentNode.innerHTML = '';
-					else {
-						ui.attr(button, 's', '-1');
+					ui.classRemove('detail card:last-child .event', 'participate');
+					ui.classRemove('row[i="' + id.id + '_' + id.date + '"]', 'participate');
+					if (button.getAttribute('confirm') == '1') {
+						ui.classAdd('detail card:last-child .event', 'canceled');
+						ui.classAdd('row[i="' + id.id + '_' + id.date + '"]', 'canceled');
+						ui.q('detail card:last-child buttontext[pID="' + participateID + '"]').outerHTML = '';
+					} else
 						button.innerText = ui.l('events.participante');
-						ui.classRemove('detail card:last-child .event', 'participate');
-						ui.classRemove('row[i="' + id.id + '_' + id.date + '"]', 'participate');
-					}
 				} else {
 					ui.attr(button, 's', '1');
 					button.innerText = ui.l('events.participanteStop');
 					ui.classAdd('detail card:last-child .event', 'participate');
 					ui.classAdd('row[i="' + id.id + '_' + id.date + '"]', 'participate');
 				}
+				var e = ui.q('detail card:last-child[i="' + id.id + '_' + id.date + '"] [name="participants"]');
+				e.innerHTML = '';
+				e.removeAttribute('h');
+				e.style.display = 'none';
 				ui.navigation.hidePopup();
 				events.init();
 			}
@@ -597,16 +600,12 @@ ${v.eventParticipationButtons}
 			});
 		}
 	}
-	static stopParticipate(id) {
-		var e = ui.q('[name="button_' + id + '"]');
-		ui.navigation.openPopup(ui.l('events.stopParticipate'), ui.l('events.stopParticipateText') + '<br/><textarea id="stopParticipateReason" placeholder="' + ui.l('events.stopParticipateHint') + '" style="margin-top:0.5em;"></textarea><buttontext class="bgColor" style="margin-top:1em;" pID="' + e.getAttribute('pID') + '" s="' + e.getAttribute('s') + '" confirm="' + e.getAttribute('confirm') + '" onclick="events.participate(event,&quot;' + id + '&quot;)">' + ui.l('events.stopParticipateButton') + '</buttontext>');
-	}
 	static toggle(id) {
 		var d = ui.q('detail card:last-child[i="' + id + '"] [name="events"]');
 		if (!d.innerHTML) {
 			var field = ui.q('detail card:last-child').getAttribute('type');
 			communication.ajax({
-				url: global.server + 'db/list?query=event_list&search=' + encodeURIComponent('event.' + field + 'Id=' + id),
+				url: global.server + 'db/list?query=location_listEvent&search=' + encodeURIComponent('event.' + field + 'Id=' + id),
 				responseType: 'json',
 				success(r) {
 					events.toggleInternal(r, id, field);
@@ -642,19 +641,14 @@ ${v.eventParticipationButtons}
 			if (v.event.maxParticipants)
 				text += global.separator + ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
 			var p = events.getParticipation({ id: v.event.id, date: date });
-			if (v.event.confirm == 1) {
+			if (v.event.confirm == 1)
 				text += global.separator + ui.l('events.participationMustBeConfirmed');
-				if (p.state == 1)
-					text += global.separator + ui.l('events.confirmed');
-				else if (p.state == 0)
-					text += global.separator + ui.l('events.canceled');
-			}
 			if (text)
 				text = '<br/>' + text.substring(global.separator.length);
 			text += '<br/>' + v.event.text;
 			if (field == 'contact')
 				text = '<br/>' + v.name + text;
-			s += '<auxEvents' + (p.state == 1 ? ' class="participate"' : '') + ' onclick="details.open(&quot;' + idIntern + '&quot;,&quot;event_list&search=' + encodeURIComponent('event.id=' + v.event.id) + '&quot;,pageLocation.detailLocationEvent)">' + s2 + text + '</auxEvents>';
+			s += '<auxEvents' + (p.state == 1 ? ' class="participate"' : p.state == -1 ? ' class="canceled"' : '') + ' onclick="details.open(&quot;' + idIntern + '&quot;,&quot;location_listEvent&search=' + encodeURIComponent('event.id=' + v.event.id) + '&quot;,pageLocation.detailLocationEvent)">' + s2 + text + '</auxEvents>';
 		}
 		if (s)
 			s += newButton;
@@ -667,12 +661,12 @@ ${v.eventParticipationButtons}
 	static toggleParticipants(event, id, confirm) {
 		if (event.stopPropagation)
 			event.stopPropagation();
-		var e = ui.q('detail card:last-child[i="' + id + '"] [name="participants"]');
+		var e = ui.q('detail card:last-child[i="' + id.id + '_' + id.date + '"] [name="participants"]');
 		if (e.innerHTML)
 			ui.toggleHeight(e);
 		else {
-			communication.loadList('query=event_participate&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id.split('_')[0] + ' and eventParticipate.eventDate=\'' + id.split('_')[1] + '\''), function (l) {
-				e.innerHTML = l.length < 2 ? '<div style="margin-bottom:1em;">' + ui.l('events.no' + (confirm == 1 ? 'Participant' : 'Marks')) + '</div>' : pageContact.listContactsInternal(l);
+			communication.loadList('query=contact_listEventParticipate&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&limit=0&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id.id + ' and eventParticipate.eventDate=\'' + id.date + '\''), function (l) {
+				e.innerHTML = l.length < 2 ? '<div style="margin-bottom:1em;">' + ui.l('events.noParticipant') + '</div>' : pageContact.listContactsInternal(l);
 				ui.toggleHeight(e);
 				return '&nbsp;';
 			});

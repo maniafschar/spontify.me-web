@@ -222,13 +222,11 @@ class pageWhatToDo {
 	}
 	static load(type, query, search, exec) {
 		var currentWtd = pageWhatToDo.getCurrentMessage();
-		if (currentWtd.keywords && pageWhatToDo.checkAttributeLocationsForList(type)) {
-			var l = currentWtd.locationLatitude ? currentWtd : geoData.latlon;
-			communication.loadList('query=' + query + '&latitude=' + l.lat + '&longitude=' + l.lon + '&distance=' + pageWhatToDo.maxRadius + '&search=' + encodeURIComponent(search), exec);
-		}
+		if (currentWtd.keywords && pageWhatToDo.checkAttributeLocationsForList(type))
+			communication.loadList('query=' + query + '&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=' + pageWhatToDo.maxRadius + '&search=' + encodeURIComponent(search), exec);
 	}
 	static loadListEvents() {
-		return pageWhatToDo.load('Events', 'event_listCurrent', pageSearch.getSearchMatchesLocation(pageWhatToDo.getCurrentMessage().keywords), pageWhatToDo.listEvents);
+		return pageWhatToDo.load('Events', 'location_listEventCurrent', pageSearch.getSearchMatchesLocation(pageWhatToDo.getCurrentMessage().keywords), pageWhatToDo.listEvents);
 	}
 	static loadListLocations() {
 		return pageWhatToDo.load('Locations', 'location_list', pageSearch.getSearchMatchesLocation(pageWhatToDo.getCurrentMessage().keywords), pageWhatToDo.listLocation);

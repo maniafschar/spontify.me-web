@@ -107,12 +107,13 @@ class Contact extends BaseEntity {
 	visitPage;
 
 	contactBlock = new ContactBlock();
-	contactLink = new ContactLink();
 	contactGroupLink = new ContactGroupLink();
+	contactLink = new ContactLink();
 	contactNotification = new ContactNotification();
 	contactRating = new ContactRating();
 	contactVisit = new ContactVisit();
 	contactWhatToDo = new ContactWhatToDo();
+	eventParticipate = new EventParticipate();
 }
 
 class ContactBlock extends BaseEntity {

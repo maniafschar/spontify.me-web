@@ -686,7 +686,7 @@ class communication {
 		body += '\n\nOS\n\t' + global.getOS();
 		body += '\n\nVERSION\n\t' + global.appVersion;
 		body += '\n\nLOCALIZED\n\t' + geoData.localized;
-		body += '\n\nLANG' + global.language;
+		body += '\n\nLANG\n\t' + global.language;
 		communication.ajax({
 			url: global.server + 'action/notify',
 			method: 'POST',

@@ -294,7 +294,7 @@ class pageSearch {
 				else if (s.type == 'locations')
 					communication.loadList(lola + 'query=location_list&search=' + encodeURIComponent(pageSearch.getSearchLocation()), pageLocation.listLocation, 'search', 'search');
 				else
-					communication.loadList(lola + 'query=event_listCurrent&search=' + encodeURIComponent(pageSearch.getSearchLocation()), events.listEvents, 'search', 'search');
+					communication.loadList(lola + 'query=location_listEventCurrent&search=' + encodeURIComponent(pageSearch.getSearchLocation()), events.listEvents, 'search', 'search');
 			});
 	}
 	static selectType() {

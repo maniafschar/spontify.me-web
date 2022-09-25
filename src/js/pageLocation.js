@@ -4,7 +4,7 @@ import { events } from './events';
 import { geoData } from './geoData';
 import { global } from './global';
 import { lists } from './lists';
-import { Location, model, LocationOpenTime, EventParticipate } from './model';
+import { Location, model, LocationOpenTime } from './model';
 import { pageChat } from './pageChat';
 import { pageWhatToDo } from './pageWhatToDo';
 import { ui, formFunc } from './ui';
