@@ -11,20 +11,20 @@ class pageHome {
 	static template = v =>
 		global.template`<homeHeader>	
 	<homeTitle onclick="ui.navigation.goTo(&quot;settings&quot;)">
-		<img source="logo.svg" />
+		<img source="logo" />
 	</homeTitle>
 </homeHeader>
 <homeBody>
 	<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;whatToDo&quot;)" style="width:80%;">
-		<span class="homeWTD">${ui.l('wtd.todayIWant')}</span><img source="rocket.svg" />
+		<span class="homeWTD">${ui.l('wtd.todayIWant')}</span><img source="rocket" />
 	</buttontext><br/>
 	<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;locations&quot;)" style="width:70%;">
 		<badge name="badgeLocations" class="bgColor pulse">0</badge>
-		<span>${ui.l('locations.homeButton')}</span> <img source="location.svg" />
+		<span>${ui.l('locations.homeButton')}</span> <img source="location" />
 	</buttontext ><br/>
 	<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;contacts&quot;)" style="width:60%;">
 		<badge name="badgeContacts" class="bgColor pulse">0</badge>
-		<span>${ui.l('contacts.homeButton')}</span><img source="network.svg" />
+		<span>${ui.l('contacts.homeButton')}</span><img source="network" />
 	</buttontext>
 </homeBody>`;
 	static init() {
@@ -39,7 +39,7 @@ class pageHome {
 			initialisation.reposition();
 		}
 		var e = ui.q('buttonIcon.bottom.left');
-		ui.buttonIcon(e, '<badgeNotifications>' + communication.notification.data.length + '</badgeNotifications><img source="news.svg" />', 'communication.notification.open()');
+		ui.buttonIcon(e, '<badgeNotifications>' + communication.notification.data.length + '</badgeNotifications><img source="news" />', 'communication.notification.open()');
 		ui.classAdd(e, 'pulse highlight');
 		if (!communication.notification.data.length)
 			ui.css(e, 'display', 'none');

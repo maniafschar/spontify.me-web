@@ -84,7 +84,7 @@ class pageChat {
 		if (document.activeElement)
 			document.activeElement.blur();
 		var popupVisible = ui.q('popupContent');
-		ui.navigation.openPopup(ui.l('chat.sendImg'), '<form name="chatImg" action="saveChatImage" style="padding:0 2em;"><input type="hidden" name="contactId2" value="' + ui.q('chat').getAttribute('i') + '"><div style="padding:1em;"><input name="image" type="file"/></div><div style="text-align:center;margin-bottom:1em;"></form><buttontext onclick="pageChat.sendChatImage()" class="bgColor" id="popupSendImage"' + (global.isBrowser() ? '' : ' style="display:none;"') + '>' + ui.l('send') + '</buttontext></div>');
+		ui.navigation.openPopup(ui.l('chat.sendImg'), '<form name="chatImg" action="saveChatImage" style="padding:0 2em;"><input type="hidden" name="contactId2" value="' + ui.q('chat').getAttribute('i') + '"><div style="margin:1em;"><input name="image" type="file"/></div></form><div style="text-align:center;margin-bottom:1em;"><buttontext onclick="pageChat.sendChatImage()" class="bgColor" id="popupSendImage" style="display:none;">' + ui.l('send') + '</buttontext></div>');
 		if (!popupVisible && global.isBrowser()) {
 			var e = ui.q('[name="image"]');
 			if (e)
@@ -93,7 +93,7 @@ class pageChat {
 	}
 	static buttonChat() {
 		var e = ui.q('buttonIcon.bottom.left');
-		ui.buttonIcon(e, '<badgeChats>' + pageChat.newChats + '</badgeChats><img source="chat.svg" />', 'pageChat.toggleUserList()');
+		ui.buttonIcon(e, '<badgeChats>' + pageChat.newChats + '</badgeChats><img source="chat" />', 'pageChat.toggleUserList()');
 		if (pageChat.newChats)
 			ui.classAdd(e, 'pulse highlight');
 	}
@@ -438,14 +438,6 @@ class pageChat {
 				}
 			}, 1000);
 		}
-	}
-	static previewChatImage(e) {
-		var e2 = ui.q('popupTitle');
-		if (e2 && e2.innerHTML.indexOf(ui.l('chat.sendImg')) == 0)
-			e2.innerHTML = e2.innerHTML.substring(0, e2.innerHTML.indexOf('<img')) + ' ' + e2.innerHTML.substring(e2.innerHTML.indexOf('<img'));
-		ui.navigation.openPopup(ui.l('chat.sendImg'), '<rotate onclick="formFunc.image.rotate(this)">&#8635;</rotate><img name="imagepreview" class="chatImgPreview" onclick="formFunc.image.rotate(this)"/><br/><buttontext onclick="pageChat.sendChatImage()" class="bgColor" style="margin-top:1em;">' + ui.l('ready') + '</buttontext><div class="chatSendImgPrevHint" style="bottom:5.5em;"></div><div class="chatSendImgPrevHint"></div>', 'formFunc.image.remove(&quot;image&quot;)', false, function () {
-			formFunc.image.previewInternal(e.files[0], e.getAttribute('name'));
-		});
 	}
 	static refresh() {
 		lists.data['chats'] = '';

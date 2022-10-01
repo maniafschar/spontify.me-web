@@ -670,7 +670,7 @@ class communication {
 		});
 	}
 	static sendError(text) {
-		if (!text || text.trim().length == 0)
+		if (!text || !global.language)
 			return;
 		for (var i = 0; i < communication.sentErrors.length; i++) {
 			if (communication.sentErrors[i] == text)

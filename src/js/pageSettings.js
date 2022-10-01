@@ -221,9 +221,23 @@ class pageSettings {
 		ui.navigation.openPopup(ui.l('settings.delete'), ui.l('deleteProfileHint') + '<br /><br /><textarea id="deleteAccountFeedback" placeholder="' + ui.l('deleteProfileFeedbackHint') + '" maxlength="2000"></textarea><div style="margin-top:1em;"><buttontext onclick="pageSettings.deleteProfileExec()" class="bgColor">' + ui.l('deleteProfileFinal') + '</buttontext></div>');
 	}
 	static deleteProfileExec() {
-		if (ui.val('#deleteAccountFeedback'))
-			pageInfo.sendFeedback('Delete Account Reason:\n' + ui.val('#deleteAccountFeedback'), pageSettings.deleteProfileExec2);
-		else
+		if (ui.val('#deleteAccountFeedback')) {
+			communication.ajax({
+				url: global.server + 'db/one',
+				method: 'POST',
+				body: {
+					classname: 'Ticket',
+					values: {
+						type: 'ACCOUNT_DELETE',
+						subject: user.contact.id,
+						note: ui.val('#deleteAccountFeedback')
+					}
+				},
+				success() {
+					pageSettings.deleteProfileExec2();
+				}
+			});
+		} else
 			pageSettings.deleteProfileExec2();
 	}
 	static deleteProfileExec2() {
@@ -231,7 +245,7 @@ class pageSettings {
 			url: global.server + 'authentication/one',
 			method: 'DELETE',
 			success(r) {
-				communication.login.resetAfterLogoff(true);
+				communication.login.resetAfterLogoff();
 			}
 		});
 	}

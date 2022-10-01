@@ -164,20 +164,10 @@ class pageInfo {
 				url: global.server + 'db/one',
 				method: 'POST',
 				body: {
-					classname: 'Feedback',
+					classname: 'Chat',
 					values: {
-						pseudonym: user.contact.pseudonym,
-						text: text,
-						os: global.getOS(),
-						appname: navigator.appName,
-						appversion: navigator.appVersion,
-						language: navigator.language,
-						platform: navigator.platform,
-						useragent: navigator.userAgent,
-						device: global.getDevice(),
-						version: global.appVersion,
-						localized: (geoData.currentTown ? geoData.currentTown + ' | ' : '') + geoData.currentStreet,
-						lang: global.language
+						note: text.replace(/</g, '&lt;'),
+						contactId2: 3
 					}
 				},
 				error(r) {

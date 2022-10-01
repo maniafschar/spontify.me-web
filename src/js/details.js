@@ -32,7 +32,7 @@ class details {
 	}
 	static init() {
 		ui.css('main>buttonIcon', 'display', 'none');
-		ui.buttonIcon('.bottom.right', 'favorite', 'details.toggleFavorite()');
+		ui.buttonIcon('.bottom.right', ui.q('detail card:last-child').getAttribute('type') == 'contact' ? 'network' : 'favorite', 'details.toggleFavorite()');
 		ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
 		pageChat.buttonChat();
 		if (ui.classContains('detail card:last-child detailHeader', 'favorite'))

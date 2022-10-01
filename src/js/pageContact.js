@@ -25,7 +25,7 @@ class pageContact {
 		<extra>${v.extra}</extra>
 		<imagelist>
 			<img src="${v.image}" class="${v.classBGImg}" />
-			${lists.iconFavorite}
+			${formFunc.image.getSVG('network')}
 		</imagelist>
 	</div>
 	</row>`;

@@ -62,10 +62,12 @@ class initialisation {
 		ui.on(window, 'keyboardDidHide', function () {
 			window.scrollTo(0, 0);
 		});
-		cordova.plugins.backgroundMode.on('activate', function () {
-			cordova.plugins.backgroundMode.disableWebViewOptimizations();
-		});
-		cordova.plugins.backgroundMode.setDefaults({ silent: true });
+		if (cordova.plugins && cordova.plugins.backgroundMode) {
+			cordova.plugins.backgroundMode.on('activate', function () {
+				cordova.plugins.backgroundMode.disableWebViewOptimizations();
+			});
+			cordova.plugins.backgroundMode.setDefaults({ silent: true });
+		}
 		initialisation.statusBar();
 		universalLinks.subscribe(null, function (e) {
 			if (e.path) {

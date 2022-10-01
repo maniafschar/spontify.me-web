@@ -36,7 +36,7 @@ class pageLocation {
 			<extra>${v.extra}</extra>
 		<imagelist>
 			<img src="${v.image}" class="${v.classBGImg}" />
-			${lists.iconFavorite}
+			${formFunc.image.getSVG('favorite')}
 		</imagelist>
 	</div>
 </row>`;
@@ -633,12 +633,6 @@ ${v.hint}
 		if (i2 > 1) {
 			for (var e in r4)
 				s += '<input type="radio" name="filterCompass" value="' + e + '" label="' + ui.l('locations.compass' + e) + '"' + m;
-			s += sep;
-		}
-		if (false && r.length > 1) {
-			r = r.sort();
-			for (var i = 0; i < r.length; i++)
-				s += '<input type="radio" label="' + r[i] + '" name="filterLocationTown"' + m;
 			s += sep;
 		}
 		var map = '';

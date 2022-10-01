@@ -51,10 +51,12 @@ class bluetooth {
 	static requestAuthorization(logon) {
 		bluetooth.reset();
 		var stateListener = function () {
-			cordova.plugins.backgroundMode.enable();
-			cordova.plugins.backgroundMode.on('failure', function (e) {
-				communication.sendError('ble background mode: ' + JSON.stringify(e));
-			});
+			if (cordova.plugins && cordova.plugins.backgroundMode) {
+				cordova.plugins.backgroundMode.enable();
+				cordova.plugins.backgroundMode.on('failure', function (e) {
+					communication.sendError('ble background mode: ' + JSON.stringify(e));
+				});
+			}
 			var showHint = !logon;
 			ble.startStateNotifications(function (state) {
 				bluetooth.state = state;

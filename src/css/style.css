@@ -1531,6 +1531,7 @@ buttonIcon.highlight {
 
 buttonIcon.highlight svg {
 	fill: rgb(252, 251, 104);
+	stroke: rgb(252, 251, 104);
 }
 
 buttonIcon.bluetoothInactive {
@@ -1694,6 +1695,7 @@ row imagelist svg {
 	width: 1.5em;
 	display: none;
 	fill: rgb(252, 251, 104);
+	stroke: rgb(252, 251, 104);
 }
 
 row.favorite imagelist svg {

@@ -9,7 +9,6 @@ export { lists };
 
 class lists {
 	static data = [];
-	static iconFavorite;
 
 	static templateList = v =>
 		global.template`<listHeader>${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5em;"></hinky><div></div></filters><listTitle></listTitle>${v.map}</listHeader>
@@ -56,15 +55,7 @@ class lists {
 		return '<noResult>' + s.replace(/\{0\}/g, ui.l(activeID + '.title')).replace('{1}', '') + '</noResult>';
 	}
 	static init() {
-		if (!lists.iconFavorite)
-			communication.ajax({
-				url: '/images/favorite.svg',
-				success(r) {
-					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
-					lists.iconFavorite = e.outerHTML;
-				}
-			});
-
+		formFunc.image.fetchSVG('favorite');
 	}
 	static removeListEntry(id) {
 		var activeID = ui.q('detail').getAttribute('from');

@@ -66,7 +66,7 @@ class ui {
 			communication.sendError('buttonIcon ' + e + ' - ' + image + ' - ' + click);
 			return;
 		}
-		e.innerHTML = image.indexOf('<') == 0 ? image : '<img source="' + image + '.svg" />';
+		e.innerHTML = image.indexOf('<') == 0 ? image : '<img source="' + image + '" />';
 		e.setAttribute('onclick', click);
 		ui.classRemove(e, 'pulse highlight bluetoothInactive');
 		e.style.display = '';
@@ -910,6 +910,8 @@ class formFunc {
 		return d;
 	}
 	static image = {
+		svg: {},
+
 		cameraError(e) {
 			if (!e || e.toLowerCase().indexOf('select') < 0)
 				ui.navigation.openPopup(ui.l('attention'), ui.l('camera.notAvailabe').replace('{0}', e));
@@ -926,7 +928,6 @@ class formFunc {
 				function (fe) {
 					fe.file(function (f) {
 						formFunc.image.preview2(f, formFunc.cameraField);
-						ui.css('popupSendImage', 'display', 'inline-block');
 					}, formFunc.image.cameraError);
 				}, formFunc.image.cameraError);
 		},
@@ -938,6 +939,24 @@ class formFunc {
 			for (var i = 0; i < arr[1].length; i++)
 				ia[i] = arr[1].charCodeAt(i);
 			return new Blob([ab], { type: mime });
+		},
+		fetchSVG(id, img) {
+			if (!formFunc.image.svg[id]) {
+				formFunc.image.svg[id] = 1;
+				communication.ajax({
+					url: '/images/' + id + '.svg',
+					success(r) {
+						var parser = new DOMParser();
+						var xmlDoc = parser.parseFromString(r, "text/xml");
+						formFunc.image.svg[id] = xmlDoc.getElementsByTagName('svg')[0].outerHTML;
+						if (img && img.parentNode)
+							formFunc.image.replaceSVG(img, id);
+					}
+				});
+			}
+		},
+		getSVG(id) {
+			return formFunc.image.svg[id];
 		},
 		hasImage(name) {
 			var x = ui.q('[name="' + name + 'Preview"]');
@@ -954,6 +973,7 @@ class formFunc {
 				var p = '<rotate onclick="formFunc.image.rotate(this)">&#8635;</rotate><img name="' + name + 'Preview"/>';
 				ui.html(ePrev, '<close onclick="formFunc.image.remove(&quot;' + name + '&quot;)">X</close>' + p + '<desc></desc>');
 				formFunc.image.previewInternal(file, name);
+				ui.css('#popupSendImage', 'display', '');
 			} else
 				formFunc.image.remove(name);
 		},
@@ -1052,10 +1072,31 @@ class formFunc {
 			ui.css(ePrev, 'z-index', '');
 			ui.html(ePrev, '<span>' + (e.getAttribute('hint') ? e.getAttribute('hint') : ui.l('fileUpload.select')) + '</span>');
 			ui.css('[name="' + name + '_disp"]', 'height', '');
+			ui.css('#popupSendImage', 'display', 'none');
 			if (!global.isBrowser()) {
 				ui.css('[name="' + name + '_appInput"]', 'display', 'block');
 				ui.css(ePrev, 'display', 'none');
-				ui.css('popupSendImage', 'display', 'none');
+			}
+		},
+		replaceSVG(img, id) {
+			if (formFunc.image.svg[id] != 1) {
+				var e = document.createElement('div');
+				e.innerHTML = formFunc.image.svg[id];
+				img.parentNode.replaceChild(e.firstChild, img);
+				if (global.language != 'DE' && id == 'logo.svg')
+					ui.classAdd('hometitle svg>g', 'en');
+			}
+		},
+		replaceSVGs() {
+			var imgs = ui.qa('img[source]');
+			if (imgs) {
+				for (var i = 0; i < imgs.length; i++) {
+					var id = imgs[i].getAttribute('source');
+					if (formFunc.image.svg[id])
+						formFunc.image.replaceSVG(imgs[i], id);
+					else
+						formFunc.image.fetchSVG(id, imgs[i]);
+				}
 			}
 		},
 		rotate(img) {
@@ -1112,27 +1153,6 @@ class formFunc {
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
 			ctx.drawImage(image, x, y, wOrg, hOrg, 0, 0, w, h);
 			return { data: canvas.toDataURL('image/jpeg', 0.8), width: parseInt(w + 0.5), height: parseInt(h + 0.5) };
-		},
-		replaceSVGs() {
-			var imgs = ui.qa('img[source]');
-			if (imgs)
-				for (var i = 0; i < imgs.length; i++)
-					formFunc.image.svgInject(imgs[i]);
-		},
-		svgInject(img) {
-			communication.ajax({
-				url: '/images/' + img.getAttribute('source'),
-				success(r) {
-					if (img && img.parentNode) {
-						var parser = new DOMParser();
-						var xmlDoc = parser.parseFromString(r, "text/xml");
-						var svg = xmlDoc.getElementsByTagName('svg')[0];
-						img.parentNode.replaceChild(svg, img);
-						if (global.language != 'DE' && img.getAttribute('source') == 'logo.svg')
-							ui.classAdd('hometitle svg>g', 'en');
-					}
-				}
-			});
 		},
 		zoom(event, delta) {
 			var e = event.target;
