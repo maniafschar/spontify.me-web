@@ -43,7 +43,7 @@ class ratings {
         <input type="hidden" id="cid" value="${v.id}" />
         <input type="hidden" name="locationId" value="${v.id}" />
         <input type="hidden" name="rating" value="80" />
-        <textarea maxlength="250" placeholder="${ui.l('locations.shortDesc')}" name="text" ${v.textareaStyle}>${v.draft}</textarea>
+        <textarea maxlength="1000" placeholder="${ui.l('locations.shortDesc')}" name="text" ${v.textareaStyle}>${v.draft}</textarea>
         <errorHint class="highlightColor"></errorHint>
         <field style="margin:0.5em 0 0 0;">
             <input type="file" name="image" accept=".gif, .png, .jpg" />

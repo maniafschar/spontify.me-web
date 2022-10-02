@@ -68,7 +68,7 @@ ${v.hint}
 <field>
 	<label>${ui.l('description')}</label>
 	<value>
-		<textarea name="text">${v.text}</textarea>
+		<textarea name="text" maxlength="1000">${v.text}</textarea>
 	</value>
 </field>
 <field>

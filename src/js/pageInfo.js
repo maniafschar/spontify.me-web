@@ -43,7 +43,7 @@ class pageInfo {
 		${ui.l('info.feedback')}
     </buttontext>
     <div id="info6" style="display:none;">
-        <textarea placeholder="${ui.l('info.feedbackHint')}" maxlength="2000" id="feedbackText"></textarea>
+        <textarea placeholder="${ui.l('info.feedbackHint')}" maxlength="1000" id="feedbackText"></textarea>
         <buttontext onclick="pageInfo.sendFeedback(ui.val(&quot;#feedbackText&quot;))"
             class="bgColor" style="margin-top:0.5em;">${ui.l('send')}
         </buttontext>
