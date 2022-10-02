@@ -194,7 +194,7 @@ ${v.eventParticipationButtons}
 	}
 	static edit(locationID, id) {
 		if (id)
-			events.editInternal(locationID, id, pageLocation.currentDetail);
+			events.editInternal(locationID, id, JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))));
 		else
 			events.editInternal(locationID);
 	}
@@ -202,9 +202,7 @@ ${v.eventParticipationButtons}
 		var draft = formFunc.getDraft('event' + locationID + (id ? '_' + id : ''));
 		if (draft)
 			v = draft.values;
-		else if (v)
-			v = model.convert(new Location(), v).event;
-		else
+		else if (!v)
 			v = {};
 		if (v.startDate && v.startDate.indexOf(':') > -1) {
 			v.startDate = v.startDate.substring(0, v.startDate.lastIndexOf('.'));
@@ -246,7 +244,7 @@ ${v.eventParticipationButtons}
 			d.setMonth(d.getMonth() + 6);
 			v.endDate = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
 		}
-		ui.navigation.openPopup(v.name, events.templateEdit(v), 'events.saveDraft()');
+		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), events.templateEdit(v), 'events.saveDraft()');
 		events.setForm();
 	}
 	static getCalendarList(data, onlyMine) {

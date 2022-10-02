@@ -13,7 +13,6 @@ import { user } from './user';
 export { pageLocation };
 
 class pageLocation {
-	static currentDetail;
 	static locationsAdded = null;
 	static map = {
 		canvas: null,
@@ -41,7 +40,7 @@ class pageLocation {
 	</div>
 </row>`;
 	static templateDetail = v =>
-		global.template`<detailHeader idFav="${v.locationFavorite.id ? v.locationFavorite.id : ''}" class="${v.favorite}">
+		global.template`<detailHeader idFav="${v.locationFavorite.id ? v.locationFavorite.id : ''}" class="${v.favorite}" data="${v.data}">
 	<detailImg>
 		<img src="${v.image}" />
 		<detailTitle>
@@ -339,15 +338,18 @@ ${v.hint}
 				success(s) {
 					while (model.convert(new LocationOpenTime(), s, 1).day == 0)
 						s.push(s.splice(1, 1)[0]);
-					l.OT = s;
-					ui.html('detail card:last-child openTimes', pageLocation.getOpenTimes(s));
+					var e = ui.q('detail card[i="' + id + '"][type="location"] detailHeader');
+					var o = JSON.parse(decodeURIComponent(e.getAttribute('data')));
+					o.OT = s;
+					e.setAttribute('data', encodeURIComponent(JSON.stringify(o)));
+					ui.html('detail card[i="' + id + '"][type="location"] openTimes', pageLocation.getOpenTimes(s));
 				}
 			});
 		return pageLocation.detailLocationEventInternal(l, id);
 	}
 	static detailLocationEventInternal(l, id) {
-		pageLocation.currentDetail = l;
 		var v = model.convert(new Location(), l);
+		v.data = encodeURIComponent(JSON.stringify(v));
 		l = l[1];
 		v.parking = '';
 		var p = v.parkingOption;
@@ -461,8 +463,9 @@ ${v.hint}
 	}
 	static edit(id) {
 		if (id) {
-			if (model.convert(new Location(), pageLocation.currentDetail).contactId == user.contact.id)
-				pageLocation.editInternal(id, pageLocation.currentDetail);
+			var v = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
+			if (v.contactId == user.contact.id)
+				pageLocation.editInternal(id, v);
 			else {
 				if (pageLocation.locationsAdded == null) {
 					communication.ajax({
@@ -478,7 +481,7 @@ ${v.hint}
 				if (pageLocation.locationsAdded <= global.minLocations)
 					ui.navigation.openPopup(ui.l('attention'), ui.l('locations.editHint').replace('{0}', pageLocation.locationsAdded) + '<br/><br/><buttontext class="bgColor" onclick="pageLocation.edit()">' + ui.l('locations.new') + '</buttontext>');
 				else
-					pageLocation.editInternal(id, pageLocation.currentDetail);
+					pageLocation.editInternal(id, v);
 			}
 		} else {
 			var e = ui.q('menu').style.transform;
@@ -493,11 +496,9 @@ ${v.hint}
 			}
 		}
 	}
-	static editInternal(id, l) {
-		var v;
+	static editInternal(id, v) {
 		var draft = formFunc.getDraft('location' + (id ? id : ''));
-		if (l) {
-			v = model.convert(new Location(), l);
+		if (v) {
 			if ((!v.ownerId && v.contactId == user.contact.id) || v.ownerId == user.contact.id)
 				v.deleteButton = '<buttontext onclick="pageLocation.deleteElement(' + id + ',&quot;Location&quot;)" class="bgColor" id="deleteElement">' + ui.l('delete') + '</buttontext>';
 		} else if (draft)
@@ -508,20 +509,20 @@ ${v.hint}
 		for (var i = 0; i < d.length; i++)
 			v['cat' + d.substring(i, i + 1)] = ' checked';
 		if (id) {
-			v.ot = '';
-			v.OT = [];
-			if (l.OT) {
-				for (var i = 1; i < l.OT.length; i++)
-					v.OT.push(model.convert(new LocationOpenTime(), l.OT, i));
+			var ot = [];
+			if (v.OT) {
+				for (var i = 1; i < v.OT.length; i++)
+					ot.push(model.convert(new LocationOpenTime(), v.OT, i));
 			} else {
 				for (var i = 1; i < 7; i++)
-					v.OT.push({ day: i });
-				v.OT.push({ day: 0 });
+					ot.push({ day: i });
+				ot.push({ day: 0 });
 			}
-			for (var i = 0; i < v.OT.length; i++) {
-				v.OT[i].i = '' + i;
-				v.OT[i]['wd' + v.OT[i].day] = ' selected';
-				v.ot += '<div>' + pageLocation.templateEditOpenTimes(v.OT[i]) + '</div>';
+			v.ot = '';
+			for (var i = 0; i < ot.length; i++) {
+				ot[i].i = '' + i;
+				ot[i]['wd' + v.OT[i].day] = ' selected';
+				v.ot += '<div>' + pageLocation.templateEditOpenTimes(ot[i]) + '</div>';
 			}
 		} else {
 			v.hint = '<div style="margin-bottom:2em;">' + ui.l('locations.newHint') + '</div>';
