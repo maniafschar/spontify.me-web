@@ -20,6 +20,7 @@ export { pageChat };
 class pageChat {
 	static copyLink = '';
 	static newChats = '';
+	static lastScroll = 0;
 	static oldCleverTip = '';
 	static admin = { id: 3, image: '' };
 
@@ -379,14 +380,16 @@ class pageChat {
 					ui.off('chatConversation', 'scroll', pageChat.reposition);
 					pageChat.detailChat(r, id);
 					ui.on('chatConversation', 'scroll', pageChat.reposition);
-					setTimeout(() => {
-						ui.css('chat', 'display', 'block');
-						pageChat.adjustTextarea(ui.q('#chatText'));
-						var e = ui.q('chatConversation');
-						if (e.children && e.children.length)
-							e.scrollTop = e.children[e.children.length - 1].offsetTop;
-						ui.navigation.animation('chat', 'slideDown');
-					}, 50);
+					ui.css('chatConversation', 'opacity', 0);
+					ui.css('chat', 'display', 'block');
+					ui.navigation.animation('chat', 'slideDown',
+						function () {
+							pageChat.adjustTextarea(ui.q('#chatText'));
+							var e = ui.q('chatConversation');
+							if (e.children && e.children.length)
+								e.scrollTop = e.children[e.children.length - 1].offsetTop;
+							ui.css('chatConversation', 'opacity', 1);
+						});
 				}
 				if (ui.cssValue('chat', 'display') == 'none')
 					f.call();
@@ -503,6 +506,9 @@ class pageChat {
 				date = e[i].innerHTML;
 			}
 			ui.html('chat chatDate', date);
+			e = ui.q('chatConversation');
+			if (!e.lastChild || e.lastChild.offsetHeight + e.lastChild.offsetTop == e.scrollTop + e.offsetHeight)
+				pageChat.lastScroll = new Date().getTime();
 		}
 	}
 	static saveDraft() {
@@ -590,6 +596,7 @@ class pageChat {
 				success() {
 					ui.navigation.hidePopup();
 					user.contact.chatTextGroups = '';
+					pageChat.initActiveChats();
 				}
 			});
 		} else
@@ -606,6 +613,7 @@ class pageChat {
 				body: v,
 				success(chatId) {
 					pageChat.postSendChatImage({ contactId: id, chatId: chatId, });
+					pageChat.initActiveChats();
 				}
 			});
 		} else

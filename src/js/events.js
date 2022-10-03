@@ -457,10 +457,9 @@ ${v.eventParticipationButtons}
 				d.values.reason = ui.q('#stopParticipateReason').value;
 			}
 		} else {
-			id.d = global.date.getDateFields(id.date);
 			d.values.state = 1;
 			d.values.eventId = id.id;
-			d.values.eventDate = id.d.year + '-' + id.d.month + '-' + id.d.day;
+			d.values.eventDate = id.date;
 		}
 		communication.ajax({
 			url: global.server + 'db/one',
@@ -469,9 +468,11 @@ ${v.eventParticipationButtons}
 			success(r) {
 				if (r)
 					ui.attr(button, 'pID', r);
+				var e = ui.q('detail card[i="' + id.id + '_' + id.date + '"] participantCount');
 				if (button.getAttribute('s') == '1') {
 					ui.classRemove('detail card:last-child .event', 'participate');
 					ui.classRemove('row[i="' + id.id + '_' + id.date + '"]', 'participate');
+					e.innerHTML = e.innerHTML && parseInt(e.innerHTML) > 1 ? (parseInt(e.innerHTML) - 1) + ' ' : '';
 					if (button.getAttribute('confirm') == '1') {
 						ui.classAdd('detail card:last-child .event', 'canceled');
 						ui.classAdd('row[i="' + id.id + '_' + id.date + '"]', 'canceled');
@@ -483,10 +484,11 @@ ${v.eventParticipationButtons}
 				} else {
 					ui.attr(button, 's', '1');
 					button.innerText = ui.l('events.participanteStop');
+					e.innerHTML = e.innerHTML ? (parseInt(e.innerHTML) + 1) + ' ' : '1 ';
 					ui.classAdd('detail card:last-child .event', 'participate');
 					ui.classAdd('row[i="' + id.id + '_' + id.date + '"]', 'participate');
 				}
-				var e = ui.q('detail card:last-child[i="' + id.id + '_' + id.date + '"] [name="participants"]');
+				e = ui.q('detail card:last-child[i="' + id.id + '_' + id.date + '"] [name="participants"]');
 				e.innerHTML = '';
 				e.removeAttribute('h');
 				e.style.display = 'none';

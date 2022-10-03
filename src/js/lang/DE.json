@@ -523,7 +523,7 @@
 			"compassW": "Westen",
 			"edit": "{0}",
 			"errorAddress": "Bitte gib die Adresse an.",
-			"errorAddressFormat": "Bitte gib eine korrekte Adresse an.",
+			"errorAddressFormat": "Bitte gib eine korrekte Adresse mit mindestens 2 Zeilen an.",
 			"errorCategory": "Bitte wähle eine Kategorie aus.",
 			"errorName": "Bitte gib einen Namen an.",
 			"errorParking": "Bitte gib die Parkplatzsituation vor Ort an.",

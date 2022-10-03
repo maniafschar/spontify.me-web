@@ -45,7 +45,7 @@ class pageHome {
 			ui.css(e, 'display', 'none');
 		ui.buttonIcon('.bottom.center', 'info', 'ui.navigation.goTo("info")');
 		ui.buttonIcon('.bottom.right', 'bluetooth', 'bluetooth.toggle()');
-		if (bluetooth.state != 'on' || !user.contact && user.contact.findMe)
+		if (bluetooth.state != 'on' || !user.contact || !user.contact.findMe)
 			ui.classAdd('buttonIcon.bottom.right', 'bluetoothInactive');
 		if (user.contact)
 			ui.buttonIcon('.top.left', 'search', 'ui.navigation.goTo("search")');

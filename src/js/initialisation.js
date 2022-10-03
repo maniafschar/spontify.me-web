@@ -158,8 +158,10 @@ class initialisation {
 		ui.swipe('chat', function (dir, event) {
 			if (dir == 'up') {
 				if (ui.parents(event.target, 'chatConversation')) {
+					if (pageChat.lastScroll + 1000 > new Date().getTime())
+						return;
 					var e = ui.q('chatConversation');
-					if (e.lastChild.offsetHeight + e.lastChild.offsetTop > e.scrollTop + e.offsetHeight)
+					if (e.lastChild && e.lastChild.offsetHeight + e.lastChild.offsetTop > e.scrollTop + e.offsetHeight)
 						return;
 				}
 				pageChat.close();

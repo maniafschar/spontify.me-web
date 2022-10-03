@@ -523,7 +523,7 @@
 			"compassW": "West",
 			"edit": "{0}",
 			"errorAddress": "Please enter the address.",
-			"errorAddressFormat": "Please enter a correct address.",
+			"errorAddressFormat": "Please enter a correct address with at least 2 rows.",
 			"errorCategory": "Please choose a category.",
 			"errorName": "Please enter a name.",
 			"errorParking": "Please enter the parking situation at the spot.",

@@ -32,14 +32,8 @@ class bluetooth {
 				window.localStorage.setItem('findMeIDs', window.localStorage.getItem('findMeIDs') + device.id + '|');
 				ble.connect(device.id, function () {
 					ble.write(device.id, bluetooth.UUID_SERVICE, bluetooth.UUID_TX, bluetooth.encode(user.contact.id), function () {
-						ble.disconnect(device.id, null, function (e) {
-							communication.sendError('ble disconnect: ' + JSON.stringify(e));
-						});
-					}, function (e) {
-						communication.sendError('ble write: ' + JSON.stringify(e));
+						ble.disconnect(device.id);
 					});
-				}, function (e) {
-					communication.sendError('ble connect: ' + JSON.stringify(e));
 				});
 			}
 		}
@@ -61,19 +55,21 @@ class bluetooth {
 			ble.startStateNotifications(function (state) {
 				bluetooth.state = state;
 				if (ui.navigation.getActiveID() == 'home') {
-					if (state == 'on')
+					if (state == 'on' && user.contact.findMe)
 						ui.classRemove('buttonIcon.bottom.right', 'bluetoothInactive');
 					else
 						ui.classAdd('buttonIcon.bottom.right', 'bluetoothInactive');
 				}
-				if (state == 'on') {
-					bluetooth.hidePopup();
-					bluetooth.scanStart();
-					if (showHint)
-						intro.openHint({ desc: 'bluetoothOn', pos: '-0.5em,-4.5em', size: 'auto,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
-					showHint = false;
-				} else
-					ui.navigation.openPopup(ui.l('attention'), ui.l('findMe.bluetoothDeactivated'));
+				if (user.contact.findMe) {
+					if (state == 'on') {
+						bluetooth.hidePopup();
+						bluetooth.scanStart();
+						if (showHint)
+							intro.openHint({ desc: 'bluetoothOn', pos: '-0.5em,-4.5em', size: 'auto,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
+						showHint = false;
+					} else
+						ui.navigation.openPopup(ui.l('attention'), ui.l('findMe.bluetoothDeactivated'));
+				}
 			})
 		};
 		if (cordova.plugins.diagnostic.requestBluetoothAuthorization) {
@@ -120,6 +116,7 @@ class bluetooth {
 			}
 		);
 		ble.startScan([bluetooth.UUID_SERVICE], bluetooth.registerDevice, function (e) {
+			bluetooth.stop();
 			communication.sendError('ble scan: ' + JSON.stringify(e));
 		});
 	}
