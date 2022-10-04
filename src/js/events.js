@@ -161,12 +161,15 @@ ${v.eventParticipationButtons}
 				url: global.server + 'db/list?query=contact_eventParticipateCount&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + x.id + ' and eventParticipate.eventDate=\'' + x.date + '\''),
 				responseType: 'json',
 				success(r) {
-					if (r[1][0])
-						ui.q('detail card[i="' + v.id + '"] participantCount').innerHTML = r[1][0] + ' ';
-					if (!v.event.maxParticipants || r[1][0] < v.event.maxParticipants) {
-						var e = ui.q('detail card:last-child buttontext[pID]');
+					if (r[1][0]) {
+						var e = ui.q('detail card[i="' + v.id + '"] participantCount');
 						if (e)
-							e.style.display = '';
+							e.innerHTML = r[1][0] + ' ';
+						if (!v.event.maxParticipants || r[1][0] < v.event.maxParticipants) {
+							e = ui.q('detail card:last-child buttontext[pID]');
+							if (e)
+								e.style.display = '';
+						}
 					}
 				}
 			});
