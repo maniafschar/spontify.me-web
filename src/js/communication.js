@@ -36,7 +36,7 @@ class communication {
 						communication.onError(xmlhttp);
 				};
 				if (xmlhttp.status >= 200 && xmlhttp.status < 300) {
-					if (communication.pingExec == null && xmlhttp.responseURL.indexOf('/ping') != xmlhttp.responseURL.length - 5)
+					if (communication.pingExec == null && xmlhttp.responseURL != global.server + '/ping' && xmlhttp.responseURL.indexOf(global.server) == 0)
 						communication.ping();
 					if (param.success) {
 						var response = xmlhttp.responseText;
@@ -585,12 +585,10 @@ class communication {
 		}
 	}
 	static ping() {
+		clearTimeout(communication.pingExec);
 		if (!user.contact || !user.contact.id)
 			return;
-		if (communication.pingExec == null) {
-			communication.pingExec = setTimeout(communication.ping, 10);
-			return;
-		}
+		communication.pingExec = -1;
 		communication.ajax({
 			url: global.server + 'action/ping',
 			progressBar: false,
@@ -606,7 +604,6 @@ class communication {
 				e.innerHTML = global.appTitle;
 				if (!user.contact || r.userId != user.contact.id)
 					return;
-				user.contact.tsVisits = r.visit;
 				var total = 0;
 				var chatNew = false;
 				var chat = 0;
@@ -626,7 +623,7 @@ class communication {
 							chatNew = true;
 					}
 				}
-				if (chatNew || r.chat != ui.qa('chatUserList>div').length)
+				if (r.firstChatId != ui.q('chatUserList').getAttribute('firstChatId'))
 					pageChat.initActiveChats();
 				total += chat;
 				pageChat.newChats = chat == 0 ? '' : '' + chat;
@@ -665,6 +662,8 @@ class communication {
 				if (total > 0)
 					ui.q('head title').innerHTML = total + global.separator + global.appTitle;
 				communication.setApplicationIconBadgeNumber(total);
+				if (communication.pingExec != null)
+					clearTimeout(communication.pingExec);
 				communication.pingExec = setTimeout(communication.ping, ui.q('chat chatConversation') ? 3000 : 15000);
 			}
 		});

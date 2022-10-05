@@ -251,7 +251,6 @@ ${v.budget}
 			body: { classname: 'ContactLink', id: linkId, values: { status: status } },
 			success() {
 				ui.toggleHeight(ui.q('detail card:last-child [name="block"]'));
-				communication.ping();
 				var e = ui.qa(ui.q('detail').getAttribute('from') + ' row[i="' + id + '"] badge');
 				ui.html(e, '');
 				ui.css(e, 'display', 'none');
@@ -713,11 +712,6 @@ ${v.budget}
 			s += pageContact.templateList(v);
 		}
 		return s;
-	}
-	static listVisits(l) {
-		for (var i = 1; i < l.length; i++)
-			l[i].classParticipate = i <= user.contact.tsVisits ? ' participate' : '';
-		return pageContact.listContactsInternal(l);
 	}
 	static sendRequestForFriendship(id) {
 		communication.ajax({

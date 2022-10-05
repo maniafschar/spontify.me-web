@@ -52,7 +52,6 @@ class initialisation {
 				break;
 			}
 		}
-		lists.init();
 		user.scale = global.getDevice() == 'phone' && ui.q('body').clientWidth < 360 ? 0.8 : 1;
 		initialisation.reposition();
 		initialisation.setLanguage((navigator.language || navigator.userLanguage).toLowerCase().indexOf('en') > -1 ? 'EN' : 'DE', initialisation.initPostProcessor);
@@ -121,6 +120,9 @@ class initialisation {
 		if (!global.isBrowser())
 			initialisation.initApp();
 		ui.html('head title', global.appTitle);
+		formFunc.image.fetchSVG('favorite');
+		formFunc.image.fetchSVG('home');
+		formFunc.image.fetchSVG('chat');
 		communication.login.autoLogin(initialisation.showStartDialogs);
 		window.onresize = initialisation.reposition;
 		ui.on(window, 'orientationchange', initialisation.reposition);

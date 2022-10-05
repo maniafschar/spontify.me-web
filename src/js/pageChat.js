@@ -316,9 +316,15 @@ class pageChat {
 				v.image = global.serverImg + v.imageList;
 			else
 				v.image = 'images/contact.svg';
-			s += '<div onclick="pageChat.open(' + v.id + ')" i="' + v.id + '"><badge class="bgColor"' + (v._unseen > 0 ? ' style="display:block;"' : '') + '>' + v._unseen + '</badge><img src="' + v.image + '"' + (v.imageList ? '' : ' class="bgColor" style="padding:0.6em;"') + '/><span>' + v.pseudonym + '<br/>' + global.date.formatDate(v._maxDate) + '</span></div>';
+			if (v._maxDate.indexOf('.') > 0)
+				v._maxDate = v._maxDate.substring(0, v._maxDate.indexOf('.'));
+			s += '<div onclick="pageChat.open(' + v.id + ')" i="' + v.id + '" t="' + v._maxDate + '"><badge class="bgColor"' + (v._unseen > 0 ? ' style="display:block;"' : '') + '>' + v._unseen + '</badge><img src="' + v.image + '"' + (v.imageList ? '' : ' class="bgColor" style="padding:0.6em;"') + '/><span>' + v.pseudonym + '<br/>' + global.date.formatDate(v._maxDate) + '</span></div>';
 		}
-		ui.q('chatUserList').innerHTML = s;
+		var e = ui.q('chatUserList');
+		e.innerHTML = s;
+		e.removeAttribute('h');
+		if (d.length > 1)
+			e.setAttribute('firstChatId', model.convert(new Contact(), d, 1)._chatId);
 	}
 	static open(id, location) {
 		if (id.indexOf && id.indexOf('_') > 0)

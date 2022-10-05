@@ -123,8 +123,8 @@ class pageWhatToDo {
 		for (var i = 0; i < cats.length; i++)
 			s += '(length(contact.attr' + cats[i] + ')>0 or length(contact.attr' + cats[i] + 'Ex)>0) or ';
 		if (s.length > 0)
-			return ' and (' + s.substring(0, s.length - 4) + ')';
-		return '';
+			s = ' and (' + s.substring(0, s.length - 4) + ')';
+		return ' and contact.id<>' + user.contact.id + s;
 	}
 	static init(exec) {
 		if (!ui.q('whatToDo').innerHTML) {

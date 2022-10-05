@@ -53,7 +53,7 @@ class ui {
 		${ui.l('contacts.friendshipTitle')}
     </a><a onclick="communication.loadList(ui.query.contactVisitees(),pageContact.listContacts,&quot;contacts&quot;,&quot;visits&quot;)">
 		${ui.l('title.history')}
-	</a><a onclick="communication.loadList(ui.query.contactVisits(),pageContact.listVisits,&quot;contacts&quot;,&quot;profile&quot;)">
+	</a><a onclick="communication.loadList(ui.query.contactVisits(),pageContact.listContacts,&quot;contacts&quot;,&quot;profile&quot;)">
 		${ui.l('title.visits')}
 	</a><a onclick="pageContact.groups.open()">
 		${ui.l('group.action')}
@@ -950,7 +950,7 @@ class formFunc {
 						var xmlDoc = parser.parseFromString(r, "text/xml");
 						formFunc.image.svg[id] = xmlDoc.getElementsByTagName('svg')[0].outerHTML;
 						if (img && img.parentNode)
-							formFunc.image.replaceSVG(img, id);
+							formFunc.image.replaceSVG(id, img);
 					}
 				});
 			}
@@ -1078,12 +1078,12 @@ class formFunc {
 				ui.css(ePrev, 'display', 'none');
 			}
 		},
-		replaceSVG(img, id) {
+		replaceSVG(id, img) {
 			if (formFunc.image.svg[id] != 1) {
 				var e = document.createElement('div');
 				e.innerHTML = formFunc.image.svg[id];
 				img.parentNode.replaceChild(e.firstChild, img);
-				if (global.language != 'DE' && id == 'logo.svg')
+				if (global.language != 'DE' && id == 'logo')
 					ui.classAdd('hometitle svg>g', 'en');
 			}
 		},
@@ -1093,7 +1093,7 @@ class formFunc {
 				for (var i = 0; i < imgs.length; i++) {
 					var id = imgs[i].getAttribute('source');
 					if (formFunc.image.svg[id])
-						formFunc.image.replaceSVG(imgs[i], id);
+						formFunc.image.replaceSVG(id, imgs[i]);
 					else
 						formFunc.image.fetchSVG(id, imgs[i]);
 				}
@@ -1418,13 +1418,17 @@ class formFunc {
 		}
 	}
 	static removeDraft(key) {
-		var d = {};
+		var d = {}, save = false;
 		for (var k in user.contact.storage) {
-			if (k != key)
+			if (k == key)
+				save = true;
+			else
 				d[k] = user.contact.storage[k];
 		}
-		user.contact.storage = d;
-		user.save({ storage: JSON.stringify(user.contact.storage) });
+		if (save) {
+			user.contact.storage = d;
+			user.save({ storage: JSON.stringify(user.contact.storage) });
+		}
 	}
 	static resetError(e) {
 		if (e) {
@@ -1438,8 +1442,10 @@ class formFunc {
 	}
 	static saveDraft(key, value) {
 		if (value) {
-			user.contact.storage[key] = value;
-			user.save({ storage: JSON.stringify(user.contact.storage) });
+			if (user.contact.storage[key] != value) {
+				user.contact.storage[key] = value;
+				user.save({ storage: JSON.stringify(user.contact.storage) });
+			}
 		} else
 			formFunc.removeDraft(key);
 	}

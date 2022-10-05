@@ -10,7 +10,6 @@ class user {
 	static introState_session = { goHome: 0, goToList: 0, menuOpen: 0 };
 	static password = null;
 	static scale = 1;
-	static tsVisits = 0;
 
 	static init(v) {
 		user.contact = new Contact();

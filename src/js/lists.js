@@ -54,9 +54,6 @@ class lists {
 			s += '<br/><br/>' + ui.l('noResults.searchWithoutKeywords') + '<br/><br/><buttontext onclick="pageSearch.repeatSearch()" class="bgColor">' + ui.l('noResults.repeat') + '</buttontext>';
 		return '<noResult>' + s.replace(/\{0\}/g, ui.l(activeID + '.title')).replace('{1}', '') + '</noResult>';
 	}
-	static init() {
-		formFunc.image.fetchSVG('favorite');
-	}
 	static removeListEntry(id) {
 		var activeID = ui.q('detail').getAttribute('from');
 		if (!activeID)
