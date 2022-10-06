@@ -228,8 +228,8 @@ class pageSettings {
 				body: {
 					classname: 'Ticket',
 					values: {
-						type: 'ACCOUNT_DELETE',
-						subject: user.contact.id,
+						type: 'REGISTRATION',
+						subject: 'Delete Reason',
 						note: ui.val('#deleteAccountFeedback')
 					}
 				},

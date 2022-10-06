@@ -521,7 +521,7 @@ ${v.hint}
 			v.ot = '';
 			for (var i = 0; i < ot.length; i++) {
 				ot[i].i = '' + i;
-				ot[i]['wd' + v.OT[i].day] = ' selected';
+				ot[i]['wd' + ot[i].day] = ' selected';
 				v.ot += '<div>' + pageLocation.templateEditOpenTimes(ot[i]) + '</div>';
 			}
 		} else {
@@ -952,11 +952,11 @@ ${v.hint}
 	static saveDraft() {
 		pageLocation.sanatizeFields();
 		var a = formFunc.getForm('editElement');
-		a['OT'] = [];
-		a['OT'][0] = ['locationOpenTime.day', 'locationOpenTime.openAt', 'locationOpenTime.closeAt', 'locationOpenTime.id'];
+		a.OT = [];
+		a.OT[0] = ['locationOpenTime.day', 'locationOpenTime.openAt', 'locationOpenTime.closeAt', 'locationOpenTime.id'];
 		var e, i = 1;
 		while ((e = ui.q('[name="locationOpenTime.day' + i + '"]'))) {
-			a['OT'][i] = [e.value, ui.val('[name="locationOpenTime.openAt' + i + '"]'), ui.val('[name="locationOpenTime.closeAt' + i + '"]'), ''];
+			a.OT[i] = [e.value, ui.val('[name="locationOpenTime.openAt' + i + '"]'), ui.val('[name="locationOpenTime.closeAt' + i + '"]'), ''];
 			i++;
 		}
 		formFunc.saveDraft('location' + ui.q('popup input[name="id"]').value, a);
