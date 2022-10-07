@@ -202,7 +202,7 @@ class pageChat {
 		s = global.string.replaceLinks(s);
 		s = s.replace(/\n/g, '<br/>');
 		s = global.string.replaceEmoji(s);
-		if (v.contactId == 3 && v.action)
+		if (v.action)
 			s = '<a onclick="' + v.action + '">' + s + '</a>';
 		return s;
 	}

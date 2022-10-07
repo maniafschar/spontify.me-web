@@ -161,12 +161,12 @@ ${v.eventParticipationButtons}
 				url: global.server + 'db/list?query=contact_eventParticipateCount&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + x.id + ' and eventParticipate.eventDate=\'' + x.date + '\''),
 				responseType: 'json',
 				success(r) {
-					if (r[1][0]) {
+					if (r[1][0] > -1) {
 						var e = ui.q('detail card[i="' + v.id + '"] participantCount');
 						if (e)
 							e.innerHTML = r[1][0] + ' ';
 						if (!v.event.maxParticipants || r[1][0] < v.event.maxParticipants) {
-							e = ui.q('detail card:last-child buttontext[pID]');
+							e = ui.q('detail card[i="' + v.id + '"] buttontext[pID]');
 							if (e)
 								e.style.display = '';
 						}
@@ -207,6 +207,8 @@ ${v.eventParticipationButtons}
 			v = draft.values;
 		else if (!v)
 			v = {};
+		else
+			v = v.event;
 		if (v.startDate && v.startDate.indexOf(':') > -1) {
 			v.startDate = v.startDate.substring(0, v.startDate.lastIndexOf('.'));
 			v.startDate = v.startDate.substring(0, v.startDate.lastIndexOf(':'));

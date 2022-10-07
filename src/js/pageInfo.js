@@ -166,8 +166,7 @@ class pageInfo {
 				body: {
 					classname: 'Chat',
 					values: {
-						note: text.replace(/</g, '&lt;'),
-						contactId2: 3
+						note: text.replace(/</g, '&lt;')
 					}
 				},
 				error(r) {
