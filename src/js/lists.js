@@ -1,4 +1,3 @@
-import { communication } from './communication';
 import { global } from './global';
 import { DragObject } from './initialisation';
 import { Contact, Location, model } from './model';
@@ -41,15 +40,19 @@ class lists {
 			s = s.substring(0, p) + ui.l(s.substring(p + 2, p2)) + s.substring(p2 + 1);
 		}
 		if (errorID == 'favorites')
-			s = s.replace('{1}', '<br/><br/><buttonIcon style="position:relative;left:50%;margin-left:-1.5em;"><img src="images/favorite.svg"/></buttonIcon><br/>');
+			s = s.replace('{1}', '<br/><br/><br/><br/><buttonIcon style="left:50%;margin:-3em 0 0 -1.5em;"><img src="images/favorite.svg"/></buttonIcon><br/>');
 		else if (errorID == 'matches' || errorID == 'whatToDo')
 			s = s.replace('{1}', '<br/><br/><buttontext onclick="ui.navigation.goTo(&quot;settings2&quot;)" class="bgColor">' + ui.l('Yes') + '</buttontext>');
 		else if (errorID == 'friends')
-			s = s.replace('{1}', '<br/><br/><buttontext class="bgColor">' + ui.l('contacts.relation') + '</buttontext><br/><br/>');
+			s = s.replace('{1}', '<br/><br/><br/><br/><buttonIcon style="left:50%;margin:-3em 0 0 -1.5em;"><img src="images/network.svg"/></buttonIcon><br/>');
 		else if (errorID.toLowerCase().indexOf('groups') > -1)
 			s = s.replace('{1}', '<br/><br/><buttontext class="bgColor">' + ui.l('group.action') + '</buttontext><br/><br/>');
 		else if (errorID == 'profile')
 			s = s.replace('{1}', '<br/><br/><buttontext onclick="ui.navigation.goTo(&quot;settings&quot;)" class="bgColor">' + ui.l('settings.edit') + '</buttontext>');
+		else if (errorID == 'list')
+			s = s.replace('{1}', '<br/><br/><buttontext onclick="pageInfo.socialShare()" class="bgColor">' + ui.l('sendSocialShareLocation') + '</buttontext><buttontext onclick="pageLocation.edit()" class="bgColor">' + ui.l('locations.new') + '</buttontext>');
+		else if (errorID == 'eventsMy')
+			s = s.replace('{1}', '<br/><br/><buttontext class="bgColor">' + ui.l('events.participante') + '</buttontext><br/><br/>');
 		else if (errorID == 'search' && ui.val('[name="searchKeywords"]'))
 			s += '<br/><br/>' + ui.l('noResults.searchWithoutKeywords') + '<br/><br/><buttontext onclick="pageSearch.repeatSearch()" class="bgColor">' + ui.l('noResults.repeat') + '</buttontext>';
 		return '<noResult>' + s.replace(/\{0\}/g, ui.l(activeID + '.title')).replace('{1}', '') + '</noResult>';
