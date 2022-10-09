@@ -192,17 +192,17 @@ class pageSettings {
 <div class="notification" id="settings3Notifications" style="display:none;padding-top:0.25em;">
 	<div style="margin:0 0.5em 1em 0.5em;">
 		<form name="myProfile3">
-			<input type="checkbox" value="true" name="notificationChat" label="${ui.l('notification.chat')}" ${v['contact.notificationChat']}>
+			<input type="checkbox" value="true" name="notificationChat" label="${ui.l('notification.chat')}" ${v['contact.notificationChat']} />
 			<br />
-			<input type="checkbox" value="true" name="notificationFriendRequest" label="${ui.l('notification.friendRequest')}" ${v['contact.notificationFriendRequest']}>
+			<input type="checkbox" value="true" name="notificationFriendRequest" label="${ui.l('notification.friendRequest')}" ${v['contact.notificationFriendRequest']} />
 			<br />
-			<input type="checkbox" value="true" name="notificationBirthday" label="${ui.l('notification.birthday')}" ${v['contact.notificationBirthday']}>
+			<input type="checkbox" value="true" name="notificationBirthday" label="${ui.l('notification.birthday')}" ${v['contact.notificationBirthday']} />
 			<br />
-			<input type="checkbox" value="true" name="notificationVisitProfile" label="${ui.l('notification.visitProfile')}" ${v['contact.notificationVisitProfile']}>
+			<input type="checkbox" value="true" name="notificationVisitProfile" label="${ui.l('notification.visitProfile')}" ${v['contact.notificationVisitProfile']} />
 			<br />
-			<input type="checkbox" value="true" name="notificationVisitLocation" label="${ui.l('notification.visitLocation')}" ${v['contact.notificationVisitLocation']}>
+			<input type="checkbox" value="true" name="notificationVisitLocation" label="${ui.l('notification.visitLocation')}" ${v['contact.notificationVisitLocation']} />
 			<br />
-			<input type="checkbox" value="true" name="notificationMarkEvent" label="${ui.l('notification.markEvent')}" ${v['contact.notificationMarkEvent']}>
+			<input type="checkbox" value="true" name="notificationMarkEvent" label="${ui.l('notification.markEvent')}" ${v['contact.notificationMarkEvent']} />
 		</form>
 	</div>
 </div>
@@ -218,27 +218,35 @@ class pageSettings {
 			communication.login.checkUnique(ui.q('input[name="email"]'));
 	}
 	static deleteProfile() {
-		ui.navigation.openPopup(ui.l('settings.delete'), ui.l('deleteProfileHint') + '<br /><br /><textarea id="deleteAccountFeedback" placeholder="' + ui.l('deleteProfileFeedbackHint') + '" maxlength="2000"></textarea><div style="margin-top:1em;"><buttontext onclick="pageSettings.deleteProfileExec()" class="bgColor">' + ui.l('deleteProfileFinal') + '</buttontext></div>');
+		var reasons = '<br/><br/>';
+		for (var i = 1; i < 8; i++)
+			reasons += '<input type="checkbox" name="deletionReason" label="' + ui.l('settings.deleteReason' + i) + '" />';
+		ui.navigation.openPopup(ui.l('settings.delete'), ui.l('settings.deleteProfileHint') + reasons + '<errorHint></errorHint><textarea id="deleteAccountFeedback" placeholder="' + ui.l('settings.deleteProfileFeedbackHint') + '" maxlength="2000" style="margin-top:1em;"></textarea><div style="margin-top:1em;"><buttontext onclick="pageSettings.deleteProfileExec()" class="bgColor">' + ui.l('settings.deleteProfileFinal') + '</buttontext></div>');
 	}
 	static deleteProfileExec() {
-		if (ui.val('#deleteAccountFeedback')) {
-			communication.ajax({
-				url: global.server + 'db/one',
-				method: 'POST',
-				body: {
-					classname: 'Ticket',
-					values: {
-						type: 'REGISTRATION',
-						subject: 'Delete Reason',
-						note: ui.val('#deleteAccountFeedback')
-					}
-				},
-				success() {
-					pageSettings.deleteProfileExec2();
+		var reasons = ui.qa('input[name="deletionReason"]:checked');
+		if (!reasons.length && !ui.val('#deleteAccountFeedback')) {
+			ui.q('errorHint').innerHTML = ui.l('settings.deleteChooseReason');
+			return;
+		}
+		var s = ui.val('#deleteAccountFeedback') ? '\n' + ui.val('#deleteAccountFeedback') : '';
+		for (var i = 0; i < reasons.length; i++)
+			s = reasons[i].getAttribute('label') + '\n' + s;
+		communication.ajax({
+			url: global.server + 'db/one',
+			method: 'POST',
+			body: {
+				classname: 'Ticket',
+				values: {
+					type: 'REGISTRATION',
+					subject: 'Delete Reason',
+					note: s
 				}
-			});
-		} else
-			pageSettings.deleteProfileExec2();
+			},
+			success() {
+				pageSettings.deleteProfileExec2();
+			}
+		});
 	}
 	static deleteProfileExec2() {
 		communication.ajax({
