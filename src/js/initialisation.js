@@ -123,6 +123,7 @@ class initialisation {
 		formFunc.image.fetchSVG('favorite');
 		formFunc.image.fetchSVG('home');
 		formFunc.image.fetchSVG('chat');
+		formFunc.image.fetchSVG('search');
 		communication.login.autoLogin(initialisation.showStartDialogs);
 		window.onresize = initialisation.reposition;
 		ui.on(window, 'orientationchange', initialisation.reposition);
