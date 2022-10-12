@@ -569,6 +569,15 @@ class pageChat {
 					classname: 'Chat',
 					values: v
 				},
+				error(r) {
+					r = JSON.parse(r.response);
+					if (r.class == 'IllegalArgumentException' && r.msg == 'duplicate chat') {
+						ui.q('#chatText').value = '';
+						pageChat.adjustTextarea(ui.q('#chatText'));
+						formFunc.removeDraft('chat' + id);
+					} else
+						communication.onError(r);
+				},
 				success(r) {
 					if (ui.q('chat[i="' + id + '"] chatConversation')) {
 						v.createdAt = new Date();
@@ -583,7 +592,6 @@ class pageChat {
 							formFunc.removeDraft('chat' + id);
 						}
 					}
-					id = parseInt(id);
 					pageChat.initActiveChats();
 				}
 			});
@@ -617,6 +625,11 @@ class pageChat {
 				url: global.server + 'db/one',
 				method: 'POST',
 				body: v,
+				error(r) {
+					r = JSON.parse(r.response);
+					if (r.class != 'IllegalArgumentException' || r.msg != 'duplicate chat')
+						communication.onError(r);
+				},
 				success(chatId) {
 					pageChat.postSendChatImage({ contactId: id, chatId: chatId, });
 					pageChat.initActiveChats();

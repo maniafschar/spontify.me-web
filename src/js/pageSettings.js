@@ -239,7 +239,7 @@ class pageSettings {
 				classname: 'Ticket',
 				values: {
 					type: 'REGISTRATION',
-					subject: 'Delete Reason',
+					subject: 'Delete',
 					note: s
 				}
 			},

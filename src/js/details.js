@@ -110,24 +110,26 @@ class details {
 			oc.click();
 	}
 	static swipeLeft() {
-		var e = ui.q('detail card:last-child').getAttribute('i');
+		var e = ui.q('detail card:last-child');
 		if (e)
-			details.openDetailNav(true, e);
+			details.openDetailNav(true, e.getAttribute('i'));
 	}
 	static swipeRight() {
 		ui.navigation.goTo('home');
 	}
 	static toggleFavorite() {
 		var e = ui.q('detail card:last-child');
-		if (e.getAttribute('type') == 'location') {
-			var id = e.getAttribute('i');
-			if (('' + id).indexOf('_') > 0)
-				id = id.substring(0, id.indexOf('_'));
-			pageLocation.toggleFavorite(id);
-		} else if (user.contact.id == e.getAttribute('i'))
-			intro.openHint({ desc: 'contactFavorite', pos: '-0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
-		else
-			pageContact.toggleBlockUser(e.getAttribute('i'));
+		if (e) {
+			if (e.getAttribute('type') == 'location') {
+				var id = e.getAttribute('i');
+				if (('' + id).indexOf('_') > 0)
+					id = id.substring(0, id.indexOf('_'));
+				pageLocation.toggleFavorite(id);
+			} else if (user.contact.id == e.getAttribute('i'))
+				intro.openHint({ desc: 'contactFavorite', pos: '-0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
+			else
+				pageContact.toggleBlockUser(e.getAttribute('i'));
+		}
 	}
 	static togglePanel(d) {
 		var path = 'detail card:last-child';
