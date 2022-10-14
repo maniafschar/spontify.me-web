@@ -93,6 +93,7 @@ class Contact extends BaseEntity {
 	longitude;
 	notificationBirthday;
 	notificationChat;
+	notificationEngagement;
 	notificationFriendRequest;
 	notificationMarkEvent;
 	notificationVisitLocation;

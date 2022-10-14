@@ -633,6 +633,7 @@
 		"notification": {
 			"birthday": "An Geburtstagen Deiner Freunde",
 			"chat": "Bei einer neuen Chatnachricht",
+			"engagement": "Sponti Support Meldungen",
 			"friendRequest": "Bei einer neuen Freundschaftsanfrage",
 			"markEvent": "Wenn jemand an ein von Dir eingegebenes Event teilnimmt/sich vormerkt",
 			"noNewsYet": "Du hast noch keine Benachrichtigungen erhalten.<br/>Hier siehst Du die letzten 100 Benachrichtigungen, die Du erhalten hast.",

@@ -198,6 +198,8 @@ class pageSettings {
 			<br />
 			<input type="checkbox" value="true" name="notificationBirthday" label="${ui.l('notification.birthday')}" ${v['contact.notificationBirthday']} />
 			<br />
+			<input type="checkbox" value="true" name="notificationEngagement" label="${ui.l('notification.engagement')}" ${v['contact.notificationMarkEvent']} />
+			<br />
 			<input type="checkbox" value="true" name="notificationVisitProfile" label="${ui.l('notification.visitProfile')}" ${v['contact.notificationVisitProfile']} />
 			<br />
 			<input type="checkbox" value="true" name="notificationVisitLocation" label="${ui.l('notification.visitLocation')}" ${v['contact.notificationVisitLocation']} />
@@ -259,6 +261,7 @@ class pageSettings {
 	}
 	static getCurrentSettings3String() {
 		var s = '' + (ui.q('settings3 [name="notificationChat"]:checked') ? 1 : 0);
+		s += (ui.q('settings3 [name="notificationEngagement"]:checked') ? 1 : 0);
 		s += (ui.q('settings3 [name="notificationFriendRequest"]:checked') ? 1 : 0);
 		s += (ui.q('settings3 [name="notificationBirthday"]:checked') ? 1 : 0);
 		s += (ui.q('settings3 [name="notificationVisitProfile"]:checked') ? 1 : 0);
@@ -332,6 +335,7 @@ class pageSettings {
 					v['birthdayDisplay1'] = v['contact.birthdayDisplay'] == 1 ? ' checked' : '';
 					v['birthdayDisplay0'] = v['contact.birthdayDisplay'] == 0 ? ' checked' : '';
 					v['contact.notificationChat'] = v['contact.notificationChat'] == 1 ? ' checked' : '';
+					v['contact.notificationEngagement'] = v['contact.notificationEngagement'] == 1 ? ' checked' : '';
 					v['contact.notificationFriendRequest'] = v['contact.notificationFriendRequest'] == 1 ? ' checked' : '';
 					v['contact.notificationBirthday'] = v['contact.notificationBirthday'] == 1 ? ' checked' : '';
 					v['contact.notificationVisitProfile'] = v['contact.notificationVisitProfile'] == 1 ? ' checked' : '';
