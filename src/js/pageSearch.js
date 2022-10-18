@@ -117,9 +117,7 @@ class pageSearch {
 			}
 			s = s.substring(0, s.length - 4) + ')';
 		}
-		if (s.indexOf(' and ') == 0)
-			s = s.substring(5);
-		return s;
+		return 'contact.id<>' + user.contact.id + s;
 	}
 	static getSearchLocation() {
 		var s = '';

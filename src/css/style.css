@@ -930,7 +930,7 @@ popupTitle {
 	font-size: 1.3em;
 	max-width: 90%;
 	display: inline-block;
-	background: rgba(255, 255, 255, 0.9);
+	background: rgba(255, 255, 255, 0.95);
 	padding: 0.5em 1em;
 	border-radius: 0.5em 0.5em 0 0;
 	color: black;
@@ -953,7 +953,7 @@ popupContent {
 	display: block;
 	border-radius: 0.5em;
 	overflow-x: hidden;
-	background: rgba(255, 255, 255, 0.9);
+	background: rgba(255, 255, 255, 0.95);
 	border: solid transparent 0.5em;
 	color: black;
 }

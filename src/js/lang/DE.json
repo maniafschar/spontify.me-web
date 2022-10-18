@@ -490,7 +490,7 @@
 			"settings": "<b>spontify.me</b><br/>Möchtest Du mehr Spontanität? Zum Beispiel wenn:<ul><li>Du etwas unternehmen möchtest, Deine Freunde aber keine Zeit haben</li><li>Du in einer fremden Stadt bist und Gleichgesinnte suchst</li><li>Du gerne Events organisierst, zu denen sich neue Spontis gesellen dürfen</li></ul>Für solche Fälle ist spontify.me die richtige App für Dich.<br /><br />Wir möchten hier Freundschaften und Spontanität entstehen lassen und Sexanfragen oder Ähnliches unterdrücken.",
 			"settings2": "Klick Dich hier durch die einzelnen Kategorien.",
 			"settingsLoggedIn": "<ul><li>Ändere hier Dein Profilbild und gib weitere, allgemeine Infos an</li><li>Ein Wisch nach links und Du kannst Dich über diverse Attribute selbst beschreiben und angeben, was Du an anderen Spontis magst</li></ul>",
-			"whatToDo": "<b>Heute schon was vor?</b><br/>Möchtest Du spontan etwas unternehmen?<br/><br/>Im Gegensatz zu Events kannst Du hier angeben, was Du gerne heute machen möchtest, z.B. Essen gehen oder ein Museen besuchen, etc.<br/><br/>Die Aktivität wird Spontis, die zu Dir passen und nicht weiter als 50 KM entfernt sind, angezeigt. Nach spätestens 24 Stunden ist die Aktivität wieder gelöscht."
+			"whatToDo": "<b>Heute schon was vor?</b><br/>Möchtest Du spontan etwas unternehmen?<br/><br/>Im Gegensatz zu Events kannst Du hier angeben, was Du gerne heute machen möchtest, z.B. Essen gehen oder ein Museum besuchen, etc.<br/><br/>Die Aktivität wird Spontis, die zu Dir passen und nicht weiter als 50 KM entfernt sind, angezeigt. Nach spätestens 24 Stunden ist die Aktivität wieder gelöscht."
 		},
 		"landing": {
 			"block1Title": "Wie sieht der Alltag ohne ${appTitle} aus?",
