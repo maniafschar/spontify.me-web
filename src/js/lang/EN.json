@@ -683,7 +683,7 @@
 			"budget": "My budget",
 			"deleteChooseReason": "Please choose a reason.",
 			"deleteExplain": "Please write us a few more words so that we can improve.",
-			"deleteProfileFeedbackHint": "please write us your reasons in more detail",
+			"deleteProfileFeedbackHint": "write us your reasons",
 			"deleteProfileFinal": "Delete permanently",
 			"deleteProfileHint": "Your data will be deleted forever after this confirmation. We only keep the reason for your deletion so that we can hopefully constantly improve. Please choose at least one reason:",
 			"deleteReason1": "technical issues",
