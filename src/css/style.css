@@ -161,6 +161,14 @@ hint>b {
 	display: inline-block;
 }
 
+hintDelete {
+	display: block;
+	position: relative;
+	font-size: 0.8em;
+	line-height: 1.3;
+	padding-left: 1em;
+}
+
 hinky {
 	position: absolute;
 	border-right: solid 0.5em transparent;

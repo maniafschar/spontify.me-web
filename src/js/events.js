@@ -111,7 +111,10 @@ ${v.eventParticipationButtons}
 		v.copyLinkHint = ui.l('copyLinkHint.event');
 		if (v.event.contactId != user.contact.id)
 			v.hideMeEdit = ' noDisp';
-		if (v.event.type != 'o') {
+		if (v.event.type == 'o') {
+			if (v.event.marketingEvent && v.event.contactId == user.contact.id)
+				v.event.text = '<b>' + ui.l('event.acceptedMarketingEvent') + '</b><br/>' + v.event.text;
+		} else {
 			var s = global.date.formatDate(v.event.endDate);
 			v.endDate = ' (' + ui.l('events.type_' + v.event.type) + ' ' + ui.l('to') + ' ' + s.substring(s.indexOf(' ') + 1, s.lastIndexOf(' ')) + ')';
 		}

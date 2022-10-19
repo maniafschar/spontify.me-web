@@ -376,6 +376,7 @@
 			"url": "Die angegebene URL ist fehlerhaft."
 		},
 		"events": {
+			"acceptedMarketingEvent": "Dein Event wurde genehmigt, viel Spaß!",
 			"canceled": "Du hast Deine Teilnahme abgesagt: ",
 			"confirm": "Spontis müssen die Teilnahme bestätigen",
 			"confirmLabel": "Bestätigung",
@@ -660,7 +661,7 @@
 			"errorPseudonym": "Der Name muss mindestens 8-stellig sein.",
 			"errorPseudonymSyntax": "Nur Buchstaben a-z, Ziffern 0-9, Leerzeichen und folgende Sonderzeichen sind erlaubt: - _ . + * # § $ % & / ^ \\",
 			"notComplete": "Du hast Deine Registrierung nicht abgeschlossen. Erst wenn Du die Registrierung abschliesst, bist Du in ${appTitle} für andere sichtbar.",
-			"success": "Vielen Dank für Deine Registrierung.<br/>Eine Email wurde Dir soeben zugesendet. In dieser stehen Deine Login Daten.",
+			"success": "Vielen Dank für Deine Registrierung.<br/><br/>Eine Email mit dem Login Link wurde Dir soeben zugesendet.",
 			"title": "Anmeldung"
 		},
 		"search": {
@@ -680,7 +681,8 @@
 			"bdayTooYoung": "Du bist mit {1} Jahren zu jung für ${appTitle}, das Mindestalter beträgt {0} Jahre.",
 			"bdayUsingInterrestedIn": "\"Interessiert an\" kannst Du nur benutzen, wenn Du auch Dein Geburtstag angibst.",
 			"budget": "Mein Budget",
-			"deleteChooseReason": "Bitte wähle eine Begründung aus",
+			"deleteChooseReason": "Bitte wähle einen Begründung aus.",
+			"deleteExplain": "Bitte schreibe uns noch ein paar Worte dazu, damit wir uns verbessern können.",
 			"deleteProfileFeedbackHint": "schreibe uns gerne ausführlicher Deine Beweggründe",
 			"deleteProfileFinal": "Endgültig löschen",
 			"deleteProfileHint": "Deine Daten werden nach dieser Bestätigung für immer gelöscht. Lediglich der Grund Deiner Löschung behalten wir, um uns hoffentlich stetig zu verbessern. Bitte wähle mindestens einen Grund aus:",
@@ -692,6 +694,13 @@
 			"deleteReason6": "verstehe den Nutzen der App nicht",
 			"deleteReason7": "nichts davon",
 			"genderUsingInterrestedIn": "\"Interessiert an\" kannst Du nur benutzen, wenn Du auch Dein Geschlecht angibst.",
+			"hintDeleteReason1": "Die App ist ganz frisch, magst Du uns nicht noch ein paar Monate Zeit geben?",
+			"hintDeleteReason2": "Mit wertvollem Input von Dir können wir die App einfacher machen. Möchtest Du und dabei unterstützen?",
+			"hintDeleteReason3": "In den Benachrichtigungen oben kannst Du gezielt Meldungen ausschalten.",
+			"hintDeleteReason4": "Wenn Du genau diese Kontekte uns meldest, können wir gezielt solche Leute anschreiben und ermahnen, notfalls sperren. Eigentlich kein Grund zu gehen, oder?",
+			"hintDeleteReason5": "Das tut uns Leid, haben etwa unsere Marketingaktionen ein falsches Bild abgegeben?",
+			"hintDeleteReason6": "Wir möchten Dich, egal wo Du gerade auf dieser Welt bist, mit Dir passenden Kontakten vernetzen. Keine Dating, kein Sex, das Leben ist so viel mehr als nur Oberflächlichkeit.",
+			"hintDeleteReason7": "Magst Du uns trotzdem schreiben, was Dich bis hierhin gebracht hat?",
 			"imageEmpty": "Kein Bild ausgewählt.",
 			"interestedIn": "Du magst",
 			"noAGB": "Bitte akzeptiere unsere AGBs.",

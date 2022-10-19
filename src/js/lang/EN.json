@@ -376,6 +376,7 @@
 			"url": "The URL is incorrect."
 		},
 		"events": {
+			"acceptedMarketingEvent": "Your event was accepted, have fun!",
 			"canceled": "You have canceled your participation: ",
 			"confirm": "Spontis must confirm participation",
 			"confirmLabel": "Confirmation",
@@ -660,7 +661,7 @@
 			"errorPseudonym": "The name must be at least 8 characters.",
 			"errorPseudonymSyntax": "Only characters a-z, digits 0-9, space and following special characters are allowed: - _ . + * # § $ % & / ^ \\",
 			"notComplete": "Your registration is not complete. Only complete registered profiles are visible here in ${appTitle} to other Spontis.",
-			"success": "Thank you for your registration.<br/>An email was just sent to you. Please, click on the login link.",
+			"success": "Thank you for your registration.<br/><br/>An email with the login link has just been sent to you.",
 			"title": "Registration"
 		},
 		"search": {
@@ -680,7 +681,8 @@
 			"bdayTooYoung": "You are only {1} years, which is too young for ${appTitle}. The minimum age is {0} years.",
 			"bdayUsingInterrestedIn": "\"Interested in\" may only be used, when you enter your own birthday.",
 			"budget": "My budget",
-			"deleteChooseReason": "Please choose a reason",
+			"deleteChooseReason": "Please choose a reason.",
+			"deleteExplain": "Please write us a few more words so that we can improve.",
 			"deleteProfileFeedbackHint": "please write us your reasons in more detail",
 			"deleteProfileFinal": "Delete permanently",
 			"deleteProfileHint": "Your data will be deleted forever after this confirmation. We only keep the reason for your deletion so that we can hopefully constantly improve. Please choose at least one reason:",
@@ -692,6 +694,13 @@
 			"deleteReason6": "don't understand the usefulness of the app",
 			"deleteReason7": "none of these",
 			"genderUsingInterrestedIn": "\"Interested in\" may only be used, when you enter your own gender.",
+			"hintDeleteReason1": "The app is brand new, can't you give us a few more months?",
+			"hintDeleteReason2": "With valuable input from you we can make the app easier. Would you like to support us?",
+			"hintDeleteReason3": "In the notifications above you can turn off specific notifications.",
+			"hintDeleteReason4": "If you report exactly these contacts to us, we can specifically write to them and warn them to block them if necessary. No reason to leave, is there?",
+			"hintDeleteReason5": "We're sorry, did our marketing give the wrong impression?",
+			"hintDeleteReason6": "We want to connect you with suitable contacts, no matter where you are in the world. No dating, no sex, life is so much more than just superficiality.",
+			"hintDeleteReason7": "Would you like to tell us what brought you here anyway?",
 			"imageEmpty": "No image selected.",
 			"interestedIn": "You like",
 			"noAGB": "Please accept our terms and conditions.",

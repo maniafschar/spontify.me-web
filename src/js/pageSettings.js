@@ -210,7 +210,30 @@ class pageSettings {
 </div>
 <buttontext class="bgColor settings2Button" onclick="pageSettings.toggleBlocked()">${ui.l('contacts.blocked')}</buttontext><br/>
 <div id="blocked" style="display:none;"></div>
-<buttontext onclick="pageSettings.deleteProfile()" class="bgColor settings2Button">${ui.l('settings.delete')}</buttontext><br/>
+<buttontext onclick="ui.toggleHeight(&quot;#delete&quot;)" class="bgColor settings2Button">${ui.l('settings.delete')}</buttontext><br/>
+<div id="delete" style="display:none;margin:0 0.5em 1em 0.5em;">
+<div style="margin-bottom:0.5em;">${ui.l('settings.deleteProfileHint')}</div>
+<input type="checkbox" name="deletionReason" label="${ui.l('settings.deleteReason1')}" onclick="ui.toggleHeight(&quot;hintDelete.hint1&quot;)" />
+<hintDelete class="hint1" style="display:none;">${ui.l('settings.hintDeleteReason1')}</hintDelete><br/>
+<input type="checkbox" name="deletionReason" label="${ui.l('settings.deleteReason2')}" onclick="ui.toggleHeight(&quot;hintDelete.hint2&quot;)" />
+<hintDelete class="hint2" style="display:none;">${ui.l('settings.hintDeleteReason2')}</hintDelete><br/>
+<input type="checkbox" name="deletionReason" label="${ui.l('settings.deleteReason3')}" onclick="ui.toggleHeight(&quot;hintDelete.hint3&quot;)" />
+<hintDelete class="hint3" style="display:none;">${ui.l('settings.hintDeleteReason3')}</hintDelete><br/>
+<input type="checkbox" name="deletionReason" label="${ui.l('settings.deleteReason4')}" onclick="ui.toggleHeight(&quot;hintDelete.hint4&quot;)" />
+<hintDelete class="hint4" style="display:none;">${ui.l('settings.hintDeleteReason4')}</hintDelete><br/>
+<input type="checkbox" name="deletionReason" label="${ui.l('settings.deleteReason5')}" onclick="ui.toggleHeight(&quot;hintDelete.hint5&quot;)" />
+<hintDelete class="hint5" style="display:none;">${ui.l('settings.hintDeleteReason5')}</hintDelete><br/>
+<input type="checkbox" name="deletionReason" label="${ui.l('settings.deleteReason6')}" onclick="ui.toggleHeight(&quot;hintDelete.hint6&quot;)" />
+<hintDelete class="hint6" style="display:none;">${ui.l('settings.hintDeleteReason6')}</hintDelete><br/>
+<input type="checkbox" name="deletionReason" label="${ui.l('settings.deleteReason7')}" onclick="ui.toggleHeight(&quot;hintDelete.hint7&quot;)" />
+<hintDelete class="hint7" style="display:none;">${ui.l('settings.hintDeleteReason7')}</hintDelete>
+<errorHint class="checkbox"></errorHint>
+<textarea id="deleteAccountFeedback" placeholder="${ui.l('settings.deleteProfileFeedbackHint')}" maxlength="2000" style="margin-top:1em;"></textarea>
+<errorHint class="textarea"></errorHint>
+<div style="margin-top:1em;text-align:center;">
+<buttontext onclick="pageSettings.deleteProfileExec()" class="bgColor">${ui.l('settings.deleteProfileFinal')}</buttontext>
+</div>
+</div>
 <settingsNav onclick="ui.navigation.goTo(&quot;settings2&quot;)" style="float:left;">&lt;</settingsNav>`;
 
 	static checkUnique() {
@@ -219,16 +242,15 @@ class pageSettings {
 		else
 			communication.login.checkUnique(ui.q('input[name="email"]'));
 	}
-	static deleteProfile() {
-		var reasons = '<br/><br/>';
-		for (var i = 1; i < 8; i++)
-			reasons += '<input type="checkbox" name="deletionReason" label="' + ui.l('settings.deleteReason' + i) + '" />';
-		ui.navigation.openPopup(ui.l('settings.delete'), ui.l('settings.deleteProfileHint') + reasons + '<errorHint></errorHint><textarea id="deleteAccountFeedback" placeholder="' + ui.l('settings.deleteProfileFeedbackHint') + '" maxlength="2000" style="margin-top:1em;"></textarea><div style="margin-top:1em;"><buttontext onclick="pageSettings.deleteProfileExec()" class="bgColor">' + ui.l('settings.deleteProfileFinal') + '</buttontext></div>');
-	}
 	static deleteProfileExec() {
+		ui.html('errorHint', '');
 		var reasons = ui.qa('input[name="deletionReason"]:checked');
-		if (!reasons.length && !ui.val('#deleteAccountFeedback')) {
-			ui.q('errorHint').innerHTML = ui.l('settings.deleteChooseReason');
+		if (!reasons.length) {
+			ui.q('errorHint.checkbox').innerHTML = ui.l('settings.deleteChooseReason');
+			return;
+		}
+		if (!ui.val('#deleteAccountFeedback')) {
+			ui.q('errorHint.textarea').innerHTML = ui.l('settings.deleteExplain');
 			return;
 		}
 		var s = ui.val('#deleteAccountFeedback') ? '\n' + ui.val('#deleteAccountFeedback') : '';
