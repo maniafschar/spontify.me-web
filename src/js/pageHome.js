@@ -51,7 +51,7 @@ class pageHome {
 			ui.buttonIcon('.top.left', 'search', 'ui.navigation.goTo("search")');
 		else
 			ui.buttonIcon('.top.left', '<span class="lang">' + global.language + '</span>', 'pageHome.openLanguage()');
-		ui.buttonIcon('.top.right', 'contact', 'ui.navigation.goTo("settings")');
+		ui.buttonIcon('.top.right', user.contact && user.contact.imageList ? user.contact.imageList : 'contact', 'ui.navigation.goTo("settings")');
 	}
 	static openLanguage() {
 		ui.navigation.openPopup(ui.l('langSelect'),

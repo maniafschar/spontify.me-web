@@ -66,9 +66,15 @@ class ui {
 			communication.sendError('buttonIcon ' + e + ' - ' + image + ' - ' + click);
 			return;
 		}
-		e.innerHTML = image.indexOf('<') == 0 ? image : '<img source="' + image + '" />';
+		ui.classRemove(e, 'pulse highlight bluetoothInactive jpg');
+		if (image.indexOf('<') == 0)
+			e.innerHTML = image;
+		else if (image.indexOf('/') > 0) {
+			ui.classAdd(e, 'jpg');
+			e.innerHTML = '<img src="' + global.serverImg + image + '" />';
+		} else
+			e.innerHTML = '<img source="' + image + '" />';
 		e.setAttribute('onclick', click);
-		ui.classRemove(e, 'pulse highlight bluetoothInactive');
 		e.style.display = '';
 		formFunc.image.replaceSVGs();
 	}
@@ -1407,7 +1413,7 @@ class formFunc {
 	static openChoices(id, exec) {
 		var e = ui.q('#' + id);
 		var v = e.getAttribute('valueEx');
-		ui.navigation.openPopup(e.parentNode.parentNode.children[0].innerText.trim(), '<input id="' + id + 'HelperPopup" type="text" multiple="' + e.getAttribute('multiplePopup') + '" value="' + e.value + '"/>' + (v == null ? '<br/>' : '<input type="text" id="' + id + 'HelperPopupEx" value="' + v + '" placeholder="' + ui.l('contacts.blockReason100') + '" style="margin-bottom:0.5em;"' + (e.getAttribute('maxEx') ? ' maxlength="' + e.getAttribute('maxEx') + '"' : '') + '/>') + '<buttontext onclick="formFunc.setChoices(&quot;' + id + '&quot;' + (exec ? ',' + exec : '') + ')" class="bgColor">' + ui.l('ready') + '</buttontext><popupHint></popupHint>');
+		ui.navigation.openPopup(e.parentNode.parentNode.children[0].innerText.trim(), '<input id="' + id + 'HelperPopup" type="text" multiple="' + e.getAttribute('multiplePopup') + '" value="' + e.value + '"/>' + (v == null ? '<br/>' : '<input type="text" id="' + id + 'HelperPopupEx" value="' + v + '" placeholder="' + ui.l('contacts.blockReason100') + '"' + (e.getAttribute('maxEx') ? ' maxlength="' + e.getAttribute('maxEx') + '"' : '') + '/><hintAttributeEx>' + ui.l('multipleValus.hintOther') + '</hintAttributeEx>') + '<popupHint></popupHint><buttontext onclick="formFunc.setChoices(&quot;' + id + '&quot;' + (exec ? ',' + exec : '') + ')" class="bgColor">' + ui.l('ready') + '</buttontext>');
 		formFunc.initFields('popup');
 	}
 	static pressDefaultButton(event) {
@@ -1456,13 +1462,20 @@ class formFunc {
 			ui.q('popupHint').innerHTML = ui.l('multipleValus.tooMany').replace('{0}', e.getAttribute('max')).replace('{1}', e2.length);
 			return;
 		}
+		if (ui.q('#' + id + 'HelperPopupEx').value && !/^[a-zA-Z ]+$/.test(ui.q('#' + id + 'HelperPopupEx').value)) {
+			ui.q('popupHint').innerHTML = ui.l('multipleValus.onlyLetters');
+			return;
+		}
 		var s2 = '';
 		for (var i = 0; i < e2.length; i++)
 			s2 += ',' + e2[i].value;
 		if (s2.length > 0)
 			s2 = s2.substring(1);
 		e.value = s2;
-		ui.attr(e, 'valueEx', ui.q('#' + id + 'HelperPopupEx').value);
+		s2 = ui.q('#' + id + 'HelperPopupEx').value.trim();
+		while (s2.indexOf('  ') > -1)
+			s2 = s2.replace(/  /g, ' ');
+		ui.attr(e, 'valueEx', s2);
 		e2 = e.parentNode;
 		var removeID = false;
 		if (!e2.id) {

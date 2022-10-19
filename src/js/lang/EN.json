@@ -837,6 +837,8 @@
 		"marketing.until": "Until",
 		"messagesTitle": "notifications ...",
 		"more": "more",
+		"multipleValus.hintOther": "Provide a space-separated list of verbs and/or nouns. Only letters from a-z allowed.",
+		"multipleValus.onlyLetters": "Only letters from a to z and blanks are allowed.",
 		"multipleValus.tooMany": ". You can select a maximum of {0} entries<br/>Currently you have selected {1}.",
 		"name": "Name",
 		"No": "No",

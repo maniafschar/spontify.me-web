@@ -161,6 +161,15 @@ hint>b {
 	display: inline-block;
 }
 
+hintAttributeEx {
+	display: block;
+	position: relative;
+	font-size: 0.8em;
+	line-height: 1.3;
+	margin: 0.5em 0 1em 0;
+	opacity: 0.5;
+}
+
 hintDelete {
 	display: block;
 	position: relative;
@@ -1505,7 +1514,6 @@ buttonIcon {
 	padding: 0.3em;
 	text-align: center;
 	z-index: 3;
-	transition: all 0.4s ease-out;
 	color: white;
 	border: solid 0.15em white;
 	border-radius: 50%;
@@ -1532,9 +1540,17 @@ buttonIcon.bottom {
 	bottom: 0.5em;
 }
 
+buttonIcon.jpg {
+	padding: 0;
+}
+
+buttonIcon.jpg img {
+	width: 2.6em;
+	height: 2.6em;
+	border-radius: 50%;
+}
 
 buttonIcon span,
-buttonIcon img,
 buttonIcon svg {
 	width: 2em;
 	height: 2em;
