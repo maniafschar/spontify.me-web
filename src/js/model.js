@@ -114,6 +114,7 @@ class Contact extends BaseEntity {
 	contactRating = new ContactRating();
 	contactVisit = new ContactVisit();
 	contactWhatToDo = new ContactWhatToDo();
+	event = new Event();
 	eventParticipate = new EventParticipate();
 }
 

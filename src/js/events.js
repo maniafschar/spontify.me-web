@@ -163,7 +163,7 @@ ${v.eventParticipationButtons}
 				success(r) {
 					if (r[1][0] > -1) {
 						var e = ui.q('detail card[i="' + v.id + '"] participantCount');
-						if (e)
+						if (e && r[1][0] > 0)
 							e.innerHTML = r[1][0] + ' ';
 						if (!v.event.maxParticipants || r[1][0] < v.event.maxParticipants) {
 							e = ui.q('detail card[i="' + v.id + '"] buttontext[pID]');
@@ -354,8 +354,18 @@ ${v.eventParticipationButtons}
 			responseType: 'json',
 			success(r) {
 				events.participations = [];
-				for (var i = 1; i < r.length; i++)
-					events.participations.push(model.convert(new Contact(), r, i).eventParticipate);
+				geoData.trackAll = null;
+				var today = global.date.local2server(new Date());
+				for (var i = 1; i < r.length; i++) {
+					var e = model.convert(new Contact(), r, i);
+					var e2 = e.eventParticipate;
+					e2.event = e.event;
+					events.participations.push(e2);
+					if (e2.event.contactId == user.contact.id && e2.eventDate.indexOf(today) == 0) {
+						e = global.date.server2Local(e2.event.startDate);
+						geoData.trackAll = e.getHours();
+					}
+				}
 			}
 		});
 	}

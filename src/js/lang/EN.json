@@ -311,6 +311,7 @@
 			"askInsertCopyLinks": "Send these links?",
 			"askInsertCopyLinksBody": "You may deselect links by clicking on them.",
 			"askInsertCurrentLocationLink": "Send your current position?",
+			"closeHint": "swipe up for closing",
 			"linksSent": "Links sent",
 			"more": "{0} more messages",
 			"picSent": "Image sent",

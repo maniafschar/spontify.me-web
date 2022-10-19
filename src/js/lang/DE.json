@@ -311,6 +311,7 @@
 			"askInsertCopyLinks": "Links senden?",
 			"askInsertCopyLinksBody": "Einzelne Links kannst Du durch anklicken abwählen.",
 			"askInsertCurrentLocationLink": "Aktuelle Position senden?",
+			"closeHint": "zum Schließen nach oben wischen",
 			"linksSent": "Links gesendet",
 			"more": "{0} weitere Nachrichten",
 			"picSent": "Bild gesendet",

@@ -27,6 +27,7 @@ class pageChat {
 	static templateInput = v =>
 		global.template`<chatInput>
 	<chatMoreButton style="display:none;" onclick="pageChat.scrollToBottom()">v v v</chatMoreButton>
+	<closeHint>${ui.l('chat.closeHint')}</closeHint>
 	<chatButtons>
 		<buttontext class="bgColor" onclick="pageChat.askLink()">${ui.l('share')}</buttontext>
 		<buttontext class="bgColor" onclick="pageChat.askLocation()">${ui.l('chat.serviceLocation')}</buttontext>
@@ -180,6 +181,14 @@ class pageChat {
 			v._pseudonym = pageChat.admin.pseudonym;
 			var e = ui.q('chat[i="' + id + '"] chatConversation');
 			e.innerHTML = e.innerHTML + pageChat.renderMsg(v);
+		}
+		if (l.length < 3) {
+			e = ui.q('chatInput closeHint');
+			e.style.display = 'block';
+			e.style.transition = 'all 2s ease-out';
+			setTimeout(function () {
+				e.style.opacity = 0;
+			}, 2000);
 		}
 		communication.ping();
 	}

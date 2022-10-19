@@ -1320,6 +1320,15 @@ chatInput {
 	left: 0;
 }
 
+chatInput closeHint {
+	position: absolute;
+	top: -2em;
+	opacity: 0.6;
+	width: 100%;
+	left: 0;
+	display: none;
+}
+
 chatInput errorHint {
 	position: absolute;
 	bottom: 2.1em;
