@@ -382,6 +382,14 @@ inputFile {
 
 inputFile img {
 	position: absolute;
+	top: 0;
+	right: 0;
+	height: 100%;
+	border-radius: 0 0.5em 0.5em 0;
+}
+
+inputFile img {
+	position: absolute;
 }
 
 inputFile span {

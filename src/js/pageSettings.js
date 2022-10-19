@@ -34,7 +34,7 @@ class pageSettings {
 	<field>
 		<label>${ui.l('picture')}</label>
 		<value style="text-align:center;">
-			<input type="file" name="image" hint="${ui.l('settings.imageHint')}" accept=".gif, .png, .jpg" />
+			<input type="file" name="image" hint="${ui.l('settings.imageHint')}" accept=".gif, .png, .jpg" ${v.image}/>
 		</value>
 	</field>
 	<field>
@@ -212,7 +212,7 @@ class pageSettings {
 <div id="blocked" style="display:none;"></div>
 <buttontext onclick="ui.toggleHeight(&quot;#delete&quot;)" class="bgColor settings2Button">${ui.l('settings.delete')}</buttontext><br/>
 <div id="delete" style="display:none;margin:0 0.5em 1em 0.5em;">
-<div style="margin-bottom:0.5em;">${ui.l('settings.deleteProfileHint')}</div>
+<div style="margin:0 0 0.5em 0.5em;">${ui.l('settings.deleteProfileHint')}</div>
 <input type="checkbox" name="deletionReason" label="${ui.l('settings.deleteReason1')}" onclick="ui.toggleHeight(&quot;hintDelete.hint1&quot;)" />
 <hintDelete class="hint1" style="display:none;">${ui.l('settings.hintDeleteReason1')}</hintDelete><br/>
 <input type="checkbox" name="deletionReason" label="${ui.l('settings.deleteReason2')}" onclick="ui.toggleHeight(&quot;hintDelete.hint2&quot;)" />
@@ -384,6 +384,8 @@ class pageSettings {
 						v['genderInterest2'] = 'checked';
 					if (v['contact.ageDivers'])
 						v['genderInterest3'] = 'checked';
+					if (user.contact.imageList)
+						v.image = 'src="' + global.serverImg + user.contact.imageList + '"';
 					ui.html('settings', pageSettings.templateSettings1(v));
 					formFunc.initFields('settings');
 					if (!v['contact.ageFemale'])
@@ -453,7 +455,7 @@ class pageSettings {
 		}
 		var s = pageContact.listContactsInternal(l);
 		var e = ui.q('#blocked');
-		e.innerHTML = s ? s : '<div style="padding:0.5em;">' + ui.l('noResults.block') + '</div>';
+		e.innerHTML = s ? s : '<div style="padding-left:1em;">' + ui.l('noResults.block') + '</div>';
 		ui.toggleHeight(e);
 	}
 	static preview() {

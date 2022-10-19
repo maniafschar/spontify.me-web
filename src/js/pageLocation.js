@@ -173,7 +173,7 @@ ${v.hint}
 <field>
 	<label>${ui.l('picture')}</label>
 	<value>
-		<input type="file" name="image" accept=".gif, .png, .jpg" />
+		<input type="file" name="image" accept=".gif, .png, .jpg" ${v.image} />
 	</value>
 </field>
 <field style="margin-bottom:0;">
@@ -546,6 +546,8 @@ ${v.hint}
 			v.longitude = geoData.latlon.lon;
 		if (!v.latitude)
 			v.latitude = geoData.latlon.lat;
+		if (v.image)
+			v.image = 'src="' + global.serverImg + v.image + '"';
 		ui.navigation.openPopup(ui.l('locations.' + (id ? 'edit' : 'new')).replace('{0}', v.name), pageLocation.templateEdit(v), 'pageLocation.saveDraft()');
 		if (id)
 			pageLocation.setEditAttributes();
