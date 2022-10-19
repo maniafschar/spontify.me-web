@@ -907,7 +907,9 @@ class formFunc {
 						cb[e[i].name] += '\u0015' + e[i].value;
 					else if (e[i].value == 'true')
 						cb[e[i].name] += '\u0015false';
-				} else if (e[i].name)
+				} else if (e[i].type == 'datetime-local')
+					d.values[e[i].name] = global.date.local2server(e[i].value);
+				else if (e[i].name)
 					d.values[e[i].name] = e[i].value.replace(/\"/g, '&quot;').replace(/</g, '&lt;');
 			}
 		}

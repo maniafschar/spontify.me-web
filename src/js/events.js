@@ -205,19 +205,16 @@ ${v.eventParticipationButtons}
 			events.editInternal(locationID);
 	}
 	static editInternal(locationID, id, v) {
-		var draft = formFunc.getDraft('event' + locationID + (id ? '_' + id : ''));
-		if (draft)
-			v = draft.values;
-		else if (!v)
+		if (!id && formFunc.getDraft('event' + locationID))
+			v = formFunc.getDraft('event' + locationID).values;
+		if (!v)
 			v = {};
 		else
 			v = v.event;
-		if (v.startDate && v.startDate.indexOf(':') > -1) {
-			v.startDate = v.startDate.substring(0, v.startDate.lastIndexOf('.'));
-			v.startDate = v.startDate.substring(0, v.startDate.lastIndexOf(':'));
+		if (v.startDate) {
+			var d = global.date.getDateFields(global.date.server2Local(v.startDate));
+			v.startDate = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute;
 		}
-		if (v.endDate)
-			v.endDate = v.endDate;
 		v.idOrNull = id ? id : 'null';
 		var d = new Date();
 		v.today = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
@@ -571,7 +568,6 @@ ${v.eventParticipationButtons}
 			end.value = start.value.substring(0, start.value.lastIndexOf('T'));
 		ui.q('[name="confirm"]').value = ui.q('[name="eventconfirm"]:checked') ? 1 : 0;
 		var v = formFunc.getForm('editElement');
-		v.values.startDate = global.date.local2server(v.values.startDate);
 		v.classname = 'Event';
 		if (id)
 			v.id = id;
@@ -588,11 +584,8 @@ ${v.eventParticipationButtons}
 	}
 	static saveDraft() {
 		var s = ui.q('detail card:last-child').getAttribute('i');
-		if (s && s.indexOf('_') > 0)
-			s = '_' + s.substring(0, s.indexOf('_'));
-		else
-			s = '';
-		formFunc.saveDraft('event' + ui.q('[name="locationId"]').value + s, formFunc.getForm('editElement'));
+		if (!s || s.indexOf('_') < 0)
+			formFunc.saveDraft('event' + ui.q('[name="locationId"]').value, formFunc.getForm('editElement'));
 	}
 	static setForm() {
 		var b = ui.q('[name="type"]').checked;

@@ -497,14 +497,13 @@ ${v.hint}
 		}
 	}
 	static editInternal(id, v) {
-		var draft = formFunc.getDraft('location' + (id ? id : ''));
 		if (v) {
 			if ((!v.ownerId && v.contactId == user.contact.id) || v.ownerId == user.contact.id)
 				v.deleteButton = '<buttontext onclick="pageLocation.deleteElement(' + id + ',&quot;Location&quot;)" class="bgColor" id="deleteElement">' + ui.l('delete') + '</buttontext>';
-		} else if (draft)
-			v = draft.values;
+		} else if (!id && formFunc.getDraft('location'))
+			v = formFunc.getDraft('location').values;
 		if (!v)
-			v = [];
+			v = {};
 		var d = '' + v.category;
 		for (var i = 0; i < d.length; i++)
 			v['cat' + d.substring(i, i + 1)] = ' checked';
@@ -548,7 +547,7 @@ ${v.hint}
 			v.latitude = geoData.latlon.lat;
 		if (v.image)
 			v.image = 'src="' + global.serverImg + v.image + '"';
-		ui.navigation.openPopup(ui.l('locations.' + (id ? 'edit' : 'new')).replace('{0}', v.name), pageLocation.templateEdit(v), 'pageLocation.saveDraft()');
+		ui.navigation.openPopup(ui.l('locations.' + (id ? 'edit' : 'new')).replace('{0}', v.name), pageLocation.templateEdit(v), id ? '' : 'pageLocation.saveDraft()');
 		if (id)
 			pageLocation.setEditAttributes();
 		else
@@ -930,7 +929,6 @@ ${v.hint}
 						return '&nbsp;';
 					});
 					ui.navigation.goTo('locations');
-					formFunc.removeDraft('location' + id);
 				}
 			});
 		} else {
@@ -946,12 +944,14 @@ ${v.hint}
 				},
 				success() {
 					ui.navigation.hidePopup();
-					formFunc.removeDraft('location' + id);
+					formFunc.removeDraft('location');
 				}
 			});
 		}
 	}
 	static saveDraft() {
+		if (ui.q('popup input[name="id"]').value)
+			return;
 		pageLocation.sanatizeFields();
 		var a = formFunc.getForm('editElement');
 		a.OT = [];
@@ -961,7 +961,7 @@ ${v.hint}
 			a.OT[i] = [e.value, ui.val('[name="locationOpenTime.openAt' + i + '"]'), ui.val('[name="locationOpenTime.closeAt' + i + '"]'), ''];
 			i++;
 		}
-		formFunc.saveDraft('location' + ui.q('popup input[name="id"]').value, a);
+		formFunc.saveDraft('location', a);
 	}
 	static scrollMap() {
 		if (ui.cssValue('map', 'display') == 'none')
