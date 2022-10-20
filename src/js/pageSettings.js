@@ -231,7 +231,7 @@ class pageSettings {
 <textarea id="deleteAccountFeedback" placeholder="${ui.l('settings.deleteProfileFeedbackHint')}" maxlength="2000" style="margin-top:1em;"></textarea>
 <errorHint class="textarea"></errorHint>
 <div style="margin-top:1em;text-align:center;">
-<buttontext onclick="pageSettings.deleteProfile()" class="bgColor">${ui.l('settings.deleteProfileFinal')}</buttontext>
+<buttontext onclick="pageSettings.deleteProfile()" class="bgColor">${ui.l('settings.deleteProfile')}</buttontext>
 </div>
 </div>
 <settingsNav onclick="ui.navigation.goTo(&quot;settings2&quot;)" style="float:left;">&lt;</settingsNav>`;
@@ -250,8 +250,10 @@ class pageSettings {
 			return;
 		}
 		var s = ui.val('#deleteAccountFeedback').trim();
-		if (!s || s.length < 10 || s.indexOf(' ') == s.lastIndexOf(' ')) {
-			ui.q('errorHint.textarea').innerHTML = ui.l('settings.deleteExplain');
+		while (s.indexOf('  ') > -1)
+			s = s.replace(/  /g, ' ');
+		if (!s || s.length < 10 || s.split(' ').length < 3) {
+			ui.q('errorHint.textarea').innerHTML = s ? ui.l('settings.deleteExplainMoreWords') : ui.l('settings.deleteExplain');
 			return;
 		}
 		communication.ajax({
@@ -266,7 +268,9 @@ class pageSettings {
 		});
 	}
 	static deleteProfileSaveReason() {
-		var s = '\n' + ui.val('#deleteAccountFeedback');
+		var s = '\n' + ui.val('#deleteAccountFeedback').trim();
+		while (s.indexOf('  ') > -1)
+			s = s.replace(/  /g, ' ');
 		var reasons = ui.qa('input[name="deletionReason"]:checked');
 		for (var i = 0; i < reasons.length; i++)
 			s = reasons[i].getAttribute('label') + '\n' + s;
