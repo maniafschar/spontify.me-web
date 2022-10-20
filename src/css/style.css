@@ -366,6 +366,14 @@ input[type="file"] {
 	cursor: pointer;
 }
 
+input[type="file"]+img {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 100%;
+	border-radius: 0 0.5em 0.5em 0;
+}
+
 inputFile {
 	position: relative;
 	min-height: 2em;
@@ -378,18 +386,6 @@ inputFile {
 	background: rgba(255, 255, 255, 0.85);
 	display: block;
 	color: black;
-}
-
-inputFile img {
-	position: absolute;
-	top: 0;
-	right: 0;
-	height: 100%;
-	border-radius: 0 0.5em 0.5em 0;
-}
-
-inputFile img {
-	position: absolute;
 }
 
 inputFile span {
@@ -1580,15 +1576,15 @@ buttonIcon.bluetoothInactive {
 }
 
 .appInput {
-	white-space: nowrap;
-	text-align: left;
-	margin-left: -0.25em;
 	text-align: center;
 }
 
 .appInput buttontext {
-	padding: 0.5em 0.75em;
+	padding: 0.5em;
 	min-height: 2em;
+	width: 50%;
+	margin: 0;
+	box-shadow: none;
 }
 
 add buttontext {
