@@ -92,7 +92,7 @@ class initialisation {
 		});
 		if (global.getOS() == 'android') {
 			ui.on(window, 'keyboardDidShow', function (e) {
-				ui.css('main', 'height', window.innerHeight - e.keyboardHeight);
+				ui.css('main', 'height', (window.innerHeight - e.keyboardHeight) + 'px');
 			});
 			ui.on(window, 'keyboardDidHide', function () {
 				ui.css('main', 'height', '');

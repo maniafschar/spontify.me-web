@@ -187,8 +187,9 @@ class pageChat {
 			e.style.display = 'block';
 			e.style.transition = 'all 2s ease-out';
 			setTimeout(function () {
-				e.style.opacity = 0;
-			}, 2000);
+				if (e && e.style)
+					e.style.opacity = 0;
+			}, 10000);
 		}
 		communication.ping();
 	}
