@@ -231,7 +231,7 @@ class pageSettings {
 <textarea id="deleteAccountFeedback" placeholder="${ui.l('settings.deleteProfileFeedbackHint')}" maxlength="2000" style="margin-top:1em;"></textarea>
 <errorHint class="textarea"></errorHint>
 <div style="margin-top:1em;text-align:center;">
-<buttontext onclick="pageSettings.deleteProfileExec()" class="bgColor">${ui.l('settings.deleteProfileFinal')}</buttontext>
+<buttontext onclick="pageSettings.deleteProfile()" class="bgColor">${ui.l('settings.deleteProfileFinal')}</buttontext>
 </div>
 </div>
 <settingsNav onclick="ui.navigation.goTo(&quot;settings2&quot;)" style="float:left;">&lt;</settingsNav>`;
@@ -242,7 +242,7 @@ class pageSettings {
 		else
 			communication.login.checkUnique(ui.q('input[name="email"]'));
 	}
-	static deleteProfileExec() {
+	static deleteProfile() {
 		ui.html('errorHint', '');
 		var reasons = ui.qa('input[name="deletionReason"]:checked');
 		if (!reasons.length) {
@@ -253,6 +253,18 @@ class pageSettings {
 			ui.q('errorHint.textarea').innerHTML = ui.l('settings.deleteExplain');
 			return;
 		}
+		communication.ajax({
+			url: global.server + 'action/prevent/delete',
+			responseType: 'json',
+			success(r) {
+				if (r.text)
+					ui.navigation.openPopup(ui.l('attention'), r.text + (r.url ? '<br/><br/><a href="' + r.url + '" target="preventDelete">' + r.url + '</a>' : '') + '<br/><br/><buttontext class="bgColor" onclick="pageSettings.deleteProfileExec()">' + ui.l('settings.deleteProfileFinal') + '</buttontext>');
+				else
+					pageSettings.deleteProfileExec();
+			}
+		});
+	}
+	static deleteProfileExec() {
 		var s = ui.val('#deleteAccountFeedback') ? '\n' + ui.val('#deleteAccountFeedback') : '';
 		for (var i = 0; i < reasons.length; i++)
 			s = reasons[i].getAttribute('label') + '\n' + s;
