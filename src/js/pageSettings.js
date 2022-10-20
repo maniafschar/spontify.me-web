@@ -249,7 +249,8 @@ class pageSettings {
 			ui.q('errorHint.checkbox').innerHTML = ui.l('settings.deleteChooseReason');
 			return;
 		}
-		if (!ui.val('#deleteAccountFeedback')) {
+		var s = ui.val('#deleteAccountFeedback').trim();
+		if (!s || s.length < 10 || s.indexOf(' ') == s.lastIndexOf(' ')) {
 			ui.q('errorHint.textarea').innerHTML = ui.l('settings.deleteExplain');
 			return;
 		}
@@ -258,14 +259,15 @@ class pageSettings {
 			responseType: 'json',
 			success(r) {
 				if (r.text)
-					ui.navigation.openPopup(ui.l('attention'), r.text + (r.url ? '<br/><br/><a href="' + r.url + '" target="preventDelete">' + r.url + '</a>' : '') + '<br/><br/><buttontext class="bgColor" onclick="pageSettings.deleteProfileExec()">' + ui.l('settings.deleteProfileFinal') + '</buttontext>');
+					ui.navigation.openPopup(ui.l('attention'), r.text + (r.url ? '<br/><br/><a href="' + r.url + '" target="preventDelete">' + r.url + '</a>' : '') + '<br/><br/><buttontext class="bgColor" onclick="pageSettings.deleteProfileSaveReason()">' + ui.l('settings.deleteProfileFinal') + '</buttontext>');
 				else
-					pageSettings.deleteProfileExec();
+					pageSettings.deleteProfileSaveReason();
 			}
 		});
 	}
-	static deleteProfileExec() {
-		var s = ui.val('#deleteAccountFeedback') ? '\n' + ui.val('#deleteAccountFeedback') : '';
+	static deleteProfileSaveReason() {
+		var s = '\n' + ui.val('#deleteAccountFeedback');
+		var reasons = ui.qa('input[name="deletionReason"]:checked');
 		for (var i = 0; i < reasons.length; i++)
 			s = reasons[i].getAttribute('label') + '\n' + s;
 		communication.ajax({
@@ -280,16 +282,13 @@ class pageSettings {
 				}
 			},
 			success() {
-				pageSettings.deleteProfileExec2();
-			}
-		});
-	}
-	static deleteProfileExec2() {
-		communication.ajax({
-			url: global.server + 'authentication/one',
-			method: 'DELETE',
-			success(r) {
-				communication.login.resetAfterLogoff();
+				communication.ajax({
+					url: global.server + 'authentication/one',
+					method: 'DELETE',
+					success(r) {
+						communication.login.resetAfterLogoff();
+					}
+				});
 			}
 		});
 	}
