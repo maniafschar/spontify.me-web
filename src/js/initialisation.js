@@ -90,10 +90,16 @@ class initialisation {
 				initialisation.statusBar();
 			}
 		});
-		if (global.getOS() == 'android') {
-			ui.on(window, 'keyboardDidShow', function (e) {
+		ui.on(window, 'keyboardDidShow', function (e) {
+			if (global.getOS() == 'android')
 				ui.css('main', 'height', (window.innerHeight - e.keyboardHeight) + 'px');
-			});
+			setTimeout(function () {
+				var e2 = document.activeElement;
+				if (e2)
+					e2.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+			}, 100);
+		});
+		if (global.getOS() == 'android') {
 			ui.on(window, 'keyboardDidHide', function () {
 				ui.css('main', 'height', '');
 			});
