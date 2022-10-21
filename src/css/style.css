@@ -625,7 +625,6 @@ locationNameInputHelper {
 field {
 	position: relative;
 	width: 100%;
-	margin-bottom: 0.5em;
 	display: inline-block;
 }
 
@@ -635,7 +634,6 @@ field value {
 	width: 100%;
 	display: block;
 	min-height: 2em;
-	float: left;
 }
 
 field .checkbox {
@@ -1581,7 +1579,7 @@ buttonIcon.bluetoothInactive {
 
 .appInput buttontext {
 	padding: 0.5em;
-	min-height: 2em;
+	min-height: 0;
 	width: 50%;
 	margin: 0;
 	box-shadow: none;
