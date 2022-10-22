@@ -178,6 +178,13 @@ hintDelete {
 	padding-left: 1em;
 }
 
+hintDelete::after {
+	content: ' ';
+	height: 2em;
+	display: block;
+	position: relative;
+}
+
 hinky {
 	position: absolute;
 	border-right: solid 0.5em transparent;
