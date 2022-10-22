@@ -52,7 +52,7 @@ class pageSearch {
 		</field>
 		<field>
 			<label>${ui.l('search.age')}</label>
-			<value>
+			<value style="height:3.7em;">
 				<input type="text" id="searchAge" value="${v.age}" name="searchAge" slider="range" min="18" max="99" />
 			</value>
 		</field>
@@ -84,7 +84,7 @@ class pageSearch {
 	static getSearchContact() {
 		var s = '', s2 = '';
 		if (ui.q('searchInput contact [name="searchMatchesOnly"]:checked'))
-			s = pageSearch.getSearchMatchesContact();
+			s = ' and ' + pageSearch.getSearchMatchesContact();
 		var v = ui.q('searchInput [name="searchGender"]:checked');
 		if (v && v.checked)
 			s += ' and contact.gender=' + v.value;
