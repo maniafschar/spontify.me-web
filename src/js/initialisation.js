@@ -213,11 +213,11 @@ class initialisation {
 				ui.navigation.goTo('home');
 			else if (dir == 'left')
 				ui.navigation.goTo('settings2');
-		}, 'input,textarea,img,slider');
+		}, 'input,textarea,img,slider,thumb,val');
 		ui.swipe('search', function (dir) {
 			if (dir == 'right')
 				ui.navigation.goTo('home');
-		}, 'input,textarea,slider');
+		}, 'input,textarea,slider,thumb,val');
 		ui.swipe('login', function (dir) {
 			if (dir == 'left')
 				ui.navigation.goTo('home');

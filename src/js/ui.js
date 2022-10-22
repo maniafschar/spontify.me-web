@@ -1557,7 +1557,7 @@ class formFunc {
 			s = id.indexOf('_right') > 0 ? t.getAttribute('min') + ',' + v : v + ',' + t.getAttribute('max');
 		else
 			s = v;
-		ui.html('#' + id + ' val', v);
+		ui.q('#' + id + ' val').innerText = v;
 		t.value = s;
 		if (t.getAttribute('callback'))
 			eval(t.getAttribute('callback'));
