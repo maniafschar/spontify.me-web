@@ -318,11 +318,9 @@ class ui {
 				else if (!direction)
 					direction = 'backward';
 			}
-			if (currentID == 'info' && id == 'home' && !user.contact && pageInfo.openSection == -2) {
-				// AGBs opened from login, go back to login
+			// AGBs opened from login, go back to login
+			if (currentID == 'info' && id == 'home' && !user.contact && pageInfo.openSection == -2)
 				id = 'login';
-				direction = 'foreward';
-			}
 			if (pageInfo.openSection == -2)
 				pageInfo.openSection = -1;
 			if (!user.contact && id != 'home' && id != 'info') {
@@ -373,8 +371,6 @@ class ui {
 					direction != 'foreward' && (
 						currentID == 'detail' ||
 						id == 'home' && currentID != 'login' ||
-						id == 'info' && currentID == 'login' ||
-						id == 'login' ||
 						id == 'settings' && currentID == 'settings2' ||
 						id == 'settings2' && currentID == 'settings3');
 				if (!back && !(currentID == 'whattodo' && id == 'locations'

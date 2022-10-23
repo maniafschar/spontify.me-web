@@ -250,7 +250,7 @@ class initialisation {
 		}, 'input,listScroll,map');
 		ui.swipe('info', function (dir) {
 			if (dir == 'left' && !user.contact)
-				ui.navigation.goTo('login', 'foreward');
+				ui.navigation.goTo('login');
 			else if (dir == 'right')
 				ui.navigation.goTo('home');
 		}, 'textarea');
