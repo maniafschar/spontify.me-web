@@ -134,9 +134,7 @@ ${v.parking}
 <input type="hidden" name="zipCode" />
 <input type="hidden" name="country" />
 <input type="hidden" name="address2" />
-<input type="hidden" name="parkingOption" />
 <input type="hidden" name="category" />
-<input type="hidden" name="budget" />
 <input type="hidden" name="openTimesBankholiday" />
 <input type="hidden" name="attr0" />
 <input type="hidden" name="attr1" />
@@ -180,18 +178,18 @@ ${v.hint}
 <field style="margin-bottom:0;">
 	<label>${ui.l('priceCategory')}</label>
 	<value>
-		<input type="checkbox" value="0" name="locationbudget" transient="true" label="${ui.l('budget')}" ${v.budget0}/>
-		<input type="checkbox" value="1" name="locationbudget" transient="true" label="${ui.l('budget')}${ui.l('budget')}" ${v.budget1}/>
-		<input type="checkbox" value="2" name="locationbudget" transient="true" label="${ui.l('budget')}${ui.l('budget')}${ui.l('budget')}" ${v.budget2}/>
+		<input type="checkbox" value="0" name="budget" label="${ui.l('budget')}" ${v.budget0}/>
+		<input type="checkbox" value="1" name="budget" label="${ui.l('budget')}${ui.l('budget')}" ${v.budget1}/>
+		<input type="checkbox" value="2" name="budget" label="${ui.l('budget')}${ui.l('budget')}${ui.l('budget')}" ${v.budget2}/>
 	</value>
 </field>
 <field>
 	<label>${ui.l('locations.parking')}</label>
 	<value>
-		<input type="checkbox" style="width:100%;" name="parkingOption2" transient="true" value="1" label="${ui.l('locations.parking1')}"${v.parkCheck1}/><br />
-		<input type="checkbox" style="width:100%;" name="parkingOption2" transient="true" value="2" label="${ui.l('locations.parking2')}"${v.parkCheck2}/><br />
-		<input type="checkbox" style="width:100%;" name="parkingOption2" transient="true" value="3" label="${ui.l('locations.parking3')}"${v.parkCheck3}/><br />
-		<input type="checkbox" style="width:100%;" name="parkingOption2" transient="true" value="4" label="${ui.l('locations.parking4')}"${v.parkCheck4}/><br />
+		<input type="checkbox" style="width:100%;" name="parkingOption" value="1" label="${ui.l('locations.parking1')}"${v.parkCheck1}/><br />
+		<input type="checkbox" style="width:100%;" name="parkingOption" value="2" label="${ui.l('locations.parking2')}"${v.parkCheck2}/><br />
+		<input type="checkbox" style="width:100%;" name="parkingOption" value="3" label="${ui.l('locations.parking3')}"${v.parkCheck3}/><br />
+		<input type="checkbox" style="width:100%;" name="parkingOption" value="4" label="${ui.l('locations.parking4')}"${v.parkCheck4}/><br />
 		<input type="text" name="parkingText" maxlength="100" placeholder="${ui.l('locations.shortDescParking')}" value="${v.parkingText}" style="float: left;" />
 	</value>
 </field>
@@ -838,23 +836,10 @@ ${v.hint}
 		return s.replace(/'/g, '&#39;').replace(/"/g, '&#34;').replace(/\n/g, '\u0015').replace(/\r/g, '');
 	}
 	static sanatizeFields() {
-		var sa = '';
-		var s = ui.qa('[name="parkingOption2"]:checked');
-		for (var i = 0; i < s.length; i++)
-			sa += ',' + s[i].value;
-		if (sa.length > 0)
-			sa = sa.substring(1);
-		ui.q('[name="parkingOption"]').value = sa;
-		sa = '';
-		s = ui.qa('[name="locationcategory"]:checked');
+		var sa = '', s = ui.qa('[name="locationcategory"]:checked');
 		for (var i = 0; i < s.length; i++)
 			sa += s[i].value;
 		ui.q('[name="category"]').value = sa;
-		sa = '';
-		s = ui.qa('[name="locationbudget"]:checked');
-		for (var i = 0; i < s.length; i++)
-			sa += s[i].value;
-		ui.q('[name="budget"]').value = sa;
 		s = ui.q('[name="openTimesBankholiday2"]');
 		ui.q('[name="openTimesBankholiday"]').value = s && s.length > 0 && s[0].checked ? '' + true : '' + false;
 		for (var i = 0; i < ui.categories.length; i++) {
@@ -876,7 +861,7 @@ ${v.hint}
 		formFunc.resetError(ui.q('[name="locationcategory"]'));
 		formFunc.resetError(ui.q('[name="name"]'));
 		formFunc.resetError(ui.q('[name="address"]'));
-		formFunc.resetError(ui.q('[name="parkingOption2"]'));
+		formFunc.resetError(ui.q('[name="parkingOption"]'));
 		if (!ui.q('[name="locationcategory"]:checked'))
 			formFunc.setError(ui.q('[name="locationcategory"]'), 'locations.errorCategory');
 		if (!ui.val('[name="name"]'))
@@ -889,11 +874,11 @@ ${v.hint}
 			formFunc.setError(ui.q('[name="address"]'), 'locations.errorAddress');
 		else if (ui.val('[name="address"]').indexOf('\n') < 0)
 			formFunc.setError(ui.q('[name="address"]'), 'locations.errorAddressFormat');
-		if (!ui.qa('[name="parkingOption2"]')[0].checked &&
-			!ui.qa('[name="parkingOption2"]')[1].checked &&
-			!ui.qa('[name="parkingOption2"]')[2].checked &&
-			!ui.qa('[name="parkingOption2"]')[3].checked)
-			formFunc.setError(ui.q('[name="parkingOption2"]'), 'locations.errorParking');
+		if (!ui.qa('[name="parkingOption"]')[0].checked &&
+			!ui.qa('[name="parkingOption"]')[1].checked &&
+			!ui.qa('[name="parkingOption"]')[2].checked &&
+			!ui.qa('[name="parkingOption"]')[3].checked)
+			formFunc.setError(ui.q('[name="parkingOption"]'), 'locations.errorParking');
 		if (ui.q('popup errorHint')) {
 			ui.scrollTo('popupContent', 0);
 			return;
@@ -909,18 +894,6 @@ ${v.hint}
 				method: 'PUT',
 				body: v,
 				success() {
-					communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent('location.id=' + id), function (l) {
-						ui.html('locations [i="' + id + '"]', pageLocation.listLocation(l));
-						var l2 = lists.data['locations'];
-						for (var i = 1; i < l2.length; i++) {
-							var v = model.convert(new Location(), l2, i);
-							if (v.id == id) {
-								l2[i] = l[1];
-								break;
-							}
-						}
-						return '&nbsp;';
-					});
 					details.open(id, 'location_list&search=' + encodeURIComponent('location.id=' + id), function (l, id) {
 						ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id);
 						ui.navigation.hidePopup();

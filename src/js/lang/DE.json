@@ -543,7 +543,7 @@
 			"marketingNoTaxNo": "Bitte gib Deine USt-Id Nr. an",
 			"marketingTaxNo": "USt-Id Nr.",
 			"matchIndicatorHint": "{0} Deiner {1} angegebenen Attribute stimmen überein, eine Übereinstimmung von {2}%.<br/>Hier werden Budget und Location Attribute in der Kategorie {3} gematcht.",
-			"new": "neue Location",
+			"new": "Location anlegen",
 			"open": "geöffnet",
 			"opentimes": "Öffnungszeiten",
 			"payments": "Erfolgte Zahlungen",

@@ -271,7 +271,7 @@ ${v.budget}
 			idIntern = idIntern.substring(0, idIntern.indexOf('_'));
 		v.distance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
 		v.birthday = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
-		if (v.birthday[0]) {
+		if (v.birthday[2]) {
 			if (v.age)
 				v.ageDisplay = ' (' + v.age + ')';
 			if (v.birthday[1]) {

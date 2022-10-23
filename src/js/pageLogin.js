@@ -30,7 +30,7 @@ class pageLogin {
 		<buttontext onclick="pageLogin.fromForm()" class="bgColor" id="defaultButton">
 			${ui.l('login.action')}
 		</buttontext>
-		<div style="padding:3em 0 1em 0;">${ui.l('login.alternative')}</div>
+		<div style="padding:2em 0 1em 0;">${ui.l('login.alternative')}</div>
 		<buttontext onclick="communication.login.openFB()" class="bgColor">
 			Facebook
 		</buttontext>

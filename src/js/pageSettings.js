@@ -504,7 +504,8 @@ class pageSettings {
 		user.contact.budget = ui.val('input[name="budget"]:checked');
 		user.contact.pseudonym = ui.val('input[name="pseudonym"]');
 		user.contact.gender = ui.val('input[name="gender"]:checked');
-		ui.html('homeUsername', user.contact.pseudonym);
+		user.contact.birthday = ui.val('input[name="birthday"]');
+		user.contact.age = user.contact.birthday ? pageContact.getBirthday(user.contact.birthday)[2] : null;
 		if (ui.q('[name="image_disp"] img')) {
 			communication.ajax({
 				url: global.server + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id),

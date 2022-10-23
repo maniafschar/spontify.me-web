@@ -543,7 +543,7 @@
 			"marketingNoTaxNo": "Please enter your VAT registration number to.",
 			"marketingTaxNo": "VAT registration number.",
 			"matchIndicatorHint": "{0} of your {1} specified attributes match. That's a {2}% match.<br/>Budget and location attributes in category {3} are matched here.",
-			"new": "new Location",
+			"new": "enter Location",
 			"open": "open",
 			"opentimes": "Opening times",
 			"payments": "Payments made",
