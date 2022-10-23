@@ -27,7 +27,6 @@ class pageLogin {
 		</value>
 	</field>
 	<dialogButtons>
-		<br/>
 		<buttontext onclick="pageLogin.fromForm()" class="bgColor" id="defaultButton">
 			${ui.l('login.action')}
 		</buttontext>
@@ -55,7 +54,7 @@ class pageLogin {
 				<input type="email" name="email" value="${v.email}" maxlength="100" />
 			</value>
 		</field>
-		<dialogButtons style="margin-top:0.5em;">
+		<dialogButtons>
 			<br/>
 			<buttontext onclick="pageLogin.recoverPasswordSendEmail()" class="bgColor" id="defaultButton">
 			${ui.l('login.recoverPassword')}

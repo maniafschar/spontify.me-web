@@ -111,7 +111,7 @@ class pageSettings {
 			<explain>${ui.l('settings.searchPseudonymHint')}</explain>
 		</value>
 	</field>
-	<dialogButtons style="margin-top:1.5em;">
+	<dialogButtons>
 		<buttontext onclick="communication.login.logoff()" class="bgColor">${ui.l('logoff.title')}</buttontext>
 		<buttontext onclick="pageSettings.preview()" class="bgColor">${ui.l('settings.preview')}</buttontext>
 	</dialogButtons>

@@ -735,7 +735,7 @@ class ui {
 				var distX = event.changedTouches[0].pageX - e.startX;
 				var distY = event.changedTouches[0].pageY - e.startY;
 				var elapsedTime = new Date().getTime() - e.startTime;
-				var swipedir = 'none', threshold = 120, restraint = 2000, allowedTime = 1000;
+				var swipedir = 'none', threshold = 100, restraint = 2000, allowedTime = 1000;
 				if (elapsedTime <= allowedTime) {
 					if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint)
 						swipedir = distX < 0 ? 'left' : 'right';

@@ -25,7 +25,7 @@ class pageLocation {
 		timeout: null
 	};
 	static templateList = v =>
-		global.template`<row onclick="details.open(&quot;${v.id}&quot;,&quot;${v.query}&quot;,${v.render});" i="${v.id}" class="location${v.classFavorite}">
+		global.template`<row onclick="details.open(&quot;${v.id}&quot;,&quot;${v.query}&quot;,${v.render})" i="${v.id}" class="location${v.classFavorite}">
 			${v.present}
 	<div>
 			<text>
@@ -149,6 +149,7 @@ ${v.hint}
 	<label>${ui.l('name')}</label>
 	<value>
 		<input type="text" name="name" maxlength="100" value="${v.name}" />
+		<div style="text-align:center;padding-top:1em;"><buttontext class="bgColor" onclick="pageLocation.showLocationsNearby(event)">${ui.l('all')}</buttontext></div>
 		<locationNameInputHelper style="display:none;"></locationNameInputHelper>
 	</value>
 </field>
@@ -467,17 +468,6 @@ ${v.hint}
 			if (v.contactId == user.contact.id)
 				pageLocation.editInternal(id, v);
 			else {
-				if (pageLocation.locationsAdded == null) {
-					communication.ajax({
-						url: global.server + 'db/list?query=location_list&search=' + encodeURIComponent('location.contactId=' + user.contact.id),
-						responseType: 'json',
-						success(s) {
-							pageLocation.locationsAdded = s.length - 1;
-							pageLocation.edit(id);
-						}
-					});
-					return;
-				}
 				if (pageLocation.locationsAdded <= global.minLocations)
 					ui.navigation.openPopup(ui.l('attention'), ui.l('locations.editHint').replace('{0}', pageLocation.locationsAdded) + '<br/><br/><buttontext class="bgColor" onclick="pageLocation.edit()">' + ui.l('locations.new') + '</buttontext>');
 				else
@@ -524,7 +514,7 @@ ${v.hint}
 				v.ot += '<div>' + pageLocation.templateEditOpenTimes(ot[i]) + '</div>';
 			}
 		} else {
-			v.hint = '<div style="margin-bottom:2em;">' + ui.l('locations.newHint') + '</div>';
+			v.hint = '<div style="padding:0.5em 1em 0 1em;">' + ui.l('locations.newHint') + '</div>';
 			v.hideOpenTimes = ' style="display:none;"';
 		}
 		for (var i = 0; i < ui.categories.length; i++)
@@ -794,22 +784,25 @@ ${v.hint}
 		return s;
 	}
 	static prefillAddress() {
+		if (geoData.localized && ui.q('input[name="name"]') && !ui.val('[name="address"]')) {
+			communication.ajax({
+				url: global.server + 'action/google?param=' + encodeURIComponent('latlng=' + geoData.latlon.lat + ',' + geoData.latlon.lon),
+				responseType: 'json',
+				success(r) {
+					if (r.formatted && !ui.val('[name="address"]'))
+						ui.html('[name="address"]', r.formatted);
+				}
+			});
+		}
+	}
+	static showLocationsNearby(event) {
 		if (geoData.localized && ui.q('input[name="name"]')) {
-			if (!ui.val('[name="address"]')) {
-				communication.ajax({
-					url: global.server + 'action/google?param=' + encodeURIComponent('latlng=' + geoData.latlon.lat + ',' + geoData.latlon.lon),
-					responseType: 'json',
-					success(r) {
-						if (r.formatted && !ui.val('[name="address"]'))
-							ui.html('[name="address"]', r.formatted);
-					}
-				});
-			}
 			communication.ajax({
 				url: global.server + 'action/google?param=' + encodeURIComponent('place/nearbysearch/json?radius=100&sensor=false&location=' + geoData.latlon.lat + ',' + geoData.latlon.lon),
 				responseType: 'json',
 				success(r) {
 					if (r.status == 'OK') {
+						event.target.parentNode.outerHTML = '';
 						r = r.results;
 						var s = '', r2 = [];
 						for (var i = 0; i < r.length; i++) {
@@ -928,7 +921,10 @@ ${v.hint}
 						}
 						return '&nbsp;';
 					});
-					ui.navigation.goTo('locations');
+					details.open(id, 'location_list&search=' + encodeURIComponent('location.id=' + id), function (l, id) {
+						ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id);
+						ui.navigation.hidePopup();
+					});
 				}
 			});
 		} else {
@@ -942,9 +938,10 @@ ${v.hint}
 					else
 						communication.onError(e);
 				},
-				success() {
+				success(r) {
 					ui.navigation.hidePopup();
 					formFunc.removeDraft('location');
+					details.open(r, 'location_list&search=' + encodeURIComponent('location.id=' + r), pageLocation.detailLocationEvent);
 				}
 			});
 		}

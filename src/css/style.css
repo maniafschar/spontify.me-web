@@ -654,7 +654,7 @@ dialogButtons {
 	clear: both;
 	position: relative;
 	width: 100%;
-	margin-bottom: 1em;
+	margin: 1em 0;
 	display: block;
 }
 
@@ -953,6 +953,11 @@ popup {
 
 popupTitle {
 	position: relative;
+	display: block;
+	height: 2.6em;
+}
+
+popupTitle>div {
 	white-space: nowrap;
 	font-size: 1.3em;
 	max-width: 90%;
@@ -961,6 +966,7 @@ popupTitle {
 	padding: 0.5em 1em;
 	border-radius: 0.5em 0.5em 0 0;
 	color: black;
+	height: 100%;
 }
 
 popupTitle>div {
@@ -1737,8 +1743,6 @@ row imagelist svg {
 	bottom: 0.25em;
 	width: 1.5em;
 	display: none;
-	fill: rgb(252, 251, 104);
-	stroke: rgb(252, 251, 104);
 }
 
 row.favorite imagelist svg {

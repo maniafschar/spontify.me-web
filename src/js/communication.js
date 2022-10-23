@@ -260,6 +260,7 @@ class communication {
 									intro.openHint({ desc: 'goToSettings', pos: '-0.5em,5em', size: '60%,auto', hinky: 'right:1em;', hinkyClass: 'top', onclick: 'ui.navigation.goTo(\'settings\')' });
 							}, 2000);
 						}
+						pageLocation.locationsAdded = v.location_added;
 						if (exec)
 							setTimeout(exec, 1500);
 					} else {
