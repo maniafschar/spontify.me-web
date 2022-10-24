@@ -9,7 +9,7 @@ export { pageHome };
 
 class pageHome {
 	static template = v =>
-		global.template`<homeHeader>	
+		global.template`<buttonicon class="marketing"><span></span></buttonicon><homeHeader>	
 	<homeTitle onclick="ui.navigation.goTo(&quot;settings&quot;)">
 		<img source="logo" />
 	</homeTitle>
@@ -37,6 +37,20 @@ class pageHome {
 			});
 			formFunc.initFields('home');
 			initialisation.reposition();
+			communication.ajax({
+				url: global.server + 'action/marketing',
+				method: 'GET',
+				responseType: 'json',
+				success(r) {
+					if (r && r.label) {
+						ui.q('buttonIcon.marketing>span').innerHTML = r.label;
+						var e = ui.q('buttonIcon.marketing');
+						e.setAttribute('onclick', 'ui.navigation.openHTML("' + r.action + '","sm_marketing");ui.q("buttonIcon.marketing").outerHTML=""');
+						e.style.display = 'flex';
+					}
+				}
+			});
+
 		}
 		var e = ui.q('buttonIcon.bottom.left');
 		ui.buttonIcon(e, '<badgeNotifications>' + communication.notification.data.length + '</badgeNotifications><img source="news" />', 'communication.notification.open()');

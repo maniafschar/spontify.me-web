@@ -1558,6 +1558,16 @@ buttonIcon.bottom {
 	bottom: 0.5em;
 }
 
+buttonIcon.marketing {
+	left: 0.5em;
+	top: 5.5em;
+	display: none;
+}
+
+buttonIcon.marketing>span {
+	font-weight: bold;
+}
+
 buttonIcon.jpg {
 	padding: 0;
 }
