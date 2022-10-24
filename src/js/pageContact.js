@@ -687,7 +687,7 @@ ${v.budget}
 			if (!v._message1)
 				v._message1 = v.attr.textAttributes();
 			if (birth)
-				v.birth = birth[0] ? ' (' + v.age + ')' : '';
+				v.birth = birth[2] ? ' (' + v.age + ')' : '';
 			if (!v._message2)
 				v._message2 = v.aboutMe;
 			v._message = v._message1 ? v._message1 + '<br/>' : '';

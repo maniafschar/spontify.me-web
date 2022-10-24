@@ -190,7 +190,7 @@ class pageSettings {
 	static templateSettings3 = v =>
 		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#settings3Notifications&quot;)">${ui.l('wtd.myNotifications')}</buttontext><br/>
 <div class="notification" id="settings3Notifications" style="display:none;padding-top:0.25em;">
-	<div style="margin:0 0.5em 1em 0.5em;">
+	<div style="margin:0.25em 0.5em 1em 0.5em;">
 		<form name="myProfile3">
 			<input type="checkbox" value="true" name="notificationChat" label="${ui.l('notification.chat')}" ${v['contact.notificationChat']} />
 			<br />
@@ -212,7 +212,7 @@ class pageSettings {
 <div id="blocked" style="display:none;"></div>
 <buttontext onclick="ui.toggleHeight(&quot;#delete&quot;)" class="bgColor settings2Button">${ui.l('settings.delete')}</buttontext><br/>
 <div id="delete" style="display:none;margin:0 0.5em 1em 0.5em;">
-<div style="margin:0 0 0.5em 0.5em;">${ui.l('settings.deleteProfileHint')}</div>
+<div style="margin:0.25em 0 0.5em 0.5em;">${ui.l('settings.deleteProfileHint')}</div>
 <div>
 <input type="checkbox" name="deletionReason" label="${ui.l('settings.deleteReason1')}" onclick="ui.toggleHeight(&quot;hintDelete.hint1&quot;)" />
 <hintDelete class="hint1" style="display:none;">${ui.l('settings.hintDeleteReason1')}</hintDelete>
@@ -242,13 +242,13 @@ class pageSettings {
 <hintDelete class="hint7" style="display:none;">${ui.l('settings.hintDeleteReason7')}</hintDelete>
 </div>
 <errorHint class="checkbox"></errorHint>
-<textarea id="deleteAccountFeedback" placeholder="${ui.l('settings.deleteProfileFeedbackHint')}" maxlength="2000" style="margin-top:1em;"></textarea>
+<textarea id="deleteAccountFeedback" placeholder="${ui.l('settings.deleteProfileFeedbackHint')}" maxlength="2000"></textarea>
 <errorHint class="textarea"></errorHint>
 <div style="margin-top:1em;text-align:center;">
 <buttontext onclick="pageSettings.deleteProfile()" class="bgColor">${ui.l('settings.deleteProfile')}</buttontext>
 </div>
 </div>
-<settingsNav onclick="ui.navigation.goTo(&quot;settings2&quot;)" style="float:left;">&lt;</settingsNav>`;
+<settingsNav onclick="ui.navigation.goTo(&quot;settings2&quot;)" style="float:left;margin-top:0.5em;">&lt;</settingsNav>`;
 
 	static checkUnique() {
 		if (user.email == ui.val('input[name="email"]'))

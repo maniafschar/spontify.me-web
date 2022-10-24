@@ -359,7 +359,7 @@ listBody {
 	overflow-y: auto;
 	display: block;
 	transition: all 0.5s ease-out;
-	padding-bottom: 4em;
+	padding-bottom: 5em;
 }
 
 listTitle {
@@ -1246,11 +1246,11 @@ chatMessage {
 }
 
 chatMessage.me .chatLinks {
-	margin-left: 0.5em;
+	margin-right: 0.5em;
 }
 
 chatMessage .chatLinks {
-	margin-right: 0.5em;
+	margin-left: 0.5em;
 }
 
 chatMessage .chatImg img {
@@ -1264,10 +1264,10 @@ feedbackHint {
 
 chatMessage note {
 	padding: 0.75em 1em;
-	border-radius: 0.5em 0 0 0.5em;
+	border-radius: 0 0.5em 0.5em 0;
 	position: relative;
 	max-width: 90%;
-	float: right;
+	float: left;
 	box-sizing: initial;
 	overflow: hidden;
 	text-align: left;
@@ -1284,8 +1284,8 @@ chatMessage note a {
 
 chatMessage.me note {
 	background: rgba(255, 255, 255, 0.8);
-	float: left;
-	border-radius: 0 0.5em 0.5em 0;
+	float: right;
+	border-radius: 0.5em 0 0 0.5em;
 }
 
 chatMessage note img {
@@ -1296,11 +1296,13 @@ chatMessage note img {
 chatMessage time {
 	position: absolute;
 	top: -0.2em;
+	left: 1em;
+	right: 1em;
 	font-size: 0.8em;
 }
 
 chatMessage.me time {
-	left: 1em;
+	text-align: right;
 }
 
 chatMessage time {
@@ -1639,9 +1641,8 @@ row>div {
 	text-align: left;
 	overflow: hidden;
 	cursor: pointer;
-	background: rgba(0, 0, 0, 0.05);
-	border-radius: 0.5em;
-	margin: 1em 0.5em 0.5em 1em;
+	background: rgba(100, 230, 255, 0.08);
+	margin: 1em 0 0.5em 0;
 	height: 6em;
 	transition: all 0.4s ease-out;
 }
@@ -1649,14 +1650,14 @@ row>div {
 row text {
 	max-height: 5.5em;
 	overflow: hidden;
-	left: 6.75em;
-	right: 3.5em;
+	left: 6em;
+	right: 4em;
 	width: auto;
 	position: absolute;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	display: inline-block;
-	padding: 0.5em;
+	padding: 0.75em 0 0 0.5em;
 }
 
 row text title {
@@ -1665,8 +1666,8 @@ row text title {
 
 row extra {
 	position: absolute;
-	right: 1.25em;
-	top: 1.5em;
+	right: 0.75em;
+	top: 1.75em;
 	text-align: right;
 	opacity: 0.6;
 	text-align: center;
@@ -1720,8 +1721,8 @@ row imagelist {
 	position: absolute;
 	text-align: center;
 	overflow: hidden;
-	margin: 0.5em;
-	border-radius: 0.5em;
+	margin: 0.5em 0.5em 0.5em 0;
+	border-radius: 0 3em 3em 0;
 	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
 }
 
@@ -1739,7 +1740,7 @@ row imagelist img.present {
 
 row imagelist svg {
 	position: absolute;
-	right: 0.25em;
+	left: 0.25em;
 	bottom: 0.25em;
 	width: 1.5em;
 	display: none;
@@ -1772,13 +1773,6 @@ detail auxEvents.participate::before,
 detail auxEvents.canceled::before {
 	text-align: right;
 	top: 0;
-}
-
-detail .event {
-	padding: 0.5em 1em;
-	background: rgba(0, 0, 0, 0.075);
-	margin: 1em -1em;
-	border-radius: 0;
 }
 
 .itemTitle,
@@ -1899,7 +1893,7 @@ text {
 text.description {
 	margin: 1em -1em;
 	padding: 1em;
-	background: rgba(0, 0, 0, 0.075);
+	background: rgba(100, 230, 255, 0.08);
 }
 
 guide {

@@ -367,9 +367,8 @@ class communication {
 					communication.login.removeCredentials();
 					user.password = ui.val('[name="passwd"]');
 					ui.attr('popupTitle', 'modal', '');
-					ui.navigation.openPopup();
-					if (!user.contact.verified)
-						user.contact.verified = 1;
+					ui.navigation.hidePopup();
+					user.contact.verified = 1;
 				});
 			}
 		},

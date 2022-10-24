@@ -93,7 +93,7 @@ ${v.hint}
 </dialogButtons>
 </form>`;
 	static templateDetail = v =>
-		global.template`<text class="event${v.classParticipate}" ${v.oc}>
+		global.template`<text class="description${v.classParticipate}" ${v.oc}>
 <div>${ui.l('events.createdBy')}<br/><a class="chatLinks" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;),event)"><img src="${v.imageEventOwner}"><br>${v.contact.pseudonym}</a></div>
 ${v.eventLinkOpen}
 <div>${v.date}${v.endDate}</div>
