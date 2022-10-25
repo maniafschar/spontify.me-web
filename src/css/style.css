@@ -1559,8 +1559,8 @@ buttonIcon.bottom {
 }
 
 buttonIcon.marketing {
-	left: 0.5em;
-	top: 5.5em;
+	right: 0.5em;
+	top: -2.5em;
 	display: none;
 }
 

@@ -9,12 +9,13 @@ export { pageHome };
 
 class pageHome {
 	static template = v =>
-		global.template`<buttonicon class="marketing"><span></span></buttonicon><homeHeader>	
+		global.template`<homeHeader>	
 	<homeTitle onclick="ui.navigation.goTo(&quot;settings&quot;)">
 		<img source="logo" />
 	</homeTitle>
 </homeHeader>
 <homeBody>
+	<buttonicon class="marketing"><span></span></buttonicon>
 	<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;whatToDo&quot;)" style="width:80%;">
 		<span class="homeWTD">${ui.l('wtd.todayIWant')}</span><img source="rocket" />
 	</buttontext><br/>
