@@ -394,7 +394,7 @@
 			"errorDateTooSmall": "The date is in the past.",
 			"maxParticipants": "Max. Participants",
 			"myEvents": "Favourite Events",
-			"new": "Add new event",
+			"new": "Add new Event",
 			"newHint": "Small events, for example, you've reserved a table at a restaurant, and also larger events are welcome.",
 			"next": "Coming {0}",
 			"noEvents": "At the moment, no Events found.",
@@ -478,6 +478,7 @@
 			"contactFavorite": "Here you can send friend requests or block other Spontis.",
 			"contacts": "<b>Spontis</b><br/>We match users according to the following criteria, which you can specify in your settings:<ul><li>Attributes you value in others</li><li>Age</li><li>Gender</li><li >Budget</li><li>Locations that you like together</li></ul>Don't forget <b>Bluetooth Matching</b>, which suggests like minded people within 10 meters arround you.",
 			"detail": "The detail page contains<ul><li>contact data</li><li>describtion of the location</li><li>reachability of the location</li><li>map</li><li>various buttons to e.g. add locations to your favorites.</li></ul>",
+			"eventNew": "<ul><li>Choose a location (list above)</li><li>Location doesn't exist? Click <b>enter Location</b></li><li>In the Location click <b>Events</b> at the bottom</li><li>Click <b>Add new Event</b></li></ul>",
 			"goToSettings": "Let's create your profile so that you can also get good matches here.<br/>Clicking on the profile icon will take you to your profile.",
 			"goToSettings2": "A swipe to the left and you can enter attributes about yourself and locations.",
 			"home": "Sometimes you want to get out of the rut and discover new things. ${appTitle} helps<ul><li>to match contacts with <b>same interests</b>, e.g. dog lovers or concert goers</li><li>to find new locations/events through <b>Guides</b></li></ul>We do it in the following way...",
@@ -610,7 +611,7 @@
 			"recoverPasswordBody": "An email has been sent. With their help, you can login again.",
 			"recoverPasswordErrorEmail": "Your information is incorrect. Note that all the fields must correspond to those, as you have entered with us.",
 			"recoverPasswordErrorSpam": "The function was called too many times.",
-			"recoverPasswordErrorTime": "You have already requested the reset. You can only reset your password once a day.",
+			"recoverPasswordErrorTime": "You have already requested the reset. Please confirm this one first.",
 			"register": "Register",
 			"title": "Login"
 		},
@@ -637,9 +638,9 @@
 		"notification": {
 			"birthday": "On birthdays of your friends",
 			"chat": "For a new chat message",
-			"engagement": "Sponti Support messages",
+			"engagement": "Location/Sponti recomendations",
 			"friendRequest": "For a new friend request",
-			"markEvent": "If someone participates in/marks one of your event",
+			"markEvent": "If someone participates in one of your event",
 			"noNewsYet": "You have not yet received any notifications<br/>Here you can see the last 100 notifications that you have received.",
 			"ratingProfile": "If your profile is voted",
 			"visitLocation": "If your favorised location is opened and the Sponti fits you",
@@ -660,7 +661,7 @@
 			"title": "Vote ${separator}"
 		},
 		"register": {
-			"errorPseudonym": "The name must be at least 8 characters.",
+			"errorPseudonym": "The name must be at least 4 characters.",
 			"errorPseudonymSyntax": "Only characters a-z, digits 0-9, space and following special characters are allowed: - _ . + * # § $ % & / ^ \\",
 			"notComplete": "Your registration is not complete. Only complete registered profiles are visible here in ${appTitle} to other Spontis.",
 			"success": "Thank you for your registration.<br/><br/>An email with the login link has just been sent to you.",

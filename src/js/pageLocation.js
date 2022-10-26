@@ -94,7 +94,7 @@ ${v.parking}
 	<buttontext class="bgColor" name="buttonGoogle"
 		onclick="ui.navigation.openHTML(&quot;https://google.com/search?q=${encodeURIComponent(v.name + ' ' + v.town)}&quot;)">Google</buttontext>
 </detailButtons>
-<text name="events" class="collapsed" ${v.urlNotActive}></text>
+<text name="events" class="collapsed" ${v.urlNotActive} style="margin:0 -1em;"></text>
 <text name="matchIndicatorHint" class="popup" style="display:none;" onclick="ui.toggleHeight(this)">
 	<div>${v.matchIndicatorHint}</div>
 </text>

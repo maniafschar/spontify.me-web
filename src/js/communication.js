@@ -380,14 +380,13 @@ class communication {
 					break;
 			}
 			var s2 = '' + x;
-			for (var i = s2.length; i < 10; i++)
-				s2 += 'y';
+			s2 += e.substring(1, 11 - s2.length);
 			communication.ajax({
 				url: global.server + 'authentication/recoverVerifyEmail?token=' + encodeURIComponent(Encryption.encPUB(e.substring(0, 10) + s2 + e.substring(10))) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
 				success(r) {
 					if (r) {
 						r = Encryption.jsEncrypt.decrypt(r).split('\u0015');
-						communication.login.login(r[0], r[1], false, pageLogin.recoverPasswordSetNew);
+						communication.login.login(r[0], r[1], !global.isBrowser(), pageLogin.recoverPasswordSetNew);
 					}
 				}
 			});
@@ -643,11 +642,13 @@ class communication {
 							communication.notification.data = [];
 							for (var i = 1; i < r.length; i++) {
 								var v = model.convert(new Contact(), r, i);
-								var m = { message: global.date.formatDate(global.date.server2Local(v.contactNotification.createdAt)) + '<br/>' + v.pseudonym + ' ' + v.contactNotification.text };
-								if (v.contactNotification.action)
-									m.additionalData = { exec: v.contactNotification.action };
-								m.additionalData.notificationId = v.contactNotification.id;
-								communication.notification.data.push(m);
+								communication.notification.data.push({
+									message: global.date.formatDate(global.date.server2Local(v.contactNotification.createdAt)) + '<br/>' + v.contactNotification.text,
+									additionalData: {
+										notificationId: v.contactNotification.id,
+										exec: v.contactNotification.action
+									}
+								});
 							}
 							var e = ui.q('badgeNotifications');
 							if (e) {

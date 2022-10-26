@@ -513,6 +513,12 @@ class pageSettings {
 				success(r) {
 					user.contact.image = r['contact.image'];
 					user.contact.imageList = r['contact.imageList'];
+					var e = ui.q('buttonIcon.top.right.jpg>img');
+					if (e)
+						e.setAttribute('src', global.serverImg + user.contact.imageList);
+					e = ui.q('settings input[name="image"]+img');
+					if (e)
+						e.setAttribute('src', global.serverImg + user.contact.imageList);
 				}
 			});
 		}

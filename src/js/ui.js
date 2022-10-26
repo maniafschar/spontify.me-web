@@ -23,7 +23,7 @@ class ui {
 	static emInPX = 0;
 	static labels = [];
 	static templateMenuLocation = () =>
-		global.template`<title>
+		global.template`<title onclick="communication.loadList(ui.query.locationAll(),pageLocation.listLocation,&quot;locations&quot;,&quot;list&quot;)">
 		${ui.l('locations.title')}
 </title><container>
 	<a onclick="communication.loadList(ui.query.locationAll(),pageLocation.listLocation,&quot;locations&quot;,&quot;list&quot;)">
@@ -35,7 +35,7 @@ class ui {
 	</a><a onclick="pageLocation.edit()">
 		${ui.l('locations.new')}
 	</a>
-</container><title style="margin-top:1em;">
+</container><title style="margin-top:1em;" onclick="communication.loadList(ui.query.eventAll(),events.listEvents,&quot;locations&quot;,&quot;events&quot;)">
 	${ui.l('events.title')}
 </title>
 <container>
@@ -43,6 +43,8 @@ class ui {
 		${ui.l('all')}
 	</a><a onclick="communication.loadList(ui.query.eventMy(),events.listEventsMy,&quot;locations&quot;,&quot;eventsMy&quot;)">
 		${ui.l('events.myEvents')}
+	</a><a onclick="events.new()">
+		${ui.l('events.new')}
 	</a>
 </container>`;
 	static templateMenuContacts = () =>
@@ -402,6 +404,7 @@ class ui {
 		hideMenu(exec) {
 			if (ui.cssValue('menu', 'transform').indexOf('1') > 0)
 				ui.navigation.toggleMenu();
+			intro.closeHint();
 			if (exec)
 				exec.call();
 		},
@@ -1630,7 +1633,7 @@ class formFunc {
 		pseudonym(e) {
 			formFunc.resetError(e);
 			var s = communication.login.getRealPseudonym(e.value);
-			if (s.length < 8)
+			if (s.length < 4)
 				formFunc.setError(e, 'register.errorPseudonym');
 			else if (s.match(communication.login.regexPW))
 				formFunc.setError(e, 'register.errorPseudonymSyntax');

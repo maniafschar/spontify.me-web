@@ -2,6 +2,7 @@ import { communication } from "./communication";
 import { details } from "./details";
 import { geoData } from "./geoData";
 import { global } from "./global";
+import { intro } from "./intro";
 import { lists } from "./lists";
 import { Contact, Location, model } from "./model";
 import { pageContact } from "./pageContact";
@@ -454,6 +455,9 @@ ${v.eventParticipationButtons}
 		lists.data[ui.navigation.getActiveID()] = as;
 		return events.listEventsInternal(as);
 	}
+	static new() {
+		intro.openHint({ desc: 'eventNew', pos: '-2em,34em', size: 'auto,auto', hinkyClass: 'top', hinky: 'right:5em;' });
+	}
 	static participate(event, id) {
 		event.stopPropagation();
 		var button = event.target;
@@ -664,7 +668,6 @@ ${v.eventParticipationButtons}
 				img = global.serverImg + (v.event.imageList ? v.event.imageList : v.imageList);
 			else
 				img = 'images/event.svg" class="' + bg;
-			s2 = '<img src="' + img + '"/>' + s2;
 			text = '';
 			if (v.event.price > 0)
 				text += global.separator + ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2));
@@ -678,7 +681,7 @@ ${v.eventParticipationButtons}
 			text += '<br/>' + v.event.text;
 			if (field == 'contact')
 				text = '<br/>' + v.name + text;
-			s += '<auxEvents' + (p.state == 1 ? ' class="participate"' : p.state == -1 ? ' class="canceled"' : '') + ' onclick="details.open(&quot;' + idIntern + '&quot;,&quot;location_listEvent&search=' + encodeURIComponent('event.id=' + v.event.id) + '&quot;,pageLocation.detailLocationEvent)">' + s2 + text + '</auxEvents>';
+			s += '<row' + (p.state == 1 ? ' class="participate"' : p.state == -1 ? ' class="canceled"' : '') + ' onclick="details.open(&quot;' + idIntern + '&quot;,&quot;location_listEvent&search=' + encodeURIComponent('event.id=' + v.event.id) + '&quot;,pageLocation.detailLocationEvent)"><div><text>' + s2 + text + '</text><imageList><img src="' + img + '"/></imageList></div></row>';
 		}
 		if (s)
 			s += newButton;

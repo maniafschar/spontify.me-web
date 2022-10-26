@@ -478,6 +478,7 @@
 			"contactFavorite": "Hier kannst Du anderen Spontis Freundschaftsanfragen senden oder blockieren.",
 			"contacts": "<b>Spontis</b><br/>Wir matchen Benutzer nach folgenden Kriterien, die Du in Deinen Einstellungen angeben kannst:<ul><li>Attribute, die Du an anderen schätzt</li><li>Alter</li><li>Geschlecht</li><li>Budget</li><li>Locations, die Ihr gemeinsam mögt</li></ul>Nicht zu vergessen das <b>Bluetooth Matching</b>, das Dir passende Spontis im 10 Meter Umkreis vorschlägt.",
 			"detail": "Die Datailseite enthält<ul><li>Kontaktdaten</li><li>Beschreibung der Location</li><li>Erreichbarkeit der Location</li><li>Kartenansicht</li><li>diverse Schaltflächen um z.B. Locations zu Deinen Favoriten hinzuzufügen</li></ul>",
+			"eventNew": "<ul><li>Wähle eine Location aus (obere Liste)</li><li>Location nicht vorhanden? Klick <b>Location anlegen</b></li><li>In der Location klick <b>Events</b> ganz unten</li><li>Klick <b>Neues Event</b></li></ul>",
 			"goToSettings": "Lass uns Dein Profil anlegen, so dass Du hier auch gute Matches erhältst.<br/>Ein Klick auf das Profil Symbol führt Dich zu Deinem Profil.",
 			"goToSettings2": "Ein Wisch nach links und Du kannst Attribute zu Dir selbst und Locations angeben.",
 			"home": "Manchmal möchte man aus dem Trott raus, Neues entdecken. ${appTitle} hilft<ul><li>dass Spontis mit <b>gleichen Interessen</b>, z.B. Hundeliebhaber oder Konzertgänger, sich finden</li><li>man durch <b>Guides</b> neue Locations und Events kennenlernt</li></ul>Dabei gehen wir wie folgt vor...",
@@ -610,7 +611,7 @@
 			"recoverPasswordBody": "Eine Email wurde versendet. Mit deren Hilfe kannst Du Dich wieder einloggen.",
 			"recoverPasswordErrorEmail": "Deine Email ist nicht registriert.",
 			"recoverPasswordErrorSpam": "Die Funktion wurde zu oft aufgerufen.",
-			"recoverPasswordErrorTime": "Du hast bereits die Zurücksetzung angefordert. Dein Passwort kannst Du nur einmal am Tag zurücksetzen.",
+			"recoverPasswordErrorTime": "Du hast bereits die Zurücksetzung angefordert. Bitte bestätige diese zuerst.",
 			"register": "Registrieren",
 			"title": "Login"
 		},
@@ -637,9 +638,9 @@
 		"notification": {
 			"birthday": "An Geburtstagen Deiner Freunde",
 			"chat": "Bei einer neuen Chatnachricht",
-			"engagement": "Sponti Support Meldungen",
+			"engagement": "Location/Sponti Vorschläge",
 			"friendRequest": "Bei einer neuen Freundschaftsanfrage",
-			"markEvent": "Wenn jemand an ein von Dir eingegebenes Event teilnimmt/sich vormerkt",
+			"markEvent": "Wenn jemand an ein von Dir eingegebenes Event teilnimmt",
 			"noNewsYet": "Du hast noch keine Benachrichtigungen erhalten.<br/>Hier siehst Du die letzten 100 Benachrichtigungen, die Du erhalten hast.",
 			"ratingProfile": "Wenn Dein Profil bewertet wird",
 			"visitLocation": "Wenn eine von Dir favorisierten Location angeschaut wird und der Sponti zu Dir passt",
@@ -660,7 +661,7 @@
 			"title": "Bewertung${separator}"
 		},
 		"register": {
-			"errorPseudonym": "Der Name muss mindestens 8-stellig sein.",
+			"errorPseudonym": "Der Name muss mindestens 4-stellig sein.",
 			"errorPseudonymSyntax": "Nur Buchstaben a-z, Ziffern 0-9, Leerzeichen und folgende Sonderzeichen sind erlaubt: - _ . + * # § $ % & / ^ \\",
 			"notComplete": "Du hast Deine Registrierung nicht abgeschlossen. Erst wenn Du die Registrierung abschliesst, bist Du in ${appTitle} für andere sichtbar.",
 			"success": "Vielen Dank für Deine Registrierung.<br/><br/>Eine Email mit dem Login Link wurde Dir soeben zugesendet.",

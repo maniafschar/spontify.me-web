@@ -774,6 +774,7 @@ whatToDoLists tabBody {
 
 whatToDoList {
 	display: none;
+	padding-bottom: 5em;
 }
 
 #whatToDoLocation>img {
@@ -864,6 +865,8 @@ errorHint {
 	position: relative;
 	z-index: 0;
 	display: block;
+	line-height: 1.2;
+	margin-top: 0.25em;
 }
 
 popup errorHint {
@@ -1779,10 +1782,10 @@ detail .canceled::before {
 	right: 0;
 }
 
-detail auxEvents.participate::before,
-detail auxEvents.canceled::before {
+detail row.participate::before,
+detail row.canceled::before {
 	text-align: right;
-	top: 0;
+	top: 0.2em;
 }
 
 .itemTitle,
@@ -1852,23 +1855,6 @@ subtitle {
 	opacity: 0.6;
 	bottom: 0.2em;
 	line-height: 1;
-}
-
-auxEvents {
-	float: left;
-	width: 100%;
-	position: relative;
-	padding-bottom: 1em;
-	text-align: left;
-	cursor: pointer;
-}
-
-auxEvents>img {
-	height: 8em;
-	border-radius: 0.5em;
-	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
-	float: left;
-	margin-right: 1em;
 }
 
 map {
