@@ -2,6 +2,7 @@ import { bluetooth } from './bluetooth';
 import { communication } from './communication';
 import { global } from './global';
 import { initialisation } from './initialisation';
+import { intro } from './intro';
 import { Contact, model } from './model';
 import { formFunc, ui } from './ui';
 import { user } from './user';
@@ -60,12 +61,8 @@ class pageHome {
 			});
 
 		}
-		var e = ui.q('buttonIcon.bottom.left');
-		ui.buttonIcon(e, '<badgeNotifications>' + Math.max(pageHome.badge, 0) + '</badgeNotifications><img source="news"/>', 'pageHome.toggleNotification()');
-		if (pageHome.badge > 0)
-			ui.classAdd(e, 'pulse highlight');
-		else
-			ui.classRemove(e, 'pulse highlight');
+		ui.buttonIcon('.bottom.left', '<badgeNotifications></badgeNotifications><img source="news"/>', 'pageHome.toggleNotification()');
+		pageHome.initNotificationButton();
 		ui.buttonIcon('.bottom.center', 'info', 'ui.navigation.goTo("info")');
 		ui.buttonIcon('.bottom.right', 'bluetooth', 'bluetooth.toggle()');
 		if (bluetooth.state != 'on' || !user.contact || !user.contact.findMe)
@@ -80,6 +77,11 @@ class pageHome {
 		var s = '';
 		for (var i = 1; i < d.length; i++) {
 			var v = model.convert(new Contact(), d, i);
+			if (i == 1 && ui.q('notificationList div[i="' + v.contactNotification.id + '"]')) {
+				pageHome.badge = 0;
+				pageHome.initNotificationButton();
+				return;
+			}
 			if (v.imageList)
 				v.image = global.serverImg + v.imageList;
 			else
@@ -90,6 +92,14 @@ class pageHome {
 		e.innerHTML = s;
 		e.removeAttribute('h');
 		pageHome.badge = ui.qa('notificationList .highlightBackground').length;
+		pageHome.initNotificationButton();
+	}
+	static initNotificationButton() {
+		if (pageHome.badge > 0)
+			ui.classAdd('buttonIcon.bottom.left', 'pulse highlight');
+		else
+			ui.classRemove('buttonIcon.bottom.left', 'pulse highlight');
+		ui.q('badgeNotifications').innerText = Math.max(pageHome.badge, 0);
 	}
 	static openLanguage() {
 		ui.navigation.openPopup(ui.l('langSelect'),
@@ -97,6 +107,10 @@ class pageHome {
 			'<a class="langSelectImg bgColor' + (global.language == 'EN' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</a></div>');
 	}
 	static toggleNotification() {
+		if (!user.contact) {
+			intro.openHint({ desc: 'notification', pos: '0.5em,-4.5em', size: 'auto,auto', hinkyClass: 'bottom', hinky: 'left:1em;' });
+			return;
+		}
 		ui.toggleHeight('notificationList');
 		if (pageHome.badge > 0) {
 			communication.ajax({

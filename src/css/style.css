@@ -854,6 +854,10 @@ notificationList div span {
 	line-height: 1.5;
 }
 
+chatList div span {
+	white-space: nowrap;
+}
+
 chatList img,
 notificationList img {
 	border-radius: 0 2em 2em 0;

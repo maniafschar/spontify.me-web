@@ -43,7 +43,7 @@ class ui {
 		${ui.l('all')}
 	</a><a onclick="communication.loadList(ui.query.eventMy(),events.listEventsMy,&quot;locations&quot;,&quot;eventsMy&quot;)">
 		${ui.l('events.myEvents')}
-	</a><a onclick="events.new()">
+	</a><a onclick="events.edit()" style="display:none;">
 		${ui.l('events.new')}
 	</a>
 </container>`;

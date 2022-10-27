@@ -455,9 +455,6 @@ ${v.eventParticipationButtons}
 		lists.data[ui.navigation.getActiveID()] = as;
 		return events.listEventsInternal(as);
 	}
-	static new() {
-		intro.openHint({ desc: 'eventNew', pos: '-2em,34em', size: 'auto,auto', hinkyClass: 'top', hinky: 'right:5em;' });
-	}
 	static participate(event, id) {
 		event.stopPropagation();
 		var button = event.target;

@@ -550,7 +550,6 @@ class communication {
 				if (!user.contact || r.userId != user.contact.id)
 					return;
 				var total = 0;
-				var chatNew = false;
 				var chat = 0;
 				if (r.chatNew) {
 					for (var i in r.chatNew) {
@@ -560,12 +559,10 @@ class communication {
 							if (ui.q('chat[i="' + i + '"]'))
 								pageChat.refresh();
 							else {
-								chatNew = true;
 								ui.html(e2, r.chatNew[i]);
 								ui.css(e2, 'display', 'block');
 							}
-						} else if (!e2)
-							chatNew = true;
+						}
 					}
 				}
 				if (r.firstChatId != ui.q('chatList').getAttribute('firstChatId'))
