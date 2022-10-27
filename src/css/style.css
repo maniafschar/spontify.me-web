@@ -95,7 +95,7 @@ body.app>main progressbar {
 }
 
 body.app>main>buttonIcon,
-body.app>main chatUserList,
+body.app>main chatList,
 body.app>main hint {
 	margin-bottom: constant(safe-area-inset-bottom);
 	margin-bottom: env(safe-area-inset-bottom);
@@ -556,7 +556,7 @@ field>label {
 	display: block;
 	width: 100%;
 	text-align: left;
-	padding: 1em 0 0 0.8em;
+	padding: 2em 0 0 1em;
 	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
@@ -812,7 +812,8 @@ listHeader chatDate {
 	line-height: 4;
 }
 
-chatUserList {
+chatList,
+notificationList {
 	position: absolute;
 	left: 0;
 	bottom: 4em;
@@ -822,39 +823,40 @@ chatUserList {
 	max-height: 23em;
 }
 
-chatUserList>div {
+chatList>div,
+notificationList>div {
 	height: 3.5em;
-	margin: 0.5em;
-	width: 16em;
+	margin: 0.5em 0;
 	background: white;
-	border-radius: 0.5em;
+	border-radius: 0 2em 2em 0;
 	cursor: pointer;
 	position: relative;
 	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
 	color: black;
+	max-width: 95%;
 }
 
-chatUserList badge {
-	right: 0;
-	top: 0;
-	box-shadow: none;
-	border-radius: 0 0.5em;
-	left: initial;
+chatList>div {
+	width: 16em;
 }
 
-chatUserList div span {
+notificationList>div {
+	width: 34em;
+}
+
+chatList div span,
+notificationList div span {
 	display: inline;
-	width: 12em;
 	position: absolute;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	padding: 0.3em 0 0 0.5em;
-	white-space: nowrap;
+	padding: 0.3em 1em 0 0.5em;
 	line-height: 1.5;
 }
 
-chatUserList img {
-	border-radius: 0.5em;
+chatList img,
+notificationList img {
+	border-radius: 0 2em 2em 0;
 	height: 100%;
 	box-shadow: 0 0 0.25em rgb(0, 0, 0, 0.3);
 	margin: -0.25em 0 0 -0.25em;
@@ -2187,7 +2189,7 @@ progressbar {
 }
 
 .highlightBackground {
-	background: rgba(252, 251, 104, 0.8) !important;
+	background: rgb(252, 251, 104) !important;
 }
 
 .highlightMap::before {

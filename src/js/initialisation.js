@@ -230,34 +230,30 @@ class initialisation {
 			else if (dir == 'right')
 				ui.navigation.goTo(user.contact ? 'contacts' : 'login', 'backward');
 		}, 'input,listScroll');
-		ui.swipe('contacts', function (dir) {
+		ui.swipe('contacts>listBody', function (dir) {
 			if (dir == 'left')
 				ui.navigation.goTo('home', 'foreward');
 			else if (dir == 'right')
 				ui.navigation.goTo('locations', 'backward');
 		}, 'input,listScroll');
-		ui.swipe('locations', function (dir) {
+		ui.swipe('locations>listBody', function (dir) {
 			if (dir == 'left')
 				ui.navigation.goTo('contacts');
 			else if (dir == 'right')
 				ui.navigation.goTo('whatToDo', 'backward');
-		}, 'input,listScroll,map');
+		}, 'input,listScroll');
 		ui.swipe('whatToDo', function (dir) {
 			if (dir == 'left')
 				ui.navigation.goTo('locations');
 			else if (dir == 'right')
 				ui.navigation.goTo('home');
-		}, 'input,listScroll,map');
+		}, 'input,listScroll');
 		ui.swipe('info', function (dir) {
 			if (dir == 'left' && !user.contact)
 				ui.navigation.goTo('login');
 			else if (dir == 'right')
 				ui.navigation.goTo('home');
 		}, 'textarea');
-		ui.swipe('alert', function (dir) {
-			if (dir == 'up')
-				communication.notification.clear();
-		});
 	}
 	static onLoad() {
 		if (global.isBrowser())

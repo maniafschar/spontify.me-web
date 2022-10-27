@@ -365,8 +365,8 @@ class ui {
 				pageSearch.init();
 			else if (id == 'chat')
 				pageChat.init();
-			communication.notification.clear(true);
 			pageChat.closeList();
+			pageHome.closeList();
 			ui.navigation.hidePopup();
 			if (currentID != id) {
 				var back = direction == 'backward' ||

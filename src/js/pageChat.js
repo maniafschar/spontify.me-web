@@ -141,7 +141,7 @@ class pageChat {
 		return true;
 	}
 	static closeList() {
-		var e = ui.q('chatUserList');
+		var e = ui.q('chatList');
 		if (ui.cssValue(e, 'display') != 'none')
 			ui.toggleHeight(e);
 	}
@@ -152,7 +152,7 @@ class pageChat {
 			action: global.getDevice() == 'computer' ? 'onclick' : 'onmousedown'
 		}));
 		ui.attr('chat', 'i', id);
-		var v = ui.q('chatUserList [i="' + id + '"] badge');
+		var v = ui.q('chatList [i="' + id + '"] badge');
 		if (v) {
 			v.innerText = 0;
 			ui.css(v, 'display', 'none');
@@ -328,9 +328,9 @@ class pageChat {
 				v.image = 'images/contact.svg';
 			if (v._maxDate.indexOf('.') > 0)
 				v._maxDate = v._maxDate.substring(0, v._maxDate.indexOf('.'));
-			s += '<div onclick="pageChat.open(' + v.id + ')" i="' + v.id + '" t="' + v._maxDate + '"><badge class="bgColor"' + (v._unseen > 0 ? ' style="display:block;"' : '') + '>' + v._unseen + '</badge><img src="' + v.image + '"' + (v.imageList ? '' : ' class="bgColor" style="padding:0.6em;"') + '/><span>' + v.pseudonym + '<br/>' + global.date.formatDate(v._maxDate) + '</span></div>';
+			s += '<div onclick="pageChat.open(' + v.id + ')" i="' + v.id + '" t="' + v._maxDate + '"' + (v._unseen > 0 ? ' class="highlightBackground"' : '') + '><img src="' + v.image + '"' + (v.imageList ? '' : ' class="bgColor" style="padding:0.6em;"') + '/><span>' + v.pseudonym + '<br/>' + global.date.formatDate(v._maxDate) + '</span></div>';
 		}
-		var e = ui.q('chatUserList');
+		var e = ui.q('chatList');
 		e.innerHTML = s;
 		e.removeAttribute('h');
 		if (d.length > 1)
@@ -351,7 +351,7 @@ class pageChat {
 					return;
 				ui.attr('chat', 'from', ui.navigation.getActiveID());
 				var f = function () {
-					var e = ui.q('chatUserList [i="' + id + '"] badge');
+					var e = ui.q('chatList [i="' + id + '"] badge');
 					ui.html(e, '0');
 					ui.css(e, 'top', '-100%');
 					e = ui.q('chat');
@@ -544,7 +544,7 @@ class pageChat {
 			var e2 = ui.qa('chatConversation > *');
 			if (e2.length) {
 				ui.scrollTo(e, e2[e2.length - 1].offsetTop + e2[e2.length - 1].offsetHeight);
-				e2 = ui.q('chatUserList [i="' + ui.q('chat').getAttribute('i') + '"] badge');
+				e2 = ui.q('chatList [i="' + ui.q('chat').getAttribute('i') + '"] badge');
 				ui.html(e2, '0');
 				ui.css(e2, 'display', 'none');
 			}
@@ -670,7 +670,7 @@ class pageChat {
 		if (ui.navigation.getActiveID() == 'detail' && user.contact.id != e.getAttribute('i'))
 			pageChat.open(e.getAttribute('i'), e.getAttribute('type') == 'location');
 		else if (user.contact)
-			ui.toggleHeight('chatUserList');
+			ui.toggleHeight('chatList');
 		else
 			intro.openHint({ desc: 'chatDescription', pos: '0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1em;' });
 	}

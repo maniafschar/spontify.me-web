@@ -203,7 +203,6 @@ class communication {
 							user.contact.storage = {};
 						}
 						ui.css('progressbar', 'display', 'none');
-						communication.notification.clear(true);
 						if (global.language != user.contact.language)
 							initialisation.setLanguage(user.contact.language);
 						if (user.contact.birthday && user.contact.birthday.trim().length > 8 && !exec) {
@@ -386,7 +385,7 @@ class communication {
 				success(r) {
 					if (r) {
 						r = Encryption.jsEncrypt.decrypt(r).split('\u0015');
-						communication.login.login(r[0], r[1], !global.isBrowser(), pageLogin.recoverPasswordSetNew);
+						communication.login.login(r[0], r[1], global.getDevice() != 'computer', pageLogin.recoverPasswordSetNew);
 					}
 				}
 			});
@@ -397,7 +396,7 @@ class communication {
 		},
 		resetAfterLogoff() {
 			bluetooth.stop();
-			ui.html('chatUserList', '');
+			ui.html('chatList', '');
 			initialisation.recoverInvoked = false;
 			pageLocation.locationsAdded = null;
 			lists.data = [];
@@ -443,7 +442,7 @@ class communication {
 			});
 		},
 		warningRegNotComplete() {
-			if (ui.q('popupHint').innerHTML) {
+			if (ui.q('popupHint') && ui.q('popupHint').innerHTML) {
 				ui.attr('popupTitle', 'modal', '');
 				communication.login.logoff();
 			} else {
@@ -453,73 +452,20 @@ class communication {
 		}
 	}
 	static notification = {
-		data: [],
 		push: null,
 
-		clear(closeOnly) {
-			var e = ui.q('alert');
-			ui.navigation.animation(e, 'homeSlideOut', function () {
-				if (!ui.classContains(e, 'homeSlideIn')) {
-					ui.html(e, '');
-					e.removeAttribute('style');
-					if (!closeOnly && communication.notification.data.length > 0 && ui.navigation.getActiveID() == 'home')
-						communication.notification.open();
-				}
-			});
-		},
 		onError(e) {
 			ui.navigation.openPopup(ui.l('attention'), ui.l('pushTokenError').replace('{0}', e.message));
 		},
 		open(e) {
-			if (e && e.additionalData && e.additionalData.notificationId) {
-				communication.notification.data.push(e);
-				communication.setApplicationIconBadgeNumber(e.count);
-				return;
-			}
-			var d = ui.q('alert');
-			if (d.innerHTML)
-				return;
-			if (e)
-				communication.ping();
+			communication.setApplicationIconBadgeNumber(e.count);
+			if (e.additionalData && e.additionalData.exec
+				&& e.additionalData.exec.indexOf('chat') == 0
+				&& ui.q('chat[i="' + e.additionalData.exec.substring(5) + '"]')
+				&& ui.q('chat').style.display != 'none')
+				pageChat.refresh();
 			else
-				e = communication.notification.data[0];
-			var e2 = document.createElement('div'), action;
-			e2.setAttribute('message', encodeURIComponent(e.message));
-			if (e.additionalData) {
-				e2.setAttribute('exec', encodeURIComponent(e.additionalData.exec));
-				if (e.additionalData.exec) {
-					if (e.additionalData.exec.indexOf('chat') == 0
-						&& ui.q('chat[i="' + e.additionalData.exec.substring(5) + '"]')
-						&& ui.q('chat').style.display != 'none') {
-						pageChat.refresh();
-						return;
-					}
-					action = 'communication.notification.clear(true);ui.navigation.autoOpen("' + e.additionalData.exec + '",event)';
-				}
-				if (e.additionalData.notificationId)
-					communication.ajax({
-						url: global.server + 'db/one',
-						method: 'PUT',
-						body: { classname: 'ContactNotification', id: e.additionalData.notificationId, values: { seen: true } },
-						success() {
-							communication.ping();
-						}
-					});
-			}
-			e2.setAttribute('onclick', action ? action : 'communication.notification.clear()');
-			if (d.innerHTML)
-				ui.classAdd(e2, 'borderBottom');
-			else {
-				var e3 = document.createElement('close');
-				e3.setAttribute('onclick', 'communication.notification.clear()');
-				e3.innerHTML = 'x';
-				d.insertBefore(e3, null);
-			}
-			e.message = global.string.replaceLinks(e.message);
-			e2.innerHTML = e.message;
-			d.insertBefore(e2, d.children[0]);
-			if (d.style.display != 'block')
-				ui.navigation.animation(d, 'homeSlideIn');
+				communication.ping();
 		},
 		register() {
 			if (global.isBrowser())
@@ -608,7 +554,7 @@ class communication {
 				var chat = 0;
 				if (r.chatNew) {
 					for (var i in r.chatNew) {
-						var e2 = ui.q('chatUserList [i="' + i + '"] badge');
+						var e2 = ui.q('chatList [i="' + i + '"] badge');
 						chat += r.chatNew[i];
 						if (e2 && parseInt(e2.innerText, 10) < r.chatNew[i]) {
 							if (ui.q('chat[i="' + i + '"]'))
@@ -622,7 +568,7 @@ class communication {
 							chatNew = true;
 					}
 				}
-				if (r.firstChatId != ui.q('chatUserList').getAttribute('firstChatId'))
+				if (r.firstChatId != ui.q('chatList').getAttribute('firstChatId'))
 					pageChat.initActiveChats();
 				total += chat;
 				pageChat.newChats = chat == 0 ? '' : '' + chat;
@@ -634,27 +580,12 @@ class communication {
 					else
 						ui.classRemove(e.parentNode, 'pulse highlight');
 				}
-				if (r.notification != communication.notification.data.length) {
+				if (r.notification != pageHome.badge) {
 					communication.ajax({
-						url: global.server + 'db/list?query=contact_listNotification&search=' + encodeURIComponent('contactNotification.seen=false'),
+						url: global.server + 'db/list?query=contact_listNotification',
 						responseType: 'json',
 						success(r) {
-							communication.notification.data = [];
-							for (var i = 1; i < r.length; i++) {
-								var v = model.convert(new Contact(), r, i);
-								communication.notification.data.push({
-									message: global.date.formatDate(global.date.server2Local(v.contactNotification.createdAt)) + '<br/>' + v.contactNotification.text,
-									additionalData: {
-										notificationId: v.contactNotification.id,
-										exec: v.contactNotification.action
-									}
-								});
-							}
-							var e = ui.q('badgeNotifications');
-							if (e) {
-								ui.html(e, communication.notification.data.length);
-								ui.css(e.parentNode, 'display', communication.notification.data.length ? '' : 'none');
-							}
+							pageHome.initNotification(r);
 						}
 					});
 				}
