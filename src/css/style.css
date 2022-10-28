@@ -833,7 +833,7 @@ notificationList>div {
 	position: relative;
 	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
 	color: black;
-	max-width: 95%;
+	max-width: 95vw;
 }
 
 chatList>div {
@@ -852,6 +852,7 @@ notificationList div span {
 	text-overflow: ellipsis;
 	padding: 0.3em 1em 0 0.5em;
 	line-height: 1.5;
+	height: 100%;
 }
 
 chatList div span {
@@ -1569,7 +1570,7 @@ buttonIcon.bottom {
 
 buttonIcon.marketing {
 	right: 0.5em;
-	top: -2.5em;
+	top: -1.5em;
 	display: none;
 }
 

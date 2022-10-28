@@ -86,7 +86,7 @@ class pageHome {
 				v.image = global.serverImg + v.imageList;
 			else
 				v.image = 'images/contact.svg';
-			s += '<div onclick="ui.navigation.autoOpen(&quot;' + v.contactNotification.id + '&quot;)" i="' + v.contactNotification.id + '"' + (v.contactNotification.seen == 0 ? ' class="highlightBackground"' : '') + '><img src="' + v.image + '"' + (v.imageList ? '' : ' class="bgColor" style="padding:0.6em;"') + '/><span>' + global.date.formatDate(v.contactNotification.createdAt) + ': ' + v.contactNotification.text + '</span></div>';
+			s += '<div onclick="ui.navigation.autoOpen(&quot;' + v.contactNotification.action + '&quot;)" i="' + v.contactNotification.id + '"' + (v.contactNotification.seen == 0 ? ' class="highlightBackground"' : '') + '><img src="' + v.image + '"' + (v.imageList ? '' : ' class="bgColor" style="padding:0.6em;"') + '/><span>' + global.date.formatDate(v.contactNotification.createdAt) + ': ' + v.contactNotification.text + '</span></div>';
 		}
 		var e = ui.q('notificationList');
 		e.innerHTML = s;

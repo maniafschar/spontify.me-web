@@ -476,7 +476,7 @@
 			"bluetoothOn": "Bluetooth Matching activated",
 			"chatDescription": "<b>Chats</b><br/>After logging in, you will see the list of Spontis with whom you have already chatted.",
 			"contactFavorite": "Here you can send friend requests or block other Spontis.",
-			"contacts": "<b>Spontis</b><br/>We match users according to the following criteria, which you can specify in your settings:<ul><li>Attributes you value in others</li><li>Age</li><li>Gender</li><li >Budget</li><li>Locations that you like together</li></ul>Don't forget <b>Bluetooth Matching</b>, which suggests like minded people within 10 meters arround you.",
+			"contacts": "<b>Spontis</b><br/>We match users according to the following criteria, which you can specify in your settings:<ul><li>Attributes you value in others</li><li>Age</li><li>Gender</li><li >Budget</li><li>favorite Locations</li></ul>Don't forget <b>Bluetooth Matching</b>, which suggests like minded people within 10 meters arround you.",
 			"detail": "The detail page contains<ul><li>contact data</li><li>describtion of the location</li><li>reachability of the location</li><li>map</li><li>various buttons to e.g. add locations to your favorites.</li></ul>",
 			"eventNew": "<ul><li>Choose a location (list above)</li><li>Location doesn't exist? Click <b>enter Location</b></li><li>In the Location click <b>Events</b> at the bottom</li><li>Click <b>Add new Event</b></li></ul>",
 			"goToSettings": "Let's create your profile so that you can also get good matches here.<br/>Clicking on the profile icon will take you to your profile.",
@@ -499,7 +499,7 @@
 			"whatToDo": "<b>Any plans for today?</b><br/>Would you like to do something spontaneously?<br/><br/>In contrast to events, you can indicate here what you would like to do today, e.g. go out to eat or visit a museum, etc.<br/><br/>The activity will be Spontis who suit you and are no further than 50 KM away. After 24 hours at the latest, the activity is deleted again."
 		},
 		"landing": {
-			"block1Title": "What does everyday life look like without ${appTitle} aus?",
+			"block1Title": "What does everyday life look like without ${appTitle}?",
 			"block1_1": "You mostly go to the same places",
 			"block1_2": "You hardly meet new Spontis with same interests",
 			"block2Title": "What's the difference when using ${appTitle}?",
