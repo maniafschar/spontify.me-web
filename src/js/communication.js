@@ -519,7 +519,7 @@ class communication {
 				s = ui.l('error.text') + '<br/>Status:&nbsp;' + r.status;
 			} catch (e) { }
 		}
-		if (r.param.progressBar != false && s) {
+		if (r.param && r.param.progressBar != false && s) {
 			if (ui.q('popupHint') && ui.q('popup').style.display != 'none')
 				ui.html('popupHint', s);
 			else if (ui.q('popup').getAttribute('error') != status) {

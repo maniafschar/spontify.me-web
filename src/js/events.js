@@ -2,7 +2,6 @@ import { communication } from "./communication";
 import { details } from "./details";
 import { geoData } from "./geoData";
 import { global } from "./global";
-import { intro } from "./intro";
 import { lists } from "./lists";
 import { Contact, Location, model } from "./model";
 import { pageContact } from "./pageContact";
@@ -20,6 +19,14 @@ class events {
 <input type="hidden" name="locationId" value="${v.locationID}"/>
 <input type="hidden" name="confirm" />
 ${v.hint}
+<field${v.displayLocation}>
+	<label>${ui.l('events.location')}</label>
+	<value style="text-align:center;">
+		<input name="location" onkeyup="events.locations()" />
+		<eventLocationInputHelper>${ui.l('events.locationInputHint')}</eventLocationInputHelper>
+		<buttontext onclick="pageLocation.edit()" class="bgColor eventLocationInputHelperButton">${ui.l('locations.new')}</buttontext>
+	</value>
+</field>
 <field>
 	<label>${ui.l('type')}</label>
 	<value>
@@ -210,19 +217,20 @@ ${v.eventParticipationButtons}
 			v = formFunc.getDraft('event' + locationID).values;
 		if (!v)
 			v = {};
-		else
-			v = v.event;
+		var d;
 		if (v.startDate) {
-			var d = global.date.getDateFields(global.date.server2Local(v.startDate));
+			d = global.date.getDateFields(global.date.server2Local(v.startDate));
 			v.startDate = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute;
 		}
 		v.idOrNull = id ? id : 'null';
-		var d = new Date();
+		d = new Date();
 		v.today = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
 		v.id = id;
 		if (!id)
-			v.hint = '<div style="margin-bottom:2em;">' + ui.l('events.newHint') + '</div>';
+			v.hint = '<div>' + ui.l('events.newHint') + '</div>';
 		v.locationID = locationID;
+		if (locationID)
+			v.displayLocation = ' style="display:none;"'
 		if (!v.type || v.type == 'o')
 			v.type_o = ' checked';
 		if (v.type == 'w1')
@@ -455,6 +463,28 @@ ${v.eventParticipationButtons}
 		lists.data[ui.navigation.getActiveID()] = as;
 		return events.listEventsInternal(as);
 	}
+	static locations() {
+		var s = ui.q('input[name="location"]').value.trim();
+		if (s.length < 4) {
+			ui.q('eventLocationInputHelper').innerHTML = ui.l('events.locationInputHint');
+			return;
+		}
+		communication.ajax({
+			url: global.server + 'action/nearByLocationAddress?search=' + encodeURIComponent('location.name like \'%' + s + '%\' or location.address like \'%' + s + '%\''),
+			responseType: 'json',
+			success(r) {
+				var s = '';
+				for (var i = 0; i < r.length; i++)
+					s += '<li i="' + r[i].id + '" onclick="events.locationSelected(this)">' + r[i].name + ', ' + r[i].address + '</li>';
+				ui.q('eventLocationInputHelper').innerHTML = s ? '<ul>' + s + '</ul>' : ui.l('events.locationInputNoHit');
+			}
+		});
+	}
+	static locationSelected(e) {
+		ui.q('input[name="locationId"]').value = e.getAttribute('i');
+		ui.q('eventLocationInputHelper').innerHTML = e.innerHTML;
+		ui.q('buttontext.eventLocationInputHelperButton').outerHTML = '';
+	}
 	static participate(event, id) {
 		event.stopPropagation();
 		var button = event.target;
@@ -584,9 +614,11 @@ ${v.eventParticipationButtons}
 		});
 	}
 	static saveDraft() {
-		var s = ui.q('detail card:last-child').getAttribute('i');
-		if (!s || s.indexOf('_') < 0)
-			formFunc.saveDraft('event' + ui.q('[name="locationId"]').value, formFunc.getForm('editElement'));
+		if (ui.q('detail card:last-child')) {
+			var s = ui.q('detail card:last-child').getAttribute('i');
+			if (!s || s.indexOf('_') < 0)
+				formFunc.saveDraft('event' + ui.q('[name="locationId"]').value, formFunc.getForm('editElement'));
+		}
 	}
 	static setForm() {
 		var b = ui.q('[name="type"]').checked;

@@ -852,7 +852,7 @@ notificationList div span {
 	text-overflow: ellipsis;
 	padding: 0.3em 1em 0 0.5em;
 	line-height: 1.5;
-	height: 100%;
+	height: 92%;
 }
 
 chatList div span {
@@ -965,6 +965,7 @@ popupTitle {
 	position: relative;
 	display: block;
 	height: 2.6em;
+	z-index: 1;
 }
 
 popupTitle>div {
@@ -1086,6 +1087,15 @@ eventListTitle {
 	height: 3em;
 	line-height: 4em;
 	display: block;
+}
+
+eventLocationInputHelper {
+	position: relative;
+	display: block;
+}
+
+.eventLocationInputHelperButton {
+	margin-top: 0.5em;
 }
 
 badgeChats,

@@ -28,11 +28,11 @@ class pageLocation {
 		global.template`<row onclick="details.open(&quot;${v.id}&quot;,&quot;${v.query}&quot;,${v.render})" i="${v.id}" class="location${v.classFavorite}">
 			${v.present}
 	<div>
-			<text>
-				<title>${v.name}</title>
-				${v._message}
-			</text>
-			<extra>${v.extra}</extra>
+		<text>
+			<title>${v.name}</title>
+			${v._message}
+		</text>
+		<extra>${v.extra}</extra>
 		<imagelist>
 			<img src="${v.image}" class="${v.classBGImg}" />
 			${formFunc.image.getSVG('favorite')}
