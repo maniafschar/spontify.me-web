@@ -207,6 +207,7 @@ ${v.eventParticipationButtons}
 		return events.templateDetail(v);
 	}
 	static edit(locationID, id) {
+		ui.navigation.hideMenu();
 		if (id)
 			events.editInternal(locationID, id, JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))));
 		else
@@ -465,6 +466,7 @@ ${v.eventParticipationButtons}
 	}
 	static locations() {
 		var s = ui.q('input[name="location"]').value.trim();
+		ui.q('buttontext.eventLocationInputHelperButton').style.display = '';
 		if (s.length < 4) {
 			ui.q('eventLocationInputHelper').innerHTML = ui.l('events.locationInputHint');
 			return;
@@ -475,7 +477,7 @@ ${v.eventParticipationButtons}
 			success(r) {
 				var s = '';
 				for (var i = 0; i < r.length; i++)
-					s += '<li i="' + r[i].id + '" onclick="events.locationSelected(this)">' + r[i].name + ', ' + r[i].address + '</li>';
+					s += '<li i="' + r[i].id + '" onclick="events.locationSelected(this)">' + r[i].name + '<br/>' + r[i].address + '</li>';
 				ui.q('eventLocationInputHelper').innerHTML = s ? '<ul>' + s + '</ul>' : ui.l('events.locationInputNoHit');
 			}
 		});
@@ -483,7 +485,7 @@ ${v.eventParticipationButtons}
 	static locationSelected(e) {
 		ui.q('input[name="locationId"]').value = e.getAttribute('i');
 		ui.q('eventLocationInputHelper').innerHTML = e.innerHTML;
-		ui.q('buttontext.eventLocationInputHelperButton').outerHTML = '';
+		ui.q('buttontext.eventLocationInputHelperButton').style.display = 'none';
 	}
 	static participate(event, id) {
 		event.stopPropagation();

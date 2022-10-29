@@ -32,8 +32,6 @@ class ui {
 		${ui.l('locations.favoritesButton')}
 	</a><a onclick="communication.loadList(ui.query.locationVisits(),pageLocation.listLocation,&quot;locations&quot;,&quot;visits&quot;)">
 		${ui.l('title.history')}
-	</a><a onclick="pageLocation.edit()">
-		${ui.l('locations.new')}
 	</a>
 </container><title style="margin-top:1em;" onclick="communication.loadList(ui.query.eventAll(),events.listEvents,&quot;locations&quot;,&quot;events&quot;)">
 	${ui.l('events.title')}
@@ -43,7 +41,7 @@ class ui {
 		${ui.l('all')}
 	</a><a onclick="communication.loadList(ui.query.eventMy(),events.listEventsMy,&quot;locations&quot;,&quot;eventsMy&quot;)">
 		${ui.l('events.myEvents')}
-	</a><a onclick="events.edit()" style="display:none;">
+	</a><a onclick="events.edit()">
 		${ui.l('events.new')}
 	</a>
 </container>`;

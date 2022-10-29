@@ -615,17 +615,6 @@ whatToDo {
 	margin-left: 0;
 }
 
-locationNameInputHelper {
-	position: relative;
-	display: block;
-	margin-top: 1px;
-	width: 100%;
-	padding: 0.75em 1em;
-	border-radius: 1em;
-	background-color: rgba(200, 200, 200, 0.1);
-}
-
-
 .noDisp {
 	display: none !important;
 }
@@ -1089,9 +1078,21 @@ eventListTitle {
 	display: block;
 }
 
+locationNameInputHelper,
 eventLocationInputHelper {
 	position: relative;
 	display: block;
+}
+
+locationNameInputHelper li,
+eventLocationInputHelper li {
+	list-style-type: none;
+	background: rgba(0, 0, 0, 0.1);
+	padding: 0.5em;
+	border-radius: 0.5em;
+	cursor: pointer;
+	margin: 0.5em;
+	text-align: center;
 }
 
 .eventLocationInputHelperButton {
