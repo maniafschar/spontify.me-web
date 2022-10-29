@@ -12,6 +12,7 @@ import { user } from "./user";
 export { events };
 
 class events {
+	static nearByExec = null;
 	static participations = null;
 	static templateEdit = v =>
 		global.template`<form name="editElement">
@@ -465,22 +466,25 @@ ${v.eventParticipationButtons}
 		return events.listEventsInternal(as);
 	}
 	static locations() {
+		clearTimeout(events.nearByExec);
 		var s = ui.q('input[name="location"]').value.trim();
 		ui.q('buttontext.eventLocationInputHelperButton').style.display = '';
 		if (s.length < 4) {
 			ui.q('eventLocationInputHelper').innerHTML = ui.l('events.locationInputHint');
 			return;
 		}
-		communication.ajax({
-			url: global.server + 'action/nearByLocationAddress?search=' + encodeURIComponent('location.name like \'%' + s + '%\' or location.address like \'%' + s + '%\''),
-			responseType: 'json',
-			success(r) {
-				var s = '';
-				for (var i = 0; i < r.length; i++)
-					s += '<li i="' + r[i].id + '" onclick="events.locationSelected(this)">' + r[i].name + '<br/>' + r[i].address + '</li>';
-				ui.q('eventLocationInputHelper').innerHTML = s ? '<ul>' + s + '</ul>' : ui.l('events.locationInputNoHit');
-			}
-		});
+		events.nearByExec = setTimeout(function () {
+			communication.ajax({
+				url: global.server + 'action/nearByLocationAddress?search=' + encodeURIComponent('location.name like \'%' + s + '%\' or location.address like \'%' + s + '%\''),
+				responseType: 'json',
+				success(r) {
+					var s = '';
+					for (var i = 0; i < r.length; i++)
+						s += '<li i="' + r[i].id + '" onclick="events.locationSelected(this)">' + r[i].name + '<br/>' + r[i].address + '</li>';
+					ui.q('eventLocationInputHelper').innerHTML = s ? '<ul>' + s + '</ul>' : ui.l('events.locationInputNoHit');
+				}
+			});
+		}, 1000);
 	}
 	static locationSelected(e) {
 		ui.q('input[name="locationId"]').value = e.getAttribute('i');
