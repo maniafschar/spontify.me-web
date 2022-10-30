@@ -6,6 +6,7 @@ import { lists } from './lists';
 import { pageChat } from './pageChat';
 import { pageHome } from './pageHome';
 import { pageLocation } from './pageLocation';
+import { pageLogin } from './pageLogin';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 
@@ -430,11 +431,12 @@ ${v['location.attr5Ex']}<br>`;
 	}
 	static showStartDialogs() {
 		if (global.getParam('r')) {
-			if (initialisation.recoverInvoked == true)
+			if (user.contact || initialisation.recoverInvoked == true)
 				return;
 			initialisation.recoverInvoked = true;
+			var e = pageLogin.getDraft() || {};
 			communication.login.removeCredentials();
-			communication.login.recoverPasswordVerifyEmail(global.getParam('r'));
+			communication.login.recoverPasswordVerifyEmail(global.getParam('r'), e.email ? e.email : '');
 			if (global.isBrowser())
 				history.pushState(null, null, window.location.origin);
 		} else if (!initialisation.showLocation()) {

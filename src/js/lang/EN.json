@@ -601,6 +601,7 @@
 			"failedData": "Login failed, incorrect login data!",
 			"failedNotVerified": "You did not verify your email address. Please click the link we sent to you.",
 			"failedNotVerifiedButton": "Resend email",
+			"failedOutdated": "The Link has expired.<br/>Do you want to resend a new link?",
 			"finishRegTitle": "complete registration",
 			"finishRegBody": "Please complete your registration, in which you can click on the link we have sent you.<br/>You can view the current email can send you where you \"forgot password\" the Dialog fill in.",
 			"failedToSetCreds": " Automatic login could not be set due to your browser settings. Possibly your browser is currently running in private mode.",

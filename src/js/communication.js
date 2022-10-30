@@ -134,26 +134,24 @@ class communication {
 		regexPW: /[^a-zA-ZÀ-ÿ0-9-_.+*#§$%&/\\ \^']/,
 
 		autoLogin(exec) {
-			if (!global.getParam('r')) {
-				var token = window.localStorage && window.localStorage.getItem('autoLogin');
-				if (token) {
-					communication.ajax({
-						url: global.server + 'authentication/loginAuto?token=' + encodeURIComponent(Encryption.encPUB(token)) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
-						error(e) {
-							if (e.status >= 500)
-								communication.login.removeCredentials();
-						},
-						success(r) {
-							r = Encryption.jsEncrypt.decrypt(r);
-							if (r) {
-								r = r.split('\u0015');
-								communication.login.login(r[0], r[1], true, exec);
-							} else
-								communication.login.removeCredentials();
-						}
-					});
-					return true;
-				}
+			var token = window.localStorage && window.localStorage.getItem('autoLogin');
+			if (token) {
+				communication.ajax({
+					url: global.server + 'authentication/loginAuto?token=' + encodeURIComponent(Encryption.encPUB(token)) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
+					error(e) {
+						if (e.status >= 500)
+							communication.login.removeCredentials();
+					},
+					success(r) {
+						r = Encryption.jsEncrypt.decrypt(r);
+						if (r) {
+							r = r.split('\u0015');
+							communication.login.login(r[0], r[1], true, exec);
+						} else
+							communication.login.removeCredentials();
+					}
+				});
+				return true;
 			}
 			if (exec)
 				exec.call();
@@ -339,7 +337,7 @@ class communication {
 				}, { scope: 'email' }
 			);
 		},
-		recoverPasswordSendEmail(email) {
+		recoverPasswordSendEmail(email, fromDialog) {
 			communication.ajax({
 				url: global.server + 'authentication/recoverSendEmail?email=' + encodeURIComponent(Encryption.encPUB(email)),
 				success(r) {
@@ -348,11 +346,16 @@ class communication {
 					else {
 						ui.navigation.hidePopup();
 						communication.login.removeCredentials();
-						ui.html('login', '<div style="padding:2em;text-align:center;">' + ui.l('login.recoverPasswordBody') + '<br/><br/><br/><buttontext onclick="pageLogin.init()" class="bgColor">&lt;</buttontext></div>');
-						setTimeout(pageLogin.init, 10000);
+						if (fromDialog)
+							ui.navigation.openPopup(ui.l('login.recoverPassword'), ui.l('login.recoverPasswordBody'));
+						else
+							ui.html('login', '<div style="padding:2em;text-align:center;">' + ui.l('login.recoverPasswordBody') + '<br/><br/><br/><buttontext onclick="pageLogin.init()" class="bgColor">&lt;</buttontext></div>');
 					}
 				}
 			})
+		},
+		recoverPasswordSendEmailFromDialog() {
+			communication.login.recoverPasswordSendEmail(ui.q('popup input').value, true);
 		},
 		recoverPasswordSetNew() {
 			if (ui.val('[name="passwd"]').length < 8)
@@ -371,7 +374,7 @@ class communication {
 				});
 			}
 		},
-		recoverPasswordVerifyEmail(e) {
+		recoverPasswordVerifyEmail(e, email) {
 			var x = 0;
 			for (var i = 0; i < e.length; i++) {
 				x += e.charCodeAt(i);
@@ -386,6 +389,10 @@ class communication {
 					if (r) {
 						r = Encryption.jsEncrypt.decrypt(r).split('\u0015');
 						communication.login.login(r[0], r[1], global.getDevice() != 'computer', pageLogin.recoverPasswordSetNew);
+					} else {
+						setTimeout(function () {
+							ui.navigation.openPopup(ui.l('attention'), ui.l('login.failedOutdated') + '<br/><br/><input' + (email ? ' value="' + email + '"' : '') + '/><br/><br/><buttontext class="bgColor" onclick="communication.login.recoverPasswordSendEmailFromDialog()">' + ui.l('login.failedNotVerifiedButton') + '</buttontext>');
+						}, 2000);
 					}
 				}
 			});

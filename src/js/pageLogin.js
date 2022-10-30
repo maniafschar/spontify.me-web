@@ -304,13 +304,6 @@ class pageLogin {
 			formFunc.setError(e, 'settings.noAGB');
 	}
 	static validatePseudonym() {
-		var e = ui.q('input[name="pseudonym"]');
-		e.value = communication.login.getRealPseudonym(e.value);
-		if (e.value.length < 8)
-			formFunc.setError(e, 'register.errorPseudonym');
-		else if (e.value.match(communication.login.regexPW))
-			formFunc.setError(e, 'register.errorPseudonymSyntax');
-		else
-			formFunc.validation.filterWords(e);
+		formFunc.validation.pseudonym(ui.q('input[name="pseudonym"]'));
 	}
 }

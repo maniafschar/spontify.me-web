@@ -601,6 +601,7 @@
 			"failedData": "Anmeldung fehlgeschlagen, falsche Login Daten!",
 			"failedNotVerified": "Du hast Deine Emailadresse noch nicht verifiziert. Bitte klicke auf den Link in der Email, die wir Dir zugesendet haben.",
 			"failedNotVerifiedButton": "Email erneut zusenden",
+			"failedOutdated": "Dein Link ist abgelaufen.<br/>Möchtest Du Dir eine neue Email zusenden lassen?",
 			"finishRegTitle": "Registrierung vervollständigen",
 			"finishRegBody": "Bitte vervollständige Deine Registrierung, in dem Du auf den Link klickst, den wir Dir zugesendet habe.<br/>Du kannst die Email erneut Dir zusenden lassen, in dem Du den \"Neues Passwort\" Dialog ausfüllst.",
 			"failedToSetCreds": "Die automatische Anmeldung konnte auf Grund Ihrer Browsereinstellungen nicht gesetzt werden. Eventuell läuft Ihr Browser momentan im Privat-Modus.",
