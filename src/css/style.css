@@ -833,19 +833,24 @@ notificationList>div {
 	width: 34em;
 }
 
-chatList div span,
-notificationList div span {
+chatList>div>span,
+notificationList>div>span {
 	display: inline;
 	position: absolute;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	padding: 0.3em 1em 0 0.5em;
+	padding: 0.3em 0 0 0.5em;
 	line-height: 1.5;
 	height: 92%;
 }
 
-chatList div span {
+chatList>div>span {
 	white-space: nowrap;
+	width: 12.75em;
+}
+
+notificationList>div>span {
+	width: 30.75em;
 }
 
 chatList img,

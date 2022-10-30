@@ -23,7 +23,7 @@ ${v.hint}
 <field${v.displayLocation}>
 	<label>${ui.l('events.location')}</label>
 	<value style="text-align:center;">
-		<input name="location" onkeyup="events.locations()" />
+		<input transient="true" name="location" onkeyup="events.locations()" />
 		<eventLocationInputHelper>${ui.l('events.locationInputHint')}</eventLocationInputHelper>
 		<buttontext onclick="pageLocation.edit()" class="bgColor eventLocationInputHelperButton">${ui.l('locations.new')}</buttontext>
 	</value>
@@ -215,8 +215,12 @@ ${v.eventParticipationButtons}
 			events.editInternal(locationID);
 	}
 	static editInternal(locationID, id, v) {
-		if (!id && formFunc.getDraft('event' + locationID))
+		if (!id && formFunc.getDraft('event' + locationID)) {
 			v = formFunc.getDraft('event' + locationID).values;
+			if (v.startDate &&
+				global.date.server2Local(v.startDate).getTime() < new Date().getTime())
+				v.startDate = null;
+		}
 		if (!v)
 			v = {};
 		var d;
@@ -372,7 +376,7 @@ ${v.eventParticipationButtons}
 					var e2 = e.eventParticipate;
 					e2.event = e.event;
 					events.participations.push(e2);
-					if (e2.event.contactId == user.contact.id && e2.eventDate.indexOf(today) == 0) {
+					if (e2.event.contactId == user.contact.id && today.indexOf(e2.eventDate) == 0) {
 						e = global.date.server2Local(e2.event.startDate);
 						geoData.trackAll = e.getHours();
 					}
