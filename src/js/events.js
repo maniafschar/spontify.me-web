@@ -624,11 +624,7 @@ ${v.eventParticipationButtons}
 		});
 	}
 	static saveDraft() {
-		if (ui.q('detail card:last-child')) {
-			var s = ui.q('detail card:last-child').getAttribute('i');
-			if (!s || s.indexOf('_') < 0)
-				formFunc.saveDraft('event' + ui.q('[name="locationId"]').value, formFunc.getForm('editElement'));
-		}
+		formFunc.saveDraft('event', formFunc.getForm('editElement'));
 	}
 	static setForm() {
 		var b = ui.q('[name="type"]').checked;

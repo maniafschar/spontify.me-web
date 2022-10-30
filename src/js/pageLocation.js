@@ -24,6 +24,7 @@ class pageLocation {
 		svgMe: null,
 		timeout: null
 	};
+	static reopenEvent;
 	static templateList = v =>
 		global.template`<row onclick="details.open(&quot;${v.id}&quot;,&quot;${v.query}&quot;,${v.render})" i="${v.id}" class="location${v.classFavorite}">
 			${v.present}
@@ -461,6 +462,7 @@ ${v.hint}
 		return pageLocation.templateDetail(v);
 	}
 	static edit(id) {
+		pageLocation.reopenEvent = false;
 		if (id) {
 			var v = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
 			if (v.contactId == user.contact.id)
@@ -472,16 +474,10 @@ ${v.hint}
 					pageLocation.editInternal(id, v);
 			}
 		} else {
-			var e = ui.q('menu').style.transform;
-			if (e.indexOf('1') > -1)
-				ui.navigation.toggleMenu();
-			e = ui.q('[name="id"]');
-			if (!e || !e.value) {
-				if (ui.q('locations > div'))
-					ui.navigation.hideMenu();
-				pageLocation.editInternal();
-				setTimeout(pageLocation.prefillAddress, 1200);
-			}
+			if (ui.q('popup input[name="location"]'))
+				pageLocation.reopenEvent = true;
+			pageLocation.editInternal();
+			setTimeout(pageLocation.prefillAddress, 1200);
 		}
 	}
 	static editInternal(id, v) {
@@ -915,6 +911,8 @@ ${v.hint}
 					ui.navigation.hidePopup();
 					formFunc.removeDraft('location');
 					details.open(r, 'location_list&search=' + encodeURIComponent('location.id=' + r), pageLocation.detailLocationEvent);
+					if (pageLocation.reopenEvent)
+						setTimeout(function () { events.edit(r); }, 1000);
 				}
 			});
 		}
@@ -1024,6 +1022,7 @@ ${v.hint}
 				s2 += s[i].trim() + '\n';
 			ui.q('form textarea[name="address"]').value = s2.trim();
 		}
+		pageLocation.closeLocationInputHelper();
 	}
 	static setOwner(id) {
 		formFunc.resetError(ui.q('#taxNo'));
