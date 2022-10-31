@@ -28,7 +28,7 @@ class pageHome {
 	</buttontext ><br/>
 	<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;contacts&quot;)" style="width:60%;">
 		<badge name="badgeContacts" class="bgColor pulse">0</badge>
-		<span>${ui.l('contacts.homeButton')}</span><img source="network" />
+		<span>${ui.l('contacts.homeButton')}</span><img source="contact" />
 	</buttontext>
 </homeBody>`;
 	static closeList() {

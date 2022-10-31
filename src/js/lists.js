@@ -44,7 +44,7 @@ class lists {
 		else if (errorID == 'matches' || errorID == 'whatToDo')
 			s = s.replace('{1}', '<br/><br/><buttontext onclick="ui.navigation.goTo(&quot;settings2&quot;)" class="bgColor">' + ui.l('Yes') + '</buttontext>');
 		else if (errorID == 'friends')
-			s = s.replace('{1}', '<br/><br/><br/><br/><buttonIcon style="left:50%;margin:-3em 0 0 -1.5em;"><img src="images/network.svg"/></buttonIcon><br/>');
+			s = s.replace('{1}', '<br/><br/><buttontext class="bgColor">' + ui.l('contacts.requestFriendshipButton') + '</buttontext><br/><br/>');
 		else if (errorID.toLowerCase().indexOf('groups') > -1)
 			s = s.replace('{1}', '<br/><br/><buttontext class="bgColor">' + ui.l('group.action') + '</buttontext><br/><br/>');
 		else if (errorID == 'profile')

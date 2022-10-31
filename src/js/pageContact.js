@@ -25,7 +25,7 @@ class pageContact {
 		<extra>${v.extra}</extra>
 		<imagelist>
 			<img src="${v.image}" class="${v.classBGImg}" />
-			${formFunc.image.getSVG('network')}
+			${formFunc.image.getSVG('favorite')}
 		</imagelist>
 	</div>
 	</row>`;
@@ -67,7 +67,7 @@ ${v.attributes}
 ${v.budget}
 <detailButtons style="margin-top:1em;">
 	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonFriend"
-		onclick="pageContact.toggleFriend(${v.id})">${ui.l('contacts.requestFriendshipButton')}</buttontext>
+		onclick="pageContact.toggleFriend(${v.id})">${v.labelFriend}</buttontext>
 	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonCopy"
 		onclick="pageChat.doCopyLink(event,&quot;p=${v.id}&quot;)">${ui.l('share')}</buttontext>
 	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonGroups"
@@ -279,15 +279,17 @@ ${v.budget}
 		} else
 			v.birthday = '';
 		v.link = '';
+		v.labelFriend = ui.l('contacts.requestFriendshipButton');
 		if (v.contactLink.id) {
 			if (v.contactLink.status == 'Pending') {
 				if (v.contactLink.contactId != user.contact.id)
 					v.link += '<div style="margin-bottom:0.5em;">' + ui.l('contacts.requestFriendshipHint') + '</div><buttontext class="bgColor" onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;Friends&quot;,' + id + ')" style="margin:0 0.5em;">' + ui.l('contacts.requestFriendshipConfirm') + '</buttontext><buttontext class="bgColor" onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;Rejected&quot;,' + id + ');" style="margin:0 0.5em;">' + ui.l('contacts.requestFriendshipReject') + '</buttontext>';
 				else
 					v.link += '<span style="text-align:center;">' + ui.l('contacts.requestFriendshipAlreadySent') + '</span>';
-			} else if (v.contactLink.status == 'Friends')
-				v.link += '<buttontext class="bgColor" onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;' + (v.contactLink.contactId == user.contact.id ? 'Terminated' : 'Terminated2') + '&quot;,' + id + ')">' + ui.l('contacts.terminateFriendship') + '</buttontext>';
-			else if (v.contactLink.status == 'Terminated' && v.contactLink.contactId == user.contact.id || v.contactLink.status == 'Terminated2' && v.contactLink.contactId2 == user.contact.id)
+			} else if (v.contactLink.status == 'Friends') {
+				v.labelFriend = ui.l('contacts.terminateFriendship');
+				v.link += '<buttontext class="bgColor" onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;' + (v.contactLink.contactId == user.contact.id ? 'Terminated' : 'Terminated2') + '&quot;,' + id + ')">' + ui.l('contacts.terminateFriendshipConfirm') + '</buttontext>';
+			} else if (v.contactLink.status == 'Terminated' && v.contactLink.contactId == user.contact.id || v.contactLink.status == 'Terminated2' && v.contactLink.contactId2 == user.contact.id)
 				v.link += '<buttontext class="bgColor" onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;Friends&quot;,' + id + ')">' + ui.l('contacts.requestFriendshipRestart') + '</buttontext>';
 			else
 				v.link += ui.l('contacts.requestFriendshipCanceled');

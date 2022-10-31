@@ -366,6 +366,7 @@
 			"requestFriendshipSent": "Freundschaftsanfrage versendet!",
 			"requestFriendshipTerminated": "Freundschaft beendet!",
 			"terminateFriendship": "Freundschaft beenden",
+			"terminateFriendshipConfirm": "Bestätige die Aufhebung der Freundschaft",
 			"title": "Spontis",
 			"unblock": "Möchtest Du den Sponti wieder entblockieren?"
 		},
