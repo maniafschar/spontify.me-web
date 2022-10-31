@@ -184,7 +184,6 @@ class pageSettings {
 </div>
 <br/>
 <dialogButtons>
-<buttontext onclick="ui.navigation.goTo(&quot;settings&quot;)" class="bgColor">&lt;</buttontext>
 <buttontext onclick="pageSettings.preview()" class="bgColor">${ui.l('settings.preview')}</buttontext>
 <buttontext onclick="ui.navigation.goTo(&quot;settings3&quot;)" class="bgColor">&gt;</buttontext>
 </dialogButtons>`;
@@ -249,11 +248,7 @@ class pageSettings {
 <buttontext onclick="pageSettings.deleteProfile()" class="bgColor">${ui.l('settings.deleteProfile')}</buttontext>
 </div>
 </div>
-<buttontext class="bgColor settings2Button" onclick="communication.login.logoff()">${ui.l('logoff.title')}</buttontext><br/>
-<br/><br/>
-<dialogButtons>
-<buttontext onclick="ui.navigation.goTo(&quot;settings2&quot;)" class="bgColor">&lt;</buttontext>
-</dialogButtons>`;
+<buttontext class="bgColor settings2Button" onclick="communication.login.logoff()">${ui.l('logoff.title')}</buttontext><br/>`;
 
 	static checkUnique() {
 		if (user.email == ui.val('input[name="email"]'))
