@@ -479,7 +479,7 @@ ${v.eventParticipationButtons}
 		}
 		events.nearByExec = setTimeout(function () {
 			communication.ajax({
-				url: global.server + 'action/nearByLocationAddress?search=' + encodeURIComponent('location.name like \'%' + s + '%\' or location.address like \'%' + s + '%\''),
+				url: global.server + 'action/searchLocation?search=' + encodeURIComponent(s),
 				responseType: 'json',
 				success(r) {
 					var s = '';

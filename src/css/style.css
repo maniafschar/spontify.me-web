@@ -96,6 +96,7 @@ body.app>main progressbar {
 
 body.app>main>buttonIcon,
 body.app>main chatList,
+body.app>main notificationList,
 body.app>main hint {
 	margin-bottom: constant(safe-area-inset-bottom);
 	margin-bottom: env(safe-area-inset-bottom);
@@ -846,11 +847,12 @@ notificationList>div>span {
 
 chatList>div>span {
 	white-space: nowrap;
-	width: 12.75em;
+	width: 12.5em;
 }
 
 notificationList>div>span {
-	width: 30.75em;
+	width: 30.5em;
+	max-width: 82vw;
 }
 
 chatList img,
