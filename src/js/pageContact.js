@@ -66,14 +66,18 @@ ${v.aboutMe}
 ${v.attributes}
 ${v.budget}
 <detailButtons style="margin-top:1em;">
+	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonFriend"
+		onclick="pageContact.toggleFriend(${v.id})">${ui.l('contacts.requestFriendshipButton')}</buttontext>
 	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonCopy"
 		onclick="pageChat.doCopyLink(event,&quot;p=${v.id}&quot;)">${ui.l('share')}</buttontext>
 	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonGroups"
 		onclick="pageContact.groups.toggleGroups(${v.id},&quot;${v.contactLinkStatus}&quot;)">${ui.l('group.action')}</buttontext>
 	<buttontext class="bgColor${v.blocked}" name="buttonEvents"
 		onclick="events.toggle(${v.id})">${ui.l('events.title')}</buttontext>
-	<buttontext class="bgColor${v.blocked}" name="buttonLocation"
+		<buttontext class="bgColor${v.blocked}" name="buttonLocation"
 		onclick="pageContact.toggleLocation(${v.id})">${ui.l('locations.title')}</buttontext>
+	<buttontext class="bgColor${v.blocked}" name="buttonBlock"
+		onclick="pageContact.toggleBlockUser(${v.id})">${ui.l('contacts.blockAction')}</buttontext>
 </detailButtons>
 <text name="matchIndicatorHint" class="popup" style="display:none;" onclick="ui.toggleHeight(this)">
 	<div>${v.matchIndicatorHint}</div>
@@ -81,9 +85,13 @@ ${v.budget}
 <text class="popup matchIndicatorAttributesHint" style="display:none;" onclick="ui.toggleHeight(this)">
 	<div></div>
 </text>
-<text name="block" class="popup" style="display:none;right:1em;bottom:4em;position:fixed;" onclick="pageContact.closeFavorite(event)">
-	<div>
+<text name="friend" class="collapsed">
+	<div style="padding:2em 0;">
 		${v.link}
+	</div>
+</text>
+<text name="block" class="collapsed">
+	<div style="padding:1em 0;">
 		<input type="radio" name="type" value="1" label="${ui.l('contacts.blockAction')}"
 			onclick="pageContact.showBlockText()" checked="true" />
 		<input type="radio" name="type" value="2" label="${ui.l('contacts.blockAndReportAction')}"
@@ -233,24 +241,13 @@ ${v.budget}
 			}
 		});
 	}
-	static closeFavorite(event) {
-		var e = event.target;
-		if (e.nodeName != 'TEXTAREA' && e.nodeName != 'INPUT') {
-			while (e && e.getAttribute) {
-				if (e.getAttribute('onclick') && e.nodeName != 'TEXT')
-					return;
-				e = e.parentNode;
-			}
-			ui.toggleHeight(ui.q('detail card:last-child [name="block"]'));
-		}
-	}
 	static confirmFriendship(linkId, status, id) {
 		communication.ajax({
 			url: global.server + 'db/one',
 			method: 'PUT',
 			body: { classname: 'ContactLink', id: linkId, values: { status: status } },
 			success() {
-				ui.toggleHeight(ui.q('detail card:last-child [name="block"]'));
+				ui.toggleHeight(ui.q('detail card:last-child [name="friend"]'));
 				var e = ui.qa(ui.q('detail').getAttribute('from') + ' row[i="' + id + '"] badge');
 				ui.html(e, '');
 				ui.css(e, 'display', 'none');
@@ -281,7 +278,7 @@ ${v.budget}
 				v.birthday = v.birthday[0];
 		} else
 			v.birthday = '';
-		v.link = '<div style="margin:0 0 1em 0;padding-bottom:1em;position:relative;" class="borderBottom">';
+		v.link = '';
 		if (v.contactLink.id) {
 			if (v.contactLink.status == 'Pending') {
 				if (v.contactLink.contactId != user.contact.id)
@@ -296,7 +293,6 @@ ${v.budget}
 				v.link += ui.l('contacts.requestFriendshipCanceled');
 		} else
 			v.link += '<buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + idIntern + ');">' + ui.l('contacts.requestFriendship') + '</buttontext>';
-		v.link += '</div>';
 		if (v.contactLink.status == 'Friends')
 			v.favorite = 'favorite';
 		pageContact.addWTDMessage(v);
@@ -346,7 +342,7 @@ ${v.budget}
 			v.aboutMe = (v.guide ? '<guide>' + ui.l('settings.guide') + '</guide>' : '') + '<text class="description">' + v.aboutMe.replace(/\n/g, '<br/>') + '</text>';
 		if (v.contactLink.status == 'Pending' && v.contactLink.contactId != user.contact.id)
 			setTimeout(function () {
-				pageContact.toggleBlockUser(id);
+				pageContact.toggleFriend(id);
 			}, 1000);
 		if (v.contactLink.status == 'Friends')
 			ui.classAdd('main>buttonIcon.bottom.right', 'highlight');
@@ -722,7 +718,7 @@ ${v.budget}
 				if (ui.q('popupContent'))
 					ui.navigation.hidePopup();
 				else
-					ui.q('detail card:last-child[i="' + id + '"] [name="block"] buttontext').outerHTML = '<span style="text-align:center;">' + ui.l('contacts.requestFriendshipAlreadySent') + '</span>';
+					ui.q('detail card:last-child[i="' + id + '"] [name="friend"] buttontext').outerHTML = '<span style="text-align:center;">' + ui.l('contacts.requestFriendshipAlreadySent') + '</span>';
 			}
 		});
 	}
@@ -730,6 +726,9 @@ ${v.budget}
 		var s = ui.q('detail card:last-child [name="block"] [name="type"]:checked').value == 2 ? 'block' : 'none';
 		ui.css(ui.q('detail card:last-child [name="block"] [name="reason"]').parentNode, 'display', s);
 		ui.css('detail card:last-child [name="block"] [name="note"]', 'display', s);
+	}
+	static toggleFriend(id) {
+		details.togglePanel(ui.q('detail card:last-child[i="' + id + '"] [name="friend"]'));
 	}
 	static toggleBlockUser(id) {
 		var divID = 'detail card:last-child[i="' + id + '"] [name="block"]';
@@ -751,9 +750,7 @@ ${v.budget}
 				}
 			});
 		}
-		e.style.right = (ui.q('body').offsetWidth - ui.q('main').offsetLeft - ui.q('main').offsetWidth + ui.emInPX) + 'px';
-		e.style.maxWidth = (ui.q('main').offsetWidth * 0.9) + 'px';
-		ui.toggleHeight(e);
+		details.togglePanel(e);
 	}
 	static toggleLocation(id) {
 		var e = ui.q('detail card:last-child[i="' + id + '"] [name="location"]');

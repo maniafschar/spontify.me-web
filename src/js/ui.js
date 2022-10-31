@@ -324,7 +324,7 @@ class ui {
 			if (pageInfo.openSection == -2)
 				pageInfo.openSection = -1;
 			if (!user.contact && id != 'home' && id != 'info') {
-				if (id == 'whatToDo' || id == 'locations' || id == 'contacts' || id == 'settings' && !event) {
+				if (id == 'whatToDo' || id == 'locations' || id == 'contacts' || id == 'settings') {
 					intro.openHint({ desc: id, pos: '10%,5em', size: '80%,auto' });
 					return;
 				}

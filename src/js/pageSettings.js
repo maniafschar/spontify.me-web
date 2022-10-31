@@ -3,7 +3,6 @@ import { communication } from './communication';
 import { global } from './global';
 import { initialisation } from './initialisation';
 import { Contact, model } from './model';
-import { pageInfo } from './pageInfo';
 import { pageContact } from './pageContact';
 import { ui, formFunc } from './ui';
 import { user } from './user';
@@ -112,12 +111,10 @@ class pageSettings {
 		</value>
 	</field>
 	<dialogButtons>
-		<buttontext onclick="communication.login.logoff()" class="bgColor">${ui.l('logoff.title')}</buttontext>
-		<buttontext onclick="pageSettings.preview()" class="bgColor">${ui.l('settings.preview')}</buttontext>
+		<buttontext onclick="ui.navigation.goTo(&quot;settings2&quot;)" class="bgColor">&gt;</buttontext>
 	</dialogButtons>
 	<input type="hidden" name="verified" value="true" />
-</form>
-<settingsNav onclick="ui.navigation.goTo(&quot;settings2&quot;)" style="float:right;">></settingsNav>`;
+</form>`;
 	static templateSettings2 = v =>
 		global.template`<div style="padding-top:1em;text-align:center;">${ui.l('attributesHint')}</div>
 <div>
@@ -185,8 +182,12 @@ class pageSettings {
             valueEx="${v['att5Ex']}" value="${v['att5']}" max="60" maxEx="250" />
     </attributesDisplay>
 </div>
-<settingsNav onclick="ui.navigation.goTo(&quot;settings&quot;)" style="float:left;">&lt;</settingsNav>
-<settingsNav onclick="ui.navigation.goTo(&quot;settings3&quot;)" style="float:right;">></settingsNav>`;
+<br/>
+<dialogButtons>
+<buttontext onclick="ui.navigation.goTo(&quot;settings&quot;)" class="bgColor">&lt;</buttontext>
+<buttontext onclick="pageSettings.preview()" class="bgColor">${ui.l('settings.preview')}</buttontext>
+<buttontext onclick="ui.navigation.goTo(&quot;settings3&quot;)" class="bgColor">&gt;</buttontext>
+</dialogButtons>`;
 	static templateSettings3 = v =>
 		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#settings3Notifications&quot;)">${ui.l('wtd.myNotifications')}</buttontext><br/>
 <div class="notification" id="settings3Notifications" style="display:none;padding-top:0.25em;">
@@ -248,7 +249,11 @@ class pageSettings {
 <buttontext onclick="pageSettings.deleteProfile()" class="bgColor">${ui.l('settings.deleteProfile')}</buttontext>
 </div>
 </div>
-<settingsNav onclick="ui.navigation.goTo(&quot;settings2&quot;)" style="float:left;margin-top:0.5em;">&lt;</settingsNav>`;
+<buttontext class="bgColor settings2Button" onclick="communication.login.logoff()">${ui.l('logoff.title')}</buttontext><br/>
+<br/><br/>
+<dialogButtons>
+<buttontext onclick="ui.navigation.goTo(&quot;settings2&quot;)" class="bgColor">&lt;</buttontext>
+</dialogButtons>`;
 
 	static checkUnique() {
 		if (user.email == ui.val('input[name="email"]'))

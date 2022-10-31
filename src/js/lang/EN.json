@@ -355,6 +355,7 @@
 			"relation": "Relation",
 			"requestFriendship": "Send friendship request!",
 			"requestFriendshipAlreadySent": "Friendship request sent, wait for confirmance!",
+			"requestFriendshipButton": "Friendship Request",
 			"requestFriendshipCanceled": "Friendship request canceled",
 			"requestFriendshipConfirm": "Confirm",
 			"requestFriendshipFriends": "Friendship confirmed!",

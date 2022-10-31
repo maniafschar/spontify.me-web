@@ -32,7 +32,8 @@ class details {
 	}
 	static init() {
 		ui.css('main>buttonIcon', 'display', 'none');
-		ui.buttonIcon('.bottom.right', ui.q('detail card:last-child').getAttribute('type') == 'contact' ? 'network' : 'favorite', 'details.toggleFavorite()');
+		if (ui.q('detail card:last-child').getAttribute('type') == 'location')
+			ui.buttonIcon('.bottom.right', 'favorite', 'details.toggleFavorite()');
 		ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
 		pageChat.buttonChat();
 		if (ui.classContains('detail card:last-child detailHeader', 'favorite'))
@@ -119,16 +120,11 @@ class details {
 	}
 	static toggleFavorite() {
 		var e = ui.q('detail card:last-child');
-		if (e) {
-			if (e.getAttribute('type') == 'location') {
-				var id = e.getAttribute('i');
-				if (('' + id).indexOf('_') > 0)
-					id = id.substring(0, id.indexOf('_'));
-				pageLocation.toggleFavorite(id);
-			} else if (user.contact.id == e.getAttribute('i'))
-				intro.openHint({ desc: 'contactFavorite', pos: '-0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
-			else
-				pageContact.toggleBlockUser(e.getAttribute('i'));
+		if (e && e.getAttribute('type') == 'location') {
+			var id = e.getAttribute('i');
+			if (('' + id).indexOf('_') > 0)
+				id = id.substring(0, id.indexOf('_'));
+			pageLocation.toggleFavorite(id);
 		}
 	}
 	static togglePanel(d) {
