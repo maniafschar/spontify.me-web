@@ -1600,6 +1600,7 @@ buttonIcon.jpg img {
 	border-radius: 50%;
 }
 
+buttonIcon img,
 buttonIcon span,
 buttonIcon svg {
 	width: 2em;

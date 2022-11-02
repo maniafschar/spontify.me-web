@@ -501,7 +501,7 @@ class communication {
 			communication.login.resetAfterLogoff();
 		else if (r.status == 408) {
 			// timeout, do nothing, most probably app wake up from sleep modus
-		} else if (r.status < 200 || r.status > 501) {
+		} else if (r.status < 200 || r.status > 501 || r.status == 400 && r.responseText && r.responseText.indexOf(' connection ') > -1) {
 			try {
 				s = ui.l('error.noNetworkConnection');
 			} catch (e) { }

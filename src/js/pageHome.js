@@ -99,7 +99,8 @@ class pageHome {
 			ui.classAdd('buttonIcon.bottom.left', 'pulse highlight');
 		else
 			ui.classRemove('buttonIcon.bottom.left', 'pulse highlight');
-		ui.q('badgeNotifications').innerText = Math.max(pageHome.badge, 0);
+		if (ui.navigation.getActiveID() == 'home')
+			ui.q('badgeNotifications').innerText = Math.max(pageHome.badge, 0);
 	}
 	static openLanguage() {
 		ui.navigation.openPopup(ui.l('langSelect'),

@@ -294,7 +294,7 @@ ${v.budget}
 			else
 				v.link += ui.l('contacts.requestFriendshipCanceled');
 		} else
-			v.link += '<buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + idIntern + ');">' + ui.l('contacts.requestFriendship') + '</buttontext>';
+			v.link += '<buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + idIntern + ')">' + ui.l('contacts.requestFriendship') + '</buttontext>';
 		if (v.contactLink.status == 'Friends')
 			v.favorite = 'favorite';
 		pageContact.addWTDMessage(v);
