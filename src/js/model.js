@@ -188,6 +188,7 @@ class Event extends BaseEntity {
 	imageList;
 	link;
 	locationId;
+	marketingEvent;
 	maxParticipants;
 	price;
 	startDate;

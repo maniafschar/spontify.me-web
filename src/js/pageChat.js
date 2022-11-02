@@ -666,10 +666,7 @@ class pageChat {
 			ui.classAdd(e, 'pressed');
 	}
 	static toggleUserList() {
-		var e = ui.q('detail card:last-child');
-		if (ui.navigation.getActiveID() == 'detail' && user.contact.id != e.getAttribute('i'))
-			pageChat.open(e.getAttribute('i'), e.getAttribute('type') == 'location');
-		else if (user.contact)
+		if (user.contact)
 			ui.toggleHeight('chatList');
 		else
 			intro.openHint({ desc: 'chatDescription', pos: '0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1em;' });

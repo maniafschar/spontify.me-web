@@ -66,6 +66,8 @@ ${v.aboutMe}
 ${v.attributes}
 ${v.budget}
 <detailButtons style="margin-top:1em;">
+	<buttontext class="bgColor${v.blocked}${v.hideMe}"
+		onclick="pageChat.open(${v.id})">${ui.l('chat.title')}</buttontext>
 	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonFriend"
 		onclick="pageContact.toggleFriend(${v.id})">${v.labelFriend}</buttontext>
 	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonCopy"

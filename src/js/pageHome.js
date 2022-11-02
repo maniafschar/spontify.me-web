@@ -62,7 +62,7 @@ class pageHome {
 
 		}
 		ui.buttonIcon('.bottom.left', '<badgeNotifications></badgeNotifications><img source="news"/>', 'pageHome.toggleNotification()');
-		pageHome.initNotificationButton();
+		pageHome.initNotificationButton(true);
 		ui.buttonIcon('.bottom.center', 'info', 'ui.navigation.goTo("info")');
 		ui.buttonIcon('.bottom.right', 'bluetooth', 'bluetooth.toggle()');
 		if (bluetooth.state != 'on' || !user.contact || !user.contact.findMe)
@@ -94,12 +94,12 @@ class pageHome {
 		pageHome.badge = ui.qa('notificationList .highlightBackground').length;
 		pageHome.initNotificationButton();
 	}
-	static initNotificationButton() {
+	static initNotificationButton(force) {
 		if (pageHome.badge > 0)
 			ui.classAdd('buttonIcon.bottom.left', 'pulse highlight');
 		else
 			ui.classRemove('buttonIcon.bottom.left', 'pulse highlight');
-		if (ui.navigation.getActiveID() == 'home')
+		if (force || ui.navigation.getActiveID() == 'home')
 			ui.q('badgeNotifications').innerText = Math.max(pageHome.badge, 0);
 	}
 	static openLanguage() {

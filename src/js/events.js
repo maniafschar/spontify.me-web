@@ -210,12 +210,12 @@ ${v.eventParticipationButtons}
 	static edit(locationID, id) {
 		ui.navigation.hideMenu();
 		if (id)
-			events.editInternal(locationID, id, JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))));
+			events.editInternal(locationID, id, JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).event);
 		else
 			events.editInternal(locationID);
 	}
 	static editInternal(locationID, id, v) {
-		if (!id && formFunc.getDraft('event' + locationID)) {
+		if (!id && locationID && formFunc.getDraft('event' + locationID)) {
 			v = formFunc.getDraft('event' + locationID).values;
 			if (v.startDate &&
 				global.date.server2Local(v.startDate).getTime() < new Date().getTime())
