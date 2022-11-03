@@ -401,7 +401,7 @@ ${v.eventParticipationButtons}
 			dateString = global.date.formatDate(date, 'weekdayLong');
 			dateString = dateString.substring(0, dateString.lastIndexOf(' '));
 		}
-		var bg = 'bgColor';
+		var bg = 'mainBG';
 		for (var i = 1; i < as.length; i++) {
 			if (as[i] == 'outdated') {
 				if (date)

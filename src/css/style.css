@@ -169,16 +169,16 @@ previewHint.image,
 previewHint.locationService {
 	position: absolute;
 	left: 50%;
-	margin-left: -15em;
-	width: 30em;
+	margin-left: -10em;
+	width: 20em;
 }
 
 previewHint.image {
-	bottom: 6em;
+	bottom: 3em;
 }
 
 previewHint.locationService {
-	top: 4em;
+	top: 3em;
 }
 
 hint>b {
@@ -2098,6 +2098,10 @@ detail detailHeader matchIndicator span {
 	margin-left: -1em;
 	border-radius: 2em;
 	border: solid 0.75em rgba(255, 255, 255, 0.6);
+}
+
+detail detailHeader .fade {
+	opacity: 0.15;
 }
 
 detail detailRating {

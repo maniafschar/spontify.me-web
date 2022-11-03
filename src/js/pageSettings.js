@@ -562,7 +562,7 @@ class pageSettings {
 			return true;
 		ui.html('#settingsHint', '');
 		if (ui.q('settings input[name="genderInterest1"]:checked') ||
-			ui.q('settingsinput[name="genderInterest2"]:checked') ||
+			ui.q('settings input[name="genderInterest2"]:checked') ||
 			ui.q('settings input[name="genderInterest3"]:checked')) {
 			var e = ui.q('settings [name="birthday"]');
 			if (!e.value)

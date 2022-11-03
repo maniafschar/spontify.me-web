@@ -33,7 +33,7 @@ class pageContact {
 		global.template`${v.present}
 <detailHeader class="${v.favorite}">
 	<detailImg>
-		<img src="${v.image}" />
+		${v.image}
 		<detailTitle>
 			<title>
 				${v.pseudonym}${v.ageDisplay}
@@ -113,7 +113,7 @@ ${v.budget}
 			class="bgColor">${ui.l('save')}</buttontext>
 	</div>
 </text>
-<text name="events" class="collapsed"></text>
+<text name="events" class="collapsed list"></text>
 <text name="groups" class="collapsed">
 	<detailTogglePanel></detailTogglePanel>
 	<buttontext onclick="pageContact.groups.addGroup(${v.id})" class="bgColor" style="margin-top:1em;">${ui.l('group.newButton')}</buttontext>
@@ -336,11 +336,13 @@ ${v.budget}
 		v.matchIndicatorHint = ui.l('contacts.matchIndicatorHint').replace('{0}', v.attr.totalMatch).replace('{1}', v.attr.total).replace('{2}', v.matchIndicatorPercent);
 		if (v.matchIndicatorClass)
 			v.matchIndicatorHint += '<br/>' + ui.l('contacts.matchIndicatorHintPulse');
+		if (preview && !v.image)
+			v.matchIndicatorClass = ' class="fade"';
 		v.hideMe = user.contact.id == v.id ? ' noDisp' : '';
 		if (v.image)
-			v.image = global.serverImg + v.image;
+			v.image = '<img src="' + global.serverImg + v.image + '" />';
 		else {
-			v.image = 'images/contact.svg" class="mainBG" style="padding:8em;';
+			v.image = '<div class="mainBG" style="padding:8em;"><img src="images/contact.svg" ' + (preview ? 'class="fade"' : '') + '/></div>';
 			if (preview)
 				v.previewHintImage = '<previewHint class="image">' + ui.l('settings.previewHintImage') + '</previewHint>';
 		}
