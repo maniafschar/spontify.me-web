@@ -57,6 +57,8 @@ class pageContact {
 				<text x="18" y="21.35" class="percentage">${v.matchIndicator}</text>
 			</svg>
 		</matchIndicator>
+		${v.previewHintImage}
+		${v.previewHintLocationService}
 	</detailImg>
 </detailHeader>
 ${v.aboutMe}
@@ -264,11 +266,14 @@ ${v.budget}
 		});
 	}
 	static detail(v, id) {
+		var preview = ui.navigation.getActiveID() == 'settings2';
 		v = model.convert(new Contact(), v);
 		var idIntern = id;
 		if (idIntern.indexOf && idIntern.indexOf('_') > -1)
 			idIntern = idIntern.substring(0, idIntern.indexOf('_'));
 		v.distance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
+		if (!v.distance && preview)
+			v.previewHintLocationService = '<previewHint class="locationService">' + ui.l('settings.previewHintLocationService') + '</previewHint>';
 		v.birthday = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
 		if (v.birthday[2]) {
 			if (v.age)
@@ -279,7 +284,7 @@ ${v.budget}
 			} else
 				v.birthday = v.birthday[0];
 		} else
-			v.birthday = '';
+			v.birthday = preview ? '<previewHint>' + ui.l('settings.previewHintBirthday') + '</previewHint>' : '';
 		v.link = '';
 		v.labelFriend = ui.l('contacts.requestFriendshipButton');
 		if (v.contactLink.id) {
@@ -307,6 +312,8 @@ ${v.budget}
 		v.attr = ui.getAttributes(v, 'detail');
 		v.budget = v.attr.budget.toString();
 		v.attributes = v.attr.textAttributes();
+		if (preview && !v.attributes)
+			v.attributes = '<previewHint>' + ui.l('settings.previewHintAttributes') + '</previewHint>';
 		if (v.gender) {
 			if (v.age && v.attr.totalMatch) {
 				var a;
@@ -332,18 +339,21 @@ ${v.budget}
 		v.hideMe = user.contact.id == v.id ? ' noDisp' : '';
 		if (v.image)
 			v.image = global.serverImg + v.image;
-		else
+		else {
 			v.image = 'images/contact.svg" class="mainBG" style="padding:8em;';
+			if (preview)
+				v.previewHintImage = '<previewHint class="image">' + ui.l('settings.previewHintImage') + '</previewHint>';
+		}
 		if (v.rating > 0)
 			v.rating = '<div><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></ratingSelection></div>';
 		else
 			v.rating = '';
 		if (global.isBrowser())
 			v.displaySocialShare = 'display:none;';
-		if (!v.attributes && !v.aboutMe && !v.rating)
-			v.dispBody = 'display:none;';
 		if (v.aboutMe)
 			v.aboutMe = (v.guide ? '<guide>' + ui.l('settings.guide') + '</guide>' : '') + '<text class="description">' + v.aboutMe.replace(/\n/g, '<br/>') + '</text>';
+		else if (preview)
+			v.aboutMe = '<previewHint>' + ui.l('settings.previewHintAboutMe') + '</previewHint>';
 		if (v.contactLink.status == 'Pending' && v.contactLink.contactId != user.contact.id)
 			setTimeout(function () {
 				pageContact.toggleFriend(id);

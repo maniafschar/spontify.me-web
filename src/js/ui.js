@@ -954,8 +954,7 @@ class formFunc {
 						var parser = new DOMParser();
 						var xmlDoc = parser.parseFromString(r, "text/xml");
 						formFunc.image.svg[id] = xmlDoc.getElementsByTagName('svg')[0].outerHTML;
-						if (img && img.parentNode)
-							formFunc.image.replaceSVG(id, img);
+						formFunc.image.replaceSVGs();
 					}
 				});
 			}
@@ -1083,23 +1082,20 @@ class formFunc {
 				ui.css(ePrev, 'display', 'none');
 			}
 		},
-		replaceSVG(id, img) {
-			if (formFunc.image.svg[id] != 1) {
-				var e = document.createElement('div');
-				e.innerHTML = formFunc.image.svg[id];
-				img.parentNode.replaceChild(e.firstChild, img);
-				if (global.language != 'DE' && id == 'logo')
-					ui.classAdd('hometitle svg>g', 'en');
-			}
-		},
 		replaceSVGs() {
 			var imgs = ui.qa('img[source]');
 			if (imgs) {
 				for (var i = 0; i < imgs.length; i++) {
 					var id = imgs[i].getAttribute('source');
-					if (formFunc.image.svg[id])
-						formFunc.image.replaceSVG(id, imgs[i]);
-					else
+					if (formFunc.image.svg[id]) {
+						if (formFunc.image.svg[id] != 1) {
+							var e = document.createElement('div');
+							e.innerHTML = formFunc.image.svg[id];
+							imgs[i].parentNode.replaceChild(e.firstChild, imgs[i]);
+							if (global.language != 'DE' && id == 'logo')
+								ui.classAdd('hometitle svg>g', 'en');
+						}
+					} else
 						formFunc.image.fetchSVG(id, imgs[i]);
 				}
 			}

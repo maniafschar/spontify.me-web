@@ -16,6 +16,8 @@ export { pageSettings };
 class pageSettings {
 	static currentSettings = null;
 	static currentSettings3 = null;
+	static hintSettings1 = false;
+	static hintSettings2 = false;
 	static templateSettings1 = v =>
 		global.template`<form name="myProfile">
 	<field>
@@ -431,9 +433,11 @@ class pageSettings {
 					pageSettings.currentSettings3 = pageSettings.getCurrentSettings3String();
 					pageSettings.init();
 					var e = function () {
-						if (!pageSettings.hasAttributes()) {
-							if (ui.navigation.getActiveID() == 'settings')
+						if (!pageSettings.hintSettings1 && !pageSettings.hasAttributes()) {
+							if (ui.navigation.getActiveID() == 'settings') {
 								intro.openHint({ desc: 'goToSettings2', pos: '-1em,-5em', size: '60%,auto', onclick: 'ui.navigation.goTo(\'settings2\')' });
+								pageSettings.hintSettings1 = true;
+							}
 							else
 								setTimeout(e, 5000);
 						}
@@ -460,10 +464,12 @@ class pageSettings {
 		ui.html('settings2', pageSettings.templateSettings2(v));
 		formFunc.initFields('settings2');
 		var e = function () {
-			if (!pageSettings.hasAttributes()) {
+			if (!pageSettings.hintSettings2 && !pageSettings.hasAttributes()) {
 				if (ui.navigation.getActiveID() == 'settings2') {
-					if (ui.cssValue('popup', 'display') == 'none')
+					if (ui.cssValue('popup', 'display') == 'none') {
 						intro.openHint({ desc: 'settings2', pos: '1.5em,9em', size: '40%,auto', hinkyClass: 'top', hinky: 'left:1em' });
+						pageSettings.hintSettings2 = true;
+					}
 				} else
 					setTimeout(e, 1000);
 			}
