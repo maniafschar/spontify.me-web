@@ -484,7 +484,7 @@ ${v.eventParticipationButtons}
 				success(r) {
 					var s = '';
 					for (var i = 0; i < r.length; i++)
-						s += '<li i="' + r[i].id + '" onclick="events.locationSelected(this)">' + r[i].name + '<br/>' + r[i].address + '</li>';
+						s += '<li i="' + r[i].id + '" onclick="events.locationSelected(this)">' + r[i].name + '<br/>' + r[i].address.replace(/\n/g, global.separator) + '</li>';
 					ui.q('eventLocationInputHelper').innerHTML = s ? '<ul>' + s + '</ul>' : ui.l('events.locationInputNoHit');
 				}
 			});

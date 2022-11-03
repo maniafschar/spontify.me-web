@@ -76,9 +76,9 @@ ${v.budget}
 		onclick="pageContact.groups.toggleGroups(${v.id},&quot;${v.contactLinkStatus}&quot;)">${ui.l('group.action')}</buttontext>
 	<buttontext class="bgColor${v.blocked}" name="buttonEvents"
 		onclick="events.toggle(${v.id})">${ui.l('events.title')}</buttontext>
-		<buttontext class="bgColor${v.blocked}" name="buttonLocation"
+	<buttontext class="bgColor${v.blocked}" name="buttonLocation"
 		onclick="pageContact.toggleLocation(${v.id})">${ui.l('locations.title')}</buttontext>
-	<buttontext class="bgColor${v.blocked}" name="buttonBlock"
+	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonBlock"
 		onclick="pageContact.toggleBlockUser(${v.id})">${ui.l('contacts.blockAction')}</buttontext>
 </detailButtons>
 <text name="matchIndicatorHint" class="popup" style="display:none;" onclick="ui.toggleHeight(this)">

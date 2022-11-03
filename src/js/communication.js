@@ -501,7 +501,7 @@ class communication {
 			communication.login.resetAfterLogoff();
 		else if (r.status == 408) {
 			// timeout, do nothing, most probably app wake up from sleep modus
-		} else if (r.status < 200 || r.status > 501 || r.status == 400 && r.responseText && r.responseText.indexOf(' connection ') > -1) {
+		} else if (r.status < 200 || r.status > 501 || r.status == 400 && r.responseText && r.responseText.toLowerCase().indexOf(' connection ') > -1) {
 			try {
 				s = ui.l('error.noNetworkConnection');
 			} catch (e) { }
@@ -526,7 +526,9 @@ class communication {
 				s = ui.l('error.text') + '<br/>Status:&nbsp;' + r.status;
 			} catch (e) { }
 		}
-		if (r.param && r.param.progressBar != false && s) {
+		// last check with 400 BAD_REQUEST is most probably a send to sleep/wake up problem, ignore it
+		// data will be sent next time, is most probably push registration or something like that, no active user input
+		if (r.param && r.param.progressBar != false && s && (r.status != 400 || !r.param.body || r.param.method == 'GET')) {
 			if (ui.q('popupHint') && ui.q('popup').style.display != 'none')
 				ui.html('popupHint', s);
 			else if (ui.q('popup').getAttribute('error') != status) {
