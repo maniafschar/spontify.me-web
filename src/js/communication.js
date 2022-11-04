@@ -569,7 +569,7 @@ class communication {
 							ui.classAdd('chatList [i="' + i + '"]', 'highlightBackground');
 					}
 				}
-				if (r.firstChatId != ui.q('chatList').getAttribute('firstChatId') || chat != parseInt(pageChat.newChats))
+				if (r.firstChatId != ui.q('chatList').getAttribute('firstChatId') || chat != (pageChat.newChats ? parseInt(pageChat.newChats) : 0))
 					pageChat.initActiveChats();
 				total += chat;
 				pageChat.newChats = chat == 0 ? '' : '' + chat;
