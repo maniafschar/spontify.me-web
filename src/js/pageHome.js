@@ -23,11 +23,9 @@ class pageHome {
 		<span class="homeWTD">${ui.l('wtd.todayIWant')}</span><img source="rocket" />
 	</buttontext><br/>
 	<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;locations&quot;)" style="width:70%;">
-		<badge name="badgeLocations" class="bgColor pulse">0</badge>
 		<span>${ui.l('locations.homeButton')}</span> <img source="location" />
 	</buttontext ><br/>
 	<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;contacts&quot;)" style="width:60%;">
-		<badge name="badgeContacts" class="bgColor pulse">0</badge>
 		<span>${ui.l('contacts.homeButton')}</span><img source="contact" />
 	</buttontext>
 </homeBody>`;

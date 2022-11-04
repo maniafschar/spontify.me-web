@@ -42,7 +42,6 @@ class details {
 			ui.classRemove('main>buttonIcon.bottom.right', 'highlight');
 	}
 	static open(id, action, callback) {
-		ui.navigation.hideMenu();
 		if (ui.navigation.getActiveID() == 'chat' && ui.q('detail:not([style*="none"])[i="' + id + '"]')) {
 			pageChat.close();
 			return;
@@ -51,6 +50,7 @@ class details {
 			url: global.server + 'action/one?query=' + action + '&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon,
 			responseType: 'json',
 			success(r) {
+				ui.navigation.hideMenu();
 				if (!r || Object.keys(r).length < 1) {
 					ui.navigation.openPopup(ui.l('attention'), ui.l('error.detailNotFound'));
 					lists.removeListEntry(id);

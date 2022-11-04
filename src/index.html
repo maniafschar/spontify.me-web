@@ -100,7 +100,12 @@
 			<ball4 class="bgColor"></ball4>
 		</progressbar>
 		<popup style="display:none;"></popup>
-		<alert style="display:none;"></alert>
+		<alert style="display:none;">
+			<div></div>
+			<close
+				onclick="ui.navigation.animation('alert', 'homeSlideOut',function(){ui.css('alert','display','none')})">
+				x</close>
+		</alert>
 		<content>
 			<home class="content"></home>
 			<login class="content"></login>

@@ -648,6 +648,7 @@
 			"engagement": "Location/Sponti Vorschläge",
 			"friendRequest": "Bei einer neuen Freundschaftsanfrage",
 			"markEvent": "Wenn jemand an ein von Dir eingegebenes Event teilnimmt",
+			"newChatAlert": "Du hast eine neue Chatnachricht...",
 			"noNewsYet": "Du hast noch keine Benachrichtigungen erhalten.<br/>Hier siehst Du die letzten 100 Benachrichtigungen, die Du erhalten hast.",
 			"ratingProfile": "Wenn Dein Profil bewertet wird",
 			"visitLocation": "Wenn eine von Dir favorisierten Location angeschaut wird und der Sponti zu Dir passt",

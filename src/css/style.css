@@ -1142,19 +1142,17 @@ badge {
 	display: none;
 	border-radius: 2em;
 	position: absolute;
-	top: -0.5em;
+	bottom: 0.8em;
 	text-align: center;
-	padding: 0.5em 1em;
+	padding: 0.25em;
 	z-index: 2;
 	box-shadow: 0 0 0.25em rgba(0, 0, 0, 0.3);
 	opacity: 0.9;
-	left: 100%;
-	margin-left: -2em;
+	left: 4.5em;
 }
 
 badge img {
-	height: 2em;
-	margin: -0.8em;
+	height: 1.5em;
 }
 
 badge span {
@@ -1166,10 +1164,6 @@ badge span {
 	height: 100%;
 	line-height: 2.5em;
 	color: rgb(252, 251, 104);
-}
-
-popup badge {
-	display: none;
 }
 
 chatDateTitle {
@@ -1761,17 +1755,6 @@ row.canceled::before {
 	line-height: 1;
 }
 
-row badge {
-	opacity: 0.9;
-	border-radius: 0.5em 0;
-	right: 0.5em;
-	left: initial;
-	top: initial;
-	bottom: 0.3em;
-	box-shadow: none;
-	background: darkgoldenrod;
-}
-
 row imagelist {
 	height: 6em;
 	width: 6em;
@@ -1986,10 +1969,6 @@ detail card {
 	height: 100%;
 	width: 100%;
 	position: relative;
-}
-
-detail badge {
-	top: 0.3em;
 }
 
 detail detailButtons {

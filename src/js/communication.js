@@ -569,8 +569,17 @@ class communication {
 							ui.classAdd('chatList [i="' + i + '"]', 'highlightBackground');
 					}
 				}
-				if (r.firstChatId != ui.q('chatList').getAttribute('firstChatId') || chat != (pageChat.newChats ? parseInt(pageChat.newChats) : 0))
+				if (r.firstChatId != ui.q('chatList').getAttribute('firstChatId') || chat != (pageChat.newChats ? parseInt(pageChat.newChats) : 0)) {
 					pageChat.initActiveChats();
+					if (ui.navigation.getActiveID() == 'home' && chat > (pageChat.newChats ? parseInt(pageChat.newChats) : 0) && ui.cssValue('alert', 'display') == 'none') {
+						var d = ui.q('alert>div');
+						d.setAttribute('onclick', 'ui.navigation.goTo("whatToDo");setTimeout(pageChat.toggleUserList,400)');
+						d.innerHTML = ui.l('notification.newChatAlert');
+						d = d.parentNode;
+						d.style.display = 'block';
+						ui.navigation.animation(d, 'homeSlideIn');
+					}
+				}
 				total += chat;
 				pageChat.newChats = chat == 0 ? '' : '' + chat;
 				e = ui.q('badgeChats');
@@ -587,6 +596,14 @@ class communication {
 						responseType: 'json',
 						success(r) {
 							pageHome.initNotification(r);
+							if (ui.navigation.getActiveID() != 'home' && ui.cssValue('alert', 'display') == 'none') {
+								var d = ui.q('alert>div');
+								d.setAttribute('onclick', ui.q('notificationList>div').getAttribute('onclick') + ';ui.q("alert>close").click()');
+								d.innerHTML = ui.q('notificationList>div>span').innerHTML;
+								d = d.parentNode;
+								d.style.display = 'block';
+								ui.navigation.animation(d, 'homeSlideIn');
+							}
 						}
 					});
 				}
