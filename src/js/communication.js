@@ -562,19 +562,14 @@ class communication {
 				var chat = 0;
 				if (r.chatNew) {
 					for (var i in r.chatNew) {
-						var e2 = ui.q('chatList [i="' + i + '"] badge');
-						chat += r.chatNew[i];
-						if (e2 && parseInt(e2.innerText, 10) < r.chatNew[i]) {
-							if (ui.q('chat[i="' + i + '"]'))
-								pageChat.refresh();
-							else {
-								ui.html(e2, r.chatNew[i]);
-								ui.css(e2, 'display', 'block');
-							}
-						}
+						chat++;
+						if (ui.q('chat[i="' + i + '"]'))
+							pageChat.refresh();
+						else
+							ui.classAdd('chatList [i="' + i + '"]', 'highlightBackground');
 					}
 				}
-				if (r.firstChatId != ui.q('chatList').getAttribute('firstChatId'))
+				if (r.firstChatId != ui.q('chatList').getAttribute('firstChatId') || chat != parseInt(pageChat.newChats))
 					pageChat.initActiveChats();
 				total += chat;
 				pageChat.newChats = chat == 0 ? '' : '' + chat;

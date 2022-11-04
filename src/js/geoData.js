@@ -13,6 +13,7 @@ class geoData {
 	static headingID = null;
 	static id = null;
 	static initDeviceOrientation = null;
+	static lastSave = 0;
 	static latlon = { lat: 48.13684, lon: 11.57685 };
 	static localizationAsked = false;
 	static localized = false;
@@ -118,7 +119,7 @@ class geoData {
 		geoData.latlon.lon = position.longitude;
 		if (geoData.trackAll != null && new Date().getHours() > geoData.trackAll + 2)
 			geoData.trackAll = null;
-		if (user.contact && user.contact.id &&
+		if (user.contact && user.contact.id && new Date().getTime() - geoData.lastSave > 5000 &&
 			(!geoData.localized || geoData.trackAll != null && new Date().getHours() >= geoData.trackAll - 1 ||
 				geoData.getDistance(l.lat, l.lon, position.latitude, position.longitude) > 0.05)) {
 			communication.ajax({
@@ -133,9 +134,9 @@ class geoData {
 				},
 				success(r) {
 					if (r) {
+						geoData.lastSave = new Date().getTime();
 						geoData.currentTown = r.town;
 						geoData.currentStreet = r.street;
-						ui.html('homeTown', geoData.currentTown);
 						pageInfo.updateLocalisation();
 					}
 				}

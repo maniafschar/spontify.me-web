@@ -860,13 +860,15 @@ notificationList>div {
 
 chatList>div>span,
 notificationList>div>span {
-	display: inline;
+	display: inline-block;
 	position: absolute;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	padding: 0.3em 0.75em 0 0.5em;
+	padding: 0.3em 0.75em 0 3.75em;
 	line-height: 1.5;
 	height: 92%;
+	width: 100%;
+	left: 0;
 }
 
 chatList>div>span {
