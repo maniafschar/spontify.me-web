@@ -29,6 +29,23 @@ class pageHome {
 		<span>${ui.l('contacts.homeButton')}</span><img source="contact" />
 	</buttontext>
 </homeBody>`;
+
+	static clickNotification(id, action) {
+		communication.ajax({
+			url: global.server + 'db/one',
+			method: 'PUT',
+			body: {
+				classname: 'ContactNotification',
+				id: id,
+				values: { seen: true }
+			},
+			success() {
+				ui.navigation.autoOpen(action);
+				communication.notification.close();
+				communication.ping();
+			}
+		});
+	}
 	static closeList() {
 		var e = ui.q('notificationList');
 		if (ui.cssValue(e, 'display') != 'none')
@@ -60,7 +77,7 @@ class pageHome {
 
 		}
 		ui.buttonIcon('.bottom.left', '<badgeNotifications></badgeNotifications><img source="news"/>', 'pageHome.toggleNotification()');
-		pageHome.initNotificationButton();
+		pageHome.initNotificationButton(true);
 		ui.buttonIcon('.bottom.center', 'info', 'ui.navigation.goTo("info")');
 		ui.buttonIcon('.bottom.right', 'bluetooth', 'bluetooth.toggle()');
 		if (bluetooth.state != 'on' || !user.contact || !user.contact.findMe)
@@ -84,7 +101,7 @@ class pageHome {
 				v.image = global.serverImg + v.imageList;
 			else
 				v.image = 'images/contact.svg';
-			s += '<div onclick="ui.navigation.autoOpen(&quot;' + v.contactNotification.action + '&quot;)" i="' + v.contactNotification.id + '"' + (v.contactNotification.seen == 0 ? ' class="highlightBackground"' : '') + '><img src="' + v.image + '"' + (v.imageList ? '' : ' class="bgColor" style="padding:0.6em;"') + '/><span>' + global.date.formatDate(v.contactNotification.createdAt) + ': ' + v.contactNotification.text + '</span></div>';
+			s += '<div onclick="pageHome.clickNotification(' + v.contactNotification.id + ',&quot;' + v.contactNotification.action + '&quot;)" ' + (v.contactNotification.seen == 0 ? ' class="highlightBackground"' : '') + '><img src="' + v.image + '"' + (v.imageList ? '' : ' class="bgColor" style="padding:0.6em;"') + '/><span>' + global.date.formatDate(v.contactNotification.createdAt) + ': ' + v.contactNotification.text + '</span></div>';
 		}
 		var e = ui.q('notificationList');
 		e.innerHTML = s;
@@ -92,13 +109,15 @@ class pageHome {
 		pageHome.badge = ui.qa('notificationList .highlightBackground').length;
 		pageHome.initNotificationButton();
 	}
-	static initNotificationButton() {
-		if (pageHome.badge > 0)
-			ui.classAdd('buttonIcon.bottom.left', 'pulse highlight');
-		else
-			ui.classRemove('buttonIcon.bottom.left', 'pulse highlight');
-		if (ui.q('badgeNotifications'))
-			ui.q('badgeNotifications').innerText = Math.max(pageHome.badge, 0);
+	static initNotificationButton(force) {
+		if (force || ui.navigation.getActiveID() == 'home') {
+			if (pageHome.badge > 0)
+				ui.classAdd('buttonIcon.bottom.left', 'pulse highlight');
+			else
+				ui.classRemove('buttonIcon.bottom.left', 'pulse highlight');
+			if (ui.q('badgeNotifications'))
+				ui.q('badgeNotifications').innerText = Math.max(pageHome.badge, 0);
+		}
 	}
 	static openLanguage() {
 		ui.navigation.openPopup(ui.l('langSelect'),
@@ -111,15 +130,5 @@ class pageHome {
 			return;
 		}
 		ui.toggleHeight('notificationList');
-		if (pageHome.badge > 0) {
-			communication.ajax({
-				url: global.server + 'db/one',
-				method: 'PUT',
-				body: { classname: 'ContactNotification', id: ui.q('notificationList>div:first-child').getAttribute('i'), values: { seen: true } },
-				success() {
-					communication.ping();
-				}
-			});
-		}
 	}
 }

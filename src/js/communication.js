@@ -461,6 +461,15 @@ class communication {
 	static notification = {
 		push: null,
 
+		close() {
+			if (ui.cssValue('alert', 'display') != 'none') {
+				ui.navigation.animation('alert', 'homeSlideOut',
+					function () {
+						ui.css('alert', 'display', 'none');
+						ui.html('alert>div', '');
+					});
+			}
+		},
 		onError(e) {
 			ui.navigation.openPopup(ui.l('attention'), ui.l('pushTokenError').replace('{0}', e.message));
 		},
@@ -469,7 +478,7 @@ class communication {
 			if (e.additionalData && e.additionalData.exec
 				&& e.additionalData.exec.indexOf('chat') == 0
 				&& ui.q('chat[i="' + e.additionalData.exec.substring(5) + '"]')
-				&& ui.q('chat').style.display != 'none')
+				&& ui.cssValue('chat', 'display') != 'none')
 				pageChat.refresh();
 			else
 				communication.ping();
@@ -572,9 +581,9 @@ class communication {
 				if (r.firstChatId != ui.q('chatList').getAttribute('firstChatId') || chat != (pageChat.newChats ? parseInt(pageChat.newChats) : 0)) {
 					pageChat.initActiveChats();
 					if (ui.navigation.getActiveID() == 'home' && chat > (pageChat.newChats ? parseInt(pageChat.newChats) : 0) && ui.cssValue('alert', 'display') == 'none') {
-						var d = ui.q('alert>div');
-						d.setAttribute('onclick', 'ui.navigation.goTo("whatToDo");setTimeout(pageChat.toggleUserList,400)');
-						d.innerHTML = ui.l('notification.newChatAlert');
+						var d = ui.q('alert>div'), i = Object.keys(r.chatNew)[0];
+						d.setAttribute('onclick', 'pageChat.open(' + i + ')');
+						d.innerHTML = ui.l('notification.newChatAlert').replace('{0}', r.chatNew[i]);
 						d = d.parentNode;
 						d.style.display = 'block';
 						ui.navigation.animation(d, 'homeSlideIn');
@@ -594,11 +603,12 @@ class communication {
 					communication.ajax({
 						url: global.server + 'db/list?query=contact_listNotification',
 						responseType: 'json',
-						success(r) {
-							pageHome.initNotification(r);
-							if (ui.navigation.getActiveID() != 'home' && ui.cssValue('alert', 'display') == 'none') {
+						success(r2) {
+							var notify = r.notification > pageHome.badge;
+							pageHome.initNotification(r2);
+							if (notify && ui.navigation.getActiveID() != 'home' && ui.cssValue('alert', 'display') == 'none') {
 								var d = ui.q('alert>div');
-								d.setAttribute('onclick', ui.q('notificationList>div').getAttribute('onclick') + ';ui.q("alert>close").click()');
+								d.setAttribute('onclick', ui.q('notificationList>div').getAttribute('onclick') + ';communication.notification.close()');
 								d.innerHTML = ui.q('notificationList>div>span').innerHTML;
 								d = d.parentNode;
 								d.style.display = 'block';

@@ -152,11 +152,7 @@ class pageChat {
 			action: global.getDevice() == 'computer' ? 'onclick' : 'onmousedown'
 		}));
 		ui.attr('chat', 'i', id);
-		var v = ui.q('chatList [i="' + id + '"] badge');
-		if (v) {
-			v.innerText = 0;
-			ui.css(v, 'display', 'none');
-		}
+		var v;
 		if (l.length > 1) {
 			var date, s = '', d;
 			for (var i = l.length - 1; i > 0; i--) {
@@ -175,8 +171,8 @@ class pageChat {
 			v = new Chat();
 			v.contactId = pageChat.admin.id;
 			v.createdAt = new Date();
-			v.type = 0;
 			v.note = ui.l('chat.empty');
+			v.type = 0;
 			v.imageList = pageChat.admin.image;
 			v._pseudonym = pageChat.admin.pseudonym;
 			var e = ui.q('chat[i="' + id + '"] chatConversation');
@@ -339,7 +335,7 @@ class pageChat {
 	static open(id, location) {
 		if (id.indexOf && id.indexOf('_') > 0)
 			id = id.substring(0, id.indexOf('_'));
-		if (ui.q('chat[i="' + id + '"][type="' + (location ? 'location' : 'contact') + ']')) {
+		if (ui.q('chat[i="' + id + '"][type="' + (location ? 'location' : 'contact') + '"]')) {
 			pageChat.close();
 			return;
 		}
@@ -351,11 +347,7 @@ class pageChat {
 					return;
 				ui.attr('chat', 'from', ui.navigation.getActiveID());
 				var f = function () {
-					var e = ui.q('chatList [i="' + id + '"] badge');
-					ui.html(e, '0');
-					ui.css(e, 'top', '-100%');
-					e = ui.q('chat');
-					ui.css(e, 'display', 'none');
+					var e = ui.q('chat');
 					ui.attr(e, 'type', location ? 'location' : 'contact');
 					ui.html(e, '<listHeader><img /><chatName></chatName><chatDate></chatDate></listHeader><div></div>');
 					if (location) {
@@ -389,6 +381,7 @@ class pageChat {
 							}
 						});
 					}
+					communication.notification.close();
 					ui.navigation.hideMenu();
 					ui.navigation.hidePopup();
 					pageChat.closeList();

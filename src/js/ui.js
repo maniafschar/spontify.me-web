@@ -268,10 +268,6 @@ class ui {
 		},
 		getActiveID() {
 			var id = 'home';
-			if (ui.cssValue(id, 'display') != 'none' && !ui.q('content.animated')) {
-				ui.css('content>:not(home).content', 'display', 'none');
-				return id;
-			}
 			var e = ui.q('content>[class*="SlideIn"]');
 			if (!e)
 				e = ui.q('content>.content:not([style*="none"])');
@@ -279,8 +275,10 @@ class ui {
 				id = e.nodeName.toLowerCase();
 			if (id == 'detail' && ui.q('content>chat:not([style*="none"])'))
 				id = 'chat';
-			if (id == 'home' && ui.cssValue(id, 'display') == 'none')
+			if (id == 'home' && ui.cssValue(id, 'display') == 'none' && !ui.q('content.animated')) {
+				ui.css('content>:not(home).content', 'display', 'none');
 				ui.css(id, 'display', 'block');
+			}
 			return id;
 		},
 		goBack() {

@@ -102,9 +102,7 @@
 		<popup style="display:none;"></popup>
 		<alert style="display:none;">
 			<div></div>
-			<close
-				onclick="ui.navigation.animation('alert', 'homeSlideOut',function(){ui.css('alert','display','none')})">
-				x</close>
+			<close onclick="communication.notification.close()">x</close>
 		</alert>
 		<content>
 			<home class="content"></home>
