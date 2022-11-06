@@ -141,6 +141,20 @@ class lists {
 			else if (id == 'locations')
 				v.map = '<map style="display:none;"></map>';
 			e.innerHTML = lists.templateList(v);
+			if (id == 'contacts')
+				ui.swipe('contacts>listBody', function (dir) {
+					if (dir == 'left')
+						ui.navigation.goTo('home', 'foreward');
+					else if (dir == 'right')
+						ui.navigation.goTo('locations', 'backward');
+				});
+			else if (id == 'locations')
+				ui.swipe('locations>listBody', function (dir) {
+					if (dir == 'left')
+						ui.navigation.goTo('contacts');
+					else if (dir == 'right')
+						ui.navigation.goTo('whatToDo', 'backward');
+				});
 			new DragObject(ui.q(id + ' listScroll')).ondrag = function (event, top) {
 				var activeID = ui.navigation.getActiveID();
 				if (ui.q(activeID + ' listScroll').offsetTop == top.y)

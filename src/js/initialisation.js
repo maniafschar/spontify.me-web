@@ -202,8 +202,6 @@ class initialisation {
 		ui.swipe('settings3', function (dir) {
 			if (dir == 'right')
 				ui.navigation.goTo('settings2');
-			else if (dir == 'left')
-				ui.navigation.goTo('settings');
 		});
 		ui.swipe('settings', function (dir) {
 			if (dir == 'right')
@@ -226,18 +224,6 @@ class initialisation {
 				ui.navigation.goTo(user.contact ? 'whatToDo' : 'info');
 			else if (dir == 'right')
 				ui.navigation.goTo(user.contact ? 'contacts' : 'login', 'backward');
-		}, 'input,listScroll');
-		ui.swipe('contacts>listBody', function (dir) {
-			if (dir == 'left')
-				ui.navigation.goTo('home', 'foreward');
-			else if (dir == 'right')
-				ui.navigation.goTo('locations', 'backward');
-		}, 'input,listScroll');
-		ui.swipe('locations>listBody', function (dir) {
-			if (dir == 'left')
-				ui.navigation.goTo('contacts');
-			else if (dir == 'right')
-				ui.navigation.goTo('whatToDo', 'backward');
 		}, 'input,listScroll');
 		ui.swipe('whatToDo', function (dir) {
 			if (dir == 'left')
