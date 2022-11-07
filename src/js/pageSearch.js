@@ -14,8 +14,8 @@ export { pageSearch };
 class pageSearch {
 	static templateSearch = v =>
 		global.template`<searchInput style="padding:0 0.5em;">
-	<field style="margin-bottom:0;">
-		<label>${ui.l('search.type')}</label>
+	<field>
+		<label style="padding-top:0.5em;">${ui.l('search.type')}</label>
 		<value>
 			<input name="searchType" type="radio" onchange="pageSearch.selectType()" ${v.typecontacts} value="contacts" label="${ui.l('contacts.title')}" />
 			<input name="searchType" type="radio" onchange="pageSearch.selectType()" ${v.typelocations} value="locations" label="${ui.l('locations.title')}" />
@@ -23,7 +23,7 @@ class pageSearch {
 		</value>
 	</field>
 	<location style="display:none;">
-		<field style="margin-bottom:0;">
+		<field>
 			<label>${ui.l('category')}</label>
 			<value>
 				<input type="checkbox" name="searchCategories" ${v.categories0} value="0" label="${ui.categories[0].label}" />
@@ -34,7 +34,7 @@ class pageSearch {
 				<input type="checkbox" name="searchCategories" ${v.categories5} value="5" label="${ui.categories[5].label}" />
 			</value>
 		</field>
-		<field style="margin-bottom:0;">
+		<field>
 			<label>${ui.l('filter')}</label>
 			<value>
 				<input type="checkbox" label="${ui.l('search.matches')}" ${v.matchesOnly} name="searchMatchesOnly" />
@@ -42,7 +42,7 @@ class pageSearch {
 		</field>
 	</location>
 	<contact>
-		<field style="margin-bottom:0;">
+		<field>
 			<label>${ui.l('gender')}</label>
 			<value>
 				<input type="radio" name="searchGender" ${v.gender1} value="1" label="${ui.l('male')}" deselect="true" />
@@ -56,7 +56,7 @@ class pageSearch {
 				<input type="text" id="searchAge" value="${v.age}" name="searchAge" slider="range" min="18" max="99" />
 			</value>
 		</field>
-		<field style="margin-bottom:0;">
+		<field>
 			<label>${ui.l('filter')}</label>
 			<value>
 				<input type="checkbox" ${v.matchesOnly} label="${ui.l('search.matches')}" name="searchMatchesOnly" />
