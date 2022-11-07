@@ -62,9 +62,7 @@ class communication {
 					errorHandler.call();
 			}
 		};
-		if (!param.method)
-			param.method = 'GET';
-		xmlhttp.open(param.method, param.url, true);
+		xmlhttp.open(param.method ? param.method : 'GET', param.url, true);
 		if (param.url.indexOf(global.server.substring(0, global.server.lastIndexOf('/', global.server.length - 2))) == 0) {
 			var d = new Date();
 			param.id = d.getTime();
