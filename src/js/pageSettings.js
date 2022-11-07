@@ -277,7 +277,7 @@ class pageSettings {
 			responseType: 'json',
 			success(r) {
 				if (r.text)
-					ui.navigation.openPopup(ui.l('attention'), r.text + (r.url ? '<br/><br/><a href="' + r.url + '" target="preventDelete">' + r.url + '</a>' : '') + '<br/><br/><buttontext class="bgColor" onclick="pageSettings.deleteProfileSaveReason()">' + ui.l('settings.deleteProfileFinal') + '</buttontext>');
+					ui.navigation.openPopup(ui.l('attention'), r.text + (r.url ? '<br/><br/><a onclick="ui.navigation.openHTML(&quot;' + r.url + '&quot;,&quot;preventDelete&quot;)">' + r.url + '</a>' : '') + '<br/><br/><buttontext class="bgColor" onclick="pageSettings.deleteProfileSaveReason()">' + ui.l('settings.deleteProfileFinal') + '</buttontext>');
 				else
 					pageSettings.deleteProfileSaveReason();
 			}

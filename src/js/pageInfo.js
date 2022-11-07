@@ -49,8 +49,6 @@ class pageInfo {
         </buttontext>
         <feedbackHint></feedbackHint>
     </div>
-	<buttontext class="bgColor infoButton" onclick="pageInfo.toggleMarketing()"${v.marketingDisplay}>${v.marketingTitle}</buttontext>
-	<div id="info5" style="display:none;margin-bottom:1em;"></div>
 	<buttontext onclick="pageInfo.socialShare()" id="socialShare" class="bgColor infoButton">
 		${ui.l('sendSocialShare')}
 	</buttontext>
@@ -209,27 +207,7 @@ class pageInfo {
 			event.stopPropagation();
 		ui.toggleHeight(id);
 	}
-	static toggleMarketing() {
-		var e = ui.q('#info5');
-		if (e.innerHTML)
-			ui.toggleHeight(e, function () {
-				ui.css(e, 'display', 'none');
-				ui.html(e, '');
-			});
-		else
-			communication.ajax({
-				url: global.server + 'action/marketing/result',
-				responseType: 'json',
-				success(r) {
-					if (r.list)
-						e.innerHTML = (r.text ? '<div style="cursor:pointer;margin:0 0.5em;background:rgba(255,255,255,0.6);padding:1em;border-radius:0.5em;text-align:center;"' + (r.action ? ' onclick="ui.navigation.autoOpen(&quot;' + r.action + '&quot;,event)"' : '') + '>' + r.text + '</div>' : '') + pageContact.listContacts(r.list);
-					else if (r.html)
-						e.innerHTML = r.html;
-					ui.toggleHeight(e);
-				}
-			});
-	}
 	static updateLocalisation() {
 		ui.html('#infoLocalized', geoData.localized ? ui.l('info.localized').replace('{0}', geoData.currentTown + global.separator + geoData.currentStreet) : ui.l('info.notLocalized').replace('{0}', geoData.currentStreet ? geoData.currentStreet : '-'));
 	}
-};
+}

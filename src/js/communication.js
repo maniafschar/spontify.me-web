@@ -24,6 +24,14 @@ class communication {
 	static sentErrors = [];
 
 	static ajax(param) {
+		var last = Object.values(communication.currentCalls)[0];
+		if (last &&
+			last.url == param.url &&
+			last.method == param.method &&
+			last.progressBar == param.progressBar &&
+			last.responseType == param.responseType &&
+			JSON.stringify(last.body) == JSON.stringify(param.body))
+			return;
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function () {
 			if (xmlhttp.readyState == 4) {
