@@ -586,7 +586,9 @@ class communication {
 				}
 				if (r.firstChatId != ui.q('chatList').getAttribute('firstChatId') || chat != (pageChat.newChats ? parseInt(pageChat.newChats) : 0)) {
 					pageChat.initActiveChats();
-					var x = ui.q('chatList>div').getAttribute('i');
+					var x = ui.q('chatList>div');
+					if (x)
+						x = x.getAttribute('i');
 					if (formFunc.getDraft('alert_chat') != x && ui.q('chatList>div[i="' + x + '"].highlightBackground') && ui.navigation.getActiveID() == 'home' && chat > (pageChat.newChats ? parseInt(pageChat.newChats) : 0) && ui.cssValue('alert', 'display') == 'none') {
 						var d = ui.q('alert>div'), i = Object.keys(r.chatNew)[0];
 						d.setAttribute('onclick', 'pageChat.open(' + i + ')');
@@ -595,7 +597,8 @@ class communication {
 						d.style.display = 'block';
 						ui.navigation.animation(d, 'homeSlideIn');
 					}
-					formFunc.saveDraft('alert_chat', x);
+					if (x)
+						formFunc.saveDraft('alert_chat', x);
 				}
 				total += chat;
 				pageChat.newChats = chat == 0 ? '' : '' + chat;
@@ -623,7 +626,7 @@ class communication {
 								d.style.display = 'block';
 								ui.navigation.animation(d, 'homeSlideIn');
 							}
-							formFunc.saveDraft('alert_notification', x);
+							formFunc.saveDraft('alert_notification', x.id);
 						}
 					});
 				}

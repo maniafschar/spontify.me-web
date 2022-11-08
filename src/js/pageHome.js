@@ -69,7 +69,7 @@ class pageHome {
 					if (r && r.label) {
 						ui.q('buttonIcon.marketing>span').innerHTML = r.label;
 						var e = ui.q('buttonIcon.marketing');
-						e.setAttribute('onclick', 'ui.navigation.openHTML("' + r.action + '","sm_marketing");ui.q("buttonIcon.marketing").outerHTML=""');
+						e.setAttribute('onclick', 'ui.navigation.openHTML("' + r.url + '","sm_marketing");ui.q("buttonIcon.marketing").outerHTML=""');
 						e.style.display = 'flex';
 					}
 				}

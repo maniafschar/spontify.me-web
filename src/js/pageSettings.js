@@ -276,7 +276,7 @@ class pageSettings {
 			url: global.server + 'action/prevent/delete',
 			responseType: 'json',
 			success(r) {
-				if (r.text)
+				if (r && r.text)
 					ui.navigation.openPopup(ui.l('attention'), r.text + (r.url ? '<br/><br/><a onclick="ui.navigation.openHTML(&quot;' + r.url + '&quot;,&quot;preventDelete&quot;)">' + r.url + '</a>' : '') + '<br/><br/><buttontext class="bgColor" onclick="pageSettings.deleteProfileSaveReason()">' + ui.l('settings.deleteProfileFinal') + '</buttontext>');
 				else
 					pageSettings.deleteProfileSaveReason();
