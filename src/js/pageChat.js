@@ -324,7 +324,7 @@ class pageChat {
 				v.image = 'images/contact.svg';
 			if (v._maxDate.indexOf('.') > 0)
 				v._maxDate = v._maxDate.substring(0, v._maxDate.indexOf('.'));
-			s += '<div onclick="pageChat.open(' + v.id + ')" i="' + v.id + '" t="' + v._maxDate + '"' + (v._unseen > 0 ? ' class="highlightBackground"' : '') + '><img src="' + v.image + '"' + (v.imageList ? '' : ' class="bgColor" style="padding:0.6em;"') + '/><span>' + v.pseudonym + '<br/>' + global.date.formatDate(v._maxDate) + '</span></div>';
+			s += '<div onclick="pageChat.open(' + v.id + ')" i="' + v.id + '"' + (v._unseen > 0 ? ' class="highlightBackground"' : '') + '><img src="' + v.image + '"' + (v.imageList ? '' : ' class="bgColor" style="padding:0.6em;"') + '/><span>' + v.pseudonym + '<br/>' + global.date.formatDate(v._maxDate) + '</span></div>';
 		}
 		var e = ui.q('chatList');
 		e.innerHTML = s;

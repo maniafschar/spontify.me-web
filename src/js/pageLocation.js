@@ -150,7 +150,7 @@ ${v.hint}
 	<label>${ui.l('name')}</label>
 	<value>
 		<input type="text" name="name" maxlength="100" value="${v.name}" />
-		<div style="text-align:center;padding-top:1em;"><buttontext class="bgColor" onclick="pageLocation.showLocationsNearby(event)">${ui.l('all')}</buttontext></div>
+		<div style="text-align:center;padding-top:1em;${v.showNearByButton}"><buttontext class="bgColor" onclick="pageLocation.showLocationsNearby(event)">${ui.l('all')}</buttontext></div>
 		<locationNameInputHelper style="display:none;"></locationNameInputHelper>
 	</value>
 </field>
@@ -509,6 +509,7 @@ ${v.hint}
 				ot[i]['wd' + ot[i].day] = ' selected';
 				v.ot += '<div>' + pageLocation.templateEditOpenTimes(ot[i]) + '</div>';
 			}
+			v.showNearByButton = 'display:none';
 		} else {
 			v.hint = '<div style="padding:0.5em 1em 0 1em;">' + ui.l('locations.newHint') + '</div>';
 			v.hideOpenTimes = ' style="display:none;"';
