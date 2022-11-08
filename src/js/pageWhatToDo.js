@@ -170,7 +170,6 @@ class pageWhatToDo {
 					} else
 						v.locDisp = 'none';
 					v[currentWtd.text ? 'msgButtonDisp' : 'msgBodyDisp'] = 'display:none;';
-					v.displayFacebookPublish = user.contact.facebookLink ? '' : 'display:none;';
 					v.date = global.date.formatDate(new Date(), 'weekdayLong');
 					v.date = global.date.getDateHint(new Date()).replace('{0}', v.date.substring(0, v.date.lastIndexOf(' ')));
 					ui.html('whatToDo', pageWhatToDo.template(v));

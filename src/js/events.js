@@ -671,24 +671,29 @@ ${v.eventParticipationButtons}
 	}
 	static toggle(id) {
 		var d = ui.q('detail card:last-child[i="' + id + '"] [name="events"]');
-		if (!d.innerHTML) {
-			var field = ui.q('detail card:last-child').getAttribute('type');
-			communication.ajax({
-				url: global.server + 'db/list?query=location_listEvent&search=' + encodeURIComponent('event.' + field + 'Id=' + id),
-				responseType: 'json',
-				success(r) {
-					events.toggleInternal(r, id, field);
-				}
-			});
-		} else
-			details.togglePanel(ui.q('detail card:last-child[i="' + id + '"] [name="events"]'));
+		if (d) {
+			if (!d.innerHTML) {
+				var field = ui.q('detail card:last-child').getAttribute('type');
+				communication.ajax({
+					url: global.server + 'db/list?query=location_listEvent&search=' + encodeURIComponent('event.' + field + 'Id=' + id),
+					responseType: 'json',
+					success(r) {
+						events.toggleInternal(r, id, field);
+					}
+				});
+			} else
+				details.togglePanel(ui.q('detail card:last-child[i="' + id + '"] [name="events"]'));
+		}
 	}
 	static toggleInternal(r, id, field) {
+		var e = ui.q('detail card:last-child[i="' + id + '"] [name="events"]');
+		if (!e)
+			return;
 		var bg = ui.classContains('detail card:last-child[i="' + id + '"] [name="buttonEvents"]', 'bgBonus') ? 'bgBonus' : 'bgColor';
 		var a = events.getCalendarList(r), newButton = field == 'contact' ? '' : '<br/><br/><buttontext onclick="events.edit(' + id + ')" class="' + bg + '">' + ui.l('events.new') + '</buttontext>';
 		var s = '', v, text;
 		var b = user.contact.id == id;
-		if (b && ui.q('detail card:last-child[i="' + id + '"] [name="events"]').getAttribute('active'))
+		if (b && e.getAttribute('active'))
 			b = false;
 		for (var i = 1; i < a.length; i++) {
 			v = a[i];
@@ -722,7 +727,6 @@ ${v.eventParticipationButtons}
 			s += newButton;
 		else
 			s = '<detailTogglePanel>' + ui.l('events.noEvents') + newButton + '</detailTogglePanel>';
-		var e = ui.q('detail card:last-child[i="' + id + '"] [name="events"]');
 		e.innerHTML = s;
 		details.togglePanel(e);
 	}

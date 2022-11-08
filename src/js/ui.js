@@ -262,6 +262,8 @@ class ui {
 				ui.css(oldDiv, 'marginLeft', 0);
 				ui.classRemove(newDiv, o + 'SlideIn');
 				ui.css(newDiv, 'transform', '');
+				if (id == 'home')
+					ui.css('content>.content:not(home)', 'display', 'none');
 				if (exec)
 					exec.call();
 			});
@@ -287,6 +289,7 @@ class ui {
 		goTo(id, direction) {
 			if (ui.classContains('content', 'animated'))
 				return;
+			communication.notification.close();
 			var currentID = ui.navigation.getActiveID();
 			if (id == 'home' && currentID == 'chat') {
 				pageChat.close();
@@ -723,14 +726,14 @@ class ui {
 			e = ui.q(e);
 		exclude = exclude ? ',' + exclude.toUpperCase() + ',' : '';
 		ui.on(e, 'touchstart', function (event) {
-			if (exclude.indexOf(',' + event.target.nodeName + ',') < 0 && exclude.indexOf(',' + event.target.parentNode.nodeName + ',') < 0) {
+			if (exclude.indexOf(',' + event.target.nodeName + ',') < 0 && (!event.target.parentNode || exclude.indexOf(',' + event.target.parentNode.nodeName + ',') < 0)) {
 				e.startX = event.changedTouches[0].pageX;
 				e.startY = event.changedTouches[0].pageY;
 				e.startTime = new Date().getTime();
 			}
 		});
 		ui.on(e, 'touchend', function (event) {
-			if (exclude.indexOf(',' + event.target.nodeName + ',') < 0 && exclude.indexOf(',' + event.target.parentNode.nodeName + ',') < 0) {
+			if (exclude.indexOf(',' + event.target.nodeName + ',') < 0 && (!event.target.parentNode || exclude.indexOf(',' + event.target.parentNode.nodeName + ',') < 0)) {
 				var distX = event.changedTouches[0].pageX - e.startX;
 				var distY = event.changedTouches[0].pageY - e.startY;
 				var elapsedTime = new Date().getTime() - e.startTime;
