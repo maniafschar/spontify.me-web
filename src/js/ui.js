@@ -424,7 +424,6 @@ class ui {
 			return e;
 		},
 		openPopup(title, data, closeAction, modal, exec) {
-			intro.closeHint();
 			var p = ui.q('popup'), pt = ui.q('popupTitle'), visible = p.style.display != 'none';
 			if (ui.classContains(p, 'animated') || visible && pt && pt.getAttribute('modal') == 'true')
 				return false;
@@ -447,6 +446,9 @@ class ui {
 					if (exec)
 						exec.call();
 				};
+				intro.closeHint();
+				pageChat.closeList();
+				communication.notification.close();
 				if (!visible)
 					f.call();
 				else
@@ -774,7 +776,7 @@ class ui {
 			e.style.display = 'block';
 			e.style.height = 0;
 			setTimeout(function () {
-				ui.on(e, 'transitionend', function () {
+				var f = function () {
 					e.style.overflow = o;
 					e.style.transition = t;
 					e.style.height = '';
@@ -782,21 +784,25 @@ class ui {
 					e.removeAttribute('toggle');
 					if (exec)
 						exec.call();
-				}, true);
+				}
+				ui.on(e, 'transitionend', f, true);
+				ui.on(e, 'transitioncancel', f, true);
 				e.style.height = e.getAttribute('h') + 'px';
 			}, 10);
 		} else {
 			e.style.transition = 'height .4s ease-in';
 			e.style.height = e.offsetHeight + 'px';
 			setTimeout(function () {
-				ui.on(e, 'transitionend', function () {
+				var f = function () {
 					e.style.overflow = o;
 					e.style.transition = t;
 					e.style.display = 'none';
 					e.removeAttribute('toggle');
 					if (exec)
 						exec.call();
-				}, true);
+				};
+				ui.on(e, 'transitionend', f, true);
+				ui.on(e, 'transitioncancel', f, true);
 				e.style.height = 0;
 			}, 10);
 		}

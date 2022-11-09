@@ -419,18 +419,15 @@ ${v['location.attr5Ex']}<br>`;
 			var e = pageLogin.getDraft() || {};
 			communication.login.removeCredentials();
 			communication.login.recoverPasswordVerifyEmail(global.getParam('r'), e.email ? e.email : '');
-			if (global.isBrowser())
-				history.pushState(null, null, window.location.origin);
 		} else if (!initialisation.showLocation()) {
 			var p = global.getParam();
 			if (p) {
 				setTimeout(function () {
 					ui.navigation.autoOpen(p);
-					if (global.isBrowser())
-						history.pushState(null, null, window.location.origin);
 				}, 1000);
 			}
 		}
+		history.pushState(null, null, window.location.origin);
 	}
 	static statusBar() {
 		if (!global.isBrowser()) {
