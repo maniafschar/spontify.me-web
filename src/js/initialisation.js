@@ -127,7 +127,11 @@ class initialisation {
 		if (!global.isBrowser())
 			initialisation.initApp();
 		ui.html('head title', global.appTitle);
-		communication.login.autoLogin(initialisation.showStartDialogs);
+		if (global.getParam('r')) {
+			communication.login.removeCredentials();
+			initialisation.showStartDialogs();
+		} else
+			communication.login.autoLogin(initialisation.showStartDialogs);
 		window.onresize = initialisation.reposition;
 		ui.on(window, 'orientationchange', initialisation.reposition);
 		ui.on(window, 'popstate', ui.navigation.goBack);
