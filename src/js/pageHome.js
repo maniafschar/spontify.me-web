@@ -125,10 +125,11 @@ class pageHome {
 			'<a class="langSelectImg bgColor' + (global.language == 'EN' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</a></div>');
 	}
 	static toggleNotification() {
-		if (!user.contact) {
-			intro.openHint({ desc: 'notification', pos: '0.5em,-4.5em', size: 'auto,auto', hinkyClass: 'bottom', hinky: 'left:1em;' });
-			return;
-		}
-		ui.toggleHeight('notificationList');
+		if (!user.contact)
+			intro.openHint({ desc: 'notification', pos: '0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1em;' });
+		else if (!ui.q('notificationList>div'))
+			intro.openHint({ desc: 'notificationEmpty', pos: '0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1em;' });
+		else
+			ui.toggleHeight('notificationList');
 	}
 }

@@ -659,8 +659,10 @@ class pageChat {
 			ui.classAdd(e, 'pressed');
 	}
 	static toggleUserList() {
-		if (user.contact)
+		if (ui.q('chatList>div'))
 			ui.toggleHeight('chatList');
+		else if (user.contact)
+			intro.openHint({ desc: 'chatEmpty', pos: '0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1em;' });
 		else
 			intro.openHint({ desc: 'chatDescription', pos: '0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1em;' });
 	}
