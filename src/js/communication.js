@@ -530,6 +530,10 @@ class communication {
 				if (r.param.body)
 					s2 += '\nbody: ' + JSON.stringify(r.param.body);
 			}
+			s2 += '\npage: ' + ui.navigation.getActiveID();
+			var last = Object.values(communication.currentCalls)[0];
+			if (last)
+				s2 += '\ncall: ' + JSON.stringify(last);
 			s2 += '\nstatus: ' + r.status;
 			if (r.responseText)
 				s2 += '\nresponse: ' + r.responseText;

@@ -62,10 +62,6 @@ class ui {
 	static buttonIcon(e, image, click) {
 		if (typeof e == 'string')
 			e = ui.q('buttonIcon' + e);
-		if (!e) {
-			communication.sendError('buttonIcon ' + e + ' - ' + image + ' - ' + click);
-			return;
-		}
 		ui.classRemove(e, 'pulse highlight bluetoothInactive jpg');
 		if (image.indexOf('<') == 0)
 			e.innerHTML = image;
@@ -599,8 +595,10 @@ class ui {
 			if (ui.labels[i[0]])
 				s = ui.labels[i[0]][i[1]];
 		}
-		if (!s)
-			communication.sendError('ERROR label not found: ' + id);
+		if (!s) {
+			communication.sendError('missing label: ' + id);
+			return '';
+		}
 		return s;
 	}
 	static off(e, type, f) {

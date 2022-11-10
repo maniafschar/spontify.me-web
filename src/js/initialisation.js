@@ -35,8 +35,14 @@ class initialisation {
 		setTimeout(f, 2000);
 		global.serverImg = global.server.substring(0, global.server.lastIndexOf('/', global.server.length - 2)) + '/med/';
 		window.onerror = function (message, url, line, column, error) {
-			if (url && (url.lastIndexOf('fmg.js') + 6 == url.length || url.lastIndexOf('lang') + 6 == url.lastIndexOf('.js')))
-				communication.sendError('uncaughtExecption:\n' + message + '\n' + url + ': ' + line + '/' + column + '\n' + JSON.stringify(error));
+			if (url && (url.lastIndexOf('fmg.js') + 6 == url.length || url.lastIndexOf('lang') + 6 == url.lastIndexOf('.js'))) {
+				var last = Object.values(communication.currentCalls)[0];
+				communication.sendError('uncaughtExecption:\nmessage: ' + message +
+					'\ncall: ' + (last ? JSON.stringify(last) : '-') +
+					'\npage: ' + ui.navigation.getActiveID() +
+					'\ncolumn: ' + url + ': ' + line + '/' + column +
+					'\nerror: ' + JSON.stringify(error));
+			}
 			communication.currentCalls.splice(0, communication.currentCalls.length);
 			ui.css('progressbar', 'display', 'none');
 		};
