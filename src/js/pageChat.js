@@ -335,9 +335,15 @@ class pageChat {
 	static open(id, location) {
 		if (id.indexOf && id.indexOf('_') > 0)
 			id = id.substring(0, id.indexOf('_'));
-		if (ui.q('chat[i="' + id + '"][type="' + (location ? 'location' : 'contact') + '"]')) {
-			pageChat.close();
-			return;
+		var e = ui.q('chat[i="' + id + '"][type="' + (location ? 'location' : 'contact') + '"]');
+		if (e) {
+			if (ui.cssValue(e, 'display') == 'none') {
+				pageChat.saveDraft();
+				ui.html('chat', '');
+			} else {
+				pageChat.close();
+				return;
+			}
 		}
 		communication.ajax({
 			url: global.server + 'action/chat/' + (location ? true : false) + '/' + id + '/true',
