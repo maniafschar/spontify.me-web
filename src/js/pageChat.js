@@ -328,7 +328,8 @@ class pageChat {
 		}
 		var e = ui.q('chatList');
 		e.innerHTML = s;
-		e.removeAttribute('h');
+		if (ui.cssValue(e, 'display') == 'none')
+			e.removeAttribute('h');
 		if (d.length > 1)
 			e.setAttribute('firstChatId', model.convert(new Contact(), d, 1)._chatId);
 	}

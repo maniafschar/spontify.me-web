@@ -105,7 +105,8 @@ class pageHome {
 		}
 		var e = ui.q('notificationList');
 		e.innerHTML = s;
-		e.removeAttribute('h');
+		if (ui.cssValue(e, 'display') == 'none')
+			e.removeAttribute('h');
 		pageHome.badge = ui.qa('notificationList .highlightBackground').length;
 		pageHome.initNotificationButton();
 	}
