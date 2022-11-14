@@ -512,9 +512,11 @@ class communication {
 	}
 	static onError(r) {
 		var s, status;
-		if (r.status == 401)
+		if (r.status == 401) {
+			if (r.responseText.indexOf('UsedSalt') > -1)
+				return;
 			communication.login.resetAfterLogoff();
-		else if (r.status == 408) {
+		} else if (r.status == 408) {
 			// timeout, do nothing, most probably app wake up from sleep modus
 		} else if (r.status < 200 || r.status > 501 || r.status == 400 && r.responseText && r.responseText.toLowerCase().indexOf(' connection ') > -1) {
 			try {

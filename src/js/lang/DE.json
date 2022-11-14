@@ -335,7 +335,7 @@
 			"blockActionHint": "Bitte begründe warum Du den Sponti melden möchtest!",
 			"blockAndReportAction": "Blockieren und melden",
 			"blockDescHint": "Begründe Deine Entscheidung!",
-			"blocked": "Geblockte Spontis",
+			"blocked": "Geblockte Einträge",
 			"blockedAction": "Dieser Sponti wurde nun blockiert. Dort kannst Du ihn in Deinen Einstelungen auf der letzten Seite wieder entsperren.",
 			"blockReason1": "existiert nicht",
 			"blockReason100": "Sonstiges",
@@ -368,7 +368,7 @@
 			"terminateFriendship": "Freundschaft beenden",
 			"terminateFriendshipConfirm": "Bestätige die Aufhebung der Freundschaft",
 			"title": "Spontis",
-			"unblock": "Möchtest Du den Sponti wieder entblockieren?"
+			"unblock": "Möchtest Du {0} wieder entblockieren?"
 		},
 		"error": {
 			"description": "Bitte gib eine Beschreibung an.",
@@ -525,6 +525,9 @@
 			"address": "Adresse",
 			"alreadyExists": "Die Location existiert bereits!",
 			"asMessage": "da will ich um {0} hin",
+			"blockReason1": "verstößt gegen AGBs",
+			"blockReason100": "Sonstiges",
+			"blockReason2": "existiert nicht",
 			"bonusEdit": "Bonus",
 			"bonusHintEdit": "Beschreibe was Du Deinen Kunden bei einer sofortigen Bewertung als Bonus anbietest, z.B. ein Espresso oder Rabatt auf den soeben getätigten Einkauf. Dein Kunde zeigt Dir dann die Bestätigungsseite auf seinem Handy, worauf Du ihm den Bonus aushändigst. Kunden können diesen Bonus maximal einmal pro Woche einlösen, da man eine Location nur einmal pro Woche bewerten kann. Deine Location wird natürlich in den ${appTitle} Listen besonders hervorgehoben!",
 			"closed": "geschlossen",
@@ -625,7 +628,7 @@
 			"title": "Login"
 		},
 		"noResults": {
-			"block": "Du hast noch keine Spontis geblockt.",
+			"block": "Du hast noch keine Spontis/Locations/Events geblockt.",
 			"events": "Hier werden die Events der folgenden 2 Wochen gelistet. Momentan sind in Deiner Umgebung keine Events eingestellt.<br/><br/>Du kannst auch selbst Events einstellen, einfach in Deiner Lieblings-Location unten auf den Button Events klicken.",
 			"eventsMy": "Momentan hast Du Dir keine Eevents gemerkt.<br/><br/>Klicke in Events auf{1}um an Event teilzunehmen.",
 			"favorites": "Du hast noch keine {0} zu Deinen Favoriten hinzugefügt.<br/><br/>Klicke auf den Button{1}in den {0} die Dir gefallen.",

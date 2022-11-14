@@ -210,15 +210,15 @@ ${v.budget}
 		}
 	}
 	static blockUser(blockID, reason, note) {
+		var id = ui.q('detail card:last-child').getAttribute('i');
 		var v = {
-			classname: 'ContactBlock',
+			classname: 'Block',
 			values: {
-				contactId2: ui.q('detail card:last-child').getAttribute('i'),
+				contactId2: id,
 				reason: reason,
 				note: note
 			}
 		};
-		var id = ui.q('detail card:last-child').getAttribute('i');
 		if (blockID > 0)
 			v.id = blockID;
 		communication.ajax({
@@ -714,7 +714,7 @@ ${v.budget}
 			if (activeID == 'detail')
 				v.oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)';
 			else if (activeID == 'settings3')
-				v.oc = 'pageSettings.unblockUser(' + v.id + ',' + v.contactBlock.id + ')';
+				v.oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';
 			else if (activeID == 'info')
 				v.oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)';
 			else if (v.contactNotification.id)
@@ -751,14 +751,14 @@ ${v.budget}
 		var e = ui.q(divID);
 		if (!e.getAttribute('blockID')) {
 			communication.ajax({
-				url: global.server + 'db/one?query=contact_block&search=' + encodeURIComponent('contactBlock.contactId=' + user.contact.id + ' and contactBlock.contactId2=' + id),
+				url: global.server + 'db/one?query=misc_block&search=' + encodeURIComponent('block.contactId=' + user.contact.id + ' and block.contactId2=' + id),
 				success(r) {
 					if (r) {
 						var v = JSON.parse(r);
-						ui.attr(e, 'blockID', v.contactBlock.id);
-						ui.qa(divID + ' input')[v.contactBlock.note ? 1 : 0].checked = true;
-						if (v.contactBlock.reason != 0)
-							ui.q(divID + ' [name="reason"][value="' + v.contactBlock.reason + '"]').checked = true;
+						ui.attr(e, 'blockID', v.block.id);
+						ui.qa(divID + ' input')[v.block.note ? 1 : 0].checked = true;
+						if (v.block.reason != 0)
+							ui.q(divID + ' [name="reason"][value="' + v.block.reason + '"]').checked = true;
 						ui.q(divID + ' textarea').value = v.reason;
 						pageContact.showBlockText();
 					} else

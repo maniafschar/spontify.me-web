@@ -26,7 +26,7 @@ class pageLocation {
 	};
 	static reopenEvent;
 	static templateList = v =>
-		global.template`<row onclick="details.open(&quot;${v.id}&quot;,&quot;${v.query}&quot;,${v.render})" i="${v.id}" class="location${v.classFavorite}">
+		global.template`<row onclick="${v.oc}" i="${v.id}" class="location${v.classFavorite}">
 			${v.present}
 	<div>
 		<text>
@@ -96,6 +96,8 @@ ${v.parking}
 		onclick="${v.editAction}">${ui.l('edit')}</buttontext>
 	<buttontext class="bgColor" name="buttonGoogle"
 		onclick="ui.navigation.openHTML(&quot;https://google.com/search?q=${encodeURIComponent(v.name + ' ' + v.town)}&quot;)">Google</buttontext>
+	<buttontext class="bgColor${v.blocked}" name="buttonBlock"
+		onclick="pageLocation.toggleBlock(${v.id})">${ui.l('contacts.blockAction')}</buttontext>
 </detailButtons>
 <text name="events" class="collapsed" ${v.urlNotActive} style="margin:0 -1em;"></text>
 <text name="matchIndicatorHint" class="popup" style="display:none;" onclick="ui.toggleHeight(this)">
@@ -103,6 +105,23 @@ ${v.parking}
 </text>
 <text class="popup matchIndicatorAttributesHint" style="display:none;" onclick="ui.toggleHeight(this)">
 	<div></div>
+</text>
+<text name="block" class="collapsed">
+	<div style="padding:1em 0;">
+		<input type="radio" name="type" value="1" label="${ui.l('contacts.blockAction')}"
+			onclick="pageLocation.showBlockText()" checked="true" />
+		<input type="radio" name="type" value="2" label="${ui.l('contacts.blockAndReportAction')}"
+			onclick="pageLocation.showBlockText()" />
+		<br />
+		<div style="display:none;margin-top:0.5em;">
+			<input type="radio" name="reason" value="1" label="${ui.l('locations.blockReason1')}" />
+			<input type="radio" name="reason" value="2" label="${ui.l('locations.blockReason2')}" ${v.hideBlockReason2}/>
+			<input type="radio" name="reason" value="100" label="${ui.l('locations.blockReason100')}" checked />
+		</div>
+		<textarea placeholder="${ui.l('contacts.blockDescHint')}" name="note" maxlength="250" style="display:none;"></textarea>
+		<buttontext onclick="pageLocation.block()" style="margin-top:0.5em;"
+			class="bgColor">${ui.l('save')}</buttontext>
+	</div>
 </text>
 <text name="whatToDo" class="collapsed">
 	<detailTogglePanel>
@@ -303,6 +322,46 @@ ${v.hint}
 		e2.innerHTML = pageLocation.templateEditOpenTimes(v);
 		ui.q('openTimesEdit').insertBefore(e2, null);
 	}
+	static block(blockID, reason, note) {
+		var v = {
+			classname: 'Block',
+			values: {
+				reason: reason,
+				note: note
+			}
+		};
+		var id = ui.q('detail card:last-child').getAttribute('i');
+		ui.q('detail card:last-child').getAttribute('i');
+		if (id.indexOf && id.indexOf('_') > 0)
+			v.values.eventId = id.substring(0, id.indexOf('_'));
+		else
+			v.values.locationId = id;
+		if (blockID > 0)
+			v.id = blockID;
+		communication.ajax({
+			url: global.server + 'db/one',
+			responseType: 'json',
+			method: blockID > 0 ? 'PUT' : 'POST',
+			body: v,
+			success() {
+				var e = ui.q('locations [i="' + id + '"]');
+				if (e) {
+					e.outerHTML = '';
+					lists.setListHint('locations');
+				}
+				ui.navigation.goTo('locations');
+				var e = lists.data['locations'];
+				if (e) {
+					for (var i = 1; i < e.length; i++) {
+						if (model.convert(new Location(), e, i).id == id) {
+							e.splice(i, 1);
+							break;
+						}
+					}
+				}
+			}
+		});
+	}
 	static closeLocationInputHelper() {
 		var e = ui.q('locationNameInputHelper');
 		if (e.innerHTML)
@@ -410,9 +469,10 @@ ${v.hint}
 		}
 		if (v.bonus)
 			v.bonus = '<text style="margin:1em 0;" class="highlightBackground">' + ui.l('locations.bonus') + v.bonus + '<br/>' + ui.l('locations.bonusHint') + '</text>';
-		if (v.event.id)
+		if (v.event.id) {
 			v.eventDetails = events.detail(v);
-		else {
+			v.hideBlockReason2 = ' style="display:none;"';
+		} else {
 			if (global.isBrowser())
 				v.copyLinkHint = ui.l('copyLinkHint.location');
 			else
@@ -772,10 +832,12 @@ ${v.hint}
 			if (v.bonus)
 				v.present = '<badge class="bgBonus" style="display:block;"><img src="images/present.svg" class="present"></badge>';
 			v.type = 'Location';
-			v.render = 'pageLocation.detailLocationEvent';
 			v._message = v._message1 ? v._message1 + '<br/>' : '';
 			v._message += v._message2 ? v._message2 : '';
-			v.query = (user.contact ? 'location_list' : 'location_anonymousList') + '&search=' + encodeURIComponent('location.id=' + v.id);
+			if (ui.navigation.getActiveID() == 'settings3')
+				v.oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';
+			else
+				v.oc = 'details.open(&quot;' + v.id + '&quot;,&quot;location_list&search=' + encodeURIComponent('location.id=' + v.id) + '&quot;,pageLocation.detailLocationEvent)';
 			s += pageLocation.templateList(v);
 		}
 		return s;
@@ -1038,10 +1100,37 @@ ${v.hint}
 		if (b == -1)
 			ui.navigation.openHTML(global.server + 'qq?i=' + id + '&t=' + encodeURIComponent(ui.q('#taxNo').value) + '&v=' + encodeURIComponent(ui.q('[name="os0"]:checked').value));
 	}
+	static showBlockText() {
+		var s = ui.q('detail card:last-child [name="block"] [name="type"]:checked').value == 2 ? 'block' : 'none';
+		ui.css(ui.q('detail card:last-child [name="block"] [name="reason"]').parentNode, 'display', s);
+		ui.css('detail card:last-child [name="block"] [name="note"]', 'display', s);
+	}
 	static showLocationInputHelper(event) {
 		var e = ui.q('locationNameInputHelper');
 		if (e.innerHTML && ui.cssValue(e, 'display') == 'none' && (!event || !ui.q('form input[name="name"]').value))
 			ui.toggleHeight(e);
+	}
+	static toggleBlock(id) {
+		var divID = 'detail card:last-child[i="' + id + '"] [name="block"]';
+		var e = ui.q(divID);
+		if (!e.getAttribute('blockID')) {
+			communication.ajax({
+				url: global.server + 'db/one?query=misc_block&search=' + encodeURIComponent('block.contactId=' + user.contact.id + ' and block.contactId2=' + id),
+				success(r) {
+					if (r) {
+						var v = JSON.parse(r);
+						ui.attr(e, 'blockID', v.block.id);
+						ui.qa(divID + ' input')[v.block.note ? 1 : 0].checked = true;
+						if (v.block.reason != 0)
+							ui.q(divID + ' [name="reason"][value="' + v.block.reason + '"]').checked = true;
+						ui.q(divID + ' textarea').value = v.reason;
+						pageLocation.showBlockText();
+					} else
+						ui.attr(e, 'blockID', 0);
+				}
+			});
+		}
+		details.togglePanel(e);
 	}
 	static toggleFavorite(id) {
 		var button = ui.q('main>buttonIcon.bottom.right');

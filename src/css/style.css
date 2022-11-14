@@ -640,6 +640,10 @@ whatToDo {
 	margin-left: 0;
 }
 
+#blocked>div {
+	margin-bottom: 1em;
+}
+
 .noDisp {
 	display: none !important;
 }

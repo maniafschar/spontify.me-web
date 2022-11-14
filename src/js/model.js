@@ -1,7 +1,7 @@
 import { communication } from './communication';
 import { user } from './user';
 
-export { model, Contact, ContactLink, Location, ContactNotification, EventParticipate, LocationOpenTime, LocationFavorite, Event, ContactBlock, Chat, LocationOwnerHistory, ContactVisit, ContactWhatToDo, ContactGroup, ContactGroupLink };
+export { model, Contact, ContactLink, Location, ContactNotification, EventParticipate, LocationOpenTime, LocationFavorite, Event, Block, Chat, LocationOwnerHistory, ContactVisit, ContactWhatToDo, ContactGroup, ContactGroupLink };
 
 class model {
 	static reportedErrors = {};
@@ -52,6 +52,11 @@ class BaseEntity {
 	createdAt;
 	id;
 	modifiedAt;
+}
+
+class Block extends BaseEntity {
+	note;
+	reason;
 }
 
 class Contact extends BaseEntity {
@@ -107,7 +112,7 @@ class Contact extends BaseEntity {
 	verified;
 	visitPage;
 
-	contactBlock = new ContactBlock();
+	block = new Block();
 	contactGroupLink = new ContactGroupLink();
 	contactLink = new ContactLink();
 	contactNotification = new ContactNotification();
@@ -116,11 +121,6 @@ class Contact extends BaseEntity {
 	contactWhatToDo = new ContactWhatToDo();
 	event = new Event();
 	eventParticipate = new EventParticipate();
-}
-
-class ContactBlock extends BaseEntity {
-	note;
-	reason;
 }
 
 class ContactGroup extends BaseEntity {
@@ -244,6 +244,7 @@ class Location extends BaseEntity {
 	town;
 	url;
 
+	block = new Block();
 	contact = new Contact();
 	event = new Event();
 	locationFavorite = new LocationFavorite();

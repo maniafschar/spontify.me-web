@@ -161,7 +161,7 @@ class initialisation {
 		});
 		ui.on('detail', 'click', function (event) {
 			var e = event.target;
-			if (e.nodeName != 'INPUT') {
+			if (e.nodeName != 'INPUT' && e.nodeName != 'TEXTAREA') {
 				while (e && e.getAttribute) {
 					if (e.getAttribute('onclick'))
 						return;

@@ -22,7 +22,6 @@ class ui {
 	static categories = [];
 	static emInPX = 0;
 	static labels = [];
-	static toggleHeightExec = null;
 	static templateMenuLocation = () =>
 		global.template`<title onclick="communication.loadList(ui.query.locationAll(),pageLocation.listLocation,&quot;locations&quot;,&quot;list&quot;)">
 		${ui.l('locations.title')}
@@ -750,8 +749,6 @@ class ui {
 		});
 	}
 	static toggleHeight(e, exec) {
-		if (ui.toggleHeightExec)
-			return;
 		if (typeof e == 'string')
 			e = ui.q(e);
 		if (!e || e.getAttribute('toggle'))
@@ -776,7 +773,7 @@ class ui {
 			e.style.transition = 'height .4s ease-out';
 			e.style.display = 'block';
 			e.style.height = 0;
-			ui.toggleHeightExec = setTimeout(function () {
+			setTimeout(function () {
 				var f = function () {
 					e.style.overflow = o;
 					e.style.transition = t;
@@ -785,16 +782,14 @@ class ui {
 					e.removeAttribute('toggle');
 					if (exec)
 						exec.call();
-					ui.toggleHeightExec = null;
 				}
 				ui.on(e, 'transitionend', f, true);
-				ui.on(e, 'transitioncancel', f, true);
 				e.style.height = e.getAttribute('h') + 'px';
 			}, 10);
 		} else {
 			e.style.transition = 'height .4s ease-in';
 			e.style.height = e.offsetHeight + 'px';
-			ui.toggleHeightExec = setTimeout(function () {
+			setTimeout(function () {
 				var f = function () {
 					e.style.overflow = o;
 					e.style.transition = t;
@@ -802,7 +797,6 @@ class ui {
 					e.removeAttribute('toggle');
 					if (exec)
 						exec.call();
-					ui.toggleHeightExec = null;
 				};
 				ui.on(e, 'transitionend', f, true);
 				ui.on(e, 'transitioncancel', f, true);

@@ -2,7 +2,7 @@ import { bluetooth } from './bluetooth';
 import { communication } from './communication';
 import { global } from './global';
 import { initialisation } from './initialisation';
-import { Contact, model } from './model';
+import { Contact, Location, model } from './model';
 import { pageContact } from './pageContact';
 import { ui, formFunc } from './ui';
 import { user } from './user';
@@ -10,6 +10,7 @@ import { pageWhatToDo } from './pageWhatToDo';
 import { details } from './details';
 import { intro } from './intro';
 import { pageChat } from './pageChat';
+import { pageLocation } from './pageLocation';
 
 export { pageSettings };
 
@@ -479,19 +480,43 @@ class pageSettings {
 		ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
 		pageChat.buttonChat();
 	}
+	static listBlocked(type, s) {
+		var e = ui.q('#blocked');
+		if (s) {
+			var e2 = document.createElement('div');
+			e2.innerHTML = s;
+			for (var i = e2.childNodes.length - 1; i >= 0; i--)
+				e.appendChild(e2.childNodes[0]);
+			e2 = ui.q('#blocked>div');
+			if (e2)
+				e2.outerHTML = '';
+		} else if (!e.innerHTML)
+			e.innerHTML = '<div style="padding-left:1em;">' + ui.l('noResults.block') + '</div>';
+		e.setAttribute(type, 'true');
+		if (ui.cssValue(e, 'display') == 'none' && e.getAttribute('contact') && e.getAttribute('location') && e.getAttribute('event'))
+			ui.toggleHeight(e);
+	}
 	static listContactsBlocked(l) {
 		l[0].push('_message1');
 		l[0].push('_message2');
 		var v;
 		for (var i = 1; i < l.length; i++) {
 			v = model.convert(new Contact(), l, i);
-			l[i].push(v.contactBlock.reason ? ui.l('contacts.blockReason' + v.contactBlock.reason) : '&nbsp;');
-			l[i].push(v.contactBlock.note ? v.contactBlock.note : '&nbsp;');
+			l[i].push(v.block.reason ? ui.l('contacts.blockReason' + v.block.reason) : '&nbsp;');
+			l[i].push(v.block.note ? v.block.note : '&nbsp;');
 		}
-		var s = pageContact.listContactsInternal(l);
-		var e = ui.q('#blocked');
-		e.innerHTML = s ? s : '<div style="padding-left:1em;">' + ui.l('noResults.block') + '</div>';
-		ui.toggleHeight(e);
+		pageSettings.listBlocked('contact', pageContact.listContactsInternal(l));
+	}
+	static listLocationsBlocked(l) {
+		l[0].push('_message1');
+		l[0].push('_message2');
+		var v;
+		for (var i = 1; i < l.length; i++) {
+			v = model.convert(new Location(), l, i);
+			l[i].push(v.block.reason ? ui.l('locations.blockReason' + v.block.reason) : '&nbsp;');
+			l[i].push(v.block.note ? v.block.note : '&nbsp;');
+		}
+		pageSettings.listBlocked(l[0].includes('event.id') ? 'event' : 'location', pageLocation.listLocationInternal(l));
 	}
 	static preview() {
 		if (pageSettings.currentSettings == pageSettings.getCurrentSettingsString())
@@ -640,26 +665,35 @@ class pageSettings {
 		var e = ui.q('#blocked');
 		if (e.innerHTML)
 			ui.toggleHeight(e, function () {
-				ui.css(e, 'display', 'none');
-				ui.html(e, '');
+				e.removeAttribute('h');
+				e.removeAttribute('contact');
+				e.removeAttribute('location');
+				e.removeAttribute('event');
+				e.style.display = 'none';
+				e.innerHTML = '';
 			});
-		else
-			communication.loadList('query=contact_listBlocked', pageSettings.listContactsBlocked);
+		else {
+			communication.loadList('query=contact_listBlocked&limit=0', pageSettings.listContactsBlocked);
+			communication.loadList('query=location_listBlocked&limit=0', pageSettings.listLocationsBlocked);
+			communication.loadList('query=location_listEventBlocked&limit=0', pageSettings.listLocationsBlocked);
+		}
 	}
 	static toggleGenderSlider(e) {
 		ui.css(ui.q('#settingsInterest' + e).nextElementSibling, 'display', ui.q('input[name="genderInterest' + e + '"]').checked ? 'block' : 'none');
 	}
-	static unblockUser(id, blockId) {
+	static unblock(id, blockId) {
 		if (!ui.q('popup [i="' + id + '"]')) {
-			ui.navigation.openPopup(ui.l('attention'), ui.l('contacts.unblock') + '<br /><br /><buttontext class="bgColor" i="' + id + '" onclick="pageSettings.unblockUser(' + id + ',' + blockId + ')">' + ui.l('Yes') + '</buttontext>');
+			ui.navigation.openPopup(ui.l('attention'), ui.l('contacts.unblock').replace('{0}', ui.q('#blocked row[i="' + id + '"] title').innerText) + '<br /><br /><buttontext class="bgColor" i="' + id + '" onclick="pageSettings.unblock(' + id + ',' + blockId + ')">' + ui.l('Yes') + '</buttontext>');
 			return;
 		}
 		communication.ajax({
 			url: global.server + 'db/one',
 			method: 'DELETE',
-			body: { classname: 'ContactBlock', id: blockId },
+			body: { classname: 'Block', id: blockId },
 			success() {
-				ui.q('settings3 #blocked [i="' + id + '"]').outerHTML = '';
+				var e = ui.q('settings3 #blocked [i="' + id + '"]');
+				if (e)
+					e.outerHTML = '';
 				ui.navigation.hidePopup();
 				ui.q('settings3 #blocked').removeAttribute('h');
 				if (!ui.q('settings3 #blocked row'))
