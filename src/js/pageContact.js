@@ -197,34 +197,27 @@ ${v.budget}
 	static block() {
 		var path = 'detail card:last-child [name="block"]';
 		formFunc.resetError(ui.q(path + ' [name="note"]'));
-		var bi = ui.q(path).getAttribute('blockID');
-		if (ui.q(path + ' [name="type"]').checked)
-			pageContact.blockUser(bi, 0, '');
-		else {
+		var id = ui.q('detail card:last-child').getAttribute('i');
+		var v = {
+			classname: 'Block',
+			values: {
+				contactId2: id
+			}
+		};
+		if (ui.q(path).getAttribute('blockID') > 0)
+			v.id = ui.q(path).getAttribute('blockID');
+		if (!ui.q(path + ' [name="type"]').checked) {
 			var n = ui.q(path + ' [name="note"]');
 			if (!n.value && ui.q(path + ' [name="reason"][value="100"]:checked')) {
 				formFunc.setError(n, 'contacts.blockActionHint');
 				return;
 			}
-			pageContact.blockUser(bi, ui.val(path + ' [name="reason"]:checked'), n.value);
+			v.values.reason = ui.val(path + ' [name="reason"]:checked');
+			v.values.note = n.value;
 		}
-	}
-	static blockUser(blockID, reason, note) {
-		var id = ui.q('detail card:last-child').getAttribute('i');
-		var v = {
-			classname: 'Block',
-			values: {
-				contactId2: id,
-				reason: reason,
-				note: note
-			}
-		};
-		if (blockID > 0)
-			v.id = blockID;
 		communication.ajax({
 			url: global.server + 'db/one',
-			responseType: 'json',
-			method: blockID > 0 ? 'PUT' : 'POST',
+			method: v.id ? 'PUT' : 'POST',
 			body: v,
 			success() {
 				var e = ui.q('contacts [i="' + id + '"]');

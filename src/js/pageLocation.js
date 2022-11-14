@@ -97,7 +97,7 @@ ${v.parking}
 	<buttontext class="bgColor" name="buttonGoogle"
 		onclick="ui.navigation.openHTML(&quot;https://google.com/search?q=${encodeURIComponent(v.name + ' ' + v.town)}&quot;)">Google</buttontext>
 	<buttontext class="bgColor${v.blocked}" name="buttonBlock"
-		onclick="pageLocation.toggleBlock(${v.id})">${ui.l('contacts.blockAction')}</buttontext>
+		onclick="pageLocation.toggleBlock(&quot;${v.id}&quot;)">${ui.l('contacts.blockAction')}</buttontext>
 </detailButtons>
 <text name="events" class="collapsed" ${v.urlNotActive} style="margin:0 -1em;"></text>
 <text name="matchIndicatorHint" class="popup" style="display:none;" onclick="ui.toggleHeight(this)">
@@ -322,26 +322,34 @@ ${v.hint}
 		e2.innerHTML = pageLocation.templateEditOpenTimes(v);
 		ui.q('openTimesEdit').insertBefore(e2, null);
 	}
-	static block(blockID, reason, note) {
+	static block() {
+		var path = 'detail card:last-child [name="block"]';
+		formFunc.resetError(ui.q(path + ' [name="note"]'));
 		var v = {
 			classname: 'Block',
 			values: {
-				reason: reason,
-				note: note
 			}
 		};
+		if (ui.q(path).getAttribute('blockID') > 0)
+			v.id = ui.q(path).getAttribute('blockID');
+		if (!ui.q(path + ' [name="type"]').checked) {
+			var n = ui.q(path + ' [name="note"]');
+			if (!n.value && ui.q(path + ' [name="reason"][value="100"]:checked')) {
+				formFunc.setError(n, 'contacts.blockActionHint');
+				return;
+			}
+			v.values.reason = ui.val(path + ' [name="reason"]:checked');
+			v.values.note = n.value;
+		}
 		var id = ui.q('detail card:last-child').getAttribute('i');
 		ui.q('detail card:last-child').getAttribute('i');
 		if (id.indexOf && id.indexOf('_') > 0)
 			v.values.eventId = id.substring(0, id.indexOf('_'));
 		else
 			v.values.locationId = id;
-		if (blockID > 0)
-			v.id = blockID;
 		communication.ajax({
 			url: global.server + 'db/one',
-			responseType: 'json',
-			method: blockID > 0 ? 'PUT' : 'POST',
+			method: v.id ? 'PUT' : 'POST',
 			body: v,
 			success() {
 				var e = ui.q('locations [i="' + id + '"]');
@@ -1115,7 +1123,7 @@ ${v.hint}
 		var e = ui.q(divID);
 		if (!e.getAttribute('blockID')) {
 			communication.ajax({
-				url: global.server + 'db/one?query=misc_block&search=' + encodeURIComponent('block.contactId=' + user.contact.id + ' and block.contactId2=' + id),
+				url: global.server + 'db/one?query=misc_block&search=' + encodeURIComponent('block.contactId=' + user.contact.id + ' and ' + (id.indexOf ? 'block.eventId=' + id.substring(0, id.indexOf('_')) : 'block.locationId=' + id)),
 				success(r) {
 					if (r) {
 						var v = JSON.parse(r);

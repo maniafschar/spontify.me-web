@@ -695,7 +695,6 @@ class pageSettings {
 				if (e)
 					e.outerHTML = '';
 				ui.navigation.hidePopup();
-				ui.q('settings3 #blocked').removeAttribute('h');
 				if (!ui.q('settings3 #blocked row'))
 					ui.css('settings3 #blocked', 'display', 'none');
 			}

@@ -332,7 +332,7 @@
 			"birthdayToday": "has birthday today",
 			"block": "You can block this Sponti. He will no longer see you or any past chat between you. It's like you have unsubscribed. Blocked Spontis can be canceled at any time. Do you want to block this Sponti?",
 			"blockAction": "Block",
-			"blockActionHint": "Please explain why you want to report the Sponti!",
+			"blockActionHint": "Please explain why you want to report this entry!",
 			"blockAndReportAction": "Block and Report",
 			"blockDescHint": "Give your reason for reporting!",
 			"blocked": "Blocked entries",

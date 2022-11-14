@@ -456,8 +456,10 @@ ${v.eventParticipationButtons}
 						v.open = ui.l('locations.closed');
 					v._geolocationDistance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 10 ? 0 : 1).replace('.', ',') : '';
 					v.type = 'Event';
-					v.render = 'pageLocation.detailLocationEvent';
-					v.query = 'location_listEvent&search=' + encodeURIComponent('event.id=' + v.event.id);
+					if (ui.navigation.getActiveID() == 'settings3')
+						v.oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';
+					else
+						v.oc = 'details.open(&quot;' + v.id + '&quot;,&quot;location_listEvent&search=' + encodeURIComponent('event.id=' + v.event.id) + '&quot;,pageLocation.detailLocationEvent)';
 					s += pageLocation.templateList(v);
 				}
 			}
