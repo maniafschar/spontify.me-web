@@ -1125,7 +1125,7 @@ ${v.hint}
 		var e = ui.q(divID);
 		if (!e.getAttribute('blockID')) {
 			communication.ajax({
-				url: global.server + 'db/one?query=misc_block&search=' + encodeURIComponent('block.contactId=' + user.contact.id + ' and ' + (id.indexOf ? 'block.eventId=' + id.substring(0, id.indexOf('_')) : 'block.locationId=' + id)),
+				url: global.server + 'db/one?query=misc_block&search=' + encodeURIComponent('block.contactId=' + user.contact.id + ' and ' + (id.indexOf && id.indexOf('_') > 0 ? 'block.eventId=' + id.substring(0, id.indexOf('_')) : 'block.locationId=' + id)),
 				success(r) {
 					if (r) {
 						var v = JSON.parse(r);

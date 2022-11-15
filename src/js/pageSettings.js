@@ -695,8 +695,10 @@ class pageSettings {
 				if (e)
 					e.outerHTML = '';
 				ui.navigation.hidePopup();
+				e = ui.q('settings3 #blocked');
+				e.removeAttribute('h');
 				if (!ui.q('settings3 #blocked row'))
-					ui.css('settings3 #blocked', 'display', 'none');
+					ui.css(e, 'display', 'none');
 			}
 		});
 	}
