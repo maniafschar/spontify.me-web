@@ -528,7 +528,7 @@ class communication {
 		} else {
 			var s2 = '';
 			if (r.param) {
-				s2 += '\n' + r.param.method + ' ' + r.param.url;
+				s2 += '\n' + (r.param.method ? r.param.method : 'GET') + ' ' + r.param.url;
 				if (r.param.body)
 					s2 += '\nbody: ' + JSON.stringify(r.param.body);
 			}

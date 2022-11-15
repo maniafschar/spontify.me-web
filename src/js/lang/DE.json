@@ -545,6 +545,7 @@
 			"errorParking": "Bitte gib die Parkplatzsituation vor Ort an.",
 			"favoritesButton": "Favoriten",
 			"homeButton": "Locations/Events",
+			"invalidAddress": "Die Adresse konnte nicht gefunden werden.",
 			"keywordsHint": "Name, Beschreibung, Attribute, Telefonnummer und Adresse werden durchsucht. Möchtest Du beispielweise zum Italiener in Schwabing, dann gib <b>schwabing italien</b> ein.",
 			"marketing": "Marketing",
 			"marketing1": "Ist dies Deine Location? Möchtest Du sie bewerben? Vorteile:<br/><marketing><span>Marketing</span><ul><li>Link zur aktuellen Wochenkarte, Sonderangebote, etc.</li><li>Erstellen von offiziellen Events</li><li>Kunden-Sofort-Bonusprogramm</li><li>Regelmäßige, automatische Posts auf der ${appTitle} Facebook Marketing Seite</li><li>Hervorhebung in den ${appTitle} Listen</li></ul><span>Statistik</span><ul><li>Ad hoc Auswertungen über Anzahl der Aufrufe, Feedback, etc.</li></ul><span>Kommunikation</span><ul><li>Direkte Kommunikation mit Kunden</li></ul></marketing>",

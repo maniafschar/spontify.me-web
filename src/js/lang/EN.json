@@ -545,6 +545,7 @@
 			"errorParking": "Please enter the parking situation at the spot.",
 			"favoritesButton": "Favorites",
 			"homeButton": "Locations/Events",
+			"invalidAddress": "Failed to locate the address.",
 			"keywordsHint": "name, description, attributes, phone number and address to be searched. Would you, for example, the Italians in Schwabing, then enter<b>Schwabing Italy</b>.",
 			"marketing": "marketing",
 			"marketing1": "Is this your Location? Do you want to advertise it? Advantages:<br/><marketing><span>Marketing</span><ul><li>Link to current weekly menu, specials, etc</li><li>Creating official events.</li><li>Customer instant bonus program</li><li>Regular, automatic posts on the ${appTitle} Facebook Marketing page</li><li>Highlighting the ${appTitle} lists</li></ul><span>Statistics</span><ul><li>Ad hoc evaluations of number of calls, feedback, etc.</li></ul><span>communication</span><ul><li>Direct communication with customers</li></ul></marketing>",
