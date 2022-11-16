@@ -839,6 +839,7 @@ notificationList {
 	overflow-y: auto;
 	z-index: 5;
 	max-height: 23em;
+	padding-right: 0.5em;
 }
 
 chatList>div,
@@ -885,6 +886,18 @@ notificationList img {
 	height: 100%;
 	box-shadow: 0 0 0.25em rgb(0, 0, 0, 0.3);
 	margin: -0.25em 0 0 -0.25em;
+}
+
+chatList svg {
+	position: absolute;
+	right: 1em;
+	height: 1em;
+	width: 1em;
+	bottom: 0.5em;
+}
+
+chatList>div.unseen svg {
+	opacity: 0.3;
 }
 
 errorHint {
@@ -1274,10 +1287,6 @@ emoji {
 	padding-top: 0.5em;
 	cursor: pointer;
 	position: relative;
-}
-
-chatMessage .unseen {
-	color: rgb(252, 251, 104) !important;
 }
 
 chatMessage {
