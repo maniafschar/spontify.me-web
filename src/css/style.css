@@ -805,11 +805,10 @@ chat {
 
 chat listHeader img {
 	position: absolute;
-	left: 50%;
+	left: 0;
 	width: 3.5em;
-	top: 0;
-	margin: 0.25em 2em 0.25em -1.75em;
-	border-radius: 0.5em;
+	top: 0.25em;
+	border-radius: 0 1.75em 1.75em 0;
 	box-shadow: 0 0 0.5em rgb(0, 0, 0, 0.3);
 }
 
@@ -820,13 +819,13 @@ chat .sendButton {
 
 listHeader chatName {
 	position: absolute;
-	right: 0.75em;
+	left: 4em;
 	line-height: 4;
 }
 
 listHeader chatDate {
 	position: absolute;
-	left: 0.75em;
+	right: 0.5em;
 	line-height: 4;
 }
 
@@ -1319,7 +1318,7 @@ feedbackHint {
 
 chatMessage note {
 	padding: 0.75em 1em;
-	border-radius: 0 0.5em 0.5em 0;
+	border-radius: 0 1.5em 1.5em 0;
 	position: relative;
 	max-width: 90%;
 	float: left;
@@ -1340,7 +1339,7 @@ chatMessage note a {
 chatMessage.me note {
 	background: rgba(255, 255, 255, 0.8);
 	float: right;
-	border-radius: 0.5em 0 0 0.5em;
+	border-radius: 1.5em 0 0 1.5em;
 }
 
 chatMessage note img {

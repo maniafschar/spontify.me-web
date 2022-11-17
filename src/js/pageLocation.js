@@ -871,13 +871,10 @@ ${v.hint}
 					if (r.status == 'OK') {
 						event.target.parentNode.outerHTML = '';
 						r = r.results;
-						var s = '', r2 = [];
+						var s = '';
 						for (var i = 0; i < r.length; i++) {
-							if (r[i].types[0] && r[i].types[0].indexOf('locality') < 0 && r[i].types[0].indexOf('route') < 0 && r[i].name) {
+							if (r[i].types[0] && r[i].types[0].indexOf('locality') < 0 && r[i].types[0].indexOf('route') < 0 && r[i].name && !r[i].permanently_closed)
 								s += '<li onclick="pageLocation.setLocationName(event)" d="' + r[i].types[0] + '" n="' + r[i].name + '" a="' + r[i].vicinity + '">' + r[i].name + '</li>';
-								if (r[i].vicinity && r[i].vicinity.indexOf && r[i].vicinity.indexOf(',') > 0)
-									r2[i] = [r[i].name, r[i].types[0], r[i].vicinity, r[i].geometry.location.lat, r[i].geometry.location.lng];
-							}
 						}
 						if (s) {
 							ui.html('locationNameInputHelper', '<ul>' + s + '</ul><div style="text-align:center;"><buttontext onclick="pageLocation.closeLocationInputHelper()" class="bgColor">' + ui.l('locations.closeInputHelper') + '</buttontext></div>');
