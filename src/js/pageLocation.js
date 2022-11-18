@@ -972,7 +972,7 @@ ${v.hint}
 				method: 'POST',
 				body: v,
 				error(e) {
-					if (e.status == 500 && e.response && e.response.indexOf('exists') > -1)
+					if (e.status == 500 && e.response && (e.response.indexOf('exists') > -1 || e.response.indexOf('ConstraintViolationException') > -1))
 						ui.html('popupHint', ui.l('locations.alreadyExists'));
 					else if (e.status == 500 && e.response && e.response.indexOf('Invalid address') > -1)
 						ui.html('popupHint', ui.l('locations.invalidAddress'));
