@@ -803,6 +803,10 @@ chat {
 	z-index: 3;
 }
 
+chat listHeader {
+	text-align: left;
+}
+
 chat listHeader img {
 	position: relative;
 	width: 3.5em;
@@ -814,6 +818,14 @@ chat listHeader img {
 chat .sendButton {
 	float: right;
 	margin: 0.5em 0;
+}
+
+
+listHeader {
+	position: relative;
+	z-index: 1;
+	height: 3.5em;
+	display: block;
 }
 
 listHeader chatName {
@@ -913,14 +925,6 @@ popup errorHint {
 
 value.checkbox errorHint {
 	margin-top: -0.5em;
-}
-
-listHeader {
-	position: relative;
-	z-index: 1;
-	height: 3.5em;
-	display: block;
-	text-align: left;
 }
 
 listResults {

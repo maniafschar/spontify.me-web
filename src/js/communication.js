@@ -613,7 +613,7 @@ class communication {
 				pageChat.chatsUnseen = Object.keys(r.chatUnseen).length;
 				e = ui.q('badgeChats');
 				if (e) {
-					ui.html(e, pageChat.chatsNew);
+					ui.html(e, pageChat.chatsNew == 0 ? '' : pageChat.chatsNew);
 					if (pageChat.chatsNew)
 						ui.classAdd(e.parentNode, 'pulse highlight');
 					else
