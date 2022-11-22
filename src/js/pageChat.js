@@ -315,25 +315,32 @@ class pageChat {
 			ui.html('popupHint', ui.l('link.sendError').replace('{0}', '<br/><buttontext class="bgColor" style="margin:1em;">' + ui.l('share') + '</buttontext><br/>'));
 	}
 	static listActiveChats(d) {
-		var s = '';
-		for (var i = 1; i < d.length; i++) {
-			var v = model.convert(new Contact(), d, i);
-			if (v.imageList)
-				v.image = global.serverImg + v.imageList;
-			else
-				v.image = 'images/contact.svg';
-			if (v._maxDate.indexOf('.') > 0)
-				v._maxDate = v._maxDate.substring(0, v._maxDate.indexOf('.'));
-			s += '<div onclick="pageChat.open(' + v.id + ')" i="' + v.id + '"' + (v._unseen > 0 ? ' class="highlightBackground"' : v._unseen2 > 0 ? ' class="unseen"' : '') + '><img src="' + v.image + '"' + (v.imageList ? '' : ' class="bgColor" style="padding:0.6em;"') + '/><span>' + v.pseudonym
-				+ '<br/>' + global.date.formatDate(v._maxDate) + '</span><img source="' + (v._contactId ? 'chatIn' : 'chatOut') + '" /></div>';
-		}
-		var e = ui.q('chatList');
-		e.innerHTML = s;
-		if (ui.cssValue(e, 'display') == 'none')
-			e.removeAttribute('h');
-		if (d.length > 1)
-			e.setAttribute('firstChatId', model.convert(new Contact(), d, 1)._chatId);
-		formFunc.image.replaceSVGs();
+		var f = function () {
+			var e = ui.q('chatList');
+			if (e.getAttribute("toggle"))
+				setTimeout(f, 500);
+			else {
+				var s = '';
+				for (var i = 1; i < d.length; i++) {
+					var v = model.convert(new Contact(), d, i);
+					if (v.imageList)
+						v.image = global.serverImg + v.imageList;
+					else
+						v.image = 'images/contact.svg';
+					if (v._maxDate.indexOf('.') > 0)
+						v._maxDate = v._maxDate.substring(0, v._maxDate.indexOf('.'));
+					s += '<div onclick="pageChat.open(' + v.id + ')" i="' + v.id + '"' + (v._unseen > 0 ? ' class="highlightBackground"' : v._unseen2 > 0 ? ' class="unseen"' : '') + '><img src="' + v.image + '"' + (v.imageList ? '' : ' class="bgColor" style="padding:0.6em;"') + '/><span>' + v.pseudonym
+						+ '<br/>' + global.date.formatDate(v._maxDate) + '</span><img source="' + (v._contactId == user.contact.id ? 'chatOut' : 'chatIn') + '" /></div>';
+				}
+				e.innerHTML = s;
+				if (ui.cssValue(e, 'display') == 'none')
+					e.removeAttribute('h');
+				if (d.length > 1)
+					e.setAttribute('firstChatId', model.convert(new Contact(), d, 1)._chatId);
+				formFunc.image.replaceSVGs();
+			}
+		};
+		f.call();
 	}
 	static open(id, location) {
 		if (id.indexOf && id.indexOf('_') > 0)
@@ -494,7 +501,7 @@ class pageChat {
 	static refreshActiveChat(unseen) {
 		var e = ui.q('chat[i]');
 		if (e && !unseen[e.getAttribute('i')])
-			ui.classRemove('chat[i="' + e.getAttribute('i') + '"] .unseen', 'unseen');
+			ui.classRemove('chat[i="' + e.getAttribute('i') + '"] .highlightColor', 'highlightColor');
 	}
 	static renderMsg(v) {
 		var date = global.date.formatDate(v.createdAt);

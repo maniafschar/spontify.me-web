@@ -799,7 +799,6 @@ class ui {
 						exec.call();
 				};
 				ui.on(e, 'transitionend', f, true);
-				ui.on(e, 'transitioncancel', f, true);
 				e.style.height = 0;
 			}, 10);
 		}

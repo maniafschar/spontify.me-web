@@ -89,26 +89,34 @@ class pageHome {
 		ui.buttonIcon('.top.right', user.contact && user.contact.imageList ? user.contact.imageList : 'contact', 'ui.navigation.goTo("settings")');
 	}
 	static initNotification(d) {
-		var s = '';
-		for (var i = 1; i < d.length; i++) {
-			var v = model.convert(new Contact(), d, i);
-			if (i == 1 && ui.q('notificationList div[i="' + v.contactNotification.id + '"]')) {
-				pageHome.badge = 0;
+		var f = function () {
+			var e = ui.q('notificationList');
+			if (e.getAttribute("toggle"))
+				setTimeout(f, 500);
+			else {
+				var s = '';
+				for (var i = 1; i < d.length; i++) {
+					var v = model.convert(new Contact(), d, i);
+					if (i == 1 && ui.q('notificationList div[i="' + v.contactNotification.id + '"]')) {
+						pageHome.badge = 0;
+						pageHome.initNotificationButton();
+						return;
+					}
+					if (v.imageList)
+						v.image = global.serverImg + v.imageList;
+					else
+						v.image = 'images/contact.svg';
+					s += '<div onclick="pageHome.clickNotification(' + v.contactNotification.id + ',&quot;' + v.contactNotification.action + '&quot;)" ' + (v.contactNotification.seen == 0 ? ' class="highlightBackground"' : '') + '><img src="' + v.image + '"' + (v.imageList ? '' : ' class="bgColor" style="padding:0.6em;"') + '/><span>' + global.date.formatDate(v.contactNotification.createdAt) + ': ' + v.contactNotification.text + '</span></div>';
+				}
+
+				e.innerHTML = s;
+				if (ui.cssValue(e, 'display') == 'none')
+					e.removeAttribute('h');
+				pageHome.badge = ui.qa('notificationList .highlightBackground').length;
 				pageHome.initNotificationButton();
-				return;
 			}
-			if (v.imageList)
-				v.image = global.serverImg + v.imageList;
-			else
-				v.image = 'images/contact.svg';
-			s += '<div onclick="pageHome.clickNotification(' + v.contactNotification.id + ',&quot;' + v.contactNotification.action + '&quot;)" ' + (v.contactNotification.seen == 0 ? ' class="highlightBackground"' : '') + '><img src="' + v.image + '"' + (v.imageList ? '' : ' class="bgColor" style="padding:0.6em;"') + '/><span>' + global.date.formatDate(v.contactNotification.createdAt) + ': ' + v.contactNotification.text + '</span></div>';
-		}
-		var e = ui.q('notificationList');
-		e.innerHTML = s;
-		if (ui.cssValue(e, 'display') == 'none')
-			e.removeAttribute('h');
-		pageHome.badge = ui.qa('notificationList .highlightBackground').length;
-		pageHome.initNotificationButton();
+		};
+		f.call();
 	}
 	static initNotificationButton(force) {
 		if (force || ui.navigation.getActiveID() == 'home') {
