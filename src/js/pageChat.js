@@ -365,13 +365,13 @@ class pageChat {
 				var f = function () {
 					var e = ui.q('chat');
 					ui.attr(e, 'type', location ? 'location' : 'contact');
-					ui.html(e, '<listHeader><img /><chatName></chatName><chatDate></chatDate></listHeader><div></div>');
+					ui.html(e, '<listHeader><chatName><img/><span></span></chatName><chatDate></chatDate></listHeader><div></div>');
 					if (location) {
 						ui.classAdd(e, 'location');
 						var path = 'popup detail';
 						if (!ui.q(path))
 							path = 'detail';
-						ui.html('chat listHeader chatName', ui.q(path + ' title').innerText);
+						ui.html('chat listHeader chatName span', ui.q(path + ' title').innerText);
 						e = ui.q('chat listHeader img');
 						ui.attr(e, 'src', ui.q(path + ' detailImg img').getAttribute('src'));
 						if (e.getAttribute('src').indexOf('.svg') > 0) {
@@ -384,8 +384,8 @@ class pageChat {
 							url: global.server + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + id),
 							responseType: 'json',
 							success(r2) {
-								ui.attr('chat[i="' + id + '"] listHeader img', 'onclick', 'ui.navigation.autoOpen("' + global.encParam('p=' + id) + '",event)');
-								ui.html('chat[i="' + id + '"] listHeader chatName', r2['contact.pseudonym']);
+								ui.attr('chat[i="' + id + '"] listHeader chatName', 'onclick', 'ui.navigation.autoOpen("' + global.encParam('p=' + id) + '",event)');
+								ui.html('chat[i="' + id + '"] listHeader chatName span', r2['contact.pseudonym']);
 								if (r2['contact.imageList'])
 									ui.attr('chat[i="' + id + '"] listHeader img', 'src', global.serverImg + r2['contact.imageList']);
 								else {

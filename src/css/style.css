@@ -804,12 +804,11 @@ chat {
 }
 
 chat listHeader img {
-	position: absolute;
-	left: 0;
+	position: relative;
 	width: 3.5em;
-	top: 0.25em;
 	border-radius: 0 1.75em 1.75em 0;
 	box-shadow: 0 0 0.5em rgb(0, 0, 0, 0.3);
+	margin-right: 0.4em;
 }
 
 chat .sendButton {
@@ -818,8 +817,8 @@ chat .sendButton {
 }
 
 listHeader chatName {
-	position: absolute;
-	left: 4em;
+	position: relative;
+	cursor: pointer;
 	line-height: 4;
 }
 
@@ -917,11 +916,11 @@ value.checkbox errorHint {
 }
 
 listHeader {
-	text-align: center;
 	position: relative;
 	z-index: 1;
 	height: 3.5em;
 	display: block;
+	text-align: left;
 }
 
 listResults {
