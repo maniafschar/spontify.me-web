@@ -590,12 +590,14 @@ class communication {
 							ui.classAdd('chatList [i="' + i + '"]', 'highlightBackground');
 					}
 				}
-				if (r.firstChatId != ui.q('chatList').getAttribute('firstChatId') || chat != (pageChat.newChats ? parseInt(pageChat.newChats) : 0)) {
+				if (r.firstChatId != ui.q('chatList').getAttribute('firstChatId') ||
+					chat != pageChat.chatsNew ||
+					Object.keys(r.chatUnseen).length != pageChat.chatsUnseen) {
 					pageChat.initActiveChats();
 					var x = ui.q('chatList>div');
 					if (x)
 						x = x.getAttribute('i');
-					if (formFunc.getDraft('alert_chat') != x && ui.q('chatList>div[i="' + x + '"].highlightBackground') && ui.navigation.getActiveID() == 'home' && chat > (pageChat.newChats ? parseInt(pageChat.newChats) : 0) && ui.cssValue('alert', 'display') == 'none') {
+					if (formFunc.getDraft('alert_chat') != x && ui.q('chatList>div[i="' + x + '"].highlightBackground') && ui.navigation.getActiveID() == 'home' && chat > (pageChat.chatsNew ? parseInt(pageChat.chatsNew) : 0) && ui.cssValue('alert', 'display') == 'none') {
 						var d = ui.q('alert>div'), i = Object.keys(r.chatNew)[0];
 						d.setAttribute('onclick', 'pageChat.open(' + i + ')');
 						d.innerHTML = ui.l('notification.newChatAlert').replace('{0}', r.chatNew[i]);
@@ -607,11 +609,12 @@ class communication {
 						formFunc.saveDraft('alert_chat', x);
 				}
 				total += chat;
-				pageChat.newChats = chat == 0 ? '' : '' + chat;
+				pageChat.chatsNew = chat;
+				pageChat.chatsUnseen = Object.keys(r.chatUnseen).length;
 				e = ui.q('badgeChats');
 				if (e) {
-					ui.html(e, pageChat.newChats);
-					if (pageChat.newChats)
+					ui.html(e, pageChat.chatsNew);
+					if (pageChat.chatsNew)
 						ui.classAdd(e.parentNode, 'pulse highlight');
 					else
 						ui.classRemove(e.parentNode, 'pulse highlight');
@@ -641,8 +644,7 @@ class communication {
 				if (total > 0)
 					ui.q('head title').innerHTML = total + global.separator + global.appTitle;
 				communication.setApplicationIconBadgeNumber(total);
-				if (communication.pingExec != null)
-					clearTimeout(communication.pingExec);
+				clearTimeout(communication.pingExec);
 				communication.pingExec = setTimeout(communication.ping, ui.q('chat chatConversation') ? 3000 : 15000);
 			}
 		});

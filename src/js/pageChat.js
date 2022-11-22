@@ -19,7 +19,8 @@ export { pageChat };
 
 class pageChat {
 	static copyLink = '';
-	static newChats = '';
+	static chatsNew = 0;
+	static chatsUnseen = 0;
 	static lastScroll = 0;
 	static oldCleverTip = '';
 	static admin = { id: 3, image: '' };
@@ -95,8 +96,8 @@ class pageChat {
 	}
 	static buttonChat() {
 		var e = ui.q('buttonIcon.bottom.left');
-		ui.buttonIcon(e, '<badgeChats>' + pageChat.newChats + '</badgeChats><img source="chat" />', 'pageChat.toggleUserList()');
-		if (pageChat.newChats)
+		ui.buttonIcon(e, '<badgeChats>' + (pageChat.chatsNew == 0 ? '' : pageChat.chatsNew) + '</badgeChats><img source="chat" />', 'pageChat.toggleUserList()');
+		if (pageChat.chatsNew)
 			ui.classAdd(e, 'pulse highlight');
 	}
 	static chatAdjustScrollTop(i) {
