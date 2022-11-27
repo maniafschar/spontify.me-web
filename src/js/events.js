@@ -454,7 +454,7 @@ ${v.eventParticipationButtons}
 						v.open = ui.l('locations.open');
 					else if (v._openTimesEntries > 0)
 						v.open = ui.l('locations.closed');
-					v._geolocationDistance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 10 ? 0 : 1).replace('.', ',') : '';
+					v._geolocationDistance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 ? 0 : 1).replace('.', ',') : '';
 					v.type = 'Event';
 					if (ui.navigation.getActiveID() == 'settings3')
 						v.oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';

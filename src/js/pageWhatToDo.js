@@ -4,7 +4,6 @@ import { lists } from './lists';
 import { ContactWhatToDo, model } from './model';
 import { pageLocation } from './pageLocation';
 import { pageContact } from './pageContact';
-import { pageSearch } from './pageSearch';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 import { geoData } from './geoData';
@@ -225,13 +224,13 @@ class pageWhatToDo {
 			communication.loadList('query=' + query + '&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=' + pageWhatToDo.maxRadius + '&search=' + encodeURIComponent(search), exec);
 	}
 	static loadListEvents() {
-		return pageWhatToDo.load('Events', 'location_listEventCurrent', pageSearch.getSearchMatchesLocation(pageWhatToDo.getCurrentMessage().keywords), pageWhatToDo.listEvents);
+		return pageWhatToDo.load('Events', 'location_listEventCurrent', pageLocation.getSearchMatches(pageWhatToDo.getCurrentMessage().keywords), pageWhatToDo.listEvents);
 	}
 	static loadListLocations() {
-		return pageWhatToDo.load('Locations', 'location_list', pageSearch.getSearchMatchesLocation(pageWhatToDo.getCurrentMessage().keywords), pageWhatToDo.listLocation);
+		return pageWhatToDo.load('Locations', 'location_list', pageLocation.getSearchMatches(pageWhatToDo.getCurrentMessage().keywords), pageWhatToDo.listLocation);
 	}
 	static loadListContacts() {
-		return pageWhatToDo.load('Contacts', 'contact_list', pageSearch.getSearchMatchesContact() + pageWhatToDo.getSearchContact(), pageWhatToDo.listContact);
+		return pageWhatToDo.load('Contacts', 'contact_list', pageContact.getSearchMatches() + pageWhatToDo.getSearchContact(), pageWhatToDo.listContact);
 	}
 	static onClickTab(event, id) {
 		ui.navigation.selectTab(event);

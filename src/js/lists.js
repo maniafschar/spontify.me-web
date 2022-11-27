@@ -1,6 +1,8 @@
 import { global } from './global';
 import { DragObject } from './initialisation';
 import { Contact, Location, model } from './model';
+import { pageChat } from './pageChat';
+import { pageContact } from './pageContact';
 import { pageLocation } from './pageLocation';
 import { ui, formFunc } from './ui';
 
@@ -54,13 +56,10 @@ class lists {
 		else if (errorID == 'eventsMy')
 			s = s.replace('{1}', '<br/><br/><buttontext class="bgColor">' + ui.l('events.participante') + '</buttontext><br/><br/>');
 		else if (errorID == 'search' && ui.val('[name="searchKeywords"]'))
-			s += '<br/><br/>' + ui.l('noResults.searchWithoutKeywords') + '<br/><br/><buttontext onclick="pageSearch.repeatSearch()" class="bgColor">' + ui.l('noResults.repeat') + '</buttontext>';
+			s += '<br/><br/>' + ui.l('noResults.searchWithoutKeywords') + '<br/><br/><buttontext onclick="lists.repeatSearch()" class="bgColor">' + ui.l('noResults.repeat') + '</buttontext>';
 		return '<noResult>' + s.replace(/\{0\}/g, ui.l(activeID + '.title')).replace('{1}', '') + '</noResult>';
 	}
-	static removeListEntry(id) {
-		var activeID = ui.q('detail').getAttribute('from');
-		if (!activeID)
-			activeID = ui.navigation.getActiveID();
+	static removeListEntry(id, activeID) {
 		ui.attr(activeID + ' [i="' + id + '"]', 'remove', '1');
 		if (ui.q('detail card:last-child [i="' + id + '"]'))
 			ui.q('detail card:last-child [i="' + id + '"]').outerHTML = '';
@@ -90,14 +89,12 @@ class lists {
 			});
 		}
 	}
-	static removeListEntryUI(event) {
-		var e = ui.parents(event.target, 'row');
-		if (e) {
-			event.stopPropagation();
-			lists.removeListEntry(e.getAttribute('i'));
-			if (ui.navigation.getActiveID() == 'locations')
-				pageLocation.scrollMap();
-		}
+	static repeatSearch() {
+		ui.q('[name="searchKeywords"]').value = '';
+		if (ui.navigation.getActiveID() == 'locations')
+			pageLocation.search();
+		else
+			pageContact.search();
 	}
 	static repositionThumb(activeID) {
 		if (typeof (activeID) != 'string')
@@ -204,13 +201,16 @@ class lists {
 		ui.css(id + ' listScroll', 'display', '');
 		lists.repositionThumb(id);
 	}
+	static hideFilter() {
+		var activeID = ui.navigation.getActiveID();
+		var e = ui.q(activeID + ' filters');
+		if (ui.cssValue(e, 'transform').indexOf('1') > 0)
+			ui.css(e, 'transform', 'scale(0)');
+	}
 	static toggleFilter(event, html) {
 		setTimeout(function () {
 			var activeID = ui.navigation.getActiveID();
-			var e = event ? event.target.nodeName : null;
-			if (!lists.data[activeID] || e == 'LABEL' || e == 'BUTTONTEXT' || event && ui.parents(event.target, 'map'))
-				return;
-			e = ui.q(activeID + ' filters>div');
+			var e = ui.q(activeID + ' filters>div');
 			if (!e.innerHTML && html) {
 				e.innerHTML = html.call();
 				formFunc.initFields(activeID + ' filters');

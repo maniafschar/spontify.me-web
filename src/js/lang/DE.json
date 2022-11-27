@@ -682,7 +682,7 @@
 			"title": "Anmeldung"
 		},
 		"search": {
-			"action": "Suchen",
+			"action": "Liste neu laden",
 			"age": "Alter",
 			"ageWithoutBDay": "Nach Alter kannst Du erst suchen, wenn Du auch Dein Geburtstag eingegeben hast. Möchtest Du ihn jetzt eingeben?",
 			"hintContact": "Name, aktueller Status, Selbstbeschreibung und Attribute werden durchsucht.",

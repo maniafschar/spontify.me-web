@@ -13,6 +13,7 @@ import { user } from './user';
 export { pageLocation };
 
 class pageLocation {
+	static filter = {};
 	static locationsAdded = null;
 	static map = {
 		canvas: null,
@@ -313,6 +314,26 @@ ${v.hint}
 <input type="time" placeholder="HH:MM" value="${v.closeAt}"
 	name="openTimes.closeAt${v.i}" onblur="pageLocation.prefillOpenTimesFields(event,&quot;close&quot;);" />
 <input type="hidden" value="${v.id}" name="openTimes.id${v.i}" />`;
+	static templateSearch = v =>
+		global.template`<form name="filterLocations">
+<input type="checkbox" name="filterCategories" value="0" label="${ui.categories[0].label}" onclick="pageLocation.filterList()" ${v.valueCat0}/>
+<input type="checkbox" name="filterCategories" value="1" label="${ui.categories[1].label}" onclick="pageLocation.filterList()" ${v.valueCat1}/>
+<input type="checkbox" name="filterCategories" value="2" label="${ui.categories[2].label}" onclick="pageLocation.filterList()" ${v.valueCat2}/>
+<input type="checkbox" name="filterCategories" value="3" label="${ui.categories[3].label}" onclick="pageLocation.filterList()" ${v.valueCat3}/>
+<input type="checkbox" name="filterCategories" value="4" label="${ui.categories[4].label}" onclick="pageLocation.filterList()" ${v.valueCat4}/>
+<input type="checkbox" name="filterCategories" value="5" label="${ui.categories[5].label}" onclick="pageLocation.filterList()" ${v.valueCat5}/>
+<filterSeparator></filterSeparator>
+<input type="radio" name="filterCompass" value="N" label="${ui.l('locations.compassN')}" onclick="pageLocation.filterList()" deselect="true" ${v.valueCompassN}/>
+<input type="radio" name="filterCompass" value="E" label="${ui.l('locations.compassE')}" onclick="pageLocation.filterList()" deselect="true" ${v.valueCompassE}/>
+<input type="radio" name="filterCompass" value="S" label="${ui.l('locations.compassS')}" onclick="pageLocation.filterList()" deselect="true" ${v.valueCompassS}/>
+<input type="radio" name="filterCompass" value="W" label="${ui.l('locations.compassW')}" onclick="pageLocation.filterList()" deselect="true" ${v.valueCompassW}/>
+<filterSeparator></filterSeparator>
+<input type="checkbox" label="${ui.l('search.matches')}" name="filterMatchesOnly" ${v.valueMatchesOnly}/>
+<filterSeparator></filterSeparator>
+<input type="text" name="filterKeywords" maxlength="100" placeholder="${ui.l('keywords')}" ${v.valueKeywords}/>
+<explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
+<errorHint></errorHint>
+<buttontext class="bgColor" onclick="pageLocation.search()" id="defaultButton">${ui.l('search.action')}</buttontext><buttontext onclick="pageLocation.toggleMap()" class="bgColor">${ui.l('filterLocMapButton')}</buttontext></form>`;
 	static addOpenTimeRow() {
 		var v = {};
 		v.i = ui.qa('openTimesEdit select').length;
@@ -388,9 +409,9 @@ ${v.hint}
 				success(r) {
 					ui.navigation.hidePopup();
 					if (classname == 'Location') {
-						ui.navigation.goTo('locations');
+						ui.navigation.goTo(ui.q('detail').getAttribute('from'));
 						setTimeout(function () {
-							lists.removeListEntry(id);
+							lists.removeListEntry(id, 'locations');
 						}, 700);
 					} else
 						events.refreshToggle();
@@ -435,7 +456,7 @@ ${v.hint}
 		if (v.parking)
 			v.parking = '<div>' + v.parking.substring(global.separator.length) + '</div>';
 		v.id = id;
-		v.distance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 10 ? 0 : 1).replace('.', ',') : '';
+		v.distance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 ? 0 : 1).replace('.', ',') : '';
 		v.classBGImg = '';
 		if (v.classBGImg.length < 8)
 			v.classBGImg = 'class="mainBG"';
@@ -469,12 +490,6 @@ ${v.hint}
 			v.description = (v.description ? v.description + ' ' : '') + ui.l('locations.clickForMoreDetails');
 		if (v.description)
 			v.description = '<text class="description">' + v.description.replace(/\n/g, '<br/>') + '</text>';
-		if (ui.q('locations').innerHTML) {
-			if (!details.getNextNavElement(true, id))
-				v.hideNext = 'display:none;';
-			if (!details.getNextNavElement(false, id))
-				v.hidePrevious = 'display:none;';
-		}
 		if (v.bonus)
 			v.bonus = '<text style="margin:1em 0;" class="highlightBackground">' + ui.l('locations.bonus') + v.bonus + '<br/>' + ui.l('locations.bonusHint') + '</text>';
 		if (v.event.id) {
@@ -609,25 +624,19 @@ ${v.hint}
 			setTimeout(pageLocation.setEditAttributes, 1000);
 	}
 	static filterList() {
-		var activeID = ui.navigation.getActiveID();
-		var d = lists.data[activeID];
+		var d = lists.data['locations'];
 		if (!d)
 			return;
-		var v = ui.qa(activeID + ' filters input[name="filterLocationTown"]:checked');
-		var v2 = ui.qa(activeID + ' filters input[name="filterLocationCategories"]:checked');
-		var v3 = ui.qa(activeID + ' filters input[name="filterCompass"]:checked');
-		var towns = [], cats = [], comp = [];
-		for (var i = 0; i < v.length; i++)
-			towns[v[i].getAttribute('label')] = 1;
-		for (var i = 0; i < v2.length; i++)
-			cats[v2[i].value] = 1;
-		for (var i = 0; i < v3.length; i++)
-			comp[v3[i].value] = 1;
+		var cats = ui.qa('locations filters input[name="filterCategories"]:checked');
+		var compass = ui.q('locations filters input[name="filterCompass"]:checked');
+		var categories = [], comp = [];
+		for (var i = 0; i < cats.length; i++)
+			categories[cats[i].value] = 1;
 		for (var i = 1; i < d.length; i++) {
 			if (d[i] != 'outdated') {
 				var e = model.convert(new Location(), d, i);
-				var match = (v.length == 0 || towns[e.town]) && (v2.length == 0 || pageLocation.hasCategory(cats, e.category)) && (v3.length == 0 || pageLocation.isInPosition(comp, e._angle));
-				e = ui.q(activeID + ' [i="' + e.id + '"]');
+				var match = (cats.length == 0 || pageLocation.hasCategory(categories, e.category)) && (!compass || pageLocation.isInPosition(compass.value, e._angle));
+				e = ui.q('locations [i="' + e.id + '"]');
 				ui.attr(e, 'filtered', !match);
 			}
 		}
@@ -635,71 +644,48 @@ ${v.hint}
 		pageLocation.scrollMap();
 	}
 	static getFilterFields() {
+		var v = {};
 		var l = lists.data[ui.navigation.getActiveID()];
-		var r = [], r2 = [], r3 = [], r4 = [], E = [], N = [], W = [], S = [], own = 0;
-		N['N'] = 1;
-		S['S'] = 1;
-		W['W'] = 1;
-		E['E'] = 1;
-		var isEvent = l[0].toString().indexOf('event.id') > 0, hasAngel;
-		for (var i = 1; i < l[0].length; i++) {
-			if (l[0][i] == '_angle') {
-				hasAngel = true;
-				break;
+		var r2 = [], r4 = [], hasAngel;
+		if (l) {
+			for (var i = 1; i < l[0].length; i++) {
+				if (l[0][i] == '_angle') {
+					hasAngel = true;
+					break;
+				}
+			}
+			if (!hasAngel)
+				l[0].push('_angle');
+			for (var i = 1; i < l.length; i++) {
+				var o = model.convert(new Location(), l, i);
+				if (!hasAngel) {
+					o._angle = geoData.getAngel(geoData.latlon, { lat: o.latitude, lon: o.longitude });
+					l[i].push(o._angle);
+				}
+				var s = '' + o.category;
+				for (var i2 = 0; i2 < s.length; i2++)
+					r2[s.substring(i2, i2 + 1)] = 1;
+				if (!r4['E'] && pageLocation.isInPosition('E', o._angle))
+					r4['E'] = 1;
+				if (!r4['N'] && pageLocation.isInPosition('N', o._angle))
+					r4['N'] = 1;
+				if (!r4['W'] && pageLocation.isInPosition('W', o._angle))
+					r4['W'] = 1;
+				if (!r4['S'] && pageLocation.isInPosition('S', o._angle))
+					r4['S'] = 1;
 			}
 		}
-		if (!hasAngel)
-			l[0].push('_angle');
-		for (var i = 1; i < l.length; i++) {
-			var v = model.convert(new Location(), l, i);
-			if (!hasAngel) {
-				v._angle = geoData.getAngel(geoData.latlon, { lat: v.latitude, lon: v.longitude });
-				l[i].push(v._angle);
-			}
-			if (v.town && !r3[v.town]) {
-				r.push(v.town);
-				r3[v.town] = 1;
-			}
-			if (user.contact && (isEvent && v.event.contactId == user.contact.id || !isEvent && v.ownerId == user.contact.id))
-				own++;
-			var s = '' + v.category;
-			for (var i2 = 0; i2 < s.length; i2++)
-				r2[s.substring(i2, i2 + 1)] = 1;
-			if (!r4['E'] && pageLocation.isInPosition(E, v._angle))
-				r4['E'] = 1;
-			if (!r4['N'] && pageLocation.isInPosition(N, v._angle))
-				r4['N'] = 1;
-			if (!r4['W'] && pageLocation.isInPosition(W, v._angle))
-				r4['W'] = 1;
-			if (!r4['S'] && pageLocation.isInPosition(S, v._angle))
-				r4['S'] = 1;
+		if (pageLocation.filter.filterCategories) {
+			var c = pageLocation.filter.filterCategories.split('\u0015');
+			for (var i = 0; i < c.length; i++)
+				v['valueCat' + c[i]] = ' checked="true"';
 		}
-		var s = '', i2 = 0, m = ' onclick="pageLocation.filterList()" deselect="true"/>', sep = '<filterSeparator></filterSeparator>';
-		for (var e in r2)
-			i2++;
-		if (i2 > 1) {
-			for (var i = 0; i < ui.categories.length; i++) {
-				if (r2[i])
-					s += '<input type="radio" name="filterLocationCategories" value="' + i + '" label="' + ui.categories[i].label + '"' + m;
-			}
-			s += sep;
-		}
-		i2 = 0;
-		for (var e in r4)
-			i2++;
-		if (i2 > 1) {
-			for (var e in r4)
-				s += '<input type="radio" name="filterCompass" value="' + e + '" label="' + ui.l('locations.compass' + e) + '"' + m;
-			s += sep;
-		}
-		var map = '';
-		if (ui.navigation.getActiveID() == 'locations')
-			map = '<br/><buttontext onclick="pageLocation.toggleMap()" style="margin:1em 0.25em;" class="bgColor">' + ui.l('filterLocMapButton') + '</buttontext>';
-		if (s)
-			s = s.substring(0, s.lastIndexOf(sep));
-		else
-			s = map ? ui.l('filterNoDifferentValues') : '<div style="padding-bottom:0.5em;">' + ui.l('filterNoDifferentValues') + '</div>';
-		return s + map;
+		v['valueCompass' + pageLocation.filter.filterCompass] = ' checked="true"';
+		if (pageLocation.filter.filterKeywords)
+			v.valueKeywords = ' value="' + pageLocation.filter.filterKeywords + '"';
+		if (pageLocation.filter.filterMatchesOnly == 'on')
+			v.valueMatchesOnly = ' checked="true"';
+		return pageLocation.templateSearch(v);
 	}
 	static getOpenTimes(r) {
 		var s = '';
@@ -726,6 +712,82 @@ ${v.hint}
 		}
 		return s;
 	}
+	static getSearch() {
+		var s = '';
+		if (ui.q('locations filters [name="filterMatchesOnly"]:checked'))
+			s = pageLocation.getSearchMatches();
+		var c = '', d = '';
+		var cats = [];
+		var e = ui.qa('locations filters [name="filterCategories"]:checked');
+		if (e) {
+			for (var i = 0; i < e.length; i++) {
+				cats.push(e[i].value);
+				c += 'category like \'%' + e[i].value + '%\' or ';
+			}
+		}
+		if (c)
+			s += (s ? ' and ' : '') + '(' + c.substring(0, c.length - 4) + ')';
+		else {
+			for (var i = 0; i < ui.categories.length; i++)
+				cats.push(i);
+		}
+		c = ui.q('locations filters [name="filterCompass"]:checked');
+		if (c) {
+			if (c.value == 'N')
+				s += (s ? ' and ' : '') + 'location.latitude>' + geoData.latlon.lat;
+			else if (c.value == 'E')
+				s += (s ? ' and ' : '') + 'location.longitude>' + geoData.latlon.lon;
+			else if (c.value == 'S')
+				s += (s ? ' and ' : '') + 'location.latitude<' + geoData.latlon.lat;
+			else if (c.value == 'W')
+				s += (s ? ' and ' : '') + 'location.longitude<' + geoData.latlon.lon;
+		}
+		var v = ui.val('locations filters [name="filterKeywords"]').trim();
+		if (v) {
+			v = v.split(' ');
+			for (var i = 0; i < v.length; i++) {
+				if (v[i].trim()) {
+					v[i] = v[i].trim().toLowerCase();
+					var att = '', l = ') like \'%' + v[i].trim().toLowerCase() + '%\' or LOWER(';
+					for (var i2 = 0; i2 < cats.length; i2++) {
+						for (var i3 = 0; i3 < ui.categories[cats[i2]].subCategories.length; i3++) {
+							if (ui.categories[cats[i2]].subCategories[i3].toLowerCase().indexOf(v[i]) > -1)
+								att += '(location.category like \'%' + cats[i2] + '%\' and location.attr' + cats[i2] + ' like \'%' + (i3 < 10 ? '00' : i3 < 100 ? '0' : '') + i3 + '%\') or ';
+						}
+					}
+					d += '(LOWER(location.name' + l + 'location.description' + l + 'location.address' + l + 'location.address2' + l + 'location.telephone' + l;
+					d = d.substring(0, d.lastIndexOf('LOWER'));
+					if (att)
+						d += att;
+					d = d.substring(0, d.length - 4) + ') and ';
+				}
+			}
+			if (d)
+				d = '(' + d.substring(0, d.length - 5) + ')';
+		}
+		if (d)
+			s += (s ? ' and ' : '') + d;
+		return s;
+	}
+	static getSearchMatches(categories) {
+		var s = '';
+		if (user.contact.budget)
+			s += '(location.budget is null or location.budget=\'\' or REGEXP_LIKE(location.budget,\'' + user.contact.budget.replace(/\u0015/g, '|') + '\')=1) and (';
+		else
+			s += '(';
+		for (var i = 0; i < ui.categories.length; i++) {
+			if ((user.contact['attr' + i] || user.contact['attr' + i + 'Ex']) && (!categories || categories.indexOf(i) > -1))
+				s += '(location.category like \'%' + i + '%\' and (' + global.getRegEx('location.attr' + i, user.contact['attr' + i]) + ' or ' +
+					global.getRegEx('location.attr' + i + 'Ex', user.contact['attr' + i + 'Ex']) + ')) or ';
+			else if (categories && categories.indexOf(i) > -1)
+				s += '(location.category like \'%' + i + '%\') or ';
+		}
+		if (s.length < 2)
+			return '';
+		if (s.lastIndexOf(' or ') == s.length - 4)
+			return s.substring(0, s.length - 4) + ')'
+		return s.substring(0, s.length - 6);
+	}
 	static hasCategory(cats, catString) {
 		catString = '' + catString;
 		for (var i = 0; i < catString.length; i++) {
@@ -737,7 +799,7 @@ ${v.hint}
 		ui.css('main>buttonIcon', 'display', 'none');
 		ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
 		ui.buttonIcon('.top.right', 'menu', 'ui.navigation.toggleMenu()');
-		ui.buttonIcon('.top.left', 'filter', 'lists.toggleFilter(event, pageLocation.getFilterFields)');
+		ui.buttonIcon('.top.left', 'search', 'lists.toggleFilter(event, pageLocation.getFilterFields)');
 		pageChat.buttonChat();
 		if (!ui.q('locations').innerHTML)
 			lists.setListDivs('locations');
@@ -775,21 +837,19 @@ ${v.hint}
 				}
 			});
 	}
-	static isInPosition(position, angle) {
-		for (var e in position) {
-			if (e == 'E' && angle > 45 && angle <= 135)
-				return 'E';
-			if (e == 'S' && angle > 135 && angle <= 225)
-				return 'S';
-			if (e == 'W' && angle > 225 && angle <= 315)
-				return 'W';
-			if (e == 'N' && (angle > 315 || angle <= 45))
-				return 'N';
-		}
+	static isInPosition(compass, angle) {
+		if (compass == 'E' && angle > 45 && angle <= 135)
+			return 'E';
+		if (compass == 'S' && angle > 135 && angle <= 225)
+			return 'S';
+		if (compass == 'W' && angle > 225 && angle <= 315)
+			return 'W';
+		if (compass == 'N' && (angle > 315 || angle <= 45))
+			return 'N';
 	}
 	static listInfos(v) {
 		v.attr = ui.getAttributes(v, 'list');
-		v.extra = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance < 10 ? 1 : 0).replace('.', ',') + 'km<br/>' : '';
+		v.extra = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 ? 0 : 1).replace('.', ',') + 'km<br/>' : '';
 		if (v.attr.total && v.attr.totalMatch / v.attr.total > 0)
 			v.extra += parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5) + '%<br/>';
 		if (v._geolocationDistance)
@@ -1066,9 +1126,10 @@ ${v.hint}
 				position: new google.maps.LatLng(d.latitude, d.longitude)
 			});
 	}
-	static selectFriend(c) {
-		ui.classRemove('.locationToFriend.selected', 'selected');
-		ui.classAdd(c, 'selected');
+	static search() {
+		ui.attr('locations', 'menuIndex', 0);
+		pageLocation.filter = formFunc.getForm('filterLocations').values;
+		communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent(pageLocation.getSearch()), pageLocation.listLocation, 'locations', 'search');
 	}
 	static setEditAttributes() {
 		if (ui.q('#loc_attrib')) {
@@ -1170,7 +1231,6 @@ ${v.hint}
 	}
 	static toggleMap() {
 		if (ui.q('map').getAttribute('created')) {
-			ui.classRemove('locations listResults row div.highlightBackground', 'highlightBackground');
 			if (ui.cssValue('map', 'display') == 'none') {
 				ui.css('locations listBody', 'margin-top', '20em');
 				ui.css('locations listBody', 'padding-top', '0.5em');
@@ -1179,29 +1239,29 @@ ${v.hint}
 				ui.css('locations listBody', 'padding-top', '');
 			}
 			ui.toggleHeight('map', pageLocation.scrollMap);
-			lists.toggleFilter();
+			lists.hideFilter();
 			pageLocation.map.scrollTop = -1;
 			pageLocation.map.id = -1;
 			ui.classRemove('locations listResults row div.highlightMap', 'highlightMap');
-			return;
+		} else {
+			ui.attr('map', 'created', new Date().getTime());
+			communication.ajax({
+				url: global.server + 'action/google?param=js',
+				responseType: 'text',
+				success(r) {
+					var script = document.createElement('script');
+					script.onload = function () {
+						new google.maps.Geocoder();
+						pageLocation.scrollMap();
+						pageLocation.toggleMap();
+						ui.on('locations listBody', 'scroll', pageLocation.scrollMap);
+						lists.toggleFilter();
+					};
+					script.src = r;
+					document.head.appendChild(script);
+				}
+			});
 		}
-		ui.attr('map', 'created', new Date().getTime());
-		communication.ajax({
-			url: global.server + 'action/google?param=js',
-			responseType: 'text',
-			success(r) {
-				var script = document.createElement('script');
-				script.onload = function () {
-					new google.maps.Geocoder();
-					pageLocation.scrollMap();
-					pageLocation.toggleMap();
-					ui.on('locations listBody', 'scroll', pageLocation.scrollMap);
-					lists.toggleFilter();
-				};
-				script.src = r;
-				document.head.appendChild(script);
-			}
-		});
 	}
 	static toggleMatchIndicatorHint(id, event) {
 		var e = ui.q('detail card:last-child [name="matchIndicatorHint"]');

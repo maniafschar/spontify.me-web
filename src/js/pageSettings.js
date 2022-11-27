@@ -22,7 +22,7 @@ class pageSettings {
 	static templateSettings1 = v =>
 		global.template`<form name="myProfile">
 	<field>
-		<label>${ui.l('pseudonym')}</label>
+		<label style="padding-top:1em;">${ui.l('pseudonym')}</label>
 		<value>
 			<input name="pseudonym" value="${v['contact.pseudonym']}" />
 		</value>
@@ -582,6 +582,8 @@ class pageSettings {
 		ui.navigation.hidePopup();
 	}
 	static save(goToID, saveNewEmail) {
+		if (!ui.q('settings').innerHTML)
+			return true;
 		pageSettings.resetError();
 		if (!user.contact || pageSettings.currentSettings == pageSettings.getCurrentSettingsString())
 			return true;

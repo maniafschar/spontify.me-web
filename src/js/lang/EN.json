@@ -682,7 +682,7 @@
 			"title": "Registration"
 		},
 		"search": {
-			"action": "Search",
+			"action": "Load list again",
 			"age": "Age",
 			"ageWithoutBDay": "As soon as you entered your birthday, you may also filter the search by age. Do you want to enter your birthday now?",
 			"hintContact": "Name, current status, self-description, and attributes will be searched.",

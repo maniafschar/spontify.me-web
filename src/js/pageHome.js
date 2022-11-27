@@ -11,6 +11,7 @@ export { pageHome };
 
 class pageHome {
 	static badge = -1;
+	static marketing = null;
 	static template = v =>
 		global.template`<homeHeader>	
 	<homeTitle onclick="ui.navigation.goTo(&quot;settings&quot;)">
@@ -67,10 +68,8 @@ class pageHome {
 				responseType: 'json',
 				success(r) {
 					if (r && r.label) {
-						ui.q('buttonIcon.marketing>span').innerHTML = r.label;
-						var e = ui.q('buttonIcon.marketing');
-						e.setAttribute('onclick', 'ui.navigation.openHTML("' + r.url + '","sm_marketing");ui.q("buttonIcon.marketing").outerHTML=""');
-						e.style.display = 'flex';
+						pageHome.marketing = r;
+						pageHome.initMarketing();
 					}
 				}
 			});
@@ -82,11 +81,14 @@ class pageHome {
 		ui.buttonIcon('.bottom.right', 'bluetooth', 'bluetooth.toggle()');
 		if (bluetooth.state != 'on' || !user.contact || !user.contact.findMe)
 			ui.classAdd('buttonIcon.bottom.right', 'bluetoothInactive');
-		if (user.contact)
-			ui.buttonIcon('.top.left', 'search', 'ui.navigation.goTo("search")');
-		else
+		if (!user.contact)
 			ui.buttonIcon('.top.left', '<span class="lang">' + global.language + '</span>', 'pageHome.openLanguage()');
 		ui.buttonIcon('.top.right', user.contact && user.contact.imageList ? user.contact.imageList : 'contact', 'ui.navigation.goTo("settings")');
+		pageHome.initMarketing();
+	}
+	static initMarketing() {
+		if (pageHome.marketing)
+			ui.buttonIcon('.top.left', '<span>' + pageHome.marketing.label + '</span>', 'ui.navigation.openHTML("' + pageHome.marketing.url + '","sm_marketing")');
 	}
 	static initNotification(d) {
 		var f = function () {

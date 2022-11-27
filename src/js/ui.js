@@ -10,7 +10,6 @@ import { pageLocation } from './pageLocation';
 import { pageLogin } from './pageLogin';
 import { pageContact } from './pageContact';
 import { pageWhatToDo } from './pageWhatToDo';
-import { pageSearch } from './pageSearch';
 import { pageSettings } from './pageSettings';
 import { user } from './user';
 import { pageHome } from './pageHome';
@@ -26,8 +25,8 @@ class ui {
 		global.template`<title onclick="communication.loadList(ui.query.locationAll(),pageLocation.listLocation,&quot;locations&quot;,&quot;list&quot;)">
 		${ui.l('locations.title')}
 </title><container>
-	<a onclick="communication.loadList(ui.query.locationAll(),pageLocation.listLocation,&quot;locations&quot;,&quot;list&quot;)">
-		${ui.l('all')}
+	<a style="display:none;">
+		${ui.l('search.title')}
 	</a><a onclick="communication.loadList(ui.query.locationFavorites(),pageLocation.listLocation,&quot;locations&quot;,&quot;favorites&quot;)">
 		${ui.l('locations.favoritesButton')}
 	</a><a onclick="communication.loadList(ui.query.locationVisits(),pageLocation.listLocation,&quot;locations&quot;,&quot;visits&quot;)">
@@ -47,8 +46,8 @@ class ui {
 </container>`;
 	static templateMenuContacts = () =>
 		global.template`<container>
-    <a onclick="communication.loadList(ui.query.contactAll(),pageContact.listContacts,&quot;contacts&quot;,&quot;list&quot;)">
-			${ui.l('all')}
+    <a style="display:none;">
+			${ui.l('search.title')}
     </a><a onclick="communication.loadList(ui.query.contactFriends(),pageContact.listContacts,&quot;contacts&quot;,&quot;friends&quot;)">
 		${ui.l('contacts.friendshipTitle')}
     </a><a onclick="communication.loadList(ui.query.contactVisitees(),pageContact.listContacts,&quot;contacts&quot;,&quot;visits&quot;)">
@@ -356,8 +355,6 @@ class ui {
 				pageLocation.init();
 			else if (id == 'settings2')
 				pageSettings.init2();
-			else if (id == 'search')
-				pageSearch.init();
 			else if (id == 'chat')
 				pageChat.init();
 			pageChat.closeList();
@@ -550,7 +547,7 @@ class ui {
 			return 'query=contact_list&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contact.id<>' + user.contact.id);
 		},
 		contactMatches() {
-			return 'query=contact_list&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent(pageSearch.getSearchMatchesContact());
+			return 'query=contact_list&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent(pageContact.getSearchMatches());
 		},
 		contactFriends() {
 			return 'query=contact_list&distance=100000&limit=0&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactLink.status=\'Friends\'');
@@ -570,7 +567,7 @@ class ui {
 			return 'query=location_listEventCurrent&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon;
 		},
 		eventMatches() {
-			return 'query=location_listEventCurrent&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent(pageSearch.getSearchMatchesLocation());
+			return 'query=location_listEventCurrent&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent(pageLocation.getSearchMatches());
 		},
 		eventMy() {
 			return 'query=location_listEvent&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('event.contactId=' + user.contact.id);
@@ -582,7 +579,7 @@ class ui {
 			return 'query=location_list&distance=100000&limit=0&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('locationFavorite.favorite=true');
 		},
 		locationMatches() {
-			return 'query=location_list&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent(pageSearch.getSearchMatchesLocation());
+			return 'query=location_list&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent(pageLocation.getSearchMatches());
 		},
 		locationVisits() {
 			return 'query=location_listVisit&distance=100000&sort=false&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon;
@@ -1198,7 +1195,7 @@ class formFunc {
 	}
 	static initFields(id) {
 		var f = function () { document.body.scrollTop = 0; };
-		var e = ui.qa(id + ' textarea');
+		var e = ui.qa(id + ' textarea'), e2;
 		for (var i = 0; i < e.length; i++)
 			e[i].onfocus = f;
 		e = ui.qa(id + ' input');
@@ -1213,7 +1210,7 @@ class formFunc {
 				var s = '';
 				for (var i2 = 0; i2 < a.length; i2++)
 					s += '<input type="radio"' + (e[i].attributes['class'] ? ' class="' + e[i].attributes['class'].value + '"' : '') + ' label="' + a[i2] + '" name="' + id2 + '" transient="true" style="background:none;" onclick="pageSettings.setChoicesSelection(&quot;' + e[i].id + '&quot;,&quot;' + a[i2] + '&quot;)"/>';
-				var e2 = document.createElement('div');
+				e2 = document.createElement('div');
 				e2.style = (e[i].style.display === 'none' ? 'display:none;' : '') + 'margin-top:0.5em;';
 				e2.id = id2;
 				e2.innerHTML = s;
@@ -1245,7 +1242,7 @@ class formFunc {
 							p = a2[i2].lastIndexOf(',');
 							s += '<input type="' + at + '" value="' + a2[i2].substring(p + 1) + '" label="' + a2[i2].substring(0, p) + '" name="' + id2 + '" transient="true"' + (v2.indexOf(a2[i2].substring(p) + ',') > -1 ? ' checked' : '') + (e[i].getAttribute('class') ? ' class="' + e[i].getAttribute('class') + '"' : '') + '/>';
 						}
-						var e2 = document.createElement('div');
+						e2 = document.createElement('div');
 						e2.setAttribute('class', 'multiple');
 						e2.id = id2;
 						e2.innerHTML = s;
@@ -1284,7 +1281,7 @@ class formFunc {
 							s += '<label class="multipleLabel">' + a2[i2].trim() + '</label>';
 					}
 				}
-				var e2 = document.createElement('div');
+				e2 = document.createElement('div');
 				e2.setAttribute('onclick', 'formFunc.openChoices("' + e[i].id + '"' + (e[i].getAttribute('saveAction') ? ',"' + e[i].getAttribute('saveAction') + '"' : '') + ')');
 				e2.innerHTML = s;
 				e[i].parentNode.insertBefore(e2, e[i].nextSibling);
@@ -1310,10 +1307,10 @@ class formFunc {
 				} else
 					v1 = 0;
 				if (e[i].getAttribute('slider') == 'range')
-					s += '<thumb style="left:' + v1 + '%;" id="' + idSlider + '_left"><span style="right:0;"><val></val>' + ui.l('slider.from') + '</span></thumb><thumb style="left:' + v2 + '%;margin-left:-1.35em;" id="' + idSlider + '_right"><span><val></val>' + ui.l('slider.until') + '</span></thumb>';
+					s += '<thumb style="left:' + v1 + '%;" id="' + idSlider + '_left"><span style="right:0;"><val></val>' + ui.l('slider.from') + '</span></thumb><thumb style="left:' + v2 + '%;margin-left:-1.35em;" id="' + idSlider + '_right"><span style="left:0;"><val></val>' + ui.l('slider.until') + '</span></thumb>';
 				else
 					s += '<thumb style="left:' + v1 + '%;" id="' + idSlider + '_left"><span style="right:0;"><val></val>' + (ui.l(e[i].getAttribute('label')) ? ui.l(e[i].getAttribute('label')) : e[i].getAttribute('label')) + '</span></thumb>';
-				var e2 = document.createElement('slider');
+				e2 = document.createElement('slider');
 				e2.innerHTML = s;
 				e[i].parentNode.insertBefore(e2, e[i].nextSibling);
 				e[i].style.display = 'none';

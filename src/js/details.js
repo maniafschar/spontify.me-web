@@ -53,7 +53,7 @@ class details {
 				ui.navigation.hideMenu();
 				if (!r || Object.keys(r).length < 1) {
 					ui.navigation.openPopup(ui.l('attention'), ui.l('error.detailNotFound'));
-					lists.removeListEntry(id);
+					lists.removeListEntry(id, action.indexOf('location_') > -1 ? 'locations' : 'contacts');
 					return;
 				}
 				var activeID = ui.navigation.getActiveID();

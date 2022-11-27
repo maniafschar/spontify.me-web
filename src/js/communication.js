@@ -121,6 +121,7 @@ class communication {
 					lists.data[divID] = r;
 					if (!s)
 						s = lists.getListNoResults(divID, errorID)
+					lists.hideFilter();
 					lists.setListDivs(divID);
 					ui.navigation.hideMenu();
 					ui.navigation.hidePopup();
@@ -413,6 +414,9 @@ class communication {
 			initialisation.recoverInvoked = false;
 			pageLocation.locationsAdded = null;
 			lists.data = [];
+			pageHome.badge = 0;
+			pageChat.chatsNew = 0;
+			pageChat.chatsUnseen = 0;
 			pageChat.copyLink = '';
 			pageWhatToDo.list = null;
 			pageSettings.currentSettings = null;
