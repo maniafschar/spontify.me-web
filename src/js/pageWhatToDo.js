@@ -215,7 +215,7 @@ class pageWhatToDo {
 	}
 	static listLocation(r) {
 		pageWhatToDo.lastUpdate.locations = new Date().getTime();
-		var s = pageLocation.listLocationInternal(r);
+		var s = pageLocation.listLocation(r);
 		ui.html('#wtdListLocations', s ? s : lists.getListNoResults('locations', 'whatToDo'));
 	}
 	static load(type, query, search, exec) {

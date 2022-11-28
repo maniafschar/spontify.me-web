@@ -136,7 +136,7 @@ class lists {
 			if (id == 'contacts')
 				v.groups = '<groups style="display:none;"></groups>';
 			else if (id == 'locations')
-				v.map = '<map style="display:none;"></map>';
+				v.map = '<map style="display:none;"></map><buttontext class="bgColor map" onclick="pageLocation.searchFromMap()">' + ui.l('search.map') + '</buttontext>';
 			e.innerHTML = lists.templateList(v);
 			if (id == 'contacts')
 				ui.swipe('contacts>listBody', function (dir) {

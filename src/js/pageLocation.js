@@ -18,6 +18,7 @@ class pageLocation {
 	static map = {
 		canvas: null,
 		id: null,
+		loadActive: false,
 		markerLocation: null,
 		markerMe: null,
 		scrollTop: -1,
@@ -712,7 +713,7 @@ ${v.hint}
 		}
 		return s;
 	}
-	static getSearch() {
+	static getSearch(bounds) {
 		var s = '';
 		if (ui.q('locations filters [name="filterMatchesOnly"]:checked'))
 			s = pageLocation.getSearchMatches();
@@ -731,16 +732,23 @@ ${v.hint}
 			for (var i = 0; i < ui.categories.length; i++)
 				cats.push(i);
 		}
-		c = ui.q('locations filters [name="filterCompass"]:checked');
-		if (c) {
-			if (c.value == 'N')
-				s += (s ? ' and ' : '') + 'location.latitude>' + geoData.latlon.lat;
-			else if (c.value == 'E')
-				s += (s ? ' and ' : '') + 'location.longitude>' + geoData.latlon.lon;
-			else if (c.value == 'S')
-				s += (s ? ' and ' : '') + 'location.latitude<' + geoData.latlon.lat;
-			else if (c.value == 'W')
-				s += (s ? ' and ' : '') + 'location.longitude<' + geoData.latlon.lon;
+		if (bounds) {
+			s += (s ? ' and ' : '') + 'location.latitude>' + bounds.Za.lo;
+			s += ' and location.latitude<' + bounds.Za.hi;
+			s += ' and location.longitude>' + bounds.Ia.lo;
+			s += ' and location.longitude<' + bounds.Ia.hi;
+		} else {
+			c = ui.q('locations filters [name="filterCompass"]:checked');
+			if (c) {
+				if (c.value == 'N')
+					s += (s ? ' and ' : '') + 'location.latitude>' + geoData.latlon.lat;
+				else if (c.value == 'E')
+					s += (s ? ' and ' : '') + 'location.longitude>' + geoData.latlon.lon;
+				else if (c.value == 'S')
+					s += (s ? ' and ' : '') + 'location.latitude<' + geoData.latlon.lat;
+				else if (c.value == 'W')
+					s += (s ? ' and ' : '') + 'location.longitude<' + geoData.latlon.lon;
+			}
 		}
 		var v = ui.val('locations filters [name="filterKeywords"]').trim();
 		if (v) {
@@ -878,13 +886,10 @@ ${v.hint}
 		}
 	}
 	static listLocation(l) {
-		if (ui.navigation.getActiveID() == 'search')
-			ui.attr('search', 'type', 'locations');
-		return pageLocation.listLocationInternal(l);
-	}
-	static listLocationInternal(l) {
-		if (ui.navigation.getActiveID() == 'locations' && ui.q('map') && ui.cssValue('map', 'display') != 'none')
+		ui.q('locations buttontext.map').style.display = null;
+		if (ui.navigation.getActiveID() == 'locations' && ui.q('map') && ui.cssValue('map', 'display') != 'none' && !pageLocation.map.loadActive)
 			pageLocation.toggleMap();
+		pageLocation.map.loadActive = false;
 		var s = '', v;
 		for (var i = 1; i < l.length; i++) {
 			v = model.convert(new Location(), l, i);
@@ -1097,9 +1102,16 @@ ${v.hint}
 			pageLocation.map.markerLocation.setMap(null);
 			pageLocation.map.canvas.setCenter(new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon));
 			pageLocation.map.canvas.setZoom(zoom);
-		} else
+			ui.q('map').setAttribute('created', new Date().getTime());
+			ui.q('locations buttontext.map').style.display = null;
+		} else {
 			pageLocation.map.canvas = new google.maps.Map(document.getElementsByTagName("map")[0],
 				{ zoom: zoom, center: new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon), mapTypeId: google.maps.MapTypeId.ROADMAP });
+			pageLocation.map.canvas.addListener('bounds_changed', function () {
+				if (new Date().getTime() - ui.q('map').getAttribute('created') > 2000)
+					ui.q('locations buttontext.map').style.display = 'inline-block';
+			});
+		}
 		pageLocation.map.markerMe = new google.maps.Marker(
 			{
 				map: pageLocation.map.canvas,
@@ -1127,9 +1139,14 @@ ${v.hint}
 			});
 	}
 	static search() {
+		pageLocation.map.loadActive = false;
 		ui.attr('locations', 'menuIndex', 0);
 		pageLocation.filter = formFunc.getForm('filterLocations').values;
 		communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent(pageLocation.getSearch()), pageLocation.listLocation, 'locations', 'search');
+	}
+	static searchFromMap() {
+		pageLocation.map.loadActive = true;
+		communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent(pageLocation.getSearch(pageLocation.map.canvas.getBounds())), pageLocation.listLocation, 'locations', 'search');
 	}
 	static setEditAttributes() {
 		if (ui.q('#loc_attrib')) {
@@ -1237,6 +1254,7 @@ ${v.hint}
 			} else {
 				ui.css('locations listBody', 'margin-top', '');
 				ui.css('locations listBody', 'padding-top', '');
+				ui.q('locations buttontext.map').style.display = null;
 			}
 			ui.toggleHeight('map', pageLocation.scrollMap);
 			lists.hideFilter();

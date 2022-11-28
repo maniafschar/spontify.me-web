@@ -1582,6 +1582,17 @@ buttontext {
 	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.2);
 }
 
+buttontext.map {
+	position: absolute;
+	width: 18em;
+	left: 50%;
+	margin-left: -9em;
+	top: 4.25em;
+	opacity: 0.8;
+	font-size: 0.7em;
+	display: none;
+}
+
 buttonIcon {
 	position: absolute;
 	cursor: pointer;
@@ -1909,7 +1920,7 @@ map {
 	box-shadow: 0 0 1em rgb(0, 0, 0, 0.3);
 }
 
-.map {
+img.map {
 	width: 100%;
 	position: relative;
 	cursor: pointer;

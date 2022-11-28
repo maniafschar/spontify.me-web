@@ -516,7 +516,7 @@ class pageSettings {
 			l[i].push(v.block.reason ? ui.l('locations.blockReason' + v.block.reason) : '&nbsp;');
 			l[i].push(v.block.note ? v.block.note : '&nbsp;');
 		}
-		pageSettings.listBlocked(l[0].includes('event.id') ? 'event' : 'location', pageLocation.listLocationInternal(l));
+		pageSettings.listBlocked(l[0].includes('event.id') ? 'event' : 'location', pageLocation.listLocation(l));
 	}
 	static preview() {
 		if (pageSettings.currentSettings == pageSettings.getCurrentSettingsString())

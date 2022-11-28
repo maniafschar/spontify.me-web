@@ -159,7 +159,6 @@ ${v.budget}
 <filterSeparator></filterSeparator>
 <input type="checkbox" label="${ui.l('search.matches')}" name="filterMatchesOnly" ${v.valueMatchesOnly}/>
 <input type="checkbox" label="${ui.l('settings.guide')}" name="filterGuide" onclick="pageContact.filterList()" ${v.valueGuide}/>
-<input type="checkbox" label="${ui.l('events.visibility1')}" name="filterFriends" onclick="pageContact.filterList()" ${v.valueFriends}/>
 <filterSeparator></filterSeparator>
 <input type="text" name="filterAge" slider="range" min="18" max="99" id="filterAge" ${v.valueAge}/>
 <filterSeparator></filterSeparator>
@@ -433,8 +432,6 @@ ${v.budget}
 			v.valueKeywords = ' value="' + pageContact.filter.filterKeywords + '"';
 		if (pageContact.filter.filterMatchesOnly == 'on')
 			v.valueMatchesOnly = ' checked="true"';
-		if (pageContact.filter.filterFriends == 'on')
-			v.valueFriends = ' checked="true"';
 		if (pageContact.filter.filterGuide == 'on')
 			v.valueGuide = ' checked="true"';
 		v['valueGender' + pageContact.filter.filterGender] = ' checked="true"';
