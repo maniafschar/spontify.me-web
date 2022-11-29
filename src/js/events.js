@@ -15,7 +15,7 @@ class events {
 	static nearByExec = null;
 	static participations = null;
 	static templateEdit = v =>
-		global.template`<form name="editElement">
+		global.template`<form name="editElement" onsubmit="return false">
 <input type="hidden" name="id" value="${v.id}"/>
 <input type="hidden" name="locationId" value="${v.locationID}"/>
 <input type="hidden" name="confirm" />

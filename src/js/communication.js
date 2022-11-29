@@ -24,14 +24,14 @@ class communication {
 	static sentErrors = [];
 
 	static ajax(param) {
-		var last = Object.values(communication.currentCalls)[0];
-		if (last &&
-			last.url == param.url &&
-			last.method == param.method &&
-			last.progressBar == param.progressBar &&
-			last.responseType == param.responseType &&
-			JSON.stringify(last.body) == JSON.stringify(param.body))
-			return;
+		for (var i = 0; i < communication.currentCalls.length; i++) {
+			if (communication.currentCalls[i].url == param.url &&
+				communication.currentCalls[i].method == param.method &&
+				communication.currentCalls[i].progressBar == param.progressBar &&
+				communication.currentCalls[i].responseType == param.responseType &&
+				JSON.stringify(communication.currentCalls[i].body) == JSON.stringify(param.body))
+				return;
+		}
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function () {
 			if (xmlhttp.readyState == 4) {
@@ -537,7 +537,7 @@ class communication {
 					s2 += '\nbody: ' + JSON.stringify(r.param.body);
 			}
 			s2 += '\npage: ' + ui.navigation.getActiveID();
-			var last = Object.values(communication.currentCalls)[0];
+			var last = communication.currentCalls[0];
 			if (last)
 				s2 += '\ncall: ' + JSON.stringify(last);
 			s2 += '\nstatus: ' + r.status;

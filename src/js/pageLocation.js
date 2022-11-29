@@ -149,7 +149,7 @@ ${v.parking}
 	<detailTogglePanel></detailTogglePanel>
 </text>`;
 	static templateEdit = v =>
-		global.template`<form name="editElement">
+		global.template`<form name="editElement" onsubmit="return false">
 <input type="hidden" name="id" transient="true" value="${v.id}" />
 <input type="hidden" name="latitude" value="${v.latitude}" />
 <input type="hidden" name="longitude" value="${v.longitude}" />
@@ -316,7 +316,7 @@ ${v.hint}
 	name="openTimes.closeAt${v.i}" onblur="pageLocation.prefillOpenTimesFields(event,&quot;close&quot;);" />
 <input type="hidden" value="${v.id}" name="openTimes.id${v.i}" />`;
 	static templateSearch = v =>
-		global.template`<form name="filterLocations">
+		global.template`<form name="filterLocations" onsubmit="return false">
 <input type="checkbox" name="filterCategories" value="0" label="${ui.categories[0].label}" onclick="pageLocation.filterList()" ${v.valueCat0}/>
 <input type="checkbox" name="filterCategories" value="1" label="${ui.categories[1].label}" onclick="pageLocation.filterList()" ${v.valueCat1}/>
 <input type="checkbox" name="filterCategories" value="2" label="${ui.categories[2].label}" onclick="pageLocation.filterList()" ${v.valueCat2}/>
@@ -331,10 +331,10 @@ ${v.hint}
 <filterSeparator></filterSeparator>
 <input type="checkbox" label="${ui.l('search.matches')}" name="filterMatchesOnly" ${v.valueMatchesOnly}/>
 <filterSeparator></filterSeparator>
-<input type="text" name="filterKeywords" maxlength="100" placeholder="${ui.l('keywords')}" ${v.valueKeywords}/>
+<input type="text" name="filterKeywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.valueKeywords}/>
 <explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
 <errorHint></errorHint>
-<buttontext class="bgColor" onclick="pageLocation.search()" id="defaultButton">${ui.l('search.action')}</buttontext><buttontext onclick="pageLocation.toggleMap()" class="bgColor">${ui.l('filterLocMapButton')}</buttontext></form>`;
+<buttontext class="bgColor defaultButton" onclick="pageLocation.search()">${ui.l('search.action')}</buttontext><buttontext onclick="pageLocation.toggleMap()" class="bgColor">${ui.l('filterLocMapButton')}</buttontext></form>`;
 	static addOpenTimeRow() {
 		var v = {};
 		v.i = ui.qa('openTimesEdit select').length;
@@ -733,10 +733,12 @@ ${v.hint}
 				cats.push(i);
 		}
 		if (bounds) {
-			s += (s ? ' and ' : '') + 'location.latitude>' + bounds.Za.lo;
-			s += ' and location.latitude<' + bounds.Za.hi;
-			s += ' and location.longitude>' + bounds.Ia.lo;
-			s += ' and location.longitude<' + bounds.Ia.hi;
+			var border = 0.1 * Math.abs(bounds.Za.hi - bounds.Za.lo);
+			s += (s ? ' and ' : '') + 'location.latitude>' + (bounds.Za.lo + border);
+			s += ' and location.latitude<' + (bounds.Za.hi - border);
+			border = 0.1 * Math.abs(bounds.Ia.hi - bounds.Ia.lo);
+			s += ' and location.longitude>' + (bounds.Ia.lo + border);
+			s += ' and location.longitude<' + (bounds.Ia.hi - border);
 		} else {
 			c = ui.q('locations filters [name="filterCompass"]:checked');
 			if (c) {
@@ -811,7 +813,7 @@ ${v.hint}
 		pageChat.buttonChat();
 		if (!ui.q('locations').innerHTML)
 			lists.setListDivs('locations');
-		if (!ui.q('locations listResults row')) {
+		if (!ui.q('locations listResults row') && (!ui.q('locations filters') || !ui.q('locations filters').style.transform || ui.q('locations filters').style.transform.indexOf('1') < 0)) {
 			var e = ui.q('menu');
 			if (ui.cssValue(e, 'transform').indexOf('1') > 0) {
 				if (e.getAttribute('type') != 'locations') {
@@ -887,9 +889,8 @@ ${v.hint}
 	}
 	static listLocation(l) {
 		ui.q('locations buttontext.map').style.display = null;
-		if (ui.navigation.getActiveID() == 'locations' && ui.q('map') && ui.cssValue('map', 'display') != 'none' && !pageLocation.map.loadActive)
+		if (ui.navigation.getActiveID() == 'locations' && ui.q('map') && ui.cssValue('map', 'display') != 'none' && ui.q('locations').getAttribute('menuIndex') != 0)
 			pageLocation.toggleMap();
-		pageLocation.map.loadActive = false;
 		var s = '', v;
 		for (var i = 1; i < l.length; i++) {
 			v = model.convert(new Location(), l, i);
@@ -1100,8 +1101,10 @@ ${v.hint}
 		if (pageLocation.map.canvas) {
 			pageLocation.map.markerMe.setMap(null);
 			pageLocation.map.markerLocation.setMap(null);
-			pageLocation.map.canvas.setCenter(new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon));
-			pageLocation.map.canvas.setZoom(zoom);
+			if (!pageLocation.map.loadActive) {
+				pageLocation.map.canvas.setCenter(new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon));
+				pageLocation.map.canvas.setZoom(zoom);
+			}
 			ui.q('map').setAttribute('created', new Date().getTime());
 			ui.q('locations buttontext.map').style.display = null;
 		} else {
@@ -1112,19 +1115,20 @@ ${v.hint}
 					ui.q('locations buttontext.map').style.display = 'inline-block';
 			});
 		}
-		pageLocation.map.markerMe = new google.maps.Marker(
-			{
-				map: pageLocation.map.canvas,
-				title: d.name,
-				contentString: '',
-				icon: {
-					url: pageLocation.map.svgMe,
-					scaledSize: new google.maps.Size(26, 26),
-					origin: new google.maps.Point(0, 0),
-					anchor: new google.maps.Point(13, 26)
-				},
-				position: new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon)
-			});
+		if (!pageLocation.map.loadActive)
+			pageLocation.map.markerMe = new google.maps.Marker(
+				{
+					map: pageLocation.map.canvas,
+					title: d.name,
+					contentString: '',
+					icon: {
+						url: pageLocation.map.svgMe,
+						scaledSize: new google.maps.Size(26, 26),
+						origin: new google.maps.Point(0, 0),
+						anchor: new google.maps.Point(13, 26)
+					},
+					position: new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon)
+				});
 		pageLocation.map.markerLocation = new google.maps.Marker(
 			{
 				map: pageLocation.map.canvas,
@@ -1248,6 +1252,7 @@ ${v.hint}
 	}
 	static toggleMap() {
 		if (ui.q('map').getAttribute('created')) {
+			ui.q('map').setAttribute('created', new Date().getTime());
 			if (ui.cssValue('map', 'display') == 'none') {
 				ui.css('locations listBody', 'margin-top', '20em');
 				ui.css('locations listBody', 'padding-top', '0.5em');

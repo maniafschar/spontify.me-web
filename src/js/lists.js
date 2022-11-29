@@ -1,7 +1,6 @@
 import { global } from './global';
 import { DragObject } from './initialisation';
 import { Contact, Location, model } from './model';
-import { pageChat } from './pageChat';
 import { pageContact } from './pageContact';
 import { pageLocation } from './pageLocation';
 import { ui, formFunc } from './ui';

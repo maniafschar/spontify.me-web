@@ -20,7 +20,7 @@ class pageSettings {
 	static hintSettings1 = false;
 	static hintSettings2 = false;
 	static templateSettings1 = v =>
-		global.template`<form name="myProfile">
+		global.template`<form name="myProfile" onsubmit="return false">
 	<field>
 		<label style="padding-top:1em;">${ui.l('pseudonym')}</label>
 		<value>
@@ -194,7 +194,7 @@ class pageSettings {
 		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#settings3Notifications&quot;)">${ui.l('wtd.myNotifications')}</buttontext><br/>
 <div class="notification" id="settings3Notifications" style="display:none;padding-top:0.25em;">
 	<div style="margin:0.25em 0.5em 1em 0.5em;">
-		<form name="myProfile3">
+		<form name="myProfile3" onsubmit="return false">
 			<input type="checkbox" value="true" name="notificationChat" label="${ui.l('notification.chat')}" ${v['contact.notificationChat']} />
 			<br />
 			<input type="checkbox" value="true" name="notificationFriendRequest" label="${ui.l('notification.friendRequest')}" ${v['contact.notificationFriendRequest']} />

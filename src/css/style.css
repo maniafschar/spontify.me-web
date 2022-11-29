@@ -1885,8 +1885,8 @@ eventOutdated {
 
 filterSeparator {
 	margin: 0 2em 0.5em 2em;
-	border-top: solid 1px rgb(240, 240, 240);
 	display: block;
+	border: solid 1px transparent
 }
 
 settingsNav {

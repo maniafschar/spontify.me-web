@@ -152,7 +152,7 @@ ${v.budget}
     ${ui.l('confirmDelete')}
 </buttontext>`;
 	static templateSearch = v =>
-		global.template`<form name="filterContacts">
+		global.template`<form name="filterContacts" onsubmit="return false">
 <input type="radio" name="filterGender" value="1" label="${ui.l('male')}" deselect="true" onclick="pageContact.filterList()" ${v.valueGender1}/>
 <input type="radio" name="filterGender" value="2" label="${ui.l('female')}" deselect="true" onclick="pageContact.filterList()" ${v.valueGender2}/>
 <input type="radio" name="filterGender" value="3" label="${ui.l('divers')}" deselect="true" onclick="pageContact.filterList()" ${v.valueGender3}/>
@@ -162,10 +162,10 @@ ${v.budget}
 <filterSeparator></filterSeparator>
 <input type="text" name="filterAge" slider="range" min="18" max="99" id="filterAge" ${v.valueAge}/>
 <filterSeparator></filterSeparator>
-<input type="text" name="filterKeywords" maxlength="100" placeholder="${ui.l('keywords')}" ${v.valueKeywords}/>
+<input type="text" name="filterKeywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.valueKeywords}/>
 <explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
 <errorHint></errorHint>
-<buttontext class="bgColor" onclick="pageContact.search()" id="defaultButton">${ui.l('search.action')}</buttontext></form>`;
+<buttontext class="bgColor defaultButton" onclick="pageContact.search()">${ui.l('search.action')}</buttontext></form>`;
 	static addWTDMessage(v) {
 		if (v.message_keywords) {
 			var msg = 'wtd:' + v.message_keywords + '|';
@@ -738,7 +738,7 @@ ${v.budget}
 		pageChat.buttonChat();
 		if (!ui.q('contacts').innerHTML)
 			lists.setListDivs('contacts');
-		if (!ui.q('contacts listResults row')) {
+		if (!ui.q('contacts listResults row') && (!ui.q('contacts filters') || !ui.q('contacts filters').style.transform || ui.q('contacts filters').style.transform.indexOf('1') < 0)) {
 			var e = ui.q('menu');
 			if (ui.cssValue(e, 'transform').indexOf('1') > 0) {
 				if (e.getAttribute('type') != 'contacts') {

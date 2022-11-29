@@ -38,7 +38,7 @@ class ratings {
             onclick="ratings.click(5)" style="display:none;">★</span></full>
 </ratingSelection>
 <div style="clear:both;text-align:center;padding:0.5em 1em 0 1em;margin-bottom:0.5em;">
-    <form name="ratingForm">
+    <form name="ratingForm" onsubmit="return false">
         <input type="hidden" id="owner" value="${v.owner}" />
         <input type="hidden" id="cid" value="${v.id}" />
         <input type="hidden" name="locationId" value="${v.id}" />

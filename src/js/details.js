@@ -46,6 +46,8 @@ class details {
 			pageChat.close();
 			return;
 		}
+		if (ui.classContains('detail', 'detailSlideIn'))
+			return;
 		communication.ajax({
 			url: global.server + 'action/one?query=' + action + '&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon,
 			responseType: 'json',

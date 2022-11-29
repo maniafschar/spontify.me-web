@@ -296,7 +296,8 @@ class ui {
 				if (x < 0) {
 					ui.on(e, 'transitionend', function () {
 						ui.css(e, 'transition', 'none');
-						e.lastChild.outerHTML = '';
+						if (e.lastChild)
+							e.lastChild.outerHTML = '';
 						var x = e.clientWidth / ui.q('content').clientWidth;
 						ui.css(e, 'width', x == 2 ? '' : ((x - 1) * 100) + '%');
 						setTimeout(function () {
@@ -1412,10 +1413,17 @@ class formFunc {
 		formFunc.initFields('popup');
 	}
 	static pressDefaultButton(event) {
-		if (event.keyCode === 13) {
-			var e = ui.q('#defaultButton');
-			if (e)
-				e.click();
+		if (event.keyCode == 13) {
+			var e = ui.qa('.defaultButton');
+			for (var i = 0; i < e.length; i++) {
+				var p = e[i];
+				while (p && ui.cssValue(p, 'display') != 'none')
+					p = p.parentElement;
+				if (!p) {
+					e[i].click();
+					break;
+				}
+			}
 		}
 	}
 	static removeDraft(key) {

@@ -27,7 +27,7 @@ class pageLogin {
 		</value>
 	</field>
 	<dialogButtons>
-		<buttontext onclick="pageLogin.fromForm()" class="bgColor" id="defaultButton">
+		<buttontext onclick="pageLogin.fromForm()" class="bgColor defaultButton">
 			${ui.l('login.action')}
 		</buttontext>
 		<div style="padding:2em 0 1em 0;">${ui.l('login.alternative')}</div>
@@ -47,7 +47,7 @@ class pageLogin {
 		</buttontext>
 	</dialogButtons>`;
 	static templateRecover = v =>
-		global.template`<form name="loginRecover">
+		global.template`<form name="loginRecover" onsubmit="return false">
 		<field>
 			<label id="loginDialog">${ui.l('email')}</label>
 			<value>
@@ -56,13 +56,13 @@ class pageLogin {
 		</field>
 		<dialogButtons>
 			<br/>
-			<buttontext onclick="pageLogin.recoverPasswordSendEmail()" class="bgColor" id="defaultButton">
+			<buttontext onclick="pageLogin.recoverPasswordSendEmail()" class="bgColor defaultButton">
 			${ui.l('login.recoverPassword')}
 			</buttontext>
 		</dialogButtons>
 	</form>`;
 	static templateRegister = v =>
-		global.template`<form name="loginRegister" style="width:100%;">
+		global.template`<form name="loginRegister" style="width:100%;" onsubmit="return false">
     <field>
         <label>${ui.l('email')}</label>
         <value>
@@ -105,7 +105,7 @@ class pageLogin {
     </field>
     <dialogButtons>
 		<br/>
-		<buttontext onclick="pageLogin.register()" class="bgColor" id="defaultButton">
+		<buttontext onclick="pageLogin.register()" class="bgColor defaultButton">
 			${ui.l('login.register')}
         </buttontext>
         <br /><br />
@@ -159,9 +159,13 @@ class pageLogin {
 	}
 	static goToLogin() {
 		if (ui.navigation.getActiveID() == 'login') {
-			var e = ui.q('#defaultButton');
-			if (e)
-				e.click();
+			var e = ui.qa('.defaultButton');
+			for (var i = 0; i < e.length; i++) {
+				if (ui.cssValue(e[i], 'display') != 'none') {
+					e[i].click();
+					break;
+				}
+			}
 		} else
 			ui.navigation.goTo('login');
 	}
