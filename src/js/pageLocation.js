@@ -888,7 +888,8 @@ ${v.hint}
 		}
 	}
 	static listLocation(l) {
-		ui.q('locations buttontext.map').style.display = null;
+		if (ui.q('locations buttontext.map'))
+			ui.q('locations buttontext.map').style.display = null;
 		if (ui.navigation.getActiveID() == 'locations' && ui.q('map') && ui.cssValue('map', 'display') != 'none' && ui.q('locations').getAttribute('menuIndex') != 0)
 			pageLocation.toggleMap();
 		var s = '', v;
