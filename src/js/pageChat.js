@@ -264,8 +264,10 @@ class pageChat {
 		});
 	}
 	static insertQuote(event) {
-		event.preventDefault();
-		event.stopPropagation();
+		try {
+			event.stopPropagation();
+			event.preventDefault();
+		} catch (e) { }
 		communication.ajax({
 			url: global.server + 'action/quotation',
 			success(r) {
@@ -564,7 +566,9 @@ class pageChat {
 	}
 	static sendChat(id, msg, event) {
 		if (event)
-			event.preventDefault();
+			try {
+				event.preventDefault();
+			} catch (e) { }
 		if (!msg) {
 			formFunc.validation.filterWords(ui.q('#chatText'));
 			if (ui.q('chat errorHint'))

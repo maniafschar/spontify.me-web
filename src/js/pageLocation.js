@@ -733,12 +733,12 @@ ${v.hint}
 				cats.push(i);
 		}
 		if (bounds) {
-			var border = 0.1 * Math.abs(bounds.Za.hi - bounds.Za.lo);
-			s += (s ? ' and ' : '') + 'location.latitude>' + (bounds.Za.lo + border);
-			s += ' and location.latitude<' + (bounds.Za.hi - border);
-			border = 0.1 * Math.abs(bounds.Ia.hi - bounds.Ia.lo);
-			s += ' and location.longitude>' + (bounds.Ia.lo + border);
-			s += ' and location.longitude<' + (bounds.Ia.hi - border);
+			var border = 0.1 * Math.abs(bounds.getSouthWest().lat() - bounds.getNorthEast().lat());
+			s += (s ? ' and ' : '') + 'location.latitude>' + (bounds.getSouthWest().lat() + border);
+			s += ' and location.latitude<' + (bounds.getNorthEast().lat() - border);
+			border = 0.1 * Math.abs(bounds.getNorthEast().lng() - bounds.getSouthWest().lng());
+			s += ' and location.longitude>' + (bounds.getSouthWest().lng() + border);
+			s += ' and location.longitude<' + (bounds.getNorthEast().lng() - border);
 		} else {
 			c = ui.q('locations filters [name="filterCompass"]:checked');
 			if (c) {
@@ -915,6 +915,8 @@ ${v.hint}
 				v.oc = 'details.open(&quot;' + v.id + '&quot;,&quot;location_list&search=' + encodeURIComponent('location.id=' + v.id) + '&quot;,pageLocation.detailLocationEvent)';
 			s += pageLocation.templateList(v);
 		}
+		if (ui.q('locations map').style.display != 'none')
+			setTimeout(pageLocation.scrollMap, 400);
 		return s;
 	}
 	static prefillAddress() {
@@ -1283,6 +1285,8 @@ ${v.hint}
 					};
 					script.src = r;
 					document.head.appendChild(script);
+					if (!ui.q('locations row'))
+						pageLocation.search();
 				}
 			});
 		}

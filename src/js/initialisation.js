@@ -92,7 +92,9 @@ class initialisation {
 		window.open = cordova.InAppBrowser.open;
 		ui.on('content > *', 'click', function (event) {
 			if ((ui.classContains(event.target, 'content') || !event.target.onclick && !event.target.parentElement.onclick && event.target.nodeName != 'INPUT') && event.screenY > 0 && event.screenY < parseInt(ui.cssValue('main', 'padding-top')) + 5 * ui.emInPX) {
-				event.preventDefault();
+				try {
+					event.preventDefault();
+				} catch (e) { }
 				initialisation.hideStatusBar = !initialisation.hideStatusBar;
 				initialisation.statusBar();
 			}
@@ -150,14 +152,19 @@ class initialisation {
 		});
 		ui.on(window, 'wheel', function (event) {
 			if (event.ctrlKey) {
-				if (!event.defaultPrevented)
-					event.preventDefault();
+				if (!event.defaultPrevented) {
+					try {
+						event.preventDefault();
+					} catch (e) { }
+				}
 				formFunc.image.zoom(event, event.deltaY);
 			}
 		});
 		ui.on(window, 'touchmove', function (event) {
 			if (event.touches.length > 1)
-				event.preventDefault();
+				try {
+					event.preventDefault();
+				} catch (e) { }
 		});
 		ui.on('detail', 'click', function (event) {
 			var e = event.target;
