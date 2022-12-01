@@ -126,7 +126,6 @@ class communication {
 					ui.navigation.hideMenu();
 					ui.navigation.hidePopup();
 					ui.html(divID + ' listResults', s);
-					ui.html(divID + ' filters>div', '');
 					if (menuIndex > -1)
 						ui.attr(divID, 'menuIndex', menuIndex);
 					ui.q(divID + ' listBody').scrollTop = 0;

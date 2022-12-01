@@ -1095,47 +1095,43 @@ ${v.hint}
 		rows[i].children[0].classList = 'highlightMap';
 		pageLocation.map.id = id;
 		var d = model.convert(new Location(), lists.data['locations'], i + 1);
-		var delta = ui.q('map').clientHeight / 320, x = 0.0625, zoom = 18;
-		for (; zoom > 0; zoom--) {
-			if (x * delta > d._geolocationDistance)
-				break;
-			x *= 2;
-		}
 		if (pageLocation.map.canvas) {
 			pageLocation.map.markerMe.setMap(null);
 			pageLocation.map.markerLocation.setMap(null);
-			if (!pageLocation.map.loadActive) {
-				pageLocation.map.canvas.setCenter(new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon));
-				pageLocation.map.canvas.setZoom(zoom);
-			}
 			ui.q('map').setAttribute('created', new Date().getTime());
 			ui.q('locations buttontext.map').style.display = null;
 		} else {
-			pageLocation.map.canvas = new google.maps.Map(document.getElementsByTagName("map")[0],
-				{ zoom: zoom, center: new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon), mapTypeId: google.maps.MapTypeId.ROADMAP });
+			pageLocation.map.canvas = new google.maps.Map(document.getElementsByTagName("map")[0], { mapTypeId: google.maps.MapTypeId.ROADMAP });
 			pageLocation.map.canvas.addListener('bounds_changed', function () {
 				if (new Date().getTime() - ui.q('map').getAttribute('created') > 2000)
 					ui.q('locations buttontext.map').style.display = 'inline-block';
 			});
 		}
-		if (!pageLocation.map.loadActive)
+		if (!pageLocation.map.loadActive) {
+			var deltaLat = Math.abs(geoData.latlon.lat - d.latitude) * 0.075, deltaLon = Math.abs(geoData.latlon.lon - d.longitude) * 0.075;
+			pageLocation.map.canvas.fitBounds(new google.maps.LatLngBounds(
+				new google.maps.LatLng(Math.max(geoData.latlon.lat, d.latitude) + deltaLat, Math.min(geoData.latlon.lon, d.longitude) - deltaLon),//south west
+				new google.maps.LatLng(Math.min(geoData.latlon.lat, d.latitude) - deltaLat, Math.max(geoData.latlon.lon, d.longitude) + deltaLon) //north east
+			));
 			pageLocation.map.markerMe = new google.maps.Marker(
 				{
 					map: pageLocation.map.canvas,
-					title: d.name,
+					title: 'me',
 					contentString: '',
 					icon: {
 						url: pageLocation.map.svgMe,
-						scaledSize: new google.maps.Size(26, 26),
+						scaledSize: new google.maps.Size(20, 20),
 						origin: new google.maps.Point(0, 0),
-						anchor: new google.maps.Point(13, 26)
+						anchor: new google.maps.Point(10, 20)
 					},
 					position: new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon)
 				});
+		}
 		pageLocation.map.markerLocation = new google.maps.Marker(
 			{
 				map: pageLocation.map.canvas,
-				title: d.name, contentString: '',
+				title: d.name,
+				contentString: '',
 				icon: {
 					url: pageLocation.map.svgLocation,
 					scaledSize: new google.maps.Size(40, 40),

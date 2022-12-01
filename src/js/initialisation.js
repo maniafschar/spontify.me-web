@@ -61,6 +61,7 @@ class initialisation {
 		}
 		user.scale = global.getDevice() == 'phone' && ui.q('body').clientWidth < 360 ? 0.8 : 1;
 		initialisation.reposition();
+		formFunc.image.fetchSVG('favorite');
 		initialisation.setLanguage((navigator.language || navigator.userLanguage).toLowerCase().indexOf('en') > -1 ? 'EN' : 'DE', initialisation.initPostProcessor);
 	}
 	static initApp() {

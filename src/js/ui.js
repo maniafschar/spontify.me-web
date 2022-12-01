@@ -946,7 +946,7 @@ class formFunc {
 				ia[i] = arr[1].charCodeAt(i);
 			return new Blob([ab], { type: mime });
 		},
-		fetchSVG(id, img) {
+		fetchSVG(id) {
 			if (!formFunc.image.svg[id]) {
 				formFunc.image.svg[id] = 1;
 				communication.ajax({
@@ -1097,7 +1097,7 @@ class formFunc {
 								ui.classAdd('hometitle svg>g', 'en');
 						}
 					} else
-						formFunc.image.fetchSVG(id, imgs[i]);
+						formFunc.image.fetchSVG(id);
 				}
 			}
 		},
