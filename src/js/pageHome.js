@@ -65,11 +65,13 @@ class pageHome {
 			communication.ajax({
 				url: global.server + 'action/marketing',
 				method: 'GET',
-				responseType: 'json',
 				success(r) {
-					if (r && r.label) {
-						pageHome.marketing = r;
-						pageHome.initMarketing();
+					if (r) {
+						r = JSON.parse(r);
+						if (r.label) {
+							pageHome.marketing = r;
+							pageHome.initMarketing();
+						}
 					}
 				}
 			});
@@ -89,6 +91,8 @@ class pageHome {
 	static initMarketing() {
 		if (pageHome.marketing)
 			ui.buttonIcon('.top.left', '<span>' + pageHome.marketing.label + '</span>', 'ui.navigation.openHTML("' + pageHome.marketing.url + '","sm_marketing")');
+		else
+			ui.q('buttonIcon.top.left').style.display = 'none';
 	}
 	static initNotification(d) {
 		var f = function () {

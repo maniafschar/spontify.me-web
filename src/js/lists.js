@@ -210,17 +210,19 @@ class lists {
 		setTimeout(function () {
 			var activeID = ui.navigation.getActiveID();
 			var e = ui.q(activeID + ' filters>div');
-			if (!e.innerHTML && html) {
-				e.innerHTML = html.call();
-				formFunc.initFields(activeID + ' filters');
+			if (e) {
+				if (!e.innerHTML && html) {
+					e.innerHTML = html.call();
+					formFunc.initFields(activeID + ' filters');
+				}
+				e = ui.q(activeID + ' filters');
+				if (ui.cssValue(e, 'transform').indexOf('1') < 0) {
+					if (ui.q('menu').style.transform.indexOf('1') > 0)
+						ui.navigation.toggleMenu();
+					ui.css(e, 'transform', 'scale(1)');
+				} else
+					ui.css(e, 'transform', 'scale(0)');
 			}
-			e = ui.q(activeID + ' filters');
-			if (ui.cssValue(e, 'transform').indexOf('1') < 0) {
-				if (ui.q('menu').style.transform.indexOf('1') > 0)
-					ui.navigation.toggleMenu();
-				ui.css(e, 'transform', 'scale(1)');
-			} else
-				ui.css(e, 'transform', 'scale(0)');
 		}, 50);
 	}
 }
