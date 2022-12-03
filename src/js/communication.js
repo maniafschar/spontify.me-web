@@ -985,19 +985,14 @@ class FB {
 			callback();
 	}
 	static api(obj) {
-		var method = obj.method || 'GET',
-			params = obj.params || {},
-			xhr = new XMLHttpRequest(),
-			url;
+		var params = obj.params || {}, xhr = new XMLHttpRequest();
 		if (!params['access_token'])
 			params['access_token'] = FB.tokenStore['fbtoken'];
-		url = 'https://graph.facebook.com' + obj.path + '?' + FB.toQueryString(params);
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === 4) {
-				if (xhr.status === 200) {
-					if (obj.success)
-						obj.success(JSON.parse(xhr.responseText));
-				} else {
+				if (xhr.status === 200)
+					obj.success(JSON.parse(xhr.responseText));
+				else {
 					var error = xhr.responseText ? JSON.parse(xhr.responseText).error : { message: 'An error has occurred' };
 					error.status = xhr.status;
 					if (obj.error)
@@ -1005,7 +1000,7 @@ class FB {
 				}
 			}
 		};
-		xhr.open(method, url, true);
+		xhr.open('GET', 'https://graph.facebook.com' + obj.path + '?' + FB.toQueryString(params), true);
 		xhr.send();
 	}
 	static parseQueryString(queryString) {

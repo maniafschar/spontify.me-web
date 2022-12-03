@@ -905,7 +905,7 @@ ${v.hint}
 				v.oc = 'details.open(&quot;' + v.id + '&quot;,&quot;location_list&search=' + encodeURIComponent('location.id=' + v.id) + '&quot;,pageLocation.detailLocationEvent)';
 			s += pageLocation.templateList(v);
 		}
-		if (ui.q('locations map').style.display != 'none')
+		if (ui.q('locations map') && ui.q('locations map').style.display != 'none')
 			setTimeout(pageLocation.scrollMap, 400);
 		if (pageLocation.map.open) {
 			pageLocation.map.open = false;
