@@ -21,6 +21,7 @@ class pageLocation {
 		loadActive: false,
 		markerLocation: null,
 		markerMe: null,
+		open: false,
 		scrollTop: -1,
 		svgLocation: null,
 		svgMe: null,
@@ -647,22 +648,10 @@ ${v.hint}
 	static getFilterFields() {
 		var v = {};
 		var l = lists.data[ui.navigation.getActiveID()];
-		var r2 = [], r4 = [], hasAngel;
+		var r2 = [], r4 = [];
 		if (l) {
-			for (var i = 1; i < l[0].length; i++) {
-				if (l[0][i] == '_angle') {
-					hasAngel = true;
-					break;
-				}
-			}
-			if (!hasAngel)
-				l[0].push('_angle');
 			for (var i = 1; i < l.length; i++) {
 				var o = model.convert(new Location(), l, i);
-				if (!hasAngel) {
-					o._angle = geoData.getAngel(geoData.latlon, { lat: o.latitude, lon: o.longitude });
-					l[i].push(o._angle);
-				}
 				var s = '' + o.category;
 				for (var i2 = 0; i2 < s.length; i2++)
 					r2[s.substring(i2, i2 + 1)] = 1;
@@ -890,11 +879,12 @@ ${v.hint}
 	static listLocation(l) {
 		if (ui.q('locations buttontext.map'))
 			ui.q('locations buttontext.map').style.display = null;
-		if (ui.navigation.getActiveID() == 'locations' && ui.q('map') && ui.cssValue('map', 'display') != 'none' && ui.q('locations').getAttribute('menuIndex') != 0)
-			pageLocation.toggleMap();
+		l[0].push('_angle');
 		var s = '', v;
 		for (var i = 1; i < l.length; i++) {
 			v = model.convert(new Location(), l, i);
+			v._angle = geoData.getAngel(geoData.latlon, { lat: v.latitude, lon: v.longitude });
+			l[i].push(v._angle);
 			v.locID = v.id;
 			v.classBGImg = v.imageList ? '' : 'mainBG';
 			if (v.locationFavorite.favorite)
@@ -917,6 +907,10 @@ ${v.hint}
 		}
 		if (ui.q('locations map').style.display != 'none')
 			setTimeout(pageLocation.scrollMap, 400);
+		if (pageLocation.map.open) {
+			pageLocation.map.open = false;
+			pageLocation.toggleMap();
+		}
 		return s;
 	}
 	static prefillAddress() {
@@ -1120,9 +1114,9 @@ ${v.hint}
 					contentString: '',
 					icon: {
 						url: pageLocation.map.svgMe,
-						scaledSize: new google.maps.Size(20, 20),
+						scaledSize: new google.maps.Size(24, 24),
 						origin: new google.maps.Point(0, 0),
-						anchor: new google.maps.Point(10, 20)
+						anchor: new google.maps.Point(12, 24)
 					},
 					position: new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon)
 				});
@@ -1142,10 +1136,13 @@ ${v.hint}
 			});
 	}
 	static search() {
-		pageLocation.map.loadActive = false;
-		ui.attr('locations', 'menuIndex', 0);
-		pageLocation.filter = formFunc.getForm('filterLocations').values;
-		communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent(pageLocation.getSearch()), pageLocation.listLocation, 'locations', 'search');
+		if (pageLocation.map.loadActive)
+			pageLocation.searchFromMap();
+		else {
+			ui.attr('locations', 'menuIndex', 0);
+			pageLocation.filter = formFunc.getForm('filterLocations').values;
+			communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent(pageLocation.getSearch()), pageLocation.listLocation, 'locations', 'search');
+		}
 	}
 	static searchFromMap() {
 		pageLocation.map.loadActive = true;
@@ -1259,12 +1256,16 @@ ${v.hint}
 				ui.css('locations listBody', 'margin-top', '');
 				ui.css('locations listBody', 'padding-top', '');
 				ui.q('locations buttontext.map').style.display = null;
+				pageLocation.map.loadActive = false;
 			}
 			ui.toggleHeight('map', pageLocation.scrollMap);
 			lists.hideFilter();
 			pageLocation.map.scrollTop = -1;
 			pageLocation.map.id = -1;
-			ui.classRemove('locations listResults row div.highlightMap', 'highlightMap');
+			setTimeout(function () { ui.classRemove('locations listResults row div.highlightMap', 'highlightMap'); }, 500);
+		} else if (!ui.q('locations row')) {
+			pageLocation.map.open = true;
+			pageLocation.search();
 		} else {
 			ui.attr('map', 'created', new Date().getTime());
 			communication.ajax({
@@ -1273,16 +1274,11 @@ ${v.hint}
 				success(r) {
 					var script = document.createElement('script');
 					script.onload = function () {
-						new google.maps.Geocoder();
-						pageLocation.scrollMap();
 						pageLocation.toggleMap();
 						ui.on('locations listBody', 'scroll', pageLocation.scrollMap);
-						lists.toggleFilter();
 					};
 					script.src = r;
 					document.head.appendChild(script);
-					if (!ui.q('locations row'))
-						pageLocation.search();
 				}
 			});
 		}
