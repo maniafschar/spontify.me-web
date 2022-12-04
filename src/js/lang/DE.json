@@ -23,7 +23,25 @@
 				"Möbel",
 				"Accessoires",
 				"Brillen",
-				"Hobbybedarf"
+				"Hobbybedarf",
+				"Gesundheit",
+				"Kosmetik",
+				"Bäckerei",
+				"Finanzen",
+				"Schönheitssalon",
+				"Fahrräder",
+				"Bücher",
+				"Kaufhaus/Einkaufszentrum",
+				"Arzt",
+				"Tankstelle",
+				"Supermarkt",
+				"Baumarkt",
+				"Haushaltswaren",
+				"Juwelier",
+				"Getränke",
+				"Wellness",
+				"Post",
+				"Tierhandlung"
 			]
 		},
 		{
@@ -53,7 +71,10 @@
 				"Gotik",
 				"Fotokunst",
 				"Pop Art",
-				"Romantik"
+				"Romantik",
+				"Kirche",
+				"Bibliothek",
+				"Universität"
 			]
 		},
 		{
@@ -105,7 +126,17 @@
 				"Landleben",
 				"Wildnis",
 				"Hotel",
-				"Markt"
+				"Markt",
+				"Flughafen",
+				"Park",
+				"Aquarium",
+				"Camping",
+				"Friedhof",
+				"Rathaus",
+				"Gericht",
+				"Botschaft",
+				"Feuerwehr",
+				"Stadion"
 			]
 		},
 		{
@@ -141,7 +172,9 @@
 				"Ü40",
 				"Ü50",
 				"Latin Bar",
-				"Sport Liveübertragungen"
+				"Sport Liveübertragungen",
+				"Bar",
+				"Casino"
 			]
 		},
 		{
@@ -182,7 +215,6 @@
 				"Schnäppchenjagen",
 				"Yoga",
 				"Gärtnern",
-				"Aquarium",
 				"Töpfern",
 				"Backen",
 				"Lesen",
