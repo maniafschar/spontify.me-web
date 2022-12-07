@@ -127,29 +127,7 @@ ${v.eventParticipationButtons}
 			var s = global.date.formatDate(v.event.endDate);
 			v.endDate = ' (' + ui.l('events.type_' + v.event.type) + ' ' + ui.l('to') + ' ' + s.substring(s.indexOf(' ') + 1, s.lastIndexOf(' ')) + ')';
 		}
-		var endDate = global.date.server2Local(v.event.endDate), today = new Date();
-		today.setHours(0);
-		today.setMinutes(0);
-		today.setSeconds(0);
-		if (('' + v.id).indexOf('_') < 0 && (endDate.getFullYear() > today.getFullYear() || endDate.getFullYear() == today.getFullYear() &&
-			(endDate.getMonth() > today.getMonth() || endDate.getMonth() == today.getMonth() &&
-				endDate.getDate() >= today.getDate()))) {
-			var d = global.date.server2Local(v.event.startDate);
-			if (v.event.type == 'w1') {
-				while (d < today)
-					d.setDate(d.getDate() + 7);
-			} else if (v.event.type == 'w2') {
-				while (d < today)
-					d.setDate(d.getDate() + 14);
-			} else if (v.event.type == 'm') {
-				while (d < today)
-					d.setMonth(d.getMonth() + 1);
-			} else if (v.event.type == 'y') {
-				while (d < today)
-					d.setFullYear(d.getFullYear() + 1);
-			}
-			v.id = v.id + '_' + d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
-		}
+		v.id = events.getId(v);
 		if (('' + v.id).indexOf('_') < 0) {
 			v.date = global.date.formatDate(v.event.startDate);
 			v.date = '<eventOutdated>&nbsp;' + v.date;
@@ -255,7 +233,7 @@ ${v.eventParticipationButtons}
 			v.visibility = '3';
 		v['visibility' + v.visibility] = ' checked';
 		if (!v.startDate) {
-			var d = new Date();
+			d = new Date();
 			d.setDate(d.getDate() + 1);
 			v.startDate = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2) + 'T' + ('0' + d.getHours()).slice(-2) + ':00';
 		}
@@ -344,6 +322,32 @@ ${v.eventParticipationButtons}
 		}
 		return a;
 	}
+	static getId(v) {
+		var endDate = global.date.server2Local(v['event.endDate'] || v.event.endDate), today = new Date(), id = v.id || v['event.id'];
+		today.setHours(0);
+		today.setMinutes(0);
+		today.setSeconds(0);
+		if (('' + v.id).indexOf('_') < 0 && (endDate.getFullYear() > today.getFullYear() || endDate.getFullYear() == today.getFullYear() &&
+			(endDate.getMonth() > today.getMonth() || endDate.getMonth() == today.getMonth() &&
+				endDate.getDate() >= today.getDate()))) {
+			var d = global.date.server2Local(v['event.startDate'] || v.event.startDate), t = v['event.type'] || v.event.type;
+			if (t == 'w1') {
+				while (d < today)
+					d.setDate(d.getDate() + 7);
+			} else if (t == 'w2') {
+				while (d < today)
+					d.setDate(d.getDate() + 14);
+			} else if (t == 'm') {
+				while (d < today)
+					d.setMonth(d.getMonth() + 1);
+			} else if (t == 'y') {
+				while (d < today)
+					d.setFullYear(d.getFullYear() + 1);
+			}
+			id += '_' + d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+		}
+		return id;
+	}
 	static getParticipateButton(p, v) {
 		var participation = events.getParticipation(p);
 		if (v.event.confirm && participation.state == -1)
@@ -384,6 +388,15 @@ ${v.eventParticipationButtons}
 			}
 		});
 	}
+	static loadListContacts() {
+		var cats = '0', s = pageContact.getSearchMatches();
+		s += '(length(contact.attr' + cats + ')>0 or length(contact.attr' + cats + 'Ex)>0) or ';
+		if (s.length > 0)
+			s = ' and (' + s.substring(0, s.length - 4) + ')';
+		s = ' and contact.id<>' + user.contact.id + s;
+		communication.loadList('query=contact_list&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=50&search=' + encodeURIComponent(s), pageContact.listContacts);
+	}
+
 	static listEvents(l) {
 		var activeID = ui.navigation.getActiveID()
 		if (activeID == 'search')
@@ -592,6 +605,8 @@ ${v.eventParticipationButtons}
 				formFunc.setError(start, 'events.errorDateFormat');
 			}
 		}
+		if (!ui.q('[name="locationId"]').value)
+			formFunc.setError(ui.q('input[name="location"]'), 'error.errorLocation');
 		if (!ui.q('[name="type"]').checked) {
 			if (!end.value)
 				formFunc.setError(end, 'events.errorDateNoEnd');

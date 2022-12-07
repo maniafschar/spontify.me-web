@@ -7,7 +7,6 @@ import { lists } from './lists';
 import { Contact, model } from './model';
 import { pageChat } from './pageChat';
 import { pageLogin } from './pageLogin';
-import { pageWhatToDo } from './pageWhatToDo';
 import { pageSettings } from './pageSettings';
 import { ui, formFunc } from './ui';
 import { user } from './user';
@@ -245,7 +244,6 @@ class communication {
 						lists.resetLists();
 						communication.ping();
 						setTimeout(communication.notification.register, 100);
-						pageWhatToDo.init();
 						pageChat.initActiveChats();
 						events.init();
 						geoData.init();
@@ -417,7 +415,6 @@ class communication {
 			pageChat.chatsNew = 0;
 			pageChat.chatsUnseen = 0;
 			pageChat.copyLink = '';
-			pageWhatToDo.list = null;
 			pageSettings.currentSettings = null;
 			pageSettings.currentSettings3 = null;
 			user.reset();

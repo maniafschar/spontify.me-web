@@ -426,6 +426,7 @@
 			"errorDateFormat": "Please enter a correct date.",
 			"errorDateNoEnd": "Please enter the end date.",
 			"errorDateTooSmall": "The date is in the past.",
+			"errorLocation": "Please choose a Location.",
 			"location": "Location",
 			"locationInputHint": "Enter at least 4 characters of the name or address of the Location or",
 			"locationInputNoHit": "No hit",
@@ -445,6 +446,7 @@
 			"priceDisp": "Entrance {0} &euro;",
 			"soldOut": "Maximum of {0} participants reached!",
 			"start": "Start date",
+			"startHour": "Start",
 			"stopParticipate": "Cancel participation",
 			"stopParticipateButton": "Definitively cancel!",
 			"stopParticipateHint": "Enter your reason for the cancellation here",
@@ -535,7 +537,7 @@
 			"settings": "<b>spontify.me</b><br/>Would you like more spontaneity? For example if:<ul><li>You  want to do something, but your friends don't have time</li><li>You are in another city and like to meet like minded</li><li>You enjoy organizing events where new Spontis are welcome to join</li></ul>spontify.me is the right app for you in such cases.<br /><br />We want to create friendships and spontaneity here and to suppress sex requests or the like.",
 			"settings2": "Click here through the individual categories.",
 			"settingsLoggedIn": "<ul><li>Change your profile image and enter general information here</li><li>Swipe left to enter attributes that describe you and that you like about other Spontis</li><li>provide yourself as a guide for Spontis fitting your settings</li></ul>",
-			"whatToDo": "<b>Any plans for today?</b><br/>Would you like to do something spontaneously?<br/><br/>In contrast to events, you can indicate here what you would like to do today, e.g. go out to eat or visit a museum, etc.<br/><br/>The activity will be Spontis who suit you and are no further than 50 KM away. After 24 hours at the latest, the activity is deleted again."
+			"whatToDo": "<b>I want to do something!</b><br/>Would you like to do something spontaneously?<br/><br/>You can indicate what you would like to do today, e.g. go out for dinner or visit a museum, etc.<br/><br/>The activity will be presented to Spontis who suit you and are no further than 50 KM away."
 		},
 		"landing": {
 			"block1Title": "What does everyday life look like without ${appTitle}?",
@@ -808,7 +810,7 @@
 			"birthdays": "Birthdays",
 			"bluetoothMatching": "Bluetooth Matching",
 			"buttonSave": "Set as status message!",
-			"error": "Matching others for \"Any plans for today?\" needs:<ul><li>Your birthday/age</li><li>Your gender</li><li>Your \"Interested in\" details</li></ ul>Please complete this information, then you can get started here.",
+			"error": "Matching others for \"{0}\" needs:<ul><li>Your birthday/age</li><li>Your gender</li><li>Your \"Interested in\" details</li></ ul>Please complete this information, then you can get started here.",
 			"location": "I want to go there",
 			"locationLink": "in the location: {0}",
 			"myNotifications": "Notifications",
@@ -819,7 +821,7 @@
 			"setStatusEvent": "Your status has been updated, have fun event!",
 			"setStatusLocation": "Your status has been updated, a lot of fun in the Location!",
 			"time": "I want to start at",
-			"todayIWant": "Any plans for today?"
+			"todayIWant": "I want to do something!"
 		},
 		"all": "Nearby",
 		"appSubTitle": "neue Leute hier und heute",

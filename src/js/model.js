@@ -1,7 +1,6 @@
 import { communication } from './communication';
-import { user } from './user';
 
-export { model, Contact, ContactLink, Location, ContactNotification, EventParticipate, LocationOpenTime, LocationFavorite, Event, Block, Chat, LocationOwnerHistory, ContactVisit, ContactWhatToDo, ContactGroup, ContactGroupLink };
+export { model, Contact, ContactLink, Location, ContactNotification, EventParticipate, LocationOpenTime, LocationFavorite, Event, Block, Chat, LocationOwnerHistory, ContactVisit, ContactGroup, ContactGroupLink };
 
 class model {
 	static reportedErrors = {};
@@ -34,7 +33,7 @@ class model {
 					if (i2 == 0 && !o.hasOwnProperty(key[i2]) && key.length > i2 && o.hasOwnProperty(key[i2 + 1]))
 						i2++;
 					if (key[i2].indexOf('_') != 0 && !model.reportedErrors[keys[i]] && !o.hasOwnProperty(key[i2])) {
-						communication.sendError('model.convert: property ' + keys[i] + 'not found, available properties\n' + Object.keys(object) + '\nproperties/values of object\n' + JSON.stringify(keys) + '\n' + JSON.stringify(object2Transform));
+						communication.sendError('model.convert: property ' + keys[i] + ' not found, available properties\n' + Object.keys(object) + '\nproperties/values of object\n' + JSON.stringify(keys) + '\n' + JSON.stringify(object2Transform));
 						model.reportedErrors[keys[i]] = 1;
 					}
 					if (i2 < key.length - 1)
@@ -118,7 +117,6 @@ class Contact extends BaseEntity {
 	contactNotification = new ContactNotification();
 	contactRating = new ContactRating();
 	contactVisit = new ContactVisit();
-	contactWhatToDo = new ContactWhatToDo();
 	event = new Event();
 	eventParticipate = new EventParticipate();
 }
@@ -158,17 +156,6 @@ class ContactVisit extends BaseEntity {
 	count;
 }
 
-class ContactWhatToDo extends BaseEntity {
-	active;
-	budget;
-	contactId;
-	eventId;
-	keywords;
-	locationId;
-	message;
-	time;
-}
-
 class Chat extends BaseEntity {
 	action;
 	contactId;
@@ -181,6 +168,7 @@ class Chat extends BaseEntity {
 }
 
 class Event extends BaseEntity {
+	category;
 	confirm;
 	contactId;
 	endDate;

@@ -42,7 +42,7 @@ class lists {
 		}
 		if (errorID == 'favorites')
 			s = s.replace('{1}', '<br/><br/><br/><br/><buttonIcon style="left:50%;margin:-3em 0 0 -1.5em;"><img src="images/favorite.svg"/></buttonIcon><br/>');
-		else if (errorID == 'matches' || errorID == 'whatToDo')
+		else if (errorID == 'matches')
 			s = s.replace('{1}', '<br/><br/><buttontext onclick="ui.navigation.goTo(&quot;settings2&quot;)" class="bgColor">' + ui.l('Yes') + '</buttontext>');
 		else if (errorID == 'friends')
 			s = s.replace('{1}', '<br/><br/><buttontext class="bgColor">' + ui.l('contacts.requestFriendshipButton') + '</buttontext><br/><br/>');
@@ -124,7 +124,6 @@ class lists {
 		ui.html('settings2', '');
 		ui.html('settings3', '');
 		ui.html('chat', '');
-		ui.html('whatToDo', '');
 		ui.html('detail', '');
 		ui.html('info', '');
 	}
@@ -149,7 +148,7 @@ class lists {
 					if (dir == 'left')
 						ui.navigation.goTo('contacts');
 					else if (dir == 'right')
-						ui.navigation.goTo('whatToDo', 'backward');
+						ui.navigation.goTo('home', 'backward');
 				});
 			new DragObject(ui.q(id + ' listScroll')).ondrag = function (event, top) {
 				var activeID = ui.navigation.getActiveID();

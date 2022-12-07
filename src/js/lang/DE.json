@@ -426,6 +426,7 @@
 			"errorDateFormat": "Bitte gib einen korrekten Termin an.",
 			"errorDateNoEnd": "Bitte gib das Enddatum an.",
 			"errorDateTooSmall": "Der Termin liegt in der Vergangenheit.",
+			"errorLocation": "Bitte wähle eine Location aus.",
 			"location": "Location",
 			"locationInputHint": "Gib mindestens 4 Buchstaben des Namens oder der Adresse der Location ein oder eine",
 			"locationInputNoHit": "Keine Treffer",
@@ -445,6 +446,7 @@
 			"priceDisp": "Eintritt {0}&euro;",
 			"soldOut": "Alle {0} Plätze belegt!",
 			"start": "Starttermin",
+			"startHour": "Start",
 			"stopParticipate": "Teilnahme absagen",
 			"stopParticipateButton": "Endgültig absagen!",
 			"stopParticipateHint": "Begründung der Absage hier eingeben",
@@ -535,7 +537,7 @@
 			"settings": "<b>spontify.me</b><br/>Möchtest Du mehr Spontanität? Zum Beispiel wenn:<ul><li>Du etwas unternehmen möchtest, Deine Freunde aber keine Zeit haben</li><li>Du in einer fremden Stadt bist und Gleichgesinnte suchst</li><li>Du gerne Events organisierst, zu denen sich neue Spontis gesellen dürfen</li></ul>Für solche Fälle ist spontify.me die richtige App für Dich.<br /><br />Wir möchten hier Freundschaften und Spontanität entstehen lassen und Sexanfragen oder Ähnliches unterdrücken.",
 			"settings2": "Klick Dich hier durch die einzelnen Kategorien.",
 			"settingsLoggedIn": "<ul><li>Ändere hier Dein Profilbild und gib weitere, allgemeine Infos an</li><li>Ein Wisch nach links und Du kannst Dich über diverse Attribute selbst beschreiben und angeben, was Du an anderen Spontis magst</li></ul>",
-			"whatToDo": "<b>Heute schon was vor?</b><br/>Möchtest Du spontan etwas unternehmen?<br/><br/>Im Gegensatz zu Events kannst Du hier angeben, was Du gerne heute machen möchtest, z.B. Essen gehen oder ein Museum besuchen, etc.<br/><br/>Die Aktivität wird Spontis, die zu Dir passen und nicht weiter als 50 KM entfernt sind, angezeigt. Nach spätestens 24 Stunden ist die Aktivität wieder gelöscht."
+			"whatToDo": "<b>Ich will was unternehmen!</b><br/>Möchtest Du spontan etwas unternehmen?<br/><br/>Du gibst an, was Du gerne heute machen möchtest, z.B. Essen gehen oder ein Museum besuchen, etc.<br/><br/>Die Aktivität wird Spontis, die zu Dir passen und nicht weiter als 50 KM entfernt sind, angezeigt."
 		},
 		"landing": {
 			"block1Title": "Wie sieht der Alltag ohne ${appTitle} aus?",
@@ -819,7 +821,7 @@
 			"setStatusEvent": "Dein Status wurde aktualisiert, viel Spaß beim Event!",
 			"setStatusLocation": "Dein Status wurde aktualisiert, viel Spaß in der Location!",
 			"time": "Loslegen möchte ich ab",
-			"todayIWant": "Heute schon was vor?"
+			"todayIWant": "Ich will was unternehmen!"
 		},
 		"all": "in der Nähe",
 		"appSubTitle": "neue Leute hier und heute",

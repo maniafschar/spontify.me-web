@@ -6,7 +6,6 @@ import { global } from './global';
 import { lists } from './lists';
 import { Location, model, LocationOpenTime } from './model';
 import { pageChat } from './pageChat';
-import { pageWhatToDo } from './pageWhatToDo';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 
@@ -132,7 +131,7 @@ ${v.parking}
 			<input type="time" id="messageTimeDetail" placeholder="HH:MM" class="whatToDoTime" value="${v.wtdTime}" />
 		</div>
 		<buttontext class="bgColor"
-			onclick="pageWhatToDo.saveLocation(&quot;${v.cat}&quot;,${v.locID})">
+			onclick="pageHome.saveEvent(&quot;${v.cat}&quot;,${v.locID})">
 			${ui.l('wtd.buttonSave')}
 		</buttontext>
 	</detailTogglePanel>
@@ -487,7 +486,8 @@ ${v.hint}
 			v.rating = '<detailRating onclick="ratings.open(' + v.locID + ')"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></ratingSelection></detailRating>';
 		else
 			v.rating = '<div style="margin:1em 0;"><buttontext class="bgColor" onclick="ratings.open(' + v.locID + ')">' + ui.l('rating.save') + '</buttontext></div>';
-		v.address = v.address.replace(/\n/g, '<br />');
+		if (v.address)
+			v.address = v.address.replace(/\n/g, '<br />');
 		if (v.ownerId && v.url)
 			v.description = (v.description ? v.description + ' ' : '') + ui.l('locations.clickForMoreDetails');
 		if (v.description)
@@ -514,16 +514,12 @@ ${v.hint}
 			v.displaySocialShare = 'display: none; ';
 		p = v._isOpen && v._isOpen > 0 ? 1 : v._openTimesEntries && v._openTimesEntries > 0 ? 0 : null;
 		v.openTimesBankholiday = v.openTimesBankholiday ? '<div>' + ui.l('locations.closedOnBankHoliday') + '</div>' : '';
-		var wtd = pageWhatToDo.getCurrentMessage();
-		if (wtd && wtd.active) {
-			var d = global.date.server2Local(wtd.time);
-			v.wtdTime = (d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
-		} else {
-			var h = (new Date().getHours() + 1) % 24;
-			v.wtdTime = h + ':00';
-			if (h < 10)
-				v.wtdTime = '0' + v.wtdTime;
-		}
+		var h = new Date().getHours() + 2;
+		if (h > 23)
+			h = 8;
+		v.wtdTime = h + ':00';
+		if (h < 10)
+			v.wtdTime = '0' + v.wtdTime;
 		if (!v.ownerId)
 			v.urlNotActive = ' active="0"';
 		v.pressedCopyButton = pageChat.copyLink.indexOf(global.encParam((v.event.id ? 'e' : 'l') + '=' + id)) > -1 ? ' buttonPressed' : '';

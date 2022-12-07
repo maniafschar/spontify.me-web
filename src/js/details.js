@@ -1,4 +1,5 @@
 import { communication } from './communication';
+import { events } from './events';
 import { geoData } from './geoData';
 import { global } from './global';
 import { intro } from './intro';
@@ -60,13 +61,15 @@ class details {
 				}
 				var activeID = ui.navigation.getActiveID();
 				ui.css(activeID + ' row[i="' + id + '"] badge[action="remove"]', 'display', 'none');
-				r = callback(r, id);
-				if (r) {
+				var s = callback(r, id);
+				if (s) {
 					var d = ui.q('detail');
-					r = '<card i="' + id + '" type="' + (action.indexOf('contact_') == 0 ? 'contact' : 'location') + '">' + r + '</card>';
+					if (r['event.id'])
+						id = events.getId(r);
+					s = '<card i="' + id + '" type="' + (action.indexOf('contact_') == 0 ? 'contact' : 'location') + '">' + s + '</card>';
 					if (activeID == 'detail') {
 						var c = document.createElement('div');
-						c.innerHTML = r;
+						c.innerHTML = s;
 						var e = ui.q('detail>div');
 						ui.css(e, 'transition', 'none');
 						e.appendChild(c.children[0]);
@@ -77,7 +80,7 @@ class details {
 							ui.css(e, 'margin-left', (-x * 100) + '%');
 						}, 50);
 					} else {
-						ui.html(d, '<div>' + r + '</div>');
+						ui.html(d, '<div>' + s + '</div>');
 						ui.navigation.goTo('detail');
 					}
 					formFunc.initFields('detail');
@@ -90,7 +93,7 @@ class details {
 							if (global.isBrowser())
 								history.pushState(null, null, window.location.origin);
 						} else {
-							var s = ui.q('detail card:last-child .title').innerHTML;
+							s = ui.q('detail card:last-child .title').innerHTML;
 							if (s.indexOf('<span') > -1)
 								s = s.substring(0, s.indexOf('<span'));
 							var e = ui.q('title');

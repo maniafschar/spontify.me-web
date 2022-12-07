@@ -9,7 +9,6 @@ import { pageInfo } from './pageInfo';
 import { pageLocation } from './pageLocation';
 import { pageLogin } from './pageLogin';
 import { pageContact } from './pageContact';
-import { pageWhatToDo } from './pageWhatToDo';
 import { pageSettings } from './pageSettings';
 import { user } from './user';
 import { pageHome } from './pageHome';
@@ -321,7 +320,7 @@ class ui {
 			if (pageInfo.openSection == -2)
 				pageInfo.openSection = -1;
 			if (!user.contact && id != 'home' && id != 'info') {
-				if (id == 'whatToDo' || id == 'locations' || id == 'contacts' || id == 'settings') {
+				if (id == 'locations' || id == 'contacts' || id == 'settings') {
 					intro.openHint({ desc: id, pos: '10%,5em', size: '80%,auto' });
 					return;
 				}
@@ -341,8 +340,7 @@ class ui {
 				pageLogin.saveDraft();
 			if (currentID == 'settings3')
 				pageSettings.save3();
-			if (id == 'settings' && pageSettings.init(function () { ui.navigation.goTo(id); })
-				|| id == 'whatToDo' && pageWhatToDo.init(function () { ui.navigation.goTo(id); }))
+			if (id == 'settings' && pageSettings.init(function () { ui.navigation.goTo(id); }))
 				return;
 			if (id == 'info')
 				pageInfo.init();
@@ -368,8 +366,7 @@ class ui {
 						id == 'home' && currentID != 'login' ||
 						id == 'settings' && currentID == 'settings2' ||
 						id == 'settings2' && currentID == 'settings3');
-				if (!back && !(currentID == 'whattodo' && id == 'locations'
-					|| currentID == 'locations' && id == 'contacts'
+				if (!back && !(currentID == 'locations' && id == 'contacts'
 					|| currentID == 'info' && id == 'login'))
 					ui.attr(id, 'from', currentID);
 				ui.navigation.fade(id, back);
@@ -1383,9 +1380,6 @@ class formFunc {
 		},
 		getAttributes5() {
 			return ui.categories[5].subCategories;
-		},
-		getMessages() {
-			return pageWhatToDo.getMessages();
 		},
 		getSubCategories0() {
 			return ui.categories[0].subCategories;

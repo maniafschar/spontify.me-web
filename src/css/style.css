@@ -241,11 +241,6 @@ ol li {
 	list-style-type: decimal;
 }
 
-whatToDoDiv {
-	padding-bottom: 1em;
-	display: block;
-}
-
 subCatTitle {
 	padding-top: 0.38em;
 	margin-bottom: 0.5em;
@@ -310,8 +305,7 @@ content {
 }
 
 contacts:before,
-locations:before,
-whatToDo:before {
+locations:before {
 	content: '';
 	position: absolute;
 	left: 0;
@@ -328,10 +322,6 @@ contacts:before {
 
 locations:before {
 	background: url(../images/location.svg) no-repeat 50% 50%;
-}
-
-whatToDo:before {
-	background: url(../images/rocket.svg) no-repeat 50% 50%;
 }
 
 groups {
@@ -625,11 +615,6 @@ settings explain {
 	padding-top: 0;
 }
 
-whatToDo {
-	overflow-y: auto;
-	overflow-x: hidden;
-}
-
 .borderBottom {
 	border-bottom: solid 1px rgba(200, 200, 200, 0.4);
 }
@@ -664,6 +649,10 @@ field value {
 
 field .checkbox {
 	margin-bottom: -0.5em;
+}
+
+field.category value {
+	text-align: center;
 }
 
 dialogButtons {
@@ -766,37 +755,6 @@ slider thumb val {
 .homeButton svg path {
 	fill: rgb(0, 100, 140);
 	stroke: rgb(0, 100, 140);
-}
-
-whatToDoInput {
-	display: block;
-	position: absolute;
-	z-index: 1;
-	margin: 1em;
-	border-radius: 1em;
-	padding: 1em;
-	box-shadow: 0 0 1em rgb(0, 0, 0, 0.3);
-	top: 3em;
-}
-
-whatToDoLists tabBody {
-	left: 0;
-	position: absolute;
-	top: 7em;
-	right: 0;
-	bottom: 0;
-	overflow-y: auto;
-	margin: 0;
-	padding-bottom: 0.5em;
-}
-
-whatToDoList {
-	display: none;
-	padding-bottom: 5em;
-}
-
-#whatToDoLocation>img {
-	border-radius: 0.5em;
 }
 
 chat {
@@ -1106,11 +1064,6 @@ popupContent> :not(detail) ratingSelection {
 	left: 50%;
 	cursor: pointer;
 	display: block;
-}
-
-.whatToDoTime {
-	width: 8em;
-	margin-top: 0.25em;
 }
 
 eventListTitle {
@@ -2348,17 +2301,6 @@ landingsubject {
 	font-weight: bold;
 	display: block;
 	padding: 1em 0 0.5em 0;
-}
-
-whatToDoTitle {
-	font-size: 1.2em;
-	font-weight: bold;
-	cursor: pointer;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	display: block;
-	margin: 1.5em 1em 1em 1em;
 }
 
 infoblock landingsubtitle {

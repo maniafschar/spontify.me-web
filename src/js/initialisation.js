@@ -239,15 +239,9 @@ class initialisation {
 		}, 'input');
 		ui.swipe('home', function (dir) {
 			if (dir == 'left')
-				ui.navigation.goTo(user.contact ? 'whatToDo' : 'info');
+				ui.navigation.goTo(user.contact ? 'locations' : 'info');
 			else if (dir == 'right')
 				ui.navigation.goTo(user.contact ? 'contacts' : 'login', 'backward');
-		}, 'input,listScroll');
-		ui.swipe('whatToDo', function (dir) {
-			if (dir == 'left')
-				ui.navigation.goTo('locations');
-			else if (dir == 'right')
-				ui.navigation.goTo('home');
 		}, 'input,listScroll');
 		ui.swipe('info', function (dir) {
 			if (dir == 'left' && !user.contact)

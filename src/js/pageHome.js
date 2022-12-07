@@ -19,8 +19,7 @@ class pageHome {
 	</homeTitle>
 </homeHeader>
 <homeBody>
-	<buttonicon class="marketing"><span></span></buttonicon>
-	<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;whatToDo&quot;)" style="width:80%;">
+	<buttontext class="bgColor homeButton" onclick="pageHome.newEvent()" style="width:80%;">
 		<span class="homeWTD">${ui.l('wtd.todayIWant')}</span><img source="rocket" />
 	</buttontext><br/>
 	<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;locations&quot;)" style="width:70%;">
@@ -30,6 +29,47 @@ class pageHome {
 		<span>${ui.l('contacts.homeButton')}</span><img source="contact" />
 	</buttontext>
 </homeBody>`;
+	static templateNewEvent = v =>
+		global.template`<form name="editElement" onsubmit="return false">
+<input type="hidden" name="locationId" />
+<input type="hidden" name="type" value="o" />
+<input type="hidden" name="visibility" value="2" />
+<input type="checkbox" transient="true" onclick="pageHome.toggleLocation()" label="in einer Location" style="margin:1em 0 2em 0;"/>
+<field class="location" style="display:none;">
+<label style="padding-top:0;">${ui.l('events.location')}</label>
+<value style="text-align:center;">
+<input transient="true" name="location" onkeyup="events.locations()" />
+<eventLocationInputHelper>${ui.l('events.locationInputHint')}</eventLocationInputHelper>
+<buttontext onclick="pageLocation.edit()" class="bgColor eventLocationInputHelperButton">${ui.l('locations.new')}</buttontext>
+</value>
+</field>
+<field class="category">
+<value>
+<input transient="true" type="radio" value="0" name="category" label="${ui.categories[0].verb}" ${v.checked0} checked />
+<input transient="true" type="radio" value="1" name="category" label="${ui.categories[1].verb}" ${v.checked1} />
+<input transient="true" type="radio" value="2" name="category" label="${ui.categories[2].verb}" ${v.checked2} />
+<input transient="true" type="radio" value="3" name="category" label="${ui.categories[3].verb}" ${v.checked3} />
+<input transient="true" type="radio" value="4" name="category" label="${ui.categories[4].verb}" ${v.checked4} />
+<input transient="true" type="radio" value="5" name="category" label="${ui.categories[5].verb}" ${v.checked5} />
+</value>
+</field>
+<field>
+<label name="startDate">${ui.l('events.startHour')}</label>
+<value>
+<input type="time-local" name="startDate" placeholder="HH:MM" step="900" value="${v.time}" />
+</value>
+</field>
+<field>
+<label>${ui.l('description')}</label>
+<value>
+<textarea name="text" maxlength="1000"></textarea>
+</value>
+</field>
+<dialogButtons>
+<buttontext onclick="pageHome.saveEvent()" class="bgColor">${ui.l('save')}</buttontext>
+<popupHint></popupHint>
+</dialogButtons>
+</form>`;
 
 	static clickNotification(id, action) {
 		communication.ajax({
@@ -62,37 +102,18 @@ class pageHome {
 			});
 			formFunc.initFields('home');
 			initialisation.reposition();
-			communication.ajax({
-				url: global.server + 'action/marketing',
-				method: 'GET',
-				success(r) {
-					if (r) {
-						r = JSON.parse(r);
-						if (r.label) {
-							pageHome.marketing = r;
-							pageHome.initMarketing();
-						}
-					}
-				}
-			});
-
 		}
+		ui.q('buttonIcon.bottom.center').style.display = 'none';
 		ui.buttonIcon('.bottom.left', '<badgeNotifications></badgeNotifications><img source="news"/>', 'pageHome.toggleNotification()');
 		pageHome.initNotificationButton(true);
-		ui.buttonIcon('.bottom.center', 'info', 'ui.navigation.goTo("info")');
-		ui.buttonIcon('.bottom.right', 'bluetooth', 'bluetooth.toggle()');
-		if (bluetooth.state != 'on' || !user.contact || !user.contact.findMe)
-			ui.classAdd('buttonIcon.bottom.right', 'bluetoothInactive');
-		if (!user.contact)
+		ui.buttonIcon('.bottom.right', 'info', 'ui.navigation.goTo("info")');
+		if (user.contact) {
+			ui.buttonIcon('.top.left', 'bluetooth', 'bluetooth.toggle()');
+			if (bluetooth.state != 'on' || !user.contact || !user.contact.findMe)
+				ui.classAdd('buttonIcon.top.left', 'bluetoothInactive');
+		} else
 			ui.buttonIcon('.top.left', '<span class="lang">' + global.language + '</span>', 'pageHome.openLanguage()');
 		ui.buttonIcon('.top.right', user.contact && user.contact.imageList ? user.contact.imageList : 'contact', 'ui.navigation.goTo("settings")');
-		pageHome.initMarketing();
-	}
-	static initMarketing() {
-		if (pageHome.marketing)
-			ui.buttonIcon('.top.left', '<span>' + pageHome.marketing.label + '</span>', 'ui.navigation.openHTML("' + pageHome.marketing.url + '","sm_marketing")');
-		else
-			ui.q('buttonIcon.top.left').style.display = 'none';
 	}
 	static initNotification(d) {
 		var f = function () {
@@ -134,10 +155,62 @@ class pageHome {
 				ui.q('badgeNotifications').innerText = Math.max(pageHome.badge, 0);
 		}
 	}
+	static newEvent() {
+		if (user.contact) {
+			var d = new Date().getHours() + 2;
+			if (d > 23)
+				d = 8;
+			ui.navigation.openPopup(ui.l('wtd.todayIWant'), pageHome.templateNewEvent({
+				time: d + ':00'
+			}));
+		} else
+			intro.openHint({ desc: 'whatToDo', pos: '10%,5em', size: '80%,auto' });
+	}
 	static openLanguage() {
 		ui.navigation.openPopup(ui.l('langSelect'),
 			'<div style="text-align:center;padding:2em 0;"><a class="langSelectImg bgColor' + (global.language == 'DE' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE">Deutsch</a>' +
 			'<a class="langSelectImg bgColor' + (global.language == 'EN' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</a></div>');
+	}
+	static saveEvent() {
+		formFunc.resetError(ui.q('input[name="location"]'));
+		formFunc.resetError(ui.q('input[name="startDate"]'));
+		formFunc.resetError(ui.q('textarea[name="text"]'));
+		var v = formFunc.getForm('editElement');
+		var h = v.values.startDate.split(':')[0];
+		if (!h)
+			formFunc.setError(ui.q('input[name="startDate"]'), 'events.errorDate')
+		if (!v.values.text)
+			formFunc.setError(ui.q('textarea[name="text"]'), 'error.description');
+		else
+			formFunc.validation.filterWords(ui.q('textarea[name="text"]'));
+		if (ui.q('field.location').style.display != 'none' && !v.values.locationId)
+			formFunc.setError(ui.q('input[name="location"]'), 'error.errorLocation');
+		if (ui.q('popup errorHint'))
+			return;
+		var d = new Date();
+		if (h < d.getHours())
+			d.setDate(d.getDate() - 1);
+		v.values.startDate = global.date.local2server(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + v.values.startDate + ':00');
+		v.classname = 'Event';
+		communication.ajax({
+			url: global.server + 'db/one',
+			method: 'POST',
+			body: v,
+			success(r) {
+				ui.navigation.hidePopup();
+				ui.navigation.autoOpen(global.encParam('e=' + r));
+			}
+		});
+	}
+	static toggleLocation() {
+		var e = ui.q('field.location');
+		if (e.style.display == 'none') {
+			e.style.display = '';
+			ui.q('field.category').style.display = 'none';
+		} else {
+			e.style.display = 'none';
+			ui.q('field.category').style.display = '';
+		}
 	}
 	static toggleNotification() {
 		if (!user.contact)

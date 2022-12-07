@@ -6,7 +6,6 @@ import { Contact, Location, model } from './model';
 import { pageContact } from './pageContact';
 import { ui, formFunc } from './ui';
 import { user } from './user';
-import { pageWhatToDo } from './pageWhatToDo';
 import { details } from './details';
 import { intro } from './intro';
 import { pageChat } from './pageChat';
@@ -651,8 +650,6 @@ class pageSettings {
 			for (var i = 0; i < ui.categories.length; i++)
 				user.contact['attr' + i + 'Ex'] = ui.q('#CONTACTATTRIB' + i).getAttribute('valueEx');
 			bluetooth.reset();
-			ui.html('whatToDo', '');
-			pageWhatToDo.init();
 		});
 	}
 	static setChoicesSelection(id, v) {

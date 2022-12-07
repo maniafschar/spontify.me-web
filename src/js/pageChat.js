@@ -10,7 +10,6 @@ import { pageHome } from './pageHome';
 import { pageInfo } from './pageInfo';
 import { pageLocation } from './pageLocation';
 import { pageSettings } from './pageSettings';
-import { pageWhatToDo } from './pageWhatToDo';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 
@@ -125,8 +124,6 @@ class pageChat {
 				pageLocation.init();
 			else if (activeID == 'info')
 				pageInfo.init();
-			else if (activeID == 'whattodo')
-				pageWhatToDo.init();
 			else if (activeID == 'home')
 				pageHome.init();
 			else if (activeID == 'detail')
