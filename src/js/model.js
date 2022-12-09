@@ -234,6 +234,7 @@ class Location extends BaseEntity {
 
 	block = new Block();
 	contact = new Contact();
+	contactLink = new ContactLink();
 	event = new Event();
 	locationFavorite = new LocationFavorite();
 	locationOpenTime;

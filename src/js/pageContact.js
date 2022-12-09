@@ -751,12 +751,6 @@ ${v.budget}
 		}
 	}
 	static listContacts(l) {
-		var activeID = ui.navigation.getActiveID()
-		if (activeID == 'search')
-			ui.attr('search', 'type', 'contacts');
-		return pageContact.listContactsInternal(l);
-	}
-	static listContactsInternal(l) {
 		var s = '', activeID = ui.navigation.getActiveID();
 		for (var i = 1; i < l.length; i++) {
 			var v = model.convert(new Contact(), l, i);

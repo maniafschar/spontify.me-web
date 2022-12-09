@@ -504,7 +504,7 @@ class pageSettings {
 			l[i].push(v.block.reason ? ui.l('contacts.blockReason' + v.block.reason) : '&nbsp;');
 			l[i].push(v.block.note ? v.block.note : '&nbsp;');
 		}
-		pageSettings.listBlocked('contact', pageContact.listContactsInternal(l));
+		pageSettings.listBlocked('contact', pageContact.listContacts(l));
 	}
 	static listLocationsBlocked(l) {
 		l[0].push('_message1');

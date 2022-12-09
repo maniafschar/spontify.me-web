@@ -434,7 +434,12 @@ ${v.eventParticipationButtons}
 					}
 					var t = global.date.formatDate(startDate);
 					t = t.substring(t.lastIndexOf(' ') + 1);
-					v.name = t + ' ' + v.name;
+					if (v.name)
+						v.name = t + ' ' + v.name;
+					else {
+						v.name = t + ' ' + v.contact.pseudonym + (v.contact.age ? ' (' + v.contact.age + ')' : '');
+						v._message1 = ui.categories[v.event.category].verb;
+					}
 					if (v.ownerId == v.contact.id)
 						v._message = '<span class="highlightColor">' + v.event.text + '</span><br/>';
 					else
@@ -454,7 +459,16 @@ ${v.eventParticipationButtons}
 						v.id += '_' + d.year + '-' + d.month + '-' + d.day;
 					}
 					v.classBGImg = v.imageList ? '' : bg;
-					v.image = v.event.imageList ? global.serverImg + v.event.imageList : v.imageList ? global.serverImg + v.imageList : 'images/event.svg" style="padding: 1em; ';
+					if (v.event.imageList)
+						v.image = global.serverImg + v.event.imageList;
+					else if (v.imageList)
+						v.image = global.serverImg + v.imageList;
+					else if (v.contact.imageList)
+						v.image = global.serverImg + v.contact.imageList;
+					else if (v.id)
+						v.image = 'images/event.svg" style="padding: 1em;';
+					else
+						v.image = 'images/contact.svg" style="padding: 1em;';
 					v.classBg = v.ownerId ? 'bgBonus' : bg;
 					if (v.parkingOption) {
 						if (v.parkingOption.indexOf('1') > -1 ||
@@ -755,7 +769,7 @@ ${v.eventParticipationButtons}
 			ui.toggleHeight(e);
 		else {
 			communication.loadList('query=contact_listEventParticipate&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&limit=0&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id.id + ' and eventParticipate.eventDate=\'' + id.date + '\''), function (l) {
-				e.innerHTML = l.length < 2 ? '<div style="margin-bottom:1em;">' + ui.l('events.noParticipant') + '</div>' : pageContact.listContactsInternal(l);
+				e.innerHTML = l.length < 2 ? '<div style="margin-bottom:1em;">' + ui.l('events.noParticipant') + '</div>' : pageContact.listContacts(l);
 				ui.toggleHeight(e);
 				return '&nbsp;';
 			});

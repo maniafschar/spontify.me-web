@@ -456,6 +456,8 @@ ${v.hint}
 			v.parking += global.separator + v.parkingText;
 		if (v.parking)
 			v.parking = '<div>' + v.parking.substring(global.separator.length) + '</div>';
+		if (!v.id)
+			v.name = v.contact.pseudonym;
 		v.id = id;
 		v.distance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 ? 0 : 1).replace('.', ',') : '';
 		v.classBGImg = '';
@@ -463,7 +465,7 @@ ${v.hint}
 			v.classBGImg = 'class="mainBG"';
 		v.locID = v.event.id ? v.event.locationId : id;
 		v.angle = geoData.getAngel(geoData.latlon, { lat: v.latitude, lon: v.longitude });
-		v.image = v.event.image ? v.event.image : v.image;
+		v.image = v.event.image ? v.event.image : v.image ? v.image : v.contact.image;
 		if (v.image)
 			v.image = global.serverImg + v.image;
 		else
@@ -523,10 +525,15 @@ ${v.hint}
 		if (!v.ownerId)
 			v.urlNotActive = ' active="0"';
 		v.pressedCopyButton = pageChat.copyLink.indexOf(global.encParam((v.event.id ? 'e' : 'l') + '=' + id)) > -1 ? ' buttonPressed' : '';
+		var c = v.category;
+		if (!c)
+			c = v.event.category;
 		v.cat = '';
-		for (var i = 0; i < v.category.length; i++)
-			v.cat = v.cat + ',' + v.category.substring(i, i + 1);
-		v.cat = v.cat.substring(1);
+		if (c) {
+			for (var i = 0; i < c.length; i++)
+				v.cat = v.cat + ',' + c.substring(i, i + 1);
+			v.cat = v.cat.substring(1);
+		}
 		communication.ajax({
 			url: global.server + 'action/map?source=' + geoData.latlon.lat + ',' + geoData.latlon.lon + '&destination=' + v.latitude + ',' + v.longitude,
 			progressBar: false,

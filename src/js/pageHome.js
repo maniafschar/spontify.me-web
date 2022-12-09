@@ -56,7 +56,7 @@ class pageHome {
 <field>
 <label name="startDate">${ui.l('events.startHour')}</label>
 <value>
-<input type="time-local" name="startDate" placeholder="HH:MM" step="900" value="${v.time}" />
+<input type="time" name="startDate" placeholder="HH:MM" step="900" value="${v.time}" />
 </value>
 </field>
 <field>
