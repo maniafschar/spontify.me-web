@@ -49,10 +49,14 @@ class pageLocation {
 		<detailTitle>
 			<title>${v.name}</title>
 		</detailTitle>
-		<detailCompass>
+		<detailCompass${v.compassDisplay}>
 			<span a="${v.angle}" style="transform:rotate(${v.angle}deg);">&uarr;</span>
 			<km>${v.distance}</km>
 		</detailCompass>
+		<detailDistance${v.distanceDisplay}>
+			${v.gender}
+			<km>${v.distance}</km>
+		</detailDistance>
 		<matchIndicator onclick="pageLocation.toggleMatchIndicatorHint(${v.id}, event)">
 			<svg viewBox="0 0 36 36">
 			<path class="circle-bg" d="M18 2.0845
@@ -85,7 +89,7 @@ ${v.parking}
 	onclick="ui.navigation.openHTML(&quot;https://maps.google.com/maps/dir/${geoData.latlon.lat},${geoData.latlon.lon}/${v.latitude},${v.longitude}&quot;)" />
 <detailButtons>
 	<buttontext class="bgColor"
-		onclick="pageChat.open(${v.id},true)">${ui.l('chat.title')}</buttontext>
+		onclick="pageChat.open(${v.chatId},${v.chatLocation})">${ui.l('chat.title')}</buttontext>
 	<buttontext class="bgColor${v.pressedCopyButton}" name="buttonCopy"
 		onclick="pageChat.doCopyLink(event,&quot;${v.event.id ? 'e' : 'l'}=${v.id}&quot;)">${ui.l('share')}</buttontext>
 	<buttontext class="bgColor${v.hideMeEvents}" name="buttonEvents"
@@ -457,7 +461,7 @@ ${v.hint}
 		if (v.parking)
 			v.parking = '<div>' + v.parking.substring(global.separator.length) + '</div>';
 		if (!v.id)
-			v.name = v.contact.pseudonym;
+			v.name = v.contact.pseudonym + (v.contact.age ? ' (' + v.contact.age + ')' : '');
 		v.id = id;
 		v.distance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 ? 0 : 1).replace('.', ',') : '';
 		v.classBGImg = '';
@@ -475,7 +479,7 @@ ${v.hint}
 			v.telOpenTag = '<a href="tel:' + v.tel.replace(/[^+\d]*/g, '') + '" style="color:black;">';
 			v.telCloseTag = '</a>';
 		}
-		v.attr = ui.getAttributes(v, 'detail');
+		v.attr = ui.getAttributes(v.address ? v : v.contact, 'detail');
 		v.budget = v.attr.budget.toString();
 		if (v.attr.totalMatch) {
 			v.matchIndicator = v.attr.totalMatch + '/' + v.attr.total;
@@ -484,10 +488,18 @@ ${v.hint}
 			v.matchIndicatorPercent = 0;
 		v.matchIndicatorHint = ui.l('locations.matchIndicatorHint').replace('{0}', v.attr.totalMatch).replace('{1}', v.attr.total).replace('{2}', v.matchIndicatorPercent).replace('{3}', v.attr.categories);
 		v.attributes = v.attr.textAttributes();
+		v.chatLocation = v.address ? true : false;
+		v.chatId = v.chatLocation ? v.locID : v.contact.id;
 		if (v.rating > 0)
 			v.rating = '<detailRating onclick="ratings.open(' + v.locID + ')"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></ratingSelection></detailRating>';
-		else
+		else if (v.address)
 			v.rating = '<div style="margin:1em 0;"><buttontext class="bgColor" onclick="ratings.open(' + v.locID + ')">' + ui.l('rating.save') + '</buttontext></div>';
+		if (v.address)
+			v.distanceDisplay = ' style="display:none;"';
+		else {
+			v.compassDisplay = ' style="display:none;"';
+			v.gender = '<img src="images/gender' + v.contact.gender + '.svg" />';
+		}
 		if (v.address)
 			v.address = v.address.replace(/\n/g, '<br />');
 		if (v.ownerId && v.url)
@@ -534,21 +546,22 @@ ${v.hint}
 				v.cat = v.cat + ',' + c.substring(i, i + 1);
 			v.cat = v.cat.substring(1);
 		}
-		communication.ajax({
-			url: global.server + 'action/map?source=' + geoData.latlon.lat + ',' + geoData.latlon.lon + '&destination=' + v.latitude + ',' + v.longitude,
-			progressBar: false,
-			success(r) {
-				var x = 0, f = function () {
-					if (x++ > 20)
-						return;
-					if (!ui.q('[i="' + v.id + '"] img.map'))
-						setTimeout(f, 100);
-					else
-						ui.attr('[i="' + v.id + '"] img.map', 'src', 'data:image/png;base64,' + r);
-				};
-				f.call();
-			}
-		});
+		if (v.address)
+			communication.ajax({
+				url: global.server + 'action/map?source=' + geoData.latlon.lat + ',' + geoData.latlon.lon + '&destination=' + v.latitude + ',' + v.longitude,
+				progressBar: false,
+				success(r) {
+					var x = 0, f = function () {
+						if (x++ > 20)
+							return;
+						if (!ui.q('[i="' + v.id + '"] img.map'))
+							setTimeout(f, 100);
+						else
+							ui.attr('[i="' + v.id + '"] img.map', 'src', 'data:image/png;base64,' + r);
+					};
+					f.call();
+				}
+			});
 		return pageLocation.templateDetail(v);
 	}
 	static edit(id) {
@@ -746,7 +759,7 @@ ${v.hint}
 		}
 		var v = ui.val('locations filters [name="filterKeywords"]').trim();
 		if (v) {
-			v = v.split(' ');
+			v = v.replace(/'/g, '\'\'').split(' ');
 			for (var i = 0; i < v.length; i++) {
 				if (v[i].trim()) {
 					v[i] = v[i].trim().toLowerCase();
@@ -850,13 +863,18 @@ ${v.hint}
 			return 'N';
 	}
 	static listInfos(v) {
-		v.attr = ui.getAttributes(v, 'list');
-		v.extra = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 ? 0 : 1).replace('.', ',') + 'km<br/>' : '';
+		v.attr = ui.getAttributes(v.id ? v : v.contact, 'list');
+		v.extra = v._geolocationDistance ?
+			parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 || !v.id ? 0 : 1).replace('.', ',') + 'km<br/>'
+			: '';
 		if (v.attr.total && v.attr.totalMatch / v.attr.total > 0)
-			v.extra += parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5) + '%<br/>';
-		if (v._geolocationDistance)
+			v.extra += parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5) + '%';
+		v.extra += '<br/>';
+		if (v._geolocationDistance && v.latitude)
 			v.extra += '<div><compass style="transform:rotate('
 				+ geoData.getAngel(geoData.latlon, { lat: v.latitude, lon: v.longitude }) + 'deg);"></compass></div>';
+		else if (v.contact.gender)
+			v.extra += '<img src="images/gender' + v.contact.gender + '.svg" />';
 		if (!v._message1)
 			v._message1 = v.attr.textAttributes();
 		if (!v._message2)

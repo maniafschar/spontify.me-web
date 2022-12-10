@@ -456,7 +456,7 @@ ${v.budget}
 		}
 		v = ui.val('contacts filters [name="filterKeywords"]').trim();
 		if (v) {
-			v = v.split(' ');
+			v = v.replace(/'/g, '\'\'').split(' ');
 			s += ' and (';
 			for (var i = 0; i < v.length; i++) {
 				if (v[i]) {

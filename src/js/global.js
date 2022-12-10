@@ -8,7 +8,7 @@ export { global };
 
 class global {
 	static appTitle = 'spontify.me';
-	static appVersion = '0.3.3';
+	static appVersion = '0.3.4';
 	static language = null;
 	static minLocations = 5;
 	static paused = false;

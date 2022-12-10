@@ -127,6 +127,8 @@ ${v.eventParticipationButtons}
 			var s = global.date.formatDate(v.event.endDate);
 			v.endDate = ' (' + ui.l('events.type_' + v.event.type) + ' ' + ui.l('to') + ' ' + s.substring(s.indexOf(' ') + 1, s.lastIndexOf(' ')) + ')';
 		}
+		if (!v.locID)
+			v.event.text = ui.categories[v.event.category].label + '<br/>' + v.event.text;
 		v.id = events.getId(v);
 		if (('' + v.id).indexOf('_') < 0) {
 			v.date = global.date.formatDate(v.event.startDate);
@@ -438,7 +440,7 @@ ${v.eventParticipationButtons}
 						v.name = t + ' ' + v.name;
 					else {
 						v.name = t + ' ' + v.contact.pseudonym + (v.contact.age ? ' (' + v.contact.age + ')' : '');
-						v._message1 = ui.categories[v.event.category].verb;
+						v._message1 = ui.categories[v.event.category].label;
 					}
 					if (v.ownerId == v.contact.id)
 						v._message = '<span class="highlightColor">' + v.event.text + '</span><br/>';
