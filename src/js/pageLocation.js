@@ -96,6 +96,8 @@ ${v.parking}
 		onclick="events.toggle(${v.locID})">${ui.l('events.title')}</buttontext>
 	<buttontext class="bgColor${v.hideMeEvents}" name="buttonWhatToDo"
 		onclick="pageLocation.toggleWhatToDo(${v.id})">${ui.l('wtd.location')}</buttontext>
+	<buttontext class="bgColor${v.hideMePotentialParticipants}" name="buttonPotentialParticipants"
+		onclick="events.loadPotentialParticipants(${v.category},${v.event.visibility})">${ui.l('events.potentialParticipants')}</buttontext>
 	<buttontext class="bgColor${v.hideMeMarketing}" name="buttonMarketing"
 		onclick="ui.navigation.openHTML(&quot;${global.server}locOwner?id=${v.id}&quot;,&quot;locOwn&quot;)">${ui.l('locations.marketing')}</buttontext>
 	<buttontext class="bgColor${v.hideMeEdit}" name="buttonEdit"
@@ -131,12 +133,24 @@ ${v.parking}
 </text>
 <text name="whatToDo" class="collapsed">
 	<detailTogglePanel>
-		<div style="margin-bottom:1.5em;">${ui.l('wtd.time')}<br/>
-			<input type="time" id="messageTimeDetail" placeholder="HH:MM" class="whatToDoTime" value="${v.wtdTime}" />
-		</div>
-		<buttontext class="bgColor"
-			onclick="pageHome.saveEvent(&quot;${v.cat}&quot;,${v.locID})">
-			${ui.l('wtd.buttonSave')}
+		<form name="editElement" onsubmit="return false">
+			<input type="hidden" name="type" value="o" />
+			<input type="hidden" name="visibility" value="2" />
+			<field>
+				<label>${ui.l('wtd.time')}</label>
+				<value>
+					<input type="time" name="startDate" placeholder="HH:MM" step="900" value="${v.wtdTime}" />
+				</value>
+			</field>
+			<field>
+				<label>${ui.l('description')}</label>
+				<value>
+					<textarea name="text" maxlength="1000"></textarea>
+				</value>
+			</field>
+		</form>
+		<buttontext class="bgColor" onclick="pageLocation.saveEvent(${v.locID})" style="margin-top:2em;">
+			${ui.l('save')}
 		</buttontext>
 	</detailTogglePanel>
 </text>
@@ -148,6 +162,9 @@ ${v.parking}
 			${ui.l('sendSocialShareLocation')}
 		</buttontext>
 	</detailTogglePanel>
+</text>
+<text name="potentialParticipants" class="collapsed" style="margin:0 -1.5em;">
+	<detailTogglePanel></detailTogglePanel>
 </text>
 <text name="marketing" class="collapsed">
 	<detailTogglePanel></detailTogglePanel>
@@ -413,13 +430,16 @@ ${v.hint}
 				body: { classname: classname, id: id },
 				success(r) {
 					ui.navigation.hidePopup();
-					if (classname == 'Location') {
-						ui.navigation.goTo(ui.q('detail').getAttribute('from'));
-						setTimeout(function () {
+					ui.navigation.goTo('home');
+					setTimeout(function () {
+						if (classname == 'Location')
 							lists.removeListEntry(id, 'locations');
-						}, 700);
-					} else
-						events.refreshToggle();
+						else {
+							var rows = ui.qa('locations row[i^="' + id + '_"]');
+							for (var i = 0; i < rows.length; i++)
+								lists.removeListEntry(rows[i].getAttribute('i'), 'locations');
+						}
+					}, 700);
 				}
 			});
 		} else
@@ -479,28 +499,32 @@ ${v.hint}
 			v.telOpenTag = '<a href="tel:' + v.tel.replace(/[^+\d]*/g, '') + '" style="color:black;">';
 			v.telCloseTag = '</a>';
 		}
-		v.attr = ui.getAttributes(v.address ? v : v.contact, 'detail');
-		v.budget = v.attr.budget.toString();
+		var eventWithLocation = v.address;
+		v.attr = ui.getAttributes(eventWithLocation ? v : v.contact, 'detail');
 		if (v.attr.totalMatch) {
 			v.matchIndicator = v.attr.totalMatch + '/' + v.attr.total;
 			v.matchIndicatorPercent = parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5);
 		} else
 			v.matchIndicatorPercent = 0;
 		v.matchIndicatorHint = ui.l('locations.matchIndicatorHint').replace('{0}', v.attr.totalMatch).replace('{1}', v.attr.total).replace('{2}', v.matchIndicatorPercent).replace('{3}', v.attr.categories);
-		v.attributes = v.attr.textAttributes();
-		v.chatLocation = v.address ? true : false;
+		if (eventWithLocation || v.event.contactId != user.contact.id) {
+			v.budget = v.attr.budget.toString();
+			v.attributes = v.attr.textAttributes();
+		}
+		v.chatLocation = eventWithLocation;
 		v.chatId = v.chatLocation ? v.locID : v.contact.id;
 		if (v.rating > 0)
 			v.rating = '<detailRating onclick="ratings.open(' + v.locID + ')"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></ratingSelection></detailRating>';
-		else if (v.address)
+		else if (eventWithLocation)
 			v.rating = '<div style="margin:1em 0;"><buttontext class="bgColor" onclick="ratings.open(' + v.locID + ')">' + ui.l('rating.save') + '</buttontext></div>';
-		if (v.address)
+		if (eventWithLocation)
 			v.distanceDisplay = ' style="display:none;"';
 		else {
+			v.category = v.event.category;
 			v.compassDisplay = ' style="display:none;"';
 			v.gender = '<img src="images/gender' + v.contact.gender + '.svg" />';
 		}
-		if (v.address)
+		if (eventWithLocation)
 			v.address = v.address.replace(/\n/g, '<br />');
 		if (v.ownerId && v.url)
 			v.description = (v.description ? v.description + ' ' : '') + ui.l('locations.clickForMoreDetails');
@@ -516,12 +540,14 @@ ${v.hint}
 				v.copyLinkHint = ui.l('copyLinkHint.location');
 			else
 				v.copyLinkHint = ui.l('copyLinkHint.locationSocial');
-			if (!user.contact || v.ownerId && v.ownerId != user.contact.id)
+			if (v.ownerId && v.ownerId != user.contact.id)
 				v.hideMeEdit = ' noDisp';
-			if (!user.contact || !global.isBrowser() || v.ownerId != user.contact.id)
+			if (!global.isBrowser() || v.ownerId != user.contact.id)
 				v.hideMeMarketing = ' noDisp';
 			v.editAction = 'pageLocation.edit(' + v.locID + ')';
 		}
+		if (v.event.contactId != user.contact.id)
+			v.hideMePotentialParticipants = ' noDisp';
 		if (v.locationFavorite.favorite)
 			v.favorite = 'favorite';
 		if (global.isBrowser())
@@ -1086,6 +1112,34 @@ ${v.hint}
 			i++;
 		}
 		formFunc.saveDraft('location', a);
+	}
+	static saveEvent(locationId) {
+		formFunc.resetError(ui.q('input[name="startDate"]'));
+		formFunc.resetError(ui.q('textarea[name="text"]'));
+		var v = formFunc.getForm('editElement');
+		var h = v.values.startDate.split(':')[0];
+		if (!h)
+			formFunc.setError(ui.q('input[name="startDate"]'), 'events.errorDate')
+		if (!v.values.text)
+			formFunc.setError(ui.q('textarea[name="text"]'), 'error.description');
+		else
+			formFunc.validation.filterWords(ui.q('textarea[name="text"]'));
+		if (ui.q('detail form errorHint'))
+			return;
+		var d = new Date();
+		if (h < d.getHours())
+			d.setDate(d.getDate() - 1);
+		v.values.startDate = global.date.local2server(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + v.values.startDate + ':00');
+		v.values.locationId = locationId;
+		v.classname = 'Event';
+		communication.ajax({
+			url: global.server + 'db/one',
+			method: 'POST',
+			body: v,
+			success(r) {
+				ui.navigation.autoOpen(global.encParam('e=' + r));
+			}
+		});
 	}
 	static scrollMap() {
 		if (ui.cssValue('map', 'display') == 'none')

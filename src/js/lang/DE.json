@@ -442,6 +442,7 @@
 			"participanteStop": "Absagen",
 			"participants": "Teilnehmer",
 			"participationMustBeConfirmed": "Bitte nur verbindliche Teilnahmen!",
+			"potentialParticipants": "passende Spontis",
 			"price": "Eintritt in &euro;",
 			"priceDisp": "Eintritt {0}&euro;",
 			"soldOut": "Alle {0} Plätze belegt!",

@@ -541,12 +541,6 @@ class ui {
 		ui.toggleHeight(e);
 	}
 	static query = {
-		contactAll() {
-			return 'query=contact_list&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contact.id<>' + user.contact.id);
-		},
-		contactMatches() {
-			return 'query=contact_list&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent(pageContact.getSearchMatches());
-		},
 		contactFriends() {
 			return 'query=contact_list&distance=100000&limit=0&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactLink.status=\'Friends\'');
 		},
@@ -563,9 +557,6 @@ class ui {
 		},
 		eventAll() {
 			return 'query=location_listEventCurrent&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon;
-		},
-		eventMatches() {
-			return 'query=location_listEventCurrent&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent(pageLocation.getSearchMatches());
 		},
 		eventMy() {
 			return 'query=location_listEvent&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('event.contactId=' + user.contact.id);

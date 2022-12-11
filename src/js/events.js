@@ -390,15 +390,6 @@ ${v.eventParticipationButtons}
 			}
 		});
 	}
-	static loadListContacts() {
-		var cats = '0', s = pageContact.getSearchMatches();
-		s += '(length(contact.attr' + cats + ')>0 or length(contact.attr' + cats + 'Ex)>0) or ';
-		if (s.length > 0)
-			s = ' and (' + s.substring(0, s.length - 4) + ')';
-		s = ' and contact.id<>' + user.contact.id + s;
-		communication.loadList('query=contact_list&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=50&search=' + encodeURIComponent(s), pageContact.listContacts);
-	}
-
 	static listEvents(l) {
 		var activeID = ui.navigation.getActiveID()
 		if (activeID == 'search')
@@ -499,6 +490,20 @@ ${v.eventParticipationButtons}
 		var as = events.getCalendarList(l, true);
 		lists.data[ui.navigation.getActiveID()] = as;
 		return events.listEventsInternal(as);
+	}
+	static loadPotentialParticipants(category, visibility) {
+		var i = ui.q('detail card:last-child').getAttribute('i');
+		if (ui.q('detail card[i="' + i + '"] [name="potentialParticipants"] detailTogglePanel').innerText) {
+			details.togglePanel(ui.q('detail card[i="' + i + '"] [name="potentialParticipants"]'));
+			return;
+		}
+		var search = (visibility == 1 ? 'contactLink.status=\'Friends\'' : pageContact.getSearchMatches()) +
+			' and (length(contact.attr' + category + ')>0 or length(contact.attr' + category + 'Ex)>0) and contact.id<>' + user.contact.id;
+		communication.loadList('query=contact_list&distance=50&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent(search),
+			function (r) {
+				ui.q('detail card[i="' + i + '"] [name="potentialParticipants"] detailTogglePanel').innerHTML = pageContact.listContacts(r);
+				details.togglePanel(ui.q('detail card[i="' + i + '"] [name="potentialParticipants"]'));
+			});
 	}
 	static locations() {
 		clearTimeout(events.nearByExec);

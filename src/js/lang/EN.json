@@ -442,6 +442,7 @@
 			"participanteStop": "Cancel",
 			"participants": "Participants",
 			"participationMustBeConfirmed": "Please only binding participation!",
+			"potentialParticipants": "matching Spontis",
 			"price": "Entrance in &euro;",
 			"priceDisp": "Entrance {0} &euro;",
 			"soldOut": "Maximum of {0} participants reached!",

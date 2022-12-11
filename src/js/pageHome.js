@@ -45,12 +45,12 @@ class pageHome {
 </field>
 <field class="category">
 <value>
-<input transient="true" type="radio" value="0" name="category" label="${ui.categories[0].verb}" ${v.checked0} checked />
-<input transient="true" type="radio" value="1" name="category" label="${ui.categories[1].verb}" ${v.checked1} />
-<input transient="true" type="radio" value="2" name="category" label="${ui.categories[2].verb}" ${v.checked2} />
-<input transient="true" type="radio" value="3" name="category" label="${ui.categories[3].verb}" ${v.checked3} />
-<input transient="true" type="radio" value="4" name="category" label="${ui.categories[4].verb}" ${v.checked4} />
-<input transient="true" type="radio" value="5" name="category" label="${ui.categories[5].verb}" ${v.checked5} />
+<input type="radio" value="0" name="category" label="${ui.categories[0].verb}" ${v.checked0} checked />
+<input type="radio" value="1" name="category" label="${ui.categories[1].verb}" ${v.checked1} />
+<input type="radio" value="2" name="category" label="${ui.categories[2].verb}" ${v.checked2} />
+<input type="radio" value="3" name="category" label="${ui.categories[3].verb}" ${v.checked3} />
+<input type="radio" value="4" name="category" label="${ui.categories[4].verb}" ${v.checked4} />
+<input type="radio" value="5" name="category" label="${ui.categories[5].verb}" ${v.checked5} />
 </value>
 </field>
 <field>
@@ -172,19 +172,19 @@ class pageHome {
 			'<a class="langSelectImg bgColor' + (global.language == 'EN' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</a></div>');
 	}
 	static saveEvent() {
-		formFunc.resetError(ui.q('input[name="location"]'));
-		formFunc.resetError(ui.q('input[name="startDate"]'));
-		formFunc.resetError(ui.q('textarea[name="text"]'));
+		formFunc.resetError(ui.q('popup form input[name="location"]'));
+		formFunc.resetError(ui.q('popup form input[name="startDate"]'));
+		formFunc.resetError(ui.q('popup form textarea[name="text"]'));
 		var v = formFunc.getForm('editElement');
 		var h = v.values.startDate.split(':')[0];
 		if (!h)
-			formFunc.setError(ui.q('input[name="startDate"]'), 'events.errorDate')
+			formFunc.setError(ui.q('popup form input[name="startDate"]'), 'events.errorDate')
 		if (!v.values.text)
-			formFunc.setError(ui.q('textarea[name="text"]'), 'error.description');
+			formFunc.setError(ui.q('popup form textarea[name="text"]'), 'error.description');
 		else
-			formFunc.validation.filterWords(ui.q('textarea[name="text"]'));
-		if (ui.q('field.location').style.display != 'none' && !v.values.locationId)
-			formFunc.setError(ui.q('input[name="location"]'), 'error.errorLocation');
+			formFunc.validation.filterWords(ui.q('popup form textarea[name="text"]'));
+		if (ui.q('popup field.location').style.display != 'none' && !v.values.locationId)
+			formFunc.setError(ui.q('popup input[name="location"]'), 'error.errorLocation');
 		if (ui.q('popup errorHint'))
 			return;
 		var d = new Date();
