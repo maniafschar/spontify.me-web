@@ -810,8 +810,13 @@ ${v.budget}
 			success() {
 				if (ui.q('popupContent'))
 					ui.navigation.hidePopup();
-				else
-					ui.q('detail card:last-child[i="' + id + '"] [name="friend"] buttontext').outerHTML = '<span style="text-align:center;">' + ui.l('contacts.requestFriendshipAlreadySent') + '</span>';
+				else {
+					var e = ui.q('detail card:last-child[i="' + id + '"] [name="friend"] buttontext');
+					if (e)
+						e.outerHTML = '<span style="text-align:center;">' + ui.l('contacts.requestFriendshipAlreadySent') + '</span>';
+					else
+						ui.navigation.openPopup(ui.l('contacts.requestFriendshipButton'), ui.l('contacts.requestFriendshipSent'));
+				}
 			}
 		});
 	}
