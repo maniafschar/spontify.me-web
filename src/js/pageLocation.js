@@ -337,7 +337,7 @@ ${v.hint}
 	name="openTimes.closeAt${v.i}" onblur="pageLocation.prefillOpenTimesFields(event,&quot;close&quot;);" />
 <input type="hidden" value="${v.id}" name="openTimes.id${v.i}" />`;
 	static templateSearch = v =>
-		global.template`<form name="filterLocations" onsubmit="return false">
+		global.template`<form onsubmit="return false">
 <input type="checkbox" name="filterCategories" value="0" label="${ui.categories[0].label}" onclick="pageLocation.filterList()" ${v.valueCat0}/>
 <input type="checkbox" name="filterCategories" value="1" label="${ui.categories[1].label}" onclick="pageLocation.filterList()" ${v.valueCat1}/>
 <input type="checkbox" name="filterCategories" value="2" label="${ui.categories[2].label}" onclick="pageLocation.filterList()" ${v.valueCat2}/>
@@ -431,6 +431,8 @@ ${v.hint}
 				success(r) {
 					ui.navigation.hidePopup();
 					ui.navigation.goTo('home');
+					if (classname == 'Event')
+						events.init();
 					setTimeout(function () {
 						if (classname == 'Location')
 							lists.removeListEntry(id, 'locations');
@@ -1061,7 +1063,7 @@ ${v.hint}
 		}
 		pageLocation.sanatizeFields();
 		var id = ui.val('[name="id"]');
-		var v = formFunc.getForm('editElement');
+		var v = formFunc.getForm('popup form');
 		v.classname = 'Location';
 		if (id) {
 			v.id = id;
@@ -1103,7 +1105,7 @@ ${v.hint}
 		if (ui.q('popup input[name="id"]').value)
 			return;
 		pageLocation.sanatizeFields();
-		var a = formFunc.getForm('editElement');
+		var a = formFunc.getForm('popup form');
 		a.OT = [];
 		a.OT[0] = ['locationOpenTime.day', 'locationOpenTime.openAt', 'locationOpenTime.closeAt', 'locationOpenTime.id'];
 		var e, i = 1;
@@ -1114,16 +1116,16 @@ ${v.hint}
 		formFunc.saveDraft('location', a);
 	}
 	static saveEvent(locationId) {
-		formFunc.resetError(ui.q('input[name="startDate"]'));
-		formFunc.resetError(ui.q('textarea[name="text"]'));
-		var v = formFunc.getForm('editElement');
+		formFunc.resetError(ui.q('popup form input[name="startDate"]'));
+		formFunc.resetError(ui.q('popup form textarea[name="text"]'));
+		var v = formFunc.getForm('popup form');
 		var h = v.values.startDate.split(':')[0];
 		if (!h)
-			formFunc.setError(ui.q('input[name="startDate"]'), 'events.errorDate')
+			formFunc.setError(ui.q('popup form input[name="startDate"]'), 'events.errorDate')
 		if (!v.values.text)
-			formFunc.setError(ui.q('textarea[name="text"]'), 'error.description');
+			formFunc.setError(ui.q('popup form textarea[name="text"]'), 'error.description');
 		else
-			formFunc.validation.filterWords(ui.q('textarea[name="text"]'));
+			formFunc.validation.filterWords(ui.q('popup form textarea[name="text"]'));
 		if (ui.q('detail form errorHint'))
 			return;
 		var d = new Date();
@@ -1138,6 +1140,7 @@ ${v.hint}
 			body: v,
 			success(r) {
 				ui.navigation.autoOpen(global.encParam('e=' + r));
+				events.init();
 			}
 		});
 	}
@@ -1215,7 +1218,7 @@ ${v.hint}
 			pageLocation.searchFromMap();
 		else {
 			ui.attr('locations', 'menuIndex', 0);
-			pageLocation.filter = formFunc.getForm('filterLocations').values;
+			pageLocation.filter = formFunc.getForm('locations filters form').values;
 			communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent(pageLocation.getSearch()), pageLocation.listLocation, 'locations', 'search');
 		}
 	}

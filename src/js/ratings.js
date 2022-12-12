@@ -38,7 +38,7 @@ class ratings {
             onclick="ratings.click(5)" style="display:none;">★</span></full>
 </ratingSelection>
 <div style="clear:both;text-align:center;padding:0.5em 1em 0 1em;margin-bottom:0.5em;">
-    <form name="ratingForm" onsubmit="return false">
+    <form onsubmit="return false">
         <input type="hidden" id="owner" value="${v.owner}" />
         <input type="hidden" id="cid" value="${v.id}" />
         <input type="hidden" name="locationId" value="${v.id}" />
@@ -163,7 +163,7 @@ class ratings {
 			ratings: ui.val('[name="ratings"]'),
 			owner: ui.val('#owner')
 		};
-		var v = formFunc.getForm('ratingForm');
+		var v = formFunc.getForm('popup form');
 		v.classname = 'LocationRating';
 		communication.ajax({
 			url: global.server + 'db/one',
@@ -176,7 +176,7 @@ class ratings {
 		});
 	}
 	static saveDraft() {
-		var f = formFunc.getForm('ratingForm');
+		var f = formFunc.getForm('popup form');
 		formFunc.saveDraft('rating' + ui.val('#cid'), f.values.text ? f : null);
 	}
 	static showRatedBonusPage(id) {

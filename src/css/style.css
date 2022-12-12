@@ -615,6 +615,17 @@ settings explain {
 	padding-top: 0;
 }
 
+settings qrcodeDescription {
+	margin-top: 2em;
+	display: block;
+}
+
+settings qrcode {
+	display: block;
+	position: relative;
+	margin-bottom: 2em;
+}
+
 .borderBottom {
 	border-bottom: solid 1px rgba(200, 200, 200, 0.4);
 }
@@ -966,7 +977,7 @@ popupTitle>div {
 	font-size: 1.3em;
 	max-width: 90%;
 	display: inline-block;
-	background: rgba(255, 255, 255, 0.95);
+	background: rgba(210, 230, 215, 0.95);
 	padding: 0.5em 1em;
 	border-radius: 0.5em 0.5em 0 0;
 	color: black;
@@ -990,8 +1001,8 @@ popupContent {
 	display: block;
 	border-radius: 0.5em;
 	overflow-x: hidden;
-	background: rgba(255, 255, 255, 0.95);
-	border: solid transparent 0.5em;
+	background: linear-gradient(rgba(210, 230, 215, 0.95) 0%, rgba(180, 200, 185, 0.95) 100%);
+	padding: 0.5em;
 	color: black;
 }
 
@@ -1784,7 +1795,7 @@ detail .canceled::before {
 	position: absolute;
 	font-size: 6em;
 	opacity: 0.3;
-	top: 1.2em;
+	top: 1.25em;
 	line-height: 1;
 	width: 100%;
 	right: 0;

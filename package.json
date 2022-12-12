@@ -21,7 +21,7 @@
 		"@babel/preset-env": "^7.18.10",
 		"@swc/core": "^1.2.226",
 		"@swc/wasm": "^1.2.226",
-		"@webpack-cli/generators": "^2.5.0",
+		"@webpack-cli/generators": "^3.0.1",
 		"assert": "^2.0.0",
 		"babel-loader": "^8.2.5",
 		"bable-loader": "0.0.1-security",
@@ -51,6 +51,7 @@
 	},
 	"dependencies": {
 		"crypto-js": "^4.1.1",
-		"jsencrypt": "^3.2.1"
+		"jsencrypt": "^3.2.1",
+		"qr-code-styling": "^1.6.0-rc.1"
 	}
 }

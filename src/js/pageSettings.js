@@ -10,6 +10,7 @@ import { details } from './details';
 import { intro } from './intro';
 import { pageChat } from './pageChat';
 import { pageLocation } from './pageLocation';
+import QRCodeStyling from 'qr-code-styling';
 
 export { pageSettings };
 
@@ -19,7 +20,7 @@ class pageSettings {
 	static hintSettings1 = false;
 	static hintSettings2 = false;
 	static templateSettings1 = v =>
-		global.template`<form name="myProfile" onsubmit="return false">
+		global.template`<form onsubmit="return false">
 	<field>
 		<label style="padding-top:1em;">${ui.l('pseudonym')}</label>
 		<value>
@@ -112,6 +113,8 @@ class pageSettings {
 			<explain>${ui.l('settings.searchPseudonymHint')}</explain>
 		</value>
 	</field>
+	<qrcodeDescription>${ui.l('settings.qrcode')}</qrcodeDescription>
+	<qrcode></qrcode>
 	<dialogButtons>
 		<buttontext onclick="ui.navigation.goTo(&quot;settings2&quot;)" class="bgColor">&gt;</buttontext>
 	</dialogButtons>
@@ -193,7 +196,7 @@ class pageSettings {
 		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#settings3Notifications&quot;)">${ui.l('wtd.myNotifications')}</buttontext><br/>
 <div class="notification" id="settings3Notifications" style="display:none;padding-top:0.25em;">
 	<div style="margin:0.25em 0.5em 1em 0.5em;">
-		<form name="myProfile3" onsubmit="return false">
+		<form onsubmit="return false">
 			<input type="checkbox" value="true" name="notificationChat" label="${ui.l('notification.chat')}" ${v['contact.notificationChat']} />
 			<br />
 			<input type="checkbox" value="true" name="notificationFriendRequest" label="${ui.l('notification.friendRequest')}" ${v['contact.notificationFriendRequest']} />
@@ -437,11 +440,22 @@ class pageSettings {
 							if (ui.navigation.getActiveID() == 'settings') {
 								intro.openHint({ desc: 'goToSettings2', pos: '-1em,-5em', size: '60%,auto', onclick: 'ui.navigation.goTo(\'settings2\')' });
 								pageSettings.hintSettings1 = true;
-							}
-							else
+							} else
 								setTimeout(e, 5000);
 						}
 					};
+					new QRCodeStyling({
+						width: 380,
+						height: 380,
+						data: global.server.substring(0, global.server.lastIndexOf('/', global.server.length - 2)) + '?' + global.encParam('f=' + user.contact.id),
+						dotsOptions: {
+							color: 'rgb(252, 251, 104)',
+							type: 'square'
+						},
+						backgroundOptions: {
+							color: 'transparent',
+						}
+					}).append(ui.q('qrcode'));
 					setTimeout(e, 10000);
 				}
 			});
@@ -621,14 +635,14 @@ class pageSettings {
 				ui.q('#settingsInterest3').value = '';
 			ui.q('textarea[name="aboutMe"]').value = ui.val('textarea[name="aboutMe"]').replace(/</g, '&lt;');
 			ui.q('input[name="email"]').value = ui.val('input[name="email"]').trim().toLowerCase();
-			user.save(formFunc.getForm('myProfile'), () => pageSettings.postSave(goToID));
+			user.save(formFunc.getForm('settings form'), () => pageSettings.postSave(goToID));
 		}
 		return false;
 	}
 	static save3() {
 		if (!user.contact || pageSettings.currentSettings3 && pageSettings.currentSettings3 == pageSettings.getCurrentSettings3String())
 			return true;
-		user.save(formFunc.getForm('myProfile3'), () => pageSettings.currentSettings3 = pageSettings.getCurrentSettings3String());
+		user.save(formFunc.getForm('settings3 form'), () => pageSettings.currentSettings3 = pageSettings.getCurrentSettings3String());
 	}
 	static saveAttributes() {
 		var v = { values: {} };

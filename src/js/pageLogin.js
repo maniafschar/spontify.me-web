@@ -207,7 +207,7 @@ class pageLogin {
 		pageLogin.validatePseudonym();
 		pageLogin.validateAGB();
 		formFunc.validation.birthday(ui.q('input[name="birthday"]'));
-		if (!ui.q('[name=loginRegister] errorHint')) {
+		if (!ui.q('form[name=loginRegister] errorHint')) {
 			var e = ui.q('input[name="name"]');
 			if (e)
 				ui.attr(e, 'name', 'time');
@@ -218,7 +218,7 @@ class pageLogin {
 			ui.q('input[name="os"]').value = global.getOS();
 			communication.ajax({
 				url: global.server + 'authentication/register',
-				body: formFunc.getForm('loginRegister').values,
+				body: formFunc.getForm('form[name=loginRegister]').values,
 				method: 'POST',
 				error(r) {
 					communication.login.checkUnique(ui.q('input[name="email"]'));
@@ -233,7 +233,7 @@ class pageLogin {
 	static saveDraft() {
 		var v;
 		if (ui.q('login input[name="agb"]'))
-			v = formFunc.getForm('loginRegister').values;
+			v = formFunc.getForm('form[name=loginRegister]').values;
 		else {
 			v = pageLogin.getDraft();
 			var s = ui.val('input[name="pseudonym"]');

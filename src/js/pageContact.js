@@ -152,7 +152,7 @@ ${v.budget}
     ${ui.l('confirmDelete')}
 </buttontext>`;
 	static templateSearch = v =>
-		global.template`<form name="filterContacts" onsubmit="return false">
+		global.template`<form onsubmit="return false">
 <input type="radio" name="filterGender" value="1" label="${ui.l('male')}" deselect="true" onclick="pageContact.filterList()" ${v.valueGender1}/>
 <input type="radio" name="filterGender" value="2" label="${ui.l('female')}" deselect="true" onclick="pageContact.filterList()" ${v.valueGender2}/>
 <input type="radio" name="filterGender" value="3" label="${ui.l('divers')}" deselect="true" onclick="pageContact.filterList()" ${v.valueGender3}/>
@@ -799,7 +799,7 @@ ${v.budget}
 	}
 	static search() {
 		ui.attr('contacts', 'menuIndex', 0);
-		pageContact.filter = formFunc.getForm('filterContacts').values;
+		pageContact.filter = formFunc.getForm('contacts filters form').values;
 		communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=contact_list&search=' + encodeURIComponent(pageContact.getSearch()), pageContact.listContacts, 'contacts', 'search');
 	}
 	static sendRequestForFriendship(id) {

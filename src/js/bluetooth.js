@@ -65,7 +65,7 @@ class bluetooth {
 						bluetooth.hidePopup();
 						bluetooth.scanStart();
 						if (showHint)
-							intro.openHint({ desc: 'bluetoothOn', pos: '0.5em,4.5em', size: 'auto,auto', hinkyClass: 'top', hinky: 'left:1em;' });
+							intro.openHint({ desc: 'bluetoothOn', pos: '-0.5em,-4.5em', size: 'auto,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
 						showHint = false;
 					} else
 						ui.navigation.openPopup(ui.l('attention'), ui.l('findMe.bluetoothDeactivated'));
@@ -122,9 +122,9 @@ class bluetooth {
 	}
 	static toggle() {
 		if (global.isBrowser())
-			intro.openHint({ desc: 'bluetoothDescriptionBrowser', pos: '0.5em,4.5em', size: '80%,auto', hinkyClass: 'top', hinky: 'left:1em;' });
+			intro.openHint({ desc: 'bluetoothDescriptionBrowser', pos: '-0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
 		else if (!user.contact)
-			intro.openHint({ desc: 'bluetoothDescriptionLoggedOff', pos: '0.5em,4.5em', size: '80%,auto', hinkyClass: 'top', hinky: 'left:1em;' });
+			intro.openHint({ desc: 'bluetoothDescriptionLoggedOff', pos: '-0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
 		else if (window.localStorage.getItem('findMeIDs'))
 			user.save({ findMe: false }, bluetooth.stop);
 		else {

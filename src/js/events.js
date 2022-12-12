@@ -5,6 +5,7 @@ import { global } from "./global";
 import { lists } from "./lists";
 import { Contact, Location, model } from "./model";
 import { pageContact } from "./pageContact";
+import { pageHome } from "./pageHome";
 import { pageLocation } from "./pageLocation";
 import { formFunc, ui } from "./ui";
 import { user } from "./user";
@@ -96,8 +97,7 @@ ${v.hint}
 </field>
 <dialogButtons>
 	<buttontext onclick="events.save()" class="bgColor">${ui.l('save')}</buttontext>
-	<buttontext onclick="pageLocation.deleteElement(${v.idOrNull},&quot;Event&quot;)"
-		style="margin-left:1em;" class="bgColor" id="deleteElement">${ui.l('delete')}</buttontext>
+	<buttontext onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" class="bgColor${v.hideDelete}" id="deleteElement">${ui.l('delete')}</buttontext>
 	<popupHint></popupHint>
 </dialogButtons>
 </form>`;
@@ -208,7 +208,8 @@ ${v.eventParticipationButtons}
 			d = global.date.getDateFields(global.date.server2Local(v.startDate));
 			v.startDate = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute;
 		}
-		v.idOrNull = id ? id : 'null';
+		if (!id)
+			v.hideDelete = ' noDsip';
 		d = new Date();
 		v.today = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
 		v.id = id;
@@ -369,6 +370,17 @@ ${v.eventParticipationButtons}
 		}
 		return {};
 	}
+	static getParticipationNext(eventId) {
+		if (events.participations) {
+			var today = new Date();
+			today.setDate(today.getDate() - 1);
+			for (var i = 0; i < events.participations.length; i++) {
+				if (global.date.server2Local(events.participations[i].eventDate).getTime() > today &&
+					(!eventId || events.participations[i].event.id == eventId))
+					return events.participations[i];
+			}
+		}
+	}
 	static init() {
 		communication.ajax({
 			url: global.server + 'db/list?query=contact_listEventParticipate&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id),
@@ -387,6 +399,12 @@ ${v.eventParticipationButtons}
 						geoData.trackAll = e.getHours();
 					}
 				}
+				events.participations.sort(
+					function (a, b) {
+						return a.eventDate > b.eventDate || a.eventDate == b.eventDate && a.event.startDate.substring(11) > b.event.startDate.substring(11) ? 1 : -1
+					});
+				if (ui.navigation.getActiveID() == 'home')
+					pageHome.init();
 			}
 		});
 	}
@@ -627,7 +645,7 @@ ${v.eventParticipationButtons}
 			}
 		}
 		if (!ui.q('[name="locationId"]').value)
-			formFunc.setError(ui.q('input[name="location"]'), 'error.errorLocation');
+			formFunc.setError(ui.q('input[name="location"]'), 'events.errorLocation');
 		if (!ui.q('[name="type"]').checked) {
 			if (!end.value)
 				formFunc.setError(end, 'events.errorDateNoEnd');
@@ -646,7 +664,7 @@ ${v.eventParticipationButtons}
 		if (ui.q('[name="type"]').checked)
 			end.value = start.value.substring(0, start.value.lastIndexOf('T'));
 		ui.q('[name="confirm"]').value = ui.q('[name="eventconfirm"]:checked') ? 1 : 0;
-		var v = formFunc.getForm('editElement');
+		var v = formFunc.getForm('popup form');
 		v.classname = 'Event';
 		if (id)
 			v.id = id;
@@ -662,7 +680,7 @@ ${v.eventParticipationButtons}
 		});
 	}
 	static saveDraft() {
-		formFunc.saveDraft('event', formFunc.getForm('editElement'));
+		formFunc.saveDraft('event', formFunc.getForm('popup form'));
 	}
 	static setForm() {
 		var b = ui.q('[name="type"]').checked;

@@ -852,17 +852,17 @@ class formFunc {
 	}
 	static getForm(id) {
 		var d = { values: {} }, cb = {};
-		var e = ui.qa('[name="' + id + '"] textarea');
+		var e = ui.qa(id + ' textarea');
 		for (var i = 0; i < e.length; i++) {
 			if (e[i].name)
 				d.values[e[i].name] = e[i].value.replace(/\"/g, '&quot;').replace(/</g, '&lt;');
 		}
-		e = ui.qa('[name="' + id + '"] select');
+		e = ui.qa(id + ' select');
 		for (var i = 0; i < e.length; i++) {
 			if (e[i].name)
 				d.values[e[i].name] = e[i].value;
 		}
-		e = ui.qa('[name="' + id + '"] input');
+		e = ui.qa(id + ' input');
 		for (var i = 0; i < e.length; i++) {
 			if (e[i].getAttribute('transient') != 'true') {
 				if (e[i].name && e[i].type == 'file') {

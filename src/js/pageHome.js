@@ -1,5 +1,6 @@
 import { bluetooth } from './bluetooth';
 import { communication } from './communication';
+import { events } from './events';
 import { global } from './global';
 import { initialisation } from './initialisation';
 import { intro } from './intro';
@@ -32,8 +33,8 @@ class pageHome {
 	static templateNewEvent = v =>
 		global.template`<form name="editElement" onsubmit="return false">
 <input type="hidden" name="locationId" />
-<input type="hidden" name="type" value="o" />
-<input type="hidden" name="visibility" value="2" />
+<input type="hidden" name="type" value="${v.type}" />
+<input type="hidden" name="visibility" value="${v.visibility}" />
 <input type="checkbox" transient="true" onclick="pageHome.toggleLocation()" label="in einer Location" style="margin:1em 0 2em 0;"/>
 <field class="location" style="display:none;">
 <label style="padding-top:0;">${ui.l('events.location')}</label>
@@ -45,28 +46,29 @@ class pageHome {
 </field>
 <field class="category">
 <value>
-<input type="radio" value="0" name="category" label="${ui.categories[0].verb}" ${v.checked0} checked />
-<input type="radio" value="1" name="category" label="${ui.categories[1].verb}" ${v.checked1} />
-<input type="radio" value="2" name="category" label="${ui.categories[2].verb}" ${v.checked2} />
-<input type="radio" value="3" name="category" label="${ui.categories[3].verb}" ${v.checked3} />
-<input type="radio" value="4" name="category" label="${ui.categories[4].verb}" ${v.checked4} />
-<input type="radio" value="5" name="category" label="${ui.categories[5].verb}" ${v.checked5} />
+<input type="radio" value="0" name="category" label="${ui.categories[0].verb}" ${v.category0} />
+<input type="radio" value="1" name="category" label="${ui.categories[1].verb}" ${v.category1} />
+<input type="radio" value="2" name="category" label="${ui.categories[2].verb}" ${v.category2} />
+<input type="radio" value="3" name="category" label="${ui.categories[3].verb}" ${v.category3} />
+<input type="radio" value="4" name="category" label="${ui.categories[4].verb}" ${v.category4} />
+<input type="radio" value="5" name="category" label="${ui.categories[5].verb}" ${v.category5} />
 </value>
 </field>
 <field>
 <label name="startDate">${ui.l('events.startHour')}</label>
 <value>
-<input type="time" name="startDate" placeholder="HH:MM" step="900" value="${v.time}" />
+<input type="time" name="startDate" placeholder="HH:MM" step="900" value="${v.startDate}" />
 </value>
 </field>
 <field>
 <label>${ui.l('description')}</label>
 <value>
-<textarea name="text" maxlength="1000"></textarea>
+<textarea name="text" maxlength="1000">${v.text}</textarea>
 </value>
 </field>
 <dialogButtons>
 <buttontext onclick="pageHome.saveEvent()" class="bgColor">${ui.l('save')}</buttontext>
+<buttontext onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" class="bgColor${v.hideDelete}" id="deleteElement">${ui.l('delete')}</buttontext>
 <popupHint></popupHint>
 </dialogButtons>
 </form>`;
@@ -95,25 +97,31 @@ class pageHome {
 	static init() {
 		var e = ui.q('home');
 		if (!e.innerHTML) {
-			e.innerHTML = pageHome.template({
-				language: global.language,
-				classLanguage: user.contact ? ' style="display:none;"' : '',
-				classSearch: user.contact ? '' : ' style="display:none;"'
-			});
+			e.innerHTML = pageHome.template();
 			formFunc.initFields('home');
 			initialisation.reposition();
 		}
-		ui.q('buttonIcon.bottom.center').style.display = 'none';
 		ui.buttonIcon('.bottom.left', '<badgeNotifications></badgeNotifications><img source="news"/>', 'pageHome.toggleNotification()');
 		pageHome.initNotificationButton(true);
-		ui.buttonIcon('.bottom.right', 'info', 'ui.navigation.goTo("info")');
-		if (user.contact) {
-			ui.buttonIcon('.top.left', 'bluetooth', 'bluetooth.toggle()');
-			if (bluetooth.state != 'on' || !user.contact || !user.contact.findMe)
-				ui.classAdd('buttonIcon.top.left', 'bluetoothInactive');
-		} else
-			ui.buttonIcon('.top.left', '<span class="lang">' + global.language + '</span>', 'pageHome.openLanguage()');
 		ui.buttonIcon('.top.right', user.contact && user.contact.imageList ? user.contact.imageList : 'contact', 'ui.navigation.goTo("settings")');
+		ui.buttonIcon('.bottom.center', 'info', 'ui.navigation.goTo("info")');
+		ui.buttonIcon('.bottom.right', 'bluetooth', 'bluetooth.toggle()');
+		if (bluetooth.state != 'on' || !user.contact || !user.contact.findMe)
+			ui.classAdd('buttonIcon.bottom.right', 'bluetoothInactive');
+		if (user.contact)
+			ui.q('buttonIcon.top.left').style.display = 'none';
+		else
+			ui.buttonIcon('.top.left', '<span class="lang">' + global.language + '</span>', 'pageHome.openLanguage()');
+		var p = events.getParticipationNext();
+		if (p && global.date.server2Local(p.eventDate).toDateString() == new Date().toDateString()) {
+			var s = global.date.formatDate(p.event.startDate);
+			s = s.substring(s.lastIndexOf(' ')).trim();
+			ui.q('buttontext .homeWTD').innerHTML = s + ' ' + p.event.text;
+			ui.attr('buttontext .homeWTD', 'i', p.event.id);
+		} else {
+			ui.q('buttontext .homeWTD').innerHTML = ui.l('wtd.todayIWant');
+			ui.attr('buttontext .homeWTD', 'i', null);
+		}
 	}
 	static initNotification(d) {
 		var f = function () {
@@ -157,12 +165,28 @@ class pageHome {
 	}
 	static newEvent() {
 		if (user.contact) {
-			var d = new Date().getHours() + 2;
-			if (d > 23)
-				d = 8;
-			ui.navigation.openPopup(ui.l('wtd.todayIWant'), pageHome.templateNewEvent({
-				time: d + ':00'
-			}));
+			var v = {};
+			var id = ui.q('buttontext .homeWTD').getAttribute('i');
+			var p = events.getParticipationNext(id);
+			if (id && p) {
+				v.visibility = p.event.visibility;
+				v.type = p.event.type;
+				v.text = p.event.text;
+				v.id = p.event.id;
+				v.startDate = global.date.server2Local(p.event.startDate);
+				v.startDate = ('0' + v.startDate.getHours()).slice(-2) + ':' + ('0' + v.startDate.getMinutes()).slice(-2);
+				v['category' + p.event.category] = ' checked';
+			} else {
+				var d = new Date().getHours() + 2;
+				if (d > 23)
+					d = 8;
+				v.startDate = ('0' + d).slice(-2) + ':00';
+				v.visibility = '2';
+				v.type = 'o';
+				v.category0 = ' checked';
+				v.hideDelete = ' noDisp';
+			}
+			ui.navigation.openPopup(ui.l('wtd.todayIWant'), pageHome.templateNewEvent(v));
 		} else
 			intro.openHint({ desc: 'whatToDo', pos: '10%,5em', size: '80%,auto' });
 	}
@@ -175,7 +199,7 @@ class pageHome {
 		formFunc.resetError(ui.q('popup form input[name="location"]'));
 		formFunc.resetError(ui.q('popup form input[name="startDate"]'));
 		formFunc.resetError(ui.q('popup form textarea[name="text"]'));
-		var v = formFunc.getForm('editElement');
+		var v = formFunc.getForm('popup form');
 		var h = v.values.startDate.split(':')[0];
 		if (!h)
 			formFunc.setError(ui.q('popup form input[name="startDate"]'), 'events.errorDate')
@@ -184,21 +208,23 @@ class pageHome {
 		else
 			formFunc.validation.filterWords(ui.q('popup form textarea[name="text"]'));
 		if (ui.q('popup field.location').style.display != 'none' && !v.values.locationId)
-			formFunc.setError(ui.q('popup input[name="location"]'), 'error.errorLocation');
+			formFunc.setError(ui.q('popup input[name="location"]'), 'events.errorLocation');
 		if (ui.q('popup errorHint'))
 			return;
 		var d = new Date();
 		if (h < d.getHours())
-			d.setDate(d.getDate() - 1);
+			d.setDate(d.getDate() + 1);
 		v.values.startDate = global.date.local2server(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + v.values.startDate + ':00');
 		v.classname = 'Event';
+		v.id = ui.q('buttontext .homeWTD').getAttribute('i');
 		communication.ajax({
 			url: global.server + 'db/one',
-			method: 'POST',
+			method: v.id ? 'PUT' : 'POST',
 			body: v,
 			success(r) {
 				ui.navigation.hidePopup();
-				ui.navigation.autoOpen(global.encParam('e=' + r));
+				ui.navigation.autoOpen(global.encParam('e=' + (r ? r : v.id)));
+				events.init();
 			}
 		});
 	}

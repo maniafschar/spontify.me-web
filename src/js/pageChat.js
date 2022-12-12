@@ -85,7 +85,7 @@ class pageChat {
 		if (document.activeElement)
 			document.activeElement.blur();
 		var popupVisible = ui.q('popupContent');
-		ui.navigation.openPopup(ui.l('chat.sendImg'), '<form name="chatImg" action="saveChatImage" style="padding:0 2em;"><input type="hidden" name="contactId2" value="' + ui.q('chat').getAttribute('i') + '"><div style="margin:1em;"><input name="image" type="file"/></div></form><div style="text-align:center;margin-bottom:1em;"><buttontext onclick="pageChat.sendChatImage()" class="bgColor" id="popupSendImage" style="display:none;">' + ui.l('send') + '</buttontext></div>');
+		ui.navigation.openPopup(ui.l('chat.sendImg'), '<form style="padding:0 2em;"><input type="hidden" name="contactId2" value="' + ui.q('chat').getAttribute('i') + '"><div style="margin:1em;"><input name="image" type="file"/></div></form><div style="text-align:center;margin-bottom:1em;"><buttontext onclick="pageChat.sendChatImage()" class="bgColor" id="popupSendImage" style="display:none;">' + ui.l('send') + '</buttontext></div>');
 		if (!popupVisible && global.isBrowser()) {
 			var e = ui.q('[name="image"]');
 			if (e)
@@ -637,7 +637,7 @@ class pageChat {
 	static sendChatImage() {
 		if (formFunc.image.hasImage('image')) {
 			var id = ui.q('chat').getAttribute('i');
-			var v = formFunc.getForm('chatImg');
+			var v = formFunc.getForm('popup form');
 			v.classname = 'Chat';
 			communication.ajax({
 				url: global.server + 'db/one',
