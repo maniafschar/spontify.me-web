@@ -618,6 +618,7 @@ settings explain {
 settings qrcodeDescription {
 	margin-top: 6em;
 	display: block;
+	padding: 1em;
 }
 
 settings qrcode {

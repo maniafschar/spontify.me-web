@@ -444,9 +444,10 @@ class pageSettings {
 								setTimeout(e, 5000);
 						}
 					};
+					var x = Math.min(400, ui.q('settings').offsetWidth - 2 * ui.emInPX);
 					new QRCodeStyling({
-						width: 380,
-						height: 380,
+						width: x,
+						height: x,
 						data: global.server.substring(0, global.server.lastIndexOf('/', global.server.length - 2)) + '?' + global.encParam('f=' + user.contact.id),
 						dotsOptions: {
 							color: 'rgb(252, 251, 104)',
