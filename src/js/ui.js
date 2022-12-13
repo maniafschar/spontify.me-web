@@ -236,7 +236,7 @@ class ui {
 					else if (idIntern.indexOf('e=') == 0)
 						details.open(idIntern.substring(2), 'location_listEvent&search=' + encodeURIComponent('event.id=' + idIntern.substring(2)), pageLocation.detailLocationEvent);
 					else if (idIntern.indexOf('f=') == 0)
-						pageContact.sendRequestForFriendship(idIntern);
+						pageContact.sendRequestForFriendship(idIntern.substring(2));
 					else if (idIntern.indexOf('=') == 1)
 						details.open(idIntern.substring(2), 'contact_list&search=' + encodeURIComponent('contact.id=' + idIntern.substring(2)), pageContact.detail);
 				}

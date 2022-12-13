@@ -1328,6 +1328,10 @@ ${v.hint}
 		if (ui.q('map').getAttribute('created')) {
 			ui.q('map').setAttribute('created', new Date().getTime());
 			if (ui.cssValue('map', 'display') == 'none') {
+				if (ui.q('locations').getAttribute('menuIndex') >= ui.q('menu container').childElementCount) {
+					ui.navigation.openPopup(ui.l('attention'), ui.l('events.mapOnlyForLocations'));
+					return;
+				}
 				ui.css('locations listBody', 'margin-top', '20em');
 				ui.css('locations listBody', 'padding-top', '0.5em');
 			} else {

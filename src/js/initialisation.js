@@ -195,7 +195,7 @@ class initialisation {
 			var e = event.target;
 			if (ui.parents(e, 'popupTitle') || !ui.q('popup input') && !ui.q('popup textarea')) {
 				while (e && e.getAttribute) {
-					if (e.getAttribute('onclick'))
+					if (e.getAttribute('onclick') || ui.classContains(e, 'selectable'))
 						return;
 					e = e.parentNode;
 				}

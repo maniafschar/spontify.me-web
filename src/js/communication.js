@@ -125,8 +125,11 @@ class communication {
 					ui.navigation.hideMenu();
 					ui.navigation.hidePopup();
 					ui.html(divID + ' listResults', s);
-					if (menuIndex > -1)
+					if (menuIndex > -1) {
 						ui.attr(divID, 'menuIndex', menuIndex);
+						if (ui.navigation.getActiveID() == 'locations' && menuIndex >= ui.q('menu container').childElementCount && ui.cssValue('map', 'display') != 'none')
+							pageLocation.toggleMap();
+					}
 					ui.q(divID + ' listBody').scrollTop = 0;
 					lists.setListHint(divID);
 				}

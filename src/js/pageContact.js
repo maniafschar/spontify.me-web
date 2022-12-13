@@ -806,7 +806,7 @@ ${v.budget}
 		communication.ajax({
 			url: global.server + 'db/one',
 			method: 'POST',
-			body: { classname: 'ContactLink', values: { status: 'Pending', contactId2: id } },
+			body: { classname: 'ContactLink', values: { contactId2: id } },
 			success() {
 				if (ui.q('popupContent'))
 					ui.navigation.hidePopup();

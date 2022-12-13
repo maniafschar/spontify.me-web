@@ -113,11 +113,11 @@ class pageSettings {
 			<explain>${ui.l('settings.searchPseudonymHint')}</explain>
 		</value>
 	</field>
-	<qrcodeDescription>${ui.l('settings.qrcode')}</qrcodeDescription>
-	<qrcode></qrcode>
 	<dialogButtons>
 		<buttontext onclick="ui.navigation.goTo(&quot;settings2&quot;)" class="bgColor">&gt;</buttontext>
 	</dialogButtons>
+	<qrcodeDescription>${ui.l('settings.qrcode')}</qrcodeDescription>
+	<qrcode></qrcode>
 	<input type="hidden" name="verified" value="true" />
 </form>`;
 	static templateSettings2 = v =>

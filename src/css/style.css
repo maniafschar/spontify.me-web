@@ -616,7 +616,7 @@ settings explain {
 }
 
 settings qrcodeDescription {
-	margin-top: 2em;
+	margin-top: 6em;
 	display: block;
 }
 
@@ -736,7 +736,7 @@ slider thumb val {
 
 .homeButton {
 	cursor: pointer;
-	height: 5em;
+	height: 4.5em;
 	position: relative;
 	display: inline-block;
 	margin: 1.25em 0;
@@ -746,21 +746,21 @@ slider thumb val {
 }
 
 .homeButton span {
-	top: 2em;
+	top: 1.75em;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	right: 5.5em;
 	white-space: nowrap;
 	position: absolute;
-	left: 1.25em;
+	left: 1em;
 	height: 2em;
 }
 
 .homeButton svg {
 	height: 2.5em;
 	position: absolute;
-	right: 1.7em;
-	top: 1.25em;
+	right: 1.5em;
+	top: 1em;
 }
 
 .homeButton svg path {
@@ -977,7 +977,7 @@ popupTitle>div {
 	font-size: 1.3em;
 	max-width: 90%;
 	display: inline-block;
-	background: rgba(210, 230, 215, 0.95);
+	background: rgba(250, 175, 100, 0.95);
 	padding: 0.5em 1em;
 	border-radius: 0.5em 0.5em 0 0;
 	color: black;
@@ -1001,7 +1001,7 @@ popupContent {
 	display: block;
 	border-radius: 0.5em;
 	overflow-x: hidden;
-	background: linear-gradient(rgba(210, 230, 215, 0.95) 0%, rgba(180, 200, 185, 0.95) 100%);
+	background: linear-gradient(rgba(250, 175, 100, 0.95) 0%, rgba(209, 130, 60, 0.95) 100%);
 	padding: 0.5em;
 	color: black;
 }
