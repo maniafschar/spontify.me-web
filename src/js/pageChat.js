@@ -533,6 +533,12 @@ class pageChat {
 				pageChat.lastScroll = new Date().getTime();
 		}
 	}
+	static reset() {
+		pageChat.chatsNew = 0;
+		pageChat.chatsUnseen = 0;
+		pageChat.copyLink = '';
+		ui.html('chatList', '');
+	}
 	static saveDraft() {
 		var e = ui.q('#chatText');
 		if (e)

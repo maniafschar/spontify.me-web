@@ -116,7 +116,7 @@ class lists {
 				+ '%');
 		}
 	}
-	static resetLists() {
+	static reset() {
 		lists.data = [];
 		ui.html('locations', '');
 		ui.html('contacts', '');

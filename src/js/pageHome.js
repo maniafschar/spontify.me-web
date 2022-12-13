@@ -195,6 +195,10 @@ class pageHome {
 			'<div style="text-align:center;padding:2em 0;"><a class="langSelectImg bgColor' + (global.language == 'DE' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE">Deutsch</a>' +
 			'<a class="langSelectImg bgColor' + (global.language == 'EN' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</a></div>');
 	}
+	static reset() {
+		pageHome.badge = -1;
+		ui.html('notificationList', '');
+	}
 	static saveEvent() {
 		formFunc.resetError(ui.q('popup form input[name="location"]'));
 		formFunc.resetError(ui.q('popup form input[name="startDate"]'));

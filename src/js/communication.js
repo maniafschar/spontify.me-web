@@ -244,7 +244,7 @@ class communication {
 							setTimeout(function () { ui.html('login', ''); }, 500);
 							ui.navigation.goTo('home');
 						}
-						lists.resetLists();
+						lists.reset();
 						communication.ping();
 						setTimeout(communication.notification.register, 100);
 						pageChat.initActiveChats();
@@ -410,24 +410,15 @@ class communication {
 		},
 		resetAfterLogoff() {
 			bluetooth.stop();
-			ui.html('chatList', '');
 			initialisation.recoverInvoked = false;
 			pageLocation.locationsAdded = null;
-			lists.data = [];
-			pageHome.badge = 0;
-			pageChat.chatsNew = 0;
-			pageChat.chatsUnseen = 0;
-			pageChat.copyLink = '';
-			pageSettings.currentSettings = null;
-			pageSettings.currentSettings3 = null;
+			pageHome.reset();
+			pageChat.reset();
+			pageSettings.reset();
 			user.reset();
-			communication.setApplicationIconBadgeNumber(0);
-			communication.login.removeCredentials();
-			ui.attr('content > *', 'menuIndex', null);
-			communication.notification.data = [];
-			communication.currentCalls = [];
+			communication.reset();
+			lists.reset();
 			ui.navigation.goTo('home');
-			lists.resetLists();
 			ui.html('head title', global.appTitle);
 		},
 		toServer(os, u, exec) {
@@ -651,6 +642,13 @@ class communication {
 				communication.pingExec = setTimeout(communication.ping, ui.q('chat chatConversation') ? 3000 : 15000);
 			}
 		});
+	}
+	static reset() {
+		communication.setApplicationIconBadgeNumber(0);
+		communication.login.removeCredentials();
+		ui.attr('content > *', 'menuIndex', null);
+		communication.notification.data = [];
+		communication.currentCalls = [];
 	}
 	static sendError(text) {
 		if (!text || !global.language)

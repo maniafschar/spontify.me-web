@@ -357,7 +357,7 @@ class initialisation {
 			}
 		});
 		ui.q('#addLeft > buttontext').innerHTML = global.appTitle + ' blog';
-		lists.resetLists();
+		lists.reset();
 		ui.html('home', '');
 		pageHome.init();
 		if (exec)

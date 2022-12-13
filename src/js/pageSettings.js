@@ -580,6 +580,10 @@ class pageSettings {
 		if (l != global.language)
 			initialisation.setLanguage(l);
 	}
+	static reset() {
+		pageSettings.currentSettings = null;
+		pageSettings.currentSettings3 = null;
+	}
 	static resetError() {
 		formFunc.resetError(ui.q('input[name="pseudonym"]'));
 		formFunc.resetError(ui.q('input[name="email"]'));
