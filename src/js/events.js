@@ -95,7 +95,7 @@ ${v.hint}
 		<input type="checkbox" name="eventconfirm" transient="true" label="${ui.l('events.confirm')}" value="1" ${v.confirm}/>
 	</value>
 </field>
-<dialogButtons>
+<dialogButtons style="margin-bottom:0;">
 	<buttontext onclick="events.save()" class="bgColor">${ui.l('save')}</buttontext>
 	<buttontext onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" class="bgColor${v.hideDelete}" id="deleteElement">${ui.l('delete')}</buttontext>
 	<popupHint></popupHint>
@@ -790,14 +790,16 @@ ${v.eventParticipationButtons}
 		if (event.stopPropagation)
 			event.stopPropagation();
 		var e = ui.q('detail card:last-child[i="' + id.id + '_' + id.date + '"] [name="participants"]');
-		if (e.innerHTML)
-			ui.toggleHeight(e);
-		else {
-			communication.loadList('query=contact_listEventParticipate&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&limit=0&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id.id + ' and eventParticipate.eventDate=\'' + id.date + '\''), function (l) {
-				e.innerHTML = l.length < 2 ? '<div style="margin-bottom:1em;">' + ui.l('events.noParticipant') + '</div>' : pageContact.listContacts(l);
+		if (e) {
+			if (e.innerHTML)
 				ui.toggleHeight(e);
-				return '&nbsp;';
-			});
+			else {
+				communication.loadList('query=contact_listEventParticipate&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&limit=0&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id.id + ' and eventParticipate.eventDate=\'' + id.date + '\''), function (l) {
+					e.innerHTML = l.length < 2 ? '<div style="margin-bottom:1em;">' + ui.l('events.noParticipant') + '</div>' : pageContact.listContacts(l);
+					ui.toggleHeight(e);
+					return '&nbsp;';
+				});
+			}
 		}
 	}
 }

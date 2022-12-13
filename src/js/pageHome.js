@@ -66,7 +66,7 @@ class pageHome {
 <textarea name="text" maxlength="1000">${v.text}</textarea>
 </value>
 </field>
-<dialogButtons>
+<dialogButtons style="margin-bottom:0;">
 <buttontext onclick="pageHome.saveEvent()" class="bgColor">${ui.l('save')}</buttontext>
 <buttontext onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" class="bgColor${v.hideDelete}" id="deleteElement">${ui.l('delete')}</buttontext>
 <popupHint></popupHint>
