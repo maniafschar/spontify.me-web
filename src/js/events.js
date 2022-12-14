@@ -25,7 +25,7 @@ ${v.hint}
 	<label>${ui.l('events.location')}</label>
 	<value style="text-align:center;">
 		<input transient="true" name="location" onkeyup="events.locations()" />
-		<eventLocationInputHelper>${ui.l('events.locationInputHint')}</eventLocationInputHelper>
+		<eventLocationInputHelper><explain>${ui.l('events.locationInputHint')}</explain></eventLocationInputHelper>
 		<buttontext onclick="pageLocation.edit()" class="bgColor eventLocationInputHelperButton">${ui.l('locations.new')}</buttontext>
 	</value>
 </field>
@@ -241,12 +241,13 @@ ${v.eventParticipationButtons}
 			v.startDate = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2) + 'T' + ('0' + d.getHours()).slice(-2) + ':00';
 		}
 		if (!v.endDate) {
-			var d = new Date();
+			d = new Date();
 			d.setMonth(d.getMonth() + 6);
 			v.endDate = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
 		}
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), events.templateEdit(v), 'events.saveDraft()');
 		events.setForm();
+		events.locationsOfPastEvents();
 	}
 	static getCalendarList(data, onlyMine) {
 		if (!data || data.length == 0)
@@ -528,7 +529,7 @@ ${v.eventParticipationButtons}
 		var s = ui.q('input[name="location"]').value.trim();
 		ui.q('buttontext.eventLocationInputHelperButton').style.display = '';
 		if (s.length < 4) {
-			ui.q('eventLocationInputHelper').innerHTML = ui.l('events.locationInputHint');
+			ui.q('eventLocationInputHelper').innerHTML = '<explain>' + ui.l('events.locationInputHint') + '</explain>';
 			return;
 		}
 		events.nearByExec = setTimeout(function () {
@@ -543,6 +544,24 @@ ${v.eventParticipationButtons}
 				}
 			});
 		}, 1000);
+	}
+	static locationsOfPastEvents() {
+		communication.ajax({
+			url: global.server + 'db/list?query=location_listEvent&search=' + encodeURIComponent('event.locationId is not null and event.contactId=' + user.contact.id),
+			responseType: 'json',
+			success(r) {
+				var s = '', processed = {};
+				for (var i = 1; i < r.length; i++) {
+					var l = model.convert(new Location(), r, i);
+					if (!processed[l.id]) {
+						s += '<li i="' + l.id + '" onclick="events.locationSelected(this)">' + l.name + '<br/>' + l.address.replace(/\n/g, global.separator) + '</li>';
+						processed[l.id] = 1;
+					}
+				}
+				if (s)
+					ui.q('eventLocationInputHelper').innerHTML = '<explain>' + ui.l('events.locationInputHint') + '<br/>' + ui.l('events.locationInputHint2') + '</explain><ul>' + s + '</ul>';
+			}
+		});
 	}
 	static locationSelected(e) {
 		ui.q('input[name="locationId"]').value = e.getAttribute('i');

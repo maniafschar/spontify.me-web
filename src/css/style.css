@@ -621,6 +621,10 @@ explain {
 	line-height: 1.3;
 }
 
+eventLocationInputHelper explain {
+	padding-bottom: 0;
+}
+
 settings explain {
 	padding-top: 0;
 }

@@ -40,7 +40,7 @@ class pageHome {
 <label style="padding-top:0;">${ui.l('events.location')}</label>
 <value style="text-align:center;">
 <input transient="true" name="location" onkeyup="events.locations()" />
-<eventLocationInputHelper>${ui.l('events.locationInputHint')}</eventLocationInputHelper>
+<eventLocationInputHelper><explain>${ui.l('events.locationInputHint')}</explain></eventLocationInputHelper>
 <buttontext onclick="pageLocation.edit()" class="bgColor eventLocationInputHelperButton">${ui.l('locations.new')}</buttontext>
 </value>
 </field>
@@ -187,6 +187,7 @@ class pageHome {
 				v.hideDelete = ' noDisp';
 			}
 			ui.navigation.openPopup(ui.l('wtd.todayIWant'), pageHome.templateNewEvent(v));
+			events.locationsOfPastEvents();
 		} else
 			intro.openHint({ desc: 'whatToDo', pos: '10%,5em', size: '80%,auto' });
 	}
