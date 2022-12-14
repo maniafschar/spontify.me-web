@@ -3,7 +3,6 @@ import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './initialisation';
 import { pageChat } from './pageChat';
-import { pageContact } from './pageContact';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 
@@ -55,41 +54,24 @@ class pageInfo {
 	<div style="text-align:center;color:white;padding-top:2em;">© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>
 </div>`;
 	static templateAbout = v =>
-		global.template`<landingblock id="landing0">
-	<landingsubject style="padding-top:0;">${ui.l('landing.block1Title')}</landingsubject>
+		global.template`<div>
+	<subject style="padding-top:0;">${ui.l('info.block1Title')}</subject>
 	<ul>
-		<li>${ui.l('landing.block1_1')}</li>
-		<li>${ui.l('landing.block1_2')}</li>
+		<li>${ui.l('info.block1_1')}</li>
+		<li>${ui.l('info.block1_2')}</li>
 	</ul>
-	<landingsubject>${ui.l('landing.block2Title')}</landingsubject>
+	<subject>${ui.l('info.block2Title')}</subject>
 	<ul>
-		<li>${ui.l('landing.block2_1')}</li>
-		<li>${ui.l('landing.block2_2')}</li>
+		<li>${ui.l('info.block2_1')}</li>
+		<li>${ui.l('info.block2_2')}</li>
 	</ul>
-	<landingsubject>${ui.l('landing.block3Title')}</landingsubject>
+	<subject>${ui.l('info.block3Title')}</subject>
 	<ul>
-		<li>${ui.l('landing.block3_1')}</li>
-		<li>${ui.l('landing.block3_2')}</li>
+		<li>${ui.l('info.block3_1')}</li>
+		<li>${ui.l('info.block3_2')}</li>
 	</ul>
 	<a style="margin:2em 0 1em 0;display:block;cursor:pointer;${v['displayBlogButton']}" onclick="ui.navigation.openHTML(&quot;https://blog.spontify.me&quot;, &quot;blog_spontifyme&quot;)">${ui.l('info.link2blog')}</a>
-</landingblock>
-<landingsubtitle onclick="pageInfo.toggleInfoBlock(&quot;${v.parent} #landing3&quot;, event);">
-	${ui.l('faq.title')}
-</landingsubtitle>
-<landingblock id="landing3" style="display:none;">
-	<landingsubject style="padding-top:0;">${ui.l('faq.1')}</landingsubject>
-	${ui.l('faq.1a')}
-	<landingsubject>${ui.l('faq.2')}</landingsubject>
-	${ui.l('faq.2a')}
-	<landingsubject>${ui.l('faq.3')}</landingsubject>
-	${ui.l('faq.3a')}
-	<landingsubject>${ui.l('faq.4')}</landingsubject>
-	${ui.l('faq.4a')}
-	<landingsubject>${ui.l('faq.5')}</landingsubject>
-	${ui.l('faq.5a')}
-	<landingsubject>${ui.l('faq.6')}</landingsubject>
-	${ui.l('faq.6a')}
-</landingblock>`;
+</div>`;
 	static marketingTitle = '';
 
 	static init() {
@@ -112,7 +94,6 @@ class pageInfo {
 				v.url = v.url + '?c=' + user.contact.id;
 			e.innerHTML = pageInfo.template(v) + e.innerHTML;
 			formFunc.initFields('info');
-			ui.css(ui.q('info landingsubtitle'), 'display', 'none');
 			if (!user.contact)
 				ui.css('#socialShare', 'display', 'none');
 			if (global.getDevice() == 'computer')

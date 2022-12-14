@@ -186,6 +186,16 @@ hint>b {
 	display: inline-block;
 }
 
+hint emphasis {
+	font-weight: bold;
+	color: rgb(209, 130, 60);
+}
+
+hint title {
+	font-weight: bold;
+	font-size: 1.3em;
+}
+
 hintAttributeEx {
 	display: block;
 	position: relative;
@@ -1554,7 +1564,7 @@ buttontext.map {
 	margin-left: -9em;
 	top: 4.25em;
 	opacity: 0.8;
-	font-size: 0.7em;
+	font-size: 0.8em;
 	display: none;
 }
 
@@ -1852,13 +1862,6 @@ filterSeparator {
 	margin: 0 2em 0.5em 2em;
 	display: block;
 	border: solid 1px transparent
-}
-
-settingsNav {
-	color: white;
-	cursor: pointer;
-	padding: 1em;
-	font-size: 1.4em;
 }
 
 title {
@@ -2282,42 +2285,10 @@ infoblock.overflow {
 	padding-top: 1em;
 }
 
-landingblock {
-	padding-bottom: 1em;
-	display: block;
-}
-
-landingimages img {
-	margin: 1em;
-}
-
-landingtitle {
-	font-size: 2em;
-	white-space: nowrap;
-	color: rgb(0, 94, 160);
-	margin-top: -0.2em;
-	padding-bottom: 0.25em;
-	display: block;
-}
-
-landingsubtitle {
-	color: rgb(252, 251, 104);
-	font-size: 1.3em;
-	padding: 0.5em 0;
-	margin-bottom: 0.5em;
-	cursor: pointer;
-	display: block;
-}
-
-landingsubject {
+info subject {
 	font-weight: bold;
 	display: block;
 	padding: 1em 0 0.5em 0;
-}
-
-infoblock landingsubtitle {
-	color: rgb(0, 94, 160);
-	font-size: 1.1em;
 }
 
 menu {
