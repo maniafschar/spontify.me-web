@@ -307,6 +307,9 @@ class initialisation {
 		} else
 			ui.css('add', 'display', '');
 	}
+	static reset() {
+		initialisation.recoverInvoked = false;
+	}
 	static setLanguage(lang, exec) {
 		if (global.language == lang)
 			return;

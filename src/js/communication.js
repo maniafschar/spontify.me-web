@@ -410,14 +410,15 @@ class communication {
 		},
 		resetAfterLogoff() {
 			bluetooth.stop();
-			initialisation.recoverInvoked = false;
-			pageLocation.locationsAdded = null;
+			initialisation.reset();
+			pageLocation.reset();
 			pageHome.reset();
 			pageChat.reset();
 			pageSettings.reset();
 			user.reset();
 			communication.reset();
 			lists.reset();
+			events.reset();
 			ui.navigation.goTo('home');
 			ui.html('head title', global.appTitle);
 		},

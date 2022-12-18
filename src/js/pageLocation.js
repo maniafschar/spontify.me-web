@@ -453,13 +453,15 @@ ${v.hint}
 				url: global.server + 'db/list?query=location_listOpenTime&search=' + encodeURIComponent('locationOpenTime.locationId=' + l['location.id']),
 				responseType: 'json',
 				success(s) {
-					while (model.convert(new LocationOpenTime(), s, 1).day == 0)
-						s.push(s.splice(1, 1)[0]);
 					var e = ui.q('detail card[i="' + id + '"][type="location"] detailHeader');
-					var o = JSON.parse(decodeURIComponent(e.getAttribute('data')));
-					o.OT = s;
-					e.setAttribute('data', encodeURIComponent(JSON.stringify(o)));
-					ui.html('detail card[i="' + id + '"][type="location"] openTimes', pageLocation.getOpenTimes(s));
+					if (e && e.getAttribute('data')) {
+						while (model.convert(new LocationOpenTime(), s, 1).day == 0)
+							s.push(s.splice(1, 1)[0]);
+						var o = JSON.parse(decodeURIComponent(e.getAttribute('data')));
+						o.OT = s;
+						e.setAttribute('data', encodeURIComponent(JSON.stringify(o)));
+						ui.html('detail card[i="' + id + '"][type="location"] openTimes', pageLocation.getOpenTimes(s));
+					}
 				}
 			});
 		return pageLocation.detailLocationEventInternal(l, id);
@@ -1012,6 +1014,9 @@ ${v.hint}
 		if (!s)
 			return '';
 		return s.replace(/'/g, '&#39;').replace(/"/g, '&#34;').replace(/\n/g, '\u0015').replace(/\r/g, '');
+	}
+	static reset() {
+		pageLocation.locationsAdded = null;
 	}
 	static sanatizeFields() {
 		var sa = '', s = ui.qa('[name="locationcategory"]:checked');

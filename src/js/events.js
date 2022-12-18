@@ -526,10 +526,10 @@ ${v.eventParticipationButtons}
 	}
 	static locations() {
 		clearTimeout(events.nearByExec);
-		var s = ui.q('input[name="location"]').value.trim();
-		ui.q('buttontext.eventLocationInputHelperButton').style.display = '';
+		var s = ui.q('popup input[name="location"]').value.trim();
+		ui.q('popup buttontext.eventLocationInputHelperButton').style.display = '';
 		if (s.length < 4) {
-			ui.q('eventLocationInputHelper').innerHTML = '<explain>' + ui.l('events.locationInputHint') + '</explain>';
+			ui.q('popup eventLocationInputHelper').innerHTML = '<explain>' + ui.l('events.locationInputHint') + '</explain>';
 			return;
 		}
 		events.nearByExec = setTimeout(function () {
@@ -540,7 +540,7 @@ ${v.eventParticipationButtons}
 					var s = '';
 					for (var i = 0; i < r.length; i++)
 						s += '<li i="' + r[i].id + '" onclick="events.locationSelected(this)">' + r[i].name + '<br/>' + r[i].address.replace(/\n/g, global.separator) + '</li>';
-					ui.q('eventLocationInputHelper').innerHTML = s ? '<ul>' + s + '</ul>' : ui.l('events.locationInputNoHit');
+					ui.q('popup eventLocationInputHelper').innerHTML = s ? '<ul>' + s + '</ul>' : ui.l('events.locationInputNoHit');
 				}
 			});
 		}, 1000);
@@ -559,14 +559,14 @@ ${v.eventParticipationButtons}
 					}
 				}
 				if (s)
-					ui.q('eventLocationInputHelper').innerHTML = '<explain>' + ui.l('events.locationInputHint') + '<br/>' + ui.l('events.locationInputHint2') + '</explain><ul>' + s + '</ul>';
+					ui.q('popup eventLocationInputHelper').innerHTML = '<explain>' + ui.l('events.locationInputHint') + '<br/>' + ui.l('events.locationInputHint2') + '</explain><ul>' + s + '</ul>';
 			}
 		});
 	}
 	static locationSelected(e) {
-		ui.q('input[name="locationId"]').value = e.getAttribute('i');
-		ui.q('eventLocationInputHelper').innerHTML = e.innerHTML;
-		ui.q('buttontext.eventLocationInputHelperButton').style.display = 'none';
+		ui.q('popup input[name="locationId"]').value = e.getAttribute('i');
+		ui.q('popup eventLocationInputHelper').innerHTML = e.innerHTML;
+		ui.q('popup buttontext.eventLocationInputHelperButton').style.display = 'none';
 	}
 	static participate(event, id) {
 		event.stopPropagation();
@@ -636,13 +636,16 @@ ${v.eventParticipationButtons}
 			});
 		}
 	}
+	static reset() {
+		events.participations = null;
+	}
 	static save() {
 		var d1, d2;
-		var start = ui.q('input[name="startDate"]');
-		var end = ui.q('input[name="endDate"]');
-		var text = ui.q('[name="text"]');
-		var id = ui.q('[name="id"]').value;
-		ui.html('popupHint', '');
+		var start = ui.q('popup input[name="startDate"]');
+		var end = ui.q('popup input[name="endDate"]');
+		var text = ui.q('popup [name="text"]');
+		var id = ui.q('popup [name="id"]').value;
+		ui.html('popup popupHint', '');
 		formFunc.resetError(start);
 		formFunc.resetError(end);
 		formFunc.resetError(text);
@@ -663,9 +666,9 @@ ${v.eventParticipationButtons}
 				formFunc.setError(start, 'events.errorDateFormat');
 			}
 		}
-		if (!ui.q('[name="locationId"]').value)
-			formFunc.setError(ui.q('input[name="location"]'), 'events.errorLocation');
-		if (!ui.q('[name="type"]').checked) {
+		if (!ui.q('popup [name="locationId"]').value)
+			formFunc.setError(ui.q('popup input[name="location"]'), 'events.errorLocation');
+		if (!ui.q('popup [name="type"]').checked) {
 			if (!end.value)
 				formFunc.setError(end, 'events.errorDateNoEnd');
 			else {
@@ -680,9 +683,9 @@ ${v.eventParticipationButtons}
 		}
 		if (ui.q('popup errorHint'))
 			return;
-		if (ui.q('[name="type"]').checked)
+		if (ui.q('popup [name="type"]').checked)
 			end.value = start.value.substring(0, start.value.lastIndexOf('T'));
-		ui.q('[name="confirm"]').value = ui.q('[name="eventconfirm"]:checked') ? 1 : 0;
+		ui.q('popup [name="confirm"]').value = ui.q('popup [name="eventconfirm"]:checked') ? 1 : 0;
 		var v = formFunc.getForm('popup form');
 		v.classname = 'Event';
 		if (id)
@@ -702,9 +705,9 @@ ${v.eventParticipationButtons}
 		formFunc.saveDraft('event', formFunc.getForm('popup form'));
 	}
 	static setForm() {
-		var b = ui.q('[name="type"]').checked;
-		ui.q('label[name="startDate"]').innerText = ui.l('events.' + (b ? 'date' : 'start'));
-		ui.css('field[name="endDate"]', 'display', b ? 'none' : '');
+		var b = ui.q('popup [name="type"]').checked;
+		ui.q('popup label[name="startDate"]').innerText = ui.l('events.' + (b ? 'date' : 'start'));
+		ui.css('popup field[name="endDate"]', 'display', b ? 'none' : '');
 	}
 	static showNext(event, next) {
 		var e2 = event.target;

@@ -583,6 +583,9 @@ class pageSettings {
 	static reset() {
 		pageSettings.currentSettings = null;
 		pageSettings.currentSettings3 = null;
+		ui.html('settings', '');
+		ui.html('settings2', '');
+		ui.html('settings3', '');
 	}
 	static resetError() {
 		formFunc.resetError(ui.q('input[name="pseudonym"]'));
