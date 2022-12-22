@@ -903,10 +903,6 @@ errorHint {
 	margin-top: 0.25em;
 }
 
-popup errorHint {
-	color: red !important;
-}
-
 value.checkbox errorHint {
 	margin-top: -0.5em;
 }

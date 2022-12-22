@@ -84,7 +84,6 @@ ${v.hint}
 <field>
 	<label>${ui.l('events.visibility')}</label>
 	<value>
-		<input type="radio" name="visibility" value="1" label="${ui.l('events.visibility1')}" ${v.visibility1}/>
 		<input type="radio" name="visibility" value="2" label="${ui.l('events.visibility2')}" ${v.visibility2}/>
 		<input type="radio" name="visibility" value="3" label="${ui.l('events.visibility3')}" ${v.visibility3}/>
 	</value>
@@ -649,6 +648,7 @@ ${v.eventParticipationButtons}
 		formFunc.resetError(start);
 		formFunc.resetError(end);
 		formFunc.resetError(text);
+		formFunc.resetError(ui.q('popup input[name="visibility"]'));
 		if (!text.value)
 			formFunc.setError(text, 'error.description');
 		else
@@ -681,6 +681,8 @@ ${v.eventParticipationButtons}
 				}
 			}
 		}
+		if (v.values.visibility == 2 && (!user.contact.attr || !user.contact.attrInterest))
+			formFunc.setError(ui.q('popup input[name="visibility"]'), 'events.errorVisibility');
 		if (ui.q('popup errorHint'))
 			return;
 		if (ui.q('popup [name="type"]').checked)

@@ -427,6 +427,7 @@
 			"errorDateNoEnd": "Bitte gib das Enddatum an.",
 			"errorDateTooSmall": "Der Termin liegt in der Vergangenheit.",
 			"errorLocation": "Bitte wähle eine Location aus.",
+			"errorVisibility": "Du hast in Deinem Profil keine Attribute hinterlegt, so kann das Event niemanden vorgeschalgen werden. Wähle in Deinem Profil Attribute aus oder selektiere \"Alle\".",
 			"location": "Location",
 			"locationInputHint": "Gib mindestens 4 Buchstaben des Namens oder der Adresse der Location ein oder erstelle eine neue Location.",
 			"locationInputHint2": "Adressen von bereits erstellten Events:",
@@ -466,7 +467,7 @@
 			"type_y": "ein mal pro Jahr",
 			"visibility": "Sichtbar für",
 			"visibility1": "Freunde",
-			"visibility2": "Freunde und Spontis die zu mir passen",
+			"visibility2": "Spontis die zu mir passen",
 			"visibility3": "Alle",
 			"yesterday": "Gestern, {0}"
 		},

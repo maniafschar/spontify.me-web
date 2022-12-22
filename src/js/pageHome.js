@@ -34,7 +34,6 @@ class pageHome {
 		global.template`<form name="editElement" onsubmit="return false">
 <input type="hidden" name="locationId" />
 <input type="hidden" name="type" value="${v.type}" />
-<input type="hidden" name="visibility" value="${v.visibility}" />
 <input type="checkbox" transient="true" onclick="pageHome.toggleLocation()" label="in einer Location" style="margin:1em 0 2em 0;"/>
 <field class="location" style="display:none;">
 <label style="padding-top:0;">${ui.l('events.location')}</label>
@@ -64,6 +63,13 @@ class pageHome {
 <label>${ui.l('description')}</label>
 <value>
 <textarea name="text" maxlength="1000">${v.text}</textarea>
+</value>
+</field>
+<field>
+<label>${ui.l('events.visibility')}</label>
+<value>
+<input type="radio" name="visibility" value="2" label="${ui.l('events.visibility2')}" ${v.visibility2} ${v.visibilityChecked2} />
+<input type="radio" name="visibility" value="3" label="${ui.l('events.visibility3')}" ${v.visibility3} ${v.visibilityChecked3} />
 </value>
 </field>
 <dialogButtons style="margin-bottom:0;">
@@ -181,11 +187,12 @@ class pageHome {
 				if (d > 23)
 					d = 8;
 				v.startDate = ('0' + d).slice(-2) + ':00';
-				v.visibility = '2';
+				v.visibility = user.contact.attr && user.contact.attrInterest ? 2 : 3;
 				v.type = 'o';
 				v.category0 = ' checked';
 				v.hideDelete = ' noDisp';
 			}
+			v['visibilityChecked' + v.visibility] = ' checked="checked"';
 			ui.navigation.openPopup(ui.l('wtd.todayIWant'), pageHome.templateNewEvent(v));
 			events.locationsOfPastEvents();
 		} else
@@ -203,6 +210,7 @@ class pageHome {
 	static saveEvent() {
 		formFunc.resetError(ui.q('popup form input[name="location"]'));
 		formFunc.resetError(ui.q('popup form input[name="startDate"]'));
+		formFunc.resetError(ui.q('popup form input[name="visibility"]'));
 		formFunc.resetError(ui.q('popup form textarea[name="text"]'));
 		var v = formFunc.getForm('popup form');
 		var h = v.values.startDate.split(':')[0];
@@ -212,6 +220,8 @@ class pageHome {
 			formFunc.setError(ui.q('popup form textarea[name="text"]'), 'error.description');
 		else
 			formFunc.validation.filterWords(ui.q('popup form textarea[name="text"]'));
+		if (v.values.visibility == 2 && (!user.contact.attr || !user.contact.attrInterest))
+			formFunc.setError(ui.q('popup input[name="visibility"]'), 'events.errorVisibility');
 		if (ui.q('popup field.location').style.display != 'none' && !v.values.locationId)
 			formFunc.setError(ui.q('popup input[name="location"]'), 'events.errorLocation');
 		if (ui.q('popup errorHint'))
