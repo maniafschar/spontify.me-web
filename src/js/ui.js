@@ -739,9 +739,9 @@ class ui {
 	static toggleHeight(e, exec) {
 		if (typeof e == 'string')
 			e = ui.q(e);
-		if (!e || e.getAttribute('toggle'))
+		if (!e || e.getAttribute('toggle') && new Date().getTime() - e.getAttribute('toggle') < 450)
 			return;
-		e.setAttribute('toggle', true);
+		e.setAttribute('toggle', new Date().getTime());
 		if (!e.getAttribute('h')) {
 			var p = e.style.position;
 			var d = e.style.display;

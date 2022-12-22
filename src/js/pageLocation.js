@@ -385,7 +385,6 @@ ${v.hint}
 			v.values.note = n.value;
 		}
 		var id = ui.q('detail card:last-child').getAttribute('i');
-		ui.q('detail card:last-child').getAttribute('i');
 		if (id.indexOf && id.indexOf('_') > 0)
 			v.values.eventId = id.substring(0, id.indexOf('_'));
 		else
