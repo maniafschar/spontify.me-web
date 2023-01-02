@@ -173,7 +173,7 @@ class pageHome {
 		if (user.contact) {
 			if (!user.contact.image) {
 				ui.navigation.openPopup(ui.l('attention'),
-					ui.l('') +
+					ui.l('events.noImage') +
 					'<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.edit') + '</buttontext>');
 				return;
 			}
