@@ -171,6 +171,12 @@ class pageHome {
 	}
 	static newEvent() {
 		if (user.contact) {
+			if (!user.contact.image) {
+				ui.navigation.openPopup(ui.l('attention'),
+					ui.l('') +
+					'<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.edit') + '</buttontext>');
+				return;
+			}
 			var v = {};
 			var id = ui.q('buttontext .homeWTD').getAttribute('i');
 			var p = events.getParticipationNext(id);

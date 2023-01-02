@@ -439,6 +439,7 @@
 			"newHint": "Small events, for example, you've reserved a table at a restaurant, and also larger events are welcome.",
 			"next": "Coming {0}",
 			"noEvents": "At the moment, no Events found.",
+			"noImage": "You don't have a profile picture yet. Without a profile picture, others can't recognize you, so a new event wouldn't make sense.<br/><br/>Upload a profile picture in your settings, then you can create a new event.",
 			"noParticipant": "No participants up to now. Be the first!",
 			"outdated": "Currently inactive Events",
 			"participante": "Participate",

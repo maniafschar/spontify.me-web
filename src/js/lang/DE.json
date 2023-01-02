@@ -439,6 +439,7 @@
 			"newHint": "Kleine Events, z.B. Du hast einen Tisch in einem Restaurant reserviert, und auch größere Events sind willkommen.",
 			"next": "Kommenden {0}",
 			"noEvents": "Momentan wurden keine Events gefunden.",
+			"noImage": "Du hast noch keine Profilbild. Ohne Profilbild können andere Dich nicht erkennen, ein neues Event würde also keinen Sinn ergeben.<br/><br/>Lade eine Profilbild in Deinen Einstellungen hoch, dann kannst du ein neues Event erstellen.",
 			"noParticipant": "Noch kein Teilnehmer, sei der Erste!",
 			"outdated": "Momentan nicht aktuelle Events",
 			"participante": "Teilnehmen",
