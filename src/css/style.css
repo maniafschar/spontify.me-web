@@ -299,7 +299,11 @@ homeBody {
 	display: block;
 	top: 50%;
 	margin-top: -8em;
-	text-align: left;
+}
+
+homeBody buttonIcon svg {
+	width: 5em;
+	height: 5em;
 }
 
 .bgColor {
@@ -1623,21 +1627,23 @@ buttontext.map {
 buttonIcon {
 	position: absolute;
 	cursor: pointer;
-	display: flex;
+	display: inline-flex;
 	padding: 0.5em;
 	text-align: center;
 	z-index: 3;
 	color: white;
-	margin-top: -2em;
+	border-radius: 50%;
 	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
 }
 
 buttonIcon.chats {
 	border-radius: 0 50% 50% 0;
+	margin-top: -2em;
 }
 
 buttonIcon.notifications {
 	border-radius: 50% 0 0 50%;
+	margin-top: -2em;
 	right: 0;
 }
 

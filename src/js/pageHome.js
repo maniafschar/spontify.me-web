@@ -22,8 +22,8 @@ class pageHome {
 <homeBody>
 	<buttonIcon class="bgColor" onclick="pageHome.newEvent()">
 		<img source="rocket" />
-	</buttonIcon>
-	<buttontext><span class="homeWTD"></span></buttontext>
+	</buttonIcon><br/>
+	<buttontext><span class="homeWTD"></span></buttontext><br/><br/>
 	<buttonIcon class="bgColor" onclick="bluetooth.toggle()">
 		<img source="bluetooth" />
 	</buttonIcon>
