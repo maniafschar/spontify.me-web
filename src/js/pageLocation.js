@@ -840,11 +840,6 @@ ${v.hint}
 		}
 	}
 	static init() {
-		ui.css('main>buttonIcon', 'display', 'none');
-		ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
-		ui.buttonIcon('.top.right', 'menu', 'ui.navigation.toggleMenu()');
-		ui.buttonIcon('.top.left', 'search', 'lists.toggleFilter(event, pageLocation.getFilterFields)');
-		pageChat.buttonChat();
 		if (!ui.q('locations').innerHTML)
 			lists.setListDivs('locations');
 		if (!ui.q('locations listResults row') && (!ui.q('locations filters') || !ui.q('locations filters').style.transform || ui.q('locations filters').style.transform.indexOf('1') < 0)) {

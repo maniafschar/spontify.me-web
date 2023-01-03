@@ -85,7 +85,6 @@ body.app>main {
 }
 
 body.app>main alert,
-body.app>main>buttonIcon,
 body.app>main hint,
 body.app>main menu,
 body.app>main popup,
@@ -94,12 +93,34 @@ body.app>main progressbar {
 	margin-top: env(safe-area-inset-top);
 }
 
-body.app>main>buttonIcon,
 body.app>main chatList,
 body.app>main notificationList,
 body.app>main hint {
 	margin-bottom: constant(safe-area-inset-bottom);
 	margin-bottom: env(safe-area-inset-bottom);
+}
+
+navigation {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 4em;
+	width: 100%;
+	z-index: 2;
+}
+
+navigation>item {
+	width: 25%;
+	position: relative;
+	height: 100%;
+	float: left;
+	text-align: center;
+	padding-top: 0.5em;
+	cursor: pointer;
+}
+
+navigation>item svg {
+	height: 3em;
 }
 
 add {
@@ -827,13 +848,21 @@ listHeader chatDate {
 chatList,
 notificationList {
 	position: absolute;
-	left: 0;
-	bottom: 4em;
+	bottom: 6.5em;
 	overflow-x: hidden;
 	overflow-y: auto;
 	z-index: 5;
 	max-height: 23em;
+}
+
+chatList {
+	left: 0;
 	padding-right: 0.5em;
+}
+
+notificationList {
+	right: 0;
+	padding-left: 0.5em;
 }
 
 chatList>div,
@@ -841,12 +870,19 @@ notificationList>div {
 	height: 3.5em;
 	margin: 0.5em 0;
 	background: white;
-	border-radius: 0 2em 2em 0;
 	cursor: pointer;
 	position: relative;
 	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
 	color: black;
 	max-width: 95vw;
+}
+
+chatList>div {
+	border-radius: 0 2em 2em 0;
+}
+
+notificationList>div {
+	border-radius: 2em 0 0 2em;
 }
 
 chatList>div {
@@ -863,11 +899,18 @@ notificationList>div>span {
 	position: absolute;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	padding: 0.3em 0.75em 0 3.75em;
 	line-height: 1.5;
 	height: 92%;
 	width: 100%;
 	left: 0;
+}
+
+chatList>div>span {
+	padding: 0.3em 0.75em 0 3.75em;
+}
+
+notificationList>div>span {
+	padding: 0.3em 3.75em 0 1em;
 }
 
 chatList>div>span {
@@ -876,10 +919,19 @@ chatList>div>span {
 
 chatList img,
 notificationList img {
-	border-radius: 0 2em 2em 0;
+	position: absolute;
 	height: 100%;
 	box-shadow: 0 0 0.25em rgb(0, 0, 0, 0.3);
-	margin: -0.25em 0 0 -0.25em;
+	margin-top: -0.25em;
+}
+
+chatList img {
+	border-radius: 0 2em 2em 0;
+}
+
+notificationList img {
+	border-radius: 2em 0 0 2em;
+	right: 0;
 }
 
 chatList svg {
@@ -1572,43 +1624,21 @@ buttonIcon {
 	position: absolute;
 	cursor: pointer;
 	display: flex;
-	padding: 0.3em;
+	padding: 0.5em;
 	text-align: center;
 	z-index: 3;
 	color: white;
-	border: solid 0.15em white;
-	border-radius: 50%;
+	margin-top: -2em;
+	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
 }
 
-buttonIcon.left {
-	left: 0.5em;
+buttonIcon.chats {
+	border-radius: 0 50% 50% 0;
 }
 
-buttonIcon.center {
-	left: 50%;
-	margin-left: -1.3em;
-}
-
-buttonIcon.right {
-	right: 0.5em;
-}
-
-buttonIcon.top {
-	top: 0.5em;
-}
-
-buttonIcon.bottom {
-	bottom: 0.5em;
-}
-
-buttonIcon.marketing {
-	right: 0.5em;
-	top: -1.5em;
-	display: none;
-}
-
-buttonIcon.marketing>span {
-	font-weight: bold;
+buttonIcon.notifications {
+	border-radius: 50% 0 0 50%;
+	right: 0;
 }
 
 buttonIcon.jpg {

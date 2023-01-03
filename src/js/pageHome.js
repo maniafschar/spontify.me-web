@@ -20,15 +20,13 @@ class pageHome {
 	</homeTitle>
 </homeHeader>
 <homeBody>
-	<buttontext class="bgColor homeButton" onclick="pageHome.newEvent()" style="width:80%;">
-		<span class="homeWTD">${ui.l('wtd.todayIWant')}</span><img source="rocket" />
-	</buttontext><br/>
-	<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;locations&quot;)" style="width:70%;">
-		<span>${ui.l('locations.homeButton')}</span> <img source="location" />
-	</buttontext ><br/>
-	<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;contacts&quot;)" style="width:60%;">
-		<span>${ui.l('contacts.homeButton')}</span><img source="contact" />
-	</buttontext>
+	<buttonIcon class="bgColor" onclick="pageHome.newEvent()">
+		<img source="rocket" />
+	</buttonIcon>
+	<buttontext><span class="homeWTD"></span></buttontext>
+	<buttonIcon class="bgColor" onclick="bluetooth.toggle()">
+		<img source="bluetooth" />
+	</buttonIcon>
 </homeBody>`;
 	static templateNewEvent = v =>
 		global.template`<form name="editElement" onsubmit="return false">
@@ -107,17 +105,9 @@ class pageHome {
 			formFunc.initFields('home');
 			initialisation.reposition();
 		}
-		ui.buttonIcon('.bottom.left', '<badgeNotifications></badgeNotifications><img source="news"/>', 'pageHome.toggleNotification()');
 		pageHome.initNotificationButton(true);
-		ui.buttonIcon('.top.right', user.contact && user.contact.imageList ? user.contact.imageList : 'contact', 'ui.navigation.goTo("settings")');
-		ui.buttonIcon('.bottom.center', 'info', 'ui.navigation.goTo("info")');
-		ui.buttonIcon('.bottom.right', 'bluetooth', 'bluetooth.toggle()');
 		if (bluetooth.state != 'on' || !user.contact || !user.contact.findMe)
 			ui.classAdd('buttonIcon.bottom.right', 'bluetoothInactive');
-		if (user.contact)
-			ui.q('buttonIcon.top.left').style.display = 'none';
-		else
-			ui.buttonIcon('.top.left', '<span class="lang">' + global.language + '</span>', 'pageHome.openLanguage()');
 		var p = events.getParticipationNext();
 		if (p && global.date.server2Local(p.eventDate).toDateString() == new Date().toDateString()) {
 			var s = global.date.formatDate(p.event.startDate);
@@ -128,6 +118,7 @@ class pageHome {
 			ui.q('buttontext .homeWTD').innerHTML = ui.l('wtd.todayIWant');
 			ui.attr('buttontext .homeWTD', 'i', null);
 		}
+		formFunc.image.replaceSVGs();
 	}
 	static initNotification(d) {
 		var f = function () {
@@ -261,9 +252,9 @@ class pageHome {
 	}
 	static toggleNotification() {
 		if (!user.contact)
-			intro.openHint({ desc: 'notification', pos: '0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1em;' });
+			intro.openHint({ desc: 'notification', pos: '-0.5em,-7em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
 		else if (!ui.q('notificationList>div'))
-			intro.openHint({ desc: 'notificationEmpty', pos: '0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1em;' });
+			intro.openHint({ desc: 'notificationEmpty', pos: '-0.5em,-7em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
 		else
 			ui.toggleHeight('notificationList');
 	}

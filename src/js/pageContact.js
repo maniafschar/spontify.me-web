@@ -731,11 +731,6 @@ ${v.budget}
 		}
 	}
 	static init() {
-		ui.css('main>buttonIcon', 'display', 'none');
-		ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
-		ui.buttonIcon('.top.right', 'menu', 'ui.navigation.toggleMenu()');
-		ui.buttonIcon('.top.left', 'search', 'lists.toggleFilter(event, pageContact.getFilterFields)');
-		pageChat.buttonChat();
 		if (!ui.q('contacts').innerHTML)
 			lists.setListDivs('contacts');
 		if (!ui.q('contacts listResults row') && (!ui.q('contacts filters') || !ui.q('contacts filters').style.transform || ui.q('contacts filters').style.transform.indexOf('1') < 0)) {

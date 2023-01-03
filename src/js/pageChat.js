@@ -93,10 +93,6 @@ class pageChat {
 		}
 	}
 	static buttonChat() {
-		var e = ui.q('buttonIcon.bottom.left');
-		ui.buttonIcon(e, '<badgeChats>' + (pageChat.chatsNew == 0 ? '' : pageChat.chatsNew) + '</badgeChats><img source="chat" />', 'pageChat.toggleUserList()');
-		if (pageChat.chatsNew)
-			ui.classAdd(e, 'pulse highlight');
 	}
 	static chatAdjustScrollTop(i) {
 		var e = ui.q('chatConversation');
@@ -238,7 +234,6 @@ class pageChat {
 		return 0;
 	}
 	static init() {
-		ui.css('main>buttonIcon', 'display', 'none');
 	}
 	static initActiveChats() {
 		if (!pageChat.admin.image) {
@@ -683,8 +678,8 @@ class pageChat {
 		if (ui.q('chatList>div'))
 			ui.toggleHeight('chatList');
 		else if (user.contact)
-			intro.openHint({ desc: 'chatEmpty', pos: '0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1em;' });
+			intro.openHint({ desc: 'chatEmpty', pos: '0.5em,-7em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1em;' });
 		else
-			intro.openHint({ desc: 'chatDescription', pos: '0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1em;' });
+			intro.openHint({ desc: 'chatDescription', pos: '0.5em,-7em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1em;' });
 	}
 };

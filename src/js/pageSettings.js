@@ -462,9 +462,6 @@ class pageSettings {
 			});
 			return true;
 		}
-		ui.css('main>buttonIcon', 'display', 'none');
-		ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
-		pageChat.buttonChat();
 	}
 	static init2() {
 		var v = [];
@@ -490,9 +487,6 @@ class pageSettings {
 			}
 		}
 		setTimeout(e, 2000);
-		ui.css('main>buttonIcon', 'display', 'none');
-		ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
-		pageChat.buttonChat();
 	}
 	static listBlocked(type, s) {
 		var e = ui.q('#blocked');

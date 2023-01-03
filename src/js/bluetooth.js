@@ -54,12 +54,6 @@ class bluetooth {
 			var showHint = !logon;
 			ble.startStateNotifications(function (state) {
 				bluetooth.state = state;
-				if (ui.navigation.getActiveID() == 'home') {
-					if (state == 'on' && user.contact.findMe)
-						ui.classRemove('buttonIcon.bottom.right', 'bluetoothInactive');
-					else
-						ui.classAdd('buttonIcon.bottom.right', 'bluetoothInactive');
-				}
 				if (user.contact.findMe) {
 					if (state == 'on') {
 						bluetooth.hidePopup();
