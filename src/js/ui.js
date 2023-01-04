@@ -291,31 +291,6 @@ class ui {
 				pageChat.close();
 				return;
 			}
-			if (id == 'home' && currentID == 'detail') {
-				var e = ui.q('detail>div');
-				var x = parseInt(ui.cssValue(e, 'margin-left')) / ui.q('content').clientWidth;
-				if (x < 0) {
-					ui.on(e, 'transitionend', function () {
-						ui.css(e, 'transition', 'none');
-						if (e.lastChild)
-							e.lastChild.outerHTML = '';
-						var x = e.clientWidth / ui.q('content').clientWidth;
-						ui.css(e, 'width', x == 2 ? '' : ((x - 1) * 100) + '%');
-						setTimeout(function () {
-							ui.css(e, 'transition', null);
-						}, 50);
-					}, true);
-					ui.css(e, 'margin-left', ((x + 1) * 100) + '%');
-					return;
-				}
-			}
-			if (id == 'home') {
-				id = ui.q(currentID).getAttribute('from');
-				if (!id || !ui.q(id).innerHTML)
-					id = 'home';
-				else if (!direction)
-					direction = 'backward';
-			}
 			// AGBs opened from login, go back to login
 			if (currentID == 'info' && id == 'home' && !user.contact && pageInfo.openSection == -2)
 				id = 'login';
@@ -373,6 +348,10 @@ class ui {
 					ui.attr(id, 'from', currentID);
 				ui.navigation.fade(id, back);
 				ui.navigation.hideMenu();
+				if (ui.q('navigation item.' + id)) {
+					ui.classRemove('navigation item', 'active');
+					ui.classAdd('navigation item.' + id, 'active');
+				}
 			}
 			ui.navigation.lastPage = currentID;
 		},
@@ -1084,7 +1063,7 @@ class formFunc {
 							e.innerHTML = formFunc.image.svg[id];
 							imgs[i].parentNode.replaceChild(e.firstChild, imgs[i]);
 							if (global.language != 'DE' && id == 'logo')
-								ui.classAdd('hometitle svg>g', 'en');
+								ui.classAdd('homeHeader svg>g', 'en');
 						}
 					} else
 						formFunc.image.fetchSVG(id);

@@ -238,12 +238,11 @@ class communication {
 								communication.sendError('script_correction: ' + ex);
 							}
 						}
-						if (ui.navigation.getActiveID() == 'home')
-							pageHome.init();
-						else {
+						if (ui.navigation.getActiveID() != 'home') {
 							setTimeout(function () { ui.html('login', ''); }, 500);
 							ui.navigation.goTo('home');
 						}
+						pageHome.init(true);
 						lists.reset();
 						communication.ping();
 						setTimeout(communication.notification.register, 100);
@@ -589,19 +588,6 @@ class communication {
 					chat != pageChat.chatsNew ||
 					Object.keys(r.chatUnseen).length != pageChat.chatsUnseen) {
 					pageChat.initActiveChats();
-					var x = ui.q('chatList>div');
-					if (x)
-						x = x.getAttribute('i');
-					if (formFunc.getDraft('alert_chat') != x && ui.q('chatList>div[i="' + x + '"].highlightBackground') && ui.navigation.getActiveID() == 'home' && chat > (pageChat.chatsNew ? parseInt(pageChat.chatsNew) : 0) && ui.cssValue('alert', 'display') == 'none') {
-						var d = ui.q('alert>div'), i = Object.keys(r.chatNew)[0];
-						d.setAttribute('onclick', 'pageChat.open(' + i + ')');
-						d.innerHTML = ui.l('notification.newChatAlert').replace('{0}', r.chatNew[i]);
-						d = d.parentNode;
-						d.style.display = 'block';
-						ui.navigation.animation(d, 'homeSlideIn');
-					}
-					if (x)
-						formFunc.saveDraft('alert_chat', x);
 				}
 				total += chat;
 				pageChat.chatsNew = chat;
@@ -619,18 +605,7 @@ class communication {
 						url: global.server + 'db/list?query=contact_listNotification',
 						responseType: 'json',
 						success(r2) {
-							var notify = r.notification > pageHome.badge;
 							pageHome.initNotification(r2);
-							var x = model.convert(new Contact(), r2, 1).contactNotification;
-							if (notify && ui.navigation.getActiveID() != 'home' && formFunc.getDraft('alert_notification') != x.id && !x.seen && ui.cssValue('alert', 'display') == 'none') {
-								var d = ui.q('alert>div');
-								d.setAttribute('onclick', ui.q('notificationList>div').getAttribute('onclick') + ';communication.notification.close()');
-								d.innerHTML = ui.q('notificationList>div>span').innerHTML;
-								d = d.parentNode;
-								d.style.display = 'block';
-								ui.navigation.animation(d, 'homeSlideIn');
-							}
-							formFunc.saveDraft('alert_notification', x.id);
 						}
 					});
 				}

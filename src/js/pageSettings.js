@@ -11,6 +11,8 @@ import { intro } from './intro';
 import { pageChat } from './pageChat';
 import { pageLocation } from './pageLocation';
 import QRCodeStyling from 'qr-code-styling';
+import { pageInfo } from './pageInfo';
+import { pageHome } from './pageHome';
 
 export { pageSettings };
 
@@ -123,69 +125,69 @@ class pageSettings {
 	static templateSettings2 = v =>
 		global.template`<div style="padding-top:1em;text-align:center;">${ui.l('attributesHint')}</div>
 <div>
-    <buttontext class="bgColor settings2Button"
-        onclick="formFunc.openChoices(&quot;CONTACTATTRIB&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.l('settings.attributes')}</buttontext>
-    <attributesDisplay>
-        <input type="text" id="CONTACTATTRIB" multiplePopup="Attributes" saveAction="pageSettings.saveAttributes"
-            valueEx="${v['attEx']}" value="${v['att']}" max="60" maxEx="250" />
-    </attributesDisplay>
+	<buttontext class="bgColor settings2Button"
+		onclick="formFunc.openChoices(&quot;CONTACTATTRIB&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.l('settings.attributes')}</buttontext>
+	<attributesDisplay>
+		<input type="text" id="CONTACTATTRIB" multiplePopup="Attributes" saveAction="pageSettings.saveAttributes"
+			valueEx="${v['attEx']}" value="${v['att']}" max="60" maxEx="250" />
+	</attributesDisplay>
 </div>
 <div>
-    <buttontext class="bgColor settings2Button"
-        onclick="formFunc.openChoices(&quot;CONTACTATTRIBINTEREST&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.l('settings.interestedIn')}</buttontext>
-    <attributesDisplay>
-        <input type="text" id="CONTACTATTRIBINTEREST" multiplePopup="Attributes"
-            saveAction="pageSettings.saveAttributes" valueEx="${v['attIntEx']}" value="${v['attInt']}" max="60"
-            maxEx="250" />
-    </attributesDisplay>
+	<buttontext class="bgColor settings2Button"
+		onclick="formFunc.openChoices(&quot;CONTACTATTRIBINTEREST&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.l('settings.interestedIn')}</buttontext>
+	<attributesDisplay>
+		<input type="text" id="CONTACTATTRIBINTEREST" multiplePopup="Attributes"
+			saveAction="pageSettings.saveAttributes" valueEx="${v['attIntEx']}" value="${v['attInt']}" max="60"
+			maxEx="250" />
+	</attributesDisplay>
 </div>
 <div>
-    <buttontext class="bgColor settings2Button"
-        onclick="formFunc.openChoices(&quot;CONTACTATTRIB0&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[0].label}</buttontext>
-    <attributesDisplay>
-        <input type="text" id="CONTACTATTRIB0" multiplePopup="Attributes0" saveAction="pageSettings.saveAttributes"
-            valueEx="${v['att0Ex']}" value="${v['att0']}" max="60" maxEx="250" />
-    </attributesDisplay>
+	<buttontext class="bgColor settings2Button"
+		onclick="formFunc.openChoices(&quot;CONTACTATTRIB0&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[0].label}</buttontext>
+	<attributesDisplay>
+		<input type="text" id="CONTACTATTRIB0" multiplePopup="Attributes0" saveAction="pageSettings.saveAttributes"
+			valueEx="${v['att0Ex']}" value="${v['att0']}" max="60" maxEx="250" />
+	</attributesDisplay>
 </div>
 <div>
-    <buttontext class="bgColor settings2Button"
-        onclick="formFunc.openChoices(&quot;CONTACTATTRIB1&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[1].label}</buttontext>
-    <attributesDisplay>
-        <input type="text" id="CONTACTATTRIB1" multiplePopup="Attributes1" saveAction="pageSettings.saveAttributes"
-            valueEx="${v['att1Ex']}" value="${v['att1']}" max="60" maxEx="250" />
-    </attributesDisplay>
+	<buttontext class="bgColor settings2Button"
+		onclick="formFunc.openChoices(&quot;CONTACTATTRIB1&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[1].label}</buttontext>
+	<attributesDisplay>
+		<input type="text" id="CONTACTATTRIB1" multiplePopup="Attributes1" saveAction="pageSettings.saveAttributes"
+			valueEx="${v['att1Ex']}" value="${v['att1']}" max="60" maxEx="250" />
+	</attributesDisplay>
 </div>
 <div>
-    <buttontext class="bgColor settings2Button"
-        onclick="formFunc.openChoices(&quot;CONTACTATTRIB2&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[2].label}</buttontext>
-    <attributesDisplay>
-        <input type="text" id="CONTACTATTRIB2" multiplePopup="Attributes2" saveAction="pageSettings.saveAttributes"
-            valueEx="${v['att2Ex']}" value="${v['att2']}" max="60" maxEx="250" />
-    </attributesDisplay>
+	<buttontext class="bgColor settings2Button"
+		onclick="formFunc.openChoices(&quot;CONTACTATTRIB2&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[2].label}</buttontext>
+	<attributesDisplay>
+		<input type="text" id="CONTACTATTRIB2" multiplePopup="Attributes2" saveAction="pageSettings.saveAttributes"
+			valueEx="${v['att2Ex']}" value="${v['att2']}" max="60" maxEx="250" />
+	</attributesDisplay>
 </div>
 <div>
-    <buttontext class="bgColor settings2Button"
-        onclick="formFunc.openChoices(&quot;CONTACTATTRIB3&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[3].label}</buttontext>
-    <attributesDisplay>
-        <input type="text" id="CONTACTATTRIB3" multiplePopup="Attributes3" saveAction="pageSettings.saveAttributes"
-            valueEx="${v['att3Ex']}" value="${v['att3']}" max="60" maxEx="250" />
-    </attributesDisplay>
+	<buttontext class="bgColor settings2Button"
+		onclick="formFunc.openChoices(&quot;CONTACTATTRIB3&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[3].label}</buttontext>
+	<attributesDisplay>
+		<input type="text" id="CONTACTATTRIB3" multiplePopup="Attributes3" saveAction="pageSettings.saveAttributes"
+			valueEx="${v['att3Ex']}" value="${v['att3']}" max="60" maxEx="250" />
+	</attributesDisplay>
 </div>
 <div>
-    <buttontext class="bgColor settings2Button"
-        onclick="formFunc.openChoices(&quot;CONTACTATTRIB4&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[4].label}</buttontext>
-    <attributesDisplay>
-        <input type="text" id="CONTACTATTRIB4" multiplePopup="Attributes4" saveAction="pageSettings.saveAttributes"
-            valueEx="${v['att4Ex']}" value="${v['att4']}" max="60" maxEx="250" />
-    </attributesDisplay>
+	<buttontext class="bgColor settings2Button"
+		onclick="formFunc.openChoices(&quot;CONTACTATTRIB4&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[4].label}</buttontext>
+	<attributesDisplay>
+		<input type="text" id="CONTACTATTRIB4" multiplePopup="Attributes4" saveAction="pageSettings.saveAttributes"
+			valueEx="${v['att4Ex']}" value="${v['att4']}" max="60" maxEx="250" />
+	</attributesDisplay>
 </div>
 <div>
-    <buttontext class="bgColor settings2Button"
-        onclick="formFunc.openChoices(&quot;CONTACTATTRIB5&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[5].label}</buttontext>
-    <attributesDisplay>
-        <input type="text" id="CONTACTATTRIB5" multiplePopup="Attributes5" saveAction="pageSettings.saveAttributes"
-            valueEx="${v['att5Ex']}" value="${v['att5']}" max="60" maxEx="250" />
-    </attributesDisplay>
+	<buttontext class="bgColor settings2Button"
+		onclick="formFunc.openChoices(&quot;CONTACTATTRIB5&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[5].label}</buttontext>
+	<attributesDisplay>
+		<input type="text" id="CONTACTATTRIB5" multiplePopup="Attributes5" saveAction="pageSettings.saveAttributes"
+			valueEx="${v['att5Ex']}" value="${v['att5']}" max="60" maxEx="250" />
+	</attributesDisplay>
 </div>
 <br/>
 <dialogButtons>
@@ -253,7 +255,8 @@ class pageSettings {
 <buttontext onclick="pageSettings.deleteProfile()" class="bgColor">${ui.l('settings.deleteProfile')}</buttontext>
 </div>
 </div>
-<buttontext class="bgColor settings2Button" onclick="communication.login.logoff()">${ui.l('logoff.title')}</buttontext><br/>`;
+<buttontext class="bgColor settings2Button" onclick="communication.login.logoff()">${ui.l('logoff.title')}</buttontext><br/>
+${v.info}`;
 
 	static checkUnique() {
 		if (user.email == ui.val('input[name="email"]'))
@@ -431,6 +434,7 @@ class pageSettings {
 					pageSettings.currentSettings = pageSettings.getCurrentSettingsString();
 					if (exec)
 						exec.call()
+					v.info = pageInfo.template({ hideDesc: ' noDisp' });
 					ui.q('settings3').innerHTML = pageSettings.templateSettings3(v);
 					formFunc.initFields('settings3');
 					pageSettings.currentSettings3 = pageSettings.getCurrentSettings3String();
@@ -552,10 +556,8 @@ class pageSettings {
 				success(r) {
 					user.contact.image = r['contact.image'];
 					user.contact.imageList = r['contact.imageList'];
-					var e = ui.q('buttonIcon.top.right.jpg>img');
-					if (e)
-						e.setAttribute('src', global.serverImg + user.contact.imageList);
-					e = ui.q('settings input[name="image"]+img');
+					ui.q('home').innerHTML = '';
+					var e = ui.q('settings input[name="image"]+img');
 					if (e)
 						e.setAttribute('src', global.serverImg + user.contact.imageList);
 				}

@@ -11,7 +11,9 @@ class lists {
 	static data = [];
 
 	static templateList = v =>
-		global.template`<listHeader>${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5em;"></hinky><div></div></filters><listTitle></listTitle>${v.map}</listHeader>
+		global.template`<buttonicon class="left bgColor" onclick="lists.toggleFilter(event)"><img source="search"/></buttonicon>
+<buttonicon class="right bgColor" onclick="ui.navigation.toggleMenu()"><img source="menu"/></buttonicon>
+<listHeader>${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5em;"></hinky><div></div></filters><listTitle></listTitle>${v.map}</listHeader>
 <listScroll><a class="bgColor"></a></listScroll><listBody>${v.groups}<listResults></listResults></listBody>`;
 
 	static execFilter() {
@@ -136,6 +138,7 @@ class lists {
 			else if (id == 'locations')
 				v.map = '<map style="display:none;"></map><buttontext class="bgColor map" onclick="pageLocation.searchFromMap()">' + ui.l('search.map') + '</buttontext>';
 			e.innerHTML = lists.templateList(v);
+			formFunc.image.replaceSVGs();
 			if (id == 'contacts')
 				ui.swipe('contacts>listBody', function (dir) {
 					if (dir == 'left')
@@ -205,13 +208,13 @@ class lists {
 		if (ui.cssValue(e, 'transform').indexOf('1') > 0)
 			ui.css(e, 'transform', 'scale(0)');
 	}
-	static toggleFilter(event, html) {
+	static toggleFilter() {
 		setTimeout(function () {
 			var activeID = ui.navigation.getActiveID();
 			var e = ui.q(activeID + ' filters>div');
 			if (e) {
-				if (!e.innerHTML && html) {
-					e.innerHTML = html.call();
+				if (!e.innerHTML) {
+					e.innerHTML = activeID == 'locations' ? pageLocation.getFilterFields() : pageContact.getFilterFields();
 					formFunc.initFields(activeID + ' filters');
 				}
 				e = ui.q(activeID + ' filters');

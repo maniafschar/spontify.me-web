@@ -12,49 +12,34 @@ class pageInfo {
 	static openSection = 4;
 	static sentFeedback = [];
 	static template = v =>
-		global.template`<div style="padding-top:0.5em;">
-    <buttontext class="bgColor infoButton" onclick="pageInfo.toggleInfoBlock(&quot;#info4&quot;)">
-        ${ui.l('home.DescLink')}
-    </buttontext>
-    <infoblock id="info4" style="display:none;">
-        ${v['infoAbout']}
-        <div id="infoVersion" onclick="pageInfo.openMap()" style="padding-top:1em;cursor:pointer;"></div>
-    </infoblock>
-    <buttontext class="bgColor infoButton" onclick="pageInfo.toggleInfoBlock(&quot;#info1&quot;)">
-		${ui.l('info.legalTitle')}
-    </buttontext>
-    <infoblock id="info1" style="display:none;" class="overflow">
-		${ui.l('infoLegal')}
-    </infoblock>
-    <buttontext class="bgColor infoButton" onclick="pageInfo.toggleInfoBlock(&quot;#info3&quot;)">
-		${ui.l('info.dsgvoTitle')}
-    </buttontext>
-    <infoblock id="info3" style="display:none;" class="overflow">
-		${ui.l('infoDSGVO')}
-    </infoblock>
-    <buttontext class="bgColor infoButton" onclick="pageInfo.toggleInfoBlock(&quot;#info2&quot;)">
-		${ui.l('info.imprintTitle')}
-    </buttontext>
-    <infoblock id="info2" style="display:none;">
-		${ui.l('info.imprint')}
-    </infoblock>
-    <buttontext class="bgColor infoButton${v['feedback']}" onclick="pageInfo.toggleInfoBlock(&quot;#info6&quot;)">
-		${ui.l('info.feedback')}
-    </buttontext>
-    <div id="info6" style="display:none;">
-        <textarea placeholder="${ui.l('info.feedbackHint')}" maxlength="1000" id="feedbackText"></textarea>
-        <buttontext onclick="pageInfo.sendFeedback(ui.val(&quot;#feedbackText&quot;))"
-            class="bgColor" style="margin-top:0.5em;">${ui.l('send')}
-        </buttontext>
-        <feedbackHint></feedbackHint>
-    </div>
-	<buttontext onclick="pageInfo.socialShare()" id="socialShare" class="bgColor infoButton">
-		${ui.l('sendSocialShare')}
-	</buttontext>
-	<div style="text-align:center;color:white;padding-top:2em;">© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>
-</div>`;
-	static templateAbout = v =>
-		global.template`<div>
+		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#info1&quot;)">
+	${ui.l('info.legalTitle')}
+</buttontext><br/>
+<infoblock id="info1" style="display:none;" class="overflow">
+	${ui.l('infoLegal')}
+</infoblock>
+<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#info3&quot;)">
+	${ui.l('info.dsgvoTitle')}
+</buttontext><br/>
+<infoblock id="info3" style="display:none;" class="overflow">
+	${ui.l('infoDSGVO')}
+</infoblock>
+<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#info2&quot;)">
+	${ui.l('info.imprintTitle')}
+</buttontext><br/>
+<infoblock id="info2" style="display:none;">
+	${ui.l('info.imprint')}
+</infoblock>
+<buttontext onclick="pageInfo.socialShare()" id="socialShare" class="bgColor settings2Button">
+	${ui.l('sendSocialShare')}
+</buttontext><br/>
+<div style="text-align:center;color:white;padding-top:2em;">© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>`;
+	static templateDesc = v =>
+		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#info4&quot;)">
+${ui.l('home.DescLink')}
+</buttontext><br/>
+<infoblock id="info4" style="display:none;">
+<div>
 	<subject style="padding-top:0;">${ui.l('info.block1Title')}</subject>
 	<ul>
 		<li>${ui.l('info.block1_1')}</li>
@@ -71,28 +56,23 @@ class pageInfo {
 		<li>${ui.l('info.block3_2')}</li>
 	</ul>
 	<a style="margin:2em 0 1em 0;display:block;cursor:pointer;${v['displayBlogButton']}" onclick="ui.navigation.openHTML(&quot;https://blog.spontify.me&quot;, &quot;blog_spontifyme&quot;)">${ui.l('info.link2blog')}</a>
-</div>`;
+</div>
+<div id="infoVersion" onclick="pageInfo.openMap()" style="padding-top:1em;cursor:pointer;"></div>
+</infoblock>`;
 	static marketingTitle = '';
 
 	static init() {
 		var e = ui.q('info');
 		if (!e.innerHTML) {
-			var v = [];
+			var v = {};
 			if (user.contact)
 				v.marketingTitle = pageInfo.marketingTitle;
 			else
 				v.feedback = ' noDisp';
 			if (!v.marketingTitle)
 				v.marketingDisplay = ' style="display:none;"';
-			v.server = global.server;
-			v.url = global.server + 'store';
-			v.parent = 'info';
-			v.divID = 'info';
 			v.displayBlogButton = '';
-			v.infoAbout = pageInfo.templateAbout(v);
-			if (user.contact)
-				v.url = v.url + '?c=' + user.contact.id;
-			e.innerHTML = pageInfo.template(v) + e.innerHTML;
+			e.innerHTML = pageInfo.templateDesc(v) + pageInfo.template(v);
 			formFunc.initFields('info');
 			if (!user.contact)
 				ui.css('#socialShare', 'display', 'none');
@@ -103,7 +83,7 @@ class pageInfo {
 			ui.css('info infoblock', 'display', 'none');
 			if (ui.cssValue('#info' + pageInfo.openSection, 'display') == 'none')
 				setTimeout(function () {
-					ui.q('#info' + pageInfo.openSection).previousElementSibling.click();
+					ui.q('#info' + pageInfo.openSection).previousElementSibling.previousElementSibling.click();
 					pageInfo.openSection = pageInfo.openSection == 1 ? -2 : -1;
 				}, 50);
 		}

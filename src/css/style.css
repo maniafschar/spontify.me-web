@@ -106,7 +106,7 @@ navigation {
 	left: 0;
 	height: 4em;
 	width: 100%;
-	z-index: 2;
+	z-index: 3;
 }
 
 navigation>item {
@@ -115,12 +115,25 @@ navigation>item {
 	height: 100%;
 	float: left;
 	text-align: center;
-	padding-top: 0.5em;
+	padding-top: 0.75em;
 	cursor: pointer;
+	transition: all 0.4s ease-out;
 }
 
 navigation>item svg {
-	height: 3em;
+	height: 2.5em;
+	transition: all 0.4s ease-out;
+	filter: drop-shadow(0.2em 0.2em 0.2em rgba(0, 0, 0, 0.3));
+}
+
+navigation>item.active svg,
+navigation>item:hover svg {
+	filter: none;
+}
+
+navigation>item.active,
+navigation>item:hover {
+	background: rgba(0, 0, 0, 0.05);
 }
 
 add {
@@ -285,12 +298,37 @@ subCatTitle {
 	background-size: 100% 100%;
 }
 
-home>div {
+home text {
+	margin-top: 0.75em;
+}
+
+homeHeader {
 	position: relative;
-	height: 100%;
-	width: 100%;
-	overflow-y: auto;
+	text-align: center;
 	display: block;
+	cursor: pointer;
+	color: white;
+	padding-top: 2em;
+}
+
+homeHeader svg {
+	height: 15vh;
+	width: auto;
+	margin-top: 4vh;
+}
+
+homeHeader img {
+	height: 20vh;
+	border-radius: 50%;
+	box-shadow: 0 0 1em rgba(0, 0, 0, 0.6);
+}
+
+homeHeader.logoSmall svg {
+	height: 8vh;
+	position: absolute;
+	left: 0;
+	top: 0.75em;
+	margin-top: 0;
 }
 
 homeBody {
@@ -298,12 +336,39 @@ homeBody {
 	width: 100%;
 	display: block;
 	top: 50%;
-	margin-top: -8em;
+	margin-top: -10vh;
+}
+
+homeBody buttonIcon {
+	padding: 0;
+	position: relative;
+	padding-bottom: 0.75em;
+	box-shadow: 0 0 1em rgba(0, 0, 0, 0.4);
 }
 
 homeBody buttonIcon svg {
 	width: 5em;
 	height: 5em;
+	margin-top: -3.5em;
+	filter: drop-shadow(0.5em 0.5em 0.5em rgba(0, 0, 0, 0.3));
+}
+
+homeBody buttonIcon.info,
+homeBody buttonIcon.bluetooth {
+	position: fixed;
+	bottom: 6em;
+	left: 50%;
+	margin-left: -3em;
+}
+
+homeBody item {
+	position: relative;
+	width: 50%;
+	float: left;
+	text-align: center;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding-top: 4em;
 }
 
 .bgColor {
@@ -337,26 +402,6 @@ content {
 	bottom: 0;
 	text-align: center;
 	display: block;
-}
-
-contacts:before,
-locations:before {
-	content: '';
-	position: absolute;
-	left: 0;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	opacity: 0.05;
-	margin: 30%;
-}
-
-contacts:before {
-	background: url(../images/contact.svg) no-repeat 50% 50%;
-}
-
-locations:before {
-	background: url(../images/location.svg) no-repeat 50% 50%;
 }
 
 groups {
@@ -1556,35 +1601,6 @@ detailTitle {
 	color: black;
 }
 
-homeHeader {
-	position: relative;
-	text-align: center;
-	display: block;
-	color: white;
-}
-
-homeTitle {
-	cursor: pointer;
-	white-space: nowrap;
-	display: inline-block;
-	margin-top: 10vh;
-}
-
-homeTitle svg {
-	height: 15vh;
-	width: auto;
-	min-height: 7.5em;
-}
-
-homeSubTitle {
-	font-family: Adelina;
-	font-size: 1.5em;
-	position: absolute;
-	width: 100%;
-	left: 0;
-	bottom: 0;
-}
-
 notifications {
 	position: absolute;
 	z-index: 3;
@@ -1676,7 +1692,17 @@ buttonIcon.highlight svg {
 }
 
 buttonIcon.bluetoothInactive {
-	opacity: 0.4;
+	opacity: 0.2;
+}
+
+buttonIcon.left {
+	top: 0.5em;
+	left: 0.5em;
+}
+
+buttonIcon.right {
+	top: 0.5em;
+	right: 0.5em;
 }
 
 .appInput {
@@ -2264,20 +2290,13 @@ info {
 	text-align: left !important;
 }
 
-.infoButton {
-	display: table;
-	position: relative;
-	margin: 1em 0 0 0;
-	border-radius: 0 2em 2em 0;
-	z-index: 1;
-}
-
 .settings2Button {
 	display: inline-block;
 	position: relative;
 	margin: 1em 0 0.25em 0;
 	border-radius: 0 2em 2em 0;
 	padding: 1em 2em 1em 1.5em;
+	z-index: 1;
 }
 
 attributes {
@@ -2293,10 +2312,6 @@ attributesDisplay {
 
 .attributeFade {
 	opacity: 0.35;
-}
-
-settings3 .infoButton {
-	margin: 0 0.5em 1em 0.5em;
 }
 
 infoblock {

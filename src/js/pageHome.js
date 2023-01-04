@@ -1,6 +1,7 @@
 import { bluetooth } from './bluetooth';
 import { communication } from './communication';
 import { events } from './events';
+import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './initialisation';
 import { intro } from './intro';
@@ -14,18 +15,29 @@ class pageHome {
 	static badge = -1;
 	static marketing = null;
 	static template = v =>
-		global.template`<homeHeader>	
-	<homeTitle onclick="ui.navigation.goTo(&quot;settings&quot;)">
-		<img source="logo" />
-	</homeTitle>
+		global.template`<homeHeader onclick="${v.clickHeader}"${v.logoSmall}>
+	<img source="logo"/>
+	${v.imgProfile}
+	<text>${v.name}</text>
 </homeHeader>
 <homeBody>
+<item class="position">
+	<buttonIcon class="bgColor" onclick="pageHome.position()">
+		<img source="location" />
+	</buttonIcon>
+	<text></text>
+</item>
+<item class="event">
 	<buttonIcon class="bgColor" onclick="pageHome.newEvent()">
 		<img source="rocket" />
-	</buttonIcon><br/>
-	<buttontext><span class="homeWTD"></span></buttontext><br/><br/>
-	<buttonIcon class="bgColor" onclick="bluetooth.toggle()">
+	</buttonIcon>
+	<text></text>
+</item>
+	<buttonIcon class="bgColor bluetooth${v.bluetoothButton}" onclick="bluetooth.toggle()">
 		<img source="bluetooth" />
+	</buttonIcon>
+	<buttonIcon class="bgColor info${v.infoButton}" onclick="ui.navigation.goTo(&quot;info&quot;)">
+		<img source="info" />
 	</buttonIcon>
 </homeBody>`;
 	static templateNewEvent = v =>
@@ -98,27 +110,43 @@ class pageHome {
 		if (ui.cssValue(e, 'display') != 'none')
 			ui.toggleHeight(e);
 	}
-	static init() {
+	static init(force) {
 		var e = ui.q('home');
-		if (!e.innerHTML) {
-			e.innerHTML = pageHome.template();
+		if (force || !e.innerHTML) {
+			var v = {};
+			if (user.contact) {
+				if (user.contact.imageList) {
+					v.imgProfile = '<img src="' + global.serverImg + user.contact.imageList + '"/>';
+					v.logoSmall = ' class="logoSmall"';
+				}
+				v.name = user.contact.pseudonym;
+				v.infoButton = ' noDisp';
+				v.clickHeader = 'ui.navigation.goTo(&quot;settings&quot;)';
+			} else {
+				v.bluetoothButton = ' noDisp';
+				v.clickHeader = 'pageHome.openHintDescription()';
+			}
+			e.innerHTML = pageHome.template(v);
 			formFunc.initFields('home');
 			initialisation.reposition();
 		}
-		pageHome.initNotificationButton(true);
+		pageHome.initNotificationButton();
 		if (bluetooth.state != 'on' || !user.contact || !user.contact.findMe)
-			ui.classAdd('buttonIcon.bottom.right', 'bluetoothInactive');
+			ui.classAdd('home buttonIcon.bluetooth', 'bluetoothInactive');
 		var p = events.getParticipationNext();
 		if (p && global.date.server2Local(p.eventDate).toDateString() == new Date().toDateString()) {
 			var s = global.date.formatDate(p.event.startDate);
 			s = s.substring(s.lastIndexOf(' ')).trim();
-			ui.q('buttontext .homeWTD').innerHTML = s + ' ' + p.event.text;
-			ui.attr('buttontext .homeWTD', 'i', p.event.id);
+			ui.q('home item.event text').innerHTML = s + ' ' + p.event.text;
+			ui.attr('home item.event', 'i', p.event.id);
 		} else {
-			ui.q('buttontext .homeWTD').innerHTML = ui.l('wtd.todayIWant');
-			ui.attr('buttontext .homeWTD', 'i', null);
+			ui.q('home item.event text').innerHTML = ui.l('wtd.todayIWant');
+			ui.attr('home item.event', 'i', null);
 		}
 		formFunc.image.replaceSVGs();
+		if (user.contact)
+			ui.classAdd('home svg>g', 'pure');
+		pageHome.updateLocalisation();
 	}
 	static initNotification(d) {
 		var f = function () {
@@ -150,15 +178,13 @@ class pageHome {
 		};
 		f.call();
 	}
-	static initNotificationButton(force) {
-		if (force || ui.navigation.getActiveID() == 'home') {
-			if (pageHome.badge > 0)
-				ui.classAdd('buttonIcon.bottom.left', 'pulse highlight');
-			else
-				ui.classRemove('buttonIcon.bottom.left', 'pulse highlight');
-			if (ui.q('badgeNotifications'))
-				ui.q('badgeNotifications').innerText = Math.max(pageHome.badge, 0);
-		}
+	static initNotificationButton() {
+		if (pageHome.badge > 0)
+			ui.classAdd('navigation buttonIcon.notifications', 'pulse highlight');
+		else
+			ui.classRemove('navigation buttonIcon.notifications', 'pulse highlight');
+		if (ui.q('badgeNotifications'))
+			ui.q('badgeNotifications').innerText = Math.max(pageHome.badge, 0);
 	}
 	static newEvent() {
 		if (user.contact) {
@@ -169,7 +195,7 @@ class pageHome {
 				return;
 			}
 			var v = {};
-			var id = ui.q('buttontext .homeWTD').getAttribute('i');
+			var id = ui.q('home item.event').getAttribute('i');
 			var p = events.getParticipationNext(id);
 			if (id && p) {
 				v.visibility = p.event.visibility;
@@ -195,10 +221,19 @@ class pageHome {
 		} else
 			intro.openHint({ desc: 'whatToDo', pos: '10%,5em', size: '80%,auto' });
 	}
+	static openHintDescription() {
+		intro.openHint({ desc: 'description', pos: '10%,5em', size: '80%,auto' });
+	}
 	static openLanguage() {
 		ui.navigation.openPopup(ui.l('langSelect'),
 			'<div style="text-align:center;padding:2em 0;"><a class="langSelectImg bgColor' + (global.language == 'DE' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE">Deutsch</a>' +
 			'<a class="langSelectImg bgColor' + (global.language == 'EN' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</a></div>');
+	}
+	static position() {
+		if (user.contact) {
+		} else
+			intro.openHint({ desc: 'position', pos: '10%,5em', size: '80%,auto' });
+
 	}
 	static reset() {
 		pageHome.badge = -1;
@@ -228,7 +263,7 @@ class pageHome {
 			d.setDate(d.getDate() + 1);
 		v.values.startDate = global.date.local2server(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + v.values.startDate + ':00');
 		v.classname = 'Event';
-		v.id = ui.q('buttontext .homeWTD').getAttribute('i');
+		v.id = ui.q('home item.event').getAttribute('i');
 		communication.ajax({
 			url: global.server + 'db/one',
 			method: v.id ? 'PUT' : 'POST',
@@ -257,5 +292,8 @@ class pageHome {
 			intro.openHint({ desc: 'notificationEmpty', pos: '-0.5em,-7em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
 		else
 			ui.toggleHeight('notificationList');
+	}
+	static updateLocalisation() {
+		ui.q('home item.position text').innerHTML = geoData.currentTown;
 	}
 }

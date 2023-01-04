@@ -1,5 +1,6 @@
 import { communication } from './communication';
 import { global } from './global';
+import { pageHome } from './pageHome';
 import { pageInfo } from './pageInfo';
 import { ui } from './ui';
 import { user } from './user';
@@ -9,7 +10,7 @@ export { geoData };
 class geoData {
 	static angle = -1;
 	static currentStreet = '';
-	static currentTown = '';
+	static currentTown = 'München';
 	static headingID = null;
 	static id = null;
 	static initDeviceOrientation = null;
@@ -131,6 +132,7 @@ class geoData {
 				error(r) {
 					geoData.currentStreet = r.status + ' ' + r.responseText;
 					pageInfo.updateLocalisation();
+					pageHome.updateLocalisation();
 				},
 				success(r) {
 					if (r) {
@@ -138,6 +140,7 @@ class geoData {
 						geoData.currentTown = r.town;
 						geoData.currentStreet = r.street;
 						pageInfo.updateLocalisation();
+						pageHome.updateLocalisation();
 					}
 				}
 			});
