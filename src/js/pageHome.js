@@ -33,12 +33,15 @@ class pageHome {
 	</buttonIcon>
 	<text></text>
 </item>
-	<buttonIcon class="bgColor bluetooth${v.bluetoothButton}" onclick="bluetooth.toggle()">
+<item class="bluetooth">
+	<buttonIcon class="bgColor${v.bluetoothButton}" onclick="bluetooth.toggle()">
 		<img source="bluetooth" />
 	</buttonIcon>
-	<buttonIcon class="bgColor info${v.infoButton}" onclick="ui.navigation.goTo(&quot;info&quot;)">
+	<buttonIcon class="bgColor${v.infoButton}" onclick="ui.navigation.goTo(&quot;info&quot;)">
 		<img source="info" />
 	</buttonIcon>
+	<text>Info</text>
+</item>
 </homeBody>`;
 	static templateNewEvent = v =>
 		global.template`<form name="editElement" onsubmit="return false">
@@ -131,8 +134,8 @@ class pageHome {
 			initialisation.reposition();
 		}
 		pageHome.initNotificationButton();
-		if (bluetooth.state != 'on' || !user.contact || !user.contact.findMe)
-			ui.classAdd('home buttonIcon.bluetooth', 'bluetoothInactive');
+		if (user.contact)
+			ui.q('home item.bluetooth text').innerHTML = ui.l(bluetooth.state == 'on' && user.contact.findMe ? 'bluetooth.activated' : 'bluetooth.deactivated');
 		var p = events.getParticipationNext();
 		if (p && global.date.server2Local(p.eventDate).toDateString() == new Date().toDateString()) {
 			var s = global.date.formatDate(p.event.startDate);

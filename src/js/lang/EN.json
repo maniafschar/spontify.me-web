@@ -833,6 +833,8 @@
 		"birthday.gratulation": "Congratulations on your {0}. birthday!<br/>We wish you a wonderful day!",
 		"birthday": "Birthday",
 		"blocked.title": "Sponti blocked",
+		"bluetooth.activated": "Turned on",
+		"bluetooth.deactivated": "Turned off",
 		"budget": "€",
 		"camera.notAvailabe": "Selecting the picture raised an error:<br/>{0}",
 		"camera.select": "Select",

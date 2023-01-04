@@ -57,21 +57,6 @@ class ui {
 		${ui.l('group.action')}
 	</a>
 </container>`;
-	static buttonIcon(e, image, click) {
-		if (typeof e == 'string')
-			e = ui.q('buttonIcon' + e);
-		ui.classRemove(e, 'pulse highlight bluetoothInactive jpg');
-		if (image.indexOf('<') == 0)
-			e.innerHTML = image;
-		else if (image.indexOf('/') > 0) {
-			ui.classAdd(e, 'jpg');
-			e.innerHTML = '<img src="' + global.serverImg + image + '" />';
-		} else
-			e.innerHTML = '<img source="' + image + '" />';
-		e.setAttribute('onclick', click);
-		e.style.display = '';
-		formFunc.image.replaceSVGs();
-	}
 	static getAttributes(compare, style) {
 		var result = {
 			attributesCategories: [],

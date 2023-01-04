@@ -58,8 +58,6 @@ class bluetooth {
 					if (state == 'on') {
 						bluetooth.hidePopup();
 						bluetooth.scanStart();
-						if (showHint)
-							intro.openHint({ desc: 'bluetoothOn', pos: '-0.5em,-4.5em', size: 'auto,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
 						showHint = false;
 					} else
 						ui.navigation.openPopup(ui.l('attention'), ui.l('findMe.bluetoothDeactivated'));
@@ -101,7 +99,9 @@ class bluetooth {
 				}
 			})
 		]).then(
-			function () { },
+			function () {
+				ui.q('home item.bluetooth text').innerHTML = ui.l('bluetooth.activated');
+			},
 			function (e) {
 				if (e.indexOf('Advertising has already started') < 0) {
 					bluetooth.stop();
@@ -116,9 +116,9 @@ class bluetooth {
 	}
 	static toggle() {
 		if (global.isBrowser())
-			intro.openHint({ desc: 'bluetoothDescriptionBrowser', pos: '10%,-12.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-1em' });
+			intro.openHint({ desc: 'bluetoothDescriptionBrowser', pos: '10%,-14em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-0.75em' });
 		else if (!user.contact)
-			intro.openHint({ desc: 'bluetoothDescriptionLoggedOff', pos: '10%,-12.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-1em' });
+			intro.openHint({ desc: 'bluetoothDescriptionLoggedOff', pos: '10%,-14em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-0.75em' });
 		else if (window.localStorage.getItem('findMeIDs'))
 			user.save({ findMe: false }, bluetooth.stop);
 		else {
@@ -136,7 +136,7 @@ class bluetooth {
 			if (ui.q('hint[i="bluetoothOn"]'))
 				intro.closeHint();
 		}
-		ui.classAdd('home buttonIcon.bluetooth', 'bluetoothInactive');
+		ui.q('home item.bluetooth text').innerHTML = ui.l('bluetooth.deactivated');
 		window.localStorage.removeItem('findMeIDs');
 	}
 }
