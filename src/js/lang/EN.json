@@ -548,9 +548,9 @@
 			"notification": "Here you will see your notifications.",
 			"notificationEmpty": "You do not have any notifications, yet.",
 			"open": "Start Intro...",
-			"position": "<title>Position</title><br/>",
+			"position": "<title>Location</title><br/>Here you can choose your <emphasis>location</emphasis>. For example, if you plan to be in another city tomorrow and want to see what's going on there, you select the city here and your location will be <emphasis>virtually</emphasis> moved there.",
 			"register": "After registration, we will show you how you can individualize your profile. Thank you for taking the time for this intro.",
-			"settings": "<title>Settings</title><br/>Here you describe yourself and what you like. Based on this information we match:<ul><li>Locations</li><li>Events</li><li>and Spontis</li></ul>",
+			"settings": "<title>Settings</title><br/>Here you describe yourself and what <emphasis>you like</emphasis>. Based on this information we match:<ul><li>Locations</li><li>Events</li><li>and Spontis</li></ul>",
 			"settings2": "Click here through the individual categories.",
 			"settingsLoggedIn": "<ul><li>Change your profile image and enter general information here</li><li>Swipe left to enter attributes that describe you and that you like about other Spontis</li><li>provide yourself as a guide for Spontis fitting your settings</li></ul>",
 			"whatToDo": "<title>I want to do something!</title><br/>You can easily enter what you would like to do <emphasis>today</emphasis>, e.g. go out for dinner or visit a museum, etc.<br/><br/>The activity will be presented to Spontis <emphasis>who suit you</emphasis> and are no further than 50 KM away."

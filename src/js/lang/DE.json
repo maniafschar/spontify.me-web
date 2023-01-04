@@ -548,9 +548,9 @@
 			"notification": "Hier siehst Du Deine Benachrichtigungen.",
 			"notificationEmpty": "Du hast noch keine Benachrichtigungen.",
 			"open": "Intro starten...",
-			"position": "<title>Position</title><br/>",
+			"position": "<title>Standort</title><br/>Hier kannst Du Deinen <emphasis>Standort</emphasis> auswählen. Wenn Du z.B. planst morgen in einer anderen Stadt zu sein und jetzt schon mal schauen möchtest was da los ist, wählst Du die Stadt hier aus und Dein Standort wird <emphasis>virtuell</emphasis> dorthin verlegt.",
 			"register": "Nach der Registrierung zeigen wir Dir, wie Du Dein Profil individualisieren kannst. Lieben Dank dass Du Dir die Zeit für die Intro genommen hast.",
-			"settings": "<title>Einstellungen</title><br/>Hier beschreibst Du Dich und was Du magst. Basierend auf diesen Angaben matchen wir:<ul><li>Locations</li><li>Events</li><li>und Spontis</li></ul>",
+			"settings": "<title>Einstellungen</title><br/>Hier beschreibst Du Dich und was <emphasis>Du magst</emphasis>. Basierend auf diesen Angaben matchen wir:<ul><li>Locations</li><li>Events</li><li>und Spontis</li></ul>",
 			"settings2": "Klick Dich hier durch die einzelnen Kategorien.",
 			"settingsLoggedIn": "<ul><li>Ändere hier Dein Profilbild und gib weitere, allgemeine Infos an</li><li>Ein Wisch nach links und Du kannst Dich über diverse Attribute selbst beschreiben und angeben, was Du an anderen Spontis magst</li></ul>",
 			"whatToDo": "<title>Ich will was unternehmen!</title><br/>Du gibst einfach an, was Du gerne <emphasis>heute</emphasis> machen möchtest, z.B. Essen gehen oder ein Museum besuchen, etc.<br/><br/>Die Aktivität wird Spontis, <emphasis>die zu Dir passen</emphasis> und nicht weiter als 50 KM entfernt sind, angezeigt."
