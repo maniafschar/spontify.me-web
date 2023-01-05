@@ -719,8 +719,8 @@ ${v.budget}
 			pageContact.filter = formFunc.getDraft('searchContacts') || {};
 		if (!ui.q('contacts').innerHTML)
 			lists.setListDivs('contacts');
-		if (!ui.q('contacts listResults row') && (!ui.q('contacts filters') || !ui.q('contacts filters').style.transform || ui.q('contacts filters').style.transform.indexOf('1') < 0))
-			lists.openFilter();
+		if (!ui.q('contacts listResults row'))
+			setTimeout(lists.openFilter, 500);
 	}
 	static listContacts(l) {
 		var s = '', activeID = ui.navigation.getActiveID();

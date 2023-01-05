@@ -12,7 +12,7 @@ import { pageContact } from './pageContact';
 import { pageSettings } from './pageSettings';
 import { user } from './user';
 import { pageHome } from './pageHome';
-import { pageEvent } from './pageEvent';
+import { lists } from './lists';
 
 export { ui, formFunc };
 
@@ -166,7 +166,6 @@ class ui {
 	}
 	static navigation = {
 		animationEvent: null,
-		lastPage: null,
 		lastPopup: null,
 
 		animation(e, animation, exec) {
@@ -176,13 +175,16 @@ class ui {
 				return;
 			var s = 'popupSlideOut homeSlideOut detailSlideOut detailBackSlideOut popupSlideIn homeSlideIn detailSlideIn detailBackSlideIn slideUp slideDown';
 			ui.classRemove(e, s);
-			ui.classAdd(e, animation + ' animated');
-			ui.on(e, ui.navigation.animationEvent, function () {
-				ui.classRemove(e, 'animated ' + s);
-				if (exec)
-					exec.call();
-			}, true);
+			ui.classAdd(e, animation);
 			ui.css(e, 'display', '');
+			setTimeout(function () {
+				ui.on(e, ui.navigation.animationEvent, function () {
+					ui.classRemove(e, 'animated ' + s);
+					if (exec)
+						exec.call();
+				}, true);
+				ui.classAdd(e, 'animated');
+			}, 100);
 		},
 		autoOpen(id, event) {
 			if (!id)
@@ -267,7 +269,7 @@ class ui {
 		goBack() {
 			ui.navigation.goTo('home');
 		},
-		goTo(id, direction) {
+		goTo(id) {
 			if (ui.classContains('content', 'animated'))
 				return;
 			communication.notification.close();
@@ -277,8 +279,6 @@ class ui {
 				return;
 			}
 			// AGBs opened from login, go back to login
-			if (currentID == 'info' && id == 'home' && !user.contact && pageInfo.openSection == -2)
-				id = 'login';
 			if (pageInfo.openSection == -2)
 				pageInfo.openSection = -1;
 			if (!user.contact && id != 'home' && id != 'info' && id != 'login') {
@@ -316,15 +316,46 @@ class ui {
 			pageHome.closeList();
 			ui.navigation.hidePopup();
 			if (currentID != id) {
-				var back = direction == 'backward' ||
-					direction != 'foreward' && (
-						currentID == 'detail' ||
-						id == 'home' && currentID != 'login' ||
+				var e = ui.q('navigation item.' + id);
+				var i1 = 0;
+				var back = null;
+				if (e) {
+					while ((e = e.previousSibling) != null)
+						i1++;
+					e = ui.q('navigation item.' + currentID);
+					if (e) {
+						var i2 = 0;
+						while ((e = e.previousSibling) != null)
+							i2++;
+						back = i2 > i1 || id == 'settings' && currentID == 'home';
+					}
+				}
+				if (back == null)
+					back = currentID == 'detail' ||
+						id == 'home' && currentID == 'login' ||
+						id == 'home' && currentID == 'info' ||
+						id == 'login' && currentID == 'info' ||
 						id == 'settings' && currentID == 'settings2' ||
-						id == 'settings2' && currentID == 'settings3');
-				if (!back && !(currentID == 'locations' && id == 'contacts'
-					|| currentID == 'info' && id == 'login'))
+						id == 'settings2' && currentID == 'settings3';
+				if (back && currentID == 'detail') {
+					e = ui.qa('detail card');
+					if (e.length > 1) {
+						ui.css('detail div', 'transition', 'none');
+						for (var i = 0; i < e.length - 1; i++)
+							e[i].outerHTML = '';
+						e = ui.q('detail div');
+						e.style.width = '100%';
+						e.style.marginLeft = 0;
+						setTimeout(function () {
+							ui.css(e, 'transition', null);
+							ui.navigation.goTo(id);
+						}, 50);
+						return;
+					}
+				}
+				if (!back)
 					ui.attr(id, 'from', currentID);
+				lists.hideFilter();
 				ui.navigation.fade(id, back);
 				ui.navigation.hideMenu();
 				if (ui.q('navigation item.' + id)) {
@@ -332,7 +363,6 @@ class ui {
 					ui.classAdd('navigation item.' + id, 'active');
 				}
 			}
-			ui.navigation.lastPage = currentID;
 		},
 		hidePopup() {
 			ui.attr('popup', 'error', '');

@@ -765,15 +765,14 @@ dialogButtons {
 }
 
 .langSelectImg {
-	border-radius: 0.5em;
-	display: inline-block;
-	position: relative;
 	margin: 0 1em;
-	padding: 1em 2em;
-	cursor: pointer;
 }
 
-.langSelectImg.pressed::before,
+.langSelectImg.pressed {
+	font-weight: bold;
+	text-decoration: underline;
+}
+
 .chatLinks.pressed::before {
 	display: block;
 	content: '✓';
@@ -1694,7 +1693,6 @@ buttonIcon svg {
 
 buttonIcon.highlight {
 	color: rgb(252, 251, 104);
-	border: solid 0.15em rgb(252, 251, 104);
 }
 
 buttonIcon.highlight svg {
@@ -2426,12 +2424,7 @@ menu title {
 }
 
 @keyframes popupSlideIn {
-	0% {
-		opacity: 1;
-	}
-
 	100% {
-		opacity: 1;
 		transform: none;
 	}
 }
@@ -2440,7 +2433,6 @@ menu title {
 	transform: rotate3d(0, 0, 1, 90deg);
 	transform-origin: right top;
 	animation-name: popupSlideIn;
-	opacity: 0;
 }
 
 @keyframes popupSlideOut {

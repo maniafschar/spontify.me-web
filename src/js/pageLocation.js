@@ -828,8 +828,8 @@ ${v.hint}
 			pageLocation.filter = formFunc.getDraft('searchLocations') || {};
 		if (!ui.q(id).innerHTML)
 			lists.setListDivs(id);
-		if (!ui.q(id + ' listResults row') && (!ui.q(id + ' filters') || !ui.q(id + ' filters').style.transform || ui.q(id + ' filters').style.transform.indexOf('1') < 0))
-			lists.openFilter();
+		if (!ui.q(id + ' listResults row'))
+			setTimeout(lists.openFilter, 500);
 		if (!pageLocation.map.svgLocation)
 			communication.ajax({
 				url: '/images/location.svg',

@@ -144,16 +144,23 @@ ${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5e
 			if (id == 'contacts')
 				ui.swipe('contacts>listBody', function (dir) {
 					if (dir == 'left')
-						ui.navigation.goTo('home', 'foreward');
+						ui.navigation.goTo('settings');
 					else if (dir == 'right')
-						ui.navigation.goTo('locations', 'backward');
+						ui.navigation.goTo('events');
 				});
 			else if (id == 'locations')
 				ui.swipe('locations>listBody', function (dir) {
 					if (dir == 'left')
+						ui.navigation.goTo('events');
+					else if (dir == 'right')
+						ui.navigation.goTo('home');
+				});
+			else if (id == 'events')
+				ui.swipe('events>listBody', function (dir) {
+					if (dir == 'left')
 						ui.navigation.goTo('contacts');
 					else if (dir == 'right')
-						ui.navigation.goTo('home', 'backward');
+						ui.navigation.goTo('locations');
 				});
 			new DragObject(ui.q(id + ' listScroll')).ondrag = function (event, top) {
 				var activeID = ui.navigation.getActiveID();
@@ -212,12 +219,7 @@ ${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5e
 	}
 	static openFilter() {
 		var e = ui.q(ui.navigation.getActiveID() + ' filters');
-		if (ui.cssValue(e, 'transform').indexOf('1') > 0) {
-			ui.on(e, 'transitionend', function () {
-				lists.toggleFilter();
-			}, true);
-			ui.css(e, 'transform', 'scale(0)');
-		} else
+		if (ui.cssValue(e, 'transform').indexOf('1') < 0)
 			lists.toggleFilter();
 
 	}

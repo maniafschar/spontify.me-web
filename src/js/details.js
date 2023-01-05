@@ -13,7 +13,7 @@ export { details };
 class details {
 	static getNextNavElement(next, id) {
 		var activeID = ui.q(ui.navigation.getActiveID()).getAttribute('from');
-		if (activeID == 'contacts' || activeID == 'locations' || activeID == 'search') {
+		if (activeID == 'contacts' || activeID == 'locations' || activeID == 'events') {
 			var e = ui.q(activeID + ' [i="' + id + '"]');
 			if (e) {
 				if (next && e.nextSibling) {
@@ -110,7 +110,25 @@ class details {
 			details.openDetailNav(true, e.getAttribute('i'));
 	}
 	static swipeRight() {
-		ui.navigation.goTo('home');
+		if (ui.qa('detail card').length == 1)
+			ui.navigation.goTo(ui.q('detail').getAttribute('from'));
+		else {
+			var e = ui.q('detail>div');
+			var x = parseInt(ui.cssValue(e, 'margin-left')) / ui.q('content').clientWidth;
+			if (x < 0) {
+				ui.on(e, 'transitionend', function () {
+					ui.css(e, 'transition', 'none');
+					if (e.lastChild)
+						e.lastChild.outerHTML = '';
+					var x = e.clientWidth / ui.q('content').clientWidth;
+					ui.css(e, 'width', x == 2 ? '' : ((x - 1) * 100) + '%');
+					setTimeout(function () {
+						ui.css(e, 'transition', null);
+					}, 50);
+				}, true);
+				ui.css(e, 'margin-left', ((x + 1) * 100) + '%');
+			}
+		}
 	}
 	static toggleFavorite() {
 		var e = ui.q('detail card:last-child');

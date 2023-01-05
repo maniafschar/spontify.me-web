@@ -5,6 +5,7 @@ import { global } from './global';
 import { lists } from './lists';
 import { pageChat } from './pageChat';
 import { pageHome } from './pageHome';
+import { pageInfo } from './pageInfo';
 import { pageLocation } from './pageLocation';
 import { pageLogin } from './pageLogin';
 import { ui, formFunc } from './ui';
@@ -174,7 +175,7 @@ class initialisation {
 						return;
 					e = e.parentNode;
 				}
-				ui.navigation.goTo('home');
+				ui.navigation.goTo(ui.q('detail').getAttribute('from'));
 			}
 		});
 		ui.on('chat', 'click', pageChat.close);
@@ -219,10 +220,12 @@ class initialisation {
 		ui.swipe('settings3', function (dir) {
 			if (dir == 'right')
 				ui.navigation.goTo('settings2');
+			else if (dir == 'left')
+				ui.navigation.goTo('home');
 		});
 		ui.swipe('settings', function (dir) {
 			if (dir == 'right')
-				ui.navigation.goTo('home');
+				ui.navigation.goTo('contacts');
 			else if (dir == 'left')
 				ui.navigation.goTo('settings2');
 		}, 'input,textarea,img,slider,thumb,val');
@@ -232,21 +235,19 @@ class initialisation {
 		}, 'input,textarea,slider,thumb,val');
 		ui.swipe('login', function (dir) {
 			if (dir == 'left')
-				ui.navigation.goTo('home');
-			else if (dir == 'right')
 				ui.navigation.goTo('info');
+			else if (dir == 'right')
+				ui.navigation.goTo('home');
 		}, 'input');
 		ui.swipe('home', function (dir) {
 			if (dir == 'left')
-				ui.navigation.goTo(user.contact ? 'locations' : 'info');
-			else if (dir == 'right')
-				ui.navigation.goTo(user.contact ? 'contacts' : 'login', 'backward');
+				ui.navigation.goTo(user.contact ? 'locations' : 'login');
+			else if (dir == 'right' && user.contact)
+				ui.navigation.goTo('settings');
 		}, 'input,listScroll');
 		ui.swipe('info', function (dir) {
-			if (dir == 'left' && !user.contact)
-				ui.navigation.goTo('login');
-			else if (dir == 'right')
-				ui.navigation.goTo('home');
+			if (dir == 'right')
+				ui.navigation.goTo(ui.q('info').getAttribute('from'));
 		}, 'textarea');
 	}
 	static onLoad() {

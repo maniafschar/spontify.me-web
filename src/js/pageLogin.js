@@ -169,10 +169,6 @@ class pageLogin {
 		} else
 			ui.navigation.goTo('login');
 	}
-	static goToRegister() {
-		if (ui.navigation.lastPage == 'login')
-			ui.navigation.goTo('login');
-	}
 	static init() {
 		if (ui.q('login').innerHTML.indexOf('loginBodyDiv') < 0)
 			ui.q('login').innerHTML = pageLogin.templateTabs();
