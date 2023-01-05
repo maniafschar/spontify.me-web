@@ -1,6 +1,6 @@
 import { communication } from './communication';
 import { details } from './details';
-import { events } from './events';
+import { pageEvent } from './pageEvent';
 import { geoData } from './geoData';
 import { global } from './global';
 import { lists } from './lists';
@@ -93,11 +93,11 @@ ${v.parking}
 	<buttontext class="bgColor${v.pressedCopyButton}" name="buttonCopy"
 		onclick="pageChat.doCopyLink(event,&quot;${v.event.id ? 'e' : 'l'}=${v.id}&quot;)">${ui.l('share')}</buttontext>
 	<buttontext class="bgColor${v.hideMeEvents}" name="buttonEvents"
-		onclick="events.toggle(${v.locID})">${ui.l('events.title')}</buttontext>
+		onclick="pageEvent.toggle(${v.locID})">${ui.l('events.title')}</buttontext>
 	<buttontext class="bgColor${v.hideMeEvents}" name="buttonWhatToDo"
 		onclick="pageLocation.toggleWhatToDo(${v.id})">${ui.l('wtd.location')}</buttontext>
 	<buttontext class="bgColor${v.hideMePotentialParticipants}" name="buttonPotentialParticipants"
-		onclick="events.loadPotentialParticipants(${v.category},${v.event.visibility})">${ui.l('events.potentialParticipants')}</buttontext>
+		onclick="pageEvent.loadPotentialParticipants(${v.category},${v.event.visibility})">${ui.l('events.potentialParticipants')}</buttontext>
 	<buttontext class="bgColor${v.hideMeMarketing}" name="buttonMarketing"
 		onclick="ui.navigation.openHTML(&quot;${global.server}locOwner?id=${v.id}&quot;,&quot;locOwn&quot;)">${ui.l('locations.marketing')}</buttontext>
 	<buttontext class="bgColor${v.hideMeEdit}" name="buttonEdit"
@@ -431,7 +431,7 @@ ${v.hint}
 					ui.navigation.hidePopup();
 					ui.navigation.goTo('home');
 					if (classname == 'Event')
-						events.init();
+						pageEvent.init();
 					setTimeout(function () {
 						if (classname == 'Location')
 							lists.removeListEntry(id, 'locations');
@@ -536,7 +536,7 @@ ${v.hint}
 		if (v.bonus)
 			v.bonus = '<text style="margin:1em 0;" class="highlightBackground">' + ui.l('locations.bonus') + v.bonus + '<br/>' + ui.l('locations.bonusHint') + '</text>';
 		if (v.event.id) {
-			v.eventDetails = events.detail(v);
+			v.eventDetails = pageEvent.detail(v);
 			v.hideBlockReason2 = ' style="display:none;"';
 		} else {
 			if (global.isBrowser())
@@ -594,6 +594,7 @@ ${v.hint}
 		return pageLocation.templateDetail(v);
 	}
 	static edit(id) {
+		ui.navigation.hideMenu();
 		pageLocation.reopenEvent = false;
 		if (id) {
 			var v = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
@@ -693,23 +694,6 @@ ${v.hint}
 	static getFilterFields() {
 		var v = {};
 		var l = lists.data[ui.navigation.getActiveID()];
-		var r2 = [], r4 = [];
-		if (l) {
-			for (var i = 1; i < l.length; i++) {
-				var o = model.convert(new Location(), l, i);
-				var s = '' + o.category;
-				for (var i2 = 0; i2 < s.length; i2++)
-					r2[s.substring(i2, i2 + 1)] = 1;
-				if (!r4['E'] && pageLocation.isInPosition('E', o._angle))
-					r4['E'] = 1;
-				if (!r4['N'] && pageLocation.isInPosition('N', o._angle))
-					r4['N'] = 1;
-				if (!r4['W'] && pageLocation.isInPosition('W', o._angle))
-					r4['W'] = 1;
-				if (!r4['S'] && pageLocation.isInPosition('S', o._angle))
-					r4['S'] = 1;
-			}
-		}
 		if (pageLocation.filter.filterCategories) {
 			var c = pageLocation.filter.filterCategories.split('\u0015');
 			for (var i = 0; i < c.length; i++)
@@ -839,20 +823,11 @@ ${v.hint}
 				return true;
 		}
 	}
-	static init() {
-		if (!ui.q('locations').innerHTML)
-			lists.setListDivs('locations');
-		if (!ui.q('locations listResults row') && (!ui.q('locations filters') || !ui.q('locations filters').style.transform || ui.q('locations filters').style.transform.indexOf('1') < 0)) {
-			var e = ui.q('menu');
-			if (ui.cssValue(e, 'transform').indexOf('1') > 0) {
-				if (e.getAttribute('type') != 'locations') {
-					ui.on(e, 'transitionend', function () {
-						ui.navigation.toggleMenu('locations');
-					}, true);
-				}
-			} else
-				ui.navigation.toggleMenu('locations');
-		}
+	static init(id) {
+		if (!ui.q(id).innerHTML)
+			lists.setListDivs(id);
+		if (!ui.q(id + ' listResults row') && (!ui.q(id + ' filters') || !ui.q(id + ' filters').style.transform || ui.q(id + ' filters').style.transform.indexOf('1') < 0))
+			lists.openFilter();
 		if (!pageLocation.map.svgLocation)
 			communication.ajax({
 				url: '/images/location.svg',
@@ -1095,7 +1070,7 @@ ${v.hint}
 					formFunc.removeDraft('location');
 					details.open(r, 'location_list&search=' + encodeURIComponent('location.id=' + r), pageLocation.detailLocationEvent);
 					if (pageLocation.reopenEvent)
-						setTimeout(function () { events.edit(r); }, 1000);
+						setTimeout(function () { pageEvent.edit(r); }, 1000);
 				}
 			});
 		}
@@ -1139,7 +1114,7 @@ ${v.hint}
 			body: v,
 			success(r) {
 				ui.navigation.autoOpen(global.encParam('e=' + r));
-				events.init();
+				pageEvent.init();
 			}
 		});
 	}

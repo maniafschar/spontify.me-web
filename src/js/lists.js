@@ -2,6 +2,7 @@ import { global } from './global';
 import { DragObject } from './initialisation';
 import { Contact, Location, model } from './model';
 import { pageContact } from './pageContact';
+import { pageEvent } from './pageEvent';
 import { pageLocation } from './pageLocation';
 import { ui, formFunc } from './ui';
 
@@ -11,9 +12,10 @@ class lists {
 	static data = [];
 
 	static templateList = v =>
-		global.template`<buttonicon class="left bgColor" onclick="lists.toggleFilter(event)"><img source="search"/></buttonicon>
+		global.template`<listHeader>
+<buttonicon class="left bgColor" onclick="lists.toggleFilter(event)"><img source="search"/></buttonicon>
 <buttonicon class="right bgColor" onclick="ui.navigation.toggleMenu()"><img source="menu"/></buttonicon>
-<listHeader>${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5em;"></hinky><div></div></filters><listTitle></listTitle>${v.map}</listHeader>
+${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5em;"></hinky><div></div></filters><listTitle></listTitle>${v.map}</listHeader>
 <listScroll><a class="bgColor"></a></listScroll><listBody>${v.groups}<listResults></listResults></listBody>`;
 
 	static execFilter() {
@@ -208,13 +210,24 @@ class lists {
 		if (ui.cssValue(e, 'transform').indexOf('1') > 0)
 			ui.css(e, 'transform', 'scale(0)');
 	}
+	static openFilter() {
+		var e = ui.q(ui.navigation.getActiveID() + ' filters');
+		if (ui.cssValue(e, 'transform').indexOf('1') > 0) {
+			ui.on(e, 'transitionend', function () {
+				lists.toggleFilter();
+			}, true);
+			ui.css(e, 'transform', 'scale(0)');
+		} else
+			lists.toggleFilter();
+
+	}
 	static toggleFilter() {
 		setTimeout(function () {
 			var activeID = ui.navigation.getActiveID();
 			var e = ui.q(activeID + ' filters>div');
 			if (e) {
 				if (!e.innerHTML) {
-					e.innerHTML = activeID == 'locations' ? pageLocation.getFilterFields() : pageContact.getFilterFields();
+					e.innerHTML = activeID == 'locations' ? pageLocation.getFilterFields() : activeID == 'events' ? pageEvent.getFilterFields() : pageContact.getFilterFields();
 					formFunc.initFields(activeID + ' filters');
 				}
 				e = ui.q(activeID + ' filters');

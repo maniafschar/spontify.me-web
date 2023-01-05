@@ -78,7 +78,7 @@ ${v.budget}
 	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonGroups"
 		onclick="pageContact.groups.toggleGroups(${v.id},&quot;${v.contactLinkStatus}&quot;)">${ui.l('group.action')}</buttontext>
 	<buttontext class="bgColor${v.blocked}" name="buttonEvents"
-		onclick="events.toggle(${v.id})">${ui.l('events.title')}</buttontext>
+		onclick="pageEvent.toggle(${v.id})">${ui.l('events.title')}</buttontext>
 	<buttontext class="bgColor${v.blocked}" name="buttonLocation"
 		onclick="pageContact.toggleLocation(${v.id})">${ui.l('locations.title')}</buttontext>
 	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonBlock"
@@ -410,22 +410,6 @@ ${v.budget}
 	static getFilterFields() {
 		var v = {};
 		var l = lists.data[ui.navigation.getActiveID()];
-		var r = [], s = '', gM = false, gF = false, gD = false, f = false, nF = false;
-		if (l) {
-			for (var i = 1; i < l.length; i++) {
-				var e = model.convert(new Contact(), l, i);
-				if (e.gender == 1)
-					gM = true;
-				else if (e.gender == 2)
-					gF = true;
-				else if (e.gender == 3)
-					gD = true;
-				if (e.contactLink.status == 'Friends')
-					f = true;
-				else
-					nF = true;
-			}
-		}
 		if (pageContact.filter.filterAge)
 			v.valueAge = ' value="' + pageContact.filter.filterAge + '"';
 		if (pageContact.filter.filterKeywords)
@@ -733,17 +717,8 @@ ${v.budget}
 	static init() {
 		if (!ui.q('contacts').innerHTML)
 			lists.setListDivs('contacts');
-		if (!ui.q('contacts listResults row') && (!ui.q('contacts filters') || !ui.q('contacts filters').style.transform || ui.q('contacts filters').style.transform.indexOf('1') < 0)) {
-			var e = ui.q('menu');
-			if (ui.cssValue(e, 'transform').indexOf('1') > 0) {
-				if (e.getAttribute('type') != 'contacts') {
-					ui.on(e, 'transitionend', function () {
-						ui.navigation.toggleMenu('contacts');
-					}, true);
-				}
-			} else
-				ui.navigation.toggleMenu('contacts');
-		}
+		if (!ui.q('contacts listResults row') && (!ui.q('contacts filters') || !ui.q('contacts filters').style.transform || ui.q('contacts filters').style.transform.indexOf('1') < 0))
+			lists.openFilter();
 	}
 	static listContacts(l) {
 		var s = '', activeID = ui.navigation.getActiveID();

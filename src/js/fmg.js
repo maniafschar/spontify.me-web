@@ -17,14 +17,14 @@ import { ratings } from './ratings';
 import { user } from './user';
 import { geoData } from './geoData';
 import { bluetooth } from './bluetooth';
-import { events } from './events';
+import { pageEvent } from './pageEvent';
 
 window.model = model;
 window.global = global;
 window.initialisation = initialisation;
 window.user = user;
 window.ui = ui;
-window.events = events;
+window.pageEvent = pageEvent;
 window.pageLogin = pageLogin;
 window.pageHome = pageHome;
 window.pageContact = pageContact;

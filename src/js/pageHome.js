@@ -1,11 +1,11 @@
 import { bluetooth } from './bluetooth';
 import { communication } from './communication';
-import { events } from './events';
 import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './initialisation';
 import { intro } from './intro';
 import { Contact, model } from './model';
+import { pageEvent } from './pageEvent';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 
@@ -19,6 +19,9 @@ class pageHome {
 	<img source="logo"/>
 	${v.imgProfile}
 	<text>${v.name}</text>
+	<buttonIcon class="language${v.langButton}" onclick="pageHome.openLanguage(event)">
+		<span>${v.lang}</span>
+	</buttonIcon>
 </homeHeader>
 <homeBody>
 <item class="position">
@@ -51,7 +54,7 @@ class pageHome {
 <field class="location" style="display:none;">
 <label style="padding-top:0;">${ui.l('events.location')}</label>
 <value style="text-align:center;">
-<input transient="true" name="location" onkeyup="events.locations()" />
+<input transient="true" name="location" onkeyup="pageEvent.locations()" />
 <eventLocationInputHelper><explain>${ui.l('events.locationInputHint')}</explain></eventLocationInputHelper>
 <buttontext onclick="pageLocation.edit()" class="bgColor eventLocationInputHelperButton">${ui.l('locations.new')}</buttontext>
 </value>
@@ -124,8 +127,10 @@ class pageHome {
 				}
 				v.name = user.contact.pseudonym;
 				v.infoButton = ' noDisp';
+				v.langButton = ' noDisp';
 				v.clickHeader = 'ui.navigation.goTo(&quot;settings&quot;)';
 			} else {
+				v.lang = global.language;
 				v.bluetoothButton = ' noDisp';
 				v.clickHeader = 'pageHome.openHintDescription()';
 			}
@@ -136,7 +141,7 @@ class pageHome {
 		pageHome.initNotificationButton();
 		if (user.contact)
 			ui.q('home item.bluetooth text').innerHTML = ui.l(bluetooth.state == 'on' && user.contact.findMe ? 'bluetooth.activated' : 'bluetooth.deactivated');
-		var p = events.getParticipationNext();
+		var p = pageEvent.getParticipationNext();
 		if (p && global.date.server2Local(p.eventDate).toDateString() == new Date().toDateString()) {
 			var s = global.date.formatDate(p.event.startDate);
 			s = s.substring(s.lastIndexOf(' ')).trim();
@@ -199,7 +204,7 @@ class pageHome {
 			}
 			var v = {};
 			var id = ui.q('home item.event').getAttribute('i');
-			var p = events.getParticipationNext(id);
+			var p = pageEvent.getParticipationNext(id);
 			if (id && p) {
 				v.visibility = p.event.visibility;
 				v.type = p.event.type;
@@ -220,14 +225,15 @@ class pageHome {
 			}
 			v['visibilityChecked' + v.visibility] = ' checked="checked"';
 			ui.navigation.openPopup(ui.l('wtd.todayIWant'), pageHome.templateNewEvent(v));
-			events.locationsOfPastEvents();
+			pageEvent.locationsOfPastEvents();
 		} else
 			intro.openHint({ desc: 'whatToDo', pos: '10%,5em', size: '80%,auto' });
 	}
 	static openHintDescription() {
 		intro.openHint({ desc: 'description', pos: '10%,5em', size: '80%,auto' });
 	}
-	static openLanguage() {
+	static openLanguage(event) {
+		event.stopPropagation();
 		ui.navigation.openPopup(ui.l('langSelect'),
 			'<div style="text-align:center;padding:2em 0;"><a class="langSelectImg bgColor' + (global.language == 'DE' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE">Deutsch</a>' +
 			'<a class="langSelectImg bgColor' + (global.language == 'EN' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</a></div>');
@@ -274,7 +280,7 @@ class pageHome {
 			success(r) {
 				ui.navigation.hidePopup();
 				ui.navigation.autoOpen(global.encParam('e=' + (r ? r : v.id)));
-				events.init();
+				pageEvent.init();
 			}
 		});
 	}

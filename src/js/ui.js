@@ -12,6 +12,7 @@ import { pageContact } from './pageContact';
 import { pageSettings } from './pageSettings';
 import { user } from './user';
 import { pageHome } from './pageHome';
+import { pageEvent } from './pageEvent';
 
 export { ui, formFunc };
 
@@ -20,26 +21,25 @@ class ui {
 	static categories = [];
 	static emInPX = 0;
 	static labels = [];
-	static templateMenuLocation = () =>
-		global.template`<title onclick="communication.loadList(ui.query.locationAll(),pageLocation.listLocation,&quot;locations&quot;,&quot;list&quot;)">
-		${ui.l('locations.title')}
-</title><container>
+	static templateMenuLocations = () =>
+		global.template`<container>
 	<a style="display:none;">
 		${ui.l('search.title')}
 	</a><a onclick="communication.loadList(ui.query.locationFavorites(),pageLocation.listLocation,&quot;locations&quot;,&quot;favorites&quot;)">
 		${ui.l('locations.favoritesButton')}
 	</a><a onclick="communication.loadList(ui.query.locationVisits(),pageLocation.listLocation,&quot;locations&quot;,&quot;visits&quot;)">
 		${ui.l('title.history')}
+	</a><a onclick="pageLocation.edit()">
+		${ui.l('locations.new')}
 	</a>
-</container><title style="margin-top:1em;" onclick="communication.loadList(ui.query.eventAll(),events.listEvents,&quot;locations&quot;,&quot;events&quot;)">
-	${ui.l('events.title')}
-</title>
-<container>
-	<a onclick="communication.loadList(ui.query.eventAll(),events.listEvents,&quot;locations&quot;,&quot;events&quot;)">
+</container>`;
+	static templateMenuEvents = () =>
+		global.template`<container>
+	<a onclick="communication.loadList(ui.query.eventAll(),pageEvent.listEvents,&quot;events&quot;,&quot;events&quot;)">
 		${ui.l('all')}
-	</a><a onclick="communication.loadList(ui.query.eventMy(),events.listEventsMy,&quot;locations&quot;,&quot;eventsMy&quot;)">
+	</a><a onclick="communication.loadList(ui.query.eventMy(),pageEvent.listEventsMy,&quot;events&quot;,&quot;eventsMy&quot;)">
 		${ui.l('events.myEvents')}
-	</a><a onclick="events.edit()">
+	</a><a onclick="pageEvent.edit()">
 		${ui.l('events.new')}
 	</a>
 </container>`;
@@ -281,15 +281,9 @@ class ui {
 				id = 'login';
 			if (pageInfo.openSection == -2)
 				pageInfo.openSection = -1;
-			if (!user.contact && id != 'home' && id != 'info') {
-				if (id == 'locations' || id == 'contacts' || id == 'settings') {
-					intro.openHint({ desc: id, pos: '10%,5em', size: '80%,auto' });
-					return;
-				}
-				var timestamp = ui.q('hint').getAttribute('timestamp');
-				if (timestamp && new Date().getTime() - timestamp < 500)
-					return;
-				id = 'login';
+			if (!user.contact && id != 'home' && id != 'info' && id != 'login') {
+				intro.openHint({ desc: id, pos: '10%,6vh', size: '80%,auto' });
+				return;
 			}
 			geoData.headingClear();
 			if (document.activeElement)
@@ -312,8 +306,8 @@ class ui {
 				pageLogin.init();
 			else if (id == 'contacts')
 				pageContact.init();
-			else if (id == 'locations')
-				pageLocation.init();
+			else if (id == 'locations' || id == 'events')
+				pageLocation.init(id);
 			else if (id == 'settings2')
 				pageSettings.init2();
 			else if (id == 'chat')
@@ -443,9 +437,11 @@ class ui {
 				if (e && activeID.toLowerCase() != e.nodeName.toLowerCase())
 					return;
 				if (activeID == 'locations')
-					ui.html(ui.q('menu>div'), ui.templateMenuLocation());
+					ui.html(ui.q('menu>div'), ui.templateMenuLocations());
 				else if (activeID == 'contacts')
 					ui.html(ui.q('menu>div'), ui.templateMenuContacts());
+				else if (activeID == 'events')
+					ui.html(ui.q('menu>div'), ui.templateMenuEvents());
 				e = ui.q('menu');
 				e.setAttribute('type', activeID);
 				ui.classAdd(ui.qa('menu a')[parseInt(ui.q(activeID).getAttribute('menuIndex'))], 'highlightMenu');

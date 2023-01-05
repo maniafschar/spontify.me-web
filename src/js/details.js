@@ -1,11 +1,9 @@
 import { communication } from './communication';
-import { events } from './events';
+import { pageEvent } from './pageEvent';
 import { geoData } from './geoData';
 import { global } from './global';
-import { intro } from './intro';
 import { lists } from './lists';
 import { pageChat } from './pageChat';
-import { pageContact } from './pageContact';
 import { pageLocation } from './pageLocation';
 import { ui, formFunc } from './ui';
 import { user } from './user';
@@ -56,7 +54,7 @@ class details {
 				if (s) {
 					var d = ui.q('detail');
 					if (r['event.id'] && (!id.indexOf || id.indexOf('_') < 0))
-						id = events.getId(r);
+						id = pageEvent.getId(r);
 					s = '<card i="' + id + '" type="' + (action.indexOf('contact_') == 0 ? 'contact' : 'location') + '">' + s + '</card>';
 					if (activeID == 'detail') {
 						var c = document.createElement('div');

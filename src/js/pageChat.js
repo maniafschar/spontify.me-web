@@ -116,8 +116,8 @@ class pageChat {
 			var activeID = ui.navigation.getActiveID();
 			if (activeID == 'contacts')
 				pageContact.init();
-			else if (activeID == 'locations')
-				pageLocation.init();
+			else if (activeID == 'locations' || activeID == 'events')
+				pageLocation.init(activeID);
 			else if (activeID == 'info')
 				pageInfo.init();
 			else if (activeID == 'home')

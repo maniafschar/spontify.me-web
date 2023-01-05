@@ -12,7 +12,7 @@ import { ui, formFunc } from './ui';
 import { user } from './user';
 import { pageLocation } from './pageLocation';
 import { intro } from './intro';
-import { events } from './events';
+import { pageEvent } from './pageEvent';
 import { pageHome } from './pageHome';
 
 export { communication, FB };
@@ -247,7 +247,7 @@ class communication {
 						communication.ping();
 						setTimeout(communication.notification.register, 100);
 						pageChat.initActiveChats();
-						events.init();
+						pageEvent.init();
 						geoData.init();
 						if (!global.isBrowser()) {
 							bluetooth.stop();
@@ -417,7 +417,7 @@ class communication {
 			user.reset();
 			communication.reset();
 			lists.reset();
-			events.reset();
+			pageEvent.reset();
 			ui.navigation.goTo('home');
 			ui.html('head title', global.appTitle);
 		},

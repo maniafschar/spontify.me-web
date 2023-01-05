@@ -10,9 +10,10 @@ import { pageLocation } from "./pageLocation";
 import { formFunc, ui } from "./ui";
 import { user } from "./user";
 
-export { events };
+export { pageEvent };
 
-class events {
+class pageEvent {
+	static filter = {};
 	static nearByExec = null;
 	static participations = null;
 	static templateEdit = v =>
@@ -24,7 +25,7 @@ ${v.hint}
 <field${v.displayLocation}>
 	<label>${ui.l('events.location')}</label>
 	<value style="text-align:center;">
-		<input transient="true" name="location" onkeyup="events.locations()" />
+		<input transient="true" name="location" onkeyup="pageEvent.locations()" />
 		<eventLocationInputHelper><explain>${ui.l('events.locationInputHint')}</explain></eventLocationInputHelper>
 		<buttontext onclick="pageLocation.edit()" class="bgColor eventLocationInputHelperButton">${ui.l('locations.new')}</buttontext>
 	</value>
@@ -32,11 +33,11 @@ ${v.hint}
 <field>
 	<label>${ui.l('type')}</label>
 	<value>
-		<input type="radio" name="type" value="o" label="${ui.l('events.type_o')}" onclick="events.setForm()" ${v.type_o}/>
-		<input type="radio" name="type" value="w1" label="${ui.l('events.type_w1')}" onclick="events.setForm()" ${v.type_w1}/>
-		<input type="radio" name="type" value="w2" label="${ui.l('events.type_w2')}" onclick="events.setForm()" ${v.type_w2}/>
-		<input type="radio" name="type" value="m" label="${ui.l('events.type_m')}" onclick="events.setForm()" ${v.type_m}/>
-		<input type="radio" name="type" value="y" label="${ui.l('events.type_y')}" onclick="events.setForm()" ${v.type_y}/>
+		<input type="radio" name="type" value="o" label="${ui.l('events.type_o')}" onclick="pageEvent.setForm()" ${v.type_o}/>
+		<input type="radio" name="type" value="w1" label="${ui.l('events.type_w1')}" onclick="pageEvent.setForm()" ${v.type_w1}/>
+		<input type="radio" name="type" value="w2" label="${ui.l('events.type_w2')}" onclick="pageEvent.setForm()" ${v.type_w2}/>
+		<input type="radio" name="type" value="m" label="${ui.l('events.type_m')}" onclick="pageEvent.setForm()" ${v.type_m}/>
+		<input type="radio" name="type" value="y" label="${ui.l('events.type_y')}" onclick="pageEvent.setForm()" ${v.type_y}/>
 	</value>
 </field>
 <field>
@@ -95,7 +96,7 @@ ${v.hint}
 	</value>
 </field>
 <dialogButtons style="margin-bottom:0;">
-	<buttontext onclick="events.save()" class="bgColor">${ui.l('save')}</buttontext>
+	<buttontext onclick="pageEvent.save()" class="bgColor">${ui.l('save')}</buttontext>
 	<buttontext onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" class="bgColor${v.hideDelete}" id="deleteElement">${ui.l('delete')}</buttontext>
 	<popupHint></popupHint>
 </dialogButtons>
@@ -114,7 +115,26 @@ ${v.eventLinkOpen}
 ${v.eventLinkClose}
 ${v.eventParticipationButtons}
 </text>`;
-
+	static templateSearch = v =>
+		global.template`<form onsubmit="return false">
+<input type="checkbox" name="filterCategories" value="0" label="${ui.categories[0].label}" onclick="pageLocation.filterList()" ${v.valueCat0}/>
+<input type="checkbox" name="filterCategories" value="1" label="${ui.categories[1].label}" onclick="pageLocation.filterList()" ${v.valueCat1}/>
+<input type="checkbox" name="filterCategories" value="2" label="${ui.categories[2].label}" onclick="pageLocation.filterList()" ${v.valueCat2}/>
+<input type="checkbox" name="filterCategories" value="3" label="${ui.categories[3].label}" onclick="pageLocation.filterList()" ${v.valueCat3}/>
+<input type="checkbox" name="filterCategories" value="4" label="${ui.categories[4].label}" onclick="pageLocation.filterList()" ${v.valueCat4}/>
+<input type="checkbox" name="filterCategories" value="5" label="${ui.categories[5].label}" onclick="pageLocation.filterList()" ${v.valueCat5}/>
+<filterSeparator></filterSeparator>
+<input type="radio" name="filterCompass" value="N" label="${ui.l('locations.compassN')}" onclick="pageLocation.filterList()" deselect="true" ${v.valueCompassN}/>
+<input type="radio" name="filterCompass" value="E" label="${ui.l('locations.compassE')}" onclick="pageLocation.filterList()" deselect="true" ${v.valueCompassE}/>
+<input type="radio" name="filterCompass" value="S" label="${ui.l('locations.compassS')}" onclick="pageLocation.filterList()" deselect="true" ${v.valueCompassS}/>
+<input type="radio" name="filterCompass" value="W" label="${ui.l('locations.compassW')}" onclick="pageLocation.filterList()" deselect="true" ${v.valueCompassW}/>
+<filterSeparator></filterSeparator>
+<input type="checkbox" label="${ui.l('search.matches')}" name="filterMatchesOnly" ${v.valueMatchesOnly}/>
+<filterSeparator></filterSeparator>
+<input type="text" name="filterKeywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.valueKeywords}/>
+<explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
+<errorHint></errorHint>
+<buttontext class="bgColor defaultButton" onclick="pageEvent.search()">${ui.l('search.action')}</buttontext></form>`;
 	static detail(v) {
 		v.copyLinkHint = ui.l('copyLinkHint.event');
 		if (v.event.contactId != user.contact.id)
@@ -128,7 +148,7 @@ ${v.eventParticipationButtons}
 		}
 		if (!v.locID)
 			v.event.text = ui.categories[v.event.category].label + '<br/>' + v.event.text;
-		v.id = events.getId(v);
+		v.id = pageEvent.getId(v);
 		if (('' + v.id).indexOf('_') < 0) {
 			v.date = global.date.formatDate(v.event.startDate);
 			v.date = '<eventOutdated>&nbsp;' + v.date;
@@ -140,8 +160,8 @@ ${v.eventParticipationButtons}
 			d.hour = d2.hour;
 			d.minute = d2.minute;
 			v.date = global.date.formatDate(d);
-			v.eventParticipationButtons = events.getParticipateButton(x, v);
-			var p = events.getParticipation(x);
+			v.eventParticipationButtons = pageEvent.getParticipateButton(x, v);
+			var p = pageEvent.getParticipation(x);
 			if (p.state == 1)
 				v.classParticipate = ' participate';
 			else if (p.state == -1 && v.event.confirm == 1) {
@@ -183,15 +203,15 @@ ${v.eventParticipationButtons}
 		v.hideMeFavorite = ' noDisp';
 		v.hideMeEvents = ' noDisp';
 		v.hideMeMarketing = ' noDisp';
-		v.editAction = 'events.edit(' + v.locID + ',' + v.event.id + ')';
-		return events.templateDetail(v);
+		v.editAction = 'pageEvent.edit(' + v.locID + ',' + v.event.id + ')';
+		return pageEvent.templateDetail(v);
 	}
 	static edit(locationID, id) {
 		ui.navigation.hideMenu();
 		if (id)
-			events.editInternal(locationID, id, JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).event);
+			pageEvent.editInternal(locationID, id, JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).event);
 		else
-			events.editInternal(locationID);
+			pageEvent.editInternal(locationID);
 	}
 	static editInternal(locationID, id, v) {
 		if (!id && locationID && formFunc.getDraft('event' + locationID)) {
@@ -244,9 +264,9 @@ ${v.eventParticipationButtons}
 			d.setMonth(d.getMonth() + 6);
 			v.endDate = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
 		}
-		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), events.templateEdit(v), 'events.saveDraft()');
-		events.setForm();
-		events.locationsOfPastEvents();
+		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
+		pageEvent.setForm();
+		pageEvent.locationsOfPastEvents();
 	}
 	static getCalendarList(data, onlyMine) {
 		if (!data || data.length == 0)
@@ -283,7 +303,7 @@ ${v.eventParticipationButtons}
 				}
 				do {
 					if (d1 > today && (!added || d1 < todayPlus14)) {
-						s = events.getParticipation({ id: v.event.id, date: d1.getFullYear() + '-' + ('0' + (d1.getMonth() + 1)).slice(-2) + '-' + ('0' + d1.getDate()).slice(-2) });
+						s = pageEvent.getParticipation({ id: v.event.id, date: d1.getFullYear() + '-' + ('0' + (d1.getMonth() + 1)).slice(-2) + '-' + ('0' + d1.getDate()).slice(-2) });
 						if (!onlyMine || s.id || v.event.contactId == user.contact.id) {
 							added = true;
 							if (!actualEvents[d1.getTime() + '.' + v.event.id]) {
@@ -325,6 +345,21 @@ ${v.eventParticipationButtons}
 		}
 		return a;
 	}
+	static getFilterFields() {
+		var v = {};
+		var l = lists.data[ui.navigation.getActiveID()];
+		if (pageEvent.filter.filterCategories) {
+			var c = pageEvent.filter.filterCategories.split('\u0015');
+			for (var i = 0; i < c.length; i++)
+				v['valueCat' + c[i]] = ' checked="true"';
+		}
+		v['valueCompass' + pageEvent.filter.filterCompass] = ' checked="true"';
+		if (pageEvent.filter.filterKeywords)
+			v.valueKeywords = ' value="' + pageEvent.filter.filterKeywords + '"';
+		if (pageEvent.filter.filterMatchesOnly == 'on')
+			v.valueMatchesOnly = ' checked="true"';
+		return pageEvent.templateSearch(v);
+	}
 	static getId(v) {
 		var endDate = global.date.server2Local(v['event.endDate'] || v.event.endDate), today = new Date(), id = v.id || v['event.id'];
 		today.setHours(0);
@@ -352,54 +387,111 @@ ${v.eventParticipationButtons}
 		return id;
 	}
 	static getParticipateButton(p, v) {
-		var participation = events.getParticipation(p);
+		var participation = pageEvent.getParticipation(p);
 		if (v.event.confirm && participation.state == -1)
 			return '';
 		var text = '<div style="margin:1em 0;">';
-		text += '<buttontext pID="' + (participation.id ? participation.id : '') + '" s="' + (participation.id ? participation.state : '') + '" confirm="' + v.event.confirm + '" class="bgColor" onclick="events.participate(event,' + JSON.stringify(p).replace(/"/g, '&quot;') + ')" max="' + (v.maxParticipants ? v.maxParticipants : 0) + '" style="display:none;">' + ui.l('events.participante' + (participation.state == 1 ? 'Stop' : '')) + '</buttontext>';
-		text += '<buttontext class="bgColor" onclick="events.toggleParticipants(event,' + JSON.stringify(p).replace(/"/g, '&quot;') + ',' + v.event.confirm + ')"><participantCount></participantCount>' + ui.l('events.participants') + '</buttontext>';
+		text += '<buttontext pID="' + (participation.id ? participation.id : '') + '" s="' + (participation.id ? participation.state : '') + '" confirm="' + v.event.confirm + '" class="bgColor" onclick="pageEvent.participate(event,' + JSON.stringify(p).replace(/"/g, '&quot;') + ')" max="' + (v.maxParticipants ? v.maxParticipants : 0) + '" style="display:none;">' + ui.l('events.participante' + (participation.state == 1 ? 'Stop' : '')) + '</buttontext>';
+		text += '<buttontext class="bgColor" onclick="pageEvent.toggleParticipants(event,' + JSON.stringify(p).replace(/"/g, '&quot;') + ',' + v.event.confirm + ')"><participantCount></participantCount>' + ui.l('events.participants') + '</buttontext>';
 		text += '</div><text name="participants" style="margin:0 -1em;"></text>';
 		return text;
 	}
 	static getParticipation(p) {
-		if (events.participations) {
-			for (var i = 0; i < events.participations.length; i++) {
-				if (events.participations[i].eventId == p.id && events.participations[i].eventDate == p.date)
-					return events.participations[i];
+		if (pageEvent.participations) {
+			for (var i = 0; i < pageEvent.participations.length; i++) {
+				if (pageEvent.participations[i].eventId == p.id && pageEvent.participations[i].eventDate == p.date)
+					return pageEvent.participations[i];
 			}
 		}
 		return {};
 	}
 	static getParticipationNext(eventId) {
-		if (events.participations) {
+		if (pageEvent.participations) {
 			var today = new Date();
 			today.setDate(today.getDate() - 1);
-			for (var i = 0; i < events.participations.length; i++) {
-				if (global.date.server2Local(events.participations[i].eventDate).getTime() > today &&
-					(!eventId || events.participations[i].event.id == eventId))
-					return events.participations[i];
+			for (var i = 0; i < pageEvent.participations.length; i++) {
+				if (global.date.server2Local(pageEvent.participations[i].eventDate).getTime() > today &&
+					(!eventId || pageEvent.participations[i].event.id == eventId))
+					return pageEvent.participations[i];
 			}
 		}
+	}
+	static getSearch() {
+		var s = '';
+		if (ui.q('events filters [name="filterMatchesOnly"]:checked'))
+			s = pageLocation.getSearchMatches();
+		var c = '', d = '';
+		var cats = [];
+		var e = ui.qa('events filters [name="filterCategories"]:checked');
+		if (e) {
+			for (var i = 0; i < e.length; i++) {
+				cats.push(e[i].value);
+				c += 'category like \'%' + e[i].value + '%\' or ';
+			}
+		}
+		if (c)
+			s += (s ? ' and ' : '') + '(' + c.substring(0, c.length - 4) + ')';
+		else {
+			for (var i = 0; i < ui.categories.length; i++)
+				cats.push(i);
+		}
+		c = ui.q('events filters [name="filterCompass"]:checked');
+		if (c) {
+			if (c.value == 'N')
+				s += (s ? ' and ' : '') + 'location.latitude>' + geoData.latlon.lat;
+			else if (c.value == 'E')
+				s += (s ? ' and ' : '') + 'location.longitude>' + geoData.latlon.lon;
+			else if (c.value == 'S')
+				s += (s ? ' and ' : '') + 'location.latitude<' + geoData.latlon.lat;
+			else if (c.value == 'W')
+				s += (s ? ' and ' : '') + 'location.longitude<' + geoData.latlon.lon;
+		}
+		var v = ui.val('events filters [name="filterKeywords"]').trim();
+		if (v) {
+			v = v.replace(/'/g, '\'\'').split(' ');
+			for (var i = 0; i < v.length; i++) {
+				if (v[i].trim()) {
+					v[i] = v[i].trim().toLowerCase();
+					var att = '', l = ') like \'%' + v[i].trim().toLowerCase() + '%\' or LOWER(';
+					for (var i2 = 0; i2 < cats.length; i2++) {
+						for (var i3 = 0; i3 < ui.categories[cats[i2]].subCategories.length; i3++) {
+							if (ui.categories[cats[i2]].subCategories[i3].toLowerCase().indexOf(v[i]) > -1)
+								att += '(location.category like \'%' + cats[i2] + '%\' and location.attr' + cats[i2] + ' like \'%' + (i3 < 10 ? '00' : i3 < 100 ? '0' : '') + i3 + '%\') or ';
+						}
+					}
+					d += '(LOWER(location.name' + l + 'location.description' + l + 'location.address' + l + 'location.address2' + l + 'location.telephone' + l;
+					d = d.substring(0, d.lastIndexOf('LOWER'));
+					if (att)
+						d += att;
+					d = d.substring(0, d.length - 4) + ') and ';
+				}
+			}
+			if (d)
+				d = '(' + d.substring(0, d.length - 5) + ')';
+		}
+		if (d)
+			s += (s ? ' and ' : '') + d;
+		return s;
 	}
 	static init() {
 		communication.ajax({
 			url: global.server + 'db/list?query=contact_listEventParticipate&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id),
 			responseType: 'json',
 			success(r) {
-				events.participations = [];
+				pageEvent.participations = [];
 				geoData.trackAll = null;
 				var today = global.date.local2server(new Date());
 				for (var i = 1; i < r.length; i++) {
 					var e = model.convert(new Contact(), r, i);
 					var e2 = e.eventParticipate;
 					e2.event = e.event;
-					events.participations.push(e2);
+					pageEvent.participations.push(e2);
 					if (e2.event.contactId == user.contact.id && today.indexOf(e2.eventDate) == 0) {
 						e = global.date.server2Local(e2.event.startDate);
 						geoData.trackAll = e.getHours();
 					}
 				}
-				events.participations.sort(
+				pageEvent.participations.sort(
 					function (a, b) {
 						return a.eventDate > b.eventDate || a.eventDate == b.eventDate && a.event.startDate.substring(11) > b.event.startDate.substring(11) ? 1 : -1
 					});
@@ -412,9 +504,9 @@ ${v.eventParticipationButtons}
 		var activeID = ui.navigation.getActiveID()
 		if (activeID == 'search')
 			ui.attr('search', 'type', 'events');
-		var as = events.getCalendarList(l);
+		var as = pageEvent.getCalendarList(l);
 		lists.data[activeID] = as;
-		return events.listEventsInternal(as);
+		return pageEvent.listEventsInternal(as);
 	}
 	static listEventsInternal(as, date) {
 		if (as.length < 2)
@@ -462,7 +554,7 @@ ${v.eventParticipationButtons}
 					v.classFavorite = v.locationFavorite.favorite ? ' favorite' : '';
 					if (!outdated) {
 						var d = global.date.getDateFields(v.event.startDate);
-						var state = events.getParticipation({ id: v.id, date: d.year + '-' + d.month + '-' + d.day }).state;
+						var state = pageEvent.getParticipation({ id: v.id, date: d.year + '-' + d.month + '-' + d.day }).state;
 						if (state == 1)
 							v.classFavorite += ' participate';
 						else if (state == -1 && v.event.confirm == 1)
@@ -505,9 +597,9 @@ ${v.eventParticipationButtons}
 		return s;
 	}
 	static listEventsMy(l) {
-		var as = events.getCalendarList(l, true);
+		var as = pageEvent.getCalendarList(l, true);
 		lists.data[ui.navigation.getActiveID()] = as;
-		return events.listEventsInternal(as);
+		return pageEvent.listEventsInternal(as);
 	}
 	static loadPotentialParticipants(category, visibility) {
 		var i = ui.q('detail card:last-child').getAttribute('i');
@@ -524,21 +616,21 @@ ${v.eventParticipationButtons}
 			});
 	}
 	static locations() {
-		clearTimeout(events.nearByExec);
+		clearTimeout(pageEvent.nearByExec);
 		var s = ui.q('popup input[name="location"]').value.trim();
 		ui.q('popup buttontext.eventLocationInputHelperButton').style.display = '';
 		if (s.length < 4) {
 			ui.q('popup eventLocationInputHelper').innerHTML = '<explain>' + ui.l('events.locationInputHint') + '</explain>';
 			return;
 		}
-		events.nearByExec = setTimeout(function () {
+		pageEvent.nearByExec = setTimeout(function () {
 			communication.ajax({
 				url: global.server + 'action/searchLocation?search=' + encodeURIComponent(s),
 				responseType: 'json',
 				success(r) {
 					var s = '';
 					for (var i = 0; i < r.length; i++)
-						s += '<li i="' + r[i].id + '" onclick="events.locationSelected(this)">' + r[i].name + '<br/>' + r[i].address.replace(/\n/g, global.separator) + '</li>';
+						s += '<li i="' + r[i].id + '" onclick="pageEvent.locationSelected(this)">' + r[i].name + '<br/>' + r[i].address.replace(/\n/g, global.separator) + '</li>';
 					ui.q('popup eventLocationInputHelper').innerHTML = s ? '<ul>' + s + '</ul>' : ui.l('events.locationInputNoHit');
 				}
 			});
@@ -553,7 +645,7 @@ ${v.eventParticipationButtons}
 				for (var i = 1; i < r.length; i++) {
 					var l = model.convert(new Location(), r, i);
 					if (!processed[l.id]) {
-						s += '<li i="' + l.id + '" onclick="events.locationSelected(this)">' + l.name + '<br/>' + l.address.replace(/\n/g, global.separator) + '</li>';
+						s += '<li i="' + l.id + '" onclick="pageEvent.locationSelected(this)">' + l.name + '<br/>' + l.address.replace(/\n/g, global.separator) + '</li>';
 						processed[l.id] = 1;
 					}
 				}
@@ -577,7 +669,7 @@ ${v.eventParticipationButtons}
 			d.id = participateID;
 			if (button.getAttribute('confirm') == 1) {
 				if (!ui.q('#stopParticipateReason')) {
-					ui.navigation.openPopup(ui.l('events.stopParticipate'), ui.l('events.stopParticipateText') + '<br/><textarea id="stopParticipateReason" placeholder="' + ui.l('events.stopParticipateHint') + '" style="margin-top:0.5em;"></textarea><buttontext class="bgColor" style="margin-top:1em;" pID="' + button.getAttribute('pID') + '" s="' + button.getAttribute('s') + '" confirm="1" onclick="events.participate(event,' + JSON.stringify(id).replace(/"/g, '&quot;') + ')">' + ui.l('events.stopParticipateButton') + '</buttontext>');
+					ui.navigation.openPopup(ui.l('events.stopParticipate'), ui.l('events.stopParticipateText') + '<br/><textarea id="stopParticipateReason" placeholder="' + ui.l('events.stopParticipateHint') + '" style="margin-top:0.5em;"></textarea><buttontext class="bgColor" style="margin-top:1em;" pID="' + button.getAttribute('pID') + '" s="' + button.getAttribute('s') + '" confirm="1" onclick="pageEvent.participate(event,' + JSON.stringify(id).replace(/"/g, '&quot;') + ')">' + ui.l('events.stopParticipateButton') + '</buttontext>');
 					return;
 				}
 				if (!ui.q('#stopParticipateReason').value)
@@ -621,7 +713,7 @@ ${v.eventParticipationButtons}
 				e.removeAttribute('h');
 				e.style.display = 'none';
 				ui.navigation.hidePopup();
-				events.init();
+				pageEvent.init();
 			}
 		});
 	}
@@ -631,7 +723,7 @@ ${v.eventParticipationButtons}
 			var id = ui.q('detail card:last-child').getAttribute('i');
 			ui.toggleHeight(e, function () {
 				e.innerHTML = '';
-				events.toggle(id);
+				pageEvent.toggle(id);
 			});
 		}
 	}
@@ -699,12 +791,16 @@ ${v.eventParticipationButtons}
 			success() {
 				ui.navigation.hidePopup();
 				formFunc.removeDraft('event' + v.locationId + (id ? '_' + id : ''));
-				events.refreshToggle();
+				pageEvent.refreshToggle();
 			}
 		});
 	}
 	static saveDraft() {
 		formFunc.saveDraft('event', formFunc.getForm('popup form'));
+	}
+	static search() {
+		pageEvent.filter = formFunc.getForm('events filters form').values;
+		communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_listEventCurrent&search=' + encodeURIComponent(pageEvent.getSearch()), pageEvent.listEvents, 'events', 'search');
 	}
 	static setForm() {
 		var b = ui.q('popup [name="type"]').checked;
@@ -758,7 +854,7 @@ ${v.eventParticipationButtons}
 					url: global.server + 'db/list?query=location_listEvent&search=' + encodeURIComponent('event.' + field + 'Id=' + id),
 					responseType: 'json',
 					success(r) {
-						events.toggleInternal(r, id, field);
+						pageEvent.toggleInternal(r, id, field);
 					}
 				});
 			} else
@@ -770,7 +866,7 @@ ${v.eventParticipationButtons}
 		if (!e)
 			return;
 		var bg = ui.classContains('detail card:last-child[i="' + id + '"] [name="buttonEvents"]', 'bgBonus') ? 'bgBonus' : 'bgColor';
-		var a = events.getCalendarList(r), newButton = field == 'contact' ? '' : '<br/><br/><buttontext onclick="events.edit(' + id + ')" class="' + bg + '">' + ui.l('events.new') + '</buttontext>';
+		var a = pageEvent.getCalendarList(r), newButton = field == 'contact' ? '' : '<br/><br/><buttontext onclick="pageEvent.edit(' + id + ')" class="' + bg + '">' + ui.l('events.new') + '</buttontext>';
 		var s = '', v, text;
 		var b = user.contact.id == id;
 		if (b && e.getAttribute('active'))
@@ -793,7 +889,7 @@ ${v.eventParticipationButtons}
 				text += global.separator + ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2));
 			if (v.event.maxParticipants)
 				text += global.separator + ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
-			var p = events.getParticipation({ id: v.event.id, date: date });
+			var p = pageEvent.getParticipation({ id: v.event.id, date: date });
 			if (v.event.confirm == 1)
 				text += global.separator + ui.l('events.participationMustBeConfirmed');
 			if (text)
