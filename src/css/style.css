@@ -357,7 +357,7 @@ home buttonIcon svg {
 
 home item.bluetooth {
 	position: absolute;
-	bottom: 0.5em;
+	bottom: 1em;
 	left: 0;
 	width: 100%;
 }

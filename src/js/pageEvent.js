@@ -728,7 +728,7 @@ ${v.eventParticipationButtons}
 		}
 	}
 	static reset() {
-		events.participations = null;
+		pageEvent.participations = null;
 	}
 	static save() {
 		var d1, d2;

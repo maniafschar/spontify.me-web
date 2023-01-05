@@ -247,6 +247,7 @@ class pageHome {
 	static reset() {
 		pageHome.badge = -1;
 		ui.html('notificationList', '');
+		ui.html('home', '');
 	}
 	static saveEvent() {
 		formFunc.resetError(ui.q('popup form input[name="location"]'));
