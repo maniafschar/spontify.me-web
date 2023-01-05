@@ -13,7 +13,7 @@ import { user } from "./user";
 export { pageEvent };
 
 class pageEvent {
-	static filter = {};
+	static filter = null;
 	static nearByExec = null;
 	static participations = null;
 	static templateEdit = v =>
@@ -474,6 +474,8 @@ ${v.eventParticipationButtons}
 		return s;
 	}
 	static init() {
+		if (!pageEvent.filter)
+			pageEvent.filter = formFunc.getDraft('searchEvents') || {};
 		communication.ajax({
 			url: global.server + 'db/list?query=contact_listEventParticipate&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id),
 			responseType: 'json',
@@ -801,6 +803,7 @@ ${v.eventParticipationButtons}
 	static search() {
 		pageEvent.filter = formFunc.getForm('events filters form').values;
 		communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_listEventCurrent&search=' + encodeURIComponent(pageEvent.getSearch()), pageEvent.listEvents, 'events', 'search');
+		formFunc.saveDraft('searchEvents', pageEvent.filter);
 	}
 	static setForm() {
 		var b = ui.q('popup [name="type"]').checked;

@@ -12,7 +12,7 @@ import { pageChat } from './pageChat';
 export { pageContact };
 
 class pageContact {
-	static filter = {};
+	static filter = null;
 	static templateList = v =>
 		global.template`<row onclick="${v.oc}" i="${v.id}" class="contact${v.classFavorite}">
 	<badge class="highlightBackground" style="display:${v._badgeDisp};" action="${v.badgeAction}">
@@ -715,6 +715,8 @@ ${v.budget}
 		}
 	}
 	static init() {
+		if (!pageContact.filter)
+			pageContact.filter = formFunc.getDraft('searchContacts') || {};
 		if (!ui.q('contacts').innerHTML)
 			lists.setListDivs('contacts');
 		if (!ui.q('contacts listResults row') && (!ui.q('contacts filters') || !ui.q('contacts filters').style.transform || ui.q('contacts filters').style.transform.indexOf('1') < 0))
@@ -771,6 +773,7 @@ ${v.budget}
 		ui.attr('contacts', 'menuIndex', 0);
 		pageContact.filter = formFunc.getForm('contacts filters form').values;
 		communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=contact_list&search=' + encodeURIComponent(pageContact.getSearch()), pageContact.listContacts, 'contacts', 'search');
+		formFunc.saveDraft('searchContacts', pageContact.filter);
 	}
 	static sendRequestForFriendship(id) {
 		communication.ajax({

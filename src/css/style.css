@@ -1671,7 +1671,7 @@ buttonIcon.language {
 	right: 0;
 	box-shadow: none;
 	font-size: 1.4em;
-	padding: 0.5em 0.5em 2em 2em;
+	padding: 1em 1em 2em 2em;
 	position: absolute;
 }
 
@@ -2427,10 +2427,11 @@ menu title {
 
 @keyframes popupSlideIn {
 	0% {
-		transform: rotate3d(0, 0, 1, 90deg);
+		opacity: 1;
 	}
 
 	100% {
+		opacity: 1;
 		transform: none;
 	}
 }
@@ -2439,13 +2440,10 @@ menu title {
 	transform: rotate3d(0, 0, 1, 90deg);
 	transform-origin: right top;
 	animation-name: popupSlideIn;
+	opacity: 0;
 }
 
 @keyframes popupSlideOut {
-	0% {
-		transform: none;
-	}
-
 	100% {
 		transform: rotate3d(0, 0, 1, -90deg);
 	}

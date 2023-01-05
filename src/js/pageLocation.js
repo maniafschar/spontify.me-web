@@ -12,7 +12,7 @@ import { user } from './user';
 export { pageLocation };
 
 class pageLocation {
-	static filter = {};
+	static filter = null;
 	static locationsAdded = null;
 	static map = {
 		canvas: null,
@@ -824,6 +824,8 @@ ${v.hint}
 		}
 	}
 	static init(id) {
+		if (!pageLocation.filter)
+			pageLocation.filter = formFunc.getDraft('searchLocations') || {};
 		if (!ui.q(id).innerHTML)
 			lists.setListDivs(id);
 		if (!ui.q(id + ' listResults row') && (!ui.q(id + ' filters') || !ui.q(id + ' filters').style.transform || ui.q(id + ' filters').style.transform.indexOf('1') < 0))
@@ -1194,6 +1196,7 @@ ${v.hint}
 			ui.attr('locations', 'menuIndex', 0);
 			pageLocation.filter = formFunc.getForm('locations filters form').values;
 			communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent(pageLocation.getSearch()), pageLocation.listLocation, 'locations', 'search');
+			formFunc.saveDraft('searchLocations', pageLocation.filter);
 		}
 	}
 	static searchFromMap() {
