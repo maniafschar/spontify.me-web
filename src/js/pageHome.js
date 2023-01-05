@@ -36,6 +36,7 @@ class pageHome {
 	</buttonIcon>
 	<text></text>
 </item>
+</homeBody>
 <item class="bluetooth">
 	<buttonIcon class="bgColor${v.bluetoothButton}" onclick="bluetooth.toggle()">
 		<img source="bluetooth" />
@@ -44,8 +45,7 @@ class pageHome {
 		<img source="info" />
 	</buttonIcon>
 	<text>Info</text>
-</item>
-</homeBody>`;
+</item>`;
 	static templateNewEvent = v =>
 		global.template`<form name="editElement" onsubmit="return false">
 <input type="hidden" name="locationId" />

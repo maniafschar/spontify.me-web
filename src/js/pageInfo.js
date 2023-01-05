@@ -30,9 +30,6 @@ class pageInfo {
 <infoblock id="info2" style="display:none;">
 	${ui.l('info.imprint')}
 </infoblock>
-<buttontext onclick="pageInfo.socialShare()" id="socialShare" class="bgColor settings2Button">
-	${ui.l('sendSocialShare')}
-</buttontext><br/>
 <div style="text-align:center;color:white;padding-top:2em;">© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>`;
 	static templateDesc = v =>
 		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#info4&quot;)">
