@@ -10,7 +10,9 @@ export { geoData };
 class geoData {
 	static angle = -1;
 	static currentStreet = '';
+	static currentStreetNonManual = '';
 	static currentTown = 'München';
+	static currentTownNonManual = geoData.currentTown;
 	static headingID = null;
 	static id = null;
 	static initDeviceOrientation = null;
@@ -118,7 +120,11 @@ class geoData {
 		cordova.plugins.diagnostic.requestLocationAuthorization(geoData.init2, null, cordova.plugins.diagnostic.locationAuthorizationMode.WHEN_IN_USE);
 	}
 	static resetLocationPicker() {
-		geoData.manual = false
+		geoData.manual = false;
+		geoData.currentStreet = geoData.currentStreetNonManual;
+		geoData.currentTown = geoData.currentTownNonManual;
+		pageInfo.updateLocalisation();
+		pageHome.updateLocalisation();
 	}
 	static save(position) {
 		var d = geoData.getDistance(geoData.latlon.lat, geoData.latlon.lon, position.latitude, position.longitude);
@@ -151,6 +157,10 @@ class geoData {
 						geoData.lastSave = new Date().getTime();
 						geoData.currentTown = r.town;
 						geoData.currentStreet = r.street;
+						if (!position.manual) {
+							geoData.currentTownNonManual = r.town;
+							geoData.currentStreetNonManual = r.street;
+						}
 						pageInfo.updateLocalisation();
 						pageHome.updateLocalisation();
 					}
