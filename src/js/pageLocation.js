@@ -1149,7 +1149,7 @@ ${v.hint}
 			ui.q('map').setAttribute('created', new Date().getTime());
 			ui.q('locations buttontext.map').style.display = null;
 		} else {
-			pageLocation.map.canvas = new google.maps.Map(ui.q('map'), { mapTypeId: google.maps.MapTypeId.ROADMAP });
+			pageLocation.map.canvas = new google.maps.Map(ui.q('map'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true });
 			pageLocation.map.canvas.addListener('bounds_changed', function () {
 				if (new Date().getTime() - ui.q('map').getAttribute('created') > 2000)
 					ui.q('locations buttontext.map').style.display = 'inline-block';

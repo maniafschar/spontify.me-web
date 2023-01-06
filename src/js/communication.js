@@ -19,6 +19,7 @@ export { communication, FB };
 
 class communication {
 	static currentCalls = [];
+	static mapScriptAdded = false;
 	static pingExec = null;
 	static sentErrors = [];
 
@@ -138,9 +139,16 @@ class communication {
 		});
 	}
 	static loadMap(exec) {
-		if (ui.q('head script[t="map"]'))
-			exec.call();
-		else
+		if (communication.mapScriptAdded) {
+			var f = function () {
+				if (ui.q('head script[t="map"]'))
+					exec.call();
+				else
+					setTimeout(f, 100);
+			}
+			f.call();
+		} else {
+			communication.mapScriptAdded = true;
 			communication.ajax({
 				url: global.server + 'action/google?param=js',
 				responseType: 'text',
@@ -152,6 +160,7 @@ class communication {
 					document.head.appendChild(script);
 				}
 			});
+		}
 	}
 	static login = {
 		regexPseudonym: /[^A-Za-zÀ-ÿ]/,

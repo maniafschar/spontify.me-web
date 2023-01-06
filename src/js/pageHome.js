@@ -244,11 +244,11 @@ class pageHome {
 			communication.loadMap(function () {
 				ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
 					'<mapPicker></mapPicker><br/>' +
-					'<buttontext class="bgColor" onclick="pageHome.resetLocationPicker()">' + ui.l('home.locationPickerReset') + '</buttontext>' +
+					(geoData.manual ? '<buttontext class="bgColor" onclick="pageHome.resetLocationPicker()">' + ui.l('home.locationPickerReset') + '</buttontext>' : '') +
 					'<buttontext class="bgColor" onclick="pageHome.saveLocationPicker()">' + ui.l('ready') + '</buttontext>', null, null,
 					function () {
 						var delta = 0.3;
-						pageHome.map = new google.maps.Map(ui.q('mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, maxZoom: 13 });
+						pageHome.map = new google.maps.Map(ui.q('mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 13 });
 						pageHome.map.fitBounds(new google.maps.LatLngBounds(
 							new google.maps.LatLng(geoData.latlon.lat + delta, geoData.latlon.lon - delta), //south west
 							new google.maps.LatLng(geoData.latlon.lat - delta, geoData.latlon.lon + delta) //north east

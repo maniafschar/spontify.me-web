@@ -46,8 +46,6 @@ class geoData {
 		return (360 + Math.atan2(p2.lon - p1.lon, p2.lat - p1.lat) * 180 / Math.PI) % 360;
 	}
 	static getDistance(lat1, lon1, lat2, lon2) {
-		if (!lat1)
-			return 1;
 		var R = 6371;
 		var a = 0.5 - Math.cos((lat2 - lat1) * Math.PI / 180) / 2 +
 			Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
