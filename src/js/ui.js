@@ -1385,7 +1385,7 @@ class formFunc {
 	static openChoices(id, exec) {
 		var e = ui.q('#' + id);
 		var v = e.getAttribute('valueEx');
-		ui.navigation.openPopup(e.parentNode.parentNode.children[0].innerText.trim(), '<input id="' + id + 'HelperPopup" type="text" multiple="' + e.getAttribute('multiplePopup') + '" value="' + e.value + '"/>' + (v == null ? '<br/>' : '<input type="text" id="' + id + 'HelperPopupEx" value="' + v + '" placeholder="' + ui.l('contacts.blockReason100') + '"' + (e.getAttribute('maxEx') ? ' maxlength="' + e.getAttribute('maxEx') + '"' : '') + '/><hintAttributeEx>' + ui.l('multipleValus.hintOther') + '</hintAttributeEx>') + '<popupHint></popupHint><buttontext onclick="formFunc.setChoices(&quot;' + id + '&quot;' + (exec ? ',' + exec : '') + ')" class="bgColor">' + ui.l('ready') + '</buttontext>');
+		ui.navigation.openPopup(e.parentNode.parentNode.children[0].innerText.trim(), '<input id="' + id + 'HelperPopup" type="text" multiple="' + e.getAttribute('multiplePopup') + '" value="' + e.value + '"/>' + (v == null ? '<br/>' : '<input type="text" id="' + id + 'HelperPopupEx" value="' + v + '" placeholder="' + ui.l('contacts.blockReason100') + '"' + (e.getAttribute('maxEx') ? ' maxlength="' + e.getAttribute('maxEx') + '"' : '') + '/><hintAttributeEx>' + ui.l('multipleValus.hintOther') + '</hintAttributeEx>') + '<popupHint></popupHint><buttontext onclick="formFunc.setChoices(&quot;' + id + '&quot;' + (exec ? ',' + exec : '') + ')" class="bgColor">' + ui.l('save') + '</buttontext>');
 		formFunc.initFields('popup');
 	}
 	static pressDefaultButton(event) {

@@ -116,7 +116,7 @@ class pageSettings {
 		</value>
 	</field>
 	<dialogButtons>
-		<buttontext onclick="ui.navigation.goTo(&quot;settings2&quot;)" class="bgColor">&gt;</buttontext>
+		<buttontext onclick="ui.navigation.goTo(&quot;settings2&quot;)" class="bgColor">${ui.l('settings.save1')}</buttontext>
 	</dialogButtons>
 	<qrcodeDescription>${ui.l('settings.qrcode')}</qrcodeDescription>
 	<qrcode></qrcode>
@@ -191,6 +191,7 @@ class pageSettings {
 </div>
 <br/>
 <dialogButtons>
+<buttontext onclick="ui.navigation.goTo(&quot;settings&quot;)" class="bgColor">&lt;</buttontext>
 <buttontext onclick="pageSettings.preview()" class="bgColor">${ui.l('settings.preview')}</buttontext>
 <buttontext onclick="ui.navigation.goTo(&quot;settings3&quot;)" class="bgColor">&gt;</buttontext>
 </dialogButtons>`;
@@ -256,7 +257,10 @@ class pageSettings {
 </div>
 </div>
 <buttontext class="bgColor settings2Button" onclick="communication.login.logoff()">${ui.l('logoff.title')}</buttontext><br/>
-${v.info}`;
+${v.info}
+<dialogButtons>
+<buttontext onclick="ui.navigation.goTo(&quot;settings2&quot;)" class="bgColor">&lt;</buttontext>
+</dialogButtons>`;
 
 	static checkUnique() {
 		if (user.email == ui.val('input[name="email"]'))
