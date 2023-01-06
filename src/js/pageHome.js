@@ -290,6 +290,8 @@ class pageHome {
 		if (h < d.getHours())
 			d.setDate(d.getDate() + 1);
 		v.values.startDate = global.date.local2server(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + v.values.startDate + ':00');
+		if (ui.q('popup field.location').style.display == 'none')
+			v.values.locationId = null;
 		v.classname = 'Event';
 		v.id = ui.q('home item.event').getAttribute('i');
 		communication.ajax({

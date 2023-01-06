@@ -487,7 +487,7 @@
 			"6a": "You can easily delete your profile in the settings. The data is then completely and irrevocably gone, a recovery is not possible. <br/> Despite the simple deletion option, our goal is to gain sustainable users who use our app in the long term and who are authentic. This simplified deletion process therefore primarily serves to build trust."
 		},
 		"home": {
-			"locationPickerReset": "Reset location",
+			"locationPickerReset": "Reset",
 			"locationPickerTitle": "Choose location"
 		},
 		"info": {

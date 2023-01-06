@@ -487,7 +487,7 @@
 			"6a": "Du kannst dein Profil ganz einfach in den Einstellungen löschen. Die Daten sind dann allerdings komplett und unwiderruflich weg, eine Wiederherstellung ist nicht möglich.<br/>Trotz der einfachen Löschmöglichkeit ist unser Ziel, nachhaltige Benutzer zu gewinnen, die langfristig unsere App nutzen und authentisch sind. Dieser vereinfachte Löschvorgang dient daher in erster Linie dem Vertrauensaufbau."
 		},
 		"home": {
-			"locationPickerReset": "Standort zurücksetzen",
+			"locationPickerReset": "Zurücksetzen",
 			"locationPickerTitle": "Standort wählen"
 		},
 		"info": {
