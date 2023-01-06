@@ -269,7 +269,7 @@ class ui {
 		goBack() {
 			ui.navigation.goTo('home');
 		},
-		goTo(id) {
+		goTo(id, back) {
 			if (ui.classContains('content', 'animated'))
 				return;
 			communication.notification.close();
@@ -296,7 +296,7 @@ class ui {
 				pageLogin.saveDraft();
 			if (currentID == 'settings3')
 				pageSettings.save3();
-			if (id == 'settings' && pageSettings.init(function () { ui.navigation.goTo(id); }))
+			if (id == 'settings' && pageSettings.init(function () { ui.navigation.goTo(id, back); }))
 				return;
 			if (id == 'info')
 				pageInfo.init();
@@ -318,8 +318,7 @@ class ui {
 			if (currentID != id) {
 				var e = ui.q('navigation item.' + id);
 				var i1 = 0;
-				var back = null;
-				if (e) {
+				if (!back && e) {
 					while ((e = e.previousSibling) != null)
 						i1++;
 					e = ui.q('navigation item.' + currentID);
@@ -327,7 +326,7 @@ class ui {
 						var i2 = 0;
 						while ((e = e.previousSibling) != null)
 							i2++;
-						back = i2 > i1 || id == 'settings' && currentID == 'home';
+						back = i2 > i1;
 					}
 				}
 				if (back == null)

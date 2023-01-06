@@ -95,7 +95,7 @@ ${v.parking}
 	<buttontext class="bgColor${v.hideMeEvents}" name="buttonEvents"
 		onclick="pageEvent.toggle(${v.locID})">${ui.l('events.title')}</buttontext>
 	<buttontext class="bgColor${v.hideMeEvents}" name="buttonWhatToDo"
-		onclick="pageLocation.toggleWhatToDo(${v.id})">${ui.l('wtd.location')}</buttontext>
+		onclick="pageLocation.toggleWhatToDo()">${ui.l('wtd.location')}</buttontext>
 	<buttontext class="bgColor${v.hideMePotentialParticipants}" name="buttonPotentialParticipants"
 		onclick="pageEvent.loadPotentialParticipants(${v.category},${v.event.visibility})">${ui.l('events.potentialParticipants')}</buttontext>
 	<buttontext class="bgColor${v.hideMeMarketing}" name="buttonMarketing"
@@ -1149,7 +1149,7 @@ ${v.hint}
 			ui.q('map').setAttribute('created', new Date().getTime());
 			ui.q('locations buttontext.map').style.display = null;
 		} else {
-			pageLocation.map.canvas = new google.maps.Map(document.getElementsByTagName("map")[0], { mapTypeId: google.maps.MapTypeId.ROADMAP });
+			pageLocation.map.canvas = new google.maps.Map(ui.q('map'), { mapTypeId: google.maps.MapTypeId.ROADMAP });
 			pageLocation.map.canvas.addListener('bounds_changed', function () {
 				if (new Date().getTime() - ui.q('map').getAttribute('created') > 2000)
 					ui.q('locations buttontext.map').style.display = 'inline-block';
@@ -1158,7 +1158,7 @@ ${v.hint}
 		if (!pageLocation.map.loadActive) {
 			var deltaLat = Math.abs(geoData.latlon.lat - d.latitude) * 0.075, deltaLon = Math.abs(geoData.latlon.lon - d.longitude) * 0.075;
 			pageLocation.map.canvas.fitBounds(new google.maps.LatLngBounds(
-				new google.maps.LatLng(Math.max(geoData.latlon.lat, d.latitude) + deltaLat, Math.min(geoData.latlon.lon, d.longitude) - deltaLon),//south west
+				new google.maps.LatLng(Math.max(geoData.latlon.lat, d.latitude) + deltaLat, Math.min(geoData.latlon.lon, d.longitude) - deltaLon), //south west
 				new google.maps.LatLng(Math.min(geoData.latlon.lat, d.latitude) - deltaLat, Math.max(geoData.latlon.lon, d.longitude) + deltaLon) //north east
 			));
 			pageLocation.map.markerMe = new google.maps.Marker(
@@ -1305,10 +1305,6 @@ ${v.hint}
 		if (ui.q('map').getAttribute('created')) {
 			ui.q('map').setAttribute('created', new Date().getTime());
 			if (ui.cssValue('map', 'display') == 'none') {
-				if (ui.q('locations').getAttribute('menuIndex') >= ui.q('menu container').childElementCount) {
-					ui.navigation.openPopup(ui.l('attention'), ui.l('events.mapOnlyForLocations'));
-					return;
-				}
 				ui.css('locations listBody', 'margin-top', '20em');
 				ui.css('locations listBody', 'padding-top', '0.5em');
 			} else {
@@ -1327,18 +1323,9 @@ ${v.hint}
 			pageLocation.search();
 		} else {
 			ui.attr('map', 'created', new Date().getTime());
-			communication.ajax({
-				url: global.server + 'action/google?param=js',
-				responseType: 'text',
-				success(r) {
-					var script = document.createElement('script');
-					script.onload = function () {
-						pageLocation.toggleMap();
-						ui.on('locations listBody', 'scroll', pageLocation.scrollMap);
-					};
-					script.src = r;
-					document.head.appendChild(script);
-				}
+			communication.loadMap(function () {
+				pageLocation.toggleMap();
+				ui.on('locations listBody', 'scroll', pageLocation.scrollMap);
 			});
 		}
 	}
@@ -1349,7 +1336,7 @@ ${v.hint}
 		e.style.left = '5%';
 		ui.toggleHeight(e);
 	}
-	static toggleWhatToDo(id) {
+	static toggleWhatToDo() {
 		details.togglePanel(ui.q('detail card:last-child [name="whatToDo"]'));
 	}
 }

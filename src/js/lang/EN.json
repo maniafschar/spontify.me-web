@@ -432,7 +432,6 @@
 			"locationInputHint": "Enter at least 4 characters of the name or address of the Location or enter a new Location.",
 			"locationInputHint2": "Addresses of existing Events:",
 			"locationInputNoHit": "No hit",
-			"mapOnlyForLocations": "Map is only available for Locations.",
 			"maxParticipants": "Max. Participants",
 			"myEvents": "Favourite Events",
 			"new": "Add new Event",
@@ -486,6 +485,10 @@
 			"5a": "No, we won't show your email to anyone. Your exact whereabouts will of course not be displayed either. Users can see that you are within 1.5 kilometers of them.",
 			"6": "Can I delete my profile again?",
 			"6a": "You can easily delete your profile in the settings. The data is then completely and irrevocably gone, a recovery is not possible. <br/> Despite the simple deletion option, our goal is to gain sustainable users who use our app in the long term and who are authentic. This simplified deletion process therefore primarily serves to build trust."
+		},
+		"home": {
+			"locationPickerReset": "Reset location",
+			"locationPickerTitle": "Choose location"
 		},
 		"info": {
 			"adsFinish": "Thank you for your feedback!",

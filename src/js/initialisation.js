@@ -193,7 +193,7 @@ class initialisation {
 		}, 'textarea');
 		ui.on('popup', 'click', function (event) {
 			var e = event.target;
-			if (ui.parents(e, 'popupTitle') || !ui.q('popup input') && !ui.q('popup textarea')) {
+			if (ui.parents(e, 'popupTitle') || !ui.q('popup input') && !ui.q('popup textarea') && !ui.q('popup mapPicker')) {
 				while (e && e.getAttribute) {
 					if (e.getAttribute('onclick') || ui.classContains(e, 'selectable'))
 						return;
@@ -243,7 +243,7 @@ class initialisation {
 			if (dir == 'left')
 				ui.navigation.goTo(user.contact ? 'locations' : 'login');
 			else if (dir == 'right' && user.contact)
-				ui.navigation.goTo('settings');
+				ui.navigation.goTo('settings', true);
 		}, 'input,listScroll');
 		ui.swipe('info', function (dir) {
 			if (dir == 'right')

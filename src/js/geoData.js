@@ -18,6 +18,7 @@ class geoData {
 	static latlon = { lat: 48.13684, lon: 11.57685 };
 	static localizationAsked = false;
 	static localized = false;
+	static manual = false;
 	static rad = 0.017453292519943295;
 	static trackAll = null;
 
@@ -43,6 +44,8 @@ class geoData {
 		return (360 + Math.atan2(p2.lon - p1.lon, p2.lat - p1.lat) * 180 / Math.PI) % 360;
 	}
 	static getDistance(lat1, lon1, lat2, lon2) {
+		if (!lat1)
+			return 1;
 		var R = 6371;
 		var a = 0.5 - Math.cos((lat2 - lat1) * Math.PI / 180) / 2 +
 			Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
@@ -114,15 +117,24 @@ class geoData {
 		ui.navigation.hidePopup();
 		cordova.plugins.diagnostic.requestLocationAuthorization(geoData.init2, null, cordova.plugins.diagnostic.locationAuthorizationMode.WHEN_IN_USE);
 	}
+	static resetLocationPicker() {
+		geoData.manual = false
+	}
 	static save(position) {
-		var l = geoData.latlon;
-		geoData.latlon.lat = position.latitude;
-		geoData.latlon.lon = position.longitude;
+		var d = geoData.getDistance(geoData.latlon.lat, geoData.latlon.lon, position.latitude, position.longitude);
+		if (position.manual || !geoData.manual) {
+			geoData.latlon.lat = position.latitude;
+			geoData.latlon.lon = position.longitude;
+		}
+		if (position.manual)
+			geoData.manual = true;
 		if (geoData.trackAll != null && new Date().getHours() > geoData.trackAll + 2)
 			geoData.trackAll = null;
 		if (user.contact && user.contact.id && new Date().getTime() - geoData.lastSave > 5000 &&
-			(!geoData.localized || geoData.trackAll != null && new Date().getHours() >= geoData.trackAll - 1 ||
-				geoData.getDistance(l.lat, l.lon, position.latitude, position.longitude) > 0.05)) {
+			(!geoData.localized ||
+				geoData.trackAll != null && new Date().getHours() >= geoData.trackAll - 1 ||
+				d > 0.05 && !geoData.manual ||
+				position.manual)) {
 			communication.ajax({
 				url: global.server + 'action/position',
 				progressBar: false,

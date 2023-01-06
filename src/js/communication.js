@@ -137,6 +137,22 @@ class communication {
 			}
 		});
 	}
+	static loadMap(exec) {
+		if (ui.q('head script[t="map"]'))
+			exec.call();
+		else
+			communication.ajax({
+				url: global.server + 'action/google?param=js',
+				responseType: 'text',
+				success(r) {
+					var script = document.createElement('script');
+					script.onload = exec;
+					script.src = r;
+					script.setAttribute('t', 'map');
+					document.head.appendChild(script);
+				}
+			});
+	}
 	static login = {
 		regexPseudonym: /[^A-Za-zÀ-ÿ]/,
 		regexPW: /[^a-zA-ZÀ-ÿ0-9-_.+*#§$%&/\\ \^']/,

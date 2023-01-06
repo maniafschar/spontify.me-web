@@ -432,7 +432,6 @@
 			"locationInputHint": "Gib mindestens 4 Buchstaben des Namens oder der Adresse der Location ein oder erstelle eine neue Location.",
 			"locationInputHint2": "Adressen von bereits erstellten Events:",
 			"locationInputNoHit": "Keine Treffer",
-			"mapOnlyForLocations": "Kartenansicht gibt es nur für Locations.",
 			"maxParticipants": "Max. Teilnehmer",
 			"myEvents": "meine Events",
 			"new": "Neues Event",
@@ -486,6 +485,10 @@
 			"5a": "Nein, wir zeigen niemandem Deine Email. Auch Dein genauer Aufenthaltsort wird selbstverständlich nicht angezeigt. Benutzer sehen maximal, das Du Dich im Umkreis von 1,5 Kilometern zu ihnen befindest.",
 			"6": "Kann ich mein Profil wieder löschen?",
 			"6a": "Du kannst dein Profil ganz einfach in den Einstellungen löschen. Die Daten sind dann allerdings komplett und unwiderruflich weg, eine Wiederherstellung ist nicht möglich.<br/>Trotz der einfachen Löschmöglichkeit ist unser Ziel, nachhaltige Benutzer zu gewinnen, die langfristig unsere App nutzen und authentisch sind. Dieser vereinfachte Löschvorgang dient daher in erster Linie dem Vertrauensaufbau."
+		},
+		"home": {
+			"locationPickerReset": "Standort zurücksetzen",
+			"locationPickerTitle": "Standort wählen"
 		},
 		"info": {
 			"adsFinish": "Lieben Dank für Dein Feedback!",

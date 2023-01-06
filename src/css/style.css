@@ -116,20 +116,21 @@ navigation>item {
 	height: 100%;
 	float: left;
 	text-align: center;
-	padding-top: 0.75em;
+	padding-top: 1.1em;
 	cursor: pointer;
 	transition: all 0.4s ease-out;
 }
 
 navigation>item svg {
-	height: 2.5em;
+	height: 2em;
 	transition: all 0.4s ease-out;
-	filter: drop-shadow(0.2em 0.2em 0.2em rgba(0, 0, 0, 0.2));
+	filter: drop-shadow(0.1em 0.1em 0.1em rgba(0, 0, 0, 0.2));
 }
 
-navigation>item.active svg,
-navigation>item:hover svg {
-	filter: none;
+navigation>item.active svg {
+	filter: drop-shadow(0.2em 0.2em 0.2em rgba(0, 0, 0, 0.35));
+	margin: -0.2em 0 0 -0.2em;
+	height: 2.1em;
 }
 
 navigation>item.active,
@@ -338,7 +339,7 @@ homeBody {
 	width: 100%;
 	display: block;
 	top: 50%;
-	margin-top: -6vh;
+	margin-top: -3vh;
 }
 
 home buttonIcon {
@@ -1945,6 +1946,13 @@ subtitle {
 	opacity: 0.6;
 	bottom: 0.2em;
 	line-height: 1;
+}
+
+mapPicker {
+	position: relative;
+	display: block;
+	width: 100%;
+	height: 50vh;
 }
 
 map {

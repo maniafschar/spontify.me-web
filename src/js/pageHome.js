@@ -13,6 +13,7 @@ export { pageHome };
 
 class pageHome {
 	static badge = -1;
+	static map;
 	static marketing = null;
 	static template = v =>
 		global.template`<homeHeader onclick="${v.clickHeader}"${v.logoSmall}>
@@ -25,7 +26,7 @@ class pageHome {
 </homeHeader>
 <homeBody>
 <item class="position">
-	<buttonIcon class="bgColor" onclick="pageHome.position()">
+	<buttonIcon class="bgColor" onclick="pageHome.openLocationPicker()">
 		<img source="location" />
 	</buttonIcon>
 	<text></text>
@@ -238,16 +239,33 @@ class pageHome {
 			'<div style="text-align:center;padding:2em 0;"><buttontext class="langSelectImg bgColor' + (global.language == 'DE' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE">Deutsch</buttontext>' +
 			'<buttontext class="langSelectImg bgColor' + (global.language == 'EN' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</buttontext></div>');
 	}
-	static position() {
+	static openLocationPicker() {
 		if (user.contact) {
+			communication.loadMap(function () {
+				ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
+					'<mapPicker></mapPicker><br/>' +
+					'<buttontext class="bgColor" onclick="pageHome.resetLocationPicker()">' + ui.l('home.locationPickerReset') + '</buttontext>' +
+					'<buttontext class="bgColor" onclick="pageHome.saveLocationPicker()">' + ui.l('ready') + '</buttontext>', null, null,
+					function () {
+						var delta = 0.3;
+						pageHome.map = new google.maps.Map(ui.q('mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, maxZoom: 13 });
+						pageHome.map.fitBounds(new google.maps.LatLngBounds(
+							new google.maps.LatLng(geoData.latlon.lat + delta, geoData.latlon.lon - delta), //south west
+							new google.maps.LatLng(geoData.latlon.lat - delta, geoData.latlon.lon + delta) //north east
+						));
+					});
+			});
 		} else
 			intro.openHint({ desc: 'position', pos: '10%,5em', size: '80%,auto' });
-
 	}
 	static reset() {
 		pageHome.badge = -1;
 		ui.html('notificationList', '');
 		ui.html('home', '');
+	}
+	static resetLocationPicker() {
+		geoData.resetLocationPicker();
+		ui.navigation.hidePopup();
 	}
 	static saveEvent() {
 		formFunc.resetError(ui.q('popup form input[name="location"]'));
@@ -284,6 +302,10 @@ class pageHome {
 				pageEvent.init();
 			}
 		});
+	}
+	static saveLocationPicker() {
+		geoData.save({ latitude: pageHome.map.getCenter().lat(), longitude: pageHome.map.getCenter().lng(), manual: true });
+		ui.navigation.hidePopup();
 	}
 	static toggleLocation() {
 		var e = ui.q('field.location');

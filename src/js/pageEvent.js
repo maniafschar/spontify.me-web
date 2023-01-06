@@ -651,8 +651,18 @@ ${v.eventParticipationButtons}
 						processed[l.id] = 1;
 					}
 				}
-				if (s)
-					ui.q('popup eventLocationInputHelper').innerHTML = '<explain>' + ui.l('events.locationInputHint') + '<br/>' + ui.l('events.locationInputHint2') + '</explain><ul>' + s + '</ul>';
+				if (s) {
+					var i = 0;
+					var f = function () {
+						i++;
+						var e = ui.q('popup eventLocationInputHelper');
+						if (e)
+							e.innerHTML = '<explain>' + ui.l('events.locationInputHint') + '<br/>' + ui.l('events.locationInputHint2') + '</explain><ul>' + s + '</ul>';
+						else if (i < 10)
+							setTimeout(f, 50);
+					};
+					setTimeout(f, 50);
+				}
 			}
 		});
 	}
