@@ -621,7 +621,7 @@ popup input:checked+label {
 }
 
 popup .multiple {
-	max-height: 60vh;
+	max-height: 50vh;
 	overflow-y: auto;
 	margin-bottom: 1em;
 }
@@ -1116,13 +1116,17 @@ popupHint {
 }
 
 popupContent {
-	overflow-y: auto;
-	display: block;
+	display: flex;
 	border-radius: 0.5em;
-	overflow-x: hidden;
 	background: linear-gradient(rgba(250, 175, 100, 0.95) 0%, rgba(209, 130, 60, 0.95) 100%);
-	padding: 0.5em;
 	color: black;
+}
+
+popupContent>div {
+	overflow-y: auto;
+	overflow-x: hidden;
+	border: solid 0.75em transparent;
+	width: 100%;
 }
 
 ratingHint {

@@ -413,9 +413,7 @@ class ui {
 				ui.navigation.hidePopup();
 			else if (data) {
 				ui.navigation.lastPopup = title + '\u0015' + data;
-				if (data.indexOf('<d') != 0 && data.indexOf('<f') != 0)
-					data = '<div style="text-align:center;padding:1em;">' + data + '</div>';
-				data = '<popupContent ts="' + new Date().getTime() + '">' + data + '</popupContent>';
+				data = '<popupContent ts="' + new Date().getTime() + '"><div>' + data + '</div></popupContent>';
 				if (title)
 					data = '<popupTitle' + (modal ? ' modal="true"' : '') + '><div>' + title + '</div></popupTitle>' + data;
 				var f = function () {

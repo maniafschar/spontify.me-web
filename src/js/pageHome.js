@@ -248,7 +248,7 @@ class pageHome {
 					'<buttontext class="bgColor" onclick="pageHome.saveLocationPicker()">' + ui.l('ready') + '</buttontext>', null, null,
 					function () {
 						var delta = 0.3;
-						pageHome.map = new google.maps.Map(ui.q('mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 13 });
+						pageHome.map = new google.maps.Map(ui.q('mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 12 });
 						pageHome.map.fitBounds(new google.maps.LatLngBounds(
 							new google.maps.LatLng(geoData.latlon.lat + delta, geoData.latlon.lon - delta), //south west
 							new google.maps.LatLng(geoData.latlon.lat - delta, geoData.latlon.lon + delta) //north east
