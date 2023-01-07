@@ -107,6 +107,14 @@ class geoData {
 			}, null, { timeout: 10000, maximumAge: 10000, enableHighAccuracy: true });
 		}
 	}
+	static initManual(data) {
+		geoData.localized = true;
+		geoData.manual = true;
+		geoData.latlon.lat = data.lat;
+		geoData.latlon.lon = data.lon;
+		geoData.currentStreet = data.street;
+		geoData.currentTown = data.town;
+	}
 	static pause() {
 		if (geoData.id) {
 			navigator.geolocation.clearWatch(geoData.id);
@@ -123,6 +131,7 @@ class geoData {
 		geoData.currentTown = geoData.currentTownNonManual;
 		pageInfo.updateLocalisation();
 		pageHome.updateLocalisation();
+		geoData.init();
 	}
 	static save(position) {
 		var d = geoData.getDistance(geoData.latlon.lat, geoData.latlon.lon, position.latitude, position.longitude);

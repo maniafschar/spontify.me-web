@@ -228,6 +228,8 @@ class communication {
 						user.email = u;
 						user.password = p;
 						user.init(v);
+						if (v['geo_location'])
+							geoData.initManual(JSON.parse(v['geo_location']));
 						try {
 							user.contact.storage = user.contact.storage ? JSON.parse(user.contact.storage) : {};
 						} catch (e) {
