@@ -5,6 +5,7 @@ import { global } from './global';
 import { initialisation } from './initialisation';
 import { intro } from './intro';
 import { Contact, model } from './model';
+import { pageChat } from './pageChat';
 import { pageEvent } from './pageEvent';
 import { formFunc, ui } from './ui';
 import { user } from './user';
@@ -319,8 +320,11 @@ class pageHome {
 			intro.openHint({ desc: 'notification', pos: '-0.5em,-7em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
 		else if (!ui.q('notificationList>div'))
 			intro.openHint({ desc: 'notificationEmpty', pos: '-0.5em,-7em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
-		else
+		else {
+			if (ui.q('notificationList').style.display == 'none')
+				pageChat.closeList();
 			ui.toggleHeight('notificationList');
+		}
 	}
 	static updateLocalisation() {
 		ui.q('home item.position text').innerHTML = geoData.currentTown;

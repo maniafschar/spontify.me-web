@@ -173,17 +173,17 @@ class ui {
 				e = ui.q(e);
 			if (ui.classContains(e, 'animated'))
 				return;
-			var s = 'popupSlideOut homeSlideOut detailSlideOut detailBackSlideOut popupSlideIn homeSlideIn detailSlideIn detailBackSlideIn slideUp slideDown';
+			var s = 'popupSlideOut detailSlideOut detailBackSlideOut popupSlideIn detailSlideIn detailBackSlideIn slideUp slideDown';
 			ui.classRemove(e, s);
 			ui.classAdd(e, animation);
 			setTimeout(function () {
+				ui.classAdd(e, 'animated');
+				ui.css(e, 'display', '');
 				ui.on(e, ui.navigation.animationEvent, function () {
 					ui.classRemove(e, 'animated ' + s);
 					if (exec)
 						exec.call();
 				}, true);
-				ui.css(e, 'display', '');
-				ui.classAdd(e, 'animated');
 			}, 100);
 		},
 		autoOpen(id, event) {

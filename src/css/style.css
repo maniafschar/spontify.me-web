@@ -303,7 +303,7 @@ homeHeader {
 	display: block;
 	cursor: pointer;
 	color: white;
-	padding-top: 6vh;
+	margin-top: 6vh;
 }
 
 homeHeader svg {
@@ -323,7 +323,7 @@ homeHeader.logoSmall svg {
 	height: 7vh;
 	position: absolute;
 	right: 0;
-	top: 0.75em;
+	top: -4.6vh;
 	margin-top: 0;
 }
 
@@ -1667,7 +1667,7 @@ buttonIcon.notifications {
 }
 
 buttonIcon.language {
-	top: 0;
+	top: -6vh;
 	right: 0;
 	box-shadow: none;
 	font-size: 1.4em;
@@ -2432,18 +2432,25 @@ menu title {
 }
 
 @keyframes popupSlideIn {
+	0% {
+		transform: rotate3d(0, 0, 1, 90deg);
+	}
+
 	100% {
 		transform: none;
 	}
 }
 
 .popupSlideIn {
-	transform: rotate3d(0, 0, 1, 90deg);
 	transform-origin: right top;
 	animation-name: popupSlideIn;
 }
 
 @keyframes popupSlideOut {
+	0% {
+		transform: none;
+	}
+
 	100% {
 		transform: rotate3d(0, 0, 1, -90deg);
 	}
@@ -2454,35 +2461,15 @@ menu title {
 	animation-name: popupSlideOut;
 }
 
-@keyframes homeSlideIn {
-	0% {
-		opacity: 0;
-	}
-
-	100% {
-		opacity: 1;
-	}
-}
-
-.homeSlideIn {
-	animation-name: homeSlideIn;
-}
-
-@keyframes homeSlideOut {
-	100% {
-		opacity: 0;
-	}
-}
-
-.homeSlideOut {
-	animation-name: homeSlideOut;
-}
-
 .detailSlideIn {
 	transform: translate3d(100%, 0, 0);
 }
 
 @keyframes detailSlideOut {
+	0% {
+		transform: none;
+	}
+
 	100% {
 		transform: translate3d(-100%, 0, 0);
 	}
@@ -2497,6 +2484,10 @@ menu title {
 }
 
 @keyframes detailBackSlideOut {
+	0% {
+		transform: none;
+	}
+
 	100% {
 		transform: translate3d(100%, 0, 0);
 	}
