@@ -85,20 +85,13 @@ body.app>main {
 }
 
 body.app>main alert,
+body.app>main content,
 body.app>main hint,
 body.app>main menu,
 body.app>main popup,
-body.app>main progressbar,
-body.app>main buttonIcon.language {
+body.app>main progressbar {
 	margin-top: constant(safe-area-inset-top);
 	margin-top: env(safe-area-inset-top);
-}
-
-body.app>main chatList,
-body.app>main notificationList,
-body.app>main hint {
-	margin-bottom: constant(safe-area-inset-bottom);
-	margin-bottom: env(safe-area-inset-bottom);
 }
 
 navigation {
@@ -327,7 +320,7 @@ homeHeader img {
 }
 
 homeHeader.logoSmall svg {
-	height: 8vh;
+	height: 7vh;
 	position: absolute;
 	right: 0;
 	top: 0.75em;
