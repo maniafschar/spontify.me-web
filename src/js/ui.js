@@ -175,8 +175,8 @@ class ui {
 				return;
 			var s = 'popupSlideOut detailSlideOut detailBackSlideOut popupSlideIn detailSlideIn detailBackSlideIn slideUp slideDown';
 			ui.classRemove(e, s);
-			ui.classAdd(e, animation);
 			setTimeout(function () {
+				ui.classAdd(e, animation);
 				ui.classAdd(e, 'animated');
 				ui.css(e, 'display', '');
 				ui.on(e, ui.navigation.animationEvent, function () {
