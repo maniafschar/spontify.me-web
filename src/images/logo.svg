@@ -33,7 +33,7 @@
 			}
 
 			g.pure {
-				transform: translate(-27em, 0);
+				transform: translate(30em, 0);
 			}
 
 			g.small .pin {

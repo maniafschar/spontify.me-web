@@ -12,7 +12,7 @@ import { pageChat } from './pageChat';
 export { pageContact };
 
 class pageContact {
-	static filter = {};
+	static filter = null;
 	static templateList = v =>
 		global.template`<row onclick="${v.oc}" i="${v.id}" class="contact${v.classFavorite}">
 	<badge class="highlightBackground" style="display:${v._badgeDisp};" action="${v.badgeAction}">
@@ -78,7 +78,7 @@ ${v.budget}
 	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonGroups"
 		onclick="pageContact.groups.toggleGroups(${v.id},&quot;${v.contactLinkStatus}&quot;)">${ui.l('group.action')}</buttontext>
 	<buttontext class="bgColor${v.blocked}" name="buttonEvents"
-		onclick="events.toggle(${v.id})">${ui.l('events.title')}</buttontext>
+		onclick="pageEvent.toggle(${v.id})">${ui.l('events.title')}</buttontext>
 	<buttontext class="bgColor${v.blocked}" name="buttonLocation"
 		onclick="pageContact.toggleLocation(${v.id})">${ui.l('locations.title')}</buttontext>
 	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonBlock"
@@ -410,22 +410,6 @@ ${v.budget}
 	static getFilterFields() {
 		var v = {};
 		var l = lists.data[ui.navigation.getActiveID()];
-		var r = [], s = '', gM = false, gF = false, gD = false, f = false, nF = false;
-		if (l) {
-			for (var i = 1; i < l.length; i++) {
-				var e = model.convert(new Contact(), l, i);
-				if (e.gender == 1)
-					gM = true;
-				else if (e.gender == 2)
-					gF = true;
-				else if (e.gender == 3)
-					gD = true;
-				if (e.contactLink.status == 'Friends')
-					f = true;
-				else
-					nF = true;
-			}
-		}
 		if (pageContact.filter.filterAge)
 			v.valueAge = ' value="' + pageContact.filter.filterAge + '"';
 		if (pageContact.filter.filterKeywords)
@@ -731,24 +715,12 @@ ${v.budget}
 		}
 	}
 	static init() {
-		ui.css('main>buttonIcon', 'display', 'none');
-		ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
-		ui.buttonIcon('.top.right', 'menu', 'ui.navigation.toggleMenu()');
-		ui.buttonIcon('.top.left', 'search', 'lists.toggleFilter(event, pageContact.getFilterFields)');
-		pageChat.buttonChat();
+		if (!pageContact.filter)
+			pageContact.filter = formFunc.getDraft('searchContacts') || {};
 		if (!ui.q('contacts').innerHTML)
 			lists.setListDivs('contacts');
-		if (!ui.q('contacts listResults row') && (!ui.q('contacts filters') || !ui.q('contacts filters').style.transform || ui.q('contacts filters').style.transform.indexOf('1') < 0)) {
-			var e = ui.q('menu');
-			if (ui.cssValue(e, 'transform').indexOf('1') > 0) {
-				if (e.getAttribute('type') != 'contacts') {
-					ui.on(e, 'transitionend', function () {
-						ui.navigation.toggleMenu('contacts');
-					}, true);
-				}
-			} else
-				ui.navigation.toggleMenu('contacts');
-		}
+		if (!ui.q('contacts listResults row'))
+			setTimeout(lists.openFilter, 500);
 	}
 	static listContacts(l) {
 		var s = '', activeID = ui.navigation.getActiveID();
@@ -801,6 +773,7 @@ ${v.budget}
 		ui.attr('contacts', 'menuIndex', 0);
 		pageContact.filter = formFunc.getForm('contacts filters form').values;
 		communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=contact_list&search=' + encodeURIComponent(pageContact.getSearch()), pageContact.listContacts, 'contacts', 'search');
+		formFunc.saveDraft('searchContacts', pageContact.filter);
 	}
 	static sendRequestForFriendship(id) {
 		communication.ajax({

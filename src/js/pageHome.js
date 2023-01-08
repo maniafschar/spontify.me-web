@@ -1,10 +1,11 @@
 import { bluetooth } from './bluetooth';
 import { communication } from './communication';
-import { events } from './events';
+import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './initialisation';
 import { intro } from './intro';
 import { Contact, model } from './model';
+import { pageEvent } from './pageEvent';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 
@@ -12,24 +13,40 @@ export { pageHome };
 
 class pageHome {
 	static badge = -1;
+	static map;
 	static marketing = null;
 	static template = v =>
-		global.template`<homeHeader>	
-	<homeTitle onclick="ui.navigation.goTo(&quot;settings&quot;)">
-		<img source="logo" />
-	</homeTitle>
+		global.template`<homeHeader onclick="${v.clickHeader}"${v.logoSmall}>
+	<img source="logo"/>
+	${v.imgProfile}
+	<text>${v.name}</text>
+	<buttonIcon class="language${v.langButton}" onclick="pageHome.openLanguage(event)">
+		<span>${v.lang}</span>
+	</buttonIcon>
 </homeHeader>
 <homeBody>
-	<buttontext class="bgColor homeButton" onclick="pageHome.newEvent()" style="width:80%;">
-		<span class="homeWTD">${ui.l('wtd.todayIWant')}</span><img source="rocket" />
-	</buttontext><br/>
-	<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;locations&quot;)" style="width:70%;">
-		<span>${ui.l('locations.homeButton')}</span> <img source="location" />
-	</buttontext ><br/>
-	<buttontext class="bgColor homeButton" onclick="ui.navigation.goTo(&quot;contacts&quot;)" style="width:60%;">
-		<span>${ui.l('contacts.homeButton')}</span><img source="contact" />
-	</buttontext>
-</homeBody>`;
+<item class="position">
+	<buttonIcon class="bgColor" onclick="pageHome.openLocationPicker()">
+		<img source="location" />
+	</buttonIcon>
+	<text></text>
+</item>
+<item class="event">
+	<buttonIcon class="bgColor" onclick="pageHome.newEvent()">
+		<img source="rocket" />
+	</buttonIcon>
+	<text></text>
+</item>
+</homeBody>
+<item class="bluetooth">
+	<buttonIcon class="bgColor${v.bluetoothButton}" onclick="bluetooth.toggle()">
+		<img source="bluetooth" />
+	</buttonIcon>
+	<buttonIcon class="bgColor${v.infoButton}" onclick="ui.navigation.goTo(&quot;info&quot;)">
+		<img source="info" />
+	</buttonIcon>
+	<text>Info</text>
+</item>`;
 	static templateNewEvent = v =>
 		global.template`<form name="editElement" onsubmit="return false">
 <input type="hidden" name="locationId" />
@@ -38,7 +55,7 @@ class pageHome {
 <field class="location" style="display:none;">
 <label style="padding-top:0;">${ui.l('events.location')}</label>
 <value style="text-align:center;">
-<input transient="true" name="location" onkeyup="events.locations()" />
+<input transient="true" name="location" onkeyup="pageEvent.locations()" />
 <eventLocationInputHelper><explain>${ui.l('events.locationInputHint')}</explain></eventLocationInputHelper>
 <buttontext onclick="pageLocation.edit()" class="bgColor eventLocationInputHelperButton">${ui.l('locations.new')}</buttontext>
 </value>
@@ -100,34 +117,45 @@ class pageHome {
 		if (ui.cssValue(e, 'display') != 'none')
 			ui.toggleHeight(e);
 	}
-	static init() {
+	static init(force) {
 		var e = ui.q('home');
-		if (!e.innerHTML) {
-			e.innerHTML = pageHome.template();
+		if (force || !e.innerHTML) {
+			var v = {};
+			if (user.contact) {
+				if (user.contact.imageList) {
+					v.imgProfile = '<img src="' + global.serverImg + user.contact.imageList + '"/>';
+					v.logoSmall = ' class="logoSmall"';
+				}
+				v.name = user.contact.pseudonym;
+				v.infoButton = ' noDisp';
+				v.langButton = ' noDisp';
+				v.clickHeader = 'ui.navigation.goTo(&quot;settings&quot;)';
+			} else {
+				v.lang = global.language;
+				v.bluetoothButton = ' noDisp';
+				v.clickHeader = 'pageHome.openHintDescription()';
+			}
+			e.innerHTML = pageHome.template(v);
 			formFunc.initFields('home');
 			initialisation.reposition();
 		}
-		ui.buttonIcon('.bottom.left', '<badgeNotifications></badgeNotifications><img source="news"/>', 'pageHome.toggleNotification()');
-		pageHome.initNotificationButton(true);
-		ui.buttonIcon('.top.right', user.contact && user.contact.imageList ? user.contact.imageList : 'contact', 'ui.navigation.goTo("settings")');
-		ui.buttonIcon('.bottom.center', 'info', 'ui.navigation.goTo("info")');
-		ui.buttonIcon('.bottom.right', 'bluetooth', 'bluetooth.toggle()');
-		if (bluetooth.state != 'on' || !user.contact || !user.contact.findMe)
-			ui.classAdd('buttonIcon.bottom.right', 'bluetoothInactive');
+		pageHome.initNotificationButton();
 		if (user.contact)
-			ui.q('buttonIcon.top.left').style.display = 'none';
-		else
-			ui.buttonIcon('.top.left', '<span class="lang">' + global.language + '</span>', 'pageHome.openLanguage()');
-		var p = events.getParticipationNext();
+			ui.q('home item.bluetooth text').innerHTML = ui.l(bluetooth.state == 'on' && user.contact.findMe ? 'bluetooth.activated' : 'bluetooth.deactivated');
+		var p = pageEvent.getParticipationNext();
 		if (p && global.date.server2Local(p.eventDate).toDateString() == new Date().toDateString()) {
 			var s = global.date.formatDate(p.event.startDate);
 			s = s.substring(s.lastIndexOf(' ')).trim();
-			ui.q('buttontext .homeWTD').innerHTML = s + ' ' + p.event.text;
-			ui.attr('buttontext .homeWTD', 'i', p.event.id);
+			ui.q('home item.event text').innerHTML = s + ' ' + p.event.text;
+			ui.attr('home item.event', 'i', p.event.id);
 		} else {
-			ui.q('buttontext .homeWTD').innerHTML = ui.l('wtd.todayIWant');
-			ui.attr('buttontext .homeWTD', 'i', null);
+			ui.q('home item.event text').innerHTML = ui.l('wtd.todayIWant');
+			ui.attr('home item.event', 'i', null);
 		}
+		formFunc.image.replaceSVGs();
+		if (user.contact)
+			ui.classAdd('home svg>g', 'pure');
+		pageHome.updateLocalisation();
 	}
 	static initNotification(d) {
 		var f = function () {
@@ -159,15 +187,13 @@ class pageHome {
 		};
 		f.call();
 	}
-	static initNotificationButton(force) {
-		if (force || ui.navigation.getActiveID() == 'home') {
-			if (pageHome.badge > 0)
-				ui.classAdd('buttonIcon.bottom.left', 'pulse highlight');
-			else
-				ui.classRemove('buttonIcon.bottom.left', 'pulse highlight');
-			if (ui.q('badgeNotifications'))
-				ui.q('badgeNotifications').innerText = Math.max(pageHome.badge, 0);
-		}
+	static initNotificationButton() {
+		if (pageHome.badge > 0)
+			ui.classAdd('navigation buttonIcon.notifications', 'pulse highlight');
+		else
+			ui.classRemove('navigation buttonIcon.notifications', 'pulse highlight');
+		if (ui.q('badgeNotifications'))
+			ui.q('badgeNotifications').innerText = Math.max(pageHome.badge, 0);
 	}
 	static newEvent() {
 		if (user.contact) {
@@ -178,8 +204,8 @@ class pageHome {
 				return;
 			}
 			var v = {};
-			var id = ui.q('buttontext .homeWTD').getAttribute('i');
-			var p = events.getParticipationNext(id);
+			var id = ui.q('home item.event').getAttribute('i');
+			var p = pageEvent.getParticipationNext(id);
 			if (id && p) {
 				v.visibility = p.event.visibility;
 				v.type = p.event.type;
@@ -200,18 +226,46 @@ class pageHome {
 			}
 			v['visibilityChecked' + v.visibility] = ' checked="checked"';
 			ui.navigation.openPopup(ui.l('wtd.todayIWant'), pageHome.templateNewEvent(v));
-			events.locationsOfPastEvents();
+			pageEvent.locationsOfPastEvents();
 		} else
 			intro.openHint({ desc: 'whatToDo', pos: '10%,5em', size: '80%,auto' });
 	}
-	static openLanguage() {
+	static openHintDescription() {
+		intro.openHint({ desc: 'description', pos: '10%,5em', size: '80%,auto' });
+	}
+	static openLanguage(event) {
+		event.stopPropagation();
 		ui.navigation.openPopup(ui.l('langSelect'),
-			'<div style="text-align:center;padding:2em 0;"><a class="langSelectImg bgColor' + (global.language == 'DE' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE">Deutsch</a>' +
-			'<a class="langSelectImg bgColor' + (global.language == 'EN' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</a></div>');
+			'<div style="text-align:center;padding:2em 0;"><buttontext class="langSelectImg bgColor' + (global.language == 'DE' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE">Deutsch</buttontext>' +
+			'<buttontext class="langSelectImg bgColor' + (global.language == 'EN' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</buttontext></div>');
+	}
+	static openLocationPicker() {
+		if (user.contact) {
+			communication.loadMap(function () {
+				ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
+					'<mapPicker></mapPicker><br/>' +
+					(geoData.manual ? '<buttontext class="bgColor" onclick="pageHome.resetLocationPicker()">' + ui.l('home.locationPickerReset') + '</buttontext>' : '') +
+					'<buttontext class="bgColor" onclick="pageHome.saveLocationPicker()">' + ui.l('ready') + '</buttontext>', null, null,
+					function () {
+						var delta = 0.3;
+						pageHome.map = new google.maps.Map(ui.q('mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 12 });
+						pageHome.map.fitBounds(new google.maps.LatLngBounds(
+							new google.maps.LatLng(geoData.latlon.lat + delta, geoData.latlon.lon - delta), //south west
+							new google.maps.LatLng(geoData.latlon.lat - delta, geoData.latlon.lon + delta) //north east
+						));
+					});
+			});
+		} else
+			intro.openHint({ desc: 'position', pos: '10%,5em', size: '80%,auto' });
 	}
 	static reset() {
 		pageHome.badge = -1;
 		ui.html('notificationList', '');
+		ui.html('home', '');
+	}
+	static resetLocationPicker() {
+		geoData.resetLocationPicker();
+		ui.navigation.hidePopup();
 	}
 	static saveEvent() {
 		formFunc.resetError(ui.q('popup form input[name="location"]'));
@@ -236,8 +290,10 @@ class pageHome {
 		if (h < d.getHours())
 			d.setDate(d.getDate() + 1);
 		v.values.startDate = global.date.local2server(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + v.values.startDate + ':00');
+		if (ui.q('popup field.location').style.display == 'none')
+			v.values.locationId = null;
 		v.classname = 'Event';
-		v.id = ui.q('buttontext .homeWTD').getAttribute('i');
+		v.id = ui.q('home item.event').getAttribute('i');
 		communication.ajax({
 			url: global.server + 'db/one',
 			method: v.id ? 'PUT' : 'POST',
@@ -245,9 +301,13 @@ class pageHome {
 			success(r) {
 				ui.navigation.hidePopup();
 				ui.navigation.autoOpen(global.encParam('e=' + (r ? r : v.id)));
-				events.init();
+				pageEvent.init();
 			}
 		});
+	}
+	static saveLocationPicker() {
+		geoData.save({ latitude: pageHome.map.getCenter().lat(), longitude: pageHome.map.getCenter().lng(), manual: true });
+		ui.navigation.hidePopup();
 	}
 	static toggleLocation() {
 		var e = ui.q('field.location');
@@ -261,10 +321,13 @@ class pageHome {
 	}
 	static toggleNotification() {
 		if (!user.contact)
-			intro.openHint({ desc: 'notification', pos: '0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1em;' });
+			intro.openHint({ desc: 'notification', pos: '-0.5em,-7em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
 		else if (!ui.q('notificationList>div'))
-			intro.openHint({ desc: 'notificationEmpty', pos: '0.5em,-4.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1em;' });
+			intro.openHint({ desc: 'notificationEmpty', pos: '-0.5em,-7em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
 		else
 			ui.toggleHeight('notificationList');
+	}
+	static updateLocalisation() {
+		ui.q('home item.position text').innerHTML = geoData.currentTown;
 	}
 }

@@ -1,5 +1,6 @@
 import { communication } from './communication';
 import { global } from './global';
+import { pageHome } from './pageHome';
 import { pageInfo } from './pageInfo';
 import { ui } from './ui';
 import { user } from './user';
@@ -9,7 +10,9 @@ export { geoData };
 class geoData {
 	static angle = -1;
 	static currentStreet = '';
-	static currentTown = '';
+	static currentStreetNonManual = '';
+	static currentTown = 'München';
+	static currentTownNonManual = geoData.currentTown;
 	static headingID = null;
 	static id = null;
 	static initDeviceOrientation = null;
@@ -17,6 +20,7 @@ class geoData {
 	static latlon = { lat: 48.13684, lon: 11.57685 };
 	static localizationAsked = false;
 	static localized = false;
+	static manual = false;
 	static rad = 0.017453292519943295;
 	static trackAll = null;
 
@@ -103,6 +107,14 @@ class geoData {
 			}, null, { timeout: 10000, maximumAge: 10000, enableHighAccuracy: true });
 		}
 	}
+	static initManual(data) {
+		geoData.localized = true;
+		geoData.manual = true;
+		geoData.latlon.lat = data.lat;
+		geoData.latlon.lon = data.lon;
+		geoData.currentStreet = data.street;
+		geoData.currentTown = data.town;
+	}
 	static pause() {
 		if (geoData.id) {
 			navigator.geolocation.clearWatch(geoData.id);
@@ -113,15 +125,29 @@ class geoData {
 		ui.navigation.hidePopup();
 		cordova.plugins.diagnostic.requestLocationAuthorization(geoData.init2, null, cordova.plugins.diagnostic.locationAuthorizationMode.WHEN_IN_USE);
 	}
+	static resetLocationPicker() {
+		geoData.manual = false;
+		geoData.currentStreet = geoData.currentStreetNonManual;
+		geoData.currentTown = geoData.currentTownNonManual;
+		pageInfo.updateLocalisation();
+		pageHome.updateLocalisation();
+		geoData.init();
+	}
 	static save(position) {
-		var l = geoData.latlon;
-		geoData.latlon.lat = position.latitude;
-		geoData.latlon.lon = position.longitude;
+		var d = geoData.getDistance(geoData.latlon.lat, geoData.latlon.lon, position.latitude, position.longitude);
+		if (position.manual || !geoData.manual) {
+			geoData.latlon.lat = position.latitude;
+			geoData.latlon.lon = position.longitude;
+		}
+		if (position.manual)
+			geoData.manual = true;
 		if (geoData.trackAll != null && new Date().getHours() > geoData.trackAll + 2)
 			geoData.trackAll = null;
 		if (user.contact && user.contact.id && new Date().getTime() - geoData.lastSave > 5000 &&
-			(!geoData.localized || geoData.trackAll != null && new Date().getHours() >= geoData.trackAll - 1 ||
-				geoData.getDistance(l.lat, l.lon, position.latitude, position.longitude) > 0.05)) {
+			(!geoData.localized ||
+				geoData.trackAll != null && new Date().getHours() >= geoData.trackAll - 1 ||
+				d > 0.05 && !geoData.manual ||
+				position.manual)) {
 			communication.ajax({
 				url: global.server + 'action/position',
 				progressBar: false,
@@ -131,13 +157,19 @@ class geoData {
 				error(r) {
 					geoData.currentStreet = r.status + ' ' + r.responseText;
 					pageInfo.updateLocalisation();
+					pageHome.updateLocalisation();
 				},
 				success(r) {
 					if (r) {
 						geoData.lastSave = new Date().getTime();
 						geoData.currentTown = r.town;
 						geoData.currentStreet = r.street;
+						if (!position.manual) {
+							geoData.currentTownNonManual = r.town;
+							geoData.currentStreetNonManual = r.street;
+						}
 						pageInfo.updateLocalisation();
+						pageHome.updateLocalisation();
 					}
 				}
 			});

@@ -1,6 +1,6 @@
 import { communication } from './communication';
 import { details } from './details';
-import { events } from './events';
+import { pageEvent } from './pageEvent';
 import { geoData } from './geoData';
 import { global } from './global';
 import { lists } from './lists';
@@ -12,7 +12,7 @@ import { user } from './user';
 export { pageLocation };
 
 class pageLocation {
-	static filter = {};
+	static filter = null;
 	static locationsAdded = null;
 	static map = {
 		canvas: null,
@@ -93,11 +93,11 @@ ${v.parking}
 	<buttontext class="bgColor${v.pressedCopyButton}" name="buttonCopy"
 		onclick="pageChat.doCopyLink(event,&quot;${v.event.id ? 'e' : 'l'}=${v.id}&quot;)">${ui.l('share')}</buttontext>
 	<buttontext class="bgColor${v.hideMeEvents}" name="buttonEvents"
-		onclick="events.toggle(${v.locID})">${ui.l('events.title')}</buttontext>
+		onclick="pageEvent.toggle(${v.locID})">${ui.l('events.title')}</buttontext>
 	<buttontext class="bgColor${v.hideMeEvents}" name="buttonWhatToDo"
-		onclick="pageLocation.toggleWhatToDo(${v.id})">${ui.l('wtd.location')}</buttontext>
+		onclick="pageLocation.toggleWhatToDo()">${ui.l('wtd.location')}</buttontext>
 	<buttontext class="bgColor${v.hideMePotentialParticipants}" name="buttonPotentialParticipants"
-		onclick="events.loadPotentialParticipants(${v.category},${v.event.visibility})">${ui.l('events.potentialParticipants')}</buttontext>
+		onclick="pageEvent.loadPotentialParticipants(${v.category},${v.event.visibility})">${ui.l('events.potentialParticipants')}</buttontext>
 	<buttontext class="bgColor${v.hideMeMarketing}" name="buttonMarketing"
 		onclick="ui.navigation.openHTML(&quot;${global.server}locOwner?id=${v.id}&quot;,&quot;locOwn&quot;)">${ui.l('locations.marketing')}</buttontext>
 	<buttontext class="bgColor${v.hideMeEdit}" name="buttonEdit"
@@ -431,7 +431,7 @@ ${v.hint}
 					ui.navigation.hidePopup();
 					ui.navigation.goTo('home');
 					if (classname == 'Event')
-						events.init();
+						pageEvent.init();
 					setTimeout(function () {
 						if (classname == 'Location')
 							lists.removeListEntry(id, 'locations');
@@ -536,7 +536,7 @@ ${v.hint}
 		if (v.bonus)
 			v.bonus = '<text style="margin:1em 0;" class="highlightBackground">' + ui.l('locations.bonus') + v.bonus + '<br/>' + ui.l('locations.bonusHint') + '</text>';
 		if (v.event.id) {
-			v.eventDetails = events.detail(v);
+			v.eventDetails = pageEvent.detail(v);
 			v.hideBlockReason2 = ' style="display:none;"';
 		} else {
 			if (global.isBrowser())
@@ -594,6 +594,7 @@ ${v.hint}
 		return pageLocation.templateDetail(v);
 	}
 	static edit(id) {
+		ui.navigation.hideMenu();
 		pageLocation.reopenEvent = false;
 		if (id) {
 			var v = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
@@ -693,23 +694,6 @@ ${v.hint}
 	static getFilterFields() {
 		var v = {};
 		var l = lists.data[ui.navigation.getActiveID()];
-		var r2 = [], r4 = [];
-		if (l) {
-			for (var i = 1; i < l.length; i++) {
-				var o = model.convert(new Location(), l, i);
-				var s = '' + o.category;
-				for (var i2 = 0; i2 < s.length; i2++)
-					r2[s.substring(i2, i2 + 1)] = 1;
-				if (!r4['E'] && pageLocation.isInPosition('E', o._angle))
-					r4['E'] = 1;
-				if (!r4['N'] && pageLocation.isInPosition('N', o._angle))
-					r4['N'] = 1;
-				if (!r4['W'] && pageLocation.isInPosition('W', o._angle))
-					r4['W'] = 1;
-				if (!r4['S'] && pageLocation.isInPosition('S', o._angle))
-					r4['S'] = 1;
-			}
-		}
 		if (pageLocation.filter.filterCategories) {
 			var c = pageLocation.filter.filterCategories.split('\u0015');
 			for (var i = 0; i < c.length; i++)
@@ -839,25 +823,13 @@ ${v.hint}
 				return true;
 		}
 	}
-	static init() {
-		ui.css('main>buttonIcon', 'display', 'none');
-		ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
-		ui.buttonIcon('.top.right', 'menu', 'ui.navigation.toggleMenu()');
-		ui.buttonIcon('.top.left', 'search', 'lists.toggleFilter(event, pageLocation.getFilterFields)');
-		pageChat.buttonChat();
-		if (!ui.q('locations').innerHTML)
-			lists.setListDivs('locations');
-		if (!ui.q('locations listResults row') && (!ui.q('locations filters') || !ui.q('locations filters').style.transform || ui.q('locations filters').style.transform.indexOf('1') < 0)) {
-			var e = ui.q('menu');
-			if (ui.cssValue(e, 'transform').indexOf('1') > 0) {
-				if (e.getAttribute('type') != 'locations') {
-					ui.on(e, 'transitionend', function () {
-						ui.navigation.toggleMenu('locations');
-					}, true);
-				}
-			} else
-				ui.navigation.toggleMenu('locations');
-		}
+	static init(id) {
+		if (!pageLocation.filter)
+			pageLocation.filter = formFunc.getDraft('searchLocations') || {};
+		if (!ui.q(id).innerHTML)
+			lists.setListDivs(id);
+		if (!ui.q(id + ' listResults row'))
+			setTimeout(lists.openFilter, 500);
 		if (!pageLocation.map.svgLocation)
 			communication.ajax({
 				url: '/images/location.svg',
@@ -1100,7 +1072,7 @@ ${v.hint}
 					formFunc.removeDraft('location');
 					details.open(r, 'location_list&search=' + encodeURIComponent('location.id=' + r), pageLocation.detailLocationEvent);
 					if (pageLocation.reopenEvent)
-						setTimeout(function () { events.edit(r); }, 1000);
+						setTimeout(function () { pageEvent.edit(r); }, 1000);
 				}
 			});
 		}
@@ -1144,7 +1116,7 @@ ${v.hint}
 			body: v,
 			success(r) {
 				ui.navigation.autoOpen(global.encParam('e=' + r));
-				events.init();
+				pageEvent.init();
 			}
 		});
 	}
@@ -1177,7 +1149,7 @@ ${v.hint}
 			ui.q('map').setAttribute('created', new Date().getTime());
 			ui.q('locations buttontext.map').style.display = null;
 		} else {
-			pageLocation.map.canvas = new google.maps.Map(document.getElementsByTagName("map")[0], { mapTypeId: google.maps.MapTypeId.ROADMAP });
+			pageLocation.map.canvas = new google.maps.Map(ui.q('map'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true });
 			pageLocation.map.canvas.addListener('bounds_changed', function () {
 				if (new Date().getTime() - ui.q('map').getAttribute('created') > 2000)
 					ui.q('locations buttontext.map').style.display = 'inline-block';
@@ -1186,7 +1158,7 @@ ${v.hint}
 		if (!pageLocation.map.loadActive) {
 			var deltaLat = Math.abs(geoData.latlon.lat - d.latitude) * 0.075, deltaLon = Math.abs(geoData.latlon.lon - d.longitude) * 0.075;
 			pageLocation.map.canvas.fitBounds(new google.maps.LatLngBounds(
-				new google.maps.LatLng(Math.max(geoData.latlon.lat, d.latitude) + deltaLat, Math.min(geoData.latlon.lon, d.longitude) - deltaLon),//south west
+				new google.maps.LatLng(Math.max(geoData.latlon.lat, d.latitude) + deltaLat, Math.min(geoData.latlon.lon, d.longitude) - deltaLon), //south west
 				new google.maps.LatLng(Math.min(geoData.latlon.lat, d.latitude) - deltaLat, Math.max(geoData.latlon.lon, d.longitude) + deltaLon) //north east
 			));
 			pageLocation.map.markerMe = new google.maps.Marker(
@@ -1224,6 +1196,7 @@ ${v.hint}
 			ui.attr('locations', 'menuIndex', 0);
 			pageLocation.filter = formFunc.getForm('locations filters form').values;
 			communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent(pageLocation.getSearch()), pageLocation.listLocation, 'locations', 'search');
+			formFunc.saveDraft('searchLocations', pageLocation.filter);
 		}
 	}
 	static searchFromMap() {
@@ -1332,10 +1305,6 @@ ${v.hint}
 		if (ui.q('map').getAttribute('created')) {
 			ui.q('map').setAttribute('created', new Date().getTime());
 			if (ui.cssValue('map', 'display') == 'none') {
-				if (ui.q('locations').getAttribute('menuIndex') >= ui.q('menu container').childElementCount) {
-					ui.navigation.openPopup(ui.l('attention'), ui.l('events.mapOnlyForLocations'));
-					return;
-				}
 				ui.css('locations listBody', 'margin-top', '20em');
 				ui.css('locations listBody', 'padding-top', '0.5em');
 			} else {
@@ -1354,18 +1323,9 @@ ${v.hint}
 			pageLocation.search();
 		} else {
 			ui.attr('map', 'created', new Date().getTime());
-			communication.ajax({
-				url: global.server + 'action/google?param=js',
-				responseType: 'text',
-				success(r) {
-					var script = document.createElement('script');
-					script.onload = function () {
-						pageLocation.toggleMap();
-						ui.on('locations listBody', 'scroll', pageLocation.scrollMap);
-					};
-					script.src = r;
-					document.head.appendChild(script);
-				}
+			communication.loadMap(function () {
+				pageLocation.toggleMap();
+				ui.on('locations listBody', 'scroll', pageLocation.scrollMap);
 			});
 		}
 	}
@@ -1376,7 +1336,7 @@ ${v.hint}
 		e.style.left = '5%';
 		ui.toggleHeight(e);
 	}
-	static toggleWhatToDo(id) {
+	static toggleWhatToDo() {
 		details.togglePanel(ui.q('detail card:last-child [name="whatToDo"]'));
 	}
 }

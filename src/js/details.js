@@ -1,11 +1,9 @@
 import { communication } from './communication';
-import { events } from './events';
+import { pageEvent } from './pageEvent';
 import { geoData } from './geoData';
 import { global } from './global';
-import { intro } from './intro';
 import { lists } from './lists';
 import { pageChat } from './pageChat';
-import { pageContact } from './pageContact';
 import { pageLocation } from './pageLocation';
 import { ui, formFunc } from './ui';
 import { user } from './user';
@@ -15,7 +13,7 @@ export { details };
 class details {
 	static getNextNavElement(next, id) {
 		var activeID = ui.q(ui.navigation.getActiveID()).getAttribute('from');
-		if (activeID == 'contacts' || activeID == 'locations' || activeID == 'search') {
+		if (activeID == 'contacts' || activeID == 'locations' || activeID == 'events') {
 			var e = ui.q(activeID + ' [i="' + id + '"]');
 			if (e) {
 				if (next && e.nextSibling) {
@@ -32,15 +30,6 @@ class details {
 		}
 	}
 	static init() {
-		ui.css('main>buttonIcon', 'display', 'none');
-		if (ui.q('detail card:last-child').getAttribute('type') == 'location')
-			ui.buttonIcon('.bottom.right', 'favorite', 'details.toggleFavorite()');
-		ui.buttonIcon('.bottom.center', 'home', 'ui.navigation.goTo("home")');
-		pageChat.buttonChat();
-		if (ui.classContains('detail card:last-child detailHeader', 'favorite'))
-			ui.classAdd('main>buttonIcon.bottom.right', 'highlight');
-		else
-			ui.classRemove('main>buttonIcon.bottom.right', 'highlight');
 	}
 	static open(id, action, callback) {
 		if (ui.navigation.getActiveID() == 'chat' && ui.q('detail:not([style*="none"])[i="' + id + '"]')) {
@@ -65,7 +54,7 @@ class details {
 				if (s) {
 					var d = ui.q('detail');
 					if (r['event.id'] && (!id.indexOf || id.indexOf('_') < 0))
-						id = events.getId(r);
+						id = pageEvent.getId(r);
 					s = '<card i="' + id + '" type="' + (action.indexOf('contact_') == 0 ? 'contact' : 'location') + '">' + s + '</card>';
 					if (activeID == 'detail') {
 						var c = document.createElement('div');
@@ -121,7 +110,25 @@ class details {
 			details.openDetailNav(true, e.getAttribute('i'));
 	}
 	static swipeRight() {
-		ui.navigation.goTo('home');
+		if (ui.qa('detail card').length == 1)
+			ui.navigation.goTo(ui.q('detail').getAttribute('from'));
+		else {
+			var e = ui.q('detail>div');
+			var x = parseInt(ui.cssValue(e, 'margin-left')) / ui.q('content').clientWidth;
+			if (x < 0) {
+				ui.on(e, 'transitionend', function () {
+					ui.css(e, 'transition', 'none');
+					if (e.lastChild)
+						e.lastChild.outerHTML = '';
+					var x = e.clientWidth / ui.q('content').clientWidth;
+					ui.css(e, 'width', x == 2 ? '' : ((x - 1) * 100) + '%');
+					setTimeout(function () {
+						ui.css(e, 'transition', null);
+					}, 50);
+				}, true);
+				ui.css(e, 'margin-left', ((x + 1) * 100) + '%');
+			}
+		}
 	}
 	static toggleFavorite() {
 		var e = ui.q('detail card:last-child');

@@ -12,13 +12,14 @@ import { ui, formFunc } from './ui';
 import { user } from './user';
 import { pageLocation } from './pageLocation';
 import { intro } from './intro';
-import { events } from './events';
+import { pageEvent } from './pageEvent';
 import { pageHome } from './pageHome';
 
 export { communication, FB };
 
 class communication {
 	static currentCalls = [];
+	static mapScriptAdded = false;
 	static pingExec = null;
 	static sentErrors = [];
 
@@ -137,6 +138,30 @@ class communication {
 			}
 		});
 	}
+	static loadMap(exec) {
+		if (communication.mapScriptAdded) {
+			var f = function () {
+				if (ui.q('head script[t="map"]'))
+					exec.call();
+				else
+					setTimeout(f, 100);
+			}
+			f.call();
+		} else {
+			communication.mapScriptAdded = true;
+			communication.ajax({
+				url: global.server + 'action/google?param=js',
+				responseType: 'text',
+				success(r) {
+					var script = document.createElement('script');
+					script.onload = exec;
+					script.src = r;
+					script.setAttribute('t', 'map');
+					document.head.appendChild(script);
+				}
+			});
+		}
+	}
 	static login = {
 		regexPseudonym: /[^A-Za-zÀ-ÿ]/,
 		regexPW: /[^a-zA-ZÀ-ÿ0-9-_.+*#§$%&/\\ \^']/,
@@ -203,6 +228,8 @@ class communication {
 						user.email = u;
 						user.password = p;
 						user.init(v);
+						if (v['geo_location'])
+							geoData.initManual(JSON.parse(v['geo_location']));
 						try {
 							user.contact.storage = user.contact.storage ? JSON.parse(user.contact.storage) : {};
 						} catch (e) {
@@ -238,17 +265,16 @@ class communication {
 								communication.sendError('script_correction: ' + ex);
 							}
 						}
-						if (ui.navigation.getActiveID() == 'home')
-							pageHome.init();
-						else {
+						if (ui.navigation.getActiveID() != 'home') {
 							setTimeout(function () { ui.html('login', ''); }, 500);
 							ui.navigation.goTo('home');
 						}
+						pageHome.init(true);
 						lists.reset();
 						communication.ping();
 						setTimeout(communication.notification.register, 100);
 						pageChat.initActiveChats();
-						events.init();
+						pageEvent.init();
 						geoData.init();
 						if (!global.isBrowser()) {
 							bluetooth.stop();
@@ -418,7 +444,7 @@ class communication {
 			user.reset();
 			communication.reset();
 			lists.reset();
-			events.reset();
+			pageEvent.reset();
 			ui.navigation.goTo('home');
 			ui.html('head title', global.appTitle);
 		},
@@ -589,19 +615,6 @@ class communication {
 					chat != pageChat.chatsNew ||
 					Object.keys(r.chatUnseen).length != pageChat.chatsUnseen) {
 					pageChat.initActiveChats();
-					var x = ui.q('chatList>div');
-					if (x)
-						x = x.getAttribute('i');
-					if (formFunc.getDraft('alert_chat') != x && ui.q('chatList>div[i="' + x + '"].highlightBackground') && ui.navigation.getActiveID() == 'home' && chat > (pageChat.chatsNew ? parseInt(pageChat.chatsNew) : 0) && ui.cssValue('alert', 'display') == 'none') {
-						var d = ui.q('alert>div'), i = Object.keys(r.chatNew)[0];
-						d.setAttribute('onclick', 'pageChat.open(' + i + ')');
-						d.innerHTML = ui.l('notification.newChatAlert').replace('{0}', r.chatNew[i]);
-						d = d.parentNode;
-						d.style.display = 'block';
-						ui.navigation.animation(d, 'homeSlideIn');
-					}
-					if (x)
-						formFunc.saveDraft('alert_chat', x);
 				}
 				total += chat;
 				pageChat.chatsNew = chat;
@@ -619,18 +632,7 @@ class communication {
 						url: global.server + 'db/list?query=contact_listNotification',
 						responseType: 'json',
 						success(r2) {
-							var notify = r.notification > pageHome.badge;
 							pageHome.initNotification(r2);
-							var x = model.convert(new Contact(), r2, 1).contactNotification;
-							if (notify && ui.navigation.getActiveID() != 'home' && formFunc.getDraft('alert_notification') != x.id && !x.seen && ui.cssValue('alert', 'display') == 'none') {
-								var d = ui.q('alert>div');
-								d.setAttribute('onclick', ui.q('notificationList>div').getAttribute('onclick') + ';communication.notification.close()');
-								d.innerHTML = ui.q('notificationList>div>span').innerHTML;
-								d = d.parentNode;
-								d.style.display = 'block';
-								ui.navigation.animation(d, 'homeSlideIn');
-							}
-							formFunc.saveDraft('alert_notification', x.id);
 						}
 					});
 				}

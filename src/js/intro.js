@@ -41,7 +41,7 @@ class intro {
 				intro.introMode = 0;
 		}
 		var e = ui.q('hint'), body = ui.l('intro.' + data.desc)
-			+ (user.contact || ui.navigation.getActiveID() != 'home' ? '' : '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;login&quot;)">' + ui.l('login.action') + '</buttontext>')
+			+ (user.contact ? '' : '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;login&quot;)">' + ui.l('login.action') + '</buttontext>')
 			+ (data.hinky ? '<hinky style="' + data.hinky + '" class="' + data.hinkyClass + '"></hinky>' : '')
 			+ (data.desc == 'home' ? '' : '<close onclick="intro.close(event)">x</close>');
 		if (data.desc == e.getAttribute('i')) {

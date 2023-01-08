@@ -2,6 +2,7 @@ import { global } from './global';
 import { DragObject } from './initialisation';
 import { Contact, Location, model } from './model';
 import { pageContact } from './pageContact';
+import { pageEvent } from './pageEvent';
 import { pageLocation } from './pageLocation';
 import { ui, formFunc } from './ui';
 
@@ -11,7 +12,10 @@ class lists {
 	static data = [];
 
 	static templateList = v =>
-		global.template`<listHeader>${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5em;"></hinky><div></div></filters><listTitle></listTitle>${v.map}</listHeader>
+		global.template`<listHeader>
+<buttonicon class="left bgColor" onclick="lists.toggleFilter(event)"><img source="search"/></buttonicon>
+<buttonicon class="right bgColor" onclick="ui.navigation.toggleMenu()"><img source="menu"/></buttonicon>
+${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5em;"></hinky><div></div></filters><listTitle></listTitle>${v.map}</listHeader>
 <listScroll><a class="bgColor"></a></listScroll><listBody>${v.groups}<listResults></listResults></listBody>`;
 
 	static execFilter() {
@@ -136,19 +140,27 @@ class lists {
 			else if (id == 'locations')
 				v.map = '<map style="display:none;"></map><buttontext class="bgColor map" onclick="pageLocation.searchFromMap()">' + ui.l('search.map') + '</buttontext>';
 			e.innerHTML = lists.templateList(v);
+			formFunc.image.replaceSVGs();
 			if (id == 'contacts')
 				ui.swipe('contacts>listBody', function (dir) {
 					if (dir == 'left')
-						ui.navigation.goTo('home', 'foreward');
+						ui.navigation.goTo('settings');
 					else if (dir == 'right')
-						ui.navigation.goTo('locations', 'backward');
+						ui.navigation.goTo('events');
 				});
 			else if (id == 'locations')
 				ui.swipe('locations>listBody', function (dir) {
 					if (dir == 'left')
+						ui.navigation.goTo('events');
+					else if (dir == 'right')
+						ui.navigation.goTo('home');
+				});
+			else if (id == 'events')
+				ui.swipe('events>listBody', function (dir) {
+					if (dir == 'left')
 						ui.navigation.goTo('contacts');
 					else if (dir == 'right')
-						ui.navigation.goTo('home', 'backward');
+						ui.navigation.goTo('locations');
 				});
 			new DragObject(ui.q(id + ' listScroll')).ondrag = function (event, top) {
 				var activeID = ui.navigation.getActiveID();
@@ -205,13 +217,19 @@ class lists {
 		if (ui.cssValue(e, 'transform').indexOf('1') > 0)
 			ui.css(e, 'transform', 'scale(0)');
 	}
-	static toggleFilter(event, html) {
+	static openFilter() {
+		var e = ui.q(ui.navigation.getActiveID() + ' filters');
+		if (ui.cssValue(e, 'transform').indexOf('1') < 0)
+			lists.toggleFilter();
+
+	}
+	static toggleFilter() {
 		setTimeout(function () {
 			var activeID = ui.navigation.getActiveID();
 			var e = ui.q(activeID + ' filters>div');
 			if (e) {
-				if (!e.innerHTML && html) {
-					e.innerHTML = html.call();
+				if (!e.innerHTML) {
+					e.innerHTML = activeID == 'locations' ? pageLocation.getFilterFields() : activeID == 'events' ? pageEvent.getFilterFields() : pageContact.getFilterFields();
 					formFunc.initFields(activeID + ' filters');
 				}
 				e = ui.q(activeID + ' filters');

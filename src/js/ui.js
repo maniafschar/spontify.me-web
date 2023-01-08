@@ -12,6 +12,7 @@ import { pageContact } from './pageContact';
 import { pageSettings } from './pageSettings';
 import { user } from './user';
 import { pageHome } from './pageHome';
+import { lists } from './lists';
 
 export { ui, formFunc };
 
@@ -20,26 +21,25 @@ class ui {
 	static categories = [];
 	static emInPX = 0;
 	static labels = [];
-	static templateMenuLocation = () =>
-		global.template`<title onclick="communication.loadList(ui.query.locationAll(),pageLocation.listLocation,&quot;locations&quot;,&quot;list&quot;)">
-		${ui.l('locations.title')}
-</title><container>
+	static templateMenuLocations = () =>
+		global.template`<container>
 	<a style="display:none;">
 		${ui.l('search.title')}
 	</a><a onclick="communication.loadList(ui.query.locationFavorites(),pageLocation.listLocation,&quot;locations&quot;,&quot;favorites&quot;)">
 		${ui.l('locations.favoritesButton')}
 	</a><a onclick="communication.loadList(ui.query.locationVisits(),pageLocation.listLocation,&quot;locations&quot;,&quot;visits&quot;)">
 		${ui.l('title.history')}
+	</a><a onclick="pageLocation.edit()">
+		${ui.l('locations.new')}
 	</a>
-</container><title style="margin-top:1em;" onclick="communication.loadList(ui.query.eventAll(),events.listEvents,&quot;locations&quot;,&quot;events&quot;)">
-	${ui.l('events.title')}
-</title>
-<container>
-	<a onclick="communication.loadList(ui.query.eventAll(),events.listEvents,&quot;locations&quot;,&quot;events&quot;)">
+</container>`;
+	static templateMenuEvents = () =>
+		global.template`<container>
+	<a onclick="communication.loadList(ui.query.eventAll(),pageEvent.listEvents,&quot;events&quot;,&quot;events&quot;)">
 		${ui.l('all')}
-	</a><a onclick="communication.loadList(ui.query.eventMy(),events.listEventsMy,&quot;locations&quot;,&quot;eventsMy&quot;)">
+	</a><a onclick="communication.loadList(ui.query.eventMy(),pageEvent.listEventsMy,&quot;events&quot;,&quot;eventsMy&quot;)">
 		${ui.l('events.myEvents')}
-	</a><a onclick="events.edit()">
+	</a><a onclick="pageEvent.edit()">
 		${ui.l('events.new')}
 	</a>
 </container>`;
@@ -57,21 +57,6 @@ class ui {
 		${ui.l('group.action')}
 	</a>
 </container>`;
-	static buttonIcon(e, image, click) {
-		if (typeof e == 'string')
-			e = ui.q('buttonIcon' + e);
-		ui.classRemove(e, 'pulse highlight bluetoothInactive jpg');
-		if (image.indexOf('<') == 0)
-			e.innerHTML = image;
-		else if (image.indexOf('/') > 0) {
-			ui.classAdd(e, 'jpg');
-			e.innerHTML = '<img src="' + global.serverImg + image + '" />';
-		} else
-			e.innerHTML = '<img source="' + image + '" />';
-		e.setAttribute('onclick', click);
-		e.style.display = '';
-		formFunc.image.replaceSVGs();
-	}
 	static getAttributes(compare, style) {
 		var result = {
 			attributesCategories: [],
@@ -181,7 +166,6 @@ class ui {
 	}
 	static navigation = {
 		animationEvent: null,
-		lastPage: null,
 		lastPopup: null,
 
 		animation(e, animation, exec) {
@@ -191,13 +175,16 @@ class ui {
 				return;
 			var s = 'popupSlideOut homeSlideOut detailSlideOut detailBackSlideOut popupSlideIn homeSlideIn detailSlideIn detailBackSlideIn slideUp slideDown';
 			ui.classRemove(e, s);
-			ui.classAdd(e, animation + ' animated');
-			ui.on(e, ui.navigation.animationEvent, function () {
-				ui.classRemove(e, 'animated ' + s);
-				if (exec)
-					exec.call();
-			}, true);
-			ui.css(e, 'display', '');
+			ui.classAdd(e, animation);
+			setTimeout(function () {
+				ui.on(e, ui.navigation.animationEvent, function () {
+					ui.classRemove(e, 'animated ' + s);
+					if (exec)
+						exec.call();
+				}, true);
+				ui.css(e, 'display', '');
+				ui.classAdd(e, 'animated');
+			}, 100);
 		},
 		autoOpen(id, event) {
 			if (!id)
@@ -265,14 +252,14 @@ class ui {
 			});
 		},
 		getActiveID() {
-			var id = 'home';
-			var e = ui.q('content>[class*="SlideIn"]');
-			if (!e)
-				e = ui.q('content>.content:not([style*="none"])');
-			if (e)
-				id = e.nodeName.toLowerCase();
-			if (id == 'detail' && ui.q('content>chat:not([style*="none"])'))
-				id = 'chat';
+			var id;
+			var e = ui.qa('content>[class*="SlideIn"]');
+			if (!e || !e.length)
+				e = ui.qa('content>.content:not([style*="none"])');
+			if (e && e.length)
+				id = e[e.length - 1].nodeName.toLowerCase();
+			else
+				id = 'home';
 			if (id == 'home' && ui.cssValue(id, 'display') == 'none' && !ui.q('content.animated')) {
 				ui.css('content>:not(home).content', 'display', 'none');
 				ui.css(id, 'display', 'block');
@@ -282,54 +269,21 @@ class ui {
 		goBack() {
 			ui.navigation.goTo('home');
 		},
-		goTo(id, direction) {
+		goTo(id, back) {
 			if (ui.classContains('content', 'animated'))
 				return;
 			communication.notification.close();
 			var currentID = ui.navigation.getActiveID();
-			if (id == 'home' && currentID == 'chat') {
+			if (currentID == 'chat' && ui.q('content>chat:not([style*="none"])') && id != 'detail') {
 				pageChat.close();
 				return;
 			}
-			if (id == 'home' && currentID == 'detail') {
-				var e = ui.q('detail>div');
-				var x = parseInt(ui.cssValue(e, 'margin-left')) / ui.q('content').clientWidth;
-				if (x < 0) {
-					ui.on(e, 'transitionend', function () {
-						ui.css(e, 'transition', 'none');
-						if (e.lastChild)
-							e.lastChild.outerHTML = '';
-						var x = e.clientWidth / ui.q('content').clientWidth;
-						ui.css(e, 'width', x == 2 ? '' : ((x - 1) * 100) + '%');
-						setTimeout(function () {
-							ui.css(e, 'transition', null);
-						}, 50);
-					}, true);
-					ui.css(e, 'margin-left', ((x + 1) * 100) + '%');
-					return;
-				}
-			}
-			if (id == 'home') {
-				id = ui.q(currentID).getAttribute('from');
-				if (!id || !ui.q(id).innerHTML)
-					id = 'home';
-				else if (!direction)
-					direction = 'backward';
-			}
 			// AGBs opened from login, go back to login
-			if (currentID == 'info' && id == 'home' && !user.contact && pageInfo.openSection == -2)
-				id = 'login';
 			if (pageInfo.openSection == -2)
 				pageInfo.openSection = -1;
-			if (!user.contact && id != 'home' && id != 'info') {
-				if (id == 'locations' || id == 'contacts' || id == 'settings') {
-					intro.openHint({ desc: id, pos: '10%,5em', size: '80%,auto' });
-					return;
-				}
-				var timestamp = ui.q('hint').getAttribute('timestamp');
-				if (timestamp && new Date().getTime() - timestamp < 500)
-					return;
-				id = 'login';
+			if (!user.contact && id != 'home' && id != 'info' && id != 'login') {
+				intro.openHint({ desc: id, pos: '10%,6vh', size: '80%,auto' });
+				return;
 			}
 			geoData.headingClear();
 			if (document.activeElement)
@@ -342,7 +296,7 @@ class ui {
 				pageLogin.saveDraft();
 			if (currentID == 'settings3')
 				pageSettings.save3();
-			if (id == 'settings' && pageSettings.init(function () { ui.navigation.goTo(id); }))
+			if (id == 'settings' && pageSettings.init(function () { ui.navigation.goTo(id, back); }))
 				return;
 			if (id == 'info')
 				pageInfo.init();
@@ -352,8 +306,8 @@ class ui {
 				pageLogin.init();
 			else if (id == 'contacts')
 				pageContact.init();
-			else if (id == 'locations')
-				pageLocation.init();
+			else if (id == 'locations' || id == 'events')
+				pageLocation.init(id);
 			else if (id == 'settings2')
 				pageSettings.init2();
 			else if (id == 'chat')
@@ -362,19 +316,52 @@ class ui {
 			pageHome.closeList();
 			ui.navigation.hidePopup();
 			if (currentID != id) {
-				var back = direction == 'backward' ||
-					direction != 'foreward' && (
-						currentID == 'detail' ||
-						id == 'home' && currentID != 'login' ||
+				var e = ui.q('navigation item.' + id);
+				var i1 = 0;
+				if (!back && e) {
+					while ((e = e.previousSibling) != null)
+						i1++;
+					e = ui.q('navigation item.' + currentID);
+					if (e) {
+						var i2 = 0;
+						while ((e = e.previousSibling) != null)
+							i2++;
+						back = i2 > i1;
+					}
+				}
+				if (back == null)
+					back = currentID == 'detail' ||
+						id == 'home' && currentID == 'login' ||
+						id == 'home' && currentID == 'info' ||
+						id == 'login' && currentID == 'info' ||
 						id == 'settings' && currentID == 'settings2' ||
-						id == 'settings2' && currentID == 'settings3');
-				if (!back && !(currentID == 'locations' && id == 'contacts'
-					|| currentID == 'info' && id == 'login'))
+						id == 'settings2' && currentID == 'settings3';
+				if (back && currentID == 'detail') {
+					e = ui.qa('detail card');
+					if (e.length > 1) {
+						ui.css('detail div', 'transition', 'none');
+						for (var i = 0; i < e.length - 1; i++)
+							e[i].outerHTML = '';
+						e = ui.q('detail div');
+						e.style.width = '100%';
+						e.style.marginLeft = 0;
+						setTimeout(function () {
+							ui.css(e, 'transition', null);
+							ui.navigation.goTo(id);
+						}, 50);
+						return;
+					}
+				}
+				if (!back)
 					ui.attr(id, 'from', currentID);
+				lists.hideFilter();
 				ui.navigation.fade(id, back);
 				ui.navigation.hideMenu();
+				if (ui.q('navigation item.' + id)) {
+					ui.classRemove('navigation item', 'active');
+					ui.classAdd('navigation item.' + id, 'active');
+				}
 			}
-			ui.navigation.lastPage = currentID;
 		},
 		hidePopup() {
 			ui.attr('popup', 'error', '');
@@ -426,9 +413,7 @@ class ui {
 				ui.navigation.hidePopup();
 			else if (data) {
 				ui.navigation.lastPopup = title + '\u0015' + data;
-				if (data.indexOf('<d') != 0 && data.indexOf('<f') != 0)
-					data = '<div style="text-align:center;padding:1em;">' + data + '</div>';
-				data = '<popupContent ts="' + new Date().getTime() + '">' + data + '</popupContent>';
+				data = '<popupContent ts="' + new Date().getTime() + '"><div>' + data + '</div></popupContent>';
 				if (title)
 					data = '<popupTitle' + (modal ? ' modal="true"' : '') + '><div>' + title + '</div></popupTitle>' + data;
 				var f = function () {
@@ -479,9 +464,11 @@ class ui {
 				if (e && activeID.toLowerCase() != e.nodeName.toLowerCase())
 					return;
 				if (activeID == 'locations')
-					ui.html(ui.q('menu>div'), ui.templateMenuLocation());
+					ui.html(ui.q('menu>div'), ui.templateMenuLocations());
 				else if (activeID == 'contacts')
 					ui.html(ui.q('menu>div'), ui.templateMenuContacts());
+				else if (activeID == 'events')
+					ui.html(ui.q('menu>div'), ui.templateMenuEvents());
 				e = ui.q('menu');
 				e.setAttribute('type', activeID);
 				ui.classAdd(ui.qa('menu a')[parseInt(ui.q(activeID).getAttribute('menuIndex'))], 'highlightMenu');
@@ -625,7 +612,7 @@ class ui {
 			var s = e2.classList ? ' ' + e2.classList.value + ' ' : '';
 			for (var i = 0; i < valueSplit.length; i++) {
 				if (s.indexOf(' ' + valueSplit[i] + ' ') < 0)
-					e2.classList = (e2.classList.value + ' ' + value).trim();
+					e2.classList = (e2.classList.value + ' ' + valueSplit[i]).trim();
 			}
 		});
 	}
@@ -1084,7 +1071,7 @@ class formFunc {
 							e.innerHTML = formFunc.image.svg[id];
 							imgs[i].parentNode.replaceChild(e.firstChild, imgs[i]);
 							if (global.language != 'DE' && id == 'logo')
-								ui.classAdd('hometitle svg>g', 'en');
+								ui.classAdd('homeHeader svg>g', 'en');
 						}
 					} else
 						formFunc.image.fetchSVG(id);
@@ -1396,7 +1383,7 @@ class formFunc {
 	static openChoices(id, exec) {
 		var e = ui.q('#' + id);
 		var v = e.getAttribute('valueEx');
-		ui.navigation.openPopup(e.parentNode.parentNode.children[0].innerText.trim(), '<input id="' + id + 'HelperPopup" type="text" multiple="' + e.getAttribute('multiplePopup') + '" value="' + e.value + '"/>' + (v == null ? '<br/>' : '<input type="text" id="' + id + 'HelperPopupEx" value="' + v + '" placeholder="' + ui.l('contacts.blockReason100') + '"' + (e.getAttribute('maxEx') ? ' maxlength="' + e.getAttribute('maxEx') + '"' : '') + '/><hintAttributeEx>' + ui.l('multipleValus.hintOther') + '</hintAttributeEx>') + '<popupHint></popupHint><buttontext onclick="formFunc.setChoices(&quot;' + id + '&quot;' + (exec ? ',' + exec : '') + ')" class="bgColor">' + ui.l('ready') + '</buttontext>');
+		ui.navigation.openPopup(e.parentNode.parentNode.children[0].innerText.trim(), '<input id="' + id + 'HelperPopup" type="text" multiple="' + e.getAttribute('multiplePopup') + '" value="' + e.value + '"/>' + (v == null ? '<br/>' : '<input type="text" id="' + id + 'HelperPopupEx" value="' + v + '" placeholder="' + ui.l('contacts.blockReason100') + '"' + (e.getAttribute('maxEx') ? ' maxlength="' + e.getAttribute('maxEx') + '"' : '') + '/><hintAttributeEx>' + ui.l('multipleValus.hintOther') + '</hintAttributeEx>') + '<popupHint></popupHint><buttontext onclick="formFunc.setChoices(&quot;' + id + '&quot;' + (exec ? ',' + exec : '') + ')" class="bgColor">' + ui.l('save') + '</buttontext>');
 		formFunc.initFields('popup');
 	}
 	static pressDefaultButton(event) {

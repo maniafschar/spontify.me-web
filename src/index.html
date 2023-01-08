@@ -107,27 +107,48 @@
 		<content>
 			<home class="content"></home>
 			<login class="content"></login>
-			<detail class="content mainBG"></detail>
-			<chat class="content mainBG"></chat>
 			<settings class="content mainBG"></settings>
 			<settings2 class="content mainBG"></settings2>
-			<settings3 class="content mainBG" style="padding-top:0.5em;"></settings3>
+			<settings3 class="content mainBG"></settings3>
 			<locations class="content"></locations>
+			<events class="content"></events>
 			<contacts class="content"></contacts>
 			<info class="content"></info>
+			<detail class="content mainBG"></detail>
+			<chat class="content mainBG"></chat>
 			<chatList style="display:none;"></chatList>
 			<notificationList style="display:none;"></notificationList>
 		</content>
-		<buttonIcon class="top left"></buttonIcon>
-		<buttonIcon class="top right"></buttonIcon>
-		<buttonIcon class="bottom left"></buttonIcon>
-		<buttonIcon class="bottom center"></buttonIcon>
-		<buttonIcon class="bottom right"></buttonIcon>
 		<hint></hint>
 		<menu style="transform:scale(0);">
 			<hinky class="top" style="right:1.5em;"></hinky>
 			<div></div>
 		</menu>
+		<navigation class="bgColor">
+			<buttonIcon onclick="pageChat.toggleUserList()" class="mainBG chats">
+				<badgeChats></badgeChats>
+				<img source="chat" />
+			</buttonIcon>
+			<item onclick="ui.navigation.goTo('home')" class="home active">
+				<img source="home" />
+			</item>
+			<item onclick="ui.navigation.goTo('locations')" class="locations">
+				<img source="location" />
+			</item>
+			<item onclick="ui.navigation.goTo('events')" class="events">
+				<img source="event" />
+			</item>
+			<item onclick="ui.navigation.goTo('contacts')" class="contacts">
+				<img source="contact" />
+			</item>
+			<item onclick="ui.navigation.goTo('settings')" class="settings">
+				<img source="settings" />
+			</item>
+			<buttonIcon onclick="pageHome.toggleNotification()" class="mainBG notifications">
+				<badgeNotifications></badgeNotifications>
+				<img source="news" />
+			</buttonIcon>
+		</navigation>
 	</main>
 </body>
 

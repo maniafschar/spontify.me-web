@@ -85,21 +85,57 @@ body.app>main {
 }
 
 body.app>main alert,
-body.app>main>buttonIcon,
 body.app>main hint,
 body.app>main menu,
 body.app>main popup,
-body.app>main progressbar {
+body.app>main progressbar,
+body.app>main buttonIcon.language {
 	margin-top: constant(safe-area-inset-top);
 	margin-top: env(safe-area-inset-top);
 }
 
-body.app>main>buttonIcon,
 body.app>main chatList,
 body.app>main notificationList,
 body.app>main hint {
 	margin-bottom: constant(safe-area-inset-bottom);
 	margin-bottom: env(safe-area-inset-bottom);
+}
+
+navigation {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 4em;
+	width: 100%;
+	z-index: 3;
+}
+
+navigation>item {
+	width: 20%;
+	position: relative;
+	height: 100%;
+	float: left;
+	text-align: center;
+	padding-top: 1.1em;
+	cursor: pointer;
+	transition: all 0.4s ease-out;
+}
+
+navigation>item svg {
+	height: 2em;
+	transition: all 0.4s ease-out;
+	filter: drop-shadow(0.1em 0.1em 0.1em rgba(0, 0, 0, 0.2));
+}
+
+navigation>item.active svg {
+	filter: drop-shadow(0.2em 0.2em 0.2em rgba(0, 0, 0, 0.35));
+	margin: -0.2em 0 0 -0.2em;
+	height: 2.1em;
+}
+
+navigation>item.active,
+navigation>item:hover {
+	background: rgba(0, 0, 0, 0.05);
 }
 
 add {
@@ -264,12 +300,38 @@ subCatTitle {
 	background-size: 100% 100%;
 }
 
-home>div {
+home text {
+	padding: 0.75em;
+}
+
+homeHeader {
 	position: relative;
-	height: 100%;
-	width: 100%;
-	overflow-y: auto;
+	text-align: center;
 	display: block;
+	cursor: pointer;
+	color: white;
+	padding-top: 6vh;
+}
+
+homeHeader svg {
+	height: 15vh;
+	width: auto;
+	margin-top: 2.5vh;
+}
+
+homeHeader img {
+	margin-top: 2vh;
+	height: 20vh;
+	border-radius: 50%;
+	box-shadow: 0 0 1em rgba(0, 0, 0, 0.6);
+}
+
+homeHeader.logoSmall svg {
+	height: 8vh;
+	position: absolute;
+	right: 0;
+	top: 0.75em;
+	margin-top: 0;
 }
 
 homeBody {
@@ -277,12 +339,42 @@ homeBody {
 	width: 100%;
 	display: block;
 	top: 50%;
-	margin-top: -8em;
-	text-align: left;
+	margin-top: -3vh;
+}
+
+home buttonIcon {
+	padding: 0;
+	position: relative;
+	padding-bottom: 0.5em;
+	box-shadow: 0 0 1em rgba(0, 0, 0, 0.4);
+}
+
+home buttonIcon svg {
+	width: 5em;
+	height: 5em;
+	margin-top: -4em;
+	filter: drop-shadow(0.5em 0.5em 0.5em rgba(0, 0, 0, 0.3));
+}
+
+home item.bluetooth {
+	position: absolute;
+	bottom: 1em;
+	left: 0;
+	width: 100%;
+}
+
+home item {
+	position: relative;
+	width: 50%;
+	float: left;
+	text-align: center;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 4em 0 0.5em 0;
 }
 
 .bgColor {
-	background: linear-gradient(rgb(252, 251, 104) 0%, rgb(220, 220, 69) 100%) center center / 100% no-repeat;
+	background: linear-gradient(rgb(252, 251, 104) 0%, rgb(190, 190, 52) 100%) center center / 100% no-repeat;
 }
 
 a.bgColor:hover,
@@ -299,9 +391,12 @@ buttontext.bgColor:hover {
 }
 
 content {
-	height: 100%;
-	position: relative;
+	position: absolute;
 	display: block;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 4em;
 }
 
 .content {
@@ -312,26 +407,6 @@ content {
 	bottom: 0;
 	text-align: center;
 	display: block;
-}
-
-contacts:before,
-locations:before {
-	content: '';
-	position: absolute;
-	left: 0;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	opacity: 0.05;
-	margin: 30%;
-}
-
-contacts:before {
-	background: url(../images/contact.svg) no-repeat 50% 50%;
-}
-
-locations:before {
-	background: url(../images/location.svg) no-repeat 50% 50%;
 }
 
 groups {
@@ -350,7 +425,7 @@ filters {
 	transition: all 0.4s ease-out 0s;
 	max-width: 90%;
 	transform-origin: top left;
-	z-index: 1;
+	z-index: 4;
 	color: black;
 }
 
@@ -384,7 +459,6 @@ listBody {
 	overflow-y: auto;
 	display: block;
 	transition: all 0.5s ease-out;
-	padding-bottom: 5em;
 }
 
 listTitle {
@@ -547,7 +621,7 @@ popup input:checked+label {
 }
 
 popup .multiple {
-	max-height: 60vh;
+	max-height: 50vh;
 	overflow-y: auto;
 	margin-bottom: 1em;
 }
@@ -607,6 +681,10 @@ settings,
 settings2,
 settings3 {
 	z-index: 2;
+}
+
+settings3 dialogButtons {
+	margin-top: 4em;
 }
 
 #info6 {
@@ -692,15 +770,14 @@ dialogButtons {
 }
 
 .langSelectImg {
-	border-radius: 0.5em;
-	display: inline-block;
-	position: relative;
 	margin: 0 1em;
-	padding: 1em 2em;
-	cursor: pointer;
 }
 
-.langSelectImg.pressed::before,
+.langSelectImg.pressed {
+	font-weight: bold;
+	text-decoration: underline;
+}
+
 .chatLinks.pressed::before {
 	display: block;
 	content: '✓';
@@ -800,8 +877,7 @@ chat listHeader img {
 }
 
 chat .sendButton {
-	float: right;
-	margin: 0.5em 0;
+	margin: 0.5em;
 }
 
 
@@ -827,13 +903,21 @@ listHeader chatDate {
 chatList,
 notificationList {
 	position: absolute;
-	left: 0;
-	bottom: 4em;
+	bottom: 2.5em;
 	overflow-x: hidden;
 	overflow-y: auto;
 	z-index: 5;
 	max-height: 23em;
+}
+
+chatList {
+	left: 0;
 	padding-right: 0.5em;
+}
+
+notificationList {
+	right: 0;
+	padding-left: 0.5em;
 }
 
 chatList>div,
@@ -841,12 +925,19 @@ notificationList>div {
 	height: 3.5em;
 	margin: 0.5em 0;
 	background: white;
-	border-radius: 0 2em 2em 0;
 	cursor: pointer;
 	position: relative;
 	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
 	color: black;
 	max-width: 95vw;
+}
+
+chatList>div {
+	border-radius: 0 2em 2em 0;
+}
+
+notificationList>div {
+	border-radius: 2em 0 0 2em;
 }
 
 chatList>div {
@@ -863,11 +954,18 @@ notificationList>div>span {
 	position: absolute;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	padding: 0.3em 0.75em 0 3.75em;
 	line-height: 1.5;
 	height: 92%;
 	width: 100%;
 	left: 0;
+}
+
+chatList>div>span {
+	padding: 0.3em 0.75em 0 3.75em;
+}
+
+notificationList>div>span {
+	padding: 0.3em 3.75em 0 1em;
 }
 
 chatList>div>span {
@@ -876,10 +974,19 @@ chatList>div>span {
 
 chatList img,
 notificationList img {
-	border-radius: 0 2em 2em 0;
+	position: absolute;
 	height: 100%;
 	box-shadow: 0 0 0.25em rgb(0, 0, 0, 0.3);
-	margin: -0.25em 0 0 -0.25em;
+	margin-top: -0.25em;
+}
+
+chatList img {
+	border-radius: 0 2em 2em 0;
+}
+
+notificationList img {
+	border-radius: 2em 0 0 2em;
+	right: 0;
 }
 
 chatList svg {
@@ -1008,13 +1115,17 @@ popupHint {
 }
 
 popupContent {
-	overflow-y: auto;
-	display: block;
+	display: flex;
 	border-radius: 0.5em;
-	overflow-x: hidden;
 	background: linear-gradient(rgba(250, 175, 100, 0.95) 0%, rgba(209, 130, 60, 0.95) 100%);
-	padding: 0.5em;
 	color: black;
+}
+
+popupContent>div {
+	overflow-y: auto;
+	overflow-x: hidden;
+	border: solid 0.75em transparent;
+	width: 100%;
 }
 
 ratingHint {
@@ -1500,35 +1611,6 @@ detailTitle {
 	color: black;
 }
 
-homeHeader {
-	position: relative;
-	text-align: center;
-	display: block;
-	color: white;
-}
-
-homeTitle {
-	cursor: pointer;
-	white-space: nowrap;
-	display: inline-block;
-	margin-top: 10vh;
-}
-
-homeTitle svg {
-	height: 15vh;
-	width: auto;
-	min-height: 7.5em;
-}
-
-homeSubTitle {
-	font-family: Adelina;
-	font-size: 1.5em;
-	position: absolute;
-	width: 100%;
-	left: 0;
-	bottom: 0;
-}
-
 notifications {
 	position: absolute;
 	z-index: 3;
@@ -1571,44 +1653,33 @@ buttontext.map {
 buttonIcon {
 	position: absolute;
 	cursor: pointer;
-	display: flex;
-	padding: 0.3em;
+	display: inline-flex;
+	padding: 0.5em;
 	text-align: center;
 	z-index: 3;
 	color: white;
-	border: solid 0.15em white;
 	border-radius: 50%;
+	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
 }
 
-buttonIcon.left {
-	left: 0.5em;
+buttonIcon.chats {
+	border-radius: 0 50% 50% 0;
+	margin-top: -2em;
 }
 
-buttonIcon.center {
-	left: 50%;
-	margin-left: -1.3em;
+buttonIcon.notifications {
+	border-radius: 50% 0 0 50%;
+	margin-top: -2em;
+	right: 0;
 }
 
-buttonIcon.right {
-	right: 0.5em;
-}
-
-buttonIcon.top {
-	top: 0.5em;
-}
-
-buttonIcon.bottom {
-	bottom: 0.5em;
-}
-
-buttonIcon.marketing {
-	right: 0.5em;
-	top: -1.5em;
-	display: none;
-}
-
-buttonIcon.marketing>span {
-	font-weight: bold;
+buttonIcon.language {
+	top: 0;
+	right: 0;
+	box-shadow: none;
+	font-size: 1.4em;
+	padding: 1em 1em 2em 2em;
+	position: absolute;
 }
 
 buttonIcon.jpg {
@@ -1622,7 +1693,6 @@ buttonIcon.jpg img {
 }
 
 buttonIcon img,
-buttonIcon span,
 buttonIcon svg {
 	width: 2em;
 	height: 2em;
@@ -1631,7 +1701,6 @@ buttonIcon svg {
 
 buttonIcon.highlight {
 	color: rgb(252, 251, 104);
-	border: solid 0.15em rgb(252, 251, 104);
 }
 
 buttonIcon.highlight svg {
@@ -1639,8 +1708,14 @@ buttonIcon.highlight svg {
 	stroke: rgb(252, 251, 104);
 }
 
-buttonIcon.bluetoothInactive {
-	opacity: 0.4;
+buttonIcon.left {
+	top: 0.5em;
+	left: 0.5em;
+}
+
+buttonIcon.right {
+	top: 0.5em;
+	right: 0.5em;
 }
 
 .appInput {
@@ -1878,6 +1953,13 @@ subtitle {
 	opacity: 0.6;
 	bottom: 0.2em;
 	line-height: 1;
+}
+
+mapPicker {
+	position: relative;
+	display: block;
+	width: 100%;
+	height: 50vh;
 }
 
 map {
@@ -2228,20 +2310,13 @@ info {
 	text-align: left !important;
 }
 
-.infoButton {
-	display: table;
-	position: relative;
-	margin: 1em 0 0 0;
-	border-radius: 0 2em 2em 0;
-	z-index: 1;
-}
-
 .settings2Button {
 	display: inline-block;
 	position: relative;
 	margin: 1em 0 0.25em 0;
 	border-radius: 0 2em 2em 0;
 	padding: 1em 2em 1em 1.5em;
+	z-index: 1;
 }
 
 attributes {
@@ -2257,10 +2332,6 @@ attributesDisplay {
 
 .attributeFade {
 	opacity: 0.35;
-}
-
-settings3 .infoButton {
-	margin: 0 0.5em 1em 0.5em;
 }
 
 infoblock {
@@ -2368,10 +2439,6 @@ menu title {
 }
 
 @keyframes popupSlideIn {
-	0% {
-		transform: rotate3d(0, 0, 1, 90deg);
-	}
-
 	100% {
 		transform: none;
 	}
@@ -2384,10 +2451,6 @@ menu title {
 }
 
 @keyframes popupSlideOut {
-	0% {
-		transform: none;
-	}
-
 	100% {
 		transform: rotate3d(0, 0, 1, -90deg);
 	}
