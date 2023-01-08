@@ -176,13 +176,13 @@ class ui {
 			var s = 'popupSlideOut homeSlideOut detailSlideOut detailBackSlideOut popupSlideIn homeSlideIn detailSlideIn detailBackSlideIn slideUp slideDown';
 			ui.classRemove(e, s);
 			ui.classAdd(e, animation);
-			ui.css(e, 'display', '');
 			setTimeout(function () {
 				ui.on(e, ui.navigation.animationEvent, function () {
 					ui.classRemove(e, 'animated ' + s);
 					if (exec)
 						exec.call();
 				}, true);
+				ui.css(e, 'display', '');
 				ui.classAdd(e, 'animated');
 			}, 100);
 		},
@@ -252,14 +252,14 @@ class ui {
 			});
 		},
 		getActiveID() {
-			var id = 'home';
-			var e = ui.q('content>[class*="SlideIn"]');
-			if (!e)
-				e = ui.q('content>.content:not([style*="none"])');
-			if (e)
-				id = e.nodeName.toLowerCase();
-			if (id == 'detail' && ui.q('content>chat:not([style*="none"])'))
-				id = 'chat';
+			var id;
+			var e = ui.qa('content>[class*="SlideIn"]');
+			if (!e || !e.length)
+				e = ui.qa('content>.content:not([style*="none"])');
+			if (e && e.length)
+				id = e[e.length - 1].nodeName.toLowerCase();
+			else
+				id = 'home';
 			if (id == 'home' && ui.cssValue(id, 'display') == 'none' && !ui.q('content.animated')) {
 				ui.css('content>:not(home).content', 'display', 'none');
 				ui.css(id, 'display', 'block');
@@ -274,7 +274,7 @@ class ui {
 				return;
 			communication.notification.close();
 			var currentID = ui.navigation.getActiveID();
-			if (id == 'home' && currentID == 'chat') {
+			if (currentID == 'chat' && ui.q('content>chat:not([style*="none"])') && id != 'detail') {
 				pageChat.close();
 				return;
 			}

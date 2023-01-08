@@ -877,8 +877,7 @@ chat listHeader img {
 }
 
 chat .sendButton {
-	float: right;
-	margin: 0.5em 0;
+	margin: 0.5em;
 }
 
 

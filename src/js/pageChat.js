@@ -398,7 +398,6 @@ class pageChat {
 					pageChat.detailChat(r, id);
 					ui.on('chatConversation', 'scroll', pageChat.reposition);
 					ui.css('chatConversation', 'opacity', 0);
-					ui.css('chat', 'display', 'block');
 					ui.navigation.animation('chat', 'slideDown',
 						function () {
 							pageChat.adjustTextarea(ui.q('#chatText'));

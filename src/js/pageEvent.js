@@ -426,7 +426,7 @@ ${v.eventParticipationButtons}
 		if (e) {
 			for (var i = 0; i < e.length; i++) {
 				cats.push(e[i].value);
-				c += 'category like \'%' + e[i].value + '%\' or ';
+				c += 'location.category like \'%' + e[i].value + '%\' or event.category like \'%' + e[i].value + '%\' or ';
 			}
 		}
 		if (c)
