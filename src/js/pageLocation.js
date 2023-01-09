@@ -345,15 +345,10 @@ ${v.hint}
 <input type="checkbox" name="filterCategories" value="4" label="${ui.categories[4].label}" onclick="pageLocation.filterList()" ${v.valueCat4}/>
 <input type="checkbox" name="filterCategories" value="5" label="${ui.categories[5].label}" onclick="pageLocation.filterList()" ${v.valueCat5}/>
 <filterSeparator></filterSeparator>
-<input type="radio" name="filterCompass" value="N" label="${ui.l('locations.compassN')}" onclick="pageLocation.filterList()" deselect="true" ${v.valueCompassN}/>
-<input type="radio" name="filterCompass" value="E" label="${ui.l('locations.compassE')}" onclick="pageLocation.filterList()" deselect="true" ${v.valueCompassE}/>
-<input type="radio" name="filterCompass" value="S" label="${ui.l('locations.compassS')}" onclick="pageLocation.filterList()" deselect="true" ${v.valueCompassS}/>
-<input type="radio" name="filterCompass" value="W" label="${ui.l('locations.compassW')}" onclick="pageLocation.filterList()" deselect="true" ${v.valueCompassW}/>
-<filterSeparator></filterSeparator>
 <input type="checkbox" label="${ui.l('search.matches')}" name="filterMatchesOnly" ${v.valueMatchesOnly}/>
 <filterSeparator></filterSeparator>
 <input type="text" name="filterKeywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.valueKeywords}/>
-<explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
+<explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
 <errorHint></errorHint>
 <buttontext class="bgColor defaultButton" onclick="pageLocation.search()">${ui.l('search.action')}</buttontext><buttontext onclick="pageLocation.toggleMap()" class="bgColor">${ui.l('filterLocMapButton')}</buttontext></form>`;
 	static addOpenTimeRow() {
@@ -676,14 +671,13 @@ ${v.hint}
 		if (!d)
 			return;
 		var cats = ui.qa('locations filters input[name="filterCategories"]:checked');
-		var compass = ui.q('locations filters input[name="filterCompass"]:checked');
 		var categories = [], comp = [];
 		for (var i = 0; i < cats.length; i++)
 			categories[cats[i].value] = 1;
 		for (var i = 1; i < d.length; i++) {
 			if (d[i] != 'outdated') {
 				var e = model.convert(new Location(), d, i);
-				var match = (cats.length == 0 || pageLocation.hasCategory(categories, e.category)) && (!compass || pageLocation.isInPosition(compass.value, e._angle));
+				var match = (cats.length == 0 || pageLocation.hasCategory(categories, e.category));
 				e = ui.q('locations [i="' + e.id + '"]');
 				ui.attr(e, 'filtered', !match);
 			}
@@ -702,6 +696,8 @@ ${v.hint}
 		v['valueCompass' + pageLocation.filter.filterCompass] = ' checked="true"';
 		if (pageLocation.filter.filterKeywords)
 			v.valueKeywords = ' value="' + pageLocation.filter.filterKeywords + '"';
+		else if (geoData.currentTown)
+			v.valueKeywords = ' value="' + geoData.currentTown + '"';
 		if (pageLocation.filter.filterMatchesOnly == 'on')
 			v.valueMatchesOnly = ' checked="true"';
 		return pageLocation.templateSearch(v);

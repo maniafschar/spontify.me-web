@@ -91,11 +91,6 @@ class intro {
 		ui.attr(e, 'timestamp', new Date().getTime());
 		ui.css(e, 'display', 'block');
 		setTimeout(function () { ui.css(e, 'opacity', 1) }, 10);
-		if (save) {
-			intro.lastHint = parseInt(new Date().getTime() / 60000);
-			user.contact.introState[data.desc] = intro.lastHint;
-			user.save({ introState: JSON.stringify(user.contact.introState) });
-		}
 	}
 	static openIntro(event) {
 		if (intro.steps.length == 0) {

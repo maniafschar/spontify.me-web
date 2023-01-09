@@ -19,10 +19,6 @@ class user {
 		}
 		if (user.contact.filter)
 			user.contact.filter = JSON.parse(user.contact.filter);
-		if (user.contact.introState)
-			user.contact.introState = JSON.parse(user.contact.introState);
-		else
-			user.contact.introState = { homeImage: 0, homeLocation: 0, settingsLoggedIn: 0, menuOpen: 0, homeInvite: 0 };
 	}
 	static reset() {
 		user.contact = null;
@@ -45,8 +41,6 @@ class user {
 						user.contact[k] = data.values[k];
 					if (typeof user.contact.filter == 'string')
 						user.contact.filter = JSON.parse(user.contact.filter);
-					if (typeof user.contact.introState == 'string')
-						user.contact.introState = JSON.parse(user.contact.introState);
 					if (typeof user.contact.storage == 'string')
 						user.contact.storage = JSON.parse(user.contact.storage);
 					if (success)

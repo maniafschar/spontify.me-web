@@ -124,15 +124,10 @@ ${v.eventParticipationButtons}
 <input type="checkbox" name="filterCategories" value="4" label="${ui.categories[4].label}" onclick="pageLocation.filterList()" ${v.valueCat4}/>
 <input type="checkbox" name="filterCategories" value="5" label="${ui.categories[5].label}" onclick="pageLocation.filterList()" ${v.valueCat5}/>
 <filterSeparator></filterSeparator>
-<input type="radio" name="filterCompass" value="N" label="${ui.l('locations.compassN')}" onclick="pageLocation.filterList()" deselect="true" ${v.valueCompassN}/>
-<input type="radio" name="filterCompass" value="E" label="${ui.l('locations.compassE')}" onclick="pageLocation.filterList()" deselect="true" ${v.valueCompassE}/>
-<input type="radio" name="filterCompass" value="S" label="${ui.l('locations.compassS')}" onclick="pageLocation.filterList()" deselect="true" ${v.valueCompassS}/>
-<input type="radio" name="filterCompass" value="W" label="${ui.l('locations.compassW')}" onclick="pageLocation.filterList()" deselect="true" ${v.valueCompassW}/>
-<filterSeparator></filterSeparator>
 <input type="checkbox" label="${ui.l('search.matches')}" name="filterMatchesOnly" ${v.valueMatchesOnly}/>
 <filterSeparator></filterSeparator>
 <input type="text" name="filterKeywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.valueKeywords}/>
-<explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
+<explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
 <errorHint></errorHint>
 <buttontext class="bgColor defaultButton" onclick="pageEvent.search()">${ui.l('search.action')}</buttontext></form>`;
 	static detail(v) {
@@ -353,9 +348,10 @@ ${v.eventParticipationButtons}
 			for (var i = 0; i < c.length; i++)
 				v['valueCat' + c[i]] = ' checked="true"';
 		}
-		v['valueCompass' + pageEvent.filter.filterCompass] = ' checked="true"';
 		if (pageEvent.filter.filterKeywords)
 			v.valueKeywords = ' value="' + pageEvent.filter.filterKeywords + '"';
+		else if (geoData.currentTown)
+			v.valueKeywords = ' value="' + geoData.currentTown + '"';
 		if (pageEvent.filter.filterMatchesOnly == 'on')
 			v.valueMatchesOnly = ' checked="true"';
 		return pageEvent.templateSearch(v);
@@ -434,17 +430,6 @@ ${v.eventParticipationButtons}
 		else {
 			for (var i = 0; i < ui.categories.length; i++)
 				cats.push(i);
-		}
-		c = ui.q('events filters [name="filterCompass"]:checked');
-		if (c) {
-			if (c.value == 'N')
-				s += (s ? ' and ' : '') + 'location.latitude>' + geoData.latlon.lat;
-			else if (c.value == 'E')
-				s += (s ? ' and ' : '') + 'location.longitude>' + geoData.latlon.lon;
-			else if (c.value == 'S')
-				s += (s ? ' and ' : '') + 'location.latitude<' + geoData.latlon.lat;
-			else if (c.value == 'W')
-				s += (s ? ' and ' : '') + 'location.longitude<' + geoData.latlon.lon;
 		}
 		var v = ui.val('events filters [name="filterKeywords"]').trim();
 		if (v) {
