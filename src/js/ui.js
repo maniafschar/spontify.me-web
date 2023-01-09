@@ -333,6 +333,7 @@ class ui {
 					back = currentID == 'detail' ||
 						id == 'home' && currentID == 'login' ||
 						id == 'home' && currentID == 'info' ||
+						id == 'home' && currentID == 'settings3' && !user.contact ||
 						id == 'login' && currentID == 'info' ||
 						id == 'settings' && currentID == 'settings2' ||
 						id == 'settings2' && currentID == 'settings3';

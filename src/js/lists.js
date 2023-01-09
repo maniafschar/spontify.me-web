@@ -122,14 +122,6 @@ ${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5e
 	}
 	static reset() {
 		lists.data = [];
-		ui.html('locations', '');
-		ui.html('contacts', '');
-		ui.html('settings', '');
-		ui.html('settings2', '');
-		ui.html('settings3', '');
-		ui.html('chat', '');
-		ui.html('detail', '');
-		ui.html('info', '');
 	}
 	static setListDivs(id) {
 		var e = ui.q(id);

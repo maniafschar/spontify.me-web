@@ -106,7 +106,8 @@ class bluetooth {
 				if (e.indexOf('Advertising has already started') < 0) {
 					bluetooth.stop();
 					communication.sendError('ble peripheral: ' + JSON.stringify(e));
-				}
+				} else
+					ui.q('home item.bluetooth text').innerHTML = ui.l('bluetooth.activated');
 			}
 		);
 		ble.startScan([bluetooth.UUID_SERVICE], bluetooth.registerDevice, function (e) {

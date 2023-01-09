@@ -435,18 +435,25 @@ class communication {
 			window.localStorage.removeItem('autoLogin');
 		},
 		resetAfterLogoff() {
+			user.reset();
 			bluetooth.stop();
 			initialisation.reset();
-			pageLocation.reset();
 			pageHome.reset();
+			pageLocation.reset();
 			pageChat.reset();
-			pageSettings.reset();
-			user.reset();
 			communication.reset();
 			lists.reset();
 			pageEvent.reset();
-			ui.navigation.goTo('home');
 			ui.html('head title', global.appTitle);
+			ui.navigation.goTo('home');
+			ui.html('locations', '');
+			ui.html('contacts', '');
+			ui.html('settings', '');
+			ui.html('settings2', '');
+			ui.html('chat', '');
+			ui.html('detail', '');
+			ui.html('info', '');
+			setTimeout(pageSettings.reset, 500);
 		},
 		toServer(os, u, exec) {
 			u.id = Encryption.encPUB(u.id);
