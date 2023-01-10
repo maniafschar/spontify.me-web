@@ -130,6 +130,15 @@ ${v.eventParticipationButtons}
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
 <errorHint></errorHint>
 <buttontext class="bgColor defaultButton" onclick="pageEvent.search()">${ui.l('search.action')}</buttontext></form>`;
+	static confirmMarketing(event) {
+		communication.ajax({
+			url: global.server + 'action/requestMarketing?id=' + ui.q('detail card:last-child').getAttribute('i'),
+			method: 'POST',
+			success(r) {
+				event.target.outerHTML = ui.l('locations.marketing2');
+			}
+		});
+	}
 	static detail(v) {
 		v.copyLinkHint = ui.l('copyLinkHint.event');
 		if (v.event.contactId != user.contact.id)
@@ -510,7 +519,7 @@ ${v.eventParticipationButtons}
 				if (date)
 					break;
 				outdated = true;
-				s += '<eventListTitle style="margin-top:2em;">' + ui.l('events.outdated') + '</eventListTitle>';
+				s += '<listSeparator style="margin-top:2em;">' + ui.l('events.outdated') + '</listSeparator>';
 			} else {
 				v = as[i];
 				var startDate = global.date.server2Local(v.event.startDate);
@@ -520,7 +529,7 @@ ${v.eventParticipationButtons}
 					if (s3 != current) {
 						current = s3;
 						if (!outdated && !date)
-							s += '<eventListTitle>' + global.date.getDateHint(startDate).replace('{0}', s3) + '</eventListTitle>';
+							s += '<listSeparator>' + global.date.getDateHint(startDate).replace('{0}', s3) + '</listSeparator>';
 					}
 					var t = global.date.formatDate(startDate);
 					t = t.substring(t.lastIndexOf(' ') + 1);
@@ -724,6 +733,21 @@ ${v.eventParticipationButtons}
 			});
 		}
 	}
+	static requestOwnerShip() {
+		var ownerId = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).ownerId;
+		if (ownerId == user.contact.id) {
+			var id = ui.q('detail card:last-child').getAttribute('i');
+			communication.ajax({
+				url: global.server + 'action/marketing?id=' + id,
+				success(r) {
+					ui.navigation.openHTML(r, 'marketing' + id);
+				}
+			});
+		} else if (ownerId)
+			ui.navigation.openPopup(ui.l('locations.marketing'), ui.l('locations.marketingOccupied'));
+		else
+			ui.navigation.openPopup(ui.l('locations.marketing'), '<marketing>' + ui.l('locations.marketing1') + '<br/><br/><buttontext class="bgColor" onclick="pageEvent.confirmMarketing(event)">' + ui.l('locations.marketingConfirm') + '</buttontext></marketing>');
+	}
 	static reset() {
 		pageEvent.participations = null;
 	}
@@ -864,7 +888,8 @@ ${v.eventParticipationButtons}
 		if (!e)
 			return;
 		var bg = ui.classContains('detail card:last-child[i="' + id + '"] [name="buttonEvents"]', 'bgBonus') ? 'bgBonus' : 'bgColor';
-		var a = pageEvent.getCalendarList(r), newButton = field == 'contact' ? '' : '<br/><br/><buttontext onclick="pageEvent.edit(' + id + ')" class="' + bg + '">' + ui.l('events.new') + '</buttontext>';
+		var a = pageEvent.getCalendarList(r), newButton = field == 'contact' ? '' : '<br/><br/><buttontext onclick="pageEvent.edit(' + id + ')" class="' + bg + '">' + ui.l('events.new') + '</buttontext>' +
+			'<buttontext class="bgColor" name="buttonMarketing" onclick="pageEvent.requestOwnerShip()">' + ui.l('locations.marketing') + '</buttontext>';
 		var s = '', v, text;
 		var b = user.contact.id == id;
 		if (b && e.getAttribute('active'))

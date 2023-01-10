@@ -13,6 +13,7 @@ import { pageSettings } from './pageSettings';
 import { user } from './user';
 import { pageHome } from './pageHome';
 import { lists } from './lists';
+import { pageTicket } from './pageTicket';
 
 export { ui, formFunc };
 
@@ -35,8 +36,8 @@ class ui {
 </container>`;
 	static templateMenuEvents = () =>
 		global.template`<container>
-	<a onclick="communication.loadList(ui.query.eventAll(),pageEvent.listEvents,&quot;events&quot;,&quot;events&quot;)">
-		${ui.l('all')}
+	<a style="display:none;">
+		${ui.l('search.title')}
 	</a><a onclick="communication.loadList(ui.query.eventMy(),pageEvent.listEventsMy,&quot;events&quot;,&quot;eventsMy&quot;)">
 		${ui.l('events.myEvents')}
 	</a><a onclick="pageEvent.edit()">
@@ -312,6 +313,8 @@ class ui {
 				pageSettings.init2();
 			else if (id == 'chat')
 				pageChat.init();
+			else if (id == 'tickets')
+				pageTicket.init();
 			pageChat.closeList();
 			pageHome.closeList();
 			ui.navigation.hidePopup();
@@ -545,14 +548,8 @@ class ui {
 			});
 			return 'query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactVisit.contactId=contact.id and contactVisit.contactId2=' + user.contact.id);
 		},
-		eventAll() {
-			return 'query=location_listEventCurrent&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon;
-		},
 		eventMy() {
 			return 'query=location_listEvent&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('event.contactId=' + user.contact.id);
-		},
-		locationAll() {
-			return (user.contact ? 'query=location_list' : 'query=location_anonymousList') + '&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon;
 		},
 		locationFavorites() {
 			return 'query=location_list&distance=100000&limit=0&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('locationFavorite.favorite=true');

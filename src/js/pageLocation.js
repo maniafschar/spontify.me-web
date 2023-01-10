@@ -88,18 +88,14 @@ ${v.parking}
 <img class="map"
 	onclick="ui.navigation.openHTML(&quot;https://maps.google.com/maps/dir/${geoData.latlon.lat},${geoData.latlon.lon}/${v.latitude},${v.longitude}&quot;)" />
 <detailButtons>
-	<buttontext class="bgColor"
+	<buttontext class="bgColor${v.hideMeEvents}"
 		onclick="pageChat.open(${v.chatId},${v.chatLocation})">${ui.l('chat.title')}</buttontext>
 	<buttontext class="bgColor${v.pressedCopyButton}" name="buttonCopy"
 		onclick="pageChat.doCopyLink(event,&quot;${v.event.id ? 'e' : 'l'}=${v.id}&quot;)">${ui.l('share')}</buttontext>
 	<buttontext class="bgColor${v.hideMeEvents}" name="buttonEvents"
 		onclick="pageEvent.toggle(${v.locID})">${ui.l('events.title')}</buttontext>
-	<buttontext class="bgColor${v.hideMeEvents}" name="buttonWhatToDo"
-		onclick="pageLocation.toggleWhatToDo()">${ui.l('wtd.location')}</buttontext>
 	<buttontext class="bgColor${v.hideMePotentialParticipants}" name="buttonPotentialParticipants"
 		onclick="pageEvent.loadPotentialParticipants(${v.category},${v.event.visibility})">${ui.l('events.potentialParticipants')}</buttontext>
-	<buttontext class="bgColor${v.hideMeMarketing}" name="buttonMarketing"
-		onclick="ui.navigation.openHTML(&quot;${global.server}locOwner?id=${v.id}&quot;,&quot;locOwn&quot;)">${ui.l('locations.marketing')}</buttontext>
 	<buttontext class="bgColor${v.hideMeEdit}" name="buttonEdit"
 		onclick="${v.editAction}">${ui.l('edit')}</buttontext>
 	<buttontext class="bgColor" name="buttonGoogle"
@@ -130,29 +126,6 @@ ${v.parking}
 		<buttontext onclick="pageLocation.block()" style="margin-top:0.5em;"
 			class="bgColor">${ui.l('save')}</buttontext>
 	</div>
-</text>
-<text name="whatToDo" class="collapsed">
-	<detailTogglePanel>
-		<form name="editElement" onsubmit="return false">
-			<input type="hidden" name="type" value="o" />
-			<input type="hidden" name="visibility" value="2" />
-			<field>
-				<label>${ui.l('wtd.time')}</label>
-				<value>
-					<input type="time" name="startDate" placeholder="HH:MM" step="900" value="${v.wtdTime}" />
-				</value>
-			</field>
-			<field>
-				<label>${ui.l('description')}</label>
-				<value>
-					<textarea name="text" maxlength="1000"></textarea>
-				</value>
-			</field>
-		</form>
-		<buttontext class="bgColor" onclick="pageLocation.saveEvent(${v.locID})" style="margin-top:2em;">
-			${ui.l('save')}
-		</buttontext>
-	</detailTogglePanel>
 </text>
 <text name="copy" class="collapsed">
 	<detailTogglePanel>
@@ -497,7 +470,7 @@ ${v.hint}
 			v.telOpenTag = '<a href="tel:' + v.tel.replace(/[^+\d]*/g, '') + '" style="color:black;">';
 			v.telCloseTag = '</a>';
 		}
-		var eventWithLocation = v.address;
+		var eventWithLocation = v.address ? true : false;
 		v.attr = ui.getAttributes(eventWithLocation ? v : v.contact, 'detail');
 		if (v.attr.totalMatch) {
 			v.matchIndicator = v.attr.totalMatch + '/' + v.attr.total;
