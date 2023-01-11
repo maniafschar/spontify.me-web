@@ -13,7 +13,7 @@ import { pageSettings } from './pageSettings';
 import { user } from './user';
 import { pageHome } from './pageHome';
 import { lists } from './lists';
-import { pageTicket } from './pageTicket';
+import { pageEvent } from './pageEvent';
 
 export { ui, formFunc };
 
@@ -38,6 +38,8 @@ class ui {
 		global.template`<container>
 	<a style="display:none;">
 		${ui.l('search.title')}
+	</a><a onclick="communication.loadList(ui.query.eventTickets(),pageEvent.listTickets,&quot;events&quot;,&quot;eventsTicket&quot;)">
+		${ui.l('events.myTickets')}
 	</a><a onclick="communication.loadList(ui.query.eventMy(),pageEvent.listEventsMy,&quot;events&quot;,&quot;eventsMy&quot;)">
 		${ui.l('events.myEvents')}
 	</a><a onclick="pageEvent.edit()">
@@ -307,14 +309,14 @@ class ui {
 				pageLogin.init();
 			else if (id == 'contacts')
 				pageContact.init();
-			else if (id == 'locations' || id == 'events')
+			else if (id == 'locations')
 				pageLocation.init(id);
+			else if (id == 'events')
+				pageEvent.init();
 			else if (id == 'settings2')
 				pageSettings.init2();
 			else if (id == 'chat')
 				pageChat.init();
-			else if (id == 'tickets')
-				pageTicket.init();
 			pageChat.closeList();
 			pageHome.closeList();
 			ui.navigation.hidePopup();
@@ -550,6 +552,9 @@ class ui {
 		},
 		eventMy() {
 			return 'query=location_listEvent&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('event.contactId=' + user.contact.id);
+		},
+		eventTickets() {
+			return 'query=location_listEvent&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('eventParticipate.id is not null');
 		},
 		locationFavorites() {
 			return 'query=location_list&distance=100000&limit=0&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('locationFavorite.favorite=true');

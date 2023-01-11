@@ -274,7 +274,7 @@ class communication {
 						communication.ping();
 						setTimeout(communication.notification.register, 100);
 						pageChat.initActiveChats();
-						pageEvent.init();
+						pageEvent.initParticipation();
 						geoData.init();
 						if (!global.isBrowser()) {
 							bluetooth.stop();

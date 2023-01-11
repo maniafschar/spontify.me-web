@@ -104,7 +104,7 @@ navigation {
 }
 
 navigation>item {
-	width: 20%;
+	width: 25%;
 	position: relative;
 	height: 100%;
 	float: left;
@@ -400,10 +400,6 @@ content {
 	bottom: 0;
 	text-align: center;
 	display: block;
-}
-
-tickets {
-	overflow-y: auto;
 }
 
 groups {
@@ -2237,20 +2233,6 @@ openTimesEdit>div {
 
 openTimesEdit>div span {
 	margin: 0 1em;
-}
-
-marketing {
-	background: rgba(255, 255, 255, 0.9);
-	padding: 1em;
-	border-radius: 0.25em;
-	display: block;
-	position: relative;
-}
-
-marketing span {
-	font-style: italic;
-	margin-top: 1.5em;
-	display: block;
 }
 
 tabHeader {

@@ -56,18 +56,10 @@ ${ui.l('home.DescLink')}
 </div>
 <div id="infoVersion" onclick="pageInfo.openMap()" style="padding-top:1em;cursor:pointer;"></div>
 </infoblock>`;
-	static marketingTitle = '';
-
 	static init() {
 		var e = ui.q('info');
 		if (!e.innerHTML) {
 			var v = {};
-			if (user.contact)
-				v.marketingTitle = pageInfo.marketingTitle;
-			else
-				v.feedback = ' noDisp';
-			if (!v.marketingTitle)
-				v.marketingDisplay = ' style="display:none;"';
 			v.displayBlogButton = '';
 			e.innerHTML = pageInfo.templateDesc(v) + pageInfo.template(v);
 			formFunc.initFields('info');
@@ -86,15 +78,6 @@ ${ui.l('home.DescLink')}
 		}
 		ui.html('#infoVersion', ui.l('info.infoOther').replace('{0}', '<span id="infoLocalized"></span>'));
 		pageInfo.updateLocalisation();
-	}
-	static initMarketing(d) {
-		pageInfo.marketingTitle = d.title;
-		var e = ui.q('#info5');
-		if (e && d.title && user.contact) {
-			e = e.previousElementSibling;
-			e.innerText = d.title;
-			ui.css(e, 'display', '');
-		}
 	}
 	static openMap() {
 		if (geoData.localized)

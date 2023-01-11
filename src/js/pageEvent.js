@@ -1,3 +1,4 @@
+import QRCodeStyling from "qr-code-styling";
 import { communication } from "./communication";
 import { details } from "./details";
 import { geoData } from "./geoData";
@@ -130,15 +131,6 @@ ${v.eventParticipationButtons}
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
 <errorHint></errorHint>
 <buttontext class="bgColor defaultButton" onclick="pageEvent.search()">${ui.l('search.action')}</buttontext></form>`;
-	static confirmMarketing(event) {
-		communication.ajax({
-			url: global.server + 'action/requestMarketing?id=' + ui.q('detail card:last-child').getAttribute('i'),
-			method: 'POST',
-			success(r) {
-				event.target.outerHTML = ui.l('locations.marketing2');
-			}
-		});
-	}
 	static detail(v) {
 		v.copyLinkHint = ui.l('copyLinkHint.event');
 		if (v.event.contactId != user.contact.id)
@@ -194,8 +186,7 @@ ${v.eventParticipationButtons}
 			v.eventLinkClose = '</a>';
 			v.eventMore = ' ' + ui.l('locations.clickForMoreDetails');
 		}
-		if (v.event.price > 0)
-			v.eventPrice = '<div>' + ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2)) + '</div>';
+		v.eventPrice = '<div>' + (v.event.price > 0 ? ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2)) : ui.l('events.priceDisp0')) + '</div>';
 		if (v.event.maxParticipants)
 			v.maxParticipants = ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
 		if (v.event.confirm == 1)
@@ -359,8 +350,6 @@ ${v.eventParticipationButtons}
 		}
 		if (pageEvent.filter.filterKeywords)
 			v.valueKeywords = ' value="' + pageEvent.filter.filterKeywords + '"';
-		else if (geoData.currentTown)
-			v.valueKeywords = ' value="' + geoData.currentTown + '"';
 		if (pageEvent.filter.filterMatchesOnly == 'on')
 			v.valueMatchesOnly = ' checked="true"';
 		return pageEvent.templateSearch(v);
@@ -398,6 +387,8 @@ ${v.eventParticipationButtons}
 		var text = '<div style="margin:1em 0;">';
 		text += '<buttontext pID="' + (participation.id ? participation.id : '') + '" s="' + (participation.id ? participation.state : '') + '" confirm="' + v.event.confirm + '" class="bgColor" onclick="pageEvent.participate(event,' + JSON.stringify(p).replace(/"/g, '&quot;') + ')" max="' + (v.maxParticipants ? v.maxParticipants : 0) + '" style="display:none;">' + ui.l('events.participante' + (participation.state == 1 ? 'Stop' : '')) + '</buttontext>';
 		text += '<buttontext class="bgColor" onclick="pageEvent.toggleParticipants(event,' + JSON.stringify(p).replace(/"/g, '&quot;') + ',' + v.event.confirm + ')"><participantCount></participantCount>' + ui.l('events.participants') + '</buttontext>';
+		if (v.event.contactId == user.contact.id)
+			text += '<buttontext class="bgColor" onclick="pageEvent.qrcode()">' + ui.l('events.qrcodeButton') + '</buttontext>';
 		text += '</div><text name="participants" style="margin:0 -1em;"></text>';
 		return text;
 	}
@@ -468,6 +459,9 @@ ${v.eventParticipationButtons}
 		return s;
 	}
 	static init() {
+		pageLocation.init('events');
+	}
+	static initParticipation() {
 		if (!pageEvent.filter)
 			pageEvent.filter = formFunc.getDraft('searchEvents') || {};
 		communication.ajax({
@@ -597,6 +591,15 @@ ${v.eventParticipationButtons}
 		lists.data[ui.navigation.getActiveID()] = as;
 		return pageEvent.listEventsInternal(as);
 	}
+	static listTickets(r) {
+		var s = pageEvent.listEvents(r);
+		if (s)
+			ui.q('events listResults').innerHTML = '<listSeparator class="highlightColor strong">Aktuelle Tickets</listSeparator>' +
+				s + '<listSeparator class="highlightColor strong">Für Dich interessante Tickets</listSeparator>' +
+				'<listSeparator class="highlightColor strong">Vergangene Tickets</listSeparator>';
+		else if (!ui.q('events listResults row'))
+			setTimeout(lists.openFilter, 500);
+	}
 	static loadPotentialParticipants(category, visibility) {
 		var i = ui.q('detail card:last-child').getAttribute('i');
 		if (ui.q('detail card[i="' + i + '"] [name="potentialParticipants"] detailTogglePanel').innerText) {
@@ -719,8 +722,24 @@ ${v.eventParticipationButtons}
 				e.removeAttribute('h');
 				e.style.display = 'none';
 				ui.navigation.hidePopup();
-				pageEvent.init();
+				pageEvent.initParticipation();
 			}
+		});
+	}
+	static qrcode() {
+		new QRCodeStyling({
+			width: 400,
+			height: 400,
+			data: global.server.substring(0, global.server.lastIndexOf('/', global.server.length - 2)) + '?' + global.encParam('q=' + user.contact.id),
+			dotsOptions: {
+				color: 'rgb(252, 251, 104)',
+				type: 'square'
+			},
+			backgroundOptions: {
+				color: 'transparent',
+			}
+		}).getRawData('png').then(function (qr) {
+			console.log(qr);
 		});
 	}
 	static refreshToggle() {
@@ -732,21 +751,6 @@ ${v.eventParticipationButtons}
 				pageEvent.toggle(id);
 			});
 		}
-	}
-	static requestOwnerShip() {
-		var ownerId = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).ownerId;
-		if (ownerId == user.contact.id) {
-			var id = ui.q('detail card:last-child').getAttribute('i');
-			communication.ajax({
-				url: global.server + 'action/marketing?id=' + id,
-				success(r) {
-					ui.navigation.openHTML(r, 'marketing' + id);
-				}
-			});
-		} else if (ownerId)
-			ui.navigation.openPopup(ui.l('locations.marketing'), ui.l('locations.marketingOccupied'));
-		else
-			ui.navigation.openPopup(ui.l('locations.marketing'), '<marketing>' + ui.l('locations.marketing1') + '<br/><br/><buttontext class="bgColor" onclick="pageEvent.confirmMarketing(event)">' + ui.l('locations.marketingConfirm') + '</buttontext></marketing>');
 	}
 	static reset() {
 		pageEvent.participations = null;
@@ -794,6 +798,7 @@ ${v.eventParticipationButtons}
 				}
 			}
 		}
+		var v = formFunc.getForm('popup form');
 		if (v.values.visibility == 2 && (!user.contact.attr || !user.contact.attrInterest))
 			formFunc.setError(ui.q('popup input[name="visibility"]'), 'events.errorVisibility');
 		if (ui.q('popup errorHint'))
@@ -801,7 +806,6 @@ ${v.eventParticipationButtons}
 		if (ui.q('popup [name="type"]').checked)
 			end.value = start.value.substring(0, start.value.lastIndexOf('T'));
 		ui.q('popup [name="confirm"]').value = ui.q('popup [name="eventconfirm"]:checked') ? 1 : 0;
-		var v = formFunc.getForm('popup form');
 		v.classname = 'Event';
 		if (id)
 			v.id = id;
@@ -888,8 +892,7 @@ ${v.eventParticipationButtons}
 		if (!e)
 			return;
 		var bg = ui.classContains('detail card:last-child[i="' + id + '"] [name="buttonEvents"]', 'bgBonus') ? 'bgBonus' : 'bgColor';
-		var a = pageEvent.getCalendarList(r), newButton = field == 'contact' ? '' : '<br/><br/><buttontext onclick="pageEvent.edit(' + id + ')" class="' + bg + '">' + ui.l('events.new') + '</buttontext>' +
-			'<buttontext class="bgColor" name="buttonMarketing" onclick="pageEvent.requestOwnerShip()">' + ui.l('locations.marketing') + '</buttontext>';
+		var a = pageEvent.getCalendarList(r), newButton = field == 'contact' ? '' : '<br/><br/><buttontext onclick="pageEvent.edit(' + id + ')" class="' + bg + '">' + ui.l('events.new') + '</buttontext>';
 		var s = '', v, text;
 		var b = user.contact.id == id;
 		if (b && e.getAttribute('active'))

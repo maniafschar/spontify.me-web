@@ -138,9 +138,6 @@ ${v.parking}
 </text>
 <text name="potentialParticipants" class="collapsed" style="margin:0 -1.5em;">
 	<detailTogglePanel></detailTogglePanel>
-</text>
-<text name="marketing" class="collapsed">
-	<detailTogglePanel></detailTogglePanel>
 </text>`;
 	static templateEdit = v =>
 		global.template`<form name="editElement" onsubmit="return false">
@@ -249,48 +246,6 @@ ${v.hint}
 	<popupHint></popupHint>
 </dialogButtons>
 </form>`;
-	static templateEditMarketing = v =>
-		global.template`${ui.l('locations.marketing1')}
-				<br />
-<buttontext onclick="this.style.display=&quot;none&quot;;this.nextSibling.style.display=&quot;&quot;"
-	class="bgColor" style="margin: 1em;">
-	${ui.l('locations.marketingMore1')}
-</buttontext>
-<div style="display:none;margin-top:1em;">
-	<span onclick="openHTML(&quot;${global.server}agbB2B&quot;)">${ui.l('locations.marketing2')}
-		<br /><br /></span>
-	<field>
-		<label>
-			${ui.l('locations.marketingTaxNo')}
-		</label>
-		<value>
-			<input type="text" id="taxNo" maxlength="20" />
-		</value>
-	</field>
-	<field>
-		<label>
-			${ui.l('info.legalTitle')}
-		</label>
-		<value>
-			<input id="agb" type="checkbox" label="${ui.l('login.legal')}" style="width:100%;margin-bottom:0;" />
-		</value>
-	</field>
-	<field>
-		<label>Dauer</label>
-		<value>
-			<input type="radio" value="30 Tage" label="30 Tage:&nbsp;40,00€" name="os0" checked="checked" />
-			<input type="radio" value="60 Tage" label="60 Tage:&nbsp;65,00€" name="os0" />
-			<input type="radio" value="90 Tage" label="90 Tage:&nbsp;90,00€" name="os0" />
-		</value>
-	</field>
-	<buttontext class="bgColor" onclick="pageLocation.setOwner(${v.id})">
-	${ui.l('locations.marketingConfirmTest')}
-	</buttontext>
-	<buttontext class="bgColor" style="margin-top:1em;"
-					onclick="ui.navigation.openHTML(&quot;${global.server}agbB2B?scale=${v.scale}&quot;)">
-	${ui.l('info.legalTitle')}
-	</buttontext>
-</div>`;
 	static templateEditOpenTimes = v =>
 		global.template`<select name="openTimes.day${v.i}">
 	<option value="1"${v.wd1}>${ui.l('weekday1')}</option>
@@ -399,7 +354,7 @@ ${v.hint}
 					ui.navigation.hidePopup();
 					ui.navigation.goTo('home');
 					if (classname == 'Event')
-						pageEvent.init();
+						pageEvent.initParticipation();
 					setTimeout(function () {
 						if (classname == 'Location')
 							lists.removeListEntry(id, 'locations');
@@ -669,8 +624,6 @@ ${v.hint}
 		v['valueCompass' + pageLocation.filter.filterCompass] = ' checked="true"';
 		if (pageLocation.filter.filterKeywords)
 			v.valueKeywords = ' value="' + pageLocation.filter.filterKeywords + '"';
-		else if (geoData.currentTown)
-			v.valueKeywords = ' value="' + geoData.currentTown + '"';
 		if (pageLocation.filter.filterMatchesOnly == 'on')
 			v.valueMatchesOnly = ' checked="true"';
 		return pageLocation.templateSearch(v);
@@ -1085,7 +1038,7 @@ ${v.hint}
 			body: v,
 			success(r) {
 				ui.navigation.autoOpen(global.encParam('e=' + r));
-				pageEvent.init();
+				pageEvent.initParticipation();
 			}
 		});
 	}
@@ -1197,17 +1150,6 @@ ${v.hint}
 			ui.q('form textarea[name="address"]').value = s2.trim();
 		}
 		pageLocation.closeLocationInputHelper();
-	}
-	static setOwner(id) {
-		formFunc.resetError(ui.q('#taxNo'));
-		formFunc.resetError(ui.q('#agb'));
-		var b = -1;
-		if (!ui.val('#taxNo'))
-			b = formFunc.setError(ui.q('#taxNo'), 'locations.marketingNoTaxNo');
-		if (!ui.q('#agb').checked)
-			b = formFunc.setError(ui.q('#agb'), 'settings.noAGB');
-		if (b == -1)
-			ui.navigation.openHTML(global.server + 'qq?i=' + id + '&t=' + encodeURIComponent(ui.q('#taxNo').value) + '&v=' + encodeURIComponent(ui.q('[name="os0"]:checked').value));
 	}
 	static showBlockText() {
 		var s = ui.q('detail card:last-child [name="block"] [name="type"]:checked').value == 2 ? 'block' : 'none';
