@@ -106,10 +106,10 @@ ${v.hint}
 		global.template`<text class="description${v.classParticipate}" ${v.oc}>
 <div>${ui.l('events.createdBy')}<br/><a class="chatLinks" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;),event)"><img src="${v.imageEventOwner}"><br>${v.contact.pseudonym}</a></div>
 ${v.eventLinkOpen}
-<div>${v.date}${v.endDate}</div>
+<div class="date">${v.date}${v.endDate}</div>
 <div>${v.event.text}${v.eventMore}</div>
 <div>${v.eventMustBeConfirmed}</div>
-<div>${v.eventPrice}</div>
+<div class="price">${v.eventPrice}</div>
 <div>${v.maxParticipants}</div>
 <div>${v.reason}</div>
 <span id="eventParticipants"></span>
@@ -186,7 +186,7 @@ ${v.eventParticipationButtons}
 			v.eventLinkClose = '</a>';
 			v.eventMore = ' ' + ui.l('locations.clickForMoreDetails');
 		}
-		v.eventPrice = '<div>' + (v.event.price > 0 ? ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2)) : ui.l('events.priceDisp0')) + '</div>';
+		v.eventPrice = (v.event.price > 0 ? ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2)) : ui.l('events.priceDisp0'));
 		if (v.event.maxParticipants)
 			v.maxParticipants = ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
 		if (v.event.confirm == 1)
@@ -387,8 +387,8 @@ ${v.eventParticipationButtons}
 		var text = '<div style="margin:1em 0;">';
 		text += '<buttontext pID="' + (participation.id ? participation.id : '') + '" s="' + (participation.id ? participation.state : '') + '" confirm="' + v.event.confirm + '" class="bgColor" onclick="pageEvent.participate(event,' + JSON.stringify(p).replace(/"/g, '&quot;') + ')" max="' + (v.maxParticipants ? v.maxParticipants : 0) + '" style="display:none;">' + ui.l('events.participante' + (participation.state == 1 ? 'Stop' : '')) + '</buttontext>';
 		text += '<buttontext class="bgColor" onclick="pageEvent.toggleParticipants(event,' + JSON.stringify(p).replace(/"/g, '&quot;') + ',' + v.event.confirm + ')"><participantCount></participantCount>' + ui.l('events.participants') + '</buttontext>';
-		if (v.event.contactId == user.contact.id)
-			text += '<buttontext class="bgColor" onclick="pageEvent.qrcode()">' + ui.l('events.qrcodeButton') + '</buttontext>';
+		if (v.event.contactId == user.contact.id && v.event.locationId || participation.state == 1)
+			text += '<buttontext class="bgColor" onclick="pageEvent.qrcode(' + (v.event.contactId == user.contact.id) + ')">' + ui.l('events.qrcodeButton') + '</buttontext>';
 		text += '</div><text name="participants" style="margin:0 -1em;"></text>';
 		return text;
 	}
@@ -726,11 +726,12 @@ ${v.eventParticipationButtons}
 			}
 		});
 	}
-	static qrcode() {
+	static qrcode(location) {
+		var id = ui.q('detail card:last-child').getAttribute('i');
 		new QRCodeStyling({
-			width: 400,
-			height: 400,
-			data: global.server.substring(0, global.server.lastIndexOf('/', global.server.length - 2)) + '?' + global.encParam('q=' + user.contact.id),
+			width: 600,
+			height: 600,
+			data: global.server.substring(0, global.server.lastIndexOf('/', global.server.length - 2)) + '?' + global.encParam(location ? 'q=' + id : 'p=' + id + '|' + user.contact.id),
 			dotsOptions: {
 				color: 'rgb(252, 251, 104)',
 				type: 'square'
@@ -739,8 +740,77 @@ ${v.eventParticipationButtons}
 				color: 'transparent',
 			}
 		}).getRawData('png').then(function (qr) {
-			console.log(qr);
+			var canvas = document.createElement('canvas');
+			canvas.height = 1332;
+			canvas.width = 888;
+			var context = canvas.getContext('2d');
+			var grd = context.createLinearGradient(0, 0, canvas.width, canvas.height);
+			grd.addColorStop(0, 'rgb(111, 174, 212)');
+			grd.addColorStop(1, 'rgb(0, 100, 140)');
+			context.fillStyle = grd;
+			context.fillRect(0, 0, canvas.width, canvas.height);
+			context.fillStyle = 'white';
+			var image = new Image();
+			image.src = URL.createObjectURL(qr);
+			image.onload = function () {
+				context.drawImage(image, 144, 650);
+				var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
+				context.font = '60px Comfortaa';
+				context.textAlign = 'center';
+				context.textBaseline = 'top';
+				var h = 80;
+				context.fillText(e.name, canvas.width / 2, h);
+				context.font = '30px Comfortaa';
+				var a = e.address.split('\n');
+				h += 40;
+				for (var i = 0; i < a.length; i++) {
+					h += 40;
+					context.fillText(a[i], canvas.width / 2, h);
+				}
+				h += 60;
+				a = ui.q('detail card:last-child text.description .date').innerHTML;
+				if (a.indexOf(' (') > -1)
+					a = a.substring(0, a.indexOf(' ('));
+				context.fillText(ui.l('events.qrcodeDate').replace('{0}', a), canvas.width / 2, h);
+				h += 60;
+				if (location) {
+					a = ui.q('detail card:last-child text.description .price').innerHTML;
+					context.fillText(a, canvas.width / 2, h);
+					var a = e.event.text.split('\n');
+					h += 20;
+					for (var i = 0; i < a.length; i++) {
+						h += 40;
+						context.fillText(a[i], canvas.width / 2, h);
+					}
+				} else
+					context.fillText(ui.l('events.qrcodeConfirmation').replace('{0}', user.contact.pseudonym), canvas.width / 2, h);
+				image = new Image();
+				image.src = 'data:image/svg+xml;utf8,' + ui.q('home homeHeader svg').outerHTML;
+				image.onload = function () {
+					context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight, 680, 25, 200, image.naturalHeight / image.naturalWidth * 200);
+					if (location)
+						pageEvent.qrcodeExport(canvas);
+					else {
+						image = new Image();
+						image.src = user.contact.image ? 'https://new.spontify.me/med/' + user.contact.image : 'images/contact.svg';
+						image.crossOrigin = 'anonymous';
+						image.onload = function () {
+							context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight, 344, 420, 200, image.naturalHeight / image.naturalWidth * 200);
+							pageEvent.qrcodeExport(canvas);
+						};
+					}
+				};
+			};
 		});
+	}
+	static qrcodeExport(canvas) {
+		canvas.toBlob(blob => {
+			var data = window.URL.createObjectURL(blob);
+			var link = document.createElement('a');
+			link.href = data;
+			link.download = 'qr' + ui.q('detail card:last-child').getAttribute('i') + '.jpg';
+			link.click();
+		}, 'image/jpeg');
 	}
 	static refreshToggle() {
 		var e = ui.q('detail card:last-child [name="events"]');
