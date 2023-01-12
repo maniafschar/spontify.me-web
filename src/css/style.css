@@ -712,6 +712,24 @@ settings qrcode {
 	margin-bottom: 2em;
 }
 
+img.qrVerification {
+	width: 20em;
+	border-radius: 1em;
+}
+
+qrCheck {
+	position: absolute;
+	font-size: 10em;
+	bottom: 1.2em;
+	left: 50%;
+	margin-left: 0.6em;
+	color: green;
+}
+
+qrCheck.negative {
+	color: red;
+}
+
 .borderBottom {
 	border-bottom: solid 1px rgba(200, 200, 200, 0.4);
 }

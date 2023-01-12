@@ -3,6 +3,7 @@ import { communication } from "./communication";
 import { details } from "./details";
 import { geoData } from "./geoData";
 import { global } from "./global";
+import { intro } from "./intro";
 import { lists } from "./lists";
 import { Contact, Location, model } from "./model";
 import { pageContact } from "./pageContact";
@@ -731,7 +732,7 @@ ${v.eventParticipationButtons}
 		new QRCodeStyling({
 			width: 600,
 			height: 600,
-			data: global.server.substring(0, global.server.lastIndexOf('/', global.server.length - 2)) + '?' + global.encParam(location ? 'q=' + id : 'p=' + id + '|' + user.contact.id),
+			data: global.server.substring(0, global.server.lastIndexOf('/', global.server.length - 2)) + '?' + global.encParam('q=' + id + (location ? '' : '|' + user.contact.id)),
 			dotsOptions: {
 				color: 'rgb(252, 251, 104)',
 				type: 'square'
@@ -792,10 +793,14 @@ ${v.eventParticipationButtons}
 						pageEvent.qrcodeExport(canvas);
 					else {
 						image = new Image();
-						image.src = user.contact.image ? 'https://new.spontify.me/med/' + user.contact.image : 'images/contact.svg';
+						image.src = user.contact.image ? global.serverImg + user.contact.image : 'images/contact.svg';
 						image.crossOrigin = 'anonymous';
 						image.onload = function () {
-							context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight, 344, 420, 200, image.naturalHeight / image.naturalWidth * 200);
+							var r = 100;
+							h = 520;
+							context.arc(canvas.width / 2, h, r, 0, 2 * Math.PI, true);
+							context.clip();
+							context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight, canvas.width / 2 - r, h - r, r * 2, image.naturalHeight / image.naturalWidth * r * 2);
 							pageEvent.qrcodeExport(canvas);
 						};
 					}
@@ -1017,5 +1022,29 @@ ${v.eventParticipationButtons}
 				});
 			}
 		}
+	}
+	static verifyParticipation(id) {
+		var u = user.contact.id;
+		id = id.split('_');
+		if (id[1].indexOf('|') > -1) {
+			u = id[1].split('\|');
+			id[1] = u[0];
+			u = u[1];
+		}
+		communication.ajax({
+			url: global.server + 'db/list?query=contact_listEventParticipate&search=' + encodeURIComponent('eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\' and eventParticipate.contactId=' + u),
+			responseType: 'json',
+			success(r) {
+				if (r.length > 1) {
+					var location = model.convert(new Location(), r, 1);
+					var date = location.eventParticipate.eventDate + location.event.startDate.substring(location.event.startDate.indexOf('T'));
+					if (location.eventParticipate.state == 1)
+						intro.openHint({ desc: '<title>' + location.name + '</title><br/>' + location.address.replace(/\n/g, '<br/>') + '<br/><br/>' + ui.l('events.qrcodeDate').replace('{0}', global.date.formatDate(date)) + '<br/>' + location.contact.pseudonym + '<br/><br/><qrCheck>&check;</qrCheck><img src="' + global.serverImg + location.contact.image + '" class="qrVerification"/>', pos: '5%,1em', size: '90%,auto' });
+					else
+						intro.openHint({ desc: '<title>' + location.name + '</title><br/>' + location.address.replace(/\n/g, '<br/>') + '<br/><br/>' + ui.l('events.qrcodeDate').replace('{0}', global.date.formatDate(date)) + '<br/>' + location.contact.pseudonym + '<br/><emphasis>' + ui.l('events.qrcodeCanceled').replace('{0}', global.date.formatDate(location.eventParticipate.modifiedAt)) + '</emphasis><qrCheck class="negative">&cross;</qrCheck><br/><br/><img src="' + global.serverImg + location.contact.image + '" class="qrVerification"/>', pos: '5%,1em', size: '90%,auto' });
+				} else
+					intro.openHint({ desc: '<title>' + ui.l('events.qrcodeButton') + '</title><br/>' + ui.l('events.qrcodeError'), pos: '5%,1em', size: '90%,auto' });
+			}
+		});
 	}
 }
