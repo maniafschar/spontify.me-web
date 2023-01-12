@@ -104,7 +104,7 @@ navigation {
 }
 
 navigation>item {
-	width: 20%;
+	width: 25%;
 	position: relative;
 	height: 100%;
 	float: left;
@@ -306,7 +306,7 @@ homeHeader {
 	margin-top: 6vh;
 }
 
-homeHeader svg {
+homeHeader>svg {
 	height: 15vh;
 	width: auto;
 	margin-top: 2.5vh;
@@ -319,8 +319,8 @@ homeHeader img {
 	box-shadow: 0 0 1em rgba(0, 0, 0, 0.6);
 }
 
-homeHeader.logoSmall svg {
-	height: 7vh;
+homeHeader.logoSmall>svg {
+	height: 9vh;
 	position: absolute;
 	right: 0;
 	top: -4.6vh;
@@ -335,14 +335,14 @@ homeBody {
 	margin-top: -3vh;
 }
 
-home buttonIcon {
+home item buttonIcon {
 	padding: 0;
 	position: relative;
 	padding-bottom: 0.5em;
 	box-shadow: 0 0 1em rgba(0, 0, 0, 0.4);
 }
 
-home buttonIcon svg {
+home item buttonIcon svg {
 	width: 5em;
 	height: 5em;
 	margin-top: -4em;
@@ -712,12 +712,29 @@ settings qrcode {
 	margin-bottom: 2em;
 }
 
+img.qrVerification {
+	width: 20em;
+	border-radius: 1em;
+}
+
+qrCheck {
+	position: absolute;
+	font-size: 10em;
+	bottom: 1.2em;
+	left: 50%;
+	margin-left: 0.6em;
+	color: green;
+}
+
+qrCheck.negative {
+	color: red;
+}
+
 .borderBottom {
 	border-bottom: solid 1px rgba(200, 200, 200, 0.4);
 }
 
-#blocked,
-#marketing {
+#blocked {
 	width: 100%;
 	margin-left: 0;
 }
@@ -1192,7 +1209,7 @@ popupContent> :not(detail) ratingSelection {
 	display: block;
 }
 
-eventListTitle {
+listSeparator {
 	position: relative;
 	width: 100%;
 	text-align: center;
@@ -1201,6 +1218,10 @@ eventListTitle {
 	height: 3em;
 	line-height: 4em;
 	display: block;
+}
+
+listSeparator.strong {
+	font-weight: bold;
 }
 
 locationNameInputHelper,
@@ -1671,8 +1692,12 @@ buttonIcon.language {
 	right: 0;
 	box-shadow: none;
 	font-size: 1.4em;
-	padding: 1em 1em 2em 2em;
+	padding: 0.5em;
 	position: absolute;
+}
+
+buttonIcon.language span {
+	padding: 0.5em;
 }
 
 buttonIcon.jpg {
@@ -2226,12 +2251,6 @@ openTimesEdit>div {
 
 openTimesEdit>div span {
 	margin: 0 1em;
-}
-
-marketing span {
-	font-style: italic;
-	margin-top: 1.5em;
-	display: block;
 }
 
 tabHeader {

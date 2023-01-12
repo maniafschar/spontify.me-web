@@ -13,6 +13,7 @@ import { pageSettings } from './pageSettings';
 import { user } from './user';
 import { pageHome } from './pageHome';
 import { lists } from './lists';
+import { pageEvent } from './pageEvent';
 
 export { ui, formFunc };
 
@@ -35,8 +36,10 @@ class ui {
 </container>`;
 	static templateMenuEvents = () =>
 		global.template`<container>
-	<a onclick="communication.loadList(ui.query.eventAll(),pageEvent.listEvents,&quot;events&quot;,&quot;events&quot;)">
-		${ui.l('all')}
+	<a style="display:none;">
+		${ui.l('search.title')}
+	</a><a onclick="communication.loadList(ui.query.eventTickets(),pageEvent.listTickets,&quot;events&quot;,&quot;eventsTicket&quot;)">
+		${ui.l('events.myTickets')}
 	</a><a onclick="communication.loadList(ui.query.eventMy(),pageEvent.listEventsMy,&quot;events&quot;,&quot;eventsMy&quot;)">
 		${ui.l('events.myEvents')}
 	</a><a onclick="pageEvent.edit()">
@@ -193,7 +196,7 @@ class ui {
 				event.stopPropagation();
 			var f = function () {
 				if (ui.q('#preloader'))
-					setTimeout(f, 500);
+					setTimeout(f, 100);
 				else {
 					if (id.indexOf('https://') == 0) {
 						ui.navigation.openHTML(id);
@@ -224,6 +227,8 @@ class ui {
 						details.open(idIntern.substring(2), 'location_listEvent&search=' + encodeURIComponent('event.id=' + idIntern.substring(2)), pageLocation.detailLocationEvent);
 					else if (idIntern.indexOf('f=') == 0)
 						pageContact.sendRequestForFriendship(idIntern.substring(2));
+					else if (idIntern.indexOf('q=') == 0)
+						pageEvent.verifyParticipation(idIntern.substring(2));
 					else if (idIntern.indexOf('=') == 1)
 						details.open(idIntern.substring(2), 'contact_list&search=' + encodeURIComponent('contact.id=' + idIntern.substring(2)), pageContact.detail);
 				}
@@ -306,8 +311,10 @@ class ui {
 				pageLogin.init();
 			else if (id == 'contacts')
 				pageContact.init();
-			else if (id == 'locations' || id == 'events')
+			else if (id == 'locations')
 				pageLocation.init(id);
+			else if (id == 'events')
+				pageEvent.init();
 			else if (id == 'settings2')
 				pageSettings.init2();
 			else if (id == 'chat')
@@ -545,14 +552,11 @@ class ui {
 			});
 			return 'query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactVisit.contactId=contact.id and contactVisit.contactId2=' + user.contact.id);
 		},
-		eventAll() {
-			return 'query=location_listEventCurrent&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon;
-		},
 		eventMy() {
 			return 'query=location_listEvent&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('event.contactId=' + user.contact.id);
 		},
-		locationAll() {
-			return (user.contact ? 'query=location_list' : 'query=location_anonymousList') + '&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon;
+		eventTickets() {
+			return 'query=location_listEvent&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('eventParticipate.id is not null');
 		},
 		locationFavorites() {
 			return 'query=location_list&distance=100000&limit=0&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('locationFavorite.favorite=true');

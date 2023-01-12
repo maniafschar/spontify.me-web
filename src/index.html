@@ -13,7 +13,7 @@
 	<meta name="keywords"
 		content="spontaneous, contact, bluetooth, social community, locations, events, chat, meet, organize events, party, dinner, guide" />
 	<meta http-equiv="Content-Security-Policy"
-		content="default-src * gap://ready file: https:; child-src * gap://ready file: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https:; script-src * 'unsafe-inline' 'unsafe-eval' file: https:" />
+		content="default-src * gap://ready file: https:; child-src * gap://ready file: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' blob: data: https:; font-src 'self' data: https:; script-src * 'unsafe-inline' 'unsafe-eval' file: https:" />
 	<meta name="robots" content="index,follow,noodp" />
 	<meta name="fragment" content="!" />
 	<meta name="google-site-verification" content="Sn53nvm_h2HJQo2WDjWXx9rjc0VRBKHTF1ohP1YuPX8" />
@@ -132,17 +132,14 @@
 			<item onclick="ui.navigation.goTo('home', true)" class="home active">
 				<img source="home" />
 			</item>
+			<item onclick="ui.navigation.goTo('events')" class="events">
+				<img source="rocket" />
+			</item>
 			<item onclick="ui.navigation.goTo('locations')" class="locations">
 				<img source="location" />
 			</item>
-			<item onclick="ui.navigation.goTo('events')" class="events">
-				<img source="event" />
-			</item>
 			<item onclick="ui.navigation.goTo('contacts')" class="contacts">
 				<img source="contact" />
-			</item>
-			<item onclick="ui.navigation.goTo('settings')" class="settings">
-				<img source="settings" />
 			</item>
 			<buttonIcon onclick="pageHome.toggleNotification()" class="mainBG notifications">
 				<badgeNotifications></badgeNotifications>

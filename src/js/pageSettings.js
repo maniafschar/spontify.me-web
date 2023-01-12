@@ -8,11 +8,9 @@ import { ui, formFunc } from './ui';
 import { user } from './user';
 import { details } from './details';
 import { intro } from './intro';
-import { pageChat } from './pageChat';
 import { pageLocation } from './pageLocation';
 import QRCodeStyling from 'qr-code-styling';
 import { pageInfo } from './pageInfo';
-import { pageHome } from './pageHome';
 
 export { pageSettings };
 

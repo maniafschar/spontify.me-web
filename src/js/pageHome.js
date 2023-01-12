@@ -15,7 +15,6 @@ export { pageHome };
 class pageHome {
 	static badge = -1;
 	static map;
-	static marketing = null;
 	static template = v =>
 		global.template`<homeHeader onclick="${v.clickHeader}"${v.logoSmall}>
 	<img source="logo"/>
@@ -33,7 +32,7 @@ class pageHome {
 	<text></text>
 </item>
 <item class="event">
-	<buttonIcon class="bgColor" onclick="pageHome.newEvent()">
+	<buttonIcon class="bgColor" onclick="pageHome.editEvent()">
 		<img source="rocket" />
 	</buttonIcon>
 	<text></text>
@@ -118,6 +117,41 @@ class pageHome {
 		if (ui.cssValue(e, 'display') != 'none')
 			ui.toggleHeight(e);
 	}
+	static editEvent() {
+		if (user.contact) {
+			if (!user.contact.image) {
+				ui.navigation.openPopup(ui.l('attention'),
+					ui.l('events.noImage') +
+					'<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.edit') + '</buttontext>');
+				return;
+			}
+			var v = {};
+			var id = ui.q('home item.event').getAttribute('i');
+			var p = pageEvent.getParticipationNext(id);
+			if (id && p) {
+				v.visibility = p.event.visibility;
+				v.type = p.event.type;
+				v.text = p.event.text;
+				v.id = p.event.id;
+				v.startDate = global.date.server2Local(p.event.startDate);
+				v.startDate = ('0' + v.startDate.getHours()).slice(-2) + ':' + ('0' + v.startDate.getMinutes()).slice(-2);
+				v['category' + p.event.category] = ' checked';
+			} else {
+				var d = new Date().getHours() + 2;
+				if (d > 23)
+					d = 8;
+				v.startDate = ('0' + d).slice(-2) + ':00';
+				v.visibility = user.contact.attr && user.contact.attrInterest ? 2 : 3;
+				v.type = 'o';
+				v.category0 = ' checked';
+				v.hideDelete = ' noDisp';
+			}
+			v['visibilityChecked' + v.visibility] = ' checked="checked"';
+			ui.navigation.openPopup(ui.l('wtd.todayIWant'), pageHome.templateNewEvent(v));
+			pageEvent.locationsOfPastEvents();
+		} else
+			intro.openHint({ desc: 'whatToDo', pos: '10%,5em', size: '80%,auto' });
+	}
 	static init(force) {
 		var e = ui.q('home');
 		if (force || !e.innerHTML) {
@@ -155,7 +189,7 @@ class pageHome {
 		}
 		formFunc.image.replaceSVGs();
 		if (user.contact)
-			ui.classAdd('home svg>g', 'pure');
+			ui.classAdd('home homeHeader svg>g', 'pure');
 		pageHome.updateLocalisation();
 	}
 	static initNotification(d) {
@@ -195,41 +229,6 @@ class pageHome {
 			ui.classRemove('navigation buttonIcon.notifications', 'pulse highlight');
 		if (ui.q('badgeNotifications'))
 			ui.q('badgeNotifications').innerText = Math.max(pageHome.badge, 0);
-	}
-	static newEvent() {
-		if (user.contact) {
-			if (!user.contact.image) {
-				ui.navigation.openPopup(ui.l('attention'),
-					ui.l('events.noImage') +
-					'<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.edit') + '</buttontext>');
-				return;
-			}
-			var v = {};
-			var id = ui.q('home item.event').getAttribute('i');
-			var p = pageEvent.getParticipationNext(id);
-			if (id && p) {
-				v.visibility = p.event.visibility;
-				v.type = p.event.type;
-				v.text = p.event.text;
-				v.id = p.event.id;
-				v.startDate = global.date.server2Local(p.event.startDate);
-				v.startDate = ('0' + v.startDate.getHours()).slice(-2) + ':' + ('0' + v.startDate.getMinutes()).slice(-2);
-				v['category' + p.event.category] = ' checked';
-			} else {
-				var d = new Date().getHours() + 2;
-				if (d > 23)
-					d = 8;
-				v.startDate = ('0' + d).slice(-2) + ':00';
-				v.visibility = user.contact.attr && user.contact.attrInterest ? 2 : 3;
-				v.type = 'o';
-				v.category0 = ' checked';
-				v.hideDelete = ' noDisp';
-			}
-			v['visibilityChecked' + v.visibility] = ' checked="checked"';
-			ui.navigation.openPopup(ui.l('wtd.todayIWant'), pageHome.templateNewEvent(v));
-			pageEvent.locationsOfPastEvents();
-		} else
-			intro.openHint({ desc: 'whatToDo', pos: '10%,5em', size: '80%,auto' });
 	}
 	static openHintDescription() {
 		intro.openHint({ desc: 'description', pos: '10%,5em', size: '80%,auto' });
@@ -297,7 +296,7 @@ class pageHome {
 			success(r) {
 				ui.navigation.hidePopup();
 				ui.navigation.autoOpen(global.encParam('e=' + (r ? r : v.id)));
-				pageEvent.init();
+				pageEvent.initParticipation();
 			}
 		});
 	}
