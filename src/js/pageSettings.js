@@ -436,7 +436,7 @@ ${v.info}
 					pageSettings.currentSettings = pageSettings.getCurrentSettingsString();
 					if (exec)
 						exec.call()
-					v.info = pageInfo.template({ hideDesc: ' noDisp' });
+					v.info = pageInfo.template();
 					ui.q('settings3').innerHTML = pageSettings.templateSettings3(v);
 					formFunc.initFields('settings3');
 					pageSettings.currentSettings3 = pageSettings.getCurrentSettings3String();

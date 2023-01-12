@@ -454,7 +454,7 @@
 			"qrcodeCanceled": "hat die Teilnahme am {0} abgesagt!",
 			"qrcodeConfirmation": "{0} nimmt teil!",
 			"qrcodeDate": "Event am {0} Uhr",
-			"qrcodeError": "zu dem QR Code wurden keine Daten gefunden!",
+			"qrcodeError": "Zu diesem QR Code wurden keine Daten gefunden!",
 			"soldOut": "Alle {0} Plätze belegt!",
 			"start": "Starttermin",
 			"startHour": "Start",

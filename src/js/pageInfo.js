@@ -30,7 +30,8 @@ class pageInfo {
 <infoblock id="info2" style="display:none;">
 	${ui.l('info.imprint')}
 </infoblock>
-<div style="text-align:center;color:white;padding-top:2em;">© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>`;
+<div id="infoVersion" onclick="pageInfo.openMap()" style="text-align:center;padding:2em 3em 1em 3em;cursor:pointer;">${ui.l('info.infoOther').replace('{0}', '<span id="infoLocalized"></span>')}</div>
+<div style="text-align:center;">© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>`;
 	static templateDesc = v =>
 		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#info4&quot;)">
 ${ui.l('home.DescLink')}
@@ -54,7 +55,6 @@ ${ui.l('home.DescLink')}
 	</ul>
 	<a style="margin:2em 0 1em 0;display:block;cursor:pointer;${v['displayBlogButton']}" onclick="ui.navigation.openHTML(&quot;https://blog.spontify.me&quot;, &quot;blog_spontifyme&quot;)">${ui.l('info.link2blog')}</a>
 </div>
-<div id="infoVersion" onclick="pageInfo.openMap()" style="padding-top:1em;cursor:pointer;"></div>
 </infoblock>`;
 	static init() {
 		var e = ui.q('info');
@@ -76,7 +76,6 @@ ${ui.l('home.DescLink')}
 					pageInfo.openSection = pageInfo.openSection == 1 ? -2 : -1;
 				}, 50);
 		}
-		ui.html('#infoVersion', ui.l('info.infoOther').replace('{0}', '<span id="infoLocalized"></span>'));
 		pageInfo.updateLocalisation();
 	}
 	static openMap() {

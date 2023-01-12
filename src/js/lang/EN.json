@@ -454,6 +454,7 @@
 			"qrcodeCanceled": "canceled the participation!",
 			"qrcodeConfirmation": "{0} participates!",
 			"qrcodeDate": "Event on {0} o'clock",
+			"qrcodeError": "No data found for this QR Code!",
 			"soldOut": "Maximum of {0} participants reached!",
 			"start": "Start date",
 			"startHour": "Start",
