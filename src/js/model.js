@@ -102,6 +102,7 @@ class Contact extends BaseEntity {
 	notificationMarkEvent;
 	notificationVisitLocation;
 	notificationVisitProfile;
+	paypalMerchantId;
 	pseudonym;
 	rating;
 	search;

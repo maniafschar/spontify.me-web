@@ -692,6 +692,14 @@ explain {
 	line-height: 1.3;
 }
 
+explain.paypal {
+	display: none;
+}
+
+explain.paypal buttontext {
+	font-size: 1.25em;
+}
+
 eventLocationInputHelper explain {
 	padding-bottom: 0;
 }
@@ -724,6 +732,7 @@ qrCheck {
 	left: 50%;
 	margin-left: 0.6em;
 	color: green;
+	filter: drop-shadow(0.04em 0.04em 0.04em rgba(0, 0, 0, 0.3));
 }
 
 qrCheck.negative {

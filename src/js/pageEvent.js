@@ -63,7 +63,12 @@ ${v.hint}
 <field>
 	<label>${ui.l('events.price')}</label>
 	<value>
-		<input type="number" step="any" name="price" value="${v.price}" />
+		<input type="number" step="any" name="price" value="${v.price}" onblur="pageEvent.checkPaypal()" />
+		<explain class="paypal">${ui.l('events.paypalSignUpHint')}
+			<dialogButtons>
+				<buttontext class="bgColor" onclick="pageEvent.signUpPaypal()">${ui.l('events.paypalSignUpButton')}</buttontext>
+			</dialogButtons>
+		</explain>
 	</value>
 </field>
 <field ${v.hideOwnerFields}>
@@ -132,6 +137,9 @@ ${v.eventParticipationButtons}
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
 <errorHint></errorHint>
 <buttontext class="bgColor defaultButton" onclick="pageEvent.search()">${ui.l('search.action')}</buttontext></form>`;
+	static checkPaypal() {
+		ui.q('popup explain.paypal').style.display = ui.q('popup [name="price"]').value > 0 && !user.contact.paypalMerchantId ? 'block' : 'none';
+	}
 	static detail(v) {
 		v.copyLinkHint = ui.l('copyLinkHint.event');
 		if (v.event.contactId != user.contact.id)
@@ -912,6 +920,14 @@ ${v.eventParticipationButtons}
 		var b = ui.q('popup [name="type"]').checked;
 		ui.q('popup label[name="startDate"]').innerText = ui.l('events.' + (b ? 'date' : 'start'));
 		ui.css('popup field[name="endDate"]', 'display', b ? 'none' : '');
+	}
+	static signUpPaypal() {
+		communication.ajax({
+			url: global.server + 'action/paypalSignUpSellerUrl',
+			success(r) {
+				ui.navigation.openHTML(r + '&displayMode=minibrowser', 'paypal');
+			}
+		});
 	}
 	static showNext(event, next) {
 		var e2 = event.target;
