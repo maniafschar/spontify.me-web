@@ -671,6 +671,11 @@ ${v.eventParticipationButtons}
 	}
 	static participate(event, id) {
 		event.stopPropagation();
+		var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
+		if (e.event.price > 0 && !user.contact.image) {
+			ui.navigation.openPopup(ui.l('attention'), ui.l('events.participationNoImage') + '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.editProfile') + '</buttontext > ');
+			return;
+		}
 		var button = event.target;
 		var participateID = button.getAttribute('pID');
 		var d = { classname: 'EventParticipate', values: {} };
