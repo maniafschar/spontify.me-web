@@ -18,6 +18,7 @@ class pageEvent {
 	static filter = null;
 	static nearByExec = null;
 	static participations = null;
+	static paypal = null;
 	static templateEdit = v =>
 		global.template`<form name="editElement" onsubmit="return false">
 <input type="hidden" name="id" value="${v.id}"/>
@@ -138,7 +139,17 @@ ${v.eventParticipationButtons}
 <errorHint></errorHint>
 <buttontext class="bgColor defaultButton" onclick="pageEvent.search()">${ui.l('search.action')}</buttontext></form>`;
 	static checkPaypal() {
-		ui.q('popup explain.paypal').style.display = ui.q('popup [name="price"]').value > 0 && !user.contact.paypalMerchantId ? 'block' : 'none';
+		if (ui.q('popup [name="price"]').value > 0 && !user.contact.paypalMerchantId) {
+			if (!pageEvent.paypal)
+				communication.ajax({
+					url: global.server + 'action/paypalSignUpSellerUrl',
+					success(r) {
+						pageEvent.paypal = r + '&displayMode=minibrowser';
+					}
+				});
+			ui.q('popup explain.paypal').style.display = 'block';
+		} else
+			ui.q('popup explain.paypal').style.display = 'none';
 	}
 	static detail(v) {
 		v.copyLinkHint = ui.l('copyLinkHint.event');
@@ -922,12 +933,10 @@ ${v.eventParticipationButtons}
 		ui.css('popup field[name="endDate"]', 'display', b ? 'none' : '');
 	}
 	static signUpPaypal() {
-		communication.ajax({
-			url: global.server + 'action/paypalSignUpSellerUrl',
-			success(r) {
-				ui.navigation.openHTML(r + '&displayMode=minibrowser', 'paypal');
-			}
-		});
+		if (pageEvent.paypal)
+			ui.navigation.openHTML(pageEvent.paypal + '&displayMode=minibrowser', 'paypal');
+		else
+			setTimeout(pageEvent.signUpPaypal, 100);
 	}
 	static showNext(event, next) {
 		var e2 = event.target;
