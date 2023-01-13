@@ -422,6 +422,10 @@ filters {
 	color: black;
 }
 
+filters buttontext {
+	margin-top: 0.5em;
+}
+
 login registerHint {
 	position: absolute;
 	margin-left: 5%;
@@ -700,6 +704,7 @@ explain.paypal buttontext {
 	font-size: 1.25em;
 }
 
+filters explain,
 popup explain {
 	padding-top: 0.25em;
 }
