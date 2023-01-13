@@ -91,7 +91,6 @@ class Contact extends BaseEntity {
 	idDisplay;
 	image;
 	imageList;
-	introState;
 	language;
 	latitude;
 	longitude;

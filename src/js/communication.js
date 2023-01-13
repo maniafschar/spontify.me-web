@@ -48,14 +48,18 @@ class communication {
 						communication.ping();
 					if (param.success) {
 						var response = xmlhttp.responseText;
-						if (param.responseType == 'json')
-							try {
-								response = JSON.parse(xmlhttp.responseText)
-							} catch (e) {
-								xmlhttp.error = e;
-								errorHandler.call();
-								return;
-							}
+						if (param.responseType == 'json') {
+							if (response) {
+								try {
+									response = JSON.parse(xmlhttp.responseText)
+								} catch (e) {
+									xmlhttp.error = e;
+									errorHandler.call();
+									return;
+								}
+							} else
+								response = null;
+						}
 						param.success(response);
 					}
 				} else
@@ -230,11 +234,6 @@ class communication {
 						user.init(v);
 						if (v['geo_location'])
 							geoData.initManual(JSON.parse(v['geo_location']));
-						try {
-							user.contact.storage = user.contact.storage ? JSON.parse(user.contact.storage) : {};
-						} catch (e) {
-							user.contact.storage = {};
-						}
 						ui.css('progressbar', 'display', 'none');
 						if (global.language != user.contact.language)
 							initialisation.setLanguage(user.contact.language);

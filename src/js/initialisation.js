@@ -4,6 +4,7 @@ import { geoData } from './geoData';
 import { global } from './global';
 import { lists } from './lists';
 import { pageChat } from './pageChat';
+import { pageEvent } from './pageEvent';
 import { pageHome } from './pageHome';
 import { pageInfo } from './pageInfo';
 import { pageLocation } from './pageLocation';
@@ -127,7 +128,7 @@ class initialisation {
 			geoData.init();
 			user.save({ active: true });
 			if (global.getParam('r'))
-				initialisation.showStartDialogs();
+				initialisation.recoverPassword();
 		});
 	}
 	static initPostProcessor() {
@@ -138,7 +139,7 @@ class initialisation {
 		ui.html('head title', global.appTitle);
 		if (global.getParam('r')) {
 			communication.login.removeCredentials();
-			initialisation.showStartDialogs();
+			initialisation.recoverPassword();
 		} else
 			communication.login.autoLogin(initialisation.showStartDialogs);
 		window.onresize = initialisation.reposition;
@@ -369,78 +370,35 @@ class initialisation {
 			user.save({ language: lang });
 		ui.navigation.hidePopup();
 	}
-	static showLocation() {
-		if (window.location && window.location.pathname && window.location.pathname.indexOf('loc_') > -1) {
-			var id = window.location.pathname;
-			id = id.substring(id.indexOf('_') + 1);
-			if (id.indexOf('_') > 0)
-				id = id.substring(0, id.indexOf('_'));
-			id = !id || isNaN(id) ? '1' : id;
-			if (/bot|crawler|spider|robot|crawling/i.test(navigator.userAgent))
-				communication.ajax({
-					url: global.server + 'db/one?query=location_anonymousList&search=' + encodeURIComponent('location.id=' + id),
-					success(r) {
-						ui.css('home', 'display', 'none');
-						var s = v =>
-							global.template`
-URL: <a href="${v['location.url']}">${v['location.url']}</a><br>
-Town: ${v['location.town']}<br>
-Address: ${v['location.address']}<br>
-Phone: ${v['location.telephone']}<br>
-Longitude: ${v['location.longitude']}<br>
-Latitude: ${v['location.latitude']}<br>
-Description: ${v['location.description']}<br>
-Parking: ${v['location.url']}${v['location.parkingText']}<br>
-${v['location.parkingOption']}<br>
-Quarter: ${v['location.quater']}<br>
-Rating: ${v['location.rating']}<br>
-Open: ${v['location.openTimesText']}<br>
-Category: ${v['location.category']}<br>
-Name: ${v['location.name']}<br>
-Bank Holidays Closed: ${v['location.openTimesHankholiday']}<br>
-Budget: ${v['location.budget']}<br>
-Image: <img src="/med/${v['location.image']}"/><br>
-Attributes: ${v['location.attr0']}<br>
-${v['location.attr1']}<br>
-${v['location.attr2']}<br>
-${v['location.attr3']}<br>
-${v['location.attr4']}<br>
-${v['location.attr5']}<br>
-${v['location.attr0Ex']}<br>
-${v['location.attr1Ex']}<br>
-${v['location.attr2Ex']}<br>
-${v['location.attr3Ex']}<br>
-${v['location.attr4Ex']}<br>
-${v['location.attr5Ex']}<br>`;
-						var e = ui.q('detail');
-						e.innerHTML = s(r);
-						ui.css(e, 'display', 'block');
-					}
-				});
-			else
-				details.open(id, 'location_anonymousList&search=' + encodeURIComponent('location.id=' + id), pageLocation.detailLocationEvent);
-			var e = ui.q('home');
-			ui.css(e, 'display', 'none');
-			ui.classRemove(e, 'homeSlideIn animated');
-			return true;
-		}
-		return false;
+	static recoverPassword() {
+		if (user.contact || initialisation.recoverInvoked == true)
+			return;
+		initialisation.recoverInvoked = true;
+		var e = pageLogin.getDraft() || {};
+		communication.login.removeCredentials();
+		communication.login.recoverPasswordVerifyEmail(global.getParam('r'), e.email ? e.email : '');
+		history.pushState(null, null, window.location.origin);
 	}
 	static showStartDialogs() {
-		if (global.getParam('r')) {
-			if (user.contact || initialisation.recoverInvoked == true)
-				return;
-			initialisation.recoverInvoked = true;
-			var e = pageLogin.getDraft() || {};
-			communication.login.removeCredentials();
-			communication.login.recoverPasswordVerifyEmail(global.getParam('r'), e.email ? e.email : '');
-		} else if (!initialisation.showLocation()) {
-			var p = global.getParam();
-			if (p) {
+		var p = global.getParam();
+		if (p) {
+			if (p.indexOf('merchantIdInPayPal')) {
+				communication.ajax({
+					url: global.server + 'action/paypalRegister',
+					method: 'PUT',
+					body: p,
+					responseType: 'json',
+					success(r) {
+						if (r) {
+							user.init(r);
+							pageEvent.edit();
+						}
+					}
+				});
+			} else
 				setTimeout(function () {
 					ui.navigation.autoOpen(p);
-				}, 1000);
-			}
+				}, 100);
 		}
 		history.pushState(null, null, window.location.origin);
 	}

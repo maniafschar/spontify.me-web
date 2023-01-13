@@ -191,8 +191,8 @@ class global {
 		if (!v || v.indexOf('?') < 0)
 			v = global.url;
 		if (v) {
-			if (v.indexOf('?') > -1)
-				v = v.substring(v.indexOf('?') + 1);
+			if (v.indexOf('?') == 0)
+				v = v.substring(1);
 			if (!n)
 				return v;
 			v = v.split('&');

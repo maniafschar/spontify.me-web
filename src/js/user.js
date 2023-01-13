@@ -7,7 +7,6 @@ export { user };
 class user {
 	static contact;
 	static email;
-	static introState_session = { goHome: 0, goToList: 0, menuOpen: 0 };
 	static password = null;
 	static scale = 1;
 
@@ -17,8 +16,12 @@ class user {
 			if (user.contact.hasOwnProperty(k.replace('contact.', '')))
 				user.contact[k.replace('contact.', '')] = v[k];
 		}
-		if (user.contact.filter)
-			user.contact.filter = JSON.parse(user.contact.filter);
+		user.contact.filter = user.contact.filter ? JSON.parse(user.contact.filter) : {};
+		try {
+			user.contact.storage = user.contact.storage ? JSON.parse(user.contact.storage) : {};
+		} catch (e) {
+			user.contact.storage = {};
+		}
 	}
 	static reset() {
 		user.contact = null;

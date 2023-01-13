@@ -56,6 +56,12 @@ ${v.hint}
 	</value>
 </field>
 <field>
+	<label>${ui.l('description')}</label>
+	<value>
+		<textarea name="text" maxlength="1000">${v.text}</textarea>
+	</value>
+</field>
+<field>
 	<label>${ui.l('events.maxParticipants')}</label>
 	<value>
 		<input type="number" name="maxParticipants" maxlength="250" value="${v.maxParticipants}" />
@@ -64,12 +70,18 @@ ${v.hint}
 <field>
 	<label>${ui.l('events.price')}</label>
 	<value>
-		<input type="number" step="any" name="price" value="${v.price}" onblur="pageEvent.checkPaypal()" />
+		<input type="number" step="any" name="price" value="${v.price}" onkeyup="pageEvent.checkPrice()" />
 		<explain class="paypal">${ui.l('events.paypalSignUpHint')}
 			<dialogButtons>
 				<buttontext class="bgColor" onclick="pageEvent.signUpPaypal()">${ui.l('events.paypalSignUpButton')}</buttontext>
 			</dialogButtons>
 		</explain>
+	</value>
+</field>
+<field class="confirm">
+	<label>${ui.l('events.confirmLabel')}</label>
+	<value>
+		<input type="checkbox" name="eventconfirm" transient="true" label="${ui.l('events.confirm')}" value="1" ${v.confirm}/>
 	</value>
 </field>
 <field ${v.hideOwnerFields}>
@@ -85,22 +97,10 @@ ${v.hint}
 	</value>
 </field>
 <field>
-	<label>${ui.l('description')}</label>
-	<value>
-		<textarea name="text" maxlength="1000">${v.text}</textarea>
-	</value>
-</field>
-<field>
 	<label>${ui.l('events.visibility')}</label>
 	<value>
 		<input type="radio" name="visibility" value="2" label="${ui.l('events.visibility2')}" ${v.visibility2}/>
 		<input type="radio" name="visibility" value="3" label="${ui.l('events.visibility3')}" ${v.visibility3}/>
-	</value>
-</field>
-<field>
-	<label>${ui.l('events.confirmLabel')}</label>
-	<value>
-		<input type="checkbox" name="eventconfirm" transient="true" label="${ui.l('events.confirm')}" value="1" ${v.confirm}/>
 	</value>
 </field>
 <dialogButtons style="margin-bottom:0;">
@@ -138,18 +138,33 @@ ${v.eventParticipationButtons}
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
 <errorHint></errorHint>
 <buttontext class="bgColor defaultButton" onclick="pageEvent.search()">${ui.l('search.action')}</buttontext></form>`;
-	static checkPaypal() {
-		if (ui.q('popup [name="price"]').value > 0 && !user.contact.paypalMerchantId) {
-			if (!pageEvent.paypal)
-				communication.ajax({
-					url: global.server + 'action/paypalSignUpSellerUrl',
-					success(r) {
-						pageEvent.paypal = r + '&displayMode=minibrowser';
-					}
-				});
-			ui.q('popup explain.paypal').style.display = 'block';
-		} else
-			ui.q('popup explain.paypal').style.display = 'none';
+	static checkPrice() {
+		var e = ui.q('popup explain.paypal'), h = ui.cssValue(e, 'height');
+		if (ui.q('popup [name="price"]').value > 0) {
+			if (h && !e.getAttribute('h'))
+				e.setAttribute('h', parseInt(h));
+			if (user.contact.paypalMerchantId && (!h || parseInt(h) > 0))
+				ui.toggleHeight(e);
+			else if (!user.contact.paypalMerchantId && h && parseInt(h) == 0)
+				ui.toggleHeight(e);
+			e = ui.q('popup .confirm');
+			h = ui.cssValue(e, 'height');
+			if (h && !e.getAttribute('h'))
+				e.setAttribute('h', parseInt(h));
+			if (!h || parseInt(h) > 0)
+				ui.toggleHeight(e);
+		} else {
+			if (h && !e.getAttribute('h'))
+				e.setAttribute('h', parseInt(h));
+			if (!h || parseInt(h) > 0)
+				ui.toggleHeight(e);
+			e = ui.q('popup .confirm');
+			h = ui.cssValue(e, 'height');
+			if (h && !e.getAttribute('h'))
+				e.setAttribute('h', parseInt(h));
+			if (h && parseInt(h) == 0)
+				ui.toggleHeight(e);
+		}
 	}
 	static detail(v) {
 		v.copyLinkHint = ui.l('copyLinkHint.event');
@@ -229,8 +244,8 @@ ${v.eventParticipationButtons}
 			pageEvent.editInternal(locationID);
 	}
 	static editInternal(locationID, id, v) {
-		if (!id && locationID && formFunc.getDraft('event' + locationID)) {
-			v = formFunc.getDraft('event' + locationID).values;
+		if (!id && (locationID && formFunc.getDraft('event' + locationID) || !locationID && formFunc.getDraft('event'))) {
+			v = formFunc.getDraft('event' + (locationID ? locationID : '')).values;
 			if (v.startDate &&
 				global.date.server2Local(v.startDate).getTime() < new Date().getTime())
 				v.startDate = null;
@@ -282,6 +297,7 @@ ${v.eventParticipationButtons}
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
 		pageEvent.setForm();
 		pageEvent.locationsOfPastEvents();
+		setTimeout(pageEvent.checkPrice, 500);
 	}
 	static getCalendarList(data, onlyMine) {
 		if (!data || data.length == 0)
@@ -480,6 +496,13 @@ ${v.eventParticipationButtons}
 	}
 	static init() {
 		pageLocation.init('events');
+		if (!pageEvent.paypal && !user.contact.paypalMerchantId)
+			communication.ajax({
+				url: global.server + 'action/paypalSignUpSellerUrl',
+				success(r) {
+					pageEvent.paypal = r + '&displayMode=minibrowser';
+				}
+			});
 	}
 	static initParticipation() {
 		if (!pageEvent.filter)
@@ -882,6 +905,8 @@ ${v.eventParticipationButtons}
 				formFunc.setError(start, 'events.errorDateFormat');
 			}
 		}
+		if (ui.q('popup [name="price"]').value > 0 && !user.contact.paypalMerchantId)
+			formFunc.setError(ui.q('popup [name="price"]'), 'events.errorActivatePaypal');
 		if (!ui.q('popup [name="locationId"]').value)
 			formFunc.setError(ui.q('popup input[name="location"]'), 'events.errorLocation');
 		if (!ui.q('popup [name="type"]').checked) {
@@ -933,48 +958,11 @@ ${v.eventParticipationButtons}
 		ui.css('popup field[name="endDate"]', 'display', b ? 'none' : '');
 	}
 	static signUpPaypal() {
-		if (pageEvent.paypal)
+		if (pageEvent.paypal) {
+			pageEvent.saveDraft();
 			ui.navigation.openHTML(pageEvent.paypal + '&displayMode=minibrowser', 'paypal');
-		else
+		} else
 			setTimeout(pageEvent.signUpPaypal, 100);
-	}
-	static showNext(event, next) {
-		var e2 = event.target;
-		var e = e2.parentNode.parentNode;
-		if (ui.classContains(e.parentNode, 'animated'))
-			return;
-		if (next) {
-			e2 = e.nextElementSibling;
-			var last = false;
-			if (!e2) {
-				e2 = e.parentNode.children[0];
-				last = true;
-			}
-			ui.css(e2, 'marginLeft', '100%');
-			ui.css(e2, 'display', 'inline-block');
-			if (last)
-				ui.css(e, 'marginTop', '-' + e.offsetHeight + 'px');
-			else
-				ui.css(e2, 'marginTop', '-' + e2.offsetHeight + 'px');
-			ui.navigation.animation(e.parentNode, 'detailSlideOut', function () {
-				ui.css(e, 'display', 'none');
-				ui.css(e, 'marginTop', '');
-				ui.css(e2, 'marginTop', '');
-				ui.css(e2, 'marginLeft', '');
-			});
-		} else {
-			e2 = e.previousElementSibling;
-			if (!e2) {
-				e2 = e.parentNode.lastChild;
-				ui.css(e2, 'marginLeft', '-200%');
-			} else
-				ui.css(2, 'marginLeft', '-100%');
-			ui.css(e2, 'display', 'inline-block');
-			ui.navigation.animation(e.parentNode, 'detailBackSlideOut', function () {
-				ui.css(e2, 'marginLeft', '');
-				ui.css(e, 'display', 'none');
-			});
-		}
 	}
 	static toggle(id) {
 		var d = ui.q('detail card:last-child[i="' + id + '"] [name="events"]');

@@ -693,7 +693,7 @@ explain {
 }
 
 explain.paypal {
-	display: none;
+	text-align: center;
 }
 
 explain.paypal buttontext {
@@ -1027,6 +1027,7 @@ errorHint {
 	display: block;
 	line-height: 1.2;
 	margin-top: 0.25em;
+	padding: 0 0.5em;
 }
 
 value.checkbox errorHint {
