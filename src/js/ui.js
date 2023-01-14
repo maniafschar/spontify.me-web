@@ -311,8 +311,8 @@ class ui {
 				pageLogin.init();
 			else if (id == 'contacts')
 				pageContact.init();
-			else if (id == 'locations')
-				pageLocation.init(id);
+			else if (id == 'search')
+				pageSearch.init();
 			else if (id == 'events')
 				pageEvent.init();
 			else if (id == 'settings2')
@@ -731,57 +731,31 @@ class ui {
 	static toggleHeight(e, exec) {
 		if (typeof e == 'string')
 			e = ui.q(e);
-		if (!e || e.getAttribute('toggle') && new Date().getTime() - e.getAttribute('toggle') < 450)
-			return;
-		e.setAttribute('toggle', new Date().getTime());
 		if (!e.getAttribute('h')) {
 			var p = e.style.position;
 			var d = e.style.display;
-			e.style.opacity = 0;
-			e.style.display = 'block';
-			e.style.height = '';
+			e.style.visibility = 'hidden';
 			e.style.position = 'absolute';
-			e.setAttribute('h', e.offsetHeight);
-			e.style.position = p;
-			e.style.opacity = '';
-			e.style.display = d ? d : 'none';
-		}
-		var o = e.style.overflow;
-		var t = e.style.transition;
-		e.style.overflow = 'hidden';
-		if (ui.cssValue(e, 'display') == 'none') {
-			e.style.transition = 'height .4s ease-out';
 			e.style.display = 'block';
-			e.style.height = 0;
+			e.style.maxHeight = '99999em';
 			setTimeout(function () {
-				var f = function () {
-					e.style.overflow = o;
-					e.style.transition = t;
-					e.style.height = '';
-					e.style.display = '';
-					e.removeAttribute('toggle');
-					if (exec)
-						exec.call();
+				if (e.offsetHeight > 0) {
+					e.setAttribute('h', e.offsetHeight);
+					e.style.maxHeight = '';
+					e.style.position = p;
+					e.style.display = d;
+					e.style.visibility = '';
 				}
-				ui.on(e, 'transitionend', f, true);
-				e.style.height = e.getAttribute('h') + 'px';
-			}, 10);
-		} else {
-			e.style.transition = 'height .4s ease-in';
-			e.style.height = e.offsetHeight + 'px';
-			setTimeout(function () {
-				var f = function () {
-					e.style.overflow = o;
-					e.style.transition = t;
-					e.style.display = 'none';
-					e.removeAttribute('toggle');
-					if (exec)
-						exec.call();
-				};
-				ui.on(e, 'transitionend', f, true);
-				e.style.height = 0;
-			}, 10);
+				ui.toggleHeight(e, exec);
+			}, 50);
+			return;
 		}
+		if (exec)
+			ui.on(e, 'transitionend', exec, true);
+		if (parseInt(e.style.maxHeight) > 0)
+			ui.css(e, 'max-height', '');
+		else
+			ui.css(e, 'max-height', e.getAttribute('h') + 'px');
 	}
 	static val(id) {
 		var e = ui.qa(id);

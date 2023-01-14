@@ -4,7 +4,7 @@ import { pageEvent } from './pageEvent';
 import { geoData } from './geoData';
 import { global } from './global';
 import { lists } from './lists';
-import { Location, model, LocationOpenTime } from './model';
+import { Location, model } from './model';
 import { pageChat } from './pageChat';
 import { ui, formFunc } from './ui';
 import { user } from './user';
@@ -12,7 +12,6 @@ import { user } from './user';
 export { pageLocation };
 
 class pageLocation {
-	static filter = null;
 	static locationsAdded = null;
 	static map = {
 		canvas: null,
@@ -75,21 +74,9 @@ ${v.description}
 <text>
 	${v.telOpenTag}${v.address}<br/>${v.tel}${v.telCloseTag}
 </text>
-${v.attributes}
-${v.budget}
-<text>
-${v.bonus}
-${v.rating}
-${v.parking}
-<openTimes></openTimes>
-<div>${v.openTimesBankholiday}</div>
-<div>${v.openTimesText}</div>
-</text>
 <img class="map"
 	onclick="ui.navigation.openHTML(&quot;https://maps.google.com/maps/dir/${geoData.latlon.lat},${geoData.latlon.lon}/${v.latitude},${v.longitude}&quot;)" />
 <detailButtons>
-	<buttontext class="bgColor${v.hideMeEvents}"
-		onclick="pageChat.open(${v.chatId},${v.chatLocation})">${ui.l('chat.title')}</buttontext>
 	<buttontext class="bgColor${v.pressedCopyButton}" name="buttonCopy"
 		onclick="pageChat.doCopyLink(event,&quot;${v.event.id ? 'e' : 'l'}=${v.id}&quot;)">${ui.l('share')}</buttontext>
 	<buttontext class="bgColor${v.hideMeEvents}" name="buttonEvents"
@@ -103,7 +90,7 @@ ${v.parking}
 	<buttontext class="bgColor${v.blocked}" name="buttonBlock"
 		onclick="pageLocation.toggleBlock(&quot;${v.id}&quot;)">${ui.l('contacts.blockAction')}</buttontext>
 </detailButtons>
-<text name="events" class="collapsed" ${v.urlNotActive} style="margin:0 -1em;"></text>
+<text name="events" class="collapsed" style="margin:0 -1em;"></text>
 <text name="matchIndicatorHint" class="popup" style="display:none;" onclick="ui.toggleHeight(this)">
 	<div>${v.matchIndicatorHint}</div>
 </text>
@@ -149,17 +136,8 @@ ${v.parking}
 <input type="hidden" name="zipCode" />
 <input type="hidden" name="country" />
 <input type="hidden" name="address2" />
-<input type="hidden" name="category" />
-<input type="hidden" name="openTimesBankholiday" />
-<input type="hidden" name="attr0" />
-<input type="hidden" name="attr1" />
-<input type="hidden" name="attr2" />
-<input type="hidden" name="attr3" />
-<input type="hidden" name="attr4" />
-<input type="hidden" name="attr5" />
-${v.hint}
 <field>
-	<label>${ui.l('name')}</label>
+	<label style="padding-top:1em;">${ui.l('name')}</label>
 	<value>
 		<input type="text" name="name" maxlength="100" value="${v.name}" />
 		<div style="text-align:center;padding-top:1em;${v.showNearByButton}"><buttontext class="bgColor" onclick="pageLocation.showLocationsNearby(event)">${ui.l('all')}</buttontext></div>
@@ -190,54 +168,6 @@ ${v.hint}
 		<input type="file" name="image" accept=".gif, .png, .jpg" ${v.image} />
 	</value>
 </field>
-<field style="margin-bottom:0;">
-	<label>${ui.l('priceCategory')}</label>
-	<value>
-		<input type="checkbox" value="0" name="budget" label="${ui.l('budget')}" ${v.budget0}/>
-		<input type="checkbox" value="1" name="budget" label="${ui.l('budget')}${ui.l('budget')}" ${v.budget1}/>
-		<input type="checkbox" value="2" name="budget" label="${ui.l('budget')}${ui.l('budget')}${ui.l('budget')}" ${v.budget2}/>
-	</value>
-</field>
-<field>
-	<label>${ui.l('locations.parking')}</label>
-	<value>
-		<input type="checkbox" style="width:100%;" name="parkingOption" value="1" label="${ui.l('locations.parking1')}"${v.parkCheck1}/><br />
-		<input type="checkbox" style="width:100%;" name="parkingOption" value="2" label="${ui.l('locations.parking2')}"${v.parkCheck2}/><br />
-		<input type="checkbox" style="width:100%;" name="parkingOption" value="3" label="${ui.l('locations.parking3')}"${v.parkCheck3}/><br />
-		<input type="checkbox" style="width:100%;" name="parkingOption" value="4" label="${ui.l('locations.parking4')}"${v.parkCheck4}/><br />
-		<input type="text" name="parkingText" maxlength="100" placeholder="${ui.l('locations.shortDescParking')}" value="${v.parkingText}" style="float: left;" />
-	</value>
-</field>
-<field>
-	<label>${ui.l('category')}</label>
-	<value style="text-align:center;">
-		<input type="checkbox" name="locationcategory" transient="true" value="0" onclick="pageLocation.setEditAttributes()" label="${ui.categories[0].label}" ${v.cat0}/>
-		<input type="checkbox" name="locationcategory" transient="true" value="1" onclick="pageLocation.setEditAttributes()" label="${ui.categories[1].label}" ${v.cat1}/>
-		<input type="checkbox" name="locationcategory" transient="true" value="2" onclick="pageLocation.setEditAttributes()" label="${ui.categories[2].label}" ${v.cat2}/>
-		<input type="checkbox" name="locationcategory" transient="true" value="3" onclick="pageLocation.setEditAttributes()" label="${ui.categories[3].label}" ${v.cat3}/>
-		<input type="checkbox" name="locationcategory" transient="true" value="4" onclick="pageLocation.setEditAttributes()" label="${ui.categories[4].label}" ${v.cat4}/>
-		<input type="checkbox" name="locationcategory" transient="true" value="5" onclick="pageLocation.setEditAttributes()" label="${ui.categories[5].label}" ${v.cat5}/>
-	</value>
-</field>
-<field>
-	<label>${ui.l('locations.subCategories')}</label>
-	<value style="text-align:center;" id="loc_attrib" v0="${v.attr0}" v1="${v.attr1}" v2="${v.attr2}"
-		v3="${v.attr3}" v4="${v.attr4}" v5="${v.attr5}" v6="${v.attr6}">
-	</value>
-</field>
-<field ${v.hideOpenTimes}>
-	<label>
-		${ui.l('locations.opentimes')}
-	</label>
-	<value>
-		<openTimesEdit>
-			${v.ot}
-		</openTimesEdit>
-		<div><openTimesAdd class="bgColor" onclick="pageLocation.addOpenTimeRow()">+</openTimesAdd></div>
-		<input type="checkbox" style="width:100%;" name="openTimesBankholiday2" transient="true" value="1" label="${ui.l('locations.closedOnBankHoliday')}" ${v.bankHolidayCheck}/><br />
-		<input type="text" name="openTimesText" maxlength="100" placeholder="${ui.l('locations.shortDescOpenTimes')}" value="${v.openTimesText}" style="float: left;" />
-	</value>
-</field>
 <dialogButtons>
 	<buttontext onclick="pageLocation.save()" class="bgColor">
 		${ui.l('save')}
@@ -246,48 +176,6 @@ ${v.hint}
 	<popupHint></popupHint>
 </dialogButtons>
 </form>`;
-	static templateEditOpenTimes = v =>
-		global.template`<select name="openTimes.day${v.i}">
-	<option value="1"${v.wd1}>${ui.l('weekday1')}</option>
-	<option value="2"${v.wd2}>${ui.l('weekday2')}</option>
-	<option value="3"${v.wd3}>${ui.l('weekday3')}</option>
-	<option value="4"${v.wd4}>${ui.l('weekday4')}</option>
-	<option value="5"${v.wd5}>${ui.l('weekday5')}</option>
-	<option value="6"${v.wd6}>${ui.l('weekday6')}</option>
-	<option value="0"${v.wd0}>${ui.l('weekday0')}</option>
-	<option value="x">${ui.l('delete')}</option>
-</select>
-<span>${ui.l('from')}</span>
-<input type="time" placeholder="HH:MM" value="${v.openAt}"
-	name="openTimes.openAt${v.i}" onblur="pageLocation.prefillOpenTimesFields(event,&quot;open&quot;);" />
-<span>${ui.l('to')}</span>
-<input type="time" placeholder="HH:MM" value="${v.closeAt}"
-	name="openTimes.closeAt${v.i}" onblur="pageLocation.prefillOpenTimesFields(event,&quot;close&quot;);" />
-<input type="hidden" value="${v.id}" name="openTimes.id${v.i}" />`;
-	static templateSearch = v =>
-		global.template`<form onsubmit="return false">
-<input type="checkbox" name="filterCategories" value="0" label="${ui.categories[0].label}" onclick="pageLocation.filterList()" ${v.valueCat0}/>
-<input type="checkbox" name="filterCategories" value="1" label="${ui.categories[1].label}" onclick="pageLocation.filterList()" ${v.valueCat1}/>
-<input type="checkbox" name="filterCategories" value="2" label="${ui.categories[2].label}" onclick="pageLocation.filterList()" ${v.valueCat2}/>
-<input type="checkbox" name="filterCategories" value="3" label="${ui.categories[3].label}" onclick="pageLocation.filterList()" ${v.valueCat3}/>
-<input type="checkbox" name="filterCategories" value="4" label="${ui.categories[4].label}" onclick="pageLocation.filterList()" ${v.valueCat4}/>
-<input type="checkbox" name="filterCategories" value="5" label="${ui.categories[5].label}" onclick="pageLocation.filterList()" ${v.valueCat5}/>
-<filterSeparator></filterSeparator>
-<input type="checkbox" label="${ui.l('search.matches')}" name="filterMatchesOnly" ${v.valueMatchesOnly}/>
-<filterSeparator></filterSeparator>
-<input type="text" name="filterKeywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.valueKeywords}/>
-<explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
-<errorHint></errorHint>
-<buttontext class="bgColor defaultButton" onclick="pageLocation.search()">${ui.l('search.action')}</buttontext><buttontext onclick="pageLocation.toggleMap()" class="bgColor">${ui.l('filterLocMapButton')}</buttontext></form>`;
-	static addOpenTimeRow() {
-		var v = {};
-		v.i = ui.qa('openTimesEdit select').length;
-		if (v.i > 0)
-			v['wd' + ((parseInt(ui.q('[name="openTimes.day' + (v.i - 1) + '"]').value, 10) + 1) % 7)] = ' selected';
-		var e2 = document.createElement('div');
-		e2.innerHTML = pageLocation.templateEditOpenTimes(v);
-		ui.q('openTimesEdit').insertBefore(e2, null);
-	}
 	static block() {
 		var path = 'detail card:last-child [name="block"]';
 		formFunc.resetError(ui.q(path + ' [name="note"]'));
@@ -370,25 +258,6 @@ ${v.hint}
 			ui.html('#deleteElement', ui.l('delete.confirm'));
 	}
 	static detailLocationEvent(l, id) {
-		if (l._openTimesEntries && user.contact)
-			communication.ajax({
-				url: global.server + 'db/list?query=location_listOpenTime&search=' + encodeURIComponent('locationOpenTime.locationId=' + l['location.id']),
-				responseType: 'json',
-				success(s) {
-					var e = ui.q('detail card[i="' + id + '"][type="location"] detailHeader');
-					if (e && e.getAttribute('data')) {
-						while (model.convert(new LocationOpenTime(), s, 1).day == 0)
-							s.push(s.splice(1, 1)[0]);
-						var o = JSON.parse(decodeURIComponent(e.getAttribute('data')));
-						o.OT = s;
-						e.setAttribute('data', encodeURIComponent(JSON.stringify(o)));
-						ui.html('detail card[i="' + id + '"][type="location"] openTimes', pageLocation.getOpenTimes(s));
-					}
-				}
-			});
-		return pageLocation.detailLocationEventInternal(l, id);
-	}
-	static detailLocationEventInternal(l, id) {
 		var v = model.convert(new Location(), l);
 		v.data = encodeURIComponent(JSON.stringify(v));
 		l = l[1];
@@ -478,16 +347,6 @@ ${v.hint}
 			v.favorite = 'favorite';
 		if (global.isBrowser())
 			v.displaySocialShare = 'display: none; ';
-		p = v._isOpen && v._isOpen > 0 ? 1 : v._openTimesEntries && v._openTimesEntries > 0 ? 0 : null;
-		v.openTimesBankholiday = v.openTimesBankholiday ? '<div>' + ui.l('locations.closedOnBankHoliday') + '</div>' : '';
-		var h = new Date().getHours() + 2;
-		if (h > 23)
-			h = 8;
-		v.wtdTime = h + ':00';
-		if (h < 10)
-			v.wtdTime = '0' + v.wtdTime;
-		if (!v.ownerId)
-			v.urlNotActive = ' active="0"';
 		v.pressedCopyButton = pageChat.copyLink.indexOf(global.encParam((v.event.id ? 'e' : 'l') + '=' + id)) > -1 ? ' buttonPressed' : '';
 		var c = v.category;
 		if (!c)
@@ -547,41 +406,10 @@ ${v.hint}
 		var d = '' + v.category;
 		for (var i = 0; i < d.length; i++)
 			v['cat' + d.substring(i, i + 1)] = ' checked';
-		if (id) {
-			var ot = [];
-			if (v.OT) {
-				for (var i = 1; i < v.OT.length; i++)
-					ot.push(model.convert(new LocationOpenTime(), v.OT, i));
-			} else {
-				for (var i = 1; i < 7; i++)
-					ot.push({ day: i });
-				ot.push({ day: 0 });
-			}
-			v.ot = '';
-			for (var i = 0; i < ot.length; i++) {
-				ot[i].i = '' + i;
-				ot[i]['wd' + ot[i].day] = ' selected';
-				v.ot += '<div>' + pageLocation.templateEditOpenTimes(ot[i]) + '</div>';
-			}
+		if (id)
 			v.showNearByButton = 'display:none';
-		} else {
-			v.hint = '<div style="padding:0.5em 1em 0 1em;">' + ui.l('locations.newHint') + '</div>';
-			v.hideOpenTimes = ' style="display:none;"';
-		}
 		for (var i = 0; i < ui.categories.length; i++)
 			v['attr' + i] = v['attr' + i] ? v['attr' + i].replace(/\u0015/g, ',') : '';
-		v.bankHolidayCheck = v.openTimesBankholiday == '1' ? ' checked' : '';
-		if (v.parkingOption) {
-			v.parkCheck1 = v.parkingOption.indexOf('1') > -1 ? ' checked' : '';
-			v.parkCheck2 = v.parkingOption.indexOf('2') > -1 ? ' checked' : '';
-			v.parkCheck3 = v.parkingOption.indexOf('3') > -1 ? ' checked' : '';
-			v.parkCheck4 = v.parkingOption.indexOf('4') > -1 ? ' checked' : '';
-		}
-		if (v.budget) {
-			v.budget0 = v.budget.indexOf('0') > -1 ? ' checked' : '';
-			v.budget1 = v.budget.indexOf('1') > -1 ? ' checked' : '';
-			v.budget2 = v.budget.indexOf('2') > -1 ? ' checked' : '';
-		}
 		if (!v.longitude)
 			v.longitude = geoData.latlon.lon;
 		if (!v.latitude)
@@ -613,167 +441,12 @@ ${v.hint}
 		lists.execFilter();
 		pageLocation.scrollMap();
 	}
-	static getFilterFields() {
-		var v = {};
-		var l = lists.data[ui.navigation.getActiveID()];
-		if (pageLocation.filter.filterCategories) {
-			var c = pageLocation.filter.filterCategories.split('\u0015');
-			for (var i = 0; i < c.length; i++)
-				v['valueCat' + c[i]] = ' checked="true"';
-		}
-		v['valueCompass' + pageLocation.filter.filterCompass] = ' checked="true"';
-		if (pageLocation.filter.filterKeywords)
-			v.valueKeywords = ' value="' + pageLocation.filter.filterKeywords + '"';
-		if (pageLocation.filter.filterMatchesOnly == 'on')
-			v.valueMatchesOnly = ' checked="true"';
-		return pageLocation.templateSearch(v);
-	}
-	static getOpenTimes(r) {
-		var s = '';
-		var today = new Date().getDay();
-		var a = [];
-		for (var i = 1; i < r.length; i++) {
-			var v = model.convert(new LocationOpenTime(), r, i);
-			var d = v.day;
-			var t = '<from>' + v.openAt.substring(0, 5) + '</from><sep>-</sep><to>' + v.closeAt.substring(0, 5) + '</to>';
-			if (a[d])
-				t = a[d] + '<br/>' + t;
-			a[d] = t;
-		}
-		for (var i = 0; i < 7; i++) {
-			var i2 = (i + 1) % 7;
-			if (a[i2]) {
-				var d = ui.l('weekday' + i2);
-				var t = a[i2];
-				s += '<row'
-				if (i2 == today)
-					s += ' class="highlightColor"';
-				s += '><day>' + d + '</day><times>' + t + '</times></row>';
-			}
-		}
-		return s;
-	}
-	static getSearch(bounds) {
-		var s = '';
-		if (ui.q('locations filters [name="filterMatchesOnly"]:checked'))
-			s = pageLocation.getSearchMatches();
-		var c = '', d = '';
-		var cats = [];
-		var e = ui.qa('locations filters [name="filterCategories"]:checked');
-		if (e) {
-			for (var i = 0; i < e.length; i++) {
-				cats.push(e[i].value);
-				c += 'category like \'%' + e[i].value + '%\' or ';
-			}
-		}
-		if (c)
-			s += (s ? ' and ' : '') + '(' + c.substring(0, c.length - 4) + ')';
-		else {
-			for (var i = 0; i < ui.categories.length; i++)
-				cats.push(i);
-		}
-		if (bounds) {
-			var border = 0.1 * Math.abs(bounds.getSouthWest().lat() - bounds.getNorthEast().lat());
-			s += (s ? ' and ' : '') + 'location.latitude>' + (bounds.getSouthWest().lat() + border);
-			s += ' and location.latitude<' + (bounds.getNorthEast().lat() - border);
-			border = 0.1 * Math.abs(bounds.getNorthEast().lng() - bounds.getSouthWest().lng());
-			s += ' and location.longitude>' + (bounds.getSouthWest().lng() + border);
-			s += ' and location.longitude<' + (bounds.getNorthEast().lng() - border);
-		} else {
-			c = ui.q('locations filters [name="filterCompass"]:checked');
-			if (c) {
-				if (c.value == 'N')
-					s += (s ? ' and ' : '') + 'location.latitude>' + geoData.latlon.lat;
-				else if (c.value == 'E')
-					s += (s ? ' and ' : '') + 'location.longitude>' + geoData.latlon.lon;
-				else if (c.value == 'S')
-					s += (s ? ' and ' : '') + 'location.latitude<' + geoData.latlon.lat;
-				else if (c.value == 'W')
-					s += (s ? ' and ' : '') + 'location.longitude<' + geoData.latlon.lon;
-			}
-		}
-		var v = ui.val('locations filters [name="filterKeywords"]').trim();
-		if (v) {
-			v = v.replace(/'/g, '\'\'').split(' ');
-			for (var i = 0; i < v.length; i++) {
-				if (v[i].trim()) {
-					v[i] = v[i].trim().toLowerCase();
-					var att = '', l = ') like \'%' + v[i].trim().toLowerCase() + '%\' or LOWER(';
-					for (var i2 = 0; i2 < cats.length; i2++) {
-						for (var i3 = 0; i3 < ui.categories[cats[i2]].subCategories.length; i3++) {
-							if (ui.categories[cats[i2]].subCategories[i3].toLowerCase().indexOf(v[i]) > -1)
-								att += '(location.category like \'%' + cats[i2] + '%\' and location.attr' + cats[i2] + ' like \'%' + (i3 < 10 ? '00' : i3 < 100 ? '0' : '') + i3 + '%\') or ';
-						}
-					}
-					d += '(LOWER(location.name' + l + 'location.description' + l + 'location.address' + l + 'location.address2' + l + 'location.telephone' + l;
-					d = d.substring(0, d.lastIndexOf('LOWER'));
-					if (att)
-						d += att;
-					d = d.substring(0, d.length - 4) + ') and ';
-				}
-			}
-			if (d)
-				d = '(' + d.substring(0, d.length - 5) + ')';
-		}
-		if (d)
-			s += (s ? ' and ' : '') + d;
-		return s;
-	}
-	static getSearchMatches(categories) {
-		var s = '';
-		if (user.contact.budget)
-			s += '(location.budget is null or location.budget=\'\' or REGEXP_LIKE(location.budget,\'' + user.contact.budget.replace(/\u0015/g, '|') + '\')=1) and (';
-		else
-			s += '(';
-		for (var i = 0; i < ui.categories.length; i++) {
-			if ((user.contact['attr' + i] || user.contact['attr' + i + 'Ex']) && (!categories || categories.indexOf(i) > -1))
-				s += '(location.category like \'%' + i + '%\' and (' + global.getRegEx('location.attr' + i, user.contact['attr' + i]) + ' or ' +
-					global.getRegEx('location.attr' + i + 'Ex', user.contact['attr' + i + 'Ex']) + ')) or ';
-			else if (categories && categories.indexOf(i) > -1)
-				s += '(location.category like \'%' + i + '%\') or ';
-		}
-		if (s.length < 2)
-			return '';
-		if (s.lastIndexOf(' or ') == s.length - 4)
-			return s.substring(0, s.length - 4) + ')'
-		return s.substring(0, s.length - 6);
-	}
 	static hasCategory(cats, catString) {
 		catString = '' + catString;
 		for (var i = 0; i < catString.length; i++) {
 			if (cats[catString.substring(i, i + 1)])
 				return true;
 		}
-	}
-	static init(id) {
-		if (!pageLocation.filter)
-			pageLocation.filter = formFunc.getDraft('searchLocations') || {};
-		if (!ui.q(id).innerHTML)
-			lists.setListDivs(id);
-		if (!ui.q(id + ' listResults row'))
-			setTimeout(lists.openFilter, 500);
-		if (!pageLocation.map.svgLocation)
-			communication.ajax({
-				url: '/images/location.svg',
-				success(r) {
-					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
-					e.setAttribute('fill', 'black');
-					e.setAttribute('stroke', 'black');
-					e.setAttribute('stroke-width', '60');
-					pageLocation.map.svgLocation = 'data:image/svg+xml;base64,' + btoa(e.outerHTML);
-				}
-			});
-		if (!pageLocation.map.svgMe)
-			communication.ajax({
-				url: '/images/contact.svg',
-				success(r) {
-					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
-					e.setAttribute('fill', 'black');
-					e.setAttribute('stroke', 'black');
-					e.setAttribute('stroke-width', '20');
-					pageLocation.map.svgMe = 'data:image/svg+xml;base64,' + btoa(e.outerHTML);
-				}
-			});
 	}
 	static isInPosition(compass, angle) {
 		if (compass == 'E' && angle > 45 && angle <= 135)
@@ -810,14 +483,6 @@ ${v.hint}
 				v._message1 = p;
 			else if (!v._message2)
 				v._message2 = p;
-		}
-		if (v._openTimesEntries) {
-			var ot = v._isOpen && v._isOpen > 0 ? ui.l('locations.open') :
-				v._openTimesEntries && v._openTimesEntries > 0 ? ui.l('locations.closed') : '';
-			if (!v._message1)
-				v._message1 = ot;
-			else if (!v._message2)
-				v._message2 = ot;
 		}
 	}
 	static listLocation(l) {
@@ -893,16 +558,6 @@ ${v.hint}
 			});
 		}
 	}
-	static prefillOpenTimesFields(event, field) {
-		var e = event.target;
-		var s = e.getAttribute('name');
-		var v = e.value;
-		s = parseInt(s.substring(s.indexOf('At') + 2), 10);
-		while (e = ui.q('[name="openTimes.' + field + 'At' + (++s) + '"]')) {
-			if (!e.value)
-				e.value = v;
-		}
-	}
 	static replaceMapDescData(s) {
 		if (!s)
 			return '';
@@ -910,27 +565,6 @@ ${v.hint}
 	}
 	static reset() {
 		pageLocation.locationsAdded = null;
-	}
-	static sanatizeFields() {
-		var sa = '', s = ui.qa('[name="locationcategory"]:checked');
-		for (var i = 0; i < s.length; i++)
-			sa += s[i].value;
-		ui.q('[name="category"]').value = sa;
-		s = ui.q('[name="openTimesBankholiday2"]');
-		ui.q('[name="openTimesBankholiday"]').value = s && s.length > 0 && s[0].checked ? '' + true : '' + false;
-		for (var i = 0; i < ui.categories.length; i++) {
-			var s2 = '';
-			if (ui.q('#inputHelperATTRIBS' + i)) {
-				s = ui.q('#inputHelperATTRIBS' + i).children;
-				for (var i2 = 0; i2 < s.length; i2++) {
-					if (s[i2].checked)
-						s2 += '\u0015' + (s[i2].value < 10 ? '00' : s[i2].value < 100 ? '0' : '') + Number(s[i2].value);
-				}
-				if (s2)
-					s2 = s2.substring(1);
-			}
-			ui.q('[name="attr' + i + '"]').value = s2;
-		}
 	}
 	static save() {
 		ui.html('popupHint', '');
@@ -959,7 +593,6 @@ ${v.hint}
 			ui.scrollTo('popupContent', 0);
 			return;
 		}
-		pageLocation.sanatizeFields();
 		var id = ui.val('[name="id"]');
 		var v = formFunc.getForm('popup form');
 		v.classname = 'Location';
@@ -1002,16 +635,7 @@ ${v.hint}
 	static saveDraft() {
 		if (ui.q('popup input[name="id"]').value)
 			return;
-		pageLocation.sanatizeFields();
-		var a = formFunc.getForm('popup form');
-		a.OT = [];
-		a.OT[0] = ['locationOpenTime.day', 'locationOpenTime.openAt', 'locationOpenTime.closeAt', 'locationOpenTime.id'];
-		var e, i = 1;
-		while ((e = ui.q('[name="locationOpenTime.day' + i + '"]'))) {
-			a.OT[i] = [e.value, ui.val('[name="locationOpenTime.openAt' + i + '"]'), ui.val('[name="locationOpenTime.closeAt' + i + '"]'), ''];
-			i++;
-		}
-		formFunc.saveDraft('location', a);
+		formFunc.saveDraft('location', formFunc.getForm('popup form'));
 	}
 	static saveEvent(locationId) {
 		formFunc.resetError(ui.q('popup form input[name="startDate"]'));

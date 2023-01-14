@@ -293,6 +293,12 @@ subCatTitle {
 	background-size: 100% 100%;
 }
 
+.expandableHeight {
+	transition: max-height .4s ease-out;
+	overflow: hidden;
+	max-height: 0;
+}
+
 home text {
 	padding: 0.75em;
 }
@@ -426,6 +432,10 @@ filters buttontext {
 	margin-top: 0.5em;
 }
 
+login {
+	padding-top: 2em !important;
+}
+
 login registerHint {
 	position: absolute;
 	margin-left: 5%;
@@ -460,6 +470,7 @@ listBody {
 
 listTitle {
 	line-height: 4em;
+	padding-left: 1em;
 }
 
 input[type="file"] {
@@ -623,6 +634,10 @@ popup .multiple {
 	margin-bottom: 1em;
 }
 
+popup .locationName {
+	margin-top: -1em;
+}
+
 .multipleLabel {
 	cursor: pointer;
 	display: inline-block;
@@ -707,6 +722,36 @@ explain.paypal buttontext {
 filters explain,
 popup explain {
 	padding-top: 0.25em;
+}
+
+search {
+	padding-top: 1em;
+}
+
+search tabHeader {
+	margin: 0 0.5em;
+}
+
+search tabBody {
+	position: absolute;
+	top: 3em;
+	left: 0;
+	right: 0;
+	bottom: 0em;
+}
+
+search tabBody>div {
+	overflow-y: auto;
+	height: 100%;
+	width: 100%;
+}
+
+search form {
+	padding: 0.5em 1em 0 1em;
+}
+
+search form explain {
+	padding: 0.25em 0.5em 0.5em 0.5em;
 }
 
 settings qrcodeDescription {
@@ -884,10 +929,6 @@ chat {
 	z-index: 3;
 }
 
-chat listHeader {
-	text-align: left;
-}
-
 chat listHeader img {
 	position: relative;
 	width: 3.5em;
@@ -906,6 +947,7 @@ listHeader {
 	z-index: 1;
 	height: 3.5em;
 	display: block;
+	text-align: left;
 }
 
 listHeader chatName {
@@ -1239,6 +1281,8 @@ locationNameInputHelper,
 eventLocationInputHelper {
 	position: relative;
 	display: block;
+	max-height: 25em;
+	overflow-y: auto;
 }
 
 locationNameInputHelper li,
@@ -2203,67 +2247,6 @@ detail text.list {
 	margin: 0 -1em;
 }
 
-openTimes row {
-	height: 1.6em;
-	width: 10em;
-	display: flex;
-	white-space: nowrap;
-	left: 50%;
-	margin-left: -5em;
-}
-
-openTimesAdd {
-	line-height: 3em;
-	width: 3em;
-	height: 3em;
-	text-align: center;
-	border-radius: 50%;
-	display: block;
-	position: relative;
-	left: 50%;
-	margin: 0.5em 0 1em -1.5em;
-}
-
-openTimes day {
-	width: 45%;
-	text-align: right;
-	display: inline-block;
-	vertical-align: top;
-}
-
-openTimes time {
-	width: 55%;
-	display: inline-block;
-	text-align: left;
-}
-
-openTimes sep {
-	width: 1em;
-	text-align: center;
-	display: inline-block;
-}
-
-openTimes from {
-	width: 3.5em;
-	text-align: right;
-	display: inline-block;
-}
-
-openTimes to {
-	width: 3.7em;
-	text-align: left;
-	display: inline-block;
-}
-
-openTimesEdit>div {
-	display: flex;
-	padding-top: 0.38em;
-}
-
-openTimesEdit>div span {
-	margin: 0 1em;
-}
-
 tabHeader {
 	height: 1.5em;
 	line-height: 1.6;
@@ -2291,10 +2274,12 @@ tab {
 	overflow: hidden;
 	height: 100%;
 	opacity: 0.5;
-	padding: 0 0.5em;
-	display: inline-block;
+	padding: 0;
+	display: inline;
 	cursor: pointer;
 	position: relative;
+	width: 33.3%;
+	float: left;
 }
 
 tabBody {
@@ -2302,7 +2287,6 @@ tabBody {
 	position: relative;
 	width: 100%;
 	display: block;
-	margin-bottom: 1em;
 }
 
 progressbar {

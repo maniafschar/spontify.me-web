@@ -13,7 +13,6 @@ class lists {
 
 	static templateList = v =>
 		global.template`<listHeader>
-<buttonicon class="left bgColor" onclick="lists.toggleFilter(event)"><img source="search"/></buttonicon>
 <buttonicon class="right bgColor" onclick="ui.navigation.toggleMenu()"><img source="menu"/></buttonicon>
 ${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5em;"></hinky><div></div></filters><listTitle></listTitle>${v.map}</listHeader>
 <listScroll><a class="bgColor"></a></listScroll><listBody>${v.groups}<listResults></listResults></listBody>`;
@@ -129,7 +128,7 @@ ${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5e
 			var v = {};
 			if (id == 'contacts')
 				v.groups = '<groups style="display:none;"></groups>';
-			else if (id == 'locations')
+			else
 				v.map = '<map style="display:none;"></map><buttontext class="bgColor map" onclick="pageLocation.searchFromMap()">' + ui.l('search.map') + '</buttontext>';
 			e.innerHTML = lists.templateList(v);
 			formFunc.image.replaceSVGs();
@@ -140,8 +139,8 @@ ${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5e
 					else if (dir == 'right')
 						ui.navigation.goTo('events');
 				});
-			else if (id == 'locations')
-				ui.swipe('locations>listBody', function (dir) {
+			else if (id == 'search')
+				ui.swipe('search>listBody', function (dir) {
 					if (dir == 'left')
 						ui.navigation.goTo('events');
 					else if (dir == 'right')
@@ -152,7 +151,7 @@ ${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5e
 					if (dir == 'left')
 						ui.navigation.goTo('contacts');
 					else if (dir == 'right')
-						ui.navigation.goTo('locations');
+						ui.navigation.goTo('search');
 				});
 			new DragObject(ui.q(id + ' listScroll')).ondrag = function (event, top) {
 				var activeID = ui.navigation.getActiveID();
@@ -199,6 +198,10 @@ ${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5e
 			else if (rows.length > x)
 				x = x + '/' + rows.length;
 			e.innerHTML = ui.l('search.results').replace('{0}', x) + ' ' + s;
+		} else if (id.indexOf('search') == 0) {
+			var s = id.substring(id.lastIndexOf('.') + 1);
+			var i = ui.qa('search tabBody div.' + s + ' listResults row').length;
+			ui.q('search tabHeader tab[i="' + s + '"]').innerText = ui.l(s + 's.title') + (i ? global.separator + i : '');
 		}
 		ui.css(id + ' listScroll', 'display', '');
 		lists.repositionThumb(id);

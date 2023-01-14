@@ -24,17 +24,18 @@ class pageEvent {
 <input type="hidden" name="id" value="${v.id}"/>
 <input type="hidden" name="locationId" value="${v.locationID}"/>
 <input type="hidden" name="confirm" />
-${v.hint}
-<field${v.displayLocation}>
-	<label>${ui.l('events.location')}</label>
+<field class="location${v.classLocation}">
+	<label style="padding-top:0;">${ui.l('events.location')}</label>
 	<value style="text-align:center;">
 		<input transient="true" name="location" onkeyup="pageEvent.locations()" />
 		<eventLocationInputHelper><explain>${ui.l('events.locationInputHint')}</explain></eventLocationInputHelper>
 		<buttontext onclick="pageLocation.edit()" class="bgColor eventLocationInputHelperButton">${ui.l('locations.new')}</buttontext>
 	</value>
 </field>
+<div class="event${v.classEvent}">
+<div class="locationName"></div>
 <field>
-	<label>${ui.l('type')}</label>
+	<label style="padding-top:1em;">${ui.l('type')}</label>
 	<value>
 		<input type="radio" name="type" value="o" label="${ui.l('events.type_o')}" onclick="pageEvent.setForm()" ${v.type_o}/>
 		<input type="radio" name="type" value="w1" label="${ui.l('events.type_w1')}" onclick="pageEvent.setForm()" ${v.type_w1}/>
@@ -71,14 +72,14 @@ ${v.hint}
 	<label>${ui.l('events.price')}</label>
 	<value>
 		<input type="number" step="any" name="price" value="${v.price}" onkeyup="pageEvent.checkPrice()" />
-		<explain class="paypal">${ui.l('events.paypalSignUpHint')}
+		<explain class="paypal expandableHeight">${ui.l('events.paypalSignUpHint')}
 			<dialogButtons>
 				<buttontext class="bgColor" onclick="pageEvent.signUpPaypal()">${ui.l('events.paypalSignUpButton')}</buttontext>
 			</dialogButtons>
 		</explain>
 	</value>
 </field>
-<field class="confirm">
+<field class="confirm expandableHeight">
 	<label>${ui.l('events.confirmLabel')}</label>
 	<value>
 		<input type="checkbox" name="eventconfirm" transient="true" label="${ui.l('events.confirm')}" value="1" ${v.confirm}/>
@@ -108,6 +109,7 @@ ${v.hint}
 	<buttontext onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" class="bgColor${v.hideDelete}" id="deleteElement">${ui.l('delete')}</buttontext>
 	<popupHint></popupHint>
 </dialogButtons>
+</div>
 </form>`;
 	static templateDetail = v =>
 		global.template`<text class="description${v.classParticipate}" ${v.oc}>
@@ -123,46 +125,20 @@ ${v.eventLinkOpen}
 ${v.eventLinkClose}
 ${v.eventParticipationButtons}
 </text>`;
-	static templateSearch = v =>
-		global.template`<form onsubmit="return false">
-<input type="checkbox" name="filterCategories" value="0" label="${ui.categories[0].label}" onclick="pageLocation.filterList()" ${v.valueCat0}/>
-<input type="checkbox" name="filterCategories" value="1" label="${ui.categories[1].label}" onclick="pageLocation.filterList()" ${v.valueCat1}/>
-<input type="checkbox" name="filterCategories" value="2" label="${ui.categories[2].label}" onclick="pageLocation.filterList()" ${v.valueCat2}/>
-<input type="checkbox" name="filterCategories" value="3" label="${ui.categories[3].label}" onclick="pageLocation.filterList()" ${v.valueCat3}/>
-<input type="checkbox" name="filterCategories" value="4" label="${ui.categories[4].label}" onclick="pageLocation.filterList()" ${v.valueCat4}/>
-<input type="checkbox" name="filterCategories" value="5" label="${ui.categories[5].label}" onclick="pageLocation.filterList()" ${v.valueCat5}/>
-<filterSeparator></filterSeparator>
-<input type="checkbox" label="${ui.l('search.matches')}" name="filterMatchesOnly" ${v.valueMatchesOnly}/>
-<filterSeparator></filterSeparator>
-<input type="text" name="filterKeywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.valueKeywords}/>
-<explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
-<errorHint></errorHint>
-<buttontext class="bgColor defaultButton" onclick="pageEvent.search()">${ui.l('search.action')}</buttontext></form>`;
 	static checkPrice() {
-		var e = ui.q('popup explain.paypal'), h = ui.cssValue(e, 'height');
+		var e = ui.q('popup explain.paypal');
 		if (ui.q('popup [name="price"]').value > 0) {
-			if (h && !e.getAttribute('h'))
-				e.setAttribute('h', parseInt(h));
-			if (user.contact.paypalMerchantId && (!h || parseInt(h) > 0))
-				ui.toggleHeight(e);
-			else if (!user.contact.paypalMerchantId && h && parseInt(h) == 0)
+			if (user.contact.paypalMerchantId && e.style.maxHeight ||
+				!user.contact.paypalMerchantId && !e.style.maxHeight)
 				ui.toggleHeight(e);
 			e = ui.q('popup .confirm');
-			h = ui.cssValue(e, 'height');
-			if (h && !e.getAttribute('h'))
-				e.setAttribute('h', parseInt(h));
-			if (!h || parseInt(h) > 0)
+			if (e.style.maxHeight)
 				ui.toggleHeight(e);
 		} else {
-			if (h && !e.getAttribute('h'))
-				e.setAttribute('h', parseInt(h));
-			if (!h || parseInt(h) > 0)
+			if (e.style.maxHeight)
 				ui.toggleHeight(e);
 			e = ui.q('popup .confirm');
-			h = ui.cssValue(e, 'height');
-			if (h && !e.getAttribute('h'))
-				e.setAttribute('h', parseInt(h));
-			if (h && parseInt(h) == 0)
+			if (!e.style.maxHeight)
 				ui.toggleHeight(e);
 		}
 	}
@@ -262,11 +238,7 @@ ${v.eventParticipationButtons}
 		d = new Date();
 		v.today = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
 		v.id = id;
-		if (!id)
-			v.hint = '<div>' + ui.l('events.newHint') + '</div>';
 		v.locationID = locationID;
-		if (locationID)
-			v.displayLocation = ' style="display:none;"'
 		if (!v.type || v.type == 'o')
 			v.type_o = ' checked';
 		if (v.type == 'w1')
@@ -294,9 +266,18 @@ ${v.eventParticipationButtons}
 			d.setMonth(d.getMonth() + 6);
 			v.endDate = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
 		}
+		if (locationID)
+			v.classLocation = ' noDisp';
+		else {
+			v.classLocation = ' expandableHeight';
+			v.classEvent = ' expandableHeight';
+		}
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
 		pageEvent.setForm();
-		pageEvent.locationsOfPastEvents();
+		if (!locationID) {
+			pageEvent.locationsOfPastEvents();
+			setTimeout(function () { ui.toggleHeight('popup field.location'); }, 300);
+		}
 		setTimeout(pageEvent.checkPrice, 500);
 	}
 	static getCalendarList(data, onlyMine) {
@@ -376,20 +357,6 @@ ${v.eventParticipationButtons}
 		}
 		return a;
 	}
-	static getFilterFields() {
-		var v = {};
-		var l = lists.data[ui.navigation.getActiveID()];
-		if (pageEvent.filter.filterCategories) {
-			var c = pageEvent.filter.filterCategories.split('\u0015');
-			for (var i = 0; i < c.length; i++)
-				v['valueCat' + c[i]] = ' checked="true"';
-		}
-		if (pageEvent.filter.filterKeywords)
-			v.valueKeywords = ' value="' + pageEvent.filter.filterKeywords + '"';
-		if (pageEvent.filter.filterMatchesOnly == 'on')
-			v.valueMatchesOnly = ' checked="true"';
-		return pageEvent.templateSearch(v);
-	}
 	static getId(v) {
 		var endDate = global.date.server2Local(v['event.endDate'] || v.event.endDate), today = new Date(), id = v.id || v['event.id'];
 		today.setHours(0);
@@ -448,54 +415,33 @@ ${v.eventParticipationButtons}
 			}
 		}
 	}
-	static getSearch() {
-		var s = '';
-		if (ui.q('events filters [name="filterMatchesOnly"]:checked'))
-			s = pageLocation.getSearchMatches();
-		var c = '', d = '';
-		var cats = [];
-		var e = ui.qa('events filters [name="filterCategories"]:checked');
-		if (e) {
-			for (var i = 0; i < e.length; i++) {
-				cats.push(e[i].value);
-				c += 'location.category like \'%' + e[i].value + '%\' or event.category like \'%' + e[i].value + '%\' or ';
-			}
-		}
-		if (c)
-			s += (s ? ' and ' : '') + '(' + c.substring(0, c.length - 4) + ')';
-		else {
-			for (var i = 0; i < ui.categories.length; i++)
-				cats.push(i);
-		}
-		var v = ui.val('events filters [name="filterKeywords"]').trim();
-		if (v) {
-			v = v.replace(/'/g, '\'\'').split(' ');
-			for (var i = 0; i < v.length; i++) {
-				if (v[i].trim()) {
-					v[i] = v[i].trim().toLowerCase();
-					var att = '', l = ') like \'%' + v[i].trim().toLowerCase() + '%\' or LOWER(';
-					for (var i2 = 0; i2 < cats.length; i2++) {
-						for (var i3 = 0; i3 < ui.categories[cats[i2]].subCategories.length; i3++) {
-							if (ui.categories[cats[i2]].subCategories[i3].toLowerCase().indexOf(v[i]) > -1)
-								att += '(location.category like \'%' + cats[i2] + '%\' and location.attr' + cats[i2] + ' like \'%' + (i3 < 10 ? '00' : i3 < 100 ? '0' : '') + i3 + '%\') or ';
-						}
-					}
-					d += '(LOWER(location.name' + l + 'location.description' + l + 'location.address' + l + 'location.address2' + l + 'location.telephone' + l;
-					d = d.substring(0, d.lastIndexOf('LOWER'));
-					if (att)
-						d += att;
-					d = d.substring(0, d.length - 4) + ') and ';
-				}
-			}
-			if (d)
-				d = '(' + d.substring(0, d.length - 5) + ')';
-		}
-		if (d)
-			s += (s ? ' and ' : '') + d;
-		return s;
-	}
 	static init() {
-		pageLocation.init('events');
+		if (!ui.q('events').innerHTML)
+			lists.setListDivs('events');
+		if (!ui.q('events listResults row'))
+			setTimeout(ui.navigation.toggleMenu, 500);
+		if (!pageLocation.map.svgLocation)
+			communication.ajax({
+				url: '/images/location.svg',
+				success(r) {
+					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
+					e.setAttribute('fill', 'black');
+					e.setAttribute('stroke', 'black');
+					e.setAttribute('stroke-width', '60');
+					pageLocation.map.svgLocation = 'data:image/svg+xml;base64,' + btoa(e.outerHTML);
+				}
+			});
+		if (!pageLocation.map.svgMe)
+			communication.ajax({
+				url: '/images/contact.svg',
+				success(r) {
+					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
+					e.setAttribute('fill', 'black');
+					e.setAttribute('stroke', 'black');
+					e.setAttribute('stroke-width', '20');
+					pageLocation.map.svgMe = 'data:image/svg+xml;base64,' + btoa(e.outerHTML);
+				}
+			});
 		if (!pageEvent.paypal && !user.contact.paypalMerchantId)
 			communication.ajax({
 				url: global.server + 'action/paypalSignUpSellerUrl',
@@ -613,10 +559,6 @@ ${v.eventParticipationButtons}
 						else if (v.parkingOption.indexOf('4') > -1)
 							v.parking = ui.l('locations.parking4');
 					}
-					if (v._isOpen > 0)
-						v.open = ui.l('locations.open');
-					else if (v._openTimesEntries > 0)
-						v.open = ui.l('locations.closed');
 					v._geolocationDistance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 ? 0 : 1).replace('.', ',') : '';
 					v.type = 'Event';
 					if (ui.navigation.getActiveID() == 'settings3')
@@ -707,9 +649,15 @@ ${v.eventParticipationButtons}
 		});
 	}
 	static locationSelected(e) {
-		ui.q('popup input[name="locationId"]').value = e.getAttribute('i');
-		ui.q('popup eventLocationInputHelper').innerHTML = e.innerHTML;
-		ui.q('popup buttontext.eventLocationInputHelperButton').style.display = 'none';
+		if (e) {
+			ui.q('popup input[name="locationId"]').value = e.getAttribute('i');
+			ui.q('popup .locationName').innerHTML = e.innerHTML;
+		}
+		ui.toggleHeight('popup .location');
+		ui.toggleHeight('popup .event', function () {
+			ui.classRemove('popup .event', 'expandableHeight');
+			ui.q('popup .event').style.maxHeight = '';
+		});
 	}
 	static participate(event, id) {
 		event.stopPropagation();

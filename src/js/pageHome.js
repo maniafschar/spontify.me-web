@@ -49,18 +49,8 @@ class pageHome {
 </item>`;
 	static templateNewEvent = v =>
 		global.template`<form name="editElement" onsubmit="return false">
-<input type="hidden" name="locationId" />
 <input type="hidden" name="type" value="${v.type}" />
-<input type="checkbox" transient="true" onclick="pageHome.toggleLocation()" label="in einer Location" style="margin:1em 0 2em 0;"/>
-<field class="location" style="display:none;">
-<label style="padding-top:0;">${ui.l('events.location')}</label>
-<value style="text-align:center;">
-<input transient="true" name="location" onkeyup="pageEvent.locations()" />
-<eventLocationInputHelper><explain>${ui.l('events.locationInputHint')}</explain></eventLocationInputHelper>
-<buttontext onclick="pageLocation.edit()" class="bgColor eventLocationInputHelperButton">${ui.l('locations.new')}</buttontext>
-</value>
-</field>
-<field class="category">
+<field style="padding-top:0.5em;">
 <value>
 <input type="radio" value="0" name="category" label="${ui.categories[0].verb}" ${v.category0} />
 <input type="radio" value="1" name="category" label="${ui.categories[1].verb}" ${v.category1} />
@@ -148,7 +138,6 @@ class pageHome {
 			}
 			v['visibilityChecked' + v.visibility] = ' checked="checked"';
 			ui.navigation.openPopup(ui.l('wtd.todayIWant'), pageHome.templateNewEvent(v));
-			pageEvent.locationsOfPastEvents();
 		} else
 			intro.openHint({ desc: 'whatToDo', pos: '10%,5em', size: '80%,auto' });
 	}
@@ -263,7 +252,6 @@ class pageHome {
 		ui.navigation.hidePopup();
 	}
 	static saveEvent() {
-		formFunc.resetError(ui.q('popup form input[name="location"]'));
 		formFunc.resetError(ui.q('popup form input[name="startDate"]'));
 		formFunc.resetError(ui.q('popup form input[name="visibility"]'));
 		formFunc.resetError(ui.q('popup form textarea[name="text"]'));
@@ -277,16 +265,12 @@ class pageHome {
 			formFunc.validation.filterWords(ui.q('popup form textarea[name="text"]'));
 		if (v.values.visibility == 2 && (!user.contact.attr || !user.contact.attrInterest))
 			formFunc.setError(ui.q('popup input[name="visibility"]'), 'events.errorVisibility');
-		if (ui.q('popup field.location').style.display != 'none' && !v.values.locationId)
-			formFunc.setError(ui.q('popup input[name="location"]'), 'events.errorLocation');
 		if (ui.q('popup errorHint'))
 			return;
 		var d = new Date();
 		if (h < d.getHours())
 			d.setDate(d.getDate() + 1);
 		v.values.startDate = global.date.local2server(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + v.values.startDate + ':00');
-		if (ui.q('popup field.location').style.display == 'none')
-			v.values.locationId = null;
 		v.classname = 'Event';
 		v.id = ui.q('home item.event').getAttribute('i');
 		communication.ajax({
@@ -303,16 +287,6 @@ class pageHome {
 	static saveLocationPicker() {
 		geoData.save({ latitude: pageHome.map.getCenter().lat(), longitude: pageHome.map.getCenter().lng(), manual: true });
 		ui.navigation.hidePopup();
-	}
-	static toggleLocation() {
-		var e = ui.q('field.location');
-		if (e.style.display == 'none') {
-			e.style.display = '';
-			ui.q('field.category').style.display = 'none';
-		} else {
-			e.style.display = 'none';
-			ui.q('field.category').style.display = '';
-		}
 	}
 	static toggleNotification() {
 		if (!user.contact)

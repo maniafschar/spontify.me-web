@@ -120,20 +120,18 @@ class pageLogin {
 </form>
 <registerHint onclick="pageLogin.toggleRegistrationHints()">${ui.l('login.hints')}</registerHint>`;
 	static templateTabs = () =>
-		global.template`<div style="padding-top:2em;">
-    <tabHeader>
-        <tab onclick="pageLogin.setLoginFormTab1()" style="max-width:30%;">
-			${ui.l('login.action')}
-        </tab>
-        <tab onclick="pageLogin.setLoginFormTab2()" style="max-width:45%;">
-			${ui.l('login.passwordForgotten')}
-        </tab>
-        <tab onclick="pageLogin.setLoginFormTab3()" style="max-width:30%;">
-			${ui.l('login.register')}
-        </tab>
-    </tabHeader>
-    <tabBody id="loginBodyDiv"></tabBody>
-</div>`;
+		global.template`<tabHeader>
+	<tab onclick="pageLogin.setLoginFormTab1()">
+		${ui.l('login.action')}
+	</tab>
+	<tab onclick="pageLogin.setLoginFormTab2()">
+		${ui.l('login.passwordForgotten')}
+	</tab>
+	<tab onclick="pageLogin.setLoginFormTab3()">
+		${ui.l('login.register')}
+	</tab>
+</tabHeader>
+<tabBody id="loginBodyDiv"></tabBody>`;
 
 	static fromForm() {
 		var u = ui.q('input[name="email"]');

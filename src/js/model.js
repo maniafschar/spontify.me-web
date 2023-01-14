@@ -1,6 +1,6 @@
 import { communication } from './communication';
 
-export { model, Contact, ContactLink, Location, ContactNotification, EventParticipate, LocationOpenTime, LocationFavorite, Event, Block, Chat, LocationOwnerHistory, ContactVisit, ContactGroup, ContactGroupLink };
+export { model, Contact, ContactLink, Location, ContactNotification, EventParticipate, LocationFavorite, Event, Block, Chat, LocationOwnerHistory, ContactVisit, ContactGroup, ContactGroupLink };
 
 class model {
 	static reportedErrors = {};
@@ -21,12 +21,6 @@ class model {
 			var o = object, key = keys[i];
 			if (key.indexOf('.') == 0)
 				key = key.substring(1);
-			else if (key == 'OT' && object2Transform[i]) {
-				var a = [];
-				for (var i2 = 1; i2 < object2Transform[i].length; i2++)
-					a.push(model.convert(new LocationOpenTime(), object2Transform[i], i2));
-				object.locationOpenTime = a;
-			}
 			key = key.split('.');
 			for (var i2 = 0; i2 < key.length; i2++) {
 				if (key[i2] != 'OT') {
@@ -219,9 +213,6 @@ class Location extends BaseEntity {
 	latitude;
 	longitude;
 	name;
-	openTimesBankholiday;
-	openTimesEntries;
-	openTimesText;
 	ownerId;
 	parkingOption;
 	parkingText;
@@ -238,19 +229,11 @@ class Location extends BaseEntity {
 	event = new Event();
 	eventParticipate = new EventParticipate();
 	locationFavorite = new LocationFavorite();
-	locationOpenTime;
 	locationRating = new LocationRating();
 }
 
 class LocationFavorite extends BaseEntity {
 	favorite;
-}
-
-class LocationOpenTime extends BaseEntity {
-	closeAt;
-	day;
-	locationId;
-	openAt;
 }
 
 class LocationOwnerHistory extends BaseEntity {

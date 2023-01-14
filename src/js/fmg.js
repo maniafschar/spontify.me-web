@@ -18,6 +18,7 @@ import { user } from './user';
 import { geoData } from './geoData';
 import { bluetooth } from './bluetooth';
 import { pageEvent } from './pageEvent';
+import { pageSearch } from './pageSearch';
 
 window.model = model;
 window.global = global;
@@ -26,6 +27,7 @@ window.user = user;
 window.ui = ui;
 window.pageEvent = pageEvent;
 window.pageLogin = pageLogin;
+window.pageSearch = pageSearch;
 window.pageHome = pageHome;
 window.pageContact = pageContact;
 window.pageLocation = pageLocation;

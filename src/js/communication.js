@@ -124,7 +124,7 @@ class communication {
 				if (divID) {
 					lists.data[divID] = r;
 					if (!s)
-						s = lists.getListNoResults(divID, errorID)
+						s = lists.getListNoResults(divID.indexOf('.') ? divID.substring(divID.lastIndexOf('.') + 1) : divID, errorID)
 					lists.hideFilter();
 					lists.setListDivs(divID);
 					ui.navigation.hideMenu();
@@ -135,7 +135,9 @@ class communication {
 						if (ui.navigation.getActiveID() == 'locations' && menuIndex >= ui.q('menu container').childElementCount && ui.cssValue('map', 'display') != 'none')
 							pageLocation.toggleMap();
 					}
-					ui.q(divID + ' listBody').scrollTop = 0;
+					var e = ui.q(divID + ' listBody');
+					if (e)
+						e.scrollTop = 0;
 					lists.setListHint(divID);
 				}
 				geoData.updateCompass();

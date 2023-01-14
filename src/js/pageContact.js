@@ -151,65 +151,6 @@ ${v.budget}
     class="bgColor">
     ${ui.l('confirmDelete')}
 </buttontext>`;
-	static templateSearch = v =>
-		global.template`<form onsubmit="return false">
-<input type="radio" name="filterGender" value="1" label="${ui.l('male')}" deselect="true" onclick="pageContact.filterList()" ${v.valueGender1}/>
-<input type="radio" name="filterGender" value="2" label="${ui.l('female')}" deselect="true" onclick="pageContact.filterList()" ${v.valueGender2}/>
-<input type="radio" name="filterGender" value="3" label="${ui.l('divers')}" deselect="true" onclick="pageContact.filterList()" ${v.valueGender3}/>
-<filterSeparator></filterSeparator>
-<input type="checkbox" label="${ui.l('search.matches')}" name="filterMatchesOnly" ${v.valueMatchesOnly}/>
-<input type="checkbox" label="${ui.l('settings.guide')}" name="filterGuide" onclick="pageContact.filterList()" ${v.valueGuide}/>
-<filterSeparator></filterSeparator>
-<input type="text" name="filterAge" slider="range" min="18" max="99" id="filterAge" ${v.valueAge}/>
-<filterSeparator></filterSeparator>
-<input type="text" name="filterKeywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.valueKeywords}/>
-<explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
-<errorHint></errorHint>
-<buttontext class="bgColor defaultButton" onclick="pageContact.search()">${ui.l('search.action')}</buttontext></form>`;
-	static addWTDMessage(v) {
-		if (v.message_keywords) {
-			var msg = 'wtd:' + v.message_keywords + '|';
-			if (v.message_locationId)
-				msg += v.message_locationId + '|';
-			var time = global.date.formatDate(v.message_time);
-			time = time.substring(time.lastIndexOf(' ') + 1);
-			v._message1 = global.string.replaceNewsAdHoc(msg + time);
-		}
-	}
-	static ageFromSelected(e) {
-		var t = ui.qa('[name="filterConAgeTo"]');
-		for (var i = 0; i < t.length; i++) {
-			if (t[i].checked) {
-				if (t[i].getAttribute('label') <= e) {
-					t[i].checked = false;
-					for (i++; i < t.length; i++) {
-						if (t[i].getAttribute('label') > e) {
-							t[i].checked = true;
-							break;
-						}
-					}
-				}
-				break;
-			}
-		}
-	}
-	static ageToSelected(e) {
-		var t = ui.qa('[name="filterConAgeFrom"]');
-		for (var i = t.length - 1; i >= 0; i--) {
-			if (t[i].checked) {
-				if (t[i].getAttribute('label') >= e) {
-					t[i].checked = false;
-					for (i--; i >= 0; i--) {
-						if (t[i].getAttribute('label') < e) {
-							t[i].checked = true;
-							break;
-						}
-					}
-				}
-				break;
-			}
-		}
-	}
 	static block() {
 		var path = 'detail card:last-child [name="block"]';
 		formFunc.resetError(ui.q(path + ' [name="note"]'));
@@ -313,7 +254,6 @@ ${v.budget}
 			v.link += '<buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + idIntern + ')">' + ui.l('contacts.requestFriendship') + '</buttontext>';
 		if (v.contactLink.status == 'Friends')
 			v.favorite = 'favorite';
-		pageContact.addWTDMessage(v);
 		v.attr = ui.getAttributes(v, 'detail');
 		v.budget = v.attr.budget.toString();
 		v.attributes = v.attr.textAttributes();
@@ -373,24 +313,6 @@ ${v.budget}
 			v.contactLinkStatus = v.contactLink.status;
 		return pageContact.templateDetail(v);
 	}
-	static filterList() {
-		var d = lists.data['contacts'];
-		if (!d)
-			return;
-		var bu = ui.q(' filters [name="filterFriends"]:checked');
-		if (bu)
-			bu = bu.value;
-		var ge = ui.q('contacts filters [name="filterGender"]:checked');
-		if (ge)
-			ge = ge.value;
-		for (var i = 1; i < d.length; i++) {
-			var e = model.convert(new Contact(), d, i);
-			var match = (!ge || e.gender == ge) && (!bu || e.contactLink.status == 'Friends');
-			e = ui.q('contacts [i="' + e.id + '"]');
-			ui.attr(e, 'filtered', !match);
-		}
-		lists.execFilter();
-	}
 	static getBirthday(b, bd) {
 		var birth = '', present = '', age = 0;
 		if (b) {
@@ -406,105 +328,6 @@ ${v.budget}
 			}
 		}
 		return [birth, present, age];
-	}
-	static getFilterFields() {
-		var v = {};
-		var l = lists.data[ui.navigation.getActiveID()];
-		if (pageContact.filter.filterAge)
-			v.valueAge = ' value="' + pageContact.filter.filterAge + '"';
-		if (pageContact.filter.filterKeywords)
-			v.valueKeywords = ' value="' + pageContact.filter.filterKeywords + '"';
-		if (pageContact.filter.filterMatchesOnly == 'on')
-			v.valueMatchesOnly = ' checked="true"';
-		if (pageContact.filter.filterGuide == 'on')
-			v.valueGuide = ' checked="true"';
-		v['valueGender' + pageContact.filter.filterGender] = ' checked="true"';
-		return pageContact.templateSearch(v);
-	}
-	static getSearch() {
-		var s = '', s2 = '';
-		if (ui.q('contacts filters [name="filterMatchesOnly"]:checked'))
-			s = ' and ' + pageContact.getSearchMatches();
-		var v = ui.q('contacts filters [name="filterGender"]:checked');
-		if (v && v.checked)
-			s += ' and contact.gender=' + v.value;
-		if (ui.q('contacts filters [name="filterGuide"]:checked'))
-			s += ' and contact.guide=1';
-		v = ui.q('contacts filters [name="filterAge"]').value;
-		if (v) {
-			v = v.split(',');
-			if (v[0] && v[0] > 18)
-				s += ' and contact.age>=' + v[0];
-			if (v[1] && v[1] < 99)
-				s += ' and contact.age<=' + v[1];
-		}
-		v = ui.val('contacts filters [name="filterKeywords"]').trim();
-		if (v) {
-			v = v.replace(/'/g, '\'\'').split(' ');
-			s += ' and (';
-			for (var i = 0; i < v.length; i++) {
-				if (v[i]) {
-					s2 = v[i].trim().toLowerCase();
-					var att = '';
-					for (var i2 = 0; i2 < ui.attributes.length; i2++) {
-						if (ui.attributes[i2].toLowerCase().indexOf(v[i].trim().toLowerCase()) > -1)
-							att += 'contact.attr like \'%' + (i2 < 10 ? '00' : i2 < 100 ? '0' : '') + i2 + '%\' or ';
-					}
-					s += 'contact.idDisplay=\'' + s2 + '\' or (contact.search=1 and (LOWER(contact.aboutMe) like \'%' + s2 + '%\' or LOWER(contact.pseudonym) like \'%' + s2 + '%\')) or ';
-					if (att)
-						s += att;
-				}
-			}
-			s = s.substring(0, s.length - 4) + ')';
-		}
-		return 'contact.id<>' + user.contact.id + s;
-	}
-	static getSearchMatches() {
-		var search = '(' + global.getRegEx("contact.attr", user.contact.attrInterest) + ' or ' + global.getRegEx('contact.attrEx', user.contact.attrInterestEx) + ')';
-		var sMale = '', sFemale = '', sDivers = '', sContactInterestedInMyGender = ' and contact.' + (user.contact.gender == 2 ? 'ageFemale' : user.contact.gender == 3 ? 'ageDivers' : 'ageMale') + ' like \'%,%\'';
-		if (user.contact.ageMale && user.contact.ageMale != '18,99') {
-			var s = user.contact.ageMale.split(','), s2 = '';
-			if (s[0] > 18)
-				s2 = 'contact.age>=' + s[0];
-			if (s[1] < 99)
-				s2 += (s2 ? ' and ' : '') + 'contact.age<=' + s[1];
-			if (s2)
-				sMale = '(contact.gender=1' + sContactInterestedInMyGender + ' and ' + s2 + ')';
-		}
-		if (!sMale && user.contact.ageMale)
-			sMale = '(contact.gender=1' + sContactInterestedInMyGender + ')';
-		if (user.contact.ageFemale && user.contact.ageFemale != '18,99') {
-			var s = user.contact.ageFemale.split(','), s2 = '';
-			if (s[0] > 18)
-				s2 = 'contact.age>=' + s[0];
-			if (s[1] < 99)
-				s2 += (s2 ? ' and ' : '') + 'contact.age<=' + s[1];
-			if (s2)
-				sFemale = '(contact.gender=2' + sContactInterestedInMyGender + ' and ' + s2 + ')';
-		}
-		if (!sFemale && user.contact.ageFemale)
-			sFemale = '(contact.gender=2' + sContactInterestedInMyGender + ')';
-		if (user.contact.ageDivers && user.contact.ageDivers != '18,99') {
-			var s = user.contact.ageDivers.split(','), s2 = '';
-			if (s[0] > 18)
-				s2 = 'contact.age>=' + s[0];
-			if (s[1] < 99)
-				s2 += (s2 ? ' and ' : '') + 'contact.age<=' + s[1];
-			if (s2)
-				sDivers = '(contact.gender=3' + sContactInterestedInMyGender + ' and ' + s2 + ')';
-		}
-		if (!sDivers && user.contact.ageDivers)
-			sDivers = '(contact.gender=3' + sContactInterestedInMyGender + ')';
-		if (sMale || sFemale || sDivers) {
-			var s3 = sMale;
-			if (sFemale)
-				s3 += (s3 ? ' or ' : '') + sFemale;
-			if (sDivers)
-				s3 += (s3 ? ' or ' : '') + sDivers;
-			search += ' and (' + s3 + ')';
-		} else
-			search += ' and (1=1)';
-		return search;
 	}
 	static groups = {
 		addGroup(id) {
@@ -715,12 +538,10 @@ ${v.budget}
 		}
 	}
 	static init() {
-		if (!pageContact.filter)
-			pageContact.filter = formFunc.getDraft('searchContacts') || {};
 		if (!ui.q('contacts').innerHTML)
 			lists.setListDivs('contacts');
 		if (!ui.q('contacts listResults row'))
-			setTimeout(lists.openFilter, 500);
+			setTimeout(ui.navigation.toggleMenu, 500);
 	}
 	static listContacts(l) {
 		var s = '', activeID = ui.navigation.getActiveID();
@@ -768,12 +589,6 @@ ${v.budget}
 			s += pageContact.templateList(v);
 		}
 		return s;
-	}
-	static search() {
-		ui.attr('contacts', 'menuIndex', 0);
-		pageContact.filter = formFunc.getForm('contacts filters form').values;
-		communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=contact_list&search=' + encodeURIComponent(pageContact.getSearch()), pageContact.listContacts, 'contacts', 'search');
-		formFunc.saveDraft('searchContacts', pageContact.filter);
 	}
 	static sendRequestForFriendship(id) {
 		communication.ajax({
