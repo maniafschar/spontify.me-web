@@ -50,8 +50,8 @@ class pageHome {
 	static templateNewEvent = v =>
 		global.template`<form name="editElement" onsubmit="return false">
 <input type="hidden" name="type" value="${v.type}" />
-<field style="padding-top:0.5em;">
-<value>
+<field>
+<value style="padding-top:0.5em;text-align:center;">
 <input type="radio" value="0" name="category" label="${ui.categories[0].verb}" ${v.category0} />
 <input type="radio" value="1" name="category" label="${ui.categories[1].verb}" ${v.category1} />
 <input type="radio" value="2" name="category" label="${ui.categories[2].verb}" ${v.category2} />

@@ -32,7 +32,7 @@ class pageEvent {
 		<buttontext onclick="pageLocation.edit()" class="bgColor eventLocationInputHelperButton">${ui.l('locations.new')}</buttontext>
 	</value>
 </field>
-<div class="event${v.classEvent}">
+<div class="event" ${v.styleEvent}>
 <div class="locationName"></div>
 <field>
 	<label style="padding-top:1em;">${ui.l('type')}</label>
@@ -65,36 +65,39 @@ class pageEvent {
 <field>
 	<label>${ui.l('events.maxParticipants')}</label>
 	<value>
-		<input type="number" name="maxParticipants" maxlength="250" value="${v.maxParticipants}" />
+		<input type="number" name="maxParticipants" maxlength="250" value="${v.maxParticipants}" onmousewheel="return false;" />
 	</value>
 </field>
 <field>
 	<label>${ui.l('events.price')}</label>
 	<value>
-		<input type="number" step="any" name="price" value="${v.price}" onkeyup="pageEvent.checkPrice()" />
-		<explain class="paypal expandableHeight">${ui.l('events.paypalSignUpHint')}
+		<input type="number" step="any" name="price" value="${v.price}" onkeyup="pageEvent.checkPrice()" onmousewheel="return false;" />
+		<explain class="paypal">${ui.l('events.paypalSignUpHint')}
 			<dialogButtons>
 				<buttontext class="bgColor" onclick="pageEvent.signUpPaypal()">${ui.l('events.paypalSignUpButton')}</buttontext>
 			</dialogButtons>
 		</explain>
 	</value>
 </field>
-<field class="confirm expandableHeight">
-	<label>${ui.l('events.confirmLabel')}</label>
-	<value>
-		<input type="checkbox" name="eventconfirm" transient="true" label="${ui.l('events.confirm')}" value="1" ${v.confirm}/>
-	</value>
-</field>
-<field ${v.hideOwnerFields}>
+<div  class="paid">
+<field>
 	<label>${ui.l('picture')}</label>
 	<value>
 		<input type="file" name="image" accept=".gif, .png, .jpg" />
 	</value>
 </field>
-<field ${v.hideOwnerFields}>
+<field>
 	<label>${ui.l('link')}</label>
 	<value>
 		<input type="url" name="link" maxlength="250" value="${v.link}" />
+	</value>
+</field>
+</div>
+<div class="unpaid">
+<field>
+	<label>${ui.l('events.confirmLabel')}</label>
+	<value>
+		<input type="checkbox" name="eventconfirm" transient="true" label="${ui.l('events.confirm')}" value="1" ${v.confirm}/>
 	</value>
 </field>
 <field>
@@ -102,6 +105,13 @@ class pageEvent {
 	<value>
 		<input type="radio" name="visibility" value="2" label="${ui.l('events.visibility2')}" ${v.visibility2}/>
 		<input type="radio" name="visibility" value="3" label="${ui.l('events.visibility3')}" ${v.visibility3}/>
+	</value>
+</field>
+</div>
+<field>
+	<label>${ui.l('events.hashtags')}</label>
+	<value>
+		<input name="hashtag" maxlength="250" value="${v.hashtags}" />
 	</value>
 </field>
 <dialogButtons style="margin-bottom:0;">
@@ -128,17 +138,19 @@ ${v.eventParticipationButtons}
 	static checkPrice() {
 		var e = ui.q('popup explain.paypal');
 		if (ui.q('popup [name="price"]').value > 0) {
-			if (user.contact.paypalMerchantId && e.style.maxHeight ||
-				!user.contact.paypalMerchantId && !e.style.maxHeight)
+			if (user.contact.paypalMerchantId && ui.cssValue(e, 'display') != 'none' ||
+				!user.contact.paypalMerchantId && ui.cssValue(e, 'display') == 'none')
 				ui.toggleHeight(e);
-			e = ui.q('popup .confirm');
-			if (e.style.maxHeight)
+			if (ui.cssValue(e = ui.q('popup .paid'), 'display') == 'none')
+				ui.toggleHeight(e);
+			if (ui.cssValue(e = ui.q('popup .unpaid'), 'display') != 'none')
 				ui.toggleHeight(e);
 		} else {
-			if (e.style.maxHeight)
+			if (ui.cssValue(e, 'display') != 'none')
 				ui.toggleHeight(e);
-			e = ui.q('popup .confirm');
-			if (!e.style.maxHeight)
+			if (ui.cssValue(e = ui.q('popup .paid'), 'display') != 'none')
+				ui.toggleHeight(e);
+			if (ui.cssValue(e = ui.q('popup .unpaid'), 'display') == 'none')
 				ui.toggleHeight(e);
 		}
 	}
@@ -269,16 +281,13 @@ ${v.eventParticipationButtons}
 		if (locationID)
 			v.classLocation = ' noDisp';
 		else {
-			v.classLocation = ' expandableHeight';
-			v.classEvent = ' expandableHeight';
+			v.styleEvent = ' style="display:none;"';
+			pageEvent.locationsOfPastEvents();
 		}
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
 		pageEvent.setForm();
-		if (!locationID) {
-			pageEvent.locationsOfPastEvents();
-			setTimeout(function () { ui.toggleHeight('popup field.location'); }, 300);
-		}
-		setTimeout(pageEvent.checkPrice, 500);
+		if (locationID)
+			setTimeout(pageEvent.checkPrice, 500);
 	}
 	static getCalendarList(data, onlyMine) {
 		if (!data || data.length == 0)
@@ -649,15 +658,10 @@ ${v.eventParticipationButtons}
 		});
 	}
 	static locationSelected(e) {
-		if (e) {
-			ui.q('popup input[name="locationId"]').value = e.getAttribute('i');
-			ui.q('popup .locationName').innerHTML = e.innerHTML;
-		}
+		ui.q('popup input[name="locationId"]').value = e.getAttribute('i');
+		ui.q('popup .locationName').innerHTML = e.innerHTML;
 		ui.toggleHeight('popup .location');
-		ui.toggleHeight('popup .event', function () {
-			ui.classRemove('popup .event', 'expandableHeight');
-			ui.q('popup .event').style.maxHeight = '';
-		});
+		ui.toggleHeight('popup .event', pageEvent.checkPrice);
 	}
 	static participate(event, id) {
 		event.stopPropagation();

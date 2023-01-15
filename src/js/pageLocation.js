@@ -37,12 +37,12 @@ class pageLocation {
 		<extra>${v.extra}</extra>
 		<imagelist>
 			<img src="${v.image}" class="${v.classBGImg}" />
-			${formFunc.image.getSVG('favorite')}
+			<img source="favorite" />
 		</imagelist>
 	</div>
 </row>`;
 	static templateDetail = v =>
-		global.template`<detailHeader idFav="${v.locationFavorite.id ? v.locationFavorite.id : ''}" class="${v.favorite}" data="${v.data}">
+		global.template`<detailHeader idFav="${v.locationFavorite.id}" data="${v.data}">
 	<detailImg>
 		<img src="${v.image}" />
 		<detailTitle>
@@ -77,16 +77,18 @@ ${v.description}
 <img class="map"
 	onclick="ui.navigation.openHTML(&quot;https://maps.google.com/maps/dir/${geoData.latlon.lat},${geoData.latlon.lon}/${v.latitude},${v.longitude}&quot;)" />
 <detailButtons>
-	<buttontext class="bgColor${v.pressedCopyButton}" name="buttonCopy"
-		onclick="pageChat.doCopyLink(event,&quot;${v.event.id ? 'e' : 'l'}=${v.id}&quot;)">${ui.l('share')}</buttontext>
 	<buttontext class="bgColor${v.hideMeEvents}" name="buttonEvents"
 		onclick="pageEvent.toggle(${v.locID})">${ui.l('events.title')}</buttontext>
+	<buttontext class="bgColor${v.favorite}" name="buttonFavorite"
+		onclick="pageLocation.toggleFavorite(&quot;${v.id}&quot;)">${ui.l('locations.favoritesButton')}</buttontext>
+	<buttontext class="bgColor${v.pressedCopyButton}" name="buttonCopy"
+		onclick="pageChat.doCopyLink(event,&quot;${v.event.id ? 'e' : 'l'}=${v.id}&quot;)">${ui.l('share')}</buttontext>
 	<buttontext class="bgColor${v.hideMePotentialParticipants}" name="buttonPotentialParticipants"
 		onclick="pageEvent.loadPotentialParticipants(${v.category},${v.event.visibility})">${ui.l('events.potentialParticipants')}</buttontext>
 	<buttontext class="bgColor${v.hideMeEdit}" name="buttonEdit"
 		onclick="${v.editAction}">${ui.l('edit')}</buttontext>
 	<buttontext class="bgColor" name="buttonGoogle"
-		onclick="ui.navigation.openHTML(&quot;https://google.com/search?q=${encodeURIComponent(v.name + ' ' + v.town)}&quot;)">Google</buttontext>
+		onclick="ui.navigation.openHTML(&quot;https://google.com/search?q=${encodeURIComponent(v.name + ' ' + v.town)}&quot;)">${ui.l('locations.google')}</buttontext>
 	<buttontext class="bgColor${v.blocked}" name="buttonBlock"
 		onclick="pageLocation.toggleBlock(&quot;${v.id}&quot;)">${ui.l('contacts.blockAction')}</buttontext>
 </detailButtons>
@@ -344,7 +346,7 @@ ${v.description}
 		if (v.event.contactId != user.contact.id)
 			v.hideMePotentialParticipants = ' noDisp';
 		if (v.locationFavorite.favorite)
-			v.favorite = 'favorite';
+			v.favorite = ' favorite';
 		if (global.isBrowser())
 			v.displaySocialShare = 'display: none; ';
 		v.pressedCopyButton = pageChat.copyLink.indexOf(global.encParam((v.event.id ? 'e' : 'l') + '=' + id)) > -1 ? ' buttonPressed' : '';
@@ -596,41 +598,31 @@ ${v.description}
 		var id = ui.val('[name="id"]');
 		var v = formFunc.getForm('popup form');
 		v.classname = 'Location';
-		if (id) {
+		if (id)
 			v.id = id;
-			communication.ajax({
-				url: global.server + 'action/one',
-				method: 'PUT',
-				body: v,
-				success() {
-					details.open(id, 'location_list&search=' + encodeURIComponent('location.id=' + id), function (l, id) {
-						ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id);
-						ui.navigation.hidePopup();
-					});
-				}
-			});
-		} else {
-			communication.ajax({
-				url: global.server + 'db/one',
-				method: 'POST',
-				body: v,
-				error(e) {
-					if (e.status == 500 && e.response && (e.response.indexOf('exists') > -1 || e.response.indexOf('ConstraintViolationException') > -1))
-						ui.html('popupHint', ui.l('locations.alreadyExists'));
-					else if (e.status == 500 && e.response && e.response.indexOf('Invalid address') > -1)
-						ui.html('popupHint', ui.l('locations.invalidAddress'));
-					else
-						communication.onError(e);
-				},
-				success(r) {
+		communication.ajax({
+			url: global.server + 'db/one',
+			method: id ? 'PUT' : 'POST',
+			body: v,
+			error(e) {
+				if (e.status == 500 && e.response && (e.response.indexOf('exists') > -1 || e.response.indexOf('ConstraintViolationException') > -1))
+					ui.html('popupHint', ui.l('locations.alreadyExists'));
+				else if (e.status == 500 && e.response && e.response.indexOf('Invalid address') > -1)
+					ui.html('popupHint', ui.l('locations.invalidAddress'));
+				else
+					communication.onError(e);
+			},
+			success(r) {
+				ui.navigation.hidePopup();
+				formFunc.removeDraft('location');
+				details.open(id ? id : r, 'location_list&search=' + encodeURIComponent('location.id=' + r), id ? function (l, id) {
+					ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id);
 					ui.navigation.hidePopup();
-					formFunc.removeDraft('location');
-					details.open(r, 'location_list&search=' + encodeURIComponent('location.id=' + r), pageLocation.detailLocationEvent);
-					if (pageLocation.reopenEvent)
-						setTimeout(function () { pageEvent.edit(r); }, 1000);
-				}
-			});
-		}
+				} : pageLocation.detailLocationEvent);
+				if (!id && pageLocation.reopenEvent)
+					setTimeout(function () { pageEvent.edit(r); }, 1000);
+			}
+		});
 	}
 	static saveDraft() {
 		if (ui.q('popup input[name="id"]').value)
@@ -808,11 +800,10 @@ ${v.description}
 		details.togglePanel(e);
 	}
 	static toggleFavorite(id) {
-		var button = ui.q('main>buttonIcon.bottom.right');
 		var idFav = ui.q('detailHeader').getAttribute('idFav');
 		var v = { classname: 'LocationFavorite' };
 		if (idFav) {
-			v.values = { favorite: ui.classContains(button, 'highlight') ? false : true };
+			v.values = { favorite: ui.q('detail card:last-child buttontext.favorite') ? false : true };
 			v.id = idFav;
 		} else
 			v.values = { locationId: id };
@@ -825,12 +816,11 @@ ${v.description}
 					ui.attr('detailHeader', 'idFav', r);
 					v.values.favorite = true;
 				}
-				ui.attr(button, 'fav', v.values.favorite ? true : false);
 				if (v.values.favorite) {
-					ui.classAdd(button, 'highlight');
+					ui.classAdd('detail card:last-child buttontext[name="buttonFavorite"]', 'favorite');
 					ui.classAdd('row.location[i="' + id + '"]', 'favorite');
 				} else {
-					ui.classRemove(button, 'highlight');
+					ui.classRemove('detail card:last-child buttontext.favorite', 'favorite');
 					ui.classRemove('row.location[i="' + id + '"]', 'favorite');
 				}
 			}
@@ -870,8 +860,5 @@ ${v.description}
 		e.style.top = (button.offsetTop + button.offsetHeight) + 'px';
 		e.style.left = '5%';
 		ui.toggleHeight(e);
-	}
-	static toggleWhatToDo() {
-		details.togglePanel(ui.q('detail card:last-child [name="whatToDo"]'));
 	}
 }

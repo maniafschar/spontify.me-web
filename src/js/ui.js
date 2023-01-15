@@ -22,18 +22,6 @@ class ui {
 	static categories = [];
 	static emInPX = 0;
 	static labels = [];
-	static templateMenuLocations = () =>
-		global.template`<container>
-	<a style="display:none;">
-		${ui.l('search.title')}
-	</a><a onclick="communication.loadList(ui.query.locationFavorites(),pageLocation.listLocation,&quot;locations&quot;,&quot;favorites&quot;)">
-		${ui.l('locations.favoritesButton')}
-	</a><a onclick="communication.loadList(ui.query.locationVisits(),pageLocation.listLocation,&quot;locations&quot;,&quot;visits&quot;)">
-		${ui.l('title.history')}
-	</a><a onclick="pageLocation.edit()">
-		${ui.l('locations.new')}
-	</a>
-</container>`;
 	static templateMenuEvents = () =>
 		global.template`<container>
 	<a style="display:none;">
@@ -56,8 +44,6 @@ class ui {
 		${ui.l('title.history')}
 	</a><a onclick="communication.loadList(ui.query.contactVisits(),pageContact.listContacts,&quot;contacts&quot;,&quot;profile&quot;)">
 		${ui.l('title.visits')}
-	</a><a onclick="pageContact.groups.open()">
-		${ui.l('group.action')}
 	</a>
 </container>`;
 	static getAttributes(compare, style) {
@@ -471,9 +457,7 @@ class ui {
 				var e = ui.q('content>[class*="SlideIn"]');
 				if (e && activeID.toLowerCase() != e.nodeName.toLowerCase())
 					return;
-				if (activeID == 'locations')
-					ui.html(ui.q('menu>div'), ui.templateMenuLocations());
-				else if (activeID == 'contacts')
+				if (activeID == 'contacts')
 					ui.html(ui.q('menu>div'), ui.templateMenuContacts());
 				else if (activeID == 'events')
 					ui.html(ui.q('menu>div'), ui.templateMenuEvents());
@@ -731,31 +715,42 @@ class ui {
 	static toggleHeight(e, exec) {
 		if (typeof e == 'string')
 			e = ui.q(e);
+		if (!e || e.getAttribute('toggle') && new Date().getTime() - e.getAttribute('toggle') < 450)
+			return;
+		e.setAttribute('toggle', new Date().getTime());
 		if (!e.getAttribute('h')) {
 			var p = e.style.position;
 			var d = e.style.display;
 			e.style.visibility = 'hidden';
-			e.style.position = 'absolute';
 			e.style.display = 'block';
-			e.style.maxHeight = '99999em';
-			setTimeout(function () {
-				if (e.offsetHeight > 0) {
-					e.setAttribute('h', e.offsetHeight);
-					e.style.maxHeight = '';
-					e.style.position = p;
-					e.style.display = d;
-					e.style.visibility = '';
-				}
-				ui.toggleHeight(e, exec);
-			}, 50);
-			return;
+			e.style.height = '';
+			e.style.position = 'absolute';
+			e.setAttribute('h', e.offsetHeight);
+			e.style.position = p;
+			e.style.display = d;
+			e.style.visibility = '';
 		}
-		if (exec)
-			ui.on(e, 'transitionend', exec, true);
-		if (parseInt(e.style.maxHeight) > 0)
-			ui.css(e, 'max-height', '');
-		else
-			ui.css(e, 'max-height', e.getAttribute('h') + 'px');
+		var o = e.style.overflow;
+		var t = e.style.transition;
+		e.style.overflow = 'hidden';
+		var expand = ui.cssValue(e, 'display') == 'none';
+		e.style.height = (expand ? 0 : e.offsetHeight) + 'px';
+		e.style.transition = 'height .4s ease-out';
+		if (expand)
+			e.style.display = 'block';
+		setTimeout(function () {
+			ui.on(e, 'transitionend', function () {
+				e.style.overflow = o;
+				e.style.transition = t;
+				e.style.height = '';
+				if (!expand)
+					e.style.display = 'none';
+				e.removeAttribute('toggle');
+				if (exec)
+					exec.call();
+			}, true);
+			e.style.height = expand ? e.getAttribute('h') + 'px' : 0;
+		}, 10);
 	}
 	static val(id) {
 		var e = ui.qa(id);

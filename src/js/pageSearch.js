@@ -33,16 +33,16 @@ class pageSearch {
 		filter: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
-	<input type="radio" name="filterGender" value="1" label="${ui.l('male')}" deselect="true" onclick="pageSearch.contact.filterList()" ${v.valueGender1}/>
-	<input type="radio" name="filterGender" value="2" label="${ui.l('female')}" deselect="true" onclick="pageSearch.contact.filterList()" ${v.valueGender2}/>
-	<input type="radio" name="filterGender" value="3" label="${ui.l('divers')}" deselect="true" onclick="pageSearch.contact.filterList()" ${v.valueGender3}/>
+	<input type="radio" name="gender" value="1" label="${ui.l('male')}" deselect="true" onclick="pageSearch.contact.filterList()" ${v.gender1}/>
+	<input type="radio" name="gender" value="2" label="${ui.l('female')}" deselect="true" onclick="pageSearch.contact.filterList()" ${v.gender2}/>
+	<input type="radio" name="gender" value="3" label="${ui.l('divers')}" deselect="true" onclick="pageSearch.contact.filterList()" ${v.gender3}/>
 	<filterSeparator></filterSeparator>
-	<input type="checkbox" label="${ui.l('search.matches')}" name="filterMatchesOnly" ${v.valueMatchesOnly}/>
-	<input type="checkbox" label="${ui.l('settings.guide')}" name="filterGuide" onclick="pageSearch.contact.filterList()" ${v.valueGuide}/>
+	<input type="checkbox" label="${ui.l('search.matches')}" name="matches" ${v.matches}/>
+	<input type="checkbox" label="${ui.l('settings.guide')}" name="guide" onclick="pageSearch.contact.filterList()" ${v.guide}/>
 	<filterSeparator></filterSeparator>
-	<input type="text" name="filterAge" slider="range" min="18" max="99" id="filterAge" ${v.valueAge}/>
+	<input type="text" name="age" slider="range" min="18" max="99" id="age" ${v.age}/>
 	<filterSeparator></filterSeparator>
-	<input type="text" name="filterKeywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.valueKeywords}/>
+	<input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
 	<explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
 	<errorHint></errorHint>
 	<buttontext class="bgColor defaultButton" onclick="pageSearch.contact.search()">${ui.l('search.action')}</buttontext></form>`,
@@ -53,7 +53,7 @@ class pageSearch {
 			var bu = ui.q(' filters [name="filterFriends"]:checked');
 			if (bu)
 				bu = bu.value;
-			var ge = ui.q('contacts filters [name="filterGender"]:checked');
+			var ge = ui.q('contacts filters [name="gender"]:checked');
 			if (ge)
 				ge = ge.value;
 			for (var i = 1; i < d.length; i++) {
@@ -66,15 +66,15 @@ class pageSearch {
 		},
 		getFields() {
 			var v = {};
-			if (pageSearch.contact.filter.filterAge)
-				v.valueAge = ' value="' + pageSearch.contact.filter.filterAge + '"';
-			if (pageSearch.contact.filter.filterKeywords)
-				v.valueKeywords = ' value="' + pageSearch.contact.filter.filterKeywords + '"';
-			if (pageSearch.contact.filter.filterMatchesOnly == 'on')
-				v.valueMatchesOnly = ' checked="true"';
-			if (pageSearch.contact.filter.filterGuide == 'on')
-				v.valueGuide = ' checked="true"';
-			v['valueGender' + pageSearch.contact.filter.filterGender] = ' checked="true"';
+			if (pageSearch.contact.filter.age)
+				v.age = ' value="' + pageSearch.contact.filter.age + '"';
+			if (pageSearch.contact.filter.keywords)
+				v.keywords = ' value="' + pageSearch.contact.filter.keywords + '"';
+			if (pageSearch.contact.filter.matches == 'on')
+				v.matches = ' checked="true"';
+			if (pageSearch.contact.filter.guide == 'on')
+				v.guide = ' checked="true"';
+			v['gender' + pageSearch.contact.filter.gender] = ' checked="true"';
 			return pageSearch.contact.template(v);
 		},
 		getMatches() {
@@ -126,14 +126,14 @@ class pageSearch {
 		},
 		getSearch() {
 			var s = '', s2 = '';
-			if (ui.q('search tabBody div.contact [name="filterMatchesOnly"]:checked'))
+			if (ui.q('search tabBody div.contact [name="matches"]:checked'))
 				s = ' and ' + pageSearch.contact.getMatches();
-			var v = ui.q('search tabBody div.contact [name="filterGender"]:checked');
+			var v = ui.q('search tabBody div.contact [name="gender"]:checked');
 			if (v && v.checked)
 				s += ' and contact.gender=' + v.value;
-			if (ui.q('search tabBody div.contact [name="filterGuide"]:checked'))
+			if (ui.q('search tabBody div.contact [name="guide"]:checked'))
 				s += ' and contact.guide=1';
-			v = ui.q('search tabBody div.contact [name="filterAge"]').value;
+			v = ui.q('search tabBody div.contact [name="age"]').value;
 			if (v) {
 				v = v.split(',');
 				if (v[0] && v[0] > 18)
@@ -141,7 +141,7 @@ class pageSearch {
 				if (v[1] && v[1] < 99)
 					s += ' and contact.age<=' + v[1];
 			}
-			v = ui.val('search tabBody div.contact [name="filterKeywords"]').trim();
+			v = ui.val('search tabBody div.contact [name="keywords"]').trim();
 			if (v) {
 				v = v.replace(/'/g, '\'\'').split(' ');
 				s += ' and (';
@@ -172,7 +172,7 @@ class pageSearch {
 		filter: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
-<input type="text" name="filterKeywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.valueKeywords}/>
+<input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
 <explain class="searchKeywordHint">${ui.l('search.hintEvent')}</explain>
 <errorHint></errorHint>
 <buttontext class="bgColor defaultButton" onclick="pageSearch.event.search()">${ui.l('search.action')}</buttontext></form>`,
@@ -184,21 +184,21 @@ class pageSearch {
 				for (var i = 0; i < c.length; i++)
 					v['valueCat' + c[i]] = ' checked="true"';
 			}
-			if (pageSearch.event.filter.filterKeywords)
-				v.valueKeywords = ' value="' + pageSearch.event.filter.filterKeywords + '"';
-			if (pageSearch.event.filter.filterMatchesOnly == 'on')
-				v.valueMatchesOnly = ' checked="true"';
+			if (pageSearch.event.filter.keywords)
+				v.keywords = ' value="' + pageSearch.event.filter.keywords + '"';
+			if (pageSearch.event.filter.matches == 'on')
+				v.matches = ' checked="true"';
 			return pageSearch.event.template(v);
 		},
 		getSearch() {
-			var v = ui.val('search tabBody div.event [name="filterKeywords"]').trim(), s = '';
+			var v = ui.val('search tabBody div.event [name="keywords"]').trim(), s = '';
 			if (v) {
 				v = v.replace(/'/g, '\'\'').split(' ');
 				for (var i = 0; i < v.length; i++) {
 					if (v[i].trim()) {
 						v[i] = v[i].trim().toLowerCase();
 						var l = ') like \'%' + v[i].trim().toLowerCase() + '%\' or LOWER(';
-						s += '(contact.search=true and (LOWER(contact.pseudonym' + l + 'contact.aboutMe' + l;
+						s += '((contact.search=true or event.price>0) and (LOWER(contact.pseudonym' + l + 'contact.aboutMe' + l;
 						s = s.substring(0, s.lastIndexOf(' or LOWER')) + ') or '
 						s += 'LOWER(location.name' + l + 'location.description' + l + 'location.address' + l + 'location.address2' + l + 'location.telephone' + l + 'event.text' + l;
 						s = s.substring(0, s.lastIndexOf(' or LOWER')) + ') and ';
@@ -221,7 +221,7 @@ class pageSearch {
 				s += ' and location.longitude>' + (bounds.getSouthWest().lng() + border);
 				s += ' and location.longitude<' + (bounds.getNorthEast().lng() - border);
 			}
-			var v = ui.val('locations filters [name="filterKeywords"]').trim();
+			var v = ui.val('locations filters [name="keywords"]').trim();
 			if (v) {
 				v = v.replace(/'/g, '\'\'').split(' ');
 				for (var i = 0; i < v.length; i++) {
@@ -258,19 +258,23 @@ class pageSearch {
 		filter: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
-<input type="text" name="filterKeywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.valueKeywords}/>
+<input type="checkbox" label="${ui.l('search.favorites')}" name="favorites" ${v.favorites}/>
+<filterSeparator></filterSeparator>
+<input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
 <errorHint></errorHint>
 <buttontext class="bgColor defaultButton" onclick="pageSearch.location.search()">${ui.l('search.action')}</buttontext></form>`,
 		getFields() {
 			var v = {};
-			if (pageSearch.location.filter.filterKeywords)
-				v.valueKeywords = ' value="' + pageSearch.location.filter.filterKeywords + '"';
+			if (pageSearch.location.filter.favorites)
+				v.favorites = ' checked="checked"';
+			if (pageSearch.location.filter.keywords)
+				v.keywords = ' value="' + pageSearch.location.filter.keywords + '"';
 			return pageSearch.location.template(v);
 		},
 		getSearch() {
 			var s = '';
-			var v = ui.val('search tabBody div.location [name="filterKeywords"]').trim();
+			var v = ui.val('search tabBody div.location [name="keywords"]').trim();
 			if (v) {
 				v = v.replace(/'/g, '\'\'').split(' ');
 				for (var i = 0; i < v.length; i++) {
@@ -283,11 +287,13 @@ class pageSearch {
 				if (s)
 					s = '(' + s.substring(0, s.length - 5) + ')';
 			}
+			if (ui.val('search tabBody div.location [name="favorites"]:checked'))
+				s += (s ? ' and ' : '') + 'locationFavorite.favorite=true';
 			return s;
 		},
 		getSearch1(bounds) {
 			var s = '';
-			if (ui.q('locations filters [name="filterMatchesOnly"]:checked'))
+			if (ui.q('locations filters [name="matches"]:checked'))
 				s = pageSearch.event.getMatches();
 			var c = '', d = '';
 			var cats = [];
@@ -312,7 +318,7 @@ class pageSearch {
 				s += ' and location.longitude>' + (bounds.getSouthWest().lng() + border);
 				s += ' and location.longitude<' + (bounds.getNorthEast().lng() - border);
 			}
-			var v = ui.val('locations filters [name="filterKeywords"]').trim();
+			var v = ui.val('locations filters [name="keywords"]').trim();
 			if (v) {
 				v = v.replace(/'/g, '\'\'').split(' ');
 				for (var i = 0; i < v.length; i++) {

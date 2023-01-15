@@ -140,6 +140,7 @@ class communication {
 						e.scrollTop = 0;
 					lists.setListHint(divID);
 				}
+				formFunc.image.replaceSVGs();
 				geoData.updateCompass();
 			}
 		});
@@ -227,7 +228,7 @@ class communication {
 			user.contact.id = 0;
 			user.password = p;
 			communication.ajax({
-				url: global.server + 'authentication/login?os=' + global.getOS() + '&device=' + global.getDevice() + '&version=' + global.appVersion + '&timezoneOffset=' + new Date().getTimezoneOffset() + '&email=' + encodeURIComponent(Encryption.encPUB(u)) + (autoLogin ? '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()) : ''),
+				url: global.server + 'authentication/login?os=' + global.getOS() + '&device=' + global.getDevice() + '&version=' + global.appVersion + '&timezone=' + encodeURIComponent(Intl.DateTimeFormat().resolvedOptions().timeZone) + '&email=' + encodeURIComponent(Encryption.encPUB(u)) + (autoLogin ? '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()) : ''),
 				responseType: 'json',
 				success(v) {
 					if (v && v['contact.verified']) {
