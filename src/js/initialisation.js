@@ -245,7 +245,7 @@ class initialisation {
 				ui.navigation.goTo(user.contact ? 'locations' : 'login');
 			else if (dir == 'right' && user.contact)
 				ui.navigation.goTo('settings', true);
-		}, 'input,listScroll');
+		}, 'input');
 		ui.swipe('info', function (dir) {
 			if (dir == 'right')
 				ui.navigation.goTo(ui.q('info').getAttribute('from'));
@@ -301,7 +301,6 @@ class initialisation {
 		}
 		ui.css('body', 'font-size', f + 'px');
 		ui.emInPX = parseFloat(ui.cssValue(document.body, 'font-size'));
-		lists.repositionThumb();
 		if (window.innerWidth / w > 1.8) {
 			ui.css('add', 'width', ((window.innerWidth - w) / 2) + 'px');
 			ui.css('add', 'display', 'block');

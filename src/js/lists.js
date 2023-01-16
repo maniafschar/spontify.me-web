@@ -14,29 +14,9 @@ class lists {
 	static templateList = v =>
 		global.template`<listHeader>
 <buttonicon class="right bgColor" onclick="ui.navigation.toggleMenu()"><img source="menu"/></buttonicon>
-${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5em;"></hinky><div></div></filters><listTitle></listTitle>${v.map}</listHeader>
-<listScroll><a class="bgColor"></a></listScroll><listBody>${v.groups}<listResults></listResults></listBody>`;
+${v.img}<listTitle></listTitle>${v.map}</listHeader>
+<listBody>${v.groups}<listResults></listResults></listBody>`;
 
-	static execFilter() {
-		var activeID = ui.navigation.getActiveID();
-		var l = ui.qa(activeID + ' [filtered="false"][style*="height"]');
-		var rep = function () {
-			setTimeout(function () {
-				lists.repositionThumb(activeID);
-			}, 400);
-		};
-		lists.setListHint(activeID);
-		if (l.length > 0) {
-			ui.css(l, 'height', '');
-			setTimeout(function () {
-				ui.css(activeID + ' [filtered="true"]', 'height', 0);
-				rep.call();
-			}, 400);
-		} else {
-			ui.css(activeID + ' [filtered="true"]', 'height', 0);
-			rep.call();
-		}
-	}
 	static getListNoResults(activeID, errorID) {
 		var s = ui.l('noResults.' + errorID), p;
 		while ((p = s.indexOf('${')) > -1) {
@@ -98,27 +78,6 @@ ${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5e
 		else
 			pageContact.search();
 	}
-	static repositionThumb(activeID) {
-		if (typeof (activeID) != 'string')
-			activeID = ui.navigation.getActiveID();
-		var list = ui.q(activeID);
-		var thumb = ui.q(activeID + ' listScroll');
-		if (ui.cssValue(list, 'display') == 'none' || !thumb)
-			return;
-		list = ui.q(activeID + ' listBody');
-		var h = list.clientHeight, l = 0, e = ui.qa(activeID + ' listBody>*');
-		for (var i = 0; i < e.length; i++)
-			l += e[i].clientHeight;
-		if (l <= h)
-			ui.css(thumb, 'display', 'none');
-		else {
-			ui.css(thumb, 'display', 'block');
-			ui.css(thumb, 'top',
-				Math.min(list.scrollTop / (l - h), 1) // Percentage of scroll: 0 - 1
-				* (h - ui.q(activeID + ' listScroll a').clientHeight - ui.q(activeID + ' listHeader').clientHeight) / h * 100 // Total percentage of scrollable area, e.g. 0 - 86
-				+ '%');
-		}
-	}
 	static reset() {
 		lists.data = [];
 	}
@@ -153,25 +112,7 @@ ${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5e
 					else if (dir == 'right')
 						ui.navigation.goTo('search');
 				});
-			new DragObject(ui.q(id + ' listScroll')).ondrag = function (event, top) {
-				var activeID = ui.navigation.getActiveID();
-				if (ui.q(activeID + ' listScroll').offsetTop == top.y)
-					return;
-				var e2 = event ? event : window.event;
-				var y;
-				if (e2.touches && e2.touches[0])
-					y = e2.touches[0].pageY ? e2.touches[0].pageY : e2.touches[0].clientY + window.document.body.scrollTop;
-				else
-					y = e2.pageY ? e2.pageY : e2.clientY + window.document.body.scrollTop;
-				e2 = ui.q(activeID + ' listBody');
-				var h = e2.clientHeight, h2 = ui.q(activeID + ' listBody listResults').clientHeight;
-				y = y / (h - ui.q(activeID + ' listScroll a').clientHeight) * (h2 - h);
-				if (e2.scrollTop != y)
-					e2.scrollTop = y;
-			};
-			ui.on(id + ' listBody', 'scroll', lists.repositionThumb);
 		}
-		ui.css(id + ' listScroll', 'display', '');
 	}
 	static setListHint(id) {
 		var e = ui.q(id + ' listHeader listTitle');
@@ -203,8 +144,6 @@ ${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5e
 			var i = ui.qa('search tabBody div.' + s + ' listResults row').length;
 			ui.q('search tabHeader tab[i="' + s + '"]').innerText = ui.l(s + '.title') + (i ? global.separator + i : '');
 		}
-		ui.css(id + ' listScroll', 'display', '');
-		lists.repositionThumb(id);
 	}
 	static hideFilter() {
 		var activeID = ui.navigation.getActiveID();
