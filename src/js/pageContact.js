@@ -63,6 +63,7 @@ class pageContact {
 	</detailImg>
 </detailHeader>
 ${v.aboutMe}
+${v.rating}
 <text${v.birthdayClass}>
 	${v.birthday}
 </text>
@@ -292,13 +293,13 @@ ${v.budget}
 				v.previewHintImage = '<previewHint class="image">' + ui.l('settings.previewHintImage') + '</previewHint>';
 		}
 		if (v.rating > 0)
-			v.rating = '<div><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></ratingSelection></div>';
+			v.rating = '<detailRating onclick="ratings.open(null,&quot;' + 'event.contactId=' + v.id + '&quot;)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></ratingSelection></detailRating>';
 		else
 			v.rating = '';
 		if (global.isBrowser())
 			v.displaySocialShare = 'display:none;';
 		if (v.aboutMe)
-			v.aboutMe = (v.guide ? '<guide>' + ui.l('settings.guide') + '</guide>' : '') + '<text class="description">' + v.aboutMe.replace(/\n/g, '<br/>') + '</text>';
+			v.aboutMe = (v.guide ? '<guide>' + ui.l('settings.guide') + '</guide>' : '') + '<text class="description">' + global.string.replaceLinks(v.aboutMe.replace(/\n/g, '<br/>')) + '</text>';
 		else if (preview)
 			v.aboutMe = '<previewHint>' + ui.l('settings.previewHintAboutMe') + '</previewHint>';
 		if (v.contactLink.status == 'Pending' && v.contactLink.contactId != user.contact.id)

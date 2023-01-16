@@ -94,6 +94,11 @@ body.app>main progressbar {
 	margin-top: env(safe-area-inset-top);
 }
 
+a {
+	color: rgb(252, 251, 104);
+	cursor: pointer;
+}
+
 navigation {
 	position: absolute;
 	bottom: 0;
@@ -1475,11 +1480,6 @@ chatMessage note {
 	color: black;
 }
 
-chatMessage note a {
-	color: darkblue;
-	cursor: pointer;
-}
-
 chatMessage.me note {
 	background: rgba(255, 255, 255, 0.8);
 	float: right;
@@ -2256,11 +2256,8 @@ tabHeader tab p {
 
 .tabActive {
 	opacity: 1 !important;
-	border-bottom: solid 1px white;
-}
-
-popup .tabActive {
-	border-bottom: solid 1px white;
+	border-bottom: solid 1px rgb(252, 251, 104);
+	color: rgb(252, 251, 104);
 }
 
 tab {

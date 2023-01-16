@@ -694,13 +694,14 @@
 			"markEvent": "Wenn jemand an ein von Dir eingegebenes Event teilnimmt",
 			"newChatAlert": "Du hast einen neuen Chat von {0}.",
 			"noNewsYet": "Du hast noch keine Benachrichtigungen erhalten.<br/>Hier siehst Du die letzten 100 Benachrichtigungen, die Du erhalten hast.",
-			"ratingProfile": "Wenn Dein Profil bewertet wird",
 			"visitLocation": "Wenn eine von Dir favorisierten Location angeschaut wird und der Sponti zu Dir passt",
 			"visitProfile": "Wenn Dein Profil angeschaut wird und der Sponti zu Dir passt"
 		},
 		"rating": {
+			"contact": "Hier siehst Du alle Bewertungen zu Events, die von {0} organisiert wurden.",
 			"history": "Bisherige Bewertungen",
 			"lastRate": "Du hast bereits am {0} mit {1} bewertet. Du kannst einmal pro Woche bewerten.",
+			"location": "Hier siehst Du alle Bewertungen zu Events, die in der Location {0} stattgefunden haben.",
 			"locationImmediate": "Möchtest Du die Location auch bewerten?",
 			"login": "Sobald Du eingeloggt bist, kannst Du Locations und Spontis bewerten und andere Bewertungen sehen.",
 			"negativeRateValidation": "Bitte beschreibe Deine negative Bewertung.",

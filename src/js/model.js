@@ -1,6 +1,6 @@
 import { communication } from './communication';
 
-export { model, Contact, ContactLink, Location, ContactNotification, EventParticipate, LocationFavorite, Event, Block, Chat, LocationOwnerHistory, ContactVisit, ContactGroup, ContactGroupLink };
+export { model, Contact, ContactLink, Location, ContactNotification, EventParticipate, LocationFavorite, Event, EventRating, Block, Chat, LocationOwnerHistory, ContactVisit, ContactGroup, ContactGroupLink };
 
 class model {
 	static reportedErrors = {};
@@ -99,6 +99,7 @@ class Contact extends BaseEntity {
 	search;
 	state;
 	storage;
+	rating;
 	type;
 	verified;
 	visitPage;
@@ -107,7 +108,6 @@ class Contact extends BaseEntity {
 	contactGroupLink = new ContactGroupLink();
 	contactLink = new ContactLink();
 	contactNotification = new ContactNotification();
-	contactRating = new ContactRating();
 	contactVisit = new ContactVisit();
 	event = new Event();
 	eventParticipate = new EventParticipate();
@@ -134,13 +134,6 @@ class ContactNotification extends BaseEntity {
 	contactId;
 	contactId2;
 	seen;
-	text;
-}
-
-class ContactRating extends BaseEntity {
-	contactId;
-	contactId2;
-	rating;
 	text;
 }
 
@@ -185,6 +178,16 @@ class EventParticipate extends BaseEntity {
 	state;
 }
 
+class EventRating extends BaseEntity {
+	contactId;
+	image;
+	locationId;
+	rating;
+	text;
+
+	contact = new Contact();
+}
+
 class Location extends BaseEntity {
 	address;
 	attr0;
@@ -209,6 +212,7 @@ class Location extends BaseEntity {
 	latitude;
 	longitude;
 	name;
+	rating;
 	subcategories;
 	telephone;
 	town;
@@ -219,7 +223,6 @@ class Location extends BaseEntity {
 	event = new Event();
 	eventParticipate = new EventParticipate();
 	locationFavorite = new LocationFavorite();
-	locationRating = new LocationRating();
 }
 
 class LocationFavorite extends BaseEntity {
@@ -227,13 +230,4 @@ class LocationFavorite extends BaseEntity {
 }
 
 class LocationOwnerHistory extends BaseEntity {
-}
-
-class LocationRating extends BaseEntity {
-	contactId;
-	image;
-	locationId;
-	paid;
-	rating;
-	text;
 }

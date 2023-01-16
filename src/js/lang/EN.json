@@ -694,13 +694,14 @@
 			"markEvent": "If someone participates in one of your event",
 			"newChatAlert": "You have a new chat from {0}.",
 			"noNewsYet": "You have not yet received any notifications<br/>Here you can see the last 100 notifications that you have received.",
-			"ratingProfile": "If your profile is voted",
 			"visitLocation": "If your favorised location is opened and the Sponti fits you",
 			"visitProfile": "If your profile is viewed and the Sponti fits you"
 		},
 		"rating": {
+			"contact": "Here you can see all reviews of events organized by {0}.",
 			"history": "Votings",
 			"lastRate": "You have already voted {1} on {0}. You can vote once a week.",
+			"location": "Here you can see all ratings for events that took place at the location {0}.",
 			"locationImmediate": "Do you also want to vote for this location?",
 			"login": "Once you are logged in, you can vote for locations and Spontis and see other votes.",
 			"negativeRateValidation": "Please describe your negative vote.",

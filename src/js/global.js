@@ -221,35 +221,6 @@ class global {
 	}
 	static string = {
 		emoji: /\p{Extended_Pictographic}/ug,
-		extractNewsAdHoc(s) {
-			var r = {};
-			if ((s.indexOf('rl:') == 0 || s.indexOf('rp:') == 0) && s.lastIndexOf(':') == s.length - 2) {
-				s = s.split(':');
-				r.type = 'rating';
-				r.subtype = s[0].substring(1);
-				r.id = s[1];
-				r.rate = 1 + parseInt(s[2], 10);
-			} else if (s.indexOf('fl:') == 0 || s.indexOf('fe:') == 0 || s.indexOf('fp:') == 0) {
-				s = s.split(':');
-				r.type = 'favorite';
-				r.subtype = s[0].substring(1);
-				r.id = s[1];
-				r.label = s[0] == 'fl' ? 'Favorites' : s[0] == 'fp' ? 'Friends' : 'Confirmed';
-			} else if (s.indexOf('wtd:') == 0 && s.indexOf('|') > 0 && s.lastIndexOf(':') > s.lastIndexOf('|') && s.length < 25) {
-				s = s.split('|');
-				r.type = 'wtd';
-				if (s.length > 2) {
-					r.subtype = 'l';
-					r.id = s[1];
-					r.time = s[2];
-				} else {
-					r.subtype = 'category';
-					r.categories = s[0].substring(4).split(',');
-					r.time = s[1];
-				}
-			}
-			return r;
-		},
 		isEmoji(c, subsequent) {
 			if (subsequent)
 				return 0x2000 <= c && c <= 0x1ffff;
@@ -274,26 +245,6 @@ class global {
 			if (match) {
 				for (var i = 0; i < match.length; i++)
 					s = s.replaceAll(match[i], '<a onclick="ui.navigation.openHTML(&quot;' + match[i] + '&quot;);event.stopPropagation();" class="internalLink">' + match[i] + '</a>');
-			}
-			return s;
-		},
-		replaceNewsAdHoc(s) {
-			var extracted = global.string.extractNewsAdHoc(s);
-			if (extracted.type == 'rating') {
-				var img = '<img class="autoNewsImg" src="images/rating' + extracted.rate + '.png"/>';
-				s = img + global.string.replaceInternalLinks(' :open(' + global.encParam(extracted.subtype + '=' + extracted.id) + '): ').replace('chatLinks', 'newsLinks');
-			} else if (extracted.type == 'favorite') {
-				var img = '<img class="autoNewsImg" src="images/button' + extracted.label + '.png"/>';
-				s = img + global.string.replaceInternalLinks(' :open(' + global.encParam(extracted.subtype + '=' + extracted.id) + '): ').replace('chatLinks', 'newsLinks');
-			} else if (extracted.type == 'wtd') {
-				if (extracted.subtype == 'l')
-					s = ui.l('locations.asMessage').replace('{0}', extracted.time) + '<br/>' + global.string.replaceInternalLinks(' :open(' + global.encParam('l=' + extracted.id) + '): ').replace('chatLinks', 'newsLinks');
-				else {
-					var cat = '';
-					for (var i2 = 0; i2 < extracted.categories.length; i2++)
-						cat += ui.categories[extracted.categories[i2]].verb + (i2 < extracted.categories.length - 1 ? ' ' + ui.l('or') + ' ' : '');
-					s = ui.l('wtd.autoNews').replace('{0}', cat).replace('{1}', extracted.time);
-				}
 			}
 			return s;
 		},

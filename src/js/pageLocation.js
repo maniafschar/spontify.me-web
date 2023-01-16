@@ -71,6 +71,7 @@ class pageLocation {
 </detailHeader>
 ${v.eventDetails}
 ${v.description}
+${v.rating}
 <text>
 	${v.telOpenTag}${v.address}<br/>${v.tel}${v.telCloseTag}
 </text>
@@ -310,10 +311,11 @@ ${v.description}
 		}
 		v.chatLocation = eventWithLocation;
 		v.chatId = v.chatLocation ? v.locID : v.contact.id;
-		if (v.rating > 0)
-			v.rating = '<detailRating onclick="ratings.open(' + v.locID + ')"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></ratingSelection></detailRating>';
-		else if (eventWithLocation)
-			v.rating = '<div style="margin:1em 0;"><buttontext class="bgColor" onclick="ratings.open(' + v.locID + ')">' + ui.l('rating.save') + '</buttontext></div>';
+		var r = eventWithLocation && v.rating || !eventWithLocation && v.contact.rating;
+		if (r > 0)
+			v.rating = '<detailRating onclick="ratings.open(' + v.event.id + ',&quot;' + (eventWithLocation ? 'event.locationId=' + v.locID : 'event.contactId=' + v.contact.id) + '&quot;)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + r) + '%;">★★★★★</full></ratingSelection></detailRating>';
+		else if (v.event.id)
+			v.rating = '<div style="margin:1em 0;"><buttontext class="bgColor" onclick="ratings.open(' + v.event.id + ')">' + ui.l('rating.save') + '</buttontext></div>';
 		if (eventWithLocation)
 			v.distanceDisplay = ' style="display:none;"';
 		else {
@@ -324,7 +326,7 @@ ${v.description}
 		if (eventWithLocation)
 			v.address = v.address.replace(/\n/g, '<br />');
 		if (v.description)
-			v.description = '<text class="description">' + v.description.replace(/\n/g, '<br/>') + '</text>';
+			v.description = '<text class="description">' + global.string.replaceLinks(v.description.replace(/\n/g, '<br/>')) + '</text>';
 		if (v.bonus)
 			v.bonus = '<text style="margin:1em 0;" class="highlightBackground">' + ui.l('locations.bonus') + v.bonus + '<br/>' + ui.l('locations.bonusHint') + '</text>';
 		if (v.event.id) {
