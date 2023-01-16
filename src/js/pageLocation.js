@@ -314,7 +314,7 @@ ${v.rating}
 		var r = eventWithLocation && v.rating || !eventWithLocation && v.contact.rating;
 		if (r > 0)
 			v.rating = '<detailRating onclick="ratings.open(' + v.event.id + ',&quot;' + (eventWithLocation ? 'event.locationId=' + v.locID : 'event.contactId=' + v.contact.id) + '&quot;)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + r) + '%;">★★★★★</full></ratingSelection></detailRating>';
-		else if (v.event.id)
+		else if (v.event.id && v.event.locationId)
 			v.rating = '<div style="margin:1em 0;"><buttontext class="bgColor" onclick="ratings.open(' + v.event.id + ')">' + ui.l('rating.save') + '</buttontext></div>';
 		if (eventWithLocation)
 			v.distanceDisplay = ' style="display:none;"';

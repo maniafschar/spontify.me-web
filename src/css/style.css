@@ -1238,11 +1238,6 @@ ratingSelection span {
 	position: relative;
 }
 
-popup rating full,
-popup ratingSelection full {
-	color: rgb(0, 100, 140);
-}
-
 popupContent> :not(detail) ratingSelection {
 	width: 10em;
 	margin-left: -5em;

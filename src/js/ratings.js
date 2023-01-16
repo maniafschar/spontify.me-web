@@ -73,7 +73,7 @@ class ratings {
 					img = v.image ? '<br/><img src="' + global.serverImg + v.image + '"/>' : '';
 					s += '<ratingItem';
 					rate = '<rating><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></rating>';
-					s += ' onclick="ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.contact.id) + '&quot;,event)" style="cursor:pointer;"';
+					s += ' onclick="ui.navigation.autoOpen(&quot;' + global.encParam('e=' + v.eventId) + '&quot;,event)" style="cursor:pointer;"';
 					s += '>' + rate + date + ' ' + pseudonym + text + img + '</ratingItem>';
 				}
 				if (s)
