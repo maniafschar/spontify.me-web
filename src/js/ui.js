@@ -735,7 +735,7 @@ class ui {
 		e.style.overflow = 'hidden';
 		var expand = ui.cssValue(e, 'display') == 'none';
 		e.style.height = (expand ? 0 : e.offsetHeight) + 'px';
-		e.style.transition = 'height .4s ease-out';
+		e.style.transition = 'height .4s ease-' + (expand ? 'in' : 'out');
 		if (expand)
 			e.style.display = 'block';
 		setTimeout(function () {

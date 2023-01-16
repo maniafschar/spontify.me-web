@@ -810,6 +810,30 @@ field.category value {
 	text-align: center;
 }
 
+field hashtags {
+	position: relative;
+	display: block;
+	text-align: center;
+	margin-top: 0.25em;
+}
+
+field hashtags>div {
+	display: none;
+}
+
+field hashtags buttontext {
+	padding-top: 0.5em;
+}
+
+field hashtags category {
+	cursor: pointer;
+	display: inline-block;
+	position: relative;
+	padding: 0.25em 0.75em;
+	border-radius: 0.5em;
+	margin: 0.25em;
+}
+
 dialogButtons {
 	text-align: center;
 	white-space: nowrap;

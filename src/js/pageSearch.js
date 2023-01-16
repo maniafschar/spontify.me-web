@@ -193,7 +193,8 @@ class pageSearch {
 		getSearch() {
 			var v = ui.val('search tabBody div.event [name="keywords"]').trim(), s = '';
 			if (v) {
-				v = v.replace(/'/g, '\'\'').split(' ');
+				var t = pageEvent.convertHashtags(v);
+				v = t.hashtags.replace(/'/g, '\'\'').split(' ');
 				for (var i = 0; i < v.length; i++) {
 					if (v[i].trim()) {
 						v[i] = v[i].trim().toLowerCase();
@@ -206,6 +207,8 @@ class pageSearch {
 				}
 				if (s)
 					s = '(' + s.substring(0, s.length - 5) + ')';
+				if (t.category)
+					s += (s ? ' and ' : '') + global.getRegEx('event.category', t.category);
 			}
 			return s;
 		},

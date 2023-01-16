@@ -24,6 +24,8 @@ class pageEvent {
 <input type="hidden" name="id" value="${v.id}"/>
 <input type="hidden" name="locationId" value="${v.locationID}"/>
 <input type="hidden" name="confirm" />
+<input type="hidden" name="category" />
+<input type="hidden" name="hashtags" />
 <field class="location${v.classLocation}">
 	<label style="padding-top:0;">${ui.l('events.location')}</label>
 	<value style="text-align:center;">
@@ -79,7 +81,7 @@ class pageEvent {
 		</explain>
 	</value>
 </field>
-<div  class="paid">
+<div class="paid" style="display:none;">
 <field>
 	<label>${ui.l('picture')}</label>
 	<value>
@@ -98,6 +100,7 @@ class pageEvent {
 	<label>${ui.l('events.confirmLabel')}</label>
 	<value>
 		<input type="checkbox" name="eventconfirm" transient="true" label="${ui.l('events.confirm')}" value="1" ${v.confirm}/>
+		<explain>${ui.l('events.confirmHint')}</explain>
 	</value>
 </field>
 <field>
@@ -111,7 +114,8 @@ class pageEvent {
 <field>
 	<label>${ui.l('events.hashtags')}</label>
 	<value>
-		<input name="hashtag" maxlength="250" value="${v.hashtags}" />
+		<input name="hashtagsDisp" maxlength="250" value="${v.hashtagsDisp}" />
+		<hashtags>${v.hashtagSelection}</hashtags>
 	</value>
 </field>
 <dialogButtons style="margin-bottom:0;">
@@ -135,24 +139,47 @@ ${v.eventLinkOpen}
 ${v.eventLinkClose}
 ${v.eventParticipationButtons}
 </text>`;
+	static addHashtag(tag) {
+		var e = ui.q('popup input[name="hashtagsDisp"]');
+		var s = e.value;
+		if ((' ' + e.value + ' ').indexOf(' ' + tag + ' ') < 0)
+			s += ' ' + tag;
+		else
+			s = s.replace(tag, '');
+		while (s.indexOf('  ') > -1)
+			s = s.replace('  ', ' ');
+		e.value = s.trim();
+	}
 	static checkPrice() {
 		var e = ui.q('popup explain.paypal');
 		if (ui.q('popup [name="price"]').value > 0) {
 			if (user.contact.paypalMerchantId && ui.cssValue(e, 'display') != 'none' ||
 				!user.contact.paypalMerchantId && ui.cssValue(e, 'display') == 'none')
 				ui.toggleHeight(e);
-			if (ui.cssValue(e = ui.q('popup .paid'), 'display') == 'none')
-				ui.toggleHeight(e);
 			if (ui.cssValue(e = ui.q('popup .unpaid'), 'display') != 'none')
-				ui.toggleHeight(e);
+				ui.toggleHeight(e, function () { ui.toggleHeight('popup .paid') });
 		} else {
 			if (ui.cssValue(e, 'display') != 'none')
 				ui.toggleHeight(e);
 			if (ui.cssValue(e = ui.q('popup .paid'), 'display') != 'none')
-				ui.toggleHeight(e);
-			if (ui.cssValue(e = ui.q('popup .unpaid'), 'display') == 'none')
-				ui.toggleHeight(e);
+				ui.toggleHeight(e, function () { ui.toggleHeight('popup .unpaid') });
 		}
+	}
+	static convertHashtags(hashtags) {
+		var category = '';
+		for (var i = 0; i < ui.categories.length; i++) {
+			for (var i2 = 0; i2 < ui.categories[i].subCategories.length; i2++) {
+				if (hashtags.indexOf(ui.categories[i].subCategories[i2]) > -1) {
+					category += '\u0015' + i + '.' + i2;
+					hashtags = hashtags.replace(ui.categories[i].subCategories[i2], '');
+				}
+			}
+		}
+		if (category)
+			category = category.substring(1);
+		while (hashtags.indexOf('  ') > -1)
+			hashtags = hashtags.replace('  ', ' ');
+		return { category: category, hashtags: hashtags.trim() };
 	}
 	static detail(v) {
 		v.copyLinkHint = ui.l('copyLinkHint.event');
@@ -246,7 +273,7 @@ ${v.eventParticipationButtons}
 			v.startDate = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute;
 		}
 		if (!id)
-			v.hideDelete = ' noDsip';
+			v.hideDelete = ' noDisp';
 		d = new Date();
 		v.today = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
 		v.id = id;
@@ -283,6 +310,16 @@ ${v.eventParticipationButtons}
 		else {
 			v.styleEvent = ' style="display:none;"';
 			pageEvent.locationsOfPastEvents();
+		}
+		v.hashtagSelection = '';
+		for (var i = 0; i < ui.categories.length; i++)
+			v.hashtagSelection += '<category class="bgColor" onclick="pageEvent.toggleSubCategories(' + i + ')">' + ui.categories[i].label + '</category>';
+		for (var i = 0; i < ui.categories.length; i++) {
+			v.hashtagSelection += '<div>';
+			var subs = ui.categories[i].subCategories.sort(function (a, b) { return a > b ? 1 : -1 });
+			for (var i2 = 0; i2 < subs.length; i2++)
+				v.hashtagSelection += '<label class="multipleLabel" onclick="pageEvent.addHashtag(&quot;' + subs[i2] + '&quot;)">' + subs[i2] + '</label>';
+			v.hashtagSelection += '</div>';
 		}
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
 		pageEvent.setForm();
@@ -660,8 +697,7 @@ ${v.eventParticipationButtons}
 	static locationSelected(e) {
 		ui.q('popup input[name="locationId"]').value = e.getAttribute('i');
 		ui.q('popup .locationName').innerHTML = e.innerHTML;
-		ui.toggleHeight('popup .location');
-		ui.toggleHeight('popup .event', pageEvent.checkPrice);
+		ui.toggleHeight('popup .location', function () { ui.toggleHeight('popup .event', pageEvent.checkPrice); });
 	}
 	static participate(event, id) {
 		event.stopPropagation();
@@ -834,12 +870,16 @@ ${v.eventParticipationButtons}
 		var start = ui.q('popup input[name="startDate"]');
 		var end = ui.q('popup input[name="endDate"]');
 		var text = ui.q('popup [name="text"]');
+		var hashtags = ui.q('popup [name="hashtagsDisp"]');
 		var id = ui.q('popup [name="id"]').value;
 		ui.html('popup popupHint', '');
 		formFunc.resetError(start);
 		formFunc.resetError(end);
 		formFunc.resetError(text);
+		formFunc.resetError(hashtags);
 		formFunc.resetError(ui.q('popup input[name="visibility"]'));
+		if (!hashtags.value)
+			formFunc.setError(hashtags, 'error.hashtags');
 		if (!text.value)
 			formFunc.setError(text, 'error.description');
 		else
@@ -874,7 +914,10 @@ ${v.eventParticipationButtons}
 				}
 			}
 		}
-		var v = formFunc.getForm('popup form');
+		var v = pageEvent.convertHashtags(ui.q('popup input[name="hashtagsDisp"]').value);
+		ui.q('popup input[name="category"]').value = v.category;
+		ui.q('popup input[name="hashtags"]').value = v.hashtags;
+		v = formFunc.getForm('popup form');
 		if (v.values.visibility == 2 && (!user.contact.attr || !user.contact.attrInterest))
 			formFunc.setError(ui.q('popup input[name="visibility"]'), 'events.errorVisibility');
 		if (ui.q('popup errorHint'))
@@ -992,6 +1035,14 @@ ${v.eventParticipationButtons}
 				});
 			}
 		}
+	}
+	static toggleSubCategories(i) {
+		var e = ui.q('popup hashtags div[style*="block"]');
+		var f = function () { ui.toggleHeight(ui.qa('popup hashtags div')[i]) };
+		if (e && e != ui.qa('popup hashtags div')[i])
+			ui.toggleHeight(e, f);
+		else
+			f.call();
 	}
 	static verifyParticipation(id) {
 		var u = user.contact.id;
