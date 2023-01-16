@@ -201,7 +201,7 @@ ${v.img}<filters style="transform:scale(0);"><hinky class="top" style="left:1.5e
 		} else if (id.indexOf('search') == 0) {
 			var s = id.substring(id.lastIndexOf('.') + 1);
 			var i = ui.qa('search tabBody div.' + s + ' listResults row').length;
-			ui.q('search tabHeader tab[i="' + s + '"]').innerText = ui.l(s + 's.title') + (i ? global.separator + i : '');
+			ui.q('search tabHeader tab[i="' + s + '"]').innerText = ui.l(s + '.title') + (i ? global.separator + i : '');
 		}
 		ui.css(id + ' listScroll', 'display', '');
 		lists.repositionThumb(id);

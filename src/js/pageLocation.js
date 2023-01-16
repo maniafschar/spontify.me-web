@@ -727,16 +727,6 @@ ${v.description}
 				position: new google.maps.LatLng(d.latitude, d.longitude)
 			});
 	}
-	static search() {
-		if (pageLocation.map.loadActive)
-			pageLocation.searchFromMap();
-		else {
-			ui.attr('locations', 'menuIndex', 0);
-			pageLocation.filter = formFunc.getForm('locations filters form').values;
-			communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent(pageLocation.getSearch()), pageLocation.listLocation, 'locations', 'search');
-			formFunc.saveDraft('searchLocations', pageLocation.filter);
-		}
-	}
 	static searchFromMap() {
 		pageLocation.map.loadActive = true;
 		communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent(pageLocation.getSearch(pageLocation.map.canvas.getBounds())), pageLocation.listLocation, 'locations', 'search');

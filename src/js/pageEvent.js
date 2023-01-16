@@ -168,9 +168,10 @@ ${v.eventParticipationButtons}
 		var category = '';
 		for (var i = 0; i < ui.categories.length; i++) {
 			for (var i2 = 0; i2 < ui.categories[i].subCategories.length; i2++) {
-				if (hashtags.indexOf(ui.categories[i].subCategories[i2]) > -1) {
+				var i3 = hashtags.toLowerCase().indexOf(ui.categories[i].subCategories[i2].toLowerCase());
+				if (i3 > -1) {
 					category += global.separatorTech + i + '.' + i2;
-					hashtags = hashtags.replace(ui.categories[i].subCategories[i2], '');
+					hashtags = hashtags.substring(0, i3) + hashtags.substring(i3 + ui.categories[i].subCategories[i2].length);
 				}
 			}
 		}

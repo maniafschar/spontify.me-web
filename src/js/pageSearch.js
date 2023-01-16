@@ -14,38 +14,38 @@ export { pageSearch };
 class pageSearch {
 	static template = v =>
 		global.template`<tabHeader>
-	<tab onclick="pageSearch.selectTab('contact')" i="contact">
+	<tab onclick="pageSearch.selectTab('contacts')" i="contacts">
 		${ui.l('contacts.title')}
 	</tab>
-	<tab onclick="pageSearch.selectTab('event')" i="event">
+	<tab onclick="pageSearch.selectTab('events')" i="events">
 		${ui.l('events.title')}
 	</tab>
-	<tab onclick="pageSearch.selectTab('location')" i="location">
+	<tab onclick="pageSearch.selectTab('locations')" i="locations">
 		${ui.l('locations.title')}
 	</tab>
 </tabHeader>
 <tabBody>
-	<div class="contact"></div>
-	<div class="event"></div>
-	<div class="location"></div>
+	<div class="contacts"></div>
+	<div class="events"></div>
+	<div class="locations"></div>
 </tabBody>`;
-	static contact = {
+	static contacts = {
 		filter: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
-	<input type="radio" name="gender" value="1" label="${ui.l('male')}" deselect="true" onclick="pageSearch.contact.filterList()" ${v.gender1}/>
-	<input type="radio" name="gender" value="2" label="${ui.l('female')}" deselect="true" onclick="pageSearch.contact.filterList()" ${v.gender2}/>
-	<input type="radio" name="gender" value="3" label="${ui.l('divers')}" deselect="true" onclick="pageSearch.contact.filterList()" ${v.gender3}/>
+	<input type="radio" name="gender" value="1" label="${ui.l('male')}" deselect="true" onclick="pageSearch.contacts.filterList()" ${v.gender1}/>
+	<input type="radio" name="gender" value="2" label="${ui.l('female')}" deselect="true" onclick="pageSearch.contacts.filterList()" ${v.gender2}/>
+	<input type="radio" name="gender" value="3" label="${ui.l('divers')}" deselect="true" onclick="pageSearch.contacts.filterList()" ${v.gender3}/>
 	<filterSeparator></filterSeparator>
 	<input type="checkbox" label="${ui.l('search.matches')}" name="matches" ${v.matches}/>
-	<input type="checkbox" label="${ui.l('settings.guide')}" name="guide" onclick="pageSearch.contact.filterList()" ${v.guide}/>
+	<input type="checkbox" label="${ui.l('settings.guide')}" name="guide" onclick="pageSearch.contacts.filterList()" ${v.guide}/>
 	<filterSeparator></filterSeparator>
 	<input type="text" name="age" slider="range" min="18" max="99" id="age" ${v.age}/>
 	<filterSeparator></filterSeparator>
 	<input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
 	<explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
 	<errorHint></errorHint>
-	<buttontext class="bgColor defaultButton" onclick="pageSearch.contact.search()">${ui.l('search.action')}</buttontext></form>`,
+	<buttontext class="bgColor defaultButton" onclick="pageSearch.contacts.search()">${ui.l('search.action')}</buttontext></form>`,
 		filterList() {
 			var d = lists.data['contacts'];
 			if (!d)
@@ -66,16 +66,16 @@ class pageSearch {
 		},
 		getFields() {
 			var v = {};
-			if (pageSearch.contact.filter.age)
-				v.age = ' value="' + pageSearch.contact.filter.age + '"';
-			if (pageSearch.contact.filter.keywords)
-				v.keywords = ' value="' + pageSearch.contact.filter.keywords + '"';
-			if (pageSearch.contact.filter.matches == 'on')
+			if (pageSearch.contacts.filter.age)
+				v.age = ' value="' + pageSearch.contacts.filter.age + '"';
+			if (pageSearch.contacts.filter.keywords)
+				v.keywords = ' value="' + pageSearch.contacts.filter.keywords + '"';
+			if (pageSearch.contacts.filter.matches == 'on')
 				v.matches = ' checked="true"';
-			if (pageSearch.contact.filter.guide == 'on')
+			if (pageSearch.contacts.filter.guide == 'on')
 				v.guide = ' checked="true"';
-			v['gender' + pageSearch.contact.filter.gender] = ' checked="true"';
-			return pageSearch.contact.template(v);
+			v['gender' + pageSearch.contacts.filter.gender] = ' checked="true"';
+			return pageSearch.contacts.template(v);
 		},
 		getMatches() {
 			var search = '(' + global.getRegEx("contact.attr", user.contact.attrInterest) + ' or ' + global.getRegEx('contact.attrEx', user.contact.attrInterestEx) + ')';
@@ -126,14 +126,14 @@ class pageSearch {
 		},
 		getSearch() {
 			var s = '', s2 = '';
-			if (ui.q('search tabBody div.contact [name="matches"]:checked'))
-				s = ' and ' + pageSearch.contact.getMatches();
-			var v = ui.q('search tabBody div.contact [name="gender"]:checked');
+			if (ui.q('search tabBody div.contacts [name="matches"]:checked'))
+				s = ' and ' + pageSearch.contacts.getMatches();
+			var v = ui.q('search tabBody div.contacts [name="gender"]:checked');
 			if (v && v.checked)
 				s += ' and contact.gender=' + v.value;
-			if (ui.q('search tabBody div.contact [name="guide"]:checked'))
+			if (ui.q('search tabBody div.contacts [name="guide"]:checked'))
 				s += ' and contact.guide=1';
-			v = ui.q('search tabBody div.contact [name="age"]').value;
+			v = ui.q('search tabBody div.contacts [name="age"]').value;
 			if (v) {
 				v = v.split(',');
 				if (v[0] && v[0] > 18)
@@ -141,7 +141,7 @@ class pageSearch {
 				if (v[1] && v[1] < 99)
 					s += ' and contact.age<=' + v[1];
 			}
-			v = ui.val('search tabBody div.contact [name="keywords"]').trim();
+			v = ui.val('search tabBody div.contacts [name="keywords"]').trim();
 			if (v) {
 				v = v.replace(/'/g, '\'\'').split(' ');
 				s += ' and (';
@@ -163,35 +163,35 @@ class pageSearch {
 			return 'contact.id<>' + user.contact.id + s;
 		},
 		search() {
-			pageSearch.contact.filter = formFunc.getForm('search tabBody div.contact form').values;
-			communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=contact_list&search=' + encodeURIComponent(pageSearch.contact.getSearch()), pageContact.listContacts, 'search tabBody>div.contact', 'search');
-			formFunc.saveDraft('searchContacts', pageSearch.contact.filter);
+			pageSearch.contacts.filter = formFunc.getForm('search tabBody div.contacts form').values;
+			communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=contact_list&search=' + encodeURIComponent(pageSearch.contacts.getSearch()), pageContact.listContacts, 'search tabBody>div.contacts', 'search');
+			formFunc.saveDraft('searchContacts', pageSearch.contacts.filter);
 		}
 	}
-	static event = {
+	static events = {
 		filter: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
 <input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
 <explain class="searchKeywordHint">${ui.l('search.hintEvent')}</explain>
 <errorHint></errorHint>
-<buttontext class="bgColor defaultButton" onclick="pageSearch.event.search()">${ui.l('search.action')}</buttontext></form>`,
+<buttontext class="bgColor defaultButton" onclick="pageSearch.events.search()">${ui.l('search.action')}</buttontext></form>`,
 		getFields() {
 			var v = {};
 			var l = lists.data[ui.navigation.getActiveID()];
-			if (pageSearch.event.filter.filterCategories) {
-				var c = pageSearch.event.filter.filterCategories.split(global.separatorTech);
+			if (pageSearch.events.filter.filterCategories) {
+				var c = pageSearch.events.filter.filterCategories.split(global.separatorTech);
 				for (var i = 0; i < c.length; i++)
 					v['valueCat' + c[i]] = ' checked="true"';
 			}
-			if (pageSearch.event.filter.keywords)
-				v.keywords = ' value="' + pageSearch.event.filter.keywords + '"';
-			if (pageSearch.event.filter.matches == 'on')
+			if (pageSearch.events.filter.keywords)
+				v.keywords = ' value="' + pageSearch.events.filter.keywords + '"';
+			if (pageSearch.events.filter.matches == 'on')
 				v.matches = ' checked="true"';
-			return pageSearch.event.template(v);
+			return pageSearch.events.template(v);
 		},
 		getSearch() {
-			var v = ui.val('search tabBody div.event [name="keywords"]').trim(), s = '';
+			var v = ui.val('search tabBody div.events [name="keywords"]').trim(), s = '';
 			if (v) {
 				var t = pageEvent.convertHashtags(v);
 				v = t.hashtags.replace(/'/g, '\'\'').split(' ');
@@ -252,12 +252,12 @@ class pageSearch {
 			return s;
 		},
 		search() {
-			pageSearch.event.filter = formFunc.getForm('search tabBody div.event form').values;
-			communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_listEvent&search=' + encodeURIComponent(pageSearch.event.getSearch()), pageEvent.listEvents, 'search tabBody>div.event', 'search');
-			formFunc.saveDraft('searchEvents', pageSearch.event.filter);
+			pageSearch.events.filter = formFunc.getForm('search tabBody div.events form').values;
+			communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_listEvent&search=' + encodeURIComponent(pageSearch.events.getSearch()), pageEvent.listEvents, 'search tabBody>div.events', 'search');
+			formFunc.saveDraft('searchEvents', pageSearch.events.filter);
 		}
 	}
-	static location = {
+	static locations = {
 		filter: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
@@ -266,18 +266,18 @@ class pageSearch {
 <input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
 <errorHint></errorHint>
-<buttontext class="bgColor defaultButton" onclick="pageSearch.location.search()">${ui.l('search.action')}</buttontext></form>`,
+<buttontext class="bgColor defaultButton" onclick="pageSearch.locations.search()">${ui.l('search.action')}</buttontext></form>`,
 		getFields() {
 			var v = {};
-			if (pageSearch.location.filter.favorites)
+			if (pageSearch.locations.filter.favorites)
 				v.favorites = ' checked="checked"';
-			if (pageSearch.location.filter.keywords)
-				v.keywords = ' value="' + pageSearch.location.filter.keywords + '"';
-			return pageSearch.location.template(v);
+			if (pageSearch.locations.filter.keywords)
+				v.keywords = ' value="' + pageSearch.locations.filter.keywords + '"';
+			return pageSearch.locations.template(v);
 		},
 		getSearch() {
 			var s = '';
-			var v = ui.val('search tabBody div.location [name="keywords"]').trim();
+			var v = ui.val('search tabBody div.locations [name="keywords"]').trim();
 			if (v) {
 				v = v.replace(/'/g, '\'\'').split(' ');
 				for (var i = 0; i < v.length; i++) {
@@ -290,14 +290,14 @@ class pageSearch {
 				if (s)
 					s = '(' + s.substring(0, s.length - 5) + ')';
 			}
-			if (ui.val('search tabBody div.location [name="favorites"]:checked'))
+			if (ui.val('search tabBody div.locations [name="favorites"]:checked'))
 				s += (s ? ' and ' : '') + 'locationFavorite.favorite=true';
 			return s;
 		},
 		getSearch1(bounds) {
 			var s = '';
 			if (ui.q('locations filters [name="matches"]:checked'))
-				s = pageSearch.event.getMatches();
+				s = pageSearch.events.getMatches();
 			var c = '', d = '';
 			var cats = [];
 			var e = ui.qa('locations filters [name="filterCategories"]:checked');
@@ -349,22 +349,22 @@ class pageSearch {
 			return s;
 		},
 		search() {
-			pageSearch.location.filter = formFunc.getForm('search tabBody div.location form').values;
-			communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent(pageSearch.location.getSearch()), pageLocation.listLocation, 'search tabBody>div.location', 'search');
-			formFunc.saveDraft('searchLocations', pageSearch.location.filter);
+			pageSearch.locations.filter = formFunc.getForm('search tabBody div.locations form').values;
+			communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent(pageSearch.locations.getSearch()), pageLocation.listLocation, 'search tabBody>div.locations', 'search');
+			formFunc.saveDraft('searchLocations', pageSearch.locations.filter);
 		}
 	}
 	static init() {
-		if (!pageSearch.contact.filter)
-			pageSearch.contact.filter = formFunc.getDraft('searchContacts') || {};
-		if (!pageSearch.event.filter)
-			pageSearch.event.filter = formFunc.getDraft('searchEvents') || {};
-		if (!pageSearch.location.filter)
-			pageSearch.location.filter = formFunc.getDraft('searchLocations') || {};
+		if (!pageSearch.contacts.filter)
+			pageSearch.contacts.filter = formFunc.getDraft('searchContacts') || {};
+		if (!pageSearch.events.filter)
+			pageSearch.events.filter = formFunc.getDraft('searchEvents') || {};
+		if (!pageSearch.locations.filter)
+			pageSearch.locations.filter = formFunc.getDraft('searchLocations') || {};
 		var e = ui.q('search');
 		if (!e.innerHTML) {
 			e.innerHTML = pageSearch.template();
-			pageSearch.selectTab('contact');
+			pageSearch.selectTab('contacts');
 		}
 	}
 	static selectTab(id) {

@@ -439,7 +439,7 @@
 			"new": "Add new Event",
 			"next": "Coming {0}",
 			"noEvents": "At the moment, no Events found.",
-			"noImage": "You don't have a profile picture yet. Without a profile picture, others can't recognize you, so a new event wouldn't make sense.<br/><br/>Upload a profile picture in your settings, then you can create a new event.",
+			"noImage": "Upload a profile picture, then you can create an event.<br/>Would you like to do something with new Spontis, who do not have a nice profile here?",
 			"noParticipant": "No participants up to now. Be the first!",
 			"outdated": "Outdated Events",
 			"participante": "Save Ticket!",
