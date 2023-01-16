@@ -185,7 +185,7 @@ class communication {
 					success(r) {
 						r = Encryption.jsEncrypt.decrypt(r);
 						if (r) {
-							r = r.split('\u0015');
+							r = r.split(global.separatorTech);
 							communication.login.login(r[0], r[1], true, exec);
 						} else
 							communication.login.removeCredentials();
@@ -422,7 +422,7 @@ class communication {
 				url: global.server + 'authentication/recoverVerifyEmail?token=' + encodeURIComponent(Encryption.encPUB(e.substring(0, 10) + s2 + e.substring(10))) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
 				success(r) {
 					if (r) {
-						r = Encryption.jsEncrypt.decrypt(r).split('\u0015');
+						r = Encryption.jsEncrypt.decrypt(r).split(global.separatorTech);
 						communication.login.login(r[0], r[1], global.getDevice() != 'computer', pageLogin.recoverPasswordSetNew);
 					} else {
 						setTimeout(function () {
@@ -477,7 +477,7 @@ class communication {
 				},
 				success(r) {
 					if (r) {
-						r = Encryption.jsEncrypt.decrypt(r).split('\u0015');
+						r = Encryption.jsEncrypt.decrypt(r).split(global.separatorTech);
 						if (r.length == 2)
 							communication.login.login(r[0], r[1], ui.q('[name="autoLogin"]:checked'), exec);
 					}

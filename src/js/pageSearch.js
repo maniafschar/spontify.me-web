@@ -180,7 +180,7 @@ class pageSearch {
 			var v = {};
 			var l = lists.data[ui.navigation.getActiveID()];
 			if (pageSearch.event.filter.filterCategories) {
-				var c = pageSearch.event.filter.filterCategories.split('\u0015');
+				var c = pageSearch.event.filter.filterCategories.split(global.separatorTech);
 				for (var i = 0; i < c.length; i++)
 					v['valueCat' + c[i]] = ' checked="true"';
 			}

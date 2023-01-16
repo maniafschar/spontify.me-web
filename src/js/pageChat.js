@@ -426,11 +426,11 @@ class pageChat {
 			if (!v) {
 				v = ui.q('[name="groupdialog"]:checked');
 				if (v)
-					v = '\u0015' + v.value;
+					v = global.separatorTech + v.value;
 				else
 					v = '';
 			}
-			v = v.split('\u0015');
+			v = v.split(global.separatorTech);
 			var g = user.contact.groups;
 			for (var i = 1; i < v.length; i++)
 				g = g.replace('value="' + v[i] + '"', 'value="' + v[i] + '" checked="checked"');
@@ -542,7 +542,7 @@ class pageChat {
 		user.contact.chatTextGroups = ui.val('#groupChatText');
 		var e = ui.qa('input[name="groupdialog"]:checked');
 		for (var i = 0; i < e.length; i++)
-			user.contact.chatTextGroups += '\u0015' + e[i].value;
+			user.contact.chatTextGroups += global.separatorTech + e[i].value;
 	}
 	static scrollToBottom() {
 		var e = ui.q('chatConversation');

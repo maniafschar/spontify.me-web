@@ -563,7 +563,7 @@ ${v.description}
 	static replaceMapDescData(s) {
 		if (!s)
 			return '';
-		return s.replace(/'/g, '&#39;').replace(/"/g, '&#34;').replace(/\n/g, '\u0015').replace(/\r/g, '');
+		return s.replace(/'/g, '&#39;').replace(/"/g, '&#34;').replace(/\n/g, global.separatorTech).replace(/\r/g, '');
 	}
 	static reset() {
 		pageLocation.locationsAdded = null;

@@ -331,22 +331,22 @@ ${v.info}
 		return s;
 	}
 	static getCurrentSettingsString() {
-		var s = ui.val('input[name="email"]') + '\u0015';
-		s += ui.q('[name="image_disp"] img') + '\u0015';
-		s += ui.val('textarea[name="aboutMe"]') + '\u0015';
-		s += ui.val('input[name="birthday"]') + '\u0015';
-		s += ui.val('input[name="birthdayDisplay"]:checked') + '\u0015';
-		s += ui.val('input[name="gender"]:checked') + '\u0015';
-		s += ui.val('input[name="ageFemale"]') + '\u0015';
-		s += ui.val('input[name="ageMale"]') + '\u0015';
-		s += ui.val('input[name="ageDivers"]') + '\u0015';
-		s += (ui.q('input[name="genderInterest1"]:checked') ? 1 : 0) + '\u0015';
-		s += (ui.q('input[name="genderInterest2"]:checked') ? 1 : 0) + '\u0015';
-		s += (ui.q('input[name="genderInterest3"]:checked') ? 1 : 0) + '\u0015';
-		s += ui.val('input[name="language"]:checked') + '\u0015';
-		s += (ui.q('input[name="search"]:checked') ? 1 : 0) + '\u0015';
-		s += (ui.q('input[name="guide"]:checked') ? 1 : 0) + '\u0015';
-		s += ui.val('input[name="pseudonym"]') + '\u0015';
+		var s = ui.val('input[name="email"]') + global.separatorTech;
+		s += ui.q('[name="image_disp"] img') + global.separatorTech;
+		s += ui.val('textarea[name="aboutMe"]') + global.separatorTech;
+		s += ui.val('input[name="birthday"]') + global.separatorTech;
+		s += ui.val('input[name="birthdayDisplay"]:checked') + global.separatorTech;
+		s += ui.val('input[name="gender"]:checked') + global.separatorTech;
+		s += ui.val('input[name="ageFemale"]') + global.separatorTech;
+		s += ui.val('input[name="ageMale"]') + global.separatorTech;
+		s += ui.val('input[name="ageDivers"]') + global.separatorTech;
+		s += (ui.q('input[name="genderInterest1"]:checked') ? 1 : 0) + global.separatorTech;
+		s += (ui.q('input[name="genderInterest2"]:checked') ? 1 : 0) + global.separatorTech;
+		s += (ui.q('input[name="genderInterest3"]:checked') ? 1 : 0) + global.separatorTech;
+		s += ui.val('input[name="language"]:checked') + global.separatorTech;
+		s += (ui.q('input[name="search"]:checked') ? 1 : 0) + global.separatorTech;
+		s += (ui.q('input[name="guide"]:checked') ? 1 : 0) + global.separatorTech;
+		s += ui.val('input[name="pseudonym"]') + global.separatorTech;
 		var e = ui.qa('[name="budget"]');
 		for (var i = 0; i < e.length; i++) {
 			if (e[i].checked)
@@ -358,7 +358,7 @@ ${v.info}
 		var s = ui.val('#' + id).split(','), s2 = '';
 		for (var i = 0; i < s.length; i++) {
 			if (s[i].trim().length > 0)
-				s2 += '\u0015' + (s[i] < 10 ? '00' : s[i] < 100 ? '0' : '') + Number(s[i]);
+				s2 += global.separatorTech + (s[i] < 10 ? '00' : s[i] < 100 ? '0' : '') + Number(s[i]);
 		}
 		if (s2.length > 0)
 			s2 = s2.substring(1);
@@ -539,7 +539,7 @@ ${v.info}
 			pageSettings.save('autoOpen');
 	}
 	static postSave(goToID) {
-		if (pageSettings.currentSettings && pageSettings.currentSettings.split('\u0015')[0] != ui.val('input[name="email"]')) {
+		if (pageSettings.currentSettings && pageSettings.currentSettings.split(global.separatorTech)[0] != ui.val('input[name="email"]')) {
 			communication.login.logoff();
 			return;
 		}
@@ -597,7 +597,7 @@ ${v.info}
 		formFunc.resetError(ui.q('#settingsInterest3'));
 	}
 	static resetEmailToOldValue() {
-		ui.q('input[name="email"]').value = pageSettings.currentSettings.split('\u0015')[0];
+		ui.q('input[name="email"]').value = pageSettings.currentSettings.split(global.separatorTech)[0];
 		ui.navigation.hidePopup();
 	}
 	static save(goToID, saveNewEmail) {
@@ -625,7 +625,7 @@ ${v.info}
 		formFunc.validation.email(ui.q('input[name="email"]'));
 		formFunc.validation.pseudonym(ui.q('input[name="pseudonym"]'));
 		if (!ui.q('settings .dialogFieldError')) {
-			if (pageSettings.currentSettings && pageSettings.currentSettings.split('\u0015')[0] != ui.val('input[name="email"]')) {
+			if (pageSettings.currentSettings && pageSettings.currentSettings.split(global.separatorTech)[0] != ui.val('input[name="email"]')) {
 				if (saveNewEmail)
 					ui.q('input[name="verified"]').value = 'false';
 				else {

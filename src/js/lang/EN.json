@@ -413,8 +413,7 @@
 		"events": {
 			"acceptedMarketingEvent": "Your event was accepted, have fun!",
 			"canceled": "You have canceled your participation: ",
-			"confirm": "Spontis must confirm participation",
-			"confirmHint": "If a Sponti cancels, he cannot register again.",
+			"confirm": "If a Sponti cancels, he cannot re-participate",
 			"confirmLabel": "Confirmation",
 			"createdBy": "Event created by",
 			"date": "Date",

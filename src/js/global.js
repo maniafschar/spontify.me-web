@@ -15,6 +15,7 @@ class global {
 	static server = 'https://spontify.me/rest/';
 	static serverImg = '';
 	static separator = ' · ';
+	static separatorTech = '\u0015';
 	static url = '';
 
 	static date = {

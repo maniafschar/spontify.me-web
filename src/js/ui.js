@@ -75,9 +75,9 @@ class ui {
 		};
 		if (compare.idDisplay) {
 			if (userAttr)
-				result.total += userAttr.split('\u0015').length;
+				result.total += userAttr.split(global.separatorTech).length;
 			if (compare.attr) {
-				a = compare.attr.split('\u0015');
+				a = compare.attr.split(global.separatorTech);
 				for (var i = 0; i < a.length; i++)
 					add2List(ui.attributes[parseInt(a[i], 10)], userAttr.indexOf(a[i]) > -1, result.attributesUser);
 			}
@@ -94,14 +94,14 @@ class ui {
 			userAttr = user.contact['attr' + i] || '';
 			var compareHasCat = compare.category ? compare.category.indexOf(i) > -1 : compare['attr' + i] || compare['attr' + i + 'Ex'];
 			if (userAttr && (compare.idDisplay || compareHasCat)) {
-				result.total += userAttr.split('\u0015').length + 1;
+				result.total += userAttr.split(global.separatorTech).length + 1;
 				result.categories += '/' + ui.categories[i].label;
 			}
 			result.attributesCategories.push(new Attribute('category' + i));
 			if (compareHasCat)
 				add2List(ui.categories[i].label, userAttr, result.attributesCategories[i]);
 			if (compare['attr' + i]) {
-				a = compare['attr' + i].split('\u0015');
+				a = compare['attr' + i].split(global.separatorTech);
 				for (var i2 = 0; i2 < a.length; i2++)
 					add2List(ui.categories[i].subCategories[parseInt(a[i2], 10)], userAttr.indexOf(a[i2]) > -1, result.attributesCategories[i]);
 			}
@@ -117,10 +117,10 @@ class ui {
 		if (result.categories)
 			result.categories = result.categories.substring(1);
 		if (user.contact.budget)
-			result.total += user.contact.budget.split('\u0015').length;
+			result.total += user.contact.budget.split(global.separatorTech).length;
 		if (compare.budget) {
 			var userBudget = user.contact.budget || '';
-			var b = compare.budget.split('\u0015');
+			var b = compare.budget.split(global.separatorTech);
 			for (var i = 0; i < b.length; i++) {
 				var s = '', i2 = 0;
 				var max = 1 + parseInt(b[i]);
@@ -403,10 +403,10 @@ class ui {
 				return false;
 			if (global.isBrowser() && location.href.indexOf('#') < 0)
 				history.pushState(null, null, '#x');
-			if (visible && ui.navigation.lastPopup == title + '\u0015' + data)
+			if (visible && ui.navigation.lastPopup == title + global.separatorTech + data)
 				ui.navigation.hidePopup();
 			else if (data) {
-				ui.navigation.lastPopup = title + '\u0015' + data;
+				ui.navigation.lastPopup = title + global.separatorTech + data;
 				data = '<popupContent ts="' + new Date().getTime() + '"><div>' + data + '</div></popupContent>';
 				if (title)
 					data = '<popupTitle' + (modal ? ' modal="true"' : '') + '><div>' + title + '</div></popupTitle>' + data;
@@ -482,7 +482,7 @@ class ui {
 					attr.list.push({ label: s, class: 'attributeFade' });
 			}
 			if (button.getAttribute('type') == 'user') {
-				var a = user.contact.attrInterest ? user.contact.attrInterest.split('\u0015') : [];
+				var a = user.contact.attrInterest ? user.contact.attrInterest.split(global.separatorTech) : [];
 				for (var i = 0; i < a.length; i++)
 					add2List(ui.attributes[parseInt(a[i], 10)]);
 				a = user.contact.attrInterestEx ? user.contact.attrInterestEx.split(',') : [];
@@ -490,7 +490,7 @@ class ui {
 					add2List(a[i].trim());
 			} else if (button.getAttribute('type').indexOf('category') == 0) {
 				var a = user.contact['attr' + button.getAttribute('type').substring(8)];
-				a = a ? a.split('\u0015') : [];
+				a = a ? a.split(global.separatorTech) : [];
 				var sub = ui.categories[parseInt(button.getAttribute('type').substring(8), 10)].subCategories;
 				for (var i = 0; i < a.length; i++)
 					add2List(sub[parseInt(a[i], 10)]);
@@ -499,7 +499,7 @@ class ui {
 				for (var i = 0; i < a.length; i++)
 					add2List(a[i].trim());
 			} else {
-				var a = user.contact.budget ? user.contact.budget.split('\u0015') : [];
+				var a = user.contact.budget ? user.contact.budget.split(global.separatorTech) : [];
 				for (var i = 0; i < a.length; i++) {
 					var s = '', i2 = 0;
 					var max = 1 + parseInt(a[i]);
@@ -759,7 +759,7 @@ class ui {
 				return e[0].value
 			var s = '';
 			for (var i = 0; i < e.length; i++)
-				s += '\u0015' + e[i].value;
+				s += global.separatorTech + e[i].value;
 			return s.substring(1);
 		}
 		return '';
@@ -844,7 +844,7 @@ class formFunc {
 						var h = Math.min(f.parentElement.clientHeight, f.clientHeight) * ratio;
 						var b = formFunc.image.scale(img, x, y, w, h).data;
 						// b = data:image/jpeg;base64,/9j/4AAQS...
-						d.values[e[i].name] = '.' + b.substring(b.indexOf('/') + 1, b.indexOf(';')) + '\u0015' + b.substring(b.indexOf(',') + 1);
+						d.values[e[i].name] = '.' + b.substring(b.indexOf('/') + 1, b.indexOf(';')) + global.separatorTech + b.substring(b.indexOf(',') + 1);
 					}
 				} else if (e[i].type == 'radio') {
 					if (e[i].checked)
@@ -853,7 +853,7 @@ class formFunc {
 					if (!cb[e[i].name])
 						cb[e[i].name] = '';
 					if (e[i].checked)
-						cb[e[i].name] += '\u0015' + e[i].value;
+						cb[e[i].name] += global.separatorTech + e[i].value;
 					else if (e[i].value == 'true')
 						cb[e[i].name] += '\u0015false';
 				} else if (e[i].type == 'datetime-local')

@@ -413,8 +413,7 @@
 		"events": {
 			"acceptedMarketingEvent": "Dein Event wurde genehmigt, viel Spaß!",
 			"canceled": "Du hast Deine Teilnahme abgesagt: ",
-			"confirm": "Spontis müssen die Teilnahme bestätigen",
-			"confirmHint": "Sagt ein Sponti ab, kann er sich nicht wieder anmelden.",
+			"confirm": "Sagt ein Sponti ab, kann er sich nicht wieder anmelden",
 			"confirmLabel": "Bestätigung",
 			"createdBy": "Event erstellt von",
 			"date": "Datum",

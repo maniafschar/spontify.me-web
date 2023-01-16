@@ -100,7 +100,6 @@ class pageEvent {
 	<label>${ui.l('events.confirmLabel')}</label>
 	<value>
 		<input type="checkbox" name="eventconfirm" transient="true" label="${ui.l('events.confirm')}" value="1" ${v.confirm}/>
-		<explain>${ui.l('events.confirmHint')}</explain>
 	</value>
 </field>
 <field>
@@ -170,15 +169,19 @@ ${v.eventParticipationButtons}
 		for (var i = 0; i < ui.categories.length; i++) {
 			for (var i2 = 0; i2 < ui.categories[i].subCategories.length; i2++) {
 				if (hashtags.indexOf(ui.categories[i].subCategories[i2]) > -1) {
-					category += '\u0015' + i + '.' + i2;
+					category += global.separatorTech + i + '.' + i2;
 					hashtags = hashtags.replace(ui.categories[i].subCategories[i2], '');
 				}
 			}
 		}
 		if (category)
 			category = category.substring(1);
+		while (category.length > 255)
+			category = category.substring(0, category.lastIndexOf(global.separatorTech));
 		while (hashtags.indexOf('  ') > -1)
 			hashtags = hashtags.replace('  ', ' ');
+		if (hashtags.length > 255)
+			hashtags = hashtags.substring(0, 255);
 		return { category: category, hashtags: hashtags.trim() };
 	}
 	static detail(v) {

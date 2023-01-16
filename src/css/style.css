@@ -705,11 +705,6 @@ explain.paypal buttontext {
 	font-size: 1.25em;
 }
 
-filters explain,
-popup explain {
-	padding-top: 0.25em;
-}
-
 search {
 	padding-top: 1em;
 }
@@ -1293,6 +1288,7 @@ eventLocationInputHelper {
 	display: block;
 	max-height: 25em;
 	overflow-y: auto;
+	padding-top: 0.25em;
 }
 
 locationNameInputHelper li,
