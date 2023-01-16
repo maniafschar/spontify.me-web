@@ -341,9 +341,6 @@ class global {
 						if (img) {
 							ui.attr(e, 'src', img);
 							ui.classRemove(e, 'bgColor');
-						} else if (v['location.ownerId']) {
-							ui.classRemove(e, 'bgColor');
-							ui.classAdd(e, 'bgBonus');
 						}
 						for (var i2 = 0; i2 < e.length; i2++) {
 							e[i2].parentNode.removeAttribute('name');

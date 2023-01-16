@@ -199,7 +199,6 @@ class Location extends BaseEntity {
 	attr4Ex;
 	attr5;
 	attr5Ex;
-	bonus;
 	budget;
 	contactId;
 	category;
@@ -207,19 +206,12 @@ class Location extends BaseEntity {
 	email;
 	image;
 	imageList;
-	isOpen;
 	latitude;
 	longitude;
 	name;
-	ownerId;
-	parkingOption;
-	parkingText;
-	quater;
-	rating;
 	subcategories;
 	telephone;
 	town;
-	url;
 
 	block = new Block();
 	contact = new Contact();

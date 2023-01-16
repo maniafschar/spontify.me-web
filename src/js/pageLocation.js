@@ -85,7 +85,7 @@ ${v.description}
 		onclick="pageChat.doCopyLink(event,&quot;${v.event.id ? 'e' : 'l'}=${v.id}&quot;)">${ui.l('share')}</buttontext>
 	<buttontext class="bgColor${v.hideMePotentialParticipants}" name="buttonPotentialParticipants"
 		onclick="pageEvent.loadPotentialParticipants(${v.category},${v.event.visibility})">${ui.l('events.potentialParticipants')}</buttontext>
-	<buttontext class="bgColor${v.hideMeEdit}" name="buttonEdit"
+	<buttontext class="bgColor" name="buttonEdit"
 		onclick="${v.editAction}">${ui.l('edit')}</buttontext>
 	<buttontext class="bgColor" name="buttonGoogle"
 		onclick="ui.navigation.openHTML(&quot;https://google.com/search?q=${encodeURIComponent(v.name + ' ' + v.town)}&quot;)">${ui.l('locations.google')}</buttontext>
@@ -323,8 +323,6 @@ ${v.description}
 		}
 		if (eventWithLocation)
 			v.address = v.address.replace(/\n/g, '<br />');
-		if (v.ownerId && v.url)
-			v.description = (v.description ? v.description + ' ' : '') + ui.l('locations.clickForMoreDetails');
 		if (v.description)
 			v.description = '<text class="description">' + v.description.replace(/\n/g, '<br/>') + '</text>';
 		if (v.bonus)
@@ -337,10 +335,6 @@ ${v.description}
 				v.copyLinkHint = ui.l('copyLinkHint.location');
 			else
 				v.copyLinkHint = ui.l('copyLinkHint.locationSocial');
-			if (v.ownerId && v.ownerId != user.contact.id)
-				v.hideMeEdit = ' noDisp';
-			if (!global.isBrowser() || v.ownerId != user.contact.id)
-				v.hideMeMarketing = ' noDisp';
 			v.editAction = 'pageLocation.edit(' + v.locID + ')';
 		}
 		if (v.event.contactId != user.contact.id)
@@ -399,7 +393,7 @@ ${v.description}
 	}
 	static editInternal(id, v) {
 		if (v) {
-			if ((!v.ownerId && v.contactId == user.contact.id) || v.ownerId == user.contact.id)
+			if (v.contactId == user.contact.id)
 				v.deleteButton = '<buttontext onclick="pageLocation.deleteElement(' + id + ',&quot;Location&quot;)" class="bgColor" id="deleteElement">' + ui.l('delete') + '</buttontext>';
 		} else if (!id && formFunc.getDraft('location'))
 			v = formFunc.getDraft('location').values;

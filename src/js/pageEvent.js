@@ -235,7 +235,7 @@ ${v.eventParticipationButtons}
 				}
 			});
 		}
-		if (v.ownerId && v.event.link) {
+		if (v.event.link) {
 			v.eventLinkOpen = '<a onclick="ui.navigation.openHTML(&quot;' + v.event.link + '&quot;)">';
 			v.eventLinkClose = '</a>';
 			v.eventMore = ' ' + ui.l('locations.clickForMoreDetails');
@@ -292,8 +292,6 @@ ${v.eventParticipationButtons}
 			v.type_m = ' checked';
 		if (v.type == 'y')
 			v.type_y = ' checked';
-		if (!v.ownerId || v.ownerId != user.contact.id)
-			v.hideOwnerFields = 'style="display:none;"';
 		if (v.confirm)
 			v.confirm = ' checked';
 		if (!v.visibility)
@@ -572,10 +570,7 @@ ${v.eventParticipationButtons}
 						v.name = t + ' ' + v.contact.pseudonym + (v.contact.age ? ' (' + v.contact.age + ')' : '');
 						v._message1 = ui.categories[v.event.category].label;
 					}
-					if (v.ownerId == v.contact.id)
-						v._message = '<span class="highlightColor">' + v.event.text + '</span><br/>';
-					else
-						v._message = v.event.text + '<br/>';
+					v._message = v.event.text + '<br/>';
 					v.locID = v.id;
 					pageLocation.listInfos(v);
 					v._message += v._message1 ? v._message1 : v._message2 ? v._message2 : '';
@@ -601,7 +596,7 @@ ${v.eventParticipationButtons}
 						v.image = 'images/event.svg" style="padding: 1em;';
 					else
 						v.image = 'images/contact.svg" style="padding: 1em;';
-					v.classBg = v.ownerId ? 'bgBonus' : bg;
+					v.classBg = bg;
 					if (v.parkingOption) {
 						if (v.parkingOption.indexOf('1') > -1 ||
 							v.parkingOption.indexOf('2') > -1)

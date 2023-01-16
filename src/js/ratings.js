@@ -39,7 +39,6 @@ class ratings {
 </ratingSelection>
 <div style="clear:both;text-align:center;padding:0.5em 1em 0 1em;margin-bottom:0.5em;">
     <form onsubmit="return false">
-        <input type="hidden" id="owner" value="${v.owner}" />
         <input type="hidden" id="cid" value="${v.id}" />
         <input type="hidden" name="locationId" value="${v.id}" />
         <input type="hidden" name="rating" value="80" />
@@ -76,10 +75,9 @@ class ratings {
 			}
 		});
 	}
-	static getForm(id, owner) {
+	static getForm(id) {
 		var v = {}, draft = formFunc.getDraft('rating' + id);
 		v.id = id;
-		v.owner = owner ? owner : '';
 		v.bg = 'bgColor';
 		if (draft)
 			v.draft = draft.values.text;
@@ -103,7 +101,7 @@ class ratings {
 					}
 					f = '<ratingHint>' + ui.l('rating.lastRate').replace('{0}', global.date.formatDate(f)).replace('{1}', '<br/><br/><rating><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + parseInt(r._lastRating.split(' ')[2])) + '%;">★★★★★</full></rating><br/><br/>') + '</ratingHint>';
 				} else
-					f = ratings.getForm(id, r._ownerId);
+					f = ratings.getForm(id);
 				ui.html('detail card:last-child [name="favLoc"]', '');
 				var name = ui.q('detail:not([style*="none"]) card:last-child title, [i="' + id + '"] title').innerText.trim();
 				if (r._one || r._two || r._three || r._four) {
@@ -160,8 +158,7 @@ class ratings {
 		}
 		var data = {
 			cid: ui.val('#cid'),
-			ratings: ui.val('[name="ratings"]'),
-			owner: ui.val('#owner')
+			ratings: ui.val('[name="ratings"]')
 		};
 		var v = formFunc.getForm('popup form');
 		v.classname = 'LocationRating';
