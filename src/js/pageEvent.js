@@ -3,6 +3,7 @@ import { communication } from "./communication";
 import { details } from "./details";
 import { geoData } from "./geoData";
 import { global } from "./global";
+import { hashtags } from "./hashtags";
 import { intro } from "./intro";
 import { lists } from "./lists";
 import { Contact, Location, model } from "./model";
@@ -113,7 +114,7 @@ class pageEvent {
 <field>
 	<label>${ui.l('events.hashtags')}</label>
 	<value>
-		<input name="hashtagsDisp" maxlength="250" value="${v.hashtagsDisp}" />
+		<textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
 		<hashtags>${v.hashtagSelection}</hashtags>
 	</value>
 </field>
@@ -138,17 +139,6 @@ ${v.eventLinkOpen}
 ${v.eventLinkClose}
 ${v.eventParticipationButtons}
 </text>`;
-	static addHashtag(tag) {
-		var e = ui.q('popup input[name="hashtagsDisp"]');
-		var s = e.value;
-		if ((' ' + e.value + ' ').indexOf(' ' + tag + ' ') < 0)
-			s += ' ' + tag;
-		else
-			s = s.replace(tag, '');
-		while (s.indexOf('  ') > -1)
-			s = s.replace('  ', ' ');
-		e.value = s.trim();
-	}
 	static checkPrice() {
 		var e = ui.q('popup explain.paypal');
 		if (ui.q('popup [name="price"]').value > 0) {
@@ -163,27 +153,6 @@ ${v.eventParticipationButtons}
 			if (ui.cssValue(e = ui.q('popup .paid'), 'display') != 'none')
 				ui.toggleHeight(e, function () { ui.toggleHeight('popup .unpaid') });
 		}
-	}
-	static convertHashtags(hashtags) {
-		var category = '';
-		for (var i = 0; i < ui.categories.length; i++) {
-			for (var i2 = 0; i2 < ui.categories[i].subCategories.length; i2++) {
-				var i3 = hashtags.toLowerCase().indexOf(ui.categories[i].subCategories[i2].toLowerCase());
-				if (i3 > -1) {
-					category += global.separatorTech + i + '.' + i2;
-					hashtags = hashtags.substring(0, i3) + hashtags.substring(i3 + ui.categories[i].subCategories[i2].length);
-				}
-			}
-		}
-		if (category)
-			category = category.substring(1);
-		while (category.length > 255)
-			category = category.substring(0, category.lastIndexOf(global.separatorTech));
-		while (hashtags.indexOf('  ') > -1)
-			hashtags = hashtags.replace('  ', ' ');
-		if (hashtags.length > 255)
-			hashtags = hashtags.substring(0, 255);
-		return { category: category, hashtags: hashtags.trim() };
 	}
 	static detail(v) {
 		v.copyLinkHint = ui.l('copyLinkHint.event');
@@ -313,16 +282,7 @@ ${v.eventParticipationButtons}
 			v.styleEvent = ' style="display:none;"';
 			pageEvent.locationsOfPastEvents();
 		}
-		v.hashtagSelection = '';
-		for (var i = 0; i < ui.categories.length; i++)
-			v.hashtagSelection += '<category class="bgColor" onclick="pageEvent.toggleSubCategories(' + i + ')">' + ui.categories[i].label + '</category>';
-		for (var i = 0; i < ui.categories.length; i++) {
-			v.hashtagSelection += '<div>';
-			var subs = ui.categories[i].subCategories.sort(function (a, b) { return a > b ? 1 : -1 });
-			for (var i2 = 0; i2 < subs.length; i2++)
-				v.hashtagSelection += '<label class="multipleLabel" onclick="pageEvent.addHashtag(&quot;' + subs[i2] + '&quot;)">' + subs[i2] + '</label>';
-			v.hashtagSelection += '</div>';
-		}
+		v.hashtagSelection = hashtags.display();
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
 		pageEvent.setForm();
 		if (locationID)
@@ -696,7 +656,11 @@ ${v.eventParticipationButtons}
 	static locationSelected(e) {
 		ui.q('popup input[name="locationId"]').value = e.getAttribute('i');
 		ui.q('popup .locationName').innerHTML = e.innerHTML;
-		ui.toggleHeight('popup .location', function () { ui.toggleHeight('popup .event', pageEvent.checkPrice); });
+		ui.toggleHeight('popup .location', function () {
+			ui.toggleHeight('popup .event', pageEvent.checkPrice);
+			if (ui.q('popup [name="hashtagsDisp"]').value)
+				setTimeout(function () { ui.adjustTextarea(ui.q('popup [name="hashtagsDisp"]')); }, 2000);
+		});
 	}
 	static participate(event, id) {
 		event.stopPropagation();
@@ -913,7 +877,7 @@ ${v.eventParticipationButtons}
 				}
 			}
 		}
-		var v = pageEvent.convertHashtags(ui.q('popup input[name="hashtagsDisp"]').value);
+		var v = hashtags.convert(ui.q('popup [name="hashtagsDisp"]').value);
 		ui.q('popup input[name="category"]').value = v.category;
 		ui.q('popup input[name="hashtags"]').value = v.hashtags;
 		v = formFunc.getForm('popup form');
@@ -1034,14 +998,6 @@ ${v.eventParticipationButtons}
 				});
 			}
 		}
-	}
-	static toggleSubCategories(i) {
-		var e = ui.q('popup hashtags div[style*="block"]');
-		var f = function () { ui.toggleHeight(ui.qa('popup hashtags div')[i]) };
-		if (e && e != ui.qa('popup hashtags div')[i])
-			ui.toggleHeight(e, f);
-		else
-			f.call();
 	}
 	static verifyParticipation(id) {
 		var u = user.contact.id;

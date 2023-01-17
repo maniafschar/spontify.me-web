@@ -46,6 +46,13 @@ class ui {
 		${ui.l('title.visits')}
 	</a>
 </container>`;
+	static adjustTextarea(e) {
+		ui.css(e, 'height', '1px');
+		var h = e.scrollHeight;
+		if (h > ui.emInPX * 6)
+			h = ui.emInPX * 6;
+		ui.css(e, 'height', (h + 6) + 'px');
+	}
 	static getAttributes(compare, style) {
 		var result = {
 			attributesCategories: [],
@@ -282,6 +289,8 @@ class ui {
 			if (!intro.introMode)
 				intro.closeHint();
 			if (currentID == 'settings' && !pageSettings.save(id))
+				return;
+			if (currentID == 'settings2' && !pageSettings.save2(id))
 				return;
 			if (!user.contact && currentID == 'login')
 				pageLogin.saveDraft();
@@ -1156,22 +1165,7 @@ class formFunc {
 			ui.on(e, 'keypress', formFunc.pressDefaultButton);
 			if ((e[i].type === 'checkbox' || e[i].type === 'radio') && (!e[i].nextSibling || e[i].nextSibling.nodeName.toLowerCase() !== 'label'))
 				e[i].outerHTML = e[i].outerHTML + '<label onclick="formFunc.toggleCheckbox(event)"' + (e[i].attributes['style'] ? ' style="' + e[i].attributes['style'].value + '"' : '') + (e[i].attributes['class'] ? ' class="' + e[i].attributes['class'].value + '"' : '') + '>' + e[i].attributes['label'].value + '</label>';
-			else if (e[i].type === 'text' && e[i].getAttribute('choices')) {
-				var a = eval('formFunc.inputHelper.get' + e[i].getAttribute('choices') + '();');
-				var id2 = 'inputHelper' + e[i].id;
-				var s = '';
-				for (var i2 = 0; i2 < a.length; i2++)
-					s += '<input type="radio"' + (e[i].attributes['class'] ? ' class="' + e[i].attributes['class'].value + '"' : '') + ' label="' + a[i2] + '" name="' + id2 + '" transient="true" style="background:none;" onclick="pageSettings.setChoicesSelection(&quot;' + e[i].id + '&quot;,&quot;' + a[i2] + '&quot;)"/>';
-				e2 = document.createElement('div');
-				e2.style = (e[i].style.display === 'none' ? 'display:none;' : '') + 'margin-top:0.5em;';
-				e2.id = id2;
-				e2.innerHTML = s;
-				e[i].parentNode.insertBefore(e2, e[i].nextSibling);
-				formFunc.initFields('#' + id2);
-				ui.on(e, 'focus', function (e) {
-					ui.css('#' + id2, 'display', '');
-				});
-			} else if (e[i].type === 'text' && (e[i].getAttribute('multiple') || e[i].getAttribute('single'))) {
+			else if (e[i].type === 'text' && (e[i].getAttribute('multiple') || e[i].getAttribute('single'))) {
 				var at = e[i].getAttribute('multiple') ? 'multiple' : 'single';
 				var id2 = 'inputHelper' + e[i].id;
 				if (!ui.q('#' + id2)) {
@@ -1203,41 +1197,6 @@ class formFunc {
 					}
 					e[i].style.display = 'none';
 				}
-			} else if (e[i].type === 'text' && e[i].getAttribute('multiplePopup')) {
-				if (e[i].nextElementSibling && e[i].nextElementSibling.nodeName == 'DIV')
-					e[i].nextElementSibling.outerHTML = '';
-				if (!e[i].id)
-					e[i].id = new Date().getTime() + '.' + Math.random();
-				var a = eval('formFunc.inputHelper.get' + e[i].getAttribute('multiplePopup') + '();');
-				var a2 = [];
-				if (a) {
-					for (var i2 = 0; i2 < a.length; i2++)
-						a2.push(a[i2] + ',' + i2);
-				}
-				a2.sort();
-				var s = '', v = e[i].value, v2 = ',';
-				v = v.split(',');
-				for (var i2 = 0; i2 < v.length; i2++)
-					v2 += parseInt(v[i2], 10) + ',';
-				var p;
-				for (var i2 = 0; i2 < a2.length; i2++) {
-					p = a2[i2].lastIndexOf(',');
-					if (v2.indexOf(a2[i2].substring(p) + ',') > -1)
-						s += '<label class="multipleLabel">' + a2[i2].substring(0, p) + '</label>';
-				}
-				a2 = e[i].getAttribute('valueEx');
-				if (a2) {
-					a2 = a2.split(',');
-					for (var i2 = 0; i2 < a2.length; i2++) {
-						if (a2[i2].trim().length > 0)
-							s += '<label class="multipleLabel">' + a2[i2].trim() + '</label>';
-					}
-				}
-				e2 = document.createElement('div');
-				e2.setAttribute('onclick', 'formFunc.openChoices("' + e[i].id + '"' + (e[i].getAttribute('saveAction') ? ',"' + e[i].getAttribute('saveAction') + '"' : '') + ')');
-				e2.innerHTML = s;
-				e[i].parentNode.insertBefore(e2, e[i].nextSibling);
-				e[i].style.display = 'none';
 			} else if (e[i].type == 'text' && e[i].getAttribute('slider') && !ui.q('#' + e[i].id + '_left')) {
 				var idSlider = e[i].id;
 				var s = '';
@@ -1354,12 +1313,6 @@ class formFunc {
 			return ui.categories[5].subCategories;
 		}
 	}
-	static openChoices(id, exec) {
-		var e = ui.q('#' + id);
-		var v = e.getAttribute('valueEx');
-		ui.navigation.openPopup(e.parentNode.parentNode.children[0].innerText.trim(), '<input id="' + id + 'HelperPopup" type="text" multiple="' + e.getAttribute('multiplePopup') + '" value="' + e.value + '"/>' + (v == null ? '<br/>' : '<input type="text" id="' + id + 'HelperPopupEx" value="' + v + '" placeholder="' + ui.l('contacts.blockReason100') + '"' + (e.getAttribute('maxEx') ? ' maxlength="' + e.getAttribute('maxEx') + '"' : '') + '/><hintAttributeEx>' + ui.l('multipleValus.hintOther') + '</hintAttributeEx>') + '<popupHint></popupHint><buttontext onclick="formFunc.setChoices(&quot;' + id + '&quot;' + (exec ? ',' + exec : '') + ')" class="bgColor">' + ui.l('save') + '</buttontext>');
-		formFunc.initFields('popup');
-	}
 	static pressDefaultButton(event) {
 		if (event.keyCode == 13) {
 			var e = ui.qa('.defaultButton');
@@ -1405,40 +1358,6 @@ class formFunc {
 			}
 		} else
 			formFunc.removeDraft(key);
-	}
-	static setChoices(id, exec) {
-		var e = ui.q('#' + id);
-		var e2 = ui.qa('#inputHelper' + id + 'HelperPopup > input:checked');
-		if (e.getAttribute('max') && e2.length > e.getAttribute('max')) {
-			ui.q('popupHint').innerHTML = ui.l('multipleValus.tooMany').replace('{0}', e.getAttribute('max')).replace('{1}', e2.length);
-			return;
-		}
-		if (ui.q('#' + id + 'HelperPopupEx').value && !/^[a-zA-Z ]+$/.test(ui.q('#' + id + 'HelperPopupEx').value)) {
-			ui.q('popupHint').innerHTML = ui.l('multipleValus.onlyLetters');
-			return;
-		}
-		var s2 = '';
-		for (var i = 0; i < e2.length; i++)
-			s2 += ',' + e2[i].value;
-		if (s2.length > 0)
-			s2 = s2.substring(1);
-		e.value = s2;
-		s2 = ui.q('#' + id + 'HelperPopupEx').value.trim();
-		while (s2.indexOf('  ') > -1)
-			s2 = s2.replace(/  /g, ' ');
-		ui.attr(e, 'valueEx', s2);
-		e2 = e.parentNode;
-		var removeID = false;
-		if (!e2.id) {
-			e2.id = e.id + '_parent';
-			removeID = true;
-		}
-		formFunc.initFields('#' + e2.getAttribute('id'));
-		if (removeID)
-			ui.attr(e2, 'id', null);
-		if (exec)
-			exec.call();
-		ui.navigation.hidePopup();
 	}
 	static setError(e, t, v) {
 		if (e) {

@@ -19,6 +19,7 @@ import { geoData } from './geoData';
 import { bluetooth } from './bluetooth';
 import { pageEvent } from './pageEvent';
 import { pageSearch } from './pageSearch';
+import { hashtags } from './hashtags';
 
 window.model = model;
 window.global = global;
@@ -43,3 +44,4 @@ window.FB = FB;
 window.ratings = ratings;
 window.geoData = geoData;
 window.bluetooth = bluetooth;
+window.hashtags = hashtags;

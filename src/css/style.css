@@ -666,6 +666,7 @@ field>label {
 }
 
 settings,
+settings2,
 login {
 	overflow-y: auto;
 	overflow-x: hidden;
@@ -673,7 +674,6 @@ login {
 }
 
 info,
-settings2,
 settings3 {
 	padding: 0 0 5em 0;
 	text-align: left !important;
@@ -832,6 +832,12 @@ field hashtags category {
 	padding: 0.25em 0.75em;
 	border-radius: 0.5em;
 	margin: 0.25em;
+	color: black;
+}
+
+field hashtags.limitHeight>div {
+	max-height: 14em;
+	overflow-y: auto;
 }
 
 dialogButtons {

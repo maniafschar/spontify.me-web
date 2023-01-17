@@ -42,11 +42,7 @@ class pageChat {
 		global.template`<chatMessage${v.class}><time${v.classUnseen}>${v.time}</time>${v.note}</chatMessage>`;
 
 	static adjustTextarea(e) {
-		ui.css(e, 'height', '1px');
-		var h = e.scrollHeight;
-		if (h > ui.emInPX * 6)
-			h = ui.emInPX * 6;
-		ui.css(e, 'height', (h + 6) + 'px');
+		ui.adjustTextarea(e);
 		ui.css('chatConversation', 'bottom', (ui.q('chatInput').clientHeight + ui.emInPX / 2) + 'px');
 	}
 	static askLocation() {

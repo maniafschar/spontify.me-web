@@ -11,11 +11,13 @@ import { intro } from './intro';
 import { pageLocation } from './pageLocation';
 import QRCodeStyling from 'qr-code-styling';
 import { pageInfo } from './pageInfo';
+import { hashtags } from './hashtags';
 
 export { pageSettings };
 
 class pageSettings {
 	static currentSettings = null;
+	static currentSettings2 = null;
 	static currentSettings3 = null;
 	static hintSettings1 = false;
 	static hintSettings2 = false;
@@ -73,25 +75,6 @@ class pageSettings {
 		</value>
 	</field>
 	<field>
-		<label>${ui.l('settings.genderInterest')}</label>
-		<value>
-			<input type="checkbox" name="genderInterest2" label="${ui.l('settings.genderInterestFemale')}"
-				onclick="pageSettings.toggleGenderSlider(2)" ${v['genderInterest2']} transient="true" />
-			<input type="text" id="settingsInterest2" slider="range" min="18" max="99" value="${v['contact.ageFemale']}"
-				name="ageFemale" />
-			<br />
-			<input type="checkbox" name="genderInterest1" label="${ui.l('settings.genderInterestMale')}"
-				onclick="pageSettings.toggleGenderSlider(1)" ${v['genderInterest1']} transient="true" />
-			<input type="text" id="settingsInterest1" slider="range" min="18" max="99" value="${v['contact.ageMale']}"
-				name="ageMale" />
-			<br />
-			<input type="checkbox" name="genderInterest3" label="${ui.l('settings.genderInterestDivers')}"
-				onclick="pageSettings.toggleGenderSlider(3)" ${v['genderInterest3']} transient="true" />
-			<input type="text" id="settingsInterest3" slider="range" min="18" max="99" value="${v['contact.ageDivers']}"
-				name="ageDivers" />
-		</value>
-	</field>
-	<field>
 		<label>${ui.l('settings.budget')}</label>
 		<value class="checkbox">
 			<input type="checkbox" value="0" name="budget" label="${ui.l('budget')}" ${v['budget0']} />
@@ -114,79 +97,53 @@ class pageSettings {
 		</value>
 	</field>
 	<dialogButtons>
-		<buttontext onclick="ui.navigation.goTo(&quot;settings2&quot;)" class="bgColor">${ui.l('settings.save1')}</buttontext>
+		<buttontext onclick="ui.navigation.goTo(&quot;settings2&quot;)" class="bgColor">&gt;</buttontext>
 	</dialogButtons>
 	<qrcodeDescription>${ui.l('settings.qrcode')}</qrcodeDescription>
 	<qrcode></qrcode>
 	<input type="hidden" name="verified" value="true" />
 </form>`;
 	static templateSettings2 = v =>
-		global.template`<div style="padding-top:1em;text-align:center;">${ui.l('attributesHint')}</div>
-<div>
-	<buttontext class="bgColor settings2Button"
-		onclick="formFunc.openChoices(&quot;CONTACTATTRIB&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.l('settings.attributes')}</buttontext>
-	<attributesDisplay>
-		<input type="text" id="CONTACTATTRIB" multiplePopup="Attributes" saveAction="pageSettings.saveAttributes"
-			valueEx="${v['attEx']}" value="${v['att']}" max="60" maxEx="250" />
-	</attributesDisplay>
-</div>
-<div>
-	<buttontext class="bgColor settings2Button"
-		onclick="formFunc.openChoices(&quot;CONTACTATTRIBINTEREST&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.l('settings.interestedIn')}</buttontext>
-	<attributesDisplay>
-		<input type="text" id="CONTACTATTRIBINTEREST" multiplePopup="Attributes"
-			saveAction="pageSettings.saveAttributes" valueEx="${v['attIntEx']}" value="${v['attInt']}" max="60"
-			maxEx="250" />
-	</attributesDisplay>
-</div>
-<div>
-	<buttontext class="bgColor settings2Button"
-		onclick="formFunc.openChoices(&quot;CONTACTATTRIB0&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[0].label}</buttontext>
-	<attributesDisplay>
-		<input type="text" id="CONTACTATTRIB0" multiplePopup="Attributes0" saveAction="pageSettings.saveAttributes"
-			valueEx="${v['att0Ex']}" value="${v['att0']}" max="60" maxEx="250" />
-	</attributesDisplay>
-</div>
-<div>
-	<buttontext class="bgColor settings2Button"
-		onclick="formFunc.openChoices(&quot;CONTACTATTRIB1&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[1].label}</buttontext>
-	<attributesDisplay>
-		<input type="text" id="CONTACTATTRIB1" multiplePopup="Attributes1" saveAction="pageSettings.saveAttributes"
-			valueEx="${v['att1Ex']}" value="${v['att1']}" max="60" maxEx="250" />
-	</attributesDisplay>
-</div>
-<div>
-	<buttontext class="bgColor settings2Button"
-		onclick="formFunc.openChoices(&quot;CONTACTATTRIB2&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[2].label}</buttontext>
-	<attributesDisplay>
-		<input type="text" id="CONTACTATTRIB2" multiplePopup="Attributes2" saveAction="pageSettings.saveAttributes"
-			valueEx="${v['att2Ex']}" value="${v['att2']}" max="60" maxEx="250" />
-	</attributesDisplay>
-</div>
-<div>
-	<buttontext class="bgColor settings2Button"
-		onclick="formFunc.openChoices(&quot;CONTACTATTRIB3&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[3].label}</buttontext>
-	<attributesDisplay>
-		<input type="text" id="CONTACTATTRIB3" multiplePopup="Attributes3" saveAction="pageSettings.saveAttributes"
-			valueEx="${v['att3Ex']}" value="${v['att3']}" max="60" maxEx="250" />
-	</attributesDisplay>
-</div>
-<div>
-	<buttontext class="bgColor settings2Button"
-		onclick="formFunc.openChoices(&quot;CONTACTATTRIB4&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[4].label}</buttontext>
-	<attributesDisplay>
-		<input type="text" id="CONTACTATTRIB4" multiplePopup="Attributes4" saveAction="pageSettings.saveAttributes"
-			valueEx="${v['att4Ex']}" value="${v['att4']}" max="60" maxEx="250" />
-	</attributesDisplay>
-</div>
-<div>
-	<buttontext class="bgColor settings2Button"
-		onclick="formFunc.openChoices(&quot;CONTACTATTRIB5&quot;,&quot;pageSettings.saveAttributes&quot;)">${ui.categories[5].label}</buttontext>
-	<attributesDisplay>
-		<input type="text" id="CONTACTATTRIB5" multiplePopup="Attributes5" saveAction="pageSettings.saveAttributes"
-			valueEx="${v['att5Ex']}" value="${v['att5']}" max="60" maxEx="250" />
-	</attributesDisplay>
-</div>
+		global.template`<field>
+	<label>${ui.l('settings.attributes')}</label>
+	<value>
+		<textarea name="attributesDisp" maxlength="250" onfocus="clonsole.log(this)" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
+		<hashtags class="limitHeight">${v.attributesSelection}</hashtags>
+	</value>
+</field>
+<field>
+	<label>${ui.l('settings.interestedIn')}</label>
+	<value>
+		<textarea name="interestedInDisp" maxlength="250" onfocus="clonsole.log(this)" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
+		<hashtags class="limitHeight">${v.attributesSelection}</hashtags>
+	</value>
+</field>
+<field>
+	<label>${ui.l('events.hashtags')}</label>
+	<value>
+		<textarea name="hashtagsDisp" maxlength="250" onfocus="clonsole.log(this)" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
+		<hashtags>${v.hashtagSelection}</hashtags>
+	</value>
+</field><br/><br/><br/>
+<field>
+	<label>${ui.l('settings.genderInterest')}</label>
+	<value>
+		<input type="checkbox" name="genderInterest2" label="${ui.l('settings.genderInterestFemale')}"
+			onclick="pageSettings.toggleGenderSlider(2)" ${v['genderInterest2']} transient="true" />
+		<input type="text" id="settingsInterest2" slider="range" min="18" max="99" value="${v['contact.ageFemale']}"
+			name="ageFemale" />
+		<br />
+		<input type="checkbox" name="genderInterest1" label="${ui.l('settings.genderInterestMale')}"
+			onclick="pageSettings.toggleGenderSlider(1)" ${v['genderInterest1']} transient="true" />
+		<input type="text" id="settingsInterest1" slider="range" min="18" max="99" value="${v['contact.ageMale']}"
+			name="ageMale" />
+		<br />
+		<input type="checkbox" name="genderInterest3" label="${ui.l('settings.genderInterestDivers')}"
+			onclick="pageSettings.toggleGenderSlider(3)" ${v['genderInterest3']} transient="true" />
+		<input type="text" id="settingsInterest3" slider="range" min="18" max="99" value="${v['contact.ageDivers']}"
+			name="ageDivers" />
+	</value>
+</field>
 <br/>
 <dialogButtons>
 <buttontext onclick="ui.navigation.goTo(&quot;settings&quot;)" class="bgColor">&lt;</buttontext>
@@ -320,17 +277,7 @@ ${v.info}
 			}
 		});
 	}
-	static getCurrentSettings3String() {
-		var s = '' + (ui.q('settings3 [name="notificationChat"]:checked') ? 1 : 0);
-		s += (ui.q('settings3 [name="notificationEngagement"]:checked') ? 1 : 0);
-		s += (ui.q('settings3 [name="notificationFriendRequest"]:checked') ? 1 : 0);
-		s += (ui.q('settings3 [name="notificationBirthday"]:checked') ? 1 : 0);
-		s += (ui.q('settings3 [name="notificationVisitProfile"]:checked') ? 1 : 0);
-		s += (ui.q('settings3 [name="notificationVisitLocation"]:checked') ? 1 : 0);
-		s += (ui.q('settings3 [name="notificationMarkEvent"]:checked') ? 1 : 0);
-		return s;
-	}
-	static getCurrentSettingsString() {
+	static getCurrentSettings() {
 		var s = ui.val('input[name="email"]') + global.separatorTech;
 		s += ui.q('[name="image_disp"] img') + global.separatorTech;
 		s += ui.val('textarea[name="aboutMe"]') + global.separatorTech;
@@ -352,6 +299,22 @@ ${v.info}
 			if (e[i].checked)
 				s += i;
 		}
+		return s;
+	}
+	static getCurrentSettings2() {
+		var s = (ui.q('input[name="genderInterest1"]:checked') ? 1 : 0) + global.separatorTech;
+		s += (ui.q('input[name="genderInterest2"]:checked') ? 1 : 0) + global.separatorTech;
+		s += (ui.q('input[name="genderInterest3"]:checked') ? 1 : 0) + global.separatorTech;
+		return s;
+	}
+	static getCurrentSettings3() {
+		var s = '' + (ui.q('settings3 [name="notificationChat"]:checked') ? 1 : 0);
+		s += (ui.q('settings3 [name="notificationEngagement"]:checked') ? 1 : 0);
+		s += (ui.q('settings3 [name="notificationFriendRequest"]:checked') ? 1 : 0);
+		s += (ui.q('settings3 [name="notificationBirthday"]:checked') ? 1 : 0);
+		s += (ui.q('settings3 [name="notificationVisitProfile"]:checked') ? 1 : 0);
+		s += (ui.q('settings3 [name="notificationVisitLocation"]:checked') ? 1 : 0);
+		s += (ui.q('settings3 [name="notificationMarkEvent"]:checked') ? 1 : 0);
 		return s;
 	}
 	static getMultiplePopupValues(id) {
@@ -417,12 +380,6 @@ ${v.info}
 						v['userImage'] = 'images/defaultProfile.png';
 					if (v['contact.search'] == 1)
 						v['search'] = ' checked';
-					if (v['contact.ageMale'])
-						v['genderInterest1'] = 'checked';
-					if (v['contact.ageFemale'])
-						v['genderInterest2'] = 'checked';
-					if (v['contact.ageDivers'])
-						v['genderInterest3'] = 'checked';
 					if (user.contact.imageList)
 						v.image = 'src="' + global.serverImg + user.contact.imageList + '"';
 					ui.html('settings', pageSettings.templateSettings1(v));
@@ -433,14 +390,14 @@ ${v.info}
 						ui.css(ui.q('#settingsInterest1').nextElementSibling, 'display', 'none');
 					if (!v['contact.ageDivers'])
 						ui.css(ui.q('#settingsInterest3').nextElementSibling, 'display', 'none');
-					pageSettings.currentSettings = pageSettings.getCurrentSettingsString();
+					pageSettings.currentSettings = pageSettings.getCurrentSettings();
 					if (exec)
 						exec.call()
 					v.info = pageInfo.template();
 					ui.q('settings3').innerHTML = pageSettings.templateSettings3(v);
 					formFunc.initFields('settings3');
-					pageSettings.currentSettings3 = pageSettings.getCurrentSettings3String();
-					pageSettings.init();
+					pageInfo.updateLocalisation();
+					pageSettings.currentSettings3 = pageSettings.getCurrentSettings3();
 					var e = function () {
 						if (!pageSettings.hintSettings1 && !pageSettings.hasAttributes()) {
 							if (ui.navigation.getActiveID() == 'settings') {
@@ -470,17 +427,26 @@ ${v.info}
 		}
 	}
 	static init2() {
-		var v = [];
-		v['att'] = user.contact.attr ? user.contact.attr.replace(/\u0015/g, ',') : '';
-		v['attInt'] = user.contact.attrInterest ? user.contact.attrInterest.replace(/\u0015/g, ',') : '';
+		var v = {};
+		v.att = user.contact.attr ? user.contact.attr.replace(/\u0015/g, ',') : '';
+		v.attInt = user.contact.attrInterest ? user.contact.attrInterest.replace(/\u0015/g, ',') : '';
 		for (var i = 0; i < ui.categories.length; i++)
 			v['att' + i] = user.contact['attr' + i] ? user.contact['attr' + i].replace(/\u0015/g, ',') : '';
-		v['attEx'] = user.contact.attrEx;
-		v['attIntEx'] = user.contact.attrInterestEx;
+		v.attEx = user.contact.attrEx;
+		v.attIntEx = user.contact.attrInterestEx;
 		for (var i = 0; i < ui.categories.length; i++)
 			v['att' + i + 'Ex'] = user.contact['attr' + i + 'Ex'] ? user.contact['attr' + i + 'Ex'].replace(/\u0015/g, ',') : '';
+		v.attributesSelection = hashtags.display(true);
+		v.hashtagSelection = hashtags.display();
+		if (user.contact.ageMale)
+			v.genderInterest1 = 'checked';
+		if (user.contact.ageFemale)
+			v.genderInterest2 = 'checked';
+		if (user.contact.ageDivers)
+			v.genderInterest3 = 'checked';
 		ui.html('settings2', pageSettings.templateSettings2(v));
 		formFunc.initFields('settings2');
+		pageSettings.currentSettings2 = pageSettings.getCurrentSettings2();
 		var e = function () {
 			if (!pageSettings.hintSettings2 && !pageSettings.hasAttributes()) {
 				if (ui.navigation.getActiveID() == 'settings2') {
@@ -533,7 +499,7 @@ ${v.info}
 		pageSettings.listBlocked(l[0].includes('event.id') ? 'event' : 'location', pageLocation.listLocation(l));
 	}
 	static preview() {
-		if (pageSettings.currentSettings == pageSettings.getCurrentSettingsString())
+		if (pageSettings.currentSettings == pageSettings.getCurrentSettings())
 			details.open(user.contact.id, 'contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id), pageContact.detail);
 		else
 			pageSettings.save('autoOpen');
@@ -566,8 +532,8 @@ ${v.info}
 			});
 		}
 		formFunc.image.remove('image');
-		pageSettings.currentSettings = pageSettings.getCurrentSettingsString();
-		pageSettings.resetError();
+		pageSettings.currentSettings = pageSettings.getCurrentSettings();
+		pageSettings.resetError1();
 		if (goToID) {
 			if (goToID == 'autoOpen')
 				pageSettings.preview();
@@ -585,13 +551,15 @@ ${v.info}
 		ui.html('settings2', '');
 		ui.html('settings3', '');
 	}
-	static resetError() {
+	static resetError1() {
 		formFunc.resetError(ui.q('input[name="pseudonym"]'));
 		formFunc.resetError(ui.q('input[name="email"]'));
 		formFunc.resetError(ui.q('input[name="image"]'));
 		formFunc.resetError(ui.q('input[name="birthday"]'));
 		formFunc.resetError(ui.q('input[name="gender"]'));
 		formFunc.resetError(ui.q('textarea[name="aboutMe"]'));
+	}
+	static resetError2() {
 		formFunc.resetError(ui.q('#settingsInterest1'));
 		formFunc.resetError(ui.q('#settingsInterest2'));
 		formFunc.resetError(ui.q('#settingsInterest3'));
@@ -603,8 +571,8 @@ ${v.info}
 	static save(goToID, saveNewEmail) {
 		if (!ui.q('settings').innerHTML)
 			return true;
-		pageSettings.resetError();
-		if (!user.contact || pageSettings.currentSettings == pageSettings.getCurrentSettingsString())
+		pageSettings.resetError1();
+		if (!user.contact || pageSettings.currentSettings == pageSettings.getCurrentSettings())
 			return true;
 		ui.html('#settingsHint', '');
 		if (ui.q('settings input[name="genderInterest1"]:checked') ||
@@ -645,10 +613,17 @@ ${v.info}
 		}
 		return false;
 	}
-	static save3() {
-		if (!user.contact || pageSettings.currentSettings3 && pageSettings.currentSettings3 == pageSettings.getCurrentSettings3String())
+	static save2(id) {
+		if (!ui.q('settings2').innerHTML)
 			return true;
-		user.save(formFunc.getForm('settings3 form'), () => pageSettings.currentSettings3 = pageSettings.getCurrentSettings3String());
+		pageSettings.resetError2();
+		if (!user.contact || pageSettings.currentSettings2 == pageSettings.getCurrentSettings2())
+			return true;
+	}
+	static save3() {
+		if (!user.contact || pageSettings.currentSettings3 && pageSettings.currentSettings3 == pageSettings.getCurrentSettings3())
+			return true;
+		user.save(formFunc.getForm('settings3 form'), () => pageSettings.currentSettings3 = pageSettings.getCurrentSettings3());
 	}
 	static saveAttributes() {
 		var v = { values: {} };
@@ -671,14 +646,6 @@ ${v.info}
 				user.contact['attr' + i + 'Ex'] = ui.q('#CONTACTATTRIB' + i).getAttribute('valueEx');
 			bluetooth.reset();
 		});
-	}
-	static setChoicesSelection(id, v) {
-		ui.q('#' + id).value = v;
-		setTimeout(function () {
-			var e = ui.qa('input[name="inputHelper' + id + '"]');
-			for (var i = 0; i < e.length; i++)
-				e[i].checked = false;
-		}, 1000);
 	}
 	static toggleBlocked() {
 		var e = ui.q('#blocked');

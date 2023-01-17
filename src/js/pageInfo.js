@@ -53,7 +53,7 @@ ${ui.l('home.DescLink')}
 		<li>${ui.l('info.block3_1')}</li>
 		<li>${ui.l('info.block3_2')}</li>
 	</ul>
-	<a style="margin-top:2em;display:block;cursor:pointer;${v['displayBlogButton']}" onclick="ui.navigation.openHTML(&quot;https://blog.spontify.me&quot;, &quot;blog_spontifyme&quot;)">${ui.l('info.link2blog')}</a>
+	<a style="margin:2em 0 1em 0;display:block;cursor:pointer;${v['displayBlogButton']}" onclick="ui.navigation.openHTML(&quot;https://blog.spontify.me&quot;, &quot;blog_spontifyme&quot;)">${ui.l('info.link2blog')}</a>
 </div>
 </infoblock>`;
 	static init() {
