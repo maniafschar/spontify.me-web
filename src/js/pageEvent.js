@@ -566,7 +566,7 @@ ${v.eventParticipationButtons}
 					}
 					v._geolocationDistance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 ? 0 : 1).replace('.', ',') : '';
 					v.type = 'Event';
-					if (ui.navigation.getActiveID() == 'settings3')
+					if (ui.navigation.getActiveID() == 'settings')
 						v.oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';
 					else
 						v.oc = 'details.open(&quot;' + v.id + '&quot;,&quot;location_listEvent&search=' + encodeURIComponent('event.id=' + v.event.id) + '&quot;,pageLocation.detailLocationEvent)';

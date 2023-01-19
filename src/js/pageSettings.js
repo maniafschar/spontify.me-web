@@ -42,14 +42,6 @@ class pageSettings {
 		</value>
 	</field>
 	<field>
-		<label>${ui.l('settings.guide')}</label>
-		<value class="checkbox">
-			<input type="checkbox" name="guide" value="true" label="${ui.l('settings.guideCheckbox')}"
-				${v['guide']} />
-			<explain>${ui.l('settings.guideCheckboxHint')}</explain>
-		</value>
-	</field>
-	<field>
 		<label>${ui.l('settings.aboutMe')}</label>
 		<value>
 			<textarea name="aboutMe" maxlength="1000">${v['contact.aboutMe']}</textarea>
@@ -96,35 +88,33 @@ class pageSettings {
 			<explain>${ui.l('settings.searchPseudonymHint')}</explain>
 		</value>
 	</field>
-	<dialogButtons>
-		<buttontext onclick="ui.navigation.goTo(&quot;settings2&quot;)" class="bgColor">&gt;</buttontext>
-	</dialogButtons>
 	<qrcodeDescription>${ui.l('settings.qrcode')}</qrcodeDescription>
 	<qrcode></qrcode>
 	<input type="hidden" name="verified" value="true" />
 </form>`;
 	static templateSettings2 = v =>
-		global.template`<field>
+		global.template`
+<field style="display:none;">
 	<label>${ui.l('settings.attributes')}</label>
 	<value>
-		<textarea name="attributesDisp" maxlength="250" onfocus="clonsole.log(this)" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
+		<textarea name="attributesDisp" maxlength="250" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
 		<hashtags class="limitHeight">${v.attributesSelection}</hashtags>
 	</value>
 </field>
-<field>
+<field style="display:none;">
 	<label>${ui.l('settings.interestedIn')}</label>
 	<value>
-		<textarea name="interestedInDisp" maxlength="250" onfocus="clonsole.log(this)" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
+		<textarea name="interestedInDisp" maxlength="250" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
 		<hashtags class="limitHeight">${v.attributesSelection}</hashtags>
 	</value>
 </field>
 <field>
-	<label>${ui.l('events.hashtags')}</label>
+	<label>${ui.l('settings.skills')}</label>
 	<value>
-		<textarea name="hashtagsDisp" maxlength="250" onfocus="clonsole.log(this)" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
+		<textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
 		<hashtags>${v.hashtagSelection}</hashtags>
 	</value>
-</field><br/><br/><br/>
+</field><br/>
 <field>
 	<label>${ui.l('settings.genderInterest')}</label>
 	<value>
@@ -146,13 +136,11 @@ class pageSettings {
 </field>
 <br/>
 <dialogButtons>
-<buttontext onclick="ui.navigation.goTo(&quot;settings&quot;)" class="bgColor">&lt;</buttontext>
 <buttontext onclick="pageSettings.preview()" class="bgColor">${ui.l('settings.preview')}</buttontext>
-<buttontext onclick="ui.navigation.goTo(&quot;settings3&quot;)" class="bgColor">&gt;</buttontext>
 </dialogButtons>`;
 	static templateSettings3 = v =>
-		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#settings3Notifications&quot;)">${ui.l('wtd.myNotifications')}</buttontext><br/>
-<div class="notification" id="settings3Notifications" style="display:none;padding-top:0.25em;">
+		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;settings page.page3 .notifications&quot;)">${ui.l('wtd.myNotifications')}</buttontext><br/>
+<div class="notification" class="notifications" style="display:none;padding-top:0.25em;">
 	<div style="margin:0.25em 0.5em 1em 0.5em;">
 		<form onsubmit="return false">
 			<input type="checkbox" value="true" name="notificationChat" label="${ui.l('notification.chat')}" ${v['contact.notificationChat']} />
@@ -212,10 +200,7 @@ class pageSettings {
 </div>
 </div>
 <buttontext class="bgColor settings2Button" onclick="communication.login.logoff()">${ui.l('logoff.title')}</buttontext><br/>
-${v.info}
-<dialogButtons>
-<buttontext onclick="ui.navigation.goTo(&quot;settings2&quot;)" class="bgColor">&lt;</buttontext>
-</dialogButtons>`;
+${v.info}`;
 
 	static checkUnique() {
 		if (user.email == ui.val('input[name="email"]'))
@@ -302,19 +287,19 @@ ${v.info}
 		return s;
 	}
 	static getCurrentSettings2() {
-		var s = (ui.q('input[name="genderInterest1"]:checked') ? 1 : 0) + global.separatorTech;
-		s += (ui.q('input[name="genderInterest2"]:checked') ? 1 : 0) + global.separatorTech;
-		s += (ui.q('input[name="genderInterest3"]:checked') ? 1 : 0) + global.separatorTech;
+		var s = (ui.q('settings page.page2 input[name="genderInterest1"]:checked') ? 1 : 0) + global.separatorTech;
+		s += (ui.q('settings page.page2 input[name="genderInterest2"]:checked') ? 1 : 0) + global.separatorTech;
+		s += (ui.q('settings page.page2 input[name="genderInterest3"]:checked') ? 1 : 0) + global.separatorTech;
 		return s;
 	}
 	static getCurrentSettings3() {
-		var s = '' + (ui.q('settings3 [name="notificationChat"]:checked') ? 1 : 0);
-		s += (ui.q('settings3 [name="notificationEngagement"]:checked') ? 1 : 0);
-		s += (ui.q('settings3 [name="notificationFriendRequest"]:checked') ? 1 : 0);
-		s += (ui.q('settings3 [name="notificationBirthday"]:checked') ? 1 : 0);
-		s += (ui.q('settings3 [name="notificationVisitProfile"]:checked') ? 1 : 0);
-		s += (ui.q('settings3 [name="notificationVisitLocation"]:checked') ? 1 : 0);
-		s += (ui.q('settings3 [name="notificationMarkEvent"]:checked') ? 1 : 0);
+		var s = '' + (ui.q('settings page.page3 [name="notificationChat"]:checked') ? 1 : 0);
+		s += (ui.q('settings page.page3 [name="notificationEngagement"]:checked') ? 1 : 0);
+		s += (ui.q('settings page.page3 [name="notificationFriendRequest"]:checked') ? 1 : 0);
+		s += (ui.q('settings page.page3 [name="notificationBirthday"]:checked') ? 1 : 0);
+		s += (ui.q('settings page.page3 [name="notificationVisitProfile"]:checked') ? 1 : 0);
+		s += (ui.q('settings page.page3 [name="notificationVisitLocation"]:checked') ? 1 : 0);
+		s += (ui.q('settings page.page3 [name="notificationMarkEvent"]:checked') ? 1 : 0);
 		return s;
 	}
 	static getMultiplePopupValues(id) {
@@ -339,7 +324,7 @@ ${v.info}
 			|| user.contact.attr5 || user.contact.attrEx5);
 	}
 	static init(exec) {
-		if (!ui.q('settings').innerHTML) {
+		if (!ui.q('settings page.page1').innerHTML) {
 			communication.ajax({
 				url: global.server + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id),
 				responseType: 'json',
@@ -374,16 +359,11 @@ ${v.info}
 					v['gender2'] = v['contact.gender'] == 2 ? ' checked' : '';
 					v['gender3'] = v['contact.gender'] == 3 ? ' checked' : '';
 					v['guide'] = v['contact.guide'] == 1 ? ' checked' : '';
-					if (user.contact.image)
-						v['userImage'] = global.serverImg + user.contact.image;
-					else
-						v['userImage'] = 'images/defaultProfile.png';
 					if (v['contact.search'] == 1)
 						v['search'] = ' checked';
 					if (user.contact.imageList)
 						v.image = 'src="' + global.serverImg + user.contact.imageList + '"';
-					ui.html('settings', pageSettings.templateSettings1(v));
-					formFunc.initFields('settings');
+					ui.html('settings page.page1', pageSettings.templateSettings1(v));
 					if (!v['contact.ageFemale'])
 						ui.css(ui.q('#settingsInterest2').nextElementSibling, 'display', 'none');
 					if (!v['contact.ageMale'])
@@ -391,17 +371,35 @@ ${v.info}
 					if (!v['contact.ageDivers'])
 						ui.css(ui.q('#settingsInterest3').nextElementSibling, 'display', 'none');
 					pageSettings.currentSettings = pageSettings.getCurrentSettings();
-					if (exec)
-						exec.call()
+					v.att = user.contact.attr ? user.contact.attr.replace(/\u0015/g, ',') : '';
+					v.attInt = user.contact.attrInterest ? user.contact.attrInterest.replace(/\u0015/g, ',') : '';
+					for (var i = 0; i < ui.categories.length; i++)
+						v['att' + i] = user.contact['attr' + i] ? user.contact['attr' + i].replace(/\u0015/g, ',') : '';
+					v.attEx = user.contact.attrEx;
+					v.attIntEx = user.contact.attrInterestEx;
+					for (var i = 0; i < ui.categories.length; i++)
+						v['att' + i + 'Ex'] = user.contact['attr' + i + 'Ex'] ? user.contact['attr' + i + 'Ex'].replace(/\u0015/g, ',') : '';
+					v.attributesSelection = hashtags.display(true);
+					v.hashtagSelection = hashtags.display();
+					if (user.contact.ageMale)
+						v.genderInterest1 = 'checked';
+					if (user.contact.ageFemale)
+						v.genderInterest2 = 'checked';
+					if (user.contact.ageDivers)
+						v.genderInterest3 = 'checked';
+					ui.html('settings page.page2', pageSettings.templateSettings2(v));
+					pageSettings.currentSettings2 = pageSettings.getCurrentSettings2();
 					v.info = pageInfo.template();
-					ui.q('settings3').innerHTML = pageSettings.templateSettings3(v);
-					formFunc.initFields('settings3');
+					ui.q('settings page.page3').innerHTML = pageSettings.templateSettings3(v);
+					formFunc.initFields('settings');
 					pageInfo.updateLocalisation();
 					pageSettings.currentSettings3 = pageSettings.getCurrentSettings3();
+					if (exec)
+						exec.call()
 					var e = function () {
 						if (!pageSettings.hintSettings1 && !pageSettings.hasAttributes()) {
 							if (ui.navigation.getActiveID() == 'settings') {
-								intro.openHint({ desc: 'goToSettings2', pos: '-1em,-5em', size: '60%,auto', onclick: 'ui.navigation.goTo(\'settings2\')' });
+								intro.openHint({ desc: 'goToSettings2', pos: '-1em,-5em', size: '60%,auto', onclick: 'ui.navigation.goTo(\'settings\')' });
 								pageSettings.hintSettings1 = true;
 							} else
 								setTimeout(e, 5000);
@@ -425,40 +423,6 @@ ${v.info}
 			});
 			return true;
 		}
-	}
-	static init2() {
-		var v = {};
-		v.att = user.contact.attr ? user.contact.attr.replace(/\u0015/g, ',') : '';
-		v.attInt = user.contact.attrInterest ? user.contact.attrInterest.replace(/\u0015/g, ',') : '';
-		for (var i = 0; i < ui.categories.length; i++)
-			v['att' + i] = user.contact['attr' + i] ? user.contact['attr' + i].replace(/\u0015/g, ',') : '';
-		v.attEx = user.contact.attrEx;
-		v.attIntEx = user.contact.attrInterestEx;
-		for (var i = 0; i < ui.categories.length; i++)
-			v['att' + i + 'Ex'] = user.contact['attr' + i + 'Ex'] ? user.contact['attr' + i + 'Ex'].replace(/\u0015/g, ',') : '';
-		v.attributesSelection = hashtags.display(true);
-		v.hashtagSelection = hashtags.display();
-		if (user.contact.ageMale)
-			v.genderInterest1 = 'checked';
-		if (user.contact.ageFemale)
-			v.genderInterest2 = 'checked';
-		if (user.contact.ageDivers)
-			v.genderInterest3 = 'checked';
-		ui.html('settings2', pageSettings.templateSettings2(v));
-		formFunc.initFields('settings2');
-		pageSettings.currentSettings2 = pageSettings.getCurrentSettings2();
-		var e = function () {
-			if (!pageSettings.hintSettings2 && !pageSettings.hasAttributes()) {
-				if (ui.navigation.getActiveID() == 'settings2') {
-					if (ui.cssValue('popup', 'display') == 'none') {
-						intro.openHint({ desc: 'settings2', pos: '1.5em,9em', size: '40%,auto', hinkyClass: 'top', hinky: 'left:1em' });
-						pageSettings.hintSettings2 = true;
-					}
-				} else
-					setTimeout(e, 1000);
-			}
-		}
-		setTimeout(e, 2000);
 	}
 	static listBlocked(type, s) {
 		var e = ui.q('#blocked');
@@ -498,11 +462,34 @@ ${v.info}
 		}
 		pageSettings.listBlocked(l[0].includes('event.id') ? 'event' : 'location', pageLocation.listLocation(l));
 	}
+	static navigationButtonDisplay() {
+		var m = ui.q('settings>div').style.marginLeft;
+		m = !m ? 0 : parseInt(m);
+		ui.css('settings listHeader buttonIcon.right', 'display', m > -200 ? '' : 'none');
+		ui.css('settings listHeader buttonIcon.left', 'display', m < 0 ? '' : 'none');
+	}
+	static next() {
+		var e = ui.q('settings>div');
+		var m = e.style.marginLeft;
+		m = !m ? 0 : parseInt(m);
+		if (m > -200) {
+			e.style.marginLeft = (m - 100) + '%';
+			pageSettings.navigationButtonDisplay();
+		}
+	}
 	static preview() {
 		if (pageSettings.currentSettings == pageSettings.getCurrentSettings())
 			details.open(user.contact.id, 'contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id), pageContact.detail);
 		else
 			pageSettings.save('autoOpen');
+	}
+	static previous() {
+		var e = ui.q('settings>div');
+		var m = parseInt(e.style.marginLeft);
+		if (m < 0) {
+			e.style.marginLeft = (m + 100) + '%';
+			pageSettings.navigationButtonDisplay();
+		}
 	}
 	static postSave(goToID) {
 		if (pageSettings.currentSettings && pageSettings.currentSettings.split(global.separatorTech)[0] != ui.val('input[name="email"]')) {
@@ -547,9 +534,7 @@ ${v.info}
 	static reset() {
 		pageSettings.currentSettings = null;
 		pageSettings.currentSettings3 = null;
-		ui.html('settings', '');
-		ui.html('settings2', '');
-		ui.html('settings3', '');
+		ui.html('settings page', '');
 	}
 	static resetError1() {
 		formFunc.resetError(ui.q('input[name="pseudonym"]'));
@@ -614,7 +599,7 @@ ${v.info}
 		return false;
 	}
 	static save2(id) {
-		if (!ui.q('settings2').innerHTML)
+		if (!ui.q('settings page.page2').innerHTML)
 			return true;
 		pageSettings.resetError2();
 		if (!user.contact || pageSettings.currentSettings2 == pageSettings.getCurrentSettings2())
@@ -623,7 +608,7 @@ ${v.info}
 	static save3() {
 		if (!user.contact || pageSettings.currentSettings3 && pageSettings.currentSettings3 == pageSettings.getCurrentSettings3())
 			return true;
-		user.save(formFunc.getForm('settings3 form'), () => pageSettings.currentSettings3 = pageSettings.getCurrentSettings3());
+		user.save(formFunc.getForm('settings page.page3 form'), () => pageSettings.currentSettings3 = pageSettings.getCurrentSettings3());
 	}
 	static saveAttributes() {
 		var v = { values: {} };
@@ -677,13 +662,13 @@ ${v.info}
 			method: 'DELETE',
 			body: { classname: 'Block', id: blockId },
 			success() {
-				var e = ui.q('settings3 #blocked [i="' + id + '"]');
+				var e = ui.q('settings page.page3 #blocked [i="' + id + '"]');
 				if (e)
 					e.outerHTML = '';
 				ui.navigation.hidePopup();
-				e = ui.q('settings3 #blocked');
+				e = ui.q('settings page.page3 #blocked');
 				e.removeAttribute('h');
-				if (!ui.q('settings3 #blocked row'))
+				if (!ui.q('settings page.page3 #blocked row'))
 					ui.css(e, 'display', 'none');
 			}
 		});

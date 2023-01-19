@@ -14,6 +14,7 @@ import { user } from './user';
 import { pageHome } from './pageHome';
 import { lists } from './lists';
 import { pageEvent } from './pageEvent';
+import { pageSearch } from './pageSearch';
 
 export { ui, formFunc };
 
@@ -290,12 +291,8 @@ class ui {
 				intro.closeHint();
 			if (currentID == 'settings' && !pageSettings.save(id))
 				return;
-			if (currentID == 'settings2' && !pageSettings.save2(id))
-				return;
 			if (!user.contact && currentID == 'login')
 				pageLogin.saveDraft();
-			if (currentID == 'settings3')
-				pageSettings.save3();
 			if (id == 'settings' && pageSettings.init(function () { ui.navigation.goTo(id, back); }))
 				return;
 			if (id == 'info')
@@ -310,8 +307,6 @@ class ui {
 				pageSearch.init();
 			else if (id == 'events')
 				pageEvent.init();
-			else if (id == 'settings2')
-				pageSettings.init2();
 			else if (id == 'chat')
 				pageChat.init();
 			pageChat.closeList();
@@ -335,10 +330,7 @@ class ui {
 					back = currentID == 'detail' ||
 						id == 'home' && currentID == 'login' ||
 						id == 'home' && currentID == 'info' ||
-						id == 'home' && currentID == 'settings3' && !user.contact ||
-						id == 'login' && currentID == 'info' ||
-						id == 'settings' && currentID == 'settings2' ||
-						id == 'settings2' && currentID == 'settings3';
+						id == 'login' && currentID == 'info';
 				if (back && currentID == 'detail') {
 					e = ui.qa('detail card');
 					if (e.length > 1) {
@@ -1052,6 +1044,7 @@ class formFunc {
 						if (formFunc.image.svg[id] != 1) {
 							var e = document.createElement('div');
 							e.innerHTML = formFunc.image.svg[id];
+							e.firstChild.onclick = imgs[i].onclick;
 							imgs[i].parentNode.replaceChild(e.firstChild, imgs[i]);
 							if (global.language != 'DE' && id == 'logo')
 								ui.classAdd('homeHeader svg>g', 'en');

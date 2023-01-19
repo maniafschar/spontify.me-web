@@ -2,6 +2,7 @@ import { bluetooth } from './bluetooth';
 import { communication } from './communication';
 import { geoData } from './geoData';
 import { global } from './global';
+import { hashtags } from './hashtags';
 import { initialisation } from './initialisation';
 import { intro } from './intro';
 import { Contact, model } from './model';
@@ -17,7 +18,8 @@ class pageHome {
 	static map;
 	static template = v =>
 		global.template`<homeHeader onclick="${v.clickHeader}"${v.logoSmall}>
-	<img source="logo"/>
+	<item onclick="pageHome.openLocationPicker(event)" class="position"${v.positionStyle}></item>
+	<img onclick="pageHome.openLocationPicker(event)" source="logo"/>
 	${v.imgProfile}
 	<text>${v.name}</text>
 	<buttonIcon class="language${v.langButton}" onclick="pageHome.openLanguage(event)">
@@ -25,67 +27,22 @@ class pageHome {
 	</buttonIcon>
 </homeHeader>
 <homeBody>
-<item class="position">
-	<buttonIcon class="bgColor" onclick="pageHome.openLocationPicker()">
-		<img source="location" />
-	</buttonIcon>
-	<text></text>
-</item>
-<item class="event">
-	<buttonIcon class="bgColor" onclick="pageHome.editEvent()">
-		<img source="rocket" />
-	</buttonIcon>
-	<text></text>
-</item>
-</homeBody>
-<item class="bluetooth">
-	<buttonIcon class="bgColor${v.bluetoothButton}" onclick="bluetooth.toggle()">
-		<img source="bluetooth" />
-	</buttonIcon>
-	<buttonIcon class="bgColor${v.infoButton}" onclick="ui.navigation.goTo(&quot;info&quot;)">
-		<img source="info" />
-	</buttonIcon>
-	<text>Info</text>
-</item>`;
-	static templateNewEvent = v =>
-		global.template`<form name="editElement" onsubmit="return false">
+<form name="editElement" onsubmit="return false">
 <input type="hidden" name="type" value="${v.type}" />
-<field>
-<value style="padding-top:0.5em;text-align:center;">
-<input type="radio" value="0" name="category" label="${ui.categories[0].verb}" ${v.category0} />
-<input type="radio" value="1" name="category" label="${ui.categories[1].verb}" ${v.category1} />
-<input type="radio" value="2" name="category" label="${ui.categories[2].verb}" ${v.category2} />
-<input type="radio" value="3" name="category" label="${ui.categories[3].verb}" ${v.category3} />
-<input type="radio" value="4" name="category" label="${ui.categories[4].verb}" ${v.category4} />
-<input type="radio" value="5" name="category" label="${ui.categories[5].verb}" ${v.category5} />
-</value>
-</field>
-<field>
-<label name="startDate">${ui.l('events.startHour')}</label>
-<value>
+Ich suche heute ab<br/>
 <input type="time" name="startDate" placeholder="HH:MM" step="900" value="${v.startDate}" />
-</value>
-</field>
+<br/>folgende Skills
 <field>
-<label>${ui.l('description')}</label>
-<value>
-<textarea name="text" maxlength="1000">${v.text}</textarea>
-</value>
+<textarea name="hashtagsDisp" maxlength="250" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
+<hashtags>${v.hashtagSelection}</hashtags>
 </field>
-<field>
-<label>${ui.l('events.visibility')}</label>
-<value>
-<input type="radio" name="visibility" value="2" label="${ui.l('events.visibility2')}" ${v.visibility2} ${v.visibilityChecked2} />
-<input type="radio" name="visibility" value="3" label="${ui.l('events.visibility3')}" ${v.visibility3} ${v.visibilityChecked3} />
-</value>
-</field>
-<dialogButtons style="margin-bottom:0;">
-<buttontext onclick="pageHome.saveEvent()" class="bgColor">${ui.l('save')}</buttontext>
-<buttontext onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" class="bgColor${v.hideDelete}" id="deleteElement">${ui.l('delete')}</buttontext>
+<dialogButtons>
+<buttontext onclick="pageHome.saveEvent()" class="bgColor" style="display:none;">${ui.l('save')}</buttontext>
+<buttontext onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" class="bgColor${v.hideDelete}" style="display:none;">${ui.l('delete')}</buttontext>
 <popupHint></popupHint>
 </dialogButtons>
-</form>`;
-
+</form>
+</homeBody>`;
 	static clickNotification(id, action) {
 		communication.ajax({
 			url: global.server + 'db/one',
@@ -155,26 +112,34 @@ class pageHome {
 				v.langButton = ' noDisp';
 				v.clickHeader = 'ui.navigation.goTo(&quot;settings&quot;)';
 			} else {
+				v.positionStyle = ' style="top:1em;"';
 				v.lang = global.language;
 				v.bluetoothButton = ' noDisp';
 				v.clickHeader = 'pageHome.openHintDescription()';
 			}
+			if (!v.startDate) {
+				var d = new Date().getHours() + 2;
+				if (d > 23)
+					d = 8;
+				v.startDate = ('0' + d).slice(-2) + ':00';
+			}
+			v.hashtagSelection = hashtags.display();
 			e.innerHTML = pageHome.template(v);
 			formFunc.initFields('home');
 			initialisation.reposition();
 		}
 		pageHome.initNotificationButton();
 		if (user.contact)
-			ui.q('home item.bluetooth text').innerHTML = ui.l(bluetooth.state == 'on' && user.contact.findMe ? 'bluetooth.activated' : 'bluetooth.deactivated');
+			ui.html('home item.bluetooth text', ui.l(bluetooth.state == 'on' && user.contact.findMe ? 'bluetooth.activated' : 'bluetooth.deactivated'));
 		var p = pageEvent.getParticipationNext();
 		if (p && global.date.server2Local(p.eventDate).toDateString() == new Date().toDateString()) {
 			var s = global.date.formatDate(p.event.startDate);
 			s = s.substring(s.lastIndexOf(' ')).trim();
-			ui.q('home item.event text').innerHTML = s + ' ' + p.event.text;
-			ui.attr('home item.event', 'i', p.event.id);
+			// ui.q('home item.event text').innerHTML = s + ' ' + p.event.text;
+			// ui.attr('home item.event', 'i', p.event.id);
 		} else {
-			ui.q('home item.event text').innerHTML = ui.l('wtd.todayIWant');
-			ui.attr('home item.event', 'i', null);
+			//ui.q('home item.event text').innerHTML = ui.l('wtd.todayIWant');
+			//ui.attr('home item.event', 'i', null);
 		}
 		formFunc.image.replaceSVGs();
 		if (user.contact)
@@ -228,7 +193,9 @@ class pageHome {
 			'<div style="text-align:center;padding:2em 0;"><buttontext class="langSelectImg bgColor' + (global.language == 'DE' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE">Deutsch</buttontext>' +
 			'<buttontext class="langSelectImg bgColor' + (global.language == 'EN' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</buttontext></div>');
 	}
-	static openLocationPicker() {
+	static openLocationPicker(event) {
+		event.preventDefault();
+		event.stopPropagation();
 		if (user.contact) {
 			communication.loadMap(function () {
 				ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
@@ -252,6 +219,10 @@ class pageHome {
 		ui.navigation.hidePopup();
 	}
 	static saveEvent() {
+		if (!user.contact) {
+			intro.openHint({ desc: 'whatToDo', pos: '10%,5em', size: '80%,auto' });
+			return;
+		}
 		formFunc.resetError(ui.q('popup form input[name="startDate"]'));
 		formFunc.resetError(ui.q('popup form input[name="visibility"]'));
 		formFunc.resetError(ui.q('popup form textarea[name="text"]'));
@@ -300,6 +271,6 @@ class pageHome {
 		}
 	}
 	static updateLocalisation() {
-		ui.q('home item.position text').innerHTML = geoData.currentTown;
+		ui.q('home item.position').innerHTML = geoData.currentTown;
 	}
 }

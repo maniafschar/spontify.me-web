@@ -9,6 +9,7 @@ import { pageHome } from './pageHome';
 import { pageInfo } from './pageInfo';
 import { pageLocation } from './pageLocation';
 import { pageLogin } from './pageLogin';
+import { pageSettings } from './pageSettings';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 
@@ -212,23 +213,11 @@ class initialisation {
 			else if (dir == 'right')
 				details.swipeRight();
 		}, 'detailButtons');
-		ui.swipe('settings2', function (dir) {
-			if (dir == 'right')
-				ui.navigation.goTo('settings');
-			else if (dir == 'left')
-				ui.navigation.goTo('settings3');
-		});
-		ui.swipe('settings3', function (dir) {
-			if (dir == 'right')
-				ui.navigation.goTo('settings2');
-			else if (dir == 'left')
-				ui.navigation.goTo('home');
-		});
 		ui.swipe('settings', function (dir) {
 			if (dir == 'right')
-				ui.navigation.goTo('contacts');
+				pageSettings.previous();
 			else if (dir == 'left')
-				ui.navigation.goTo('settings2');
+				pageSettings.next();
 		}, 'input,textarea,img,slider,thumb,val');
 		ui.swipe('search', function (dir) {
 			if (dir == 'right')

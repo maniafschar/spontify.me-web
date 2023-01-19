@@ -217,7 +217,7 @@ ${v.budget}
 		});
 	}
 	static detail(v, id) {
-		var preview = ui.navigation.getActiveID() == 'settings2';
+		var preview = ui.navigation.getActiveID() == 'settings';
 		v = model.convert(new Contact(), v);
 		var idIntern = id;
 		if (idIntern.indexOf && idIntern.indexOf('_') > -1)
@@ -579,7 +579,7 @@ ${v.budget}
 				v.badgeAction = birth[1] ? '' : 'remove';
 			if (activeID == 'detail')
 				v.oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)';
-			else if (activeID == 'settings3')
+			else if (activeID == 'settings')
 				v.oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';
 			else if (activeID == 'info')
 				v.oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)';

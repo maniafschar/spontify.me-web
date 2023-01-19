@@ -506,7 +506,7 @@ ${v.rating}
 			v.type = 'Location';
 			v._message = v._message1 ? v._message1 + '<br/>' : '';
 			v._message += v._message2 ? v._message2 : '';
-			if (ui.navigation.getActiveID() == 'settings3')
+			if (ui.navigation.getActiveID() == 'settings')
 				v.oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';
 			else
 				v.oc = 'details.open(&quot;' + v.id + '&quot;,&quot;location_list&search=' + encodeURIComponent('location.id=' + v.id) + '&quot;,pageLocation.detailLocationEvent)';

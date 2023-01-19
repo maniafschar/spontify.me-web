@@ -298,17 +298,13 @@ subCatTitle {
 	background-size: 100% 100%;
 }
 
-home text {
-	padding: 0.75em;
-}
-
 homeHeader {
 	position: relative;
 	text-align: center;
 	display: block;
 	cursor: pointer;
 	color: white;
-	margin-top: 6vh;
+	padding-top: 5vh;
 }
 
 homeHeader>svg {
@@ -318,17 +314,16 @@ homeHeader>svg {
 }
 
 homeHeader img {
-	margin-top: 2vh;
-	height: 20vh;
+	height: 15vh;
 	border-radius: 50%;
 	box-shadow: 0 0 1em rgba(0, 0, 0, 0.6);
 }
 
 homeHeader.logoSmall>svg {
-	height: 9vh;
+	height: 4em;
 	position: absolute;
 	right: 0;
-	top: -4.6vh;
+	top: 1em;
 	margin-top: 0;
 }
 
@@ -336,22 +331,18 @@ homeBody {
 	position: absolute;
 	width: 100%;
 	display: block;
-	top: 50%;
-	margin-top: -3vh;
+	top: 34%;
+	height: 66%;
+	overflow-y: auto;
 }
 
-home item buttonIcon {
-	padding: 0;
-	position: relative;
-	padding-bottom: 0.5em;
-	box-shadow: 0 0 1em rgba(0, 0, 0, 0.4);
+homeBody input {
+	width: 8em;
+	margin-bottom: 1em;
 }
 
-home item buttonIcon svg {
-	width: 5em;
-	height: 5em;
-	margin-top: -4em;
-	filter: drop-shadow(0.5em 0.5em 0.5em rgba(0, 0, 0, 0.3));
+homeBody field {
+	padding: 0 1em;
 }
 
 home item.bluetooth {
@@ -362,13 +353,9 @@ home item.bluetooth {
 }
 
 home item {
-	position: relative;
-	width: 50%;
-	float: left;
-	text-align: center;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	padding: 4em 0 0.5em 0;
+	right: 1em;
+	top: 4em;
+	position: absolute;
 }
 
 .bgColor {
@@ -666,28 +653,46 @@ field>label {
 }
 
 settings,
-settings2,
 login {
 	overflow-y: auto;
 	overflow-x: hidden;
+}
+
+login {
 	padding: 0 0.5em 5em 0.5em;
 }
 
 info,
-settings3 {
-	padding: 0 0 5em 0;
+settings page.page3 {
 	text-align: left !important;
-	overflow-y: auto;
+	padding-bottom: 2em;
 }
 
-settings,
-settings2,
-settings3 {
+settings {
 	z-index: 2;
 }
 
-settings3 dialogButtons {
-	margin-top: 4em;
+settings>div {
+	position: absolute;
+	top: 4em;
+	left: 0;
+	bottom: 0;
+	width: 300%;
+	transition: all 0.4s ease-out 0s;
+}
+
+settings page {
+	width: 33.3333%;
+	display: block;
+	position: relative;
+	float: left;
+	overflow-y: auto;
+	height: 100%;
+}
+
+settings page.page1,
+settings page.page2 {
+	padding: 0 0.5em 2em 0.5em;
 }
 
 #info6 {
@@ -741,7 +746,7 @@ search form explain {
 }
 
 settings qrcodeDescription {
-	margin-top: 6em;
+	margin-top: 3em;
 	display: block;
 	padding: 1em;
 }
@@ -961,7 +966,7 @@ chat .sendButton {
 listHeader {
 	position: relative;
 	z-index: 1;
-	height: 3.5em;
+	height: 4em;
 	display: block;
 	text-align: left;
 }
@@ -1739,8 +1744,10 @@ buttonIcon.language {
 	position: absolute;
 }
 
-buttonIcon.language span {
-	padding: 0.5em;
+buttonIcon span {
+	width: 2em;
+	height: 2em;
+	line-height: 2;
 }
 
 buttonIcon.jpg {
@@ -2308,6 +2315,7 @@ progressbar {
 
 info {
 	text-align: left !important;
+	overflow-y: auto;
 }
 
 .settings2Button {

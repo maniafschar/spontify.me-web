@@ -100,14 +100,14 @@ class bluetooth {
 			})
 		]).then(
 			function () {
-				ui.q('home item.bluetooth text').innerHTML = ui.l('bluetooth.activated');
+				ui.html('home item.bluetooth text', ui.l('bluetooth.activated'));
 			},
 			function (e) {
 				if (e.indexOf('Advertising has already started') < 0) {
 					bluetooth.stop();
 					communication.sendError('ble peripheral: ' + JSON.stringify(e));
 				} else
-					ui.q('home item.bluetooth text').innerHTML = ui.l('bluetooth.activated');
+					ui.html('home item.bluetooth text', ui.l('bluetooth.activated'));
 			}
 		);
 		ble.startScan([bluetooth.UUID_SERVICE], bluetooth.registerDevice, function (e) {
@@ -137,7 +137,7 @@ class bluetooth {
 			if (ui.q('hint[i="bluetoothOn"]'))
 				intro.closeHint();
 		}
-		ui.q('home item.bluetooth text').innerHTML = ui.l('bluetooth.deactivated');
+		ui.html('home item.bluetooth text', ui.l('bluetooth.deactivated'));
 		window.localStorage.removeItem('findMeIDs');
 	}
 }

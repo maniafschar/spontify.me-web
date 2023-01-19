@@ -450,8 +450,7 @@ class communication {
 			ui.navigation.goTo('home');
 			ui.html('locations', '');
 			ui.html('contacts', '');
-			ui.html('settings', '');
-			ui.html('settings2', '');
+			ui.html('settings page', '');
 			ui.html('chat', '');
 			ui.html('detail', '');
 			ui.html('info', '');
