@@ -497,6 +497,8 @@
 			"6a": "Du kannst dein Profil ganz einfach in den Einstellungen löschen. Die Daten sind dann allerdings komplett und unwiderruflich weg, eine Wiederherstellung ist nicht möglich.<br/>Trotz der einfachen Löschmöglichkeit ist unser Ziel, nachhaltige Benutzer zu gewinnen, die langfristig unsere App nutzen und authentisch sind. Dieser vereinfachte Löschvorgang dient daher in erster Linie dem Vertrauensaufbau."
 		},
 		"home": {
+			"labelSkill": "suche ich Spontis mit folgenden Skills",
+			"labelTime": "Heute ab",
 			"locationPickerReset": "Zurücksetzen",
 			"locationPickerTitle": "Standort wählen"
 		},
@@ -811,7 +813,10 @@
 			"showAge": "Nur das Alter anzeigen",
 			"showBirthday": "Geburtstag anzeigen",
 			"showNoAge": "Nicht anzeigen",
-			"skills": "Meine Skills"
+			"skills": "Meine Skills",
+			"tabLegal": "Rechtliches",
+			"tabProfile": "Profil",
+			"tabSkills": "Skills"
 		},
 		"wtd": {
 			"action": "Los geht's!",

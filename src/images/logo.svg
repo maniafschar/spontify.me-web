@@ -48,6 +48,14 @@
 				display: none;
 			}
 
+			g.pure text.big {
+				display: none;
+			}
+
+			g:not(.pure) text.small {
+				display: none;
+			}
+
 			.color1 {
 				fill: rgb(252, 251, 104);
 			}
@@ -60,19 +68,7 @@
 		</g>
 		<text x="700" y="770" font-size="750" font-family="Adelina" class="name">sp</text>
 		<text x="1920" y="770" font-size="750" font-family="Adelina" class="name">ntify</text>
-		<text x="2250" y="1720" font-size="360" font-family="Adelina" text-anchor="middle" class="claim">
-			<tspan class="de">
-				das
-				<tspan class="color1">Beste</tspan>
-				kommt
-				<tspan class="color1">spontan</tspan>
-			</tspan>
-			<tspan class="en">
-				the
-				<tspan class="color1">best</tspan>
-				comes
-				<tspan class="color1">spontaneously</tspan>
-			</tspan>
-		</text>
+		<text x="2250" y="1720" font-size="360" font-family="Adelina" text-anchor="middle" class="position big"></text>
+		<text x="80%" y="1620" font-size="360" font-family="Adelina" text-anchor="end" class="position small"></text>
 	</g>
 </svg>

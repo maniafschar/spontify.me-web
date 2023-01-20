@@ -145,11 +145,11 @@ class communication {
 			}
 		});
 	}
-	static loadMap(exec) {
+	static loadMap() {
 		if (communication.mapScriptAdded) {
 			var f = function () {
 				if (ui.q('head script[t="map"]'))
-					exec.call();
+					pageHome.openLocationPickerDialog();
 				else
 					setTimeout(f, 100);
 			}
@@ -161,8 +161,7 @@ class communication {
 				responseType: 'text',
 				success(r) {
 					var script = document.createElement('script');
-					script.onload = exec;
-					script.src = r;
+					script.src = r + '&callback=pageHome.openLocationPickerDialog';
 					script.setAttribute('t', 'map');
 					document.head.appendChild(script);
 				}

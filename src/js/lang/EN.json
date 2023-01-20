@@ -497,6 +497,8 @@
 			"6a": "You can easily delete your profile in the settings. The data is then completely and irrevocably gone, a recovery is not possible. <br/> Despite the simple deletion option, our goal is to gain sustainable users who use our app in the long term and who are authentic. This simplified deletion process therefore primarily serves to build trust."
 		},
 		"home": {
+			"labelSkill": "I am looking for Spontis with following skills",
+			"labelTime": "Today from",
 			"locationPickerReset": "Reset",
 			"locationPickerTitle": "Choose location"
 		},
@@ -811,7 +813,10 @@
 			"showAge": "Only show the age",
 			"showBirthday": "Show birthday",
 			"showNoAge": "Don't show",
-			"skills": "My skills"
+			"skills": "My skills",
+			"tabLegal": "Legal",
+			"tabProfile": "Profile",
+			"tabSkills": "Skills"
 		},
 		"wtd": {
 			"action": "Let's go!",

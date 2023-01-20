@@ -5,11 +5,23 @@ import { formFunc, ui } from './ui';
 export { pageLogin };
 
 class pageLogin {
-	static lastTab = 1;
 	static timestamp = new Date().getTime();
-	static templateForm = v =>
-		global.template`<field>
-		<label id="loginDialog">${ui.l('email')}</label>
+	static template = v =>
+		global.template`<tabHeader>
+	<tab onclick="pageLogin.setLoginFormTab1()" class="tabActive">
+		${ui.l('login.action')}
+	</tab>
+	<tab onclick="pageLogin.setLoginFormTab2()">
+		${ui.l('login.passwordForgotten')}
+	</tab>
+	<tab onclick="pageLogin.setLoginFormTab3()">
+		${ui.l('login.register')}
+	</tab>
+</tabHeader>
+<tabBody>
+<form>
+	<field>
+		<label>${ui.l('email')}</label>
 		<value>
 			<input type="email" name="email" maxlength="100" />
 		</value>
@@ -45,24 +57,23 @@ class pageLogin {
 					fill="#FFF" />
 			</svg>&nbsp;&nbsp;Sign in with Apple
 		</buttontext>
-	</dialogButtons>`;
-	static templateRecover = v =>
-		global.template`<form name="loginRecover" onsubmit="return false">
-		<field>
-			<label id="loginDialog">${ui.l('email')}</label>
-			<value>
-				<input type="email" name="email" value="${v.email}" maxlength="100" />
-			</value>
-		</field>
-		<dialogButtons>
-			<br/>
-			<buttontext onclick="pageLogin.recoverPasswordSendEmail()" class="bgColor defaultButton">
-			${ui.l('login.recoverPassword')}
-			</buttontext>
-		</dialogButtons>
-	</form>`;
-	static templateRegister = v =>
-		global.template`<form name="loginRegister" style="width:100%;" onsubmit="return false">
+	</dialogButtons>
+</form>
+<form name="loginRecover" onsubmit="return false">
+	<field>
+		<label>${ui.l('email')}</label>
+		<value>
+			<input type="email" name="email" value="${v.email}" maxlength="100" />
+		</value>
+	</field>
+	<dialogButtons>
+		<br/>
+		<buttontext onclick="pageLogin.recoverPasswordSendEmail()" class="bgColor defaultButton">
+		${ui.l('login.recoverPassword')}
+		</buttontext>
+	</dialogButtons>
+</form>
+<form name="loginRegister" onsubmit="return false">
     <field>
         <label>${ui.l('email')}</label>
         <value>
@@ -118,20 +129,8 @@ class pageLogin {
         </buttontext>
     </dialogButtons>
 </form>
-<registerHint onclick="pageLogin.toggleRegistrationHints()">${ui.l('login.hints')}</registerHint>`;
-	static templateTabs = () =>
-		global.template`<tabHeader>
-	<tab onclick="pageLogin.setLoginFormTab1()">
-		${ui.l('login.action')}
-	</tab>
-	<tab onclick="pageLogin.setLoginFormTab2()">
-		${ui.l('login.passwordForgotten')}
-	</tab>
-	<tab onclick="pageLogin.setLoginFormTab3()">
-		${ui.l('login.register')}
-	</tab>
-</tabHeader>
-<tabBody id="loginBodyDiv"></tabBody>`;
+<registerHint onclick="pageLogin.toggleRegistrationHints()">${ui.l('login.hints')}</registerHint>
+</tabBody>`;
 
 	static fromForm() {
 		var u = ui.q('input[name="email"]');
@@ -168,14 +167,10 @@ class pageLogin {
 			ui.navigation.goTo('login');
 	}
 	static init() {
-		if (ui.q('login').innerHTML.indexOf('loginBodyDiv') < 0)
-			ui.q('login').innerHTML = pageLogin.templateTabs();
-		if (pageLogin.lastTab == 1)
-			pageLogin.setLoginFormTab1();
-		else if (pageLogin.lastTab == 2)
-			pageLogin.setLoginFormTab2();
-		else if (pageLogin.lastTab == 3)
-			pageLogin.setLoginFormTab3();
+		if (!ui.q('login').innerHTML) {
+			ui.q('login').innerHTML = pageLogin.template(pageLogin.getDraft());
+			formFunc.initFields('login');
+		}
 	}
 	static toggleRegistrationHints() {
 		var e = ui.q('registerHint');
@@ -223,18 +218,8 @@ class pageLogin {
 		}
 	}
 	static saveDraft() {
-		var v;
-		if (ui.q('login input[name="agb"]'))
-			v = formFunc.getForm('form[name=loginRegister]').values;
-		else {
-			v = pageLogin.getDraft();
-			var s = ui.val('input[name="pseudonym"]');
-			if (s)
-				v.pseudonym = s;
-			s = ui.val('input[name="email"]');
-			if (s)
-				v.email = s;
-		}
+		var v = formFunc.getForm('login form:nth-child(3)').values;
+		v.email = ui.qa('login tabBody input[name="email"]')[parseInt(ui.q('login tabBody').style.marginLeft || 0) / -100].value;
 		window.localStorage.setItem('login', JSON.stringify(v));
 	}
 	static setError(s, resetPW) {
@@ -251,46 +236,31 @@ class pageLogin {
 	}
 	static setLoginFormTab1() {
 		pageLogin.saveDraft();
-		var e = ui.q('#loginBodyDiv').previousElementSibling.children;
-		ui.classAdd(e[0], 'tabActive');
-		ui.classRemove(e[1], 'tabActive');
-		ui.classRemove(e[2], 'tabActive');
+		ui.classRemove('login tab', 'tabActive');
+		ui.classAdd(ui.qa('login tab')[0], 'tabActive');
 		var v = [];
 		if (!global.isBrowser())
 			v['keepLoggedIn'] = ' checked';
 		if (global.getOS() != 'ios')
 			v['hideApple'] = 'display:none;';
-		ui.q('#loginBodyDiv').innerHTML = pageLogin.templateForm(v);
-		formFunc.initFields('#loginBodyDiv');
-		if (pageLogin.getDraft().email)
-			ui.q('input[name="email"]').value = pageLogin.getDraft().email;
+		ui.css('login tabBody', 'margin-left', 0);
+		ui.qa('login input[name="email"]')[0].value = pageLogin.getDraft().email;
 	}
 	static setLoginFormTab2() {
-		pageLogin.lastTab = 2;
 		pageLogin.saveDraft();
-		var e = ui.q('#loginBodyDiv').previousElementSibling.children;
-		ui.classRemove(e[0], 'tabActive');
-		ui.classAdd(e[1], 'tabActive');
-		ui.classRemove(e[2], 'tabActive');
-		ui.q('#loginBodyDiv').innerHTML = pageLogin.templateRecover(pageLogin.getDraft());
-		formFunc.initFields('#loginBodyDiv');
+		ui.css('login tabBody', 'margin-left', '-100%');
+		ui.classRemove('login tab', 'tabActive');
+		ui.classAdd(ui.qa('login tab')[1], 'tabActive');
+		ui.qa('login input[name="email"]')[1].value = pageLogin.getDraft().email;
 	}
 	static setLoginFormTab3() {
-		pageLogin.lastTab = 3;
 		pageLogin.saveDraft();
-		var v = pageLogin.getDraft();
-		if (v.gender)
-			v['gender' + v.gender] = ' checked';
-		if (v.agb)
-			v.agb = ' checked';
-		var e = ui.q('#loginBodyDiv').previousElementSibling.children;
-		ui.classRemove(e[0], 'tabActive');
-		ui.classRemove(e[1], 'tabActive');
-		ui.classAdd(e[2], 'tabActive');
-		ui.html('#loginBodyDiv', pageLogin.templateRegister(v));
-		formFunc.initFields('#loginBodyDiv');
-		ui.css('input[name="name"]', 'position', 'absolute');
-		ui.css('input[name="name"]', 'right', '200%');
+		ui.classRemove('login tab', 'tabActive');
+		ui.classAdd(ui.qa('login tab')[2], 'tabActive');
+		ui.css('login tabBody', 'margin-left', '-200%');
+		ui.css('login input[name="name"]', 'position', 'absolute');
+		ui.css('login input[name="name"]', 'right', '200%');
+		ui.qa('login input[name="email"]')[2].value = pageLogin.getDraft().email;
 	}
 	static validateAGB() {
 		var e = ui.q('input[name="agb"]');

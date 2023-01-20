@@ -368,12 +368,11 @@ class pageSearch {
 		}
 	}
 	static selectTab(id) {
-		ui.classAdd('search tabBody>div', 'noDisp');
 		var e = ui.q('search tabBody div.' + id);
 		if (!e.innerHTML)
 			e.innerHTML = pageSearch[id].getFields() + '<listResults></listResults>';
 		formFunc.initFields('search');
-		ui.classRemove('search tabBody div.' + id, 'noDisp');
+		ui.q('search tabBody').style.marginLeft = ((id == 'contacts' ? 0 : id == 'events' ? 1 : 2) * -100) + '%';
 		ui.classRemove('search tab', 'tabActive');
 		ui.classAdd('search tab[i="' + id + '"]', 'tabActive');
 	}

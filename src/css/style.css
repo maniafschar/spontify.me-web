@@ -304,17 +304,18 @@ homeHeader {
 	display: block;
 	cursor: pointer;
 	color: white;
-	padding-top: 5vh;
+	padding-top: 5%;
+	height: 25%;
 }
 
 homeHeader>svg {
-	height: 15vh;
+	margin-top: 5%;
+	height: 80%;
 	width: auto;
-	margin-top: 2.5vh;
 }
 
 homeHeader img {
-	height: 15vh;
+	height: 80%;
 	border-radius: 50%;
 	box-shadow: 0 0 1em rgba(0, 0, 0, 0.6);
 }
@@ -331,9 +332,9 @@ homeBody {
 	position: absolute;
 	width: 100%;
 	display: block;
-	top: 34%;
-	height: 66%;
+	height: 75%;
 	overflow-y: auto;
+	padding-top: 5%;
 }
 
 homeBody input {
@@ -414,16 +415,12 @@ filters {
 	color: black;
 }
 
-login {
-	padding-top: 2em !important;
-}
-
 login registerHint {
 	position: absolute;
-	margin-left: 5%;
-	width: 90%;
-	left: 0;
-	bottom: 1em;
+	margin-right: 1.666%;
+	width: 30%;
+	right: 0;
+	bottom: 4em;
 	padding: 1em 0.5em;
 	background: rgba(255, 255, 255, 0.9);
 	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
@@ -659,7 +656,7 @@ login {
 }
 
 login {
-	padding: 0 0.5em 5em 0.5em;
+	padding: 1em 0.5em 5em 0.5em;
 }
 
 info,
@@ -669,6 +666,7 @@ settings page.page3 {
 }
 
 settings {
+	padding-top: 1em;
 	z-index: 2;
 }
 
@@ -719,22 +717,28 @@ search {
 	padding-top: 1em;
 }
 
-search tabHeader {
-	margin: 0 0.5em;
-}
-
-search tabBody {
+search tabBody,
+settings tabBody,
+login tabBody {
 	position: absolute;
 	top: 3em;
 	left: 0;
-	right: 0;
+	width: 300%;
 	bottom: 0em;
+	transition: all 0.4s ease-out;
 }
 
-search tabBody>div {
+search tabBody>div,
+settings tabBody>div,
+login tabBody>form {
 	overflow-y: auto;
 	height: 100%;
-	width: 100%;
+	width: 33.3333%;
+	float: left;
+}
+
+login tabBody>form {
+	padding: 0 0.5em;
 }
 
 search form {
@@ -1736,12 +1740,16 @@ buttonIcon.notifications {
 }
 
 buttonIcon.language {
-	top: -6vh;
+	top: 0;
 	right: 0;
 	box-shadow: none;
 	font-size: 1.4em;
 	padding: 0.5em;
 	position: absolute;
+}
+
+buttonIcon.language span {
+	line-height: 1.5;
 }
 
 buttonIcon span {
@@ -2255,6 +2263,7 @@ tabHeader {
 	line-height: 1.6;
 	white-space: nowrap;
 	display: block;
+	margin: 0 0.5em;
 }
 
 tabHeader tab p {

@@ -18,7 +18,6 @@ class pageHome {
 	static map;
 	static template = v =>
 		global.template`<homeHeader onclick="${v.clickHeader}"${v.logoSmall}>
-	<item onclick="pageHome.openLocationPicker(event)" class="position"${v.positionStyle}></item>
 	<img onclick="pageHome.openLocationPicker(event)" source="logo"/>
 	${v.imgProfile}
 	<text>${v.name}</text>
@@ -29,9 +28,9 @@ class pageHome {
 <homeBody>
 <form name="editElement" onsubmit="return false">
 <input type="hidden" name="type" value="${v.type}" />
-Ich suche heute ab<br/>
-<input type="time" name="startDate" placeholder="HH:MM" step="900" value="${v.startDate}" />
-<br/>folgende Skills
+${ui.l('home.labelTime')}<br/>
+<input type="time" name="startDate" placeholder="HH:MM" step="900" value="${v.startDate}" /><br/>
+${ui.l('home.labelSkill')}
 <field>
 <textarea name="hashtagsDisp" maxlength="250" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
 <hashtags>${v.hashtagSelection}</hashtags>
@@ -112,7 +111,6 @@ Ich suche heute ab<br/>
 				v.langButton = ' noDisp';
 				v.clickHeader = 'ui.navigation.goTo(&quot;settings&quot;)';
 			} else {
-				v.positionStyle = ' style="top:1em;"';
 				v.lang = global.language;
 				v.bluetoothButton = ' noDisp';
 				v.clickHeader = 'pageHome.openHintDescription()';
@@ -197,17 +195,18 @@ Ich suche heute ab<br/>
 		event.preventDefault();
 		event.stopPropagation();
 		if (user.contact) {
-			communication.loadMap(function () {
-				ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
-					'<mapPicker></mapPicker><br/>' +
-					(geoData.manual ? '<buttontext class="bgColor" onclick="pageHome.resetLocationPicker()">' + ui.l('home.locationPickerReset') + '</buttontext>' : '') +
-					'<buttontext class="bgColor" onclick="pageHome.saveLocationPicker()">' + ui.l('ready') + '</buttontext>', null, null,
-					function () {
-						pageHome.map = new google.maps.Map(ui.q('mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 12, center: new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon), zoom: 9 });
-					});
-			});
+			communication.loadMap();
 		} else
 			intro.openHint({ desc: 'position', pos: '10%,5em', size: '80%,auto' });
+	}
+	static openLocationPickerDialog() {
+		ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
+			'<mapPicker></mapPicker><br/>' +
+			(geoData.manual ? '<buttontext class="bgColor" onclick="pageHome.resetLocationPicker()">' + ui.l('home.locationPickerReset') + '</buttontext>' : '') +
+			'<buttontext class="bgColor" onclick="pageHome.saveLocationPicker()">' + ui.l('ready') + '</buttontext>', null, null,
+			function () {
+				pageHome.map = new google.maps.Map(ui.q('mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 12, center: new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon), zoom: 9 });
+			});
 	}
 	static reset() {
 		pageHome.badge = -1;
@@ -271,6 +270,6 @@ Ich suche heute ab<br/>
 		}
 	}
 	static updateLocalisation() {
-		ui.q('home item.position').innerHTML = geoData.currentTown;
+		ui.html('home svg text.position', geoData.currentTown);
 	}
 }

@@ -7,7 +7,6 @@ import { pageContact } from './pageContact';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 import { details } from './details';
-import { intro } from './intro';
 import { pageLocation } from './pageLocation';
 import QRCodeStyling from 'qr-code-styling';
 import { pageInfo } from './pageInfo';
@@ -17,10 +16,23 @@ export { pageSettings };
 
 class pageSettings {
 	static currentSettings = null;
-	static currentSettings2 = null;
-	static currentSettings3 = null;
-	static hintSettings1 = false;
-	static hintSettings2 = false;
+	static template = v =>
+		global.template`<tabHeader>
+	<tab onclick="pageSettings.selectTab(0)" class="tabActive">
+		${ui.l('settings.tabProfile')}
+	</tab>
+	<tab onclick="pageSettings.selectTab(1)">
+		${ui.l('settings.tabSkills')}
+	</tab>
+	<tab onclick="pageSettings.selectTab(2)">
+		${ui.l('settings.tabLegal')}
+	</tab>
+</tabHeader>
+<tabBody>
+	<div style="padding:0 0.5em;">${v.settings1}</div>
+	<div style="padding:0 0.5em;">${v.settings2}</div>
+	<div style="text-align:left;">${v.settings3}</div>
+</tabBody>`;
 	static templateSettings1 = v =>
 		global.template`<form onsubmit="return false">
 	<field>
@@ -93,8 +105,7 @@ class pageSettings {
 	<input type="hidden" name="verified" value="true" />
 </form>`;
 	static templateSettings2 = v =>
-		global.template`
-<field style="display:none;">
+		global.template`<field style="display:none;">
 	<label>${ui.l('settings.attributes')}</label>
 	<value>
 		<textarea name="attributesDisp" maxlength="250" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
@@ -139,7 +150,7 @@ class pageSettings {
 <buttontext onclick="pageSettings.preview()" class="bgColor">${ui.l('settings.preview')}</buttontext>
 </dialogButtons>`;
 	static templateSettings3 = v =>
-		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;settings page.page3 .notifications&quot;)">${ui.l('wtd.myNotifications')}</buttontext><br/>
+		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;settings tabBody .notifications&quot;)">${ui.l('wtd.myNotifications')}</buttontext><br/>
 <div class="notification" class="notifications" style="display:none;padding-top:0.25em;">
 	<div style="margin:0.25em 0.5em 1em 0.5em;">
 		<form onsubmit="return false">
@@ -279,27 +290,21 @@ ${v.info}`;
 		s += (ui.q('input[name="search"]:checked') ? 1 : 0) + global.separatorTech;
 		s += (ui.q('input[name="guide"]:checked') ? 1 : 0) + global.separatorTech;
 		s += ui.val('input[name="pseudonym"]') + global.separatorTech;
+		s += (ui.q('settings input[name="genderInterest1"]:checked') ? 1 : 0) + global.separatorTech;
+		s += (ui.q('settings input[name="genderInterest2"]:checked') ? 1 : 0) + global.separatorTech;
+		s += (ui.q('settings input[name="genderInterest3"]:checked') ? 1 : 0) + global.separatorTech;
+		s += '' + (ui.q('settings [name="notificationChat"]:checked') ? 1 : 0);
+		s += (ui.q('settings [name="notificationEngagement"]:checked') ? 1 : 0);
+		s += (ui.q('settings [name="notificationFriendRequest"]:checked') ? 1 : 0);
+		s += (ui.q('settings [name="notificationBirthday"]:checked') ? 1 : 0);
+		s += (ui.q('settings [name="notificationVisitProfile"]:checked') ? 1 : 0);
+		s += (ui.q('settings [name="notificationVisitLocation"]:checked') ? 1 : 0);
+		s += (ui.q('settings [name="notificationMarkEvent"]:checked') ? 1 : 0);
 		var e = ui.qa('[name="budget"]');
 		for (var i = 0; i < e.length; i++) {
 			if (e[i].checked)
 				s += i;
 		}
-		return s;
-	}
-	static getCurrentSettings2() {
-		var s = (ui.q('settings page.page2 input[name="genderInterest1"]:checked') ? 1 : 0) + global.separatorTech;
-		s += (ui.q('settings page.page2 input[name="genderInterest2"]:checked') ? 1 : 0) + global.separatorTech;
-		s += (ui.q('settings page.page2 input[name="genderInterest3"]:checked') ? 1 : 0) + global.separatorTech;
-		return s;
-	}
-	static getCurrentSettings3() {
-		var s = '' + (ui.q('settings page.page3 [name="notificationChat"]:checked') ? 1 : 0);
-		s += (ui.q('settings page.page3 [name="notificationEngagement"]:checked') ? 1 : 0);
-		s += (ui.q('settings page.page3 [name="notificationFriendRequest"]:checked') ? 1 : 0);
-		s += (ui.q('settings page.page3 [name="notificationBirthday"]:checked') ? 1 : 0);
-		s += (ui.q('settings page.page3 [name="notificationVisitProfile"]:checked') ? 1 : 0);
-		s += (ui.q('settings page.page3 [name="notificationVisitLocation"]:checked') ? 1 : 0);
-		s += (ui.q('settings page.page3 [name="notificationMarkEvent"]:checked') ? 1 : 0);
 		return s;
 	}
 	static getMultiplePopupValues(id) {
@@ -324,7 +329,7 @@ ${v.info}`;
 			|| user.contact.attr5 || user.contact.attrEx5);
 	}
 	static init(exec) {
-		if (!ui.q('settings page.page1').innerHTML) {
+		if (!ui.q('settings').innerHTML) {
 			communication.ajax({
 				url: global.server + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id),
 				responseType: 'json',
@@ -363,14 +368,13 @@ ${v.info}`;
 						v['search'] = ' checked';
 					if (user.contact.imageList)
 						v.image = 'src="' + global.serverImg + user.contact.imageList + '"';
-					ui.html('settings page.page1', pageSettings.templateSettings1(v));
+					v.settings1 = pageSettings.templateSettings1(v);
 					if (!v['contact.ageFemale'])
 						ui.css(ui.q('#settingsInterest2').nextElementSibling, 'display', 'none');
 					if (!v['contact.ageMale'])
 						ui.css(ui.q('#settingsInterest1').nextElementSibling, 'display', 'none');
 					if (!v['contact.ageDivers'])
 						ui.css(ui.q('#settingsInterest3').nextElementSibling, 'display', 'none');
-					pageSettings.currentSettings = pageSettings.getCurrentSettings();
 					v.att = user.contact.attr ? user.contact.attr.replace(/\u0015/g, ',') : '';
 					v.attInt = user.contact.attrInterest ? user.contact.attrInterest.replace(/\u0015/g, ',') : '';
 					for (var i = 0; i < ui.categories.length; i++)
@@ -387,24 +391,15 @@ ${v.info}`;
 						v.genderInterest2 = 'checked';
 					if (user.contact.ageDivers)
 						v.genderInterest3 = 'checked';
-					ui.html('settings page.page2', pageSettings.templateSettings2(v));
-					pageSettings.currentSettings2 = pageSettings.getCurrentSettings2();
+					v.settings2 = pageSettings.templateSettings2(v);
 					v.info = pageInfo.template();
-					ui.q('settings page.page3').innerHTML = pageSettings.templateSettings3(v);
+					v.settings3 = pageSettings.templateSettings3(v);
+					ui.q('settings').innerHTML = pageSettings.template(v);
 					formFunc.initFields('settings');
 					pageInfo.updateLocalisation();
-					pageSettings.currentSettings3 = pageSettings.getCurrentSettings3();
+					pageSettings.currentSettings = pageSettings.getCurrentSettings();
 					if (exec)
 						exec.call()
-					var e = function () {
-						if (!pageSettings.hintSettings1 && !pageSettings.hasAttributes()) {
-							if (ui.navigation.getActiveID() == 'settings') {
-								intro.openHint({ desc: 'goToSettings2', pos: '-1em,-5em', size: '60%,auto', onclick: 'ui.navigation.goTo(\'settings\')' });
-								pageSettings.hintSettings1 = true;
-							} else
-								setTimeout(e, 5000);
-						}
-					};
 					var x = Math.min(400, ui.q('settings').offsetWidth - 2 * ui.emInPX);
 					new QRCodeStyling({
 						width: x,
@@ -418,7 +413,6 @@ ${v.info}`;
 							color: 'transparent',
 						}
 					}).append(ui.q('qrcode'));
-					setTimeout(e, 10000);
 				}
 			});
 			return true;
@@ -520,7 +514,7 @@ ${v.info}`;
 		}
 		formFunc.image.remove('image');
 		pageSettings.currentSettings = pageSettings.getCurrentSettings();
-		pageSettings.resetError1();
+		pageSettings.reset();
 		if (goToID) {
 			if (goToID == 'autoOpen')
 				pageSettings.preview();
@@ -533,18 +527,13 @@ ${v.info}`;
 	}
 	static reset() {
 		pageSettings.currentSettings = null;
-		pageSettings.currentSettings3 = null;
 		ui.html('settings page', '');
-	}
-	static resetError1() {
 		formFunc.resetError(ui.q('input[name="pseudonym"]'));
 		formFunc.resetError(ui.q('input[name="email"]'));
 		formFunc.resetError(ui.q('input[name="image"]'));
 		formFunc.resetError(ui.q('input[name="birthday"]'));
 		formFunc.resetError(ui.q('input[name="gender"]'));
 		formFunc.resetError(ui.q('textarea[name="aboutMe"]'));
-	}
-	static resetError2() {
 		formFunc.resetError(ui.q('#settingsInterest1'));
 		formFunc.resetError(ui.q('#settingsInterest2'));
 		formFunc.resetError(ui.q('#settingsInterest3'));
@@ -556,7 +545,7 @@ ${v.info}`;
 	static save(goToID, saveNewEmail) {
 		if (!ui.q('settings').innerHTML)
 			return true;
-		pageSettings.resetError1();
+		pageSettings.reset();
 		if (!user.contact || pageSettings.currentSettings == pageSettings.getCurrentSettings())
 			return true;
 		ui.html('#settingsHint', '');
@@ -598,18 +587,6 @@ ${v.info}`;
 		}
 		return false;
 	}
-	static save2(id) {
-		if (!ui.q('settings page.page2').innerHTML)
-			return true;
-		pageSettings.resetError2();
-		if (!user.contact || pageSettings.currentSettings2 == pageSettings.getCurrentSettings2())
-			return true;
-	}
-	static save3() {
-		if (!user.contact || pageSettings.currentSettings3 && pageSettings.currentSettings3 == pageSettings.getCurrentSettings3())
-			return true;
-		user.save(formFunc.getForm('settings page.page3 form'), () => pageSettings.currentSettings3 = pageSettings.getCurrentSettings3());
-	}
 	static saveAttributes() {
 		var v = { values: {} };
 		for (var i = 0; i < ui.categories.length; i++) {
@@ -631,6 +608,11 @@ ${v.info}`;
 				user.contact['attr' + i + 'Ex'] = ui.q('#CONTACTATTRIB' + i).getAttribute('valueEx');
 			bluetooth.reset();
 		});
+	}
+	static selectTab(i) {
+		ui.classRemove('settings tab', 'tabActive');
+		ui.classAdd(ui.qa('settings tab')[i], 'tabActive');
+		ui.q('settings tabBody').style.marginLeft = i * -100 + '%';
 	}
 	static toggleBlocked() {
 		var e = ui.q('#blocked');
@@ -662,13 +644,13 @@ ${v.info}`;
 			method: 'DELETE',
 			body: { classname: 'Block', id: blockId },
 			success() {
-				var e = ui.q('settings page.page3 #blocked [i="' + id + '"]');
+				var e = ui.q('settings #blocked [i="' + id + '"]');
 				if (e)
 					e.outerHTML = '';
 				ui.navigation.hidePopup();
-				e = ui.q('settings page.page3 #blocked');
+				e = ui.q('settings #blocked');
 				e.removeAttribute('h');
-				if (!ui.q('settings page.page3 #blocked row'))
+				if (!ui.q('settings #blocked row'))
 					ui.css(e, 'display', 'none');
 			}
 		});
