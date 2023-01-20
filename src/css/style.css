@@ -346,6 +346,10 @@ homeBody field {
 	padding: 0 1em;
 }
 
+home {
+	z-index: 1;
+}
+
 home item.bluetooth {
 	position: absolute;
 	bottom: 1em;
@@ -660,9 +664,12 @@ login {
 }
 
 info,
-settings page.page3 {
-	text-align: left !important;
+settings tabBody>div {
 	padding-bottom: 2em;
+}
+
+settings tabBody>div:nth-child(3) {
+	text-align: left;
 }
 
 settings {
@@ -759,7 +766,6 @@ settings qrcodeDescription {
 settings qrcode {
 	display: block;
 	position: relative;
-	margin-bottom: 2em;
 }
 
 img.qrVerification {

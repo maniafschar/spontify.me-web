@@ -29,8 +29,8 @@ class pageSettings {
 	</tab>
 </tabHeader>
 <tabBody>
-	<div style="padding:0 0.5em;">${v.settings1}</div>
-	<div style="padding:0 0.5em;">${v.settings2}</div>
+	<div style="padding:0 0.5em 2em 0.5em;">${v.settings1}</div>
+	<div style="padding:0 0.5em 2em 0.5em;">${v.settings2}</div>
 	<div style="text-align:left;">${v.settings3}</div>
 </tabBody>`;
 	static templateSettings1 = v =>
@@ -400,7 +400,7 @@ ${v.info}`;
 					pageSettings.currentSettings = pageSettings.getCurrentSettings();
 					if (exec)
 						exec.call()
-					var x = Math.min(400, ui.q('settings').offsetWidth - 2 * ui.emInPX);
+					var x = Math.min(300, ui.q('settings').offsetWidth - 2 * ui.emInPX);
 					new QRCodeStyling({
 						width: x,
 						height: x,
