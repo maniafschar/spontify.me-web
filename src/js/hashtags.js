@@ -4,8 +4,7 @@ export { hashtags }
 
 class hashtags {
 	static add(e, tag) {
-		while (e.nodeName != 'HASHTAGS')
-			e = e.parentElement;
+		e = ui.parents(e, 'hashtags');
 		e = e.previousElementSibling;
 		var s = e.value;
 		if ((' ' + e.value + ' ').indexOf(' ' + tag + ' ') < 0)
@@ -67,8 +66,10 @@ class hashtags {
 		if (e.nodeName != 'TEXTAREA')
 			e = ui.parents(e, 'hashtags').previousElementSibling
 		var tags = e.nextElementSibling.querySelectorAll('label');
+		var s = e.value.toLowerCase();
 		for (var i = 0; i < tags.length; i++)
-			tags[i].style.color = e.value.indexOf(tags[i].innerText) < 0 ? '' : 'black';
+			tags[i].style.color = s.indexOf(tags[i].innerText.toLowerCase()) < 0 ? '' : 'black';
+		ui.adjustTextarea(e);
 	}
 	static toggleSubCategories(e, i) {
 		e = ui.parents(e, 'hashtags');

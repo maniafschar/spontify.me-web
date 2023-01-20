@@ -32,12 +32,12 @@ ${ui.l('home.labelTime')}<br/>
 <input type="time" name="startDate" placeholder="HH:MM" step="900" value="${v.startDate}" /><br/>
 ${ui.l('home.labelSkill')}
 <field>
-<textarea name="hashtagsDisp" maxlength="250" onkeyup="hashtags.synchonizeTags(event)" style="height:2em;">${v.hashtagsDisp}</textarea>
+<textarea name="hashtagsDisp" maxlength="250" onkeyup="pageHome.synchonizeTags(event)" style="height:2em;">${v.hashtagsDisp}</textarea>
 <hashtags>${v.hashtagSelection}</hashtags>
 </field>
 <dialogButtons>
-<buttontext onclick="pageHome.saveEvent()" class="bgColor" style="display:none;">${ui.l('save')}</buttontext>
-<buttontext onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" class="bgColor${v.hideDelete}" style="display:none;">${ui.l('delete')}</buttontext>
+<buttontext onclick="pageHome.saveEvent()" class="bgColor noDisp save">${ui.l('save')}</buttontext>
+<buttontext onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" class="bgColor noDisp delete">${ui.l('delete')}</buttontext>
 <popupHint></popupHint>
 </dialogButtons>
 </form>
@@ -62,40 +62,6 @@ ${ui.l('home.labelSkill')}
 		var e = ui.q('notificationList');
 		if (ui.cssValue(e, 'display') != 'none')
 			ui.toggleHeight(e);
-	}
-	static editEvent() {
-		if (user.contact) {
-			if (!user.contact.image) {
-				ui.navigation.openPopup(ui.l('attention'),
-					ui.l('events.noImage') +
-					'<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.edit') + '</buttontext>');
-				return;
-			}
-			var v = {};
-			var id = ui.q('home item.event').getAttribute('i');
-			var p = pageEvent.getParticipationNext(id);
-			if (id && p) {
-				v.visibility = p.event.visibility;
-				v.type = p.event.type;
-				v.text = p.event.text;
-				v.id = p.event.id;
-				v.startDate = global.date.server2Local(p.event.startDate);
-				v.startDate = ('0' + v.startDate.getHours()).slice(-2) + ':' + ('0' + v.startDate.getMinutes()).slice(-2);
-				v['category' + p.event.category] = ' checked';
-			} else {
-				var d = new Date().getHours() + 2;
-				if (d > 23)
-					d = 8;
-				v.startDate = ('0' + d).slice(-2) + ':00';
-				v.visibility = user.contact.attr && user.contact.attrInterest ? 2 : 3;
-				v.type = 'o';
-				v.category0 = ' checked';
-				v.hideDelete = ' noDisp';
-			}
-			v['visibilityChecked' + v.visibility] = ' checked="checked"';
-			ui.navigation.openPopup(ui.l('wtd.todayIWant'), pageHome.templateNewEvent(v));
-		} else
-			intro.openHint({ desc: 'whatToDo', pos: '10%,5em', size: '80%,auto' });
 	}
 	static init(force) {
 		var e = ui.q('home');
@@ -125,6 +91,21 @@ ${ui.l('home.labelSkill')}
 			e.innerHTML = pageHome.template(v);
 			formFunc.initFields('home');
 			initialisation.reposition();
+			var input = ui.q('home homeBody textarea[name="hashtagsDisp"]');
+			var descriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(input), 'value');
+			Object.defineProperty(input, 'value', {
+				set: function () {
+					var r = descriptor.set.apply(this, arguments);
+					if (this.value)
+						ui.classRemove('home buttontext.save', 'noDisp');
+					else
+						ui.classAdd('home buttontext.save', 'noDisp');
+					return r;
+				},
+				get: function () {
+					return descriptor.get.apply(this);
+				}
+			});
 		}
 		pageHome.initNotificationButton();
 		if (user.contact)
@@ -181,10 +162,6 @@ ${ui.l('home.labelSkill')}
 			ui.classRemove('navigation buttonIcon.notifications', 'pulse highlight');
 		if (ui.q('badgeNotifications'))
 			ui.q('badgeNotifications').innerText = Math.max(pageHome.badge, 0);
-	}
-	static synchonizeTags() {
-
-		ui.adjustTextarea(this);
 	}
 	static openHintDescription() {
 		intro.openHint({ desc: 'description', pos: '10%,5em', size: '80%,auto' });
@@ -261,6 +238,13 @@ ${ui.l('home.labelSkill')}
 	static saveLocationPicker() {
 		geoData.save({ latitude: pageHome.map.getCenter().lat(), longitude: pageHome.map.getCenter().lng(), manual: true });
 		ui.navigation.hidePopup();
+	}
+	static synchonizeTags(event) {
+		hashtags.synchonizeTags(event);
+		if (event.target.value)
+			ui.classRemove('home buttontext.save', 'noDisp');
+		else
+			ui.classAdd('home buttontext.save', 'noDisp');
 	}
 	static toggleNotification() {
 		if (!user.contact)
