@@ -72,6 +72,7 @@ class pageLogin {
 		${ui.l('login.recoverPassword')}
 		</buttontext>
 	</dialogButtons>
+	<errorHint></errorHint>
 </form>
 <form name="loginRegister" onsubmit="return false">
     <field>
@@ -177,7 +178,7 @@ class pageLogin {
 		ui.css(e, 'transform', ui.cssValue(e, 'transform').indexOf('1') > -1 ? 'scale(0)' : 'scale(1)');
 	}
 	static recoverPasswordSendEmail() {
-		var email = ui.q('input[name="email"]');
+		var email = ui.qa('input[name="email"]')[1];
 		formFunc.resetError(email);
 		var b = -1;
 		if (!email.value)

@@ -621,7 +621,7 @@ popup .multiple {
 	border-radius: 0.5em;
 	background: rgba(255, 255, 255, 0.85);
 	margin: 0.25em;
-	color: black;
+	color: rgba(0, 0, 0, 0.3);
 }
 
 textarea {
@@ -735,6 +735,7 @@ login tabBody>form {
 	height: 100%;
 	width: 33.3333%;
 	float: left;
+	overflow-x: hidden;
 }
 
 login tabBody>form {

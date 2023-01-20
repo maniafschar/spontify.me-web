@@ -150,7 +150,7 @@ class pageSettings {
 <buttontext onclick="pageSettings.preview()" class="bgColor">${ui.l('settings.preview')}</buttontext>
 </dialogButtons>`;
 	static templateSettings3 = v =>
-		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;settings tabBody .notifications&quot;)">${ui.l('wtd.myNotifications')}</buttontext><br/>
+		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;settings tabBody .notification&quot;)">${ui.l('wtd.myNotifications')}</buttontext><br/>
 <div class="notification" class="notifications" style="display:none;padding-top:0.25em;">
 	<div style="margin:0.25em 0.5em 1em 0.5em;">
 		<form onsubmit="return false">
@@ -274,26 +274,26 @@ ${v.info}`;
 		});
 	}
 	static getCurrentSettings() {
-		var s = ui.val('input[name="email"]') + global.separatorTech;
-		s += ui.q('[name="image_disp"] img') + global.separatorTech;
-		s += ui.val('textarea[name="aboutMe"]') + global.separatorTech;
-		s += ui.val('input[name="birthday"]') + global.separatorTech;
-		s += ui.val('input[name="birthdayDisplay"]:checked') + global.separatorTech;
-		s += ui.val('input[name="gender"]:checked') + global.separatorTech;
-		s += ui.val('input[name="ageFemale"]') + global.separatorTech;
-		s += ui.val('input[name="ageMale"]') + global.separatorTech;
-		s += ui.val('input[name="ageDivers"]') + global.separatorTech;
-		s += (ui.q('input[name="genderInterest1"]:checked') ? 1 : 0) + global.separatorTech;
-		s += (ui.q('input[name="genderInterest2"]:checked') ? 1 : 0) + global.separatorTech;
-		s += (ui.q('input[name="genderInterest3"]:checked') ? 1 : 0) + global.separatorTech;
-		s += ui.val('input[name="language"]:checked') + global.separatorTech;
-		s += (ui.q('input[name="search"]:checked') ? 1 : 0) + global.separatorTech;
-		s += (ui.q('input[name="guide"]:checked') ? 1 : 0) + global.separatorTech;
-		s += ui.val('input[name="pseudonym"]') + global.separatorTech;
+		var s = ui.val('settings input[name="email"]') + global.separatorTech;
+		s += ui.q('settings [name="image_disp"] img') + global.separatorTech;
+		s += ui.val('settings textarea[name="aboutMe"]') + global.separatorTech;
+		s += ui.val('settings input[name="birthday"]') + global.separatorTech;
+		s += ui.val('settings input[name="birthdayDisplay"]:checked') + global.separatorTech;
+		s += ui.val('settings input[name="gender"]:checked') + global.separatorTech;
+		s += ui.val('settings input[name="ageFemale"]') + global.separatorTech;
+		s += ui.val('settings input[name="ageMale"]') + global.separatorTech;
+		s += ui.val('settings input[name="ageDivers"]') + global.separatorTech;
 		s += (ui.q('settings input[name="genderInterest1"]:checked') ? 1 : 0) + global.separatorTech;
 		s += (ui.q('settings input[name="genderInterest2"]:checked') ? 1 : 0) + global.separatorTech;
 		s += (ui.q('settings input[name="genderInterest3"]:checked') ? 1 : 0) + global.separatorTech;
-		s += '' + (ui.q('settings [name="notificationChat"]:checked') ? 1 : 0);
+		s += ui.val('settings input[name="language"]:checked') + global.separatorTech;
+		s += (ui.q('settings input[name="search"]:checked') ? 1 : 0) + global.separatorTech;
+		s += (ui.q('settings input[name="guide"]:checked') ? 1 : 0) + global.separatorTech;
+		s += ui.val('settings input[name="pseudonym"]') + global.separatorTech;
+		s += (ui.q('settings input[name="genderInterest1"]:checked') ? 1 : 0) + global.separatorTech;
+		s += (ui.q('settings input[name="genderInterest2"]:checked') ? 1 : 0) + global.separatorTech;
+		s += (ui.q('settings input[name="genderInterest3"]:checked') ? 1 : 0) + global.separatorTech;
+		s += (ui.q('settings [name="notificationChat"]:checked') ? 1 : 0);
 		s += (ui.q('settings [name="notificationEngagement"]:checked') ? 1 : 0);
 		s += (ui.q('settings [name="notificationFriendRequest"]:checked') ? 1 : 0);
 		s += (ui.q('settings [name="notificationBirthday"]:checked') ? 1 : 0);
@@ -456,20 +456,13 @@ ${v.info}`;
 		}
 		pageSettings.listBlocked(l[0].includes('event.id') ? 'event' : 'location', pageLocation.listLocation(l));
 	}
-	static navigationButtonDisplay() {
-		var m = ui.q('settings>div').style.marginLeft;
-		m = !m ? 0 : parseInt(m);
-		ui.css('settings listHeader buttonIcon.right', 'display', m > -200 ? '' : 'none');
-		ui.css('settings listHeader buttonIcon.left', 'display', m < 0 ? '' : 'none');
-	}
 	static next() {
-		var e = ui.q('settings>div');
-		var m = e.style.marginLeft;
+		var m = ui.q('settings tabBody').style.marginLeft;
 		m = !m ? 0 : parseInt(m);
-		if (m > -200) {
-			e.style.marginLeft = (m - 100) + '%';
-			pageSettings.navigationButtonDisplay();
-		}
+		if (m > -200)
+			pageSettings.selectTab(m / -100 + 1);
+		else
+			ui.navigation.goTo('home');
 	}
 	static preview() {
 		if (pageSettings.currentSettings == pageSettings.getCurrentSettings())
@@ -478,12 +471,11 @@ ${v.info}`;
 			pageSettings.save('autoOpen');
 	}
 	static previous() {
-		var e = ui.q('settings>div');
-		var m = parseInt(e.style.marginLeft);
-		if (m < 0) {
-			e.style.marginLeft = (m + 100) + '%';
-			pageSettings.navigationButtonDisplay();
-		}
+		var m = parseInt(ui.q('settings tabBody').style.marginLeft);
+		if (m < 0)
+			pageSettings.selectTab(m / -100 - 1);
+		else
+			ui.navigation.goTo('home', true);
 	}
 	static postSave(goToID) {
 		if (pageSettings.currentSettings && pageSettings.currentSettings.split(global.separatorTech)[0] != ui.val('input[name="email"]')) {
@@ -514,7 +506,7 @@ ${v.info}`;
 		}
 		formFunc.image.remove('image');
 		pageSettings.currentSettings = pageSettings.getCurrentSettings();
-		pageSettings.reset();
+		bluetooth.reset();
 		if (goToID) {
 			if (goToID == 'autoOpen')
 				pageSettings.preview();
@@ -526,8 +518,6 @@ ${v.info}`;
 			initialisation.setLanguage(l);
 	}
 	static reset() {
-		pageSettings.currentSettings = null;
-		ui.html('settings page', '');
 		formFunc.resetError(ui.q('input[name="pseudonym"]'));
 		formFunc.resetError(ui.q('input[name="email"]'));
 		formFunc.resetError(ui.q('input[name="image"]'));
@@ -548,7 +538,6 @@ ${v.info}`;
 		pageSettings.reset();
 		if (!user.contact || pageSettings.currentSettings == pageSettings.getCurrentSettings())
 			return true;
-		ui.html('#settingsHint', '');
 		if (ui.q('settings input[name="genderInterest1"]:checked') ||
 			ui.q('settings input[name="genderInterest2"]:checked') ||
 			ui.q('settings input[name="genderInterest3"]:checked')) {
@@ -566,48 +555,25 @@ ${v.info}`;
 			formFunc.validation.filterWords(ui.q('textarea[name="aboutMe"]'));
 		formFunc.validation.email(ui.q('input[name="email"]'));
 		formFunc.validation.pseudonym(ui.q('input[name="pseudonym"]'));
-		if (!ui.q('settings .dialogFieldError')) {
-			if (pageSettings.currentSettings && pageSettings.currentSettings.split(global.separatorTech)[0] != ui.val('input[name="email"]')) {
-				if (saveNewEmail)
-					ui.q('input[name="verified"]').value = 'false';
-				else {
-					ui.navigation.openPopup(ui.l('attention'), ui.l('settings.confirmEmailChange') + '<br /><buttontext class="bgColor" onclick="pageSettings.save(&quot;' + goToID + '&quot;,true);ui.navigation.hidePopup()" style="margin-top:1em;">' + ui.l('Yes') + '</buttontext><buttontext class="bgColor" onclick="pageSettings.resetEmailToOldValue()" style="margin-top:1em;">' + ui.l('No') + '</buttontext>');
-					return false;
-				}
+		if (ui.q('settings .dialogFieldError'))
+			return false;
+		if (pageSettings.currentSettings && pageSettings.currentSettings.split(global.separatorTech)[0] != ui.val('input[name="email"]')) {
+			if (saveNewEmail)
+				ui.q('input[name="verified"]').value = 'false';
+			else {
+				ui.navigation.openPopup(ui.l('attention'), ui.l('settings.confirmEmailChange') + '<br /><buttontext class="bgColor" onclick="pageSettings.save(&quot;' + goToID + '&quot;,true);ui.navigation.hidePopup()" style="margin-top:1em;">' + ui.l('Yes') + '</buttontext><buttontext class="bgColor" onclick="pageSettings.resetEmailToOldValue()" style="margin-top:1em;">' + ui.l('No') + '</buttontext>');
+				return false;
 			}
-			if (!ui.q('input[name="genderInterest1"]:checked'))
-				ui.q('#settingsInterest1').value = '';
-			if (!ui.q('input[name="genderInterest2"]:checked'))
-				ui.q('#settingsInterest2').value = '';
-			if (!ui.q('input[name="genderInterest3"]:checked'))
-				ui.q('#settingsInterest3').value = '';
-			ui.q('textarea[name="aboutMe"]').value = ui.val('textarea[name="aboutMe"]').replace(/</g, '&lt;');
-			ui.q('input[name="email"]').value = ui.val('input[name="email"]').trim().toLowerCase();
-			user.save(formFunc.getForm('settings form'), () => pageSettings.postSave(goToID));
 		}
-		return false;
-	}
-	static saveAttributes() {
-		var v = { values: {} };
-		for (var i = 0; i < ui.categories.length; i++) {
-			v.values['attr' + i] = pageSettings.getMultiplePopupValues('CONTACTATTRIB' + i);
-			v.values['attr' + i + 'Ex'] = ui.q('#CONTACTATTRIB' + i).getAttribute('valueEx');
-		}
-		v.values['attr'] = pageSettings.getMultiplePopupValues('CONTACTATTRIB');
-		v.values['attrInterest'] = pageSettings.getMultiplePopupValues('CONTACTATTRIBINTEREST');
-		v.values['attrEx'] = ui.q('#CONTACTATTRIB').getAttribute('valueEx');
-		v.values['attrInterestEx'] = ui.q('#CONTACTATTRIBINTEREST').getAttribute('valueEx');
-		user.save(v, function () {
-			user.contact.attr = pageSettings.getMultiplePopupValues('CONTACTATTRIB');
-			user.contact.attrInterest = pageSettings.getMultiplePopupValues('CONTACTATTRIBINTEREST');
-			for (var i = 0; i < ui.categories.length; i++)
-				user.contact['attr' + i] = pageSettings.getMultiplePopupValues('CONTACTATTRIB' + i);
-			user.contact.attrEx = ui.q('#CONTACTATTRIB').getAttribute('valueEx');
-			user.contact.attrInterestEx = ui.q('#CONTACTATTRIBINTEREST').getAttribute('valueEx');
-			for (var i = 0; i < ui.categories.length; i++)
-				user.contact['attr' + i + 'Ex'] = ui.q('#CONTACTATTRIB' + i).getAttribute('valueEx');
-			bluetooth.reset();
-		});
+		if (!ui.q('input[name="genderInterest1"]:checked'))
+			ui.q('#settingsInterest1').value = '';
+		if (!ui.q('input[name="genderInterest2"]:checked'))
+			ui.q('#settingsInterest2').value = '';
+		if (!ui.q('input[name="genderInterest3"]:checked'))
+			ui.q('#settingsInterest3').value = '';
+		ui.q('textarea[name="aboutMe"]').value = ui.val('textarea[name="aboutMe"]').replace(/</g, '&lt;');
+		ui.q('input[name="email"]').value = ui.val('input[name="email"]').trim().toLowerCase();
+		user.save(formFunc.getForm('settings form'), () => pageSettings.postSave(goToID));
 	}
 	static selectTab(i) {
 		ui.classRemove('settings tab', 'tabActive');

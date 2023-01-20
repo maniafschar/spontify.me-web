@@ -383,7 +383,7 @@ class communication {
 						if (fromDialog)
 							ui.navigation.openPopup(ui.l('login.recoverPassword'), ui.l('login.recoverPasswordBody'));
 						else
-							ui.html('login', '<div style="padding:2em;text-align:center;">' + ui.l('login.recoverPasswordBody') + '<br/><br/><br/><buttontext onclick="pageLogin.init()" class="bgColor">&lt;</buttontext></div>');
+							ui.html('login errorHint', ui.l('login.recoverPasswordBody'));
 					}
 				}
 			})

@@ -1308,16 +1308,9 @@ class formFunc {
 	}
 	static pressDefaultButton(event) {
 		if (event.keyCode == 13) {
-			var e = ui.qa('.defaultButton');
-			for (var i = 0; i < e.length; i++) {
-				var p = e[i];
-				while (p && ui.cssValue(p, 'display') != 'none')
-					p = p.parentElement;
-				if (!p) {
-					e[i].click();
-					break;
-				}
-			}
+			var e = ui.parents(event.target, 'form').querySelector('.defaultButton');
+			if (e)
+				e.click();
 		}
 	}
 	static removeDraft(key) {

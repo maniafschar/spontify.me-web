@@ -16,6 +16,7 @@ class hashtags {
 			s = s.replace('  ', ' ');
 		e.value = s.trim();
 		ui.adjustTextarea(e);
+		hashtags.synchonizeTags(e);
 	}
 	static convert(hashtags) {
 		var category = '';
@@ -60,9 +61,17 @@ class hashtags {
 		}
 		return s;
 	}
+	static synchonizeTags(e) {
+		if (e.target)
+			e = e.target;
+		if (e.nodeName != 'TEXTAREA')
+			e = ui.parents(e, 'hashtags').previousElementSibling
+		var tags = e.nextElementSibling.querySelectorAll('label');
+		for (var i = 0; i < tags.length; i++)
+			tags[i].style.color = e.value.indexOf(tags[i].innerText) < 0 ? '' : 'black';
+	}
 	static toggleSubCategories(e, i) {
-		while (e.nodeName != 'HASHTAGS')
-			e = e.parentElement;
+		e = ui.parents(e, 'hashtags');
 		var e2 = e.querySelector('div[style*="block"]');
 		e = e.querySelectorAll('div')[i];
 		var f = function () { ui.toggleHeight(e) };

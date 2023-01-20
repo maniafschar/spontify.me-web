@@ -32,7 +32,7 @@ ${ui.l('home.labelTime')}<br/>
 <input type="time" name="startDate" placeholder="HH:MM" step="900" value="${v.startDate}" /><br/>
 ${ui.l('home.labelSkill')}
 <field>
-<textarea name="hashtagsDisp" maxlength="250" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
+<textarea name="hashtagsDisp" maxlength="250" onkeyup="hashtags.synchonizeTags(event)" style="height:2em;">${v.hashtagsDisp}</textarea>
 <hashtags>${v.hashtagSelection}</hashtags>
 </field>
 <dialogButtons>
@@ -181,6 +181,10 @@ ${ui.l('home.labelSkill')}
 			ui.classRemove('navigation buttonIcon.notifications', 'pulse highlight');
 		if (ui.q('badgeNotifications'))
 			ui.q('badgeNotifications').innerText = Math.max(pageHome.badge, 0);
+	}
+	static synchonizeTags() {
+
+		ui.adjustTextarea(this);
 	}
 	static openHintDescription() {
 		intro.openHint({ desc: 'description', pos: '10%,5em', size: '80%,auto' });
