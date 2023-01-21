@@ -21,11 +21,12 @@ class hashtags {
 		var category = '';
 		hashtags = hashtags.replace(/\n|\t|\r/g, ' ');
 		for (var i = 0; i < ui.categories.length; i++) {
-			for (var i2 = 0; i2 < ui.categories[i].subCategories.length; i2++) {
-				var i3 = hashtags.toLowerCase().indexOf(ui.categories[i].subCategories[i2].toLowerCase());
+			for (var i2 = 0; i2 < ui.categories[i].values.length; i2++) {
+				var t = ui.categories[i].values[i2].split('|');
+				var i3 = hashtags.toLowerCase().indexOf(t[0].toLowerCase());
 				if (i3 > -1) {
-					category += global.separatorTech + i + '.' + i2;
-					hashtags = hashtags.substring(0, i3) + hashtags.substring(i3 + ui.categories[i].subCategories[i2].length);
+					category += global.separatorTech + i + '.' + t[1];
+					hashtags = hashtags.substring(0, i3) + hashtags.substring(i3 + t[0].length);
 				}
 			}
 		}
@@ -39,24 +40,16 @@ class hashtags {
 			hashtags = hashtags.substring(0, 255);
 		return { category: category, hashtags: hashtags.trim() };
 	}
-	static display(attributes) {
+	static display() {
 		var s = '';
-		if (attributes) {
-			s = '<category class="bgColor" onclick="hashtags.toggleSubCategories(this,0)">' + ui.l('settings.openAttributes') + '</category><div>';
-			var attr = ui.attributes.sort(function (a, b) { return a > b ? 1 : -1 });
-			for (var i = 0; i < attr.length; i++)
-				s += '<label class="multipleLabel" onclick="hashtags.add(this,&quot;' + attr[i] + '&quot;)">' + attr[i] + '</label>';
+		for (var i = 0; i < ui.categories.length; i++)
+			s += '<category class="bgColor" onclick="hashtags.toggleSubCategories(this,' + i + ')">' + ui.categories[i].label + '</category>';
+		for (var i = 0; i < ui.categories.length; i++) {
+			s += '<div>';
+			var subs = ui.categories[i].values.sort(function (a, b) { return a > b ? 1 : -1 });
+			for (var i2 = 0; i2 < subs.length; i2++)
+				s += '<label class="multipleLabel" onclick="hashtags.add(this,&quot;' + subs[i2].split('|')[0] + '&quot;)">' + subs[i2].split('|')[0] + '</label>';
 			s += '</div>';
-		} else {
-			for (var i = 0; i < ui.categories.length; i++)
-				s += '<category class="bgColor" onclick="hashtags.toggleSubCategories(this,' + i + ')">' + ui.categories[i].label + '</category>';
-			for (var i = 0; i < ui.categories.length; i++) {
-				s += '<div>';
-				var subs = ui.categories[i].subCategories.sort(function (a, b) { return a > b ? 1 : -1 });
-				for (var i2 = 0; i2 < subs.length; i2++)
-					s += '<label class="multipleLabel" onclick="hashtags.add(this,&quot;' + subs[i2] + '&quot;)">' + subs[i2] + '</label>';
-				s += '</div>';
-			}
 		}
 		return s;
 	}

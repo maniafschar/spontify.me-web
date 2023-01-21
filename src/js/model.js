@@ -57,29 +57,12 @@ class Contact extends BaseEntity {
 	ageDivers;
 	ageFemale;
 	ageMale;
-	attr;
-	attrEx;
-	attr0;
-	attr0Ex;
-	attr1;
-	attr1Ex;
-	attr2;
-	attr2Ex;
-	attr3;
-	attr3Ex;
-	attr4;
-	attr4Ex;
-	attr5;
-	attr5Ex;
-	attrInterest;
-	attrInterestEx;
 	birthday;
 	birthdayDisplay;
 	budget;
 	filter;
 	findMe;
 	gender;
-	guide;
 	idDisplay;
 	image;
 	imageList;
@@ -97,10 +80,10 @@ class Contact extends BaseEntity {
 	pseudonym;
 	rating;
 	search;
+	skills;
+	skillsText;
 	state;
 	storage;
-	rating;
-	type;
 	verified;
 	visitPage;
 
@@ -190,30 +173,14 @@ class EventRating extends BaseEntity {
 
 class Location extends BaseEntity {
 	address;
-	attr0;
-	attr0Ex;
-	attr1;
-	attr1Ex;
-	attr2;
-	attr2Ex;
-	attr3;
-	attr3Ex;
-	attr4;
-	attr4Ex;
-	attr5;
-	attr5Ex;
 	budget;
 	contactId;
-	category;
 	description;
-	email;
 	image;
 	imageList;
 	latitude;
 	longitude;
 	name;
-	rating;
-	subcategories;
 	telephone;
 	town;
 

@@ -298,7 +298,7 @@ ${v.rating}
 			v.telCloseTag = '</a>';
 		}
 		var eventWithLocation = v.address ? true : false;
-		v.attr = ui.getAttributes(eventWithLocation ? v : v.contact, 'detail');
+		v.attr = ui.getSkills(eventWithLocation ? v : v.contact, 'detail');
 		if (v.attr.totalMatch) {
 			v.matchIndicator = v.attr.totalMatch + '/' + v.attr.total;
 			v.matchIndicatorPercent = parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5);
@@ -415,10 +415,6 @@ ${v.rating}
 		if (v.image)
 			v.image = 'src="' + global.serverImg + v.image + '"';
 		ui.navigation.openPopup(ui.l('locations.' + (id ? 'edit' : 'new')).replace('{0}', v.name), pageLocation.templateEdit(v), id ? '' : 'pageLocation.saveDraft()');
-		if (id)
-			pageLocation.setEditAttributes();
-		else
-			setTimeout(pageLocation.setEditAttributes, 1000);
 	}
 	static filterList() {
 		var d = lists.data['locations'];
@@ -457,7 +453,7 @@ ${v.rating}
 			return 'N';
 	}
 	static listInfos(v) {
-		v.attr = ui.getAttributes(v.id ? v : v.contact, 'list');
+		v.attr = ui.getSkills(v.id ? v : v.contact, 'list');
 		v.extra = v._geolocationDistance ?
 			parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 || !v.id ? 0 : 1).replace('.', ',') + 'km<br/>'
 			: '';
@@ -726,18 +722,6 @@ ${v.rating}
 	static searchFromMap() {
 		pageLocation.map.loadActive = true;
 		communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent(pageLocation.getSearch(pageLocation.map.canvas.getBounds())), pageLocation.listLocation, 'locations', 'search');
-	}
-	static setEditAttributes() {
-		if (ui.q('#loc_attrib')) {
-			var cats = ui.qa('[name="locationcategory"]:checked'), s = '';
-			for (var i = 0; i < cats.length; i++) {
-				var v = ui.q('#loc_attrib').getAttribute('v' + cats[i].value);
-				var v2 = ui.val('[name="attr' + cats[i].value + 'Ex"]');
-				s += '<subCatTitle>' + ui.categories[cats[i].value].label + '</subCatTitle><input id="ATTRIBS' + cats[i].value + '" type="text" multiple="SubCategories' + cats[i].value + '" value="' + (v ? v : '') + '"/><input name="attr' + cats[i].value + 'Ex" value="' + (v2 ? v2 : '') + '" type="text" maxlength="1000" placeholder="' + ui.l('contacts.blockReason100') + '" style="margin-bottom:1em;"/>';
-			}
-			ui.html('#loc_attrib', s);
-			formFunc.initFields('#loc_attrib');
-		}
 	}
 	static setLocationName(event) {
 		var e = event.target;

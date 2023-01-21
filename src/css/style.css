@@ -95,7 +95,7 @@ body.app>main progressbar {
 }
 
 a {
-	color: rgb(252, 251, 104);
+	color: rgb(0, 100, 140);
 	cursor: pointer;
 }
 
@@ -864,15 +864,6 @@ dialogButtons {
 	width: 100%;
 	margin: 1em 0;
 	display: block;
-}
-
-.langSelectImg {
-	margin: 0 1em;
-}
-
-.langSelectImg.pressed {
-	font-weight: bold;
-	text-decoration: underline;
 }
 
 .chatLinks.pressed::before {
@@ -2080,14 +2071,6 @@ text.description {
 	background: rgba(100, 230, 255, 0.08);
 }
 
-guide {
-	font-weight: bold;
-	margin-bottom: -1em;
-	margin-top: 1em;
-	position: relative;
-	display: block;
-}
-
 text.popup {
 	position: absolute;
 	max-width: 90%;
@@ -2172,6 +2155,7 @@ detail text.matchIndicatorAttributesHint {
 	width: 80%;
 }
 
+popup buttontext.favorite::before,
 detail buttontext.favorite::before {
 	content: '✓';
 	position: absolute;

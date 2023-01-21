@@ -255,7 +255,7 @@ ${v.budget}
 			v.link += '<buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + idIntern + ')">' + ui.l('contacts.requestFriendship') + '</buttontext>';
 		if (v.contactLink.status == 'Friends')
 			v.favorite = 'favorite';
-		v.attr = ui.getAttributes(v, 'detail');
+		v.attr = ui.getSkills(v, 'detail');
 		v.budget = v.attr.budget.toString();
 		v.attributes = v.attr.textAttributes();
 		if (preview && !v.attributes)
@@ -556,7 +556,7 @@ ${v.budget}
 			v.classBGImg = v.imageList ? '' : 'mainBG';
 			if (v.contactLink.status == 'Friends')
 				v.classFavorite = ' favorite';
-			v.attr = ui.getAttributes(v, 'list');
+			v.attr = ui.getSkills(v, 'list');
 			v.extra = (v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) + 'km' : '') + '<br/>';
 			if (v.attr.total && v.attr.totalMatch / v.attr.total > 0)
 				v.extra += parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5) + '%';

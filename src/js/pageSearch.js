@@ -215,7 +215,6 @@ class pageSearch {
 		getSearch1(bounds) {
 			var s = '';
 			var c = '', d = '';
-			var cats = [];
 			if (bounds) {
 				var border = 0.1 * Math.abs(bounds.getSouthWest().lat() - bounds.getNorthEast().lat());
 				s += (s ? ' and ' : '') + 'location.latitude>' + (bounds.getSouthWest().lat() + border);
@@ -230,17 +229,9 @@ class pageSearch {
 				for (var i = 0; i < v.length; i++) {
 					if (v[i].trim()) {
 						v[i] = v[i].trim().toLowerCase();
-						var att = '', l = ') like \'%' + v[i].trim().toLowerCase() + '%\' or LOWER(';
-						for (var i2 = 0; i2 < cats.length; i2++) {
-							for (var i3 = 0; i3 < ui.categories[cats[i2]].subCategories.length; i3++) {
-								if (ui.categories[cats[i2]].subCategories[i3].toLowerCase().indexOf(v[i]) > -1)
-									att += '(location.category like \'%' + cats[i2] + '%\' and location.attr' + cats[i2] + ' like \'%' + (i3 < 10 ? '00' : i3 < 100 ? '0' : '') + i3 + '%\') or ';
-							}
-						}
+						var l = ') like \'%' + v[i].trim().toLowerCase() + '%\' or LOWER(';
 						d += '(LOWER(location.name' + l + 'location.description' + l + 'location.address' + l + 'location.address2' + l + 'location.telephone' + l;
 						d = d.substring(0, d.lastIndexOf('LOWER'));
-						if (att)
-							d += att;
 						d = d.substring(0, d.length - 4) + ') and ';
 					}
 				}
@@ -299,7 +290,6 @@ class pageSearch {
 			if (ui.q('locations filters [name="matches"]:checked'))
 				s = pageSearch.events.getMatches();
 			var c = '', d = '';
-			var cats = [];
 			var e = ui.qa('locations filters [name="filterCategories"]:checked');
 			if (e) {
 				for (var i = 0; i < e.length; i++) {
@@ -327,17 +317,9 @@ class pageSearch {
 				for (var i = 0; i < v.length; i++) {
 					if (v[i].trim()) {
 						v[i] = v[i].trim().toLowerCase();
-						var att = '', l = ') like \'%' + v[i].trim().toLowerCase() + '%\' or LOWER(';
-						for (var i2 = 0; i2 < cats.length; i2++) {
-							for (var i3 = 0; i3 < ui.categories[cats[i2]].subCategories.length; i3++) {
-								if (ui.categories[cats[i2]].subCategories[i3].toLowerCase().indexOf(v[i]) > -1)
-									att += '(location.category like \'%' + cats[i2] + '%\' and location.attr' + cats[i2] + ' like \'%' + (i3 < 10 ? '00' : i3 < 100 ? '0' : '') + i3 + '%\') or ';
-							}
-						}
+						var l = ') like \'%' + v[i].trim().toLowerCase() + '%\' or LOWER(';
 						d += '(LOWER(location.name' + l + 'location.description' + l + 'location.address' + l + 'location.address2' + l + 'location.telephone' + l;
 						d = d.substring(0, d.lastIndexOf('LOWER'));
-						if (att)
-							d += att;
 						d = d.substring(0, d.length - 4) + ') and ';
 					}
 				}

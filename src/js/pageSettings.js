@@ -105,21 +105,7 @@ class pageSettings {
 	<input type="hidden" name="verified" value="true" />
 </form>`;
 	static templateSettings2 = v =>
-		global.template`<field style="display:none;">
-	<label>${ui.l('settings.attributes')}</label>
-	<value>
-		<textarea name="attributesDisp" maxlength="250" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
-		<hashtags class="limitHeight">${v.attributesSelection}</hashtags>
-	</value>
-</field>
-<field style="display:none;">
-	<label>${ui.l('settings.interestedIn')}</label>
-	<value>
-		<textarea name="interestedInDisp" maxlength="250" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
-		<hashtags class="limitHeight">${v.attributesSelection}</hashtags>
-	</value>
-</field>
-<field>
+		global.template`<field>
 	<label>${ui.l('settings.skills')}</label>
 	<value>
 		<textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
@@ -383,7 +369,6 @@ ${v.info}`;
 					v.attIntEx = user.contact.attrInterestEx;
 					for (var i = 0; i < ui.categories.length; i++)
 						v['att' + i + 'Ex'] = user.contact['attr' + i + 'Ex'] ? user.contact['attr' + i + 'Ex'].replace(/\u0015/g, ',') : '';
-					v.attributesSelection = hashtags.display(true);
 					v.hashtagSelection = hashtags.display();
 					if (user.contact.ageMale)
 						v.genderInterest1 = 'checked';

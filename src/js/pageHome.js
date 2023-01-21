@@ -36,7 +36,7 @@ ${ui.l('home.labelSkill')}
 <hashtags>${v.hashtagSelection}</hashtags>
 </field>
 <dialogButtons>
-<buttontext onclick="pageHome.saveEvent()" class="bgColor noDisp save">${ui.l('save')}</buttontext>
+<buttontext onclick="pageHome.saveEvent()" class="bgColor noDisp save">${ui.l('home.saveEvent')}</buttontext>
 <buttontext onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" class="bgColor noDisp delete">${ui.l('delete')}</buttontext>
 <popupHint></popupHint>
 </dialogButtons>
@@ -169,8 +169,8 @@ ${ui.l('home.labelSkill')}
 	static openLanguage(event) {
 		event.stopPropagation();
 		ui.navigation.openPopup(ui.l('langSelect'),
-			'<div style="text-align:center;padding:2em 0;"><buttontext class="langSelectImg bgColor' + (global.language == 'DE' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE">Deutsch</buttontext>' +
-			'<buttontext class="langSelectImg bgColor' + (global.language == 'EN' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</buttontext></div>');
+			'<div style="padding:1em 0;"><buttontext class="bgColor' + (global.language == 'DE' ? ' favorite' : '') + '" onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE">Deutsch</buttontext>' +
+			'<buttontext class="bgColor' + (global.language == 'EN' ? ' favorite' : '') + '" onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</buttontext></div>');
 	}
 	static openLocationPicker(event) {
 		event.preventDefault();

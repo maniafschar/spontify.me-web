@@ -7,12 +7,12 @@ import { user } from './user';
 export { global };
 
 class global {
-	static appTitle = 'spontify.me';
+	static appTitle = 'skills.community';
 	static appVersion = '0.3.7';
 	static language = null;
 	static minLocations = 5;
 	static paused = false;
-	static server = 'https://spontify.me/rest/';
+	static server = 'https://skills.community/rest/';
 	static serverImg = '';
 	static separator = ' · ';
 	static separatorTech = '\u0015';

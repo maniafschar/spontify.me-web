@@ -54,7 +54,7 @@ class ui {
 			h = ui.emInPX * 6;
 		ui.css(e, 'height', (h + 6) + 'px');
 	}
-	static getAttributes(compare, style) {
+	static getSkills(compare, style) {
 		var result = {
 			attributesCategories: [],
 			attributesUser: new Attribute('user'),
@@ -72,7 +72,7 @@ class ui {
 				return s;
 			}
 		};
-		var a, userAttr = user.contact.attrInterest || '';
+		var a, skills = user.contact.skills || '';
 		var add2List = function (label, highlight, list) {
 			var l = { label: label };
 			if (highlight) {
@@ -81,45 +81,43 @@ class ui {
 			}
 			list.list.push(l);
 		};
-		if (compare.idDisplay) {
-			if (userAttr)
-				result.total += userAttr.split(global.separatorTech).length;
-			if (compare.attr) {
-				a = compare.attr.split(global.separatorTech);
-				for (var i = 0; i < a.length; i++)
-					add2List(ui.attributes[parseInt(a[i], 10)], userAttr.indexOf(a[i]) > -1, result.attributesUser);
-			}
-			userAttr = user.contact.attrInterestEx ? ',' + user.contact.attrInterestEx.toLowerCase() + ',' : '';
-			if (userAttr)
-				result.total += userAttr.split(',').length - 2;
-			if (compare.attrEx) {
-				a = compare.attrEx.toLowerCase().split(',');
-				for (var i = 0; i < a.length; i++)
-					add2List(a[i].trim(), userAttr.indexOf(',' + a[i].trim() + ',') > -1, result.attributesUser);
-			}
+		if (skills)
+			result.total += skills.split('|').length;
+		if (compare.skills) {
+			a = compare.skills.split('|');
+			for (var i = 0; i < a.length; i++)
+				add2List(ui.attributes[parseInt(a[i], 10)], skills.indexOf(a[i]) > -1, result.attributesUser);
+		}
+		skills = user.contact.skillsText ? ',' + user.contact.skillsText.toLowerCase() + ',' : '';
+		if (skills)
+			result.total += skills.split('|').length - 2;
+		if (compare.skillsText) {
+			a = compare.skillsText.toLowerCase().split('|');
+			for (var i = 0; i < a.length; i++)
+				add2List(a[i].trim(), skills.indexOf('|' + a[i].trim() + '|') > -1, result.attributesUser);
 		}
 		for (var i = 0; i < ui.categories.length; i++) {
-			userAttr = user.contact['attr' + i] || '';
+			skills = user.contact.skills || '';
 			var compareHasCat = compare.category ? compare.category.indexOf(i) > -1 : compare['attr' + i] || compare['attr' + i + 'Ex'];
-			if (userAttr && (compare.idDisplay || compareHasCat)) {
-				result.total += userAttr.split(global.separatorTech).length + 1;
+			if (skills && (compare.idDisplay || compareHasCat)) {
+				result.total += skills.split(global.separatorTech).length + 1;
 				result.categories += '/' + ui.categories[i].label;
 			}
 			result.attributesCategories.push(new Attribute('category' + i));
 			if (compareHasCat)
-				add2List(ui.categories[i].label, userAttr, result.attributesCategories[i]);
+				add2List(ui.categories[i].label, skills, result.attributesCategories[i]);
 			if (compare['attr' + i]) {
 				a = compare['attr' + i].split(global.separatorTech);
 				for (var i2 = 0; i2 < a.length; i2++)
-					add2List(ui.categories[i].subCategories[parseInt(a[i2], 10)], userAttr.indexOf(a[i2]) > -1, result.attributesCategories[i]);
+					add2List(ui.categories[i].values[parseInt(a[i2], 10)], skills.indexOf(a[i2]) > -1, result.attributesCategories[i]);
 			}
-			userAttr = user.contact['attr' + i + 'Ex'] ? ',' + user.contact['attr' + i + 'Ex'].toLowerCase() + ',' : '';
-			if (userAttr && (compare.idDisplay || compareHasCat))
-				result.total += userAttr.split(',').length - 2;
+			skills = user.contact['attr' + i + 'Ex'] ? ',' + user.contact['attr' + i + 'Ex'].toLowerCase() + ',' : '';
+			if (skills && (compare.idDisplay || compareHasCat))
+				result.total += skills.split(',').length - 2;
 			if (compare['attr' + i + 'Ex']) {
 				a = compare['attr' + i + 'Ex'].split(',');
 				for (var i2 = 0; i2 < a.length; i2++)
-					add2List(a[i2].trim(), userAttr.indexOf(',' + a[i2] + ',') > -1, result.attributesCategories[i]);
+					add2List(a[i2].trim(), skills.indexOf(',' + a[i2] + ',') > -1, result.attributesCategories[i]);
 			}
 		}
 		if (result.categories)
@@ -483,20 +481,10 @@ class ui {
 					attr.list.push({ label: s, class: 'attributeFade' });
 			}
 			if (button.getAttribute('type') == 'user') {
-				var a = user.contact.attrInterest ? user.contact.attrInterest.split(global.separatorTech) : [];
+				var a = user.contact.skills ? user.contact.skills.split('|') : [];
 				for (var i = 0; i < a.length; i++)
 					add2List(ui.attributes[parseInt(a[i], 10)]);
-				a = user.contact.attrInterestEx ? user.contact.attrInterestEx.split(',') : [];
-				for (var i = 0; i < a.length; i++)
-					add2List(a[i].trim());
-			} else if (button.getAttribute('type').indexOf('category') == 0) {
-				var a = user.contact['attr' + button.getAttribute('type').substring(8)];
-				a = a ? a.split(global.separatorTech) : [];
-				var sub = ui.categories[parseInt(button.getAttribute('type').substring(8), 10)].subCategories;
-				for (var i = 0; i < a.length; i++)
-					add2List(sub[parseInt(a[i], 10)]);
-				a = user.contact['attr' + button.getAttribute('type').substring(8) + 'Ex'];
-				a = a ? a.split(',') : [];
+				a = user.contact.skillsText ? user.contact.skillsText.split('|') : [];
 				for (var i = 0; i < a.length; i++)
 					add2List(a[i].trim());
 			} else {
@@ -1158,39 +1146,7 @@ class formFunc {
 			ui.on(e, 'keypress', formFunc.pressDefaultButton);
 			if ((e[i].type === 'checkbox' || e[i].type === 'radio') && (!e[i].nextSibling || e[i].nextSibling.nodeName.toLowerCase() !== 'label'))
 				e[i].outerHTML = e[i].outerHTML + '<label onclick="formFunc.toggleCheckbox(event)"' + (e[i].attributes['style'] ? ' style="' + e[i].attributes['style'].value + '"' : '') + (e[i].attributes['class'] ? ' class="' + e[i].attributes['class'].value + '"' : '') + '>' + e[i].attributes['label'].value + '</label>';
-			else if (e[i].type === 'text' && (e[i].getAttribute('multiple') || e[i].getAttribute('single'))) {
-				var at = e[i].getAttribute('multiple') ? 'multiple' : 'single';
-				var id2 = 'inputHelper' + e[i].id;
-				if (!ui.q('#' + id2)) {
-					var a = eval('formFunc.inputHelper.get' + e[i].getAttribute(at) + '();');
-					if (a) {
-						var a2 = [];
-						for (var i2 = 0; i2 < a.length; i2++) {
-							if (a[i2])
-								a2.push(a[i2] + ',' + i2);
-						}
-						if (e[i].getAttribute('sort') != 'false')
-							a2.sort();
-						var s = '', v = e[i].value, v2 = ',';
-						v = v.split(',');
-						for (var i2 = 0; i2 < v.length; i2++)
-							v2 += parseInt(v[i2], 10) + ',';
-						var p;
-						at = at === 'multiple' ? 'checkbox' : 'radio';
-						for (var i2 = 0; i2 < a2.length; i2++) {
-							p = a2[i2].lastIndexOf(',');
-							s += '<input type="' + at + '" value="' + a2[i2].substring(p + 1) + '" label="' + a2[i2].substring(0, p) + '" name="' + id2 + '" transient="true"' + (v2.indexOf(a2[i2].substring(p) + ',') > -1 ? ' checked' : '') + (e[i].getAttribute('class') ? ' class="' + e[i].getAttribute('class') + '"' : '') + '/>';
-						}
-						e2 = document.createElement('div');
-						e2.setAttribute('class', 'multiple');
-						e2.id = id2;
-						e2.innerHTML = s;
-						e[i].parentNode.insertBefore(e2, e[i].nextSibling);
-						formFunc.initFields('#' + id2);
-					}
-					e[i].style.display = 'none';
-				}
-			} else if (e[i].type == 'text' && e[i].getAttribute('slider') && !ui.q('#' + e[i].id + '_left')) {
+			else if (e[i].type == 'text' && e[i].getAttribute('slider') && !ui.q('#' + e[i].id + '_left')) {
 				var idSlider = e[i].id;
 				var s = '';
 				var max = e[i].getAttribute('max'), min = e[i].getAttribute('min');
@@ -1263,47 +1219,6 @@ class formFunc {
 			tmp.ondrop = function (e) {
 				this.obj.style.left = formFunc.updateSlider(this.obj.id) + '%';
 			};
-		}
-	}
-	static inputHelper = {
-		getAttributes() {
-			return ui.attributes;
-		},
-		getAttributes0() {
-			return ui.categories[0].subCategories;
-		},
-		getAttributes1() {
-			return ui.categories[1].subCategories;
-		},
-		getAttributes2() {
-			return ui.categories[2].subCategories;
-		},
-		getAttributes3() {
-			return ui.categories[3].subCategories;
-		},
-		getAttributes4() {
-			return ui.categories[4].subCategories;
-		},
-		getAttributes5() {
-			return ui.categories[5].subCategories;
-		},
-		getSubCategories0() {
-			return ui.categories[0].subCategories;
-		},
-		getSubCategories1() {
-			return ui.categories[1].subCategories;
-		},
-		getSubCategories2() {
-			return ui.categories[2].subCategories;
-		},
-		getSubCategories3() {
-			return ui.categories[3].subCategories;
-		},
-		getSubCategories4() {
-			return ui.categories[4].subCategories;
-		},
-		getSubCategories5() {
-			return ui.categories[5].subCategories;
 		}
 	}
 	static pressDefaultButton(event) {
@@ -1386,18 +1301,6 @@ class formFunc {
 		e.click();
 		if (resetType)
 			ui.attr(e, 'type', 'radio');
-		if (e.getAttribute('name') && e.getAttribute('name').indexOf('inputHelper') == 0) {
-			var e2 = ui.q('#' + e.getAttribute('name').substring(11));
-			if (ui.cssValue(e2, 'display') == 'none') {
-				e = ui.qa('input[name="' + e.getAttribute('name') + '"]:checked');
-				var s = '';
-				for (var i = 0; i < e.length; i++)
-					s += ',' + e[i].value;
-				if (s.length > 0)
-					s = s.substring(1);
-				e2.value = s;
-			}
-		}
 	}
 	static updateSlider(id) {
 		var t = ui.q('#' + id.substring(0, id.lastIndexOf('_')));
