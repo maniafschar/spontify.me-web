@@ -6,9 +6,8 @@ import { lists } from './lists';
 import { pageChat } from './pageChat';
 import { pageEvent } from './pageEvent';
 import { pageHome } from './pageHome';
-import { pageInfo } from './pageInfo';
-import { pageLocation } from './pageLocation';
 import { pageLogin } from './pageLogin';
+import { pageSearch } from './pageSearch';
 import { pageSettings } from './pageSettings';
 import { ui, formFunc } from './ui';
 import { user } from './user';
@@ -180,19 +179,6 @@ class initialisation {
 				ui.navigation.goTo(ui.q('detail').getAttribute('from'));
 			}
 		});
-		ui.on('chat', 'click', pageChat.close);
-		ui.swipe('chat', function (dir, event) {
-			if (dir == 'up') {
-				if (ui.parents(event.target, 'chatConversation')) {
-					if (pageChat.lastScroll + 500 > new Date().getTime())
-						return;
-					var e = ui.q('chatConversation');
-					if (e.lastChild && e.lastChild.offsetHeight + e.lastChild.offsetTop > e.scrollTop + e.offsetHeight)
-						return;
-				}
-				pageChat.close();
-			}
-		}, 'textarea');
 		ui.on('popup', 'click', function (event) {
 			var e = event.target;
 			if (ui.parents(e, 'popupTitle') || !ui.q('popup input') && !ui.q('popup textarea') && !ui.q('popup mapPicker')) {
@@ -207,6 +193,19 @@ class initialisation {
 				ui.navigation.hidePopup();
 			}
 		});
+		ui.on('chat', 'click', pageChat.close);
+		ui.swipe('chat', function (dir, event) {
+			if (dir == 'up' || dir == 'left' || dir == 'right') {
+				if (ui.parents(event.target, 'chatConversation')) {
+					if (pageChat.lastScroll + 500 > new Date().getTime())
+						return;
+					var e = ui.q('chatConversation');
+					if (e.lastChild && e.lastChild.offsetHeight + e.lastChild.offsetTop > e.scrollTop + e.offsetHeight)
+						return;
+				}
+				pageChat.close();
+			}
+		}, 'textarea');
 		ui.swipe('detail', function (dir) {
 			if (dir == 'left')
 				details.swipeLeft();
@@ -220,20 +219,22 @@ class initialisation {
 				pageSettings.next();
 		}, 'input,textarea,img,slider,thumb,val');
 		ui.swipe('search', function (dir) {
-			if (dir == 'right')
-				ui.navigation.goTo('home');
+			if (dir == 'left')
+				pageSearch.swipeLeft();
+			else if (dir == 'right')
+				pageSearch.swipeRight();
 		}, 'input,textarea,slider,thumb,val');
 		ui.swipe('login', function (dir) {
 			if (dir == 'left')
-				ui.navigation.goTo('info');
+				pageLogin.swipeLeft();
 			else if (dir == 'right')
-				ui.navigation.goTo('home');
+				pageLogin.swipeRight();
 		}, 'input');
 		ui.swipe('home', function (dir) {
 			if (dir == 'left')
-				ui.navigation.goTo(user.contact ? 'locations' : 'login');
-			else if (dir == 'right' && user.contact)
-				ui.navigation.goTo('settings', true);
+				ui.navigation.goTo(user.contact ? 'search' : 'login');
+			else if (dir == 'right')
+				ui.navigation.goTo(user.contact ? 'contacts' : 'login', true);
 		}, 'input');
 		ui.swipe('info', function (dir) {
 			if (dir == 'right')

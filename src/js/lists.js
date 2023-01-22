@@ -1,5 +1,4 @@
 import { global } from './global';
-import { DragObject } from './initialisation';
 import { Contact, Location, model } from './model';
 import { pageContact } from './pageContact';
 import { pageEvent } from './pageEvent';
@@ -11,10 +10,10 @@ export { lists };
 class lists {
 	static data = [];
 
-	static templateList = v =>
+	static template = v =>
 		global.template`<listHeader>
 <buttonicon class="right bgColor" onclick="ui.navigation.toggleMenu()"><img source="menu"/></buttonicon>
-${v.img}<listTitle></listTitle>${v.map}</listHeader>
+${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 <listBody>${v.groups}<listResults></listResults></listBody>`;
 
 	static getListNoResults(activeID, errorID) {
@@ -89,28 +88,22 @@ ${v.img}<listTitle></listTitle>${v.map}</listHeader>
 				v.groups = '<groups style="display:none;"></groups>';
 			else
 				v.map = '<map style="display:none;"></map><buttontext class="bgColor map" onclick="pageLocation.searchFromMap()">' + ui.l('search.map') + '</buttontext>';
-			e.innerHTML = lists.templateList(v);
+			v.title = ui.l(id + '.title');
+			e.innerHTML = lists.template(v);
 			formFunc.image.replaceSVGs();
 			if (id == 'contacts')
 				ui.swipe('contacts>listBody', function (dir) {
 					if (dir == 'left')
-						ui.navigation.goTo('settings');
+						ui.navigation.goTo('home', false);
 					else if (dir == 'right')
-						ui.navigation.goTo('events');
-				});
-			else if (id == 'search')
-				ui.swipe('search>listBody', function (dir) {
-					if (dir == 'left')
-						ui.navigation.goTo('events');
-					else if (dir == 'right')
-						ui.navigation.goTo('home');
+						ui.navigation.goTo('events', true);
 				});
 			else if (id == 'events')
 				ui.swipe('events>listBody', function (dir) {
 					if (dir == 'left')
 						ui.navigation.goTo('contacts');
 					else if (dir == 'right')
-						ui.navigation.goTo('search');
+						ui.navigation.goTo('search', true);
 				});
 		}
 	}

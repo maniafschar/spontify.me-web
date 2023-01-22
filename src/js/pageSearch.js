@@ -5,9 +5,9 @@ import { pageContact } from "./pageContact";
 import { formFunc, ui } from "./ui";
 import { user } from "./user";
 import { lists } from "./lists";
-import { Contact, model } from "./model";
 import { pageEvent } from "./pageEvent";
 import { pageLocation } from "./pageLocation";
+import { hashtags } from "./hashtags";
 
 export { pageSearch };
 
@@ -33,12 +33,11 @@ class pageSearch {
 		filter: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
-	<input type="radio" name="gender" value="1" label="${ui.l('male')}" deselect="true" onclick="pageSearch.contacts.filterList()" ${v.gender1}/>
-	<input type="radio" name="gender" value="2" label="${ui.l('female')}" deselect="true" onclick="pageSearch.contacts.filterList()" ${v.gender2}/>
-	<input type="radio" name="gender" value="3" label="${ui.l('divers')}" deselect="true" onclick="pageSearch.contacts.filterList()" ${v.gender3}/>
+	<input type="radio" name="gender" value="1" label="${ui.l('male')}" deselect="true" ${v.gender1}/>
+	<input type="radio" name="gender" value="2" label="${ui.l('female')}" deselect="true" ${v.gender2}/>
+	<input type="radio" name="gender" value="3" label="${ui.l('divers')}" deselect="true" ${v.gender3}/>
 	<filterSeparator></filterSeparator>
 	<input type="checkbox" label="${ui.l('search.matches')}" name="matches" ${v.matches}/>
-	<input type="checkbox" label="${ui.l('settings.guide')}" name="guide" onclick="pageSearch.contacts.filterList()" ${v.guide}/>
 	<filterSeparator></filterSeparator>
 	<input type="text" name="age" slider="range" min="18" max="99" id="age" ${v.age}/>
 	<filterSeparator></filterSeparator>
@@ -46,24 +45,6 @@ class pageSearch {
 	<explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
 	<errorHint></errorHint>
 	<buttontext class="bgColor defaultButton" onclick="pageSearch.contacts.search()">${ui.l('search.action')}</buttontext></form>`,
-		filterList() {
-			var d = lists.data['contacts'];
-			if (!d)
-				return;
-			var bu = ui.q(' filters [name="filterFriends"]:checked');
-			if (bu)
-				bu = bu.value;
-			var ge = ui.q('contacts filters [name="gender"]:checked');
-			if (ge)
-				ge = ge.value;
-			for (var i = 1; i < d.length; i++) {
-				var e = model.convert(new Contact(), d, i);
-				var match = (!ge || e.gender == ge) && (!bu || e.contactLink.status == 'Friends');
-				e = ui.q('contacts [i="' + e.id + '"]');
-				ui.attr(e, 'filtered', !match);
-			}
-			lists.execFilter();
-		},
 		getFields() {
 			var v = {};
 			if (pageSearch.contacts.filter.age)
@@ -193,7 +174,7 @@ class pageSearch {
 		getSearch() {
 			var v = ui.val('search tabBody div.events [name="keywords"]').trim(), s = '';
 			if (v) {
-				var t = pageEvent.convertHashtags(v);
+				var t = hashtags.convert(v);
 				v = t.hashtags.replace(/'/g, '\'\'').split(' ');
 				for (var i = 0; i < v.length; i++) {
 					if (v[i].trim()) {
@@ -290,19 +271,6 @@ class pageSearch {
 			if (ui.q('locations filters [name="matches"]:checked'))
 				s = pageSearch.events.getMatches();
 			var c = '', d = '';
-			var e = ui.qa('locations filters [name="filterCategories"]:checked');
-			if (e) {
-				for (var i = 0; i < e.length; i++) {
-					cats.push(e[i].value);
-					c += 'category like \'%' + e[i].value + '%\' or ';
-				}
-			}
-			if (c)
-				s += (s ? ' and ' : '') + '(' + c.substring(0, c.length - 4) + ')';
-			else {
-				for (var i = 0; i < ui.categories.length; i++)
-					cats.push(i);
-			}
 			if (bounds) {
 				var border = 0.1 * Math.abs(bounds.getSouthWest().lat() - bounds.getNorthEast().lat());
 				s += (s ? ' and ' : '') + 'location.latitude>' + (bounds.getSouthWest().lat() + border);
@@ -357,5 +325,23 @@ class pageSearch {
 		ui.q('search tabBody').style.marginLeft = ((id == 'contacts' ? 0 : id == 'events' ? 1 : 2) * -100) + '%';
 		ui.classRemove('search tab', 'tabActive');
 		ui.classAdd('search tab[i="' + id + '"]', 'tabActive');
+	}
+	static swipeLeft() {
+		var x = parseInt(ui.q('search tabBody').style.marginLeft) || 0;
+		if (x == -200)
+			ui.navigation.goTo('events');
+		else if (x == -100)
+			pageSearch.selectTab('locations');
+		else
+			pageSearch.selectTab('events');
+	}
+	static swipeRight() {
+		var x = parseInt(ui.q('search tabBody').style.marginLeft) || 0;
+		if (x == 0)
+			ui.navigation.goTo('home', true);
+		else if (x == -100)
+			pageSearch.selectTab('contacts');
+		else
+			pageSearch.selectTab('events');
 	}
 }

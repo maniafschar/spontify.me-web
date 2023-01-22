@@ -8,13 +8,13 @@ class pageLogin {
 	static timestamp = new Date().getTime();
 	static template = v =>
 		global.template`<tabHeader>
-	<tab onclick="pageLogin.setLoginFormTab1()" class="tabActive">
+	<tab onclick="pageLogin.setTab1()" class="tabActive">
 		${ui.l('login.action')}
 	</tab>
-	<tab onclick="pageLogin.setLoginFormTab2()">
+	<tab onclick="pageLogin.setTab2()">
 		${ui.l('login.passwordForgotten')}
 	</tab>
-	<tab onclick="pageLogin.setLoginFormTab3()">
+	<tab onclick="pageLogin.setTab3()">
 		${ui.l('login.register')}
 	</tab>
 </tabHeader>
@@ -235,7 +235,7 @@ class pageLogin {
 		} else
 			ui.navigation.openPopup(ui.l('attention'), ui.l(s));
 	}
-	static setLoginFormTab1() {
+	static setTab1() {
 		pageLogin.saveDraft();
 		ui.classRemove('login tab', 'tabActive');
 		ui.classAdd(ui.qa('login tab')[0], 'tabActive');
@@ -247,14 +247,14 @@ class pageLogin {
 		ui.css('login tabBody', 'margin-left', 0);
 		ui.qa('login input[name="email"]')[0].value = pageLogin.getDraft().email;
 	}
-	static setLoginFormTab2() {
+	static setTab2() {
 		pageLogin.saveDraft();
 		ui.css('login tabBody', 'margin-left', '-100%');
 		ui.classRemove('login tab', 'tabActive');
 		ui.classAdd(ui.qa('login tab')[1], 'tabActive');
 		ui.qa('login input[name="email"]')[1].value = pageLogin.getDraft().email;
 	}
-	static setLoginFormTab3() {
+	static setTab3() {
 		pageLogin.saveDraft();
 		ui.classRemove('login tab', 'tabActive');
 		ui.classAdd(ui.qa('login tab')[2], 'tabActive');
@@ -262,6 +262,24 @@ class pageLogin {
 		ui.css('login input[name="name"]', 'position', 'absolute');
 		ui.css('login input[name="name"]', 'right', '200%');
 		ui.qa('login input[name="email"]')[2].value = pageLogin.getDraft().email;
+	}
+	static swipeLeft() {
+		var x = parseInt(ui.q('login tabBody').style.marginLeft) || 0;
+		if (x == -200)
+			ui.navigation.goTo('home', false);
+		else if (x == -100)
+			pageLogin.setTab3();
+		else
+			pageLogin.setTab2();
+	}
+	static swipeRight() {
+		var x = parseInt(ui.q('login tabBody').style.marginLeft) || 0;
+		if (x == 0)
+			ui.navigation.goTo('home');
+		else if (x == -100)
+			pageLogin.setTab1();
+		else
+			pageLogin.setTab2();
 	}
 	static validateAGB() {
 		var e = ui.q('input[name="agb"]');

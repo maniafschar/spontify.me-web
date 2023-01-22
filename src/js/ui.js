@@ -313,22 +313,24 @@ class ui {
 			if (currentID != id) {
 				var e = ui.q('navigation item.' + id);
 				var i1 = 0;
-				if (!back && e) {
-					while ((e = e.previousSibling) != null)
-						i1++;
-					e = ui.q('navigation item.' + currentID);
+				if (back == null) {
 					if (e) {
-						var i2 = 0;
 						while ((e = e.previousSibling) != null)
-							i2++;
-						back = i2 > i1;
+							i1++;
+						e = ui.q('navigation item.' + currentID);
+						if (e) {
+							var i2 = 0;
+							while ((e = e.previousSibling) != null)
+								i2++;
+							back = i2 > i1;
+						}
 					}
+					if (back == null)
+						back = currentID == 'detail' ||
+							id == 'home' && currentID == 'login' ||
+							id == 'home' && currentID == 'info' ||
+							id == 'login' && currentID == 'info';
 				}
-				if (back == null)
-					back = currentID == 'detail' ||
-						id == 'home' && currentID == 'login' ||
-						id == 'home' && currentID == 'info' ||
-						id == 'login' && currentID == 'info';
 				if (back && currentID == 'detail') {
 					e = ui.qa('detail card');
 					if (e.length > 1) {

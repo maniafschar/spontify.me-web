@@ -309,9 +309,10 @@ homeHeader {
 }
 
 homeHeader>svg {
-	margin-top: 5%;
-	height: 80%;
-	width: auto;
+	margin-top: 5vh;
+	height: auto;
+	width: 60%;
+	max-height: 15vh;
 }
 
 homeHeader img {
@@ -321,10 +322,10 @@ homeHeader img {
 }
 
 homeHeader.logoSmall>svg {
-	height: 4em;
+	width: 33%;
 	position: absolute;
-	right: 0;
-	top: 1em;
+	right: 0.5em;
+	top: 0.5em;
 	margin-top: 0;
 }
 
@@ -2257,15 +2258,10 @@ tabHeader {
 	margin: 0 0.5em;
 }
 
-tabHeader tab p {
-	text-overflow: ellipsis;
-	overflow: hidden;
-}
-
 .tabActive {
 	opacity: 1 !important;
-	border-bottom: solid 1px rgb(252, 251, 104);
 	color: rgb(252, 251, 104);
+	font-weight: bold;
 }
 
 tab {
@@ -2280,6 +2276,8 @@ tab {
 	position: relative;
 	width: 33.3%;
 	float: left;
+	text-transform: lowercase;
+	transition: all .4s;
 }
 
 tabBody {

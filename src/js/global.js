@@ -7,7 +7,7 @@ import { user } from './user';
 export { global };
 
 class global {
-	static appTitle = 'skills.community';
+	static appTitle = 'skillvents';
 	static appVersion = '0.3.7';
 	static language = null;
 	static minLocations = 5;

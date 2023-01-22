@@ -124,6 +124,8 @@ ${ui.l('home.labelSkill')}
 		if (user.contact)
 			ui.classAdd('home homeHeader svg>g', 'pure');
 		pageHome.updateLocalisation();
+		ui.css('navigation item.search', 'display', user.contact ? '' : 'none');
+		ui.css('navigation item.info', 'display', user.contact ? 'none' : '');
 	}
 	static initNotification(d) {
 		var f = function () {

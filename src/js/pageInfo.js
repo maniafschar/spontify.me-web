@@ -38,22 +38,7 @@ ${ui.l('home.DescLink')}
 </buttontext><br/>
 <infoblock id="info4" style="display:none;">
 <div>
-	<subject style="padding-top:0;">${ui.l('info.block1Title')}</subject>
-	<ul>
-		<li>${ui.l('info.block1_1')}</li>
-		<li>${ui.l('info.block1_2')}</li>
-	</ul>
-	<subject>${ui.l('info.block2Title')}</subject>
-	<ul>
-		<li>${ui.l('info.block2_1')}</li>
-		<li>${ui.l('info.block2_2')}</li>
-	</ul>
-	<subject>${ui.l('info.block3Title')}</subject>
-	<ul>
-		<li>${ui.l('info.block3_1')}</li>
-		<li>${ui.l('info.block3_2')}</li>
-	</ul>
-	<a style="margin:2em 0 1em 0;display:block;cursor:pointer;${v['displayBlogButton']}" onclick="ui.navigation.openHTML(&quot;https://blog.spontify.me&quot;, &quot;blog_spontifyme&quot;)">${ui.l('info.link2blog')}</a>
+	${ui.l('info.description')}
 </div>
 </infoblock>`;
 	static init() {

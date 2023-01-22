@@ -446,14 +446,16 @@ class communication {
 			lists.reset();
 			pageEvent.reset();
 			ui.html('head title', global.appTitle);
-			ui.navigation.goTo('home');
-			ui.html('locations', '');
-			ui.html('contacts', '');
-			ui.html('settings page', '');
-			ui.html('chat', '');
-			ui.html('detail', '');
-			ui.html('info', '');
-			setTimeout(pageSettings.reset, 500);
+			ui.navigation.goTo('home', true);
+			setTimeout(function () {
+				ui.html('contacts', '');
+				ui.html('events', '');
+				ui.html('search', '');
+				ui.html('settings', '');
+				ui.html('chat', '');
+				ui.html('detail', '');
+				ui.html('info', '');
+			}, 500);
 		},
 		toServer(os, u, exec) {
 			u.id = Encryption.encPUB(u.id);
