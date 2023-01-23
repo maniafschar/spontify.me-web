@@ -88,7 +88,7 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 				v.groups = '<groups style="display:none;"></groups>';
 			else
 				v.map = '<map style="display:none;"></map><buttontext class="bgColor map" onclick="pageLocation.searchFromMap()">' + ui.l('search.map') + '</buttontext>';
-			v.title = ui.l(id + '.title');
+			v.title = ui.l(id + '.title').toLowerCase();
 			e.innerHTML = lists.template(v);
 			formFunc.image.replaceSVGs();
 			if (id == 'contacts')

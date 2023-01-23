@@ -31,14 +31,18 @@ class pageEvent {
 	<label style="padding-top:0;">${ui.l('events.location')}</label>
 	<value style="text-align:center;">
 		<input transient="true" name="location" onkeyup="pageEvent.locations()" />
-		<eventLocationInputHelper><explain>${ui.l('events.locationInputHint')}</explain></eventLocationInputHelper>
-		<buttontext onclick="pageLocation.edit()" class="bgColor eventLocationInputHelperButton">${ui.l('locations.new')}</buttontext>
+		<eventLocationInputHelper><explain>${ui.l('events.locationInputHint')}</explain>
+			<li onclick="pageEvent.locationSelected()" class="highlightColor">${ui.l('events.newOnlineEvent')}</li>
+			<ul></ul>
+			<explain style="margin-bottom:0.5em;">${ui.l('events.locationInputHintCreateNew')}</explain>
+			<buttontext onclick="pageLocation.edit()" class="bgColor">${ui.l('locations.new')}</buttontext>
+		</eventLocationInputHelper>
 	</value>
 </field>
 <div class="event" ${v.styleEvent}>
 <div class="locationName"></div>
 <field>
-	<label style="padding-top:1em;">${ui.l('type')}</label>
+	<label style="padding-top:0;">${ui.l('type')}</label>
 	<value>
 		<input type="radio" name="type" value="o" label="${ui.l('events.type_o')}" onclick="pageEvent.setForm()" ${v.type_o}/>
 		<input type="radio" name="type" value="w1" label="${ui.l('events.type_w1')}" onclick="pageEvent.setForm()" ${v.type_w1}/>
@@ -82,20 +86,12 @@ class pageEvent {
 		</explain>
 	</value>
 </field>
-<div class="paid" style="display:none;">
-<field>
+<field class="paid" style="display:none;">
 	<label>${ui.l('picture')}</label>
 	<value>
 		<input type="file" name="image" accept=".gif, .png, .jpg" />
 	</value>
 </field>
-<field>
-	<label>${ui.l('link')}</label>
-	<value>
-		<input type="url" name="link" maxlength="250" value="${v.link}" />
-	</value>
-</field>
-</div>
 <div class="unpaid">
 <field>
 	<label>${ui.l('events.confirmLabel')}</label>
@@ -607,23 +603,21 @@ ${v.eventParticipationButtons}
 	static locations() {
 		clearTimeout(pageEvent.nearByExec);
 		var s = ui.q('popup input[name="location"]').value.trim();
-		ui.q('popup buttontext.eventLocationInputHelperButton').style.display = '';
-		if (s.length < 4) {
-			ui.q('popup eventLocationInputHelper').innerHTML = '<explain>' + ui.l('events.locationInputHint') + '</explain>';
-			return;
-		}
-		pageEvent.nearByExec = setTimeout(function () {
-			communication.ajax({
-				url: global.server + 'action/searchLocation?search=' + encodeURIComponent(s),
-				responseType: 'json',
-				success(r) {
-					var s = '';
-					for (var i = 0; i < r.length; i++)
-						s += '<li i="' + r[i].id + '" onclick="pageEvent.locationSelected(this)">' + r[i].name + '<br/>' + r[i].address.replace(/\n/g, global.separator) + '</li>';
-					ui.q('popup eventLocationInputHelper').innerHTML = s ? '<ul>' + s + '</ul>' : ui.l('events.locationInputNoHit');
-				}
-			});
-		}, 1000);
+		if (s.length > 3)
+			pageEvent.nearByExec = setTimeout(function () {
+				communication.ajax({
+					url: global.server + 'action/searchLocation?search=' + encodeURIComponent(s),
+					responseType: 'json',
+					success(r) {
+						var s = '', e = ui.q('popup eventLocationInputHelper ul');
+						if (e) {
+							for (var i = 0; i < r.length; i++)
+								s += '<li i="' + r[i].id + '" onclick="pageEvent.locationSelected(this)">' + r[i].name + '<br/>' + r[i].address.replace(/\n/g, global.separator) + '</li>';
+							e.innerHTML = s;
+						}
+					}
+				});
+			}, 1000);
 	}
 	static locationsOfPastEvents() {
 		communication.ajax({
@@ -642,9 +636,9 @@ ${v.eventParticipationButtons}
 					var i = 0;
 					var f = function () {
 						i++;
-						var e = ui.q('popup eventLocationInputHelper');
+						var e = ui.q('popup eventLocationInputHelper ul');
 						if (e)
-							e.innerHTML = '<explain>' + ui.l('events.locationInputHint') + '<br/>' + ui.l('events.locationInputHint2') + '</explain><ul>' + s + '</ul>';
+							e.innerHTML = s;
 						else if (i < 10)
 							setTimeout(f, 50);
 					};
@@ -654,8 +648,8 @@ ${v.eventParticipationButtons}
 		});
 	}
 	static locationSelected(e) {
-		ui.q('popup input[name="locationId"]').value = e.getAttribute('i');
-		ui.q('popup .locationName').innerHTML = e.innerHTML;
+		ui.q('popup input[name="locationId"]').value = e ? e.getAttribute('i') : -1;
+		ui.q('popup .locationName').innerHTML = e ? e.innerHTML : ui.l('events.newOnlineEvent');
 		ui.toggleHeight('popup .location', function () {
 			ui.toggleHeight('popup .event', pageEvent.checkPrice);
 			if (ui.q('popup [name="hashtagsDisp"]').value)
@@ -732,7 +726,7 @@ ${v.eventParticipationButtons}
 			height: 600,
 			data: global.server.substring(0, global.server.lastIndexOf('/', global.server.length - 2)) + '?' + global.encParam('q=' + id + (location ? '' : '|' + user.contact.id)),
 			dotsOptions: {
-				color: 'rgb(252, 251, 104)',
+				color: 'rgb(255, 220, 70)',
 				type: 'square'
 			},
 			backgroundOptions: {
@@ -744,8 +738,8 @@ ${v.eventParticipationButtons}
 			canvas.width = 888;
 			var context = canvas.getContext('2d');
 			var grd = context.createLinearGradient(0, 0, canvas.width, canvas.height);
-			grd.addColorStop(0, 'rgb(111, 174, 212)');
-			grd.addColorStop(1, 'rgb(0, 100, 140)');
+			grd.addColorStop(0, 'rgb(70, 138, 180)');
+			grd.addColorStop(1, 'rgb(25, 50, 100)');
 			context.fillStyle = grd;
 			context.fillRect(0, 0, canvas.width, canvas.height);
 			context.fillStyle = 'white';
@@ -942,7 +936,7 @@ ${v.eventParticipationButtons}
 		var e = ui.q('detail card:last-child[i="' + id + '"] [name="events"]');
 		if (!e)
 			return;
-		var bg = ui.classContains('detail card:last-child[i="' + id + '"] [name="buttonEvents"]', 'bgBonus') ? 'bgBonus' : 'bgColor';
+		var bg = 'bgColor';
 		var a = pageEvent.getCalendarList(r), newButton = field == 'contact' ? '' : '<br/><br/><buttontext onclick="pageEvent.edit(' + id + ')" class="' + bg + '">' + ui.l('events.new') + '</buttontext>';
 		var s = '', v, text;
 		var b = user.contact.id == id;

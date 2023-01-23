@@ -58,7 +58,6 @@ class ui {
 		var result = {
 			attributesCategories: [],
 			attributesUser: new Attribute('user'),
-			budget: new Attribute('budget'),
 			categories: '',
 			total: 0,
 			totalMatch: 0,
@@ -122,25 +121,6 @@ class ui {
 		}
 		if (result.categories)
 			result.categories = result.categories.substring(1);
-		if (user.contact.budget)
-			result.total += user.contact.budget.split(global.separatorTech).length;
-		if (compare.budget) {
-			var userBudget = user.contact.budget || '';
-			var b = compare.budget.split(global.separatorTech);
-			for (var i = 0; i < b.length; i++) {
-				var s = '', i2 = 0;
-				var max = 1 + parseInt(b[i]);
-				for (; i2 < max; i2++)
-					s += ui.l('budget');
-				if (max < 3) {
-					s += '<span style="opacity:0.3;">';
-					for (; i2 < 3; i2++)
-						s += ui.l('budget');
-					s += '</span>';
-				}
-				add2List(s, userBudget.indexOf(b[i]) > -1, result.budget);
-			}
-		}
 		return result;
 	}
 	static getEvtPos(e, horizontal) {
@@ -489,21 +469,6 @@ class ui {
 				a = user.contact.skillsText ? user.contact.skillsText.split('|') : [];
 				for (var i = 0; i < a.length; i++)
 					add2List(a[i].trim());
-			} else {
-				var a = user.contact.budget ? user.contact.budget.split(global.separatorTech) : [];
-				for (var i = 0; i < a.length; i++) {
-					var s = '', i2 = 0;
-					var max = 1 + parseInt(a[i]);
-					for (; i2 < max; i2++)
-						s += ui.l('budget');
-					if (max < 3) {
-						s += '<span style="opacity:0.3;">';
-						for (; i2 < 3; i2++)
-							s += ui.l('budget');
-						s += '</span>';
-					}
-					add2List(s);
-				}
 			}
 			ui.q('detail card:last-child .matchIndicatorAttributesHint>div').innerHTML = attr.toString();
 			e.style.top = (button.offsetTop + 2 * ui.emInPX) + 'px';
@@ -806,52 +771,50 @@ class formFunc {
 	}
 	static getForm(id) {
 		var d = { values: {} }, cb = {};
-		var e = ui.qa(id + ' textarea');
+		var e = ui.qa(id + ' textarea:not([transient="true"])');
 		for (var i = 0; i < e.length; i++) {
 			if (e[i].name)
 				d.values[e[i].name] = e[i].value.replace(/\"/g, '&quot;').replace(/</g, '&lt;');
 		}
-		e = ui.qa(id + ' select');
+		e = ui.qa(id + ' select:not([transient="true"])');
 		for (var i = 0; i < e.length; i++) {
 			if (e[i].name)
 				d.values[e[i].name] = e[i].value;
 		}
-		e = ui.qa(id + ' input');
+		e = ui.qa(id + ' input:not([transient="true"])');
 		for (var i = 0; i < e.length; i++) {
-			if (e[i].getAttribute('transient') != 'true') {
-				if (e[i].name && e[i].type == 'file') {
-					var f = ui.q('[name="' + e[i].name + 'Preview"]');
-					if (f && f.getAttribute('src')) {
-						var img = new Image();
-						img.src = f.getAttribute('src');
-						var ratio;
-						if (f.clientHeight > f.clientWidth)
-							ratio = f.naturalWidth / f.clientWidth;
-						else
-							ratio = f.naturalHeight / f.clientHeight;
-						var x = -f.offsetLeft * ratio;
-						var y = -f.offsetTop * ratio;
-						var w = Math.min(f.parentElement.clientWidth, f.clientWidth) * ratio;
-						var h = Math.min(f.parentElement.clientHeight, f.clientHeight) * ratio;
-						var b = formFunc.image.scale(img, x, y, w, h).data;
-						// b = data:image/jpeg;base64,/9j/4AAQS...
-						d.values[e[i].name] = '.' + b.substring(b.indexOf('/') + 1, b.indexOf(';')) + global.separatorTech + b.substring(b.indexOf(',') + 1);
-					}
-				} else if (e[i].type == 'radio') {
-					if (e[i].checked)
-						d.values[e[i].name] = e[i].value;
-				} else if (e[i].type == 'checkbox') {
-					if (!cb[e[i].name])
-						cb[e[i].name] = '';
-					if (e[i].checked)
-						cb[e[i].name] += global.separatorTech + e[i].value;
-					else if (e[i].value == 'true')
-						cb[e[i].name] += '\u0015false';
-				} else if (e[i].type == 'datetime-local')
-					d.values[e[i].name] = global.date.local2server(e[i].value);
-				else if (e[i].name)
-					d.values[e[i].name] = e[i].value.replace(/\"/g, '&quot;').replace(/</g, '&lt;');
-			}
+			if (e[i].name && e[i].type == 'file') {
+				var f = ui.q('[name="' + e[i].name + 'Preview"]');
+				if (f && f.getAttribute('src')) {
+					var img = new Image();
+					img.src = f.getAttribute('src');
+					var ratio;
+					if (f.clientHeight > f.clientWidth)
+						ratio = f.naturalWidth / f.clientWidth;
+					else
+						ratio = f.naturalHeight / f.clientHeight;
+					var x = -f.offsetLeft * ratio;
+					var y = -f.offsetTop * ratio;
+					var w = Math.min(f.parentElement.clientWidth, f.clientWidth) * ratio;
+					var h = Math.min(f.parentElement.clientHeight, f.clientHeight) * ratio;
+					var b = formFunc.image.scale(img, x, y, w, h).data;
+					// b = data:image/jpeg;base64,/9j/4AAQS...
+					d.values[e[i].name] = '.' + b.substring(b.indexOf('/') + 1, b.indexOf(';')) + global.separatorTech + b.substring(b.indexOf(',') + 1);
+				}
+			} else if (e[i].type == 'radio') {
+				if (e[i].checked)
+					d.values[e[i].name] = e[i].value;
+			} else if (e[i].type == 'checkbox') {
+				if (!cb[e[i].name])
+					cb[e[i].name] = '';
+				if (e[i].checked)
+					cb[e[i].name] += global.separatorTech + e[i].value;
+				else if (e[i].value == 'true')
+					cb[e[i].name] += '\u0015false';
+			} else if (e[i].type == 'datetime-local')
+				d.values[e[i].name] = global.date.local2server(e[i].value);
+			else if (e[i].name)
+				d.values[e[i].name] = e[i].value.replace(/\"/g, '&quot;').replace(/</g, '&lt;');
 		}
 		for (var k in cb)
 			d.values[k] = cb[k].length > 0 ? cb[k].substring(1) : '';

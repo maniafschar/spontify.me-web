@@ -25,7 +25,7 @@ class hashtags {
 				var t = ui.categories[i].values[i2].split('|');
 				var i3 = hashtags.toLowerCase().indexOf(t[0].toLowerCase());
 				if (i3 > -1) {
-					category += global.separatorTech + i + '.' + t[1];
+					category += '|' + i + '.' + t[1];
 					hashtags = hashtags.substring(0, i3) + hashtags.substring(i3 + t[0].length);
 				}
 			}
@@ -33,12 +33,13 @@ class hashtags {
 		if (category)
 			category = category.substring(1);
 		while (category.length > 255)
-			category = category.substring(0, category.lastIndexOf(global.separatorTech));
+			category = category.substring(0, category.lastIndexOf('|'));
+		hashtags = hashtags.trim();
 		while (hashtags.indexOf('  ') > -1)
-			hashtags = hashtags.replace('  ', ' ');
+			hashtags = hashtags.replace('  ', ' ').trim();
 		if (hashtags.length > 255)
 			hashtags = hashtags.substring(0, 255);
-		return { category: category, hashtags: hashtags.trim() };
+		return { category: category, hashtags: hashtags.replace(/ /g, '|') };
 	}
 	static display() {
 		var s = '';
@@ -52,6 +53,22 @@ class hashtags {
 			s += '</div>';
 		}
 		return s;
+	}
+	static ids2Text(ids) {
+		if (!ids)
+			return '';
+		var s = '';
+		ids = ids.split('|');
+		for (var i = 0; i < ids.length; i++) {
+			var id = ids[i].split('\.');
+			for (var i2 = 0; i2 < ui.categories[id[0]].values.length; i2++) {
+				if (ui.categories[id[0]].values[i2].split('|')[1] == id[1]) {
+					s += ' ' + ui.categories[id[0]].values[i2].split('|')[0];
+					break;
+				}
+			}
+		}
+		return s.trim();
 	}
 	static synchonizeTags(e) {
 		if (e.target)

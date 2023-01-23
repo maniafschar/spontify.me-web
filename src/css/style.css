@@ -95,7 +95,7 @@ body.app>main progressbar {
 }
 
 a {
-	color: rgb(0, 100, 140);
+	color: rgb(25, 50, 100);
 	cursor: pointer;
 }
 
@@ -294,7 +294,7 @@ subCatTitle {
 }
 
 .mainBG {
-	background: linear-gradient(120deg, rgb(111, 174, 212) 0%, rgb(0, 100, 140) 100%);
+	background: linear-gradient(120deg, rgb(70, 138, 180) 0%, rgb(25, 50, 100) 100%);
 	background-size: 100% 100%;
 }
 
@@ -365,12 +365,12 @@ home item {
 }
 
 .bgColor {
-	background: linear-gradient(rgb(252, 251, 104) 0%, rgb(190, 190, 52) 100%) center center / 100% no-repeat;
+	background: linear-gradient(rgb(255, 220, 70) 0%, rgb(210, 140, 20) 100%) center center / 100% no-repeat;
 }
 
 a.bgColor:hover,
 buttontext.bgColor:hover {
-	background: rgb(252, 251, 104);
+	background: rgb(255, 220, 70);
 }
 
 .bgWeb {
@@ -608,7 +608,7 @@ input:checked+label:before {
 }
 
 popup input:checked+label {
-	background: rgb(252, 251, 104) !important;
+	background: rgb(255, 220, 70) !important;
 	color: black;
 }
 
@@ -626,7 +626,7 @@ popup .multiple {
 	border-radius: 0.5em;
 	background: rgba(255, 255, 255, 0.85);
 	margin: 0.25em;
-	color: rgba(0, 0, 0, 0.3);
+	color: rgba(0, 0, 0, 0.5);
 }
 
 textarea {
@@ -945,8 +945,8 @@ slider thumb val {
 }
 
 .homeButton svg path {
-	fill: rgb(0, 100, 140);
-	stroke: rgb(0, 100, 140);
+	fill: rgb(25, 50, 100);
+	stroke: rgb(25, 50, 100);
 }
 
 chat {
@@ -1243,7 +1243,7 @@ ratingSelection full {
 	left: 0;
 	overflow: hidden;
 	top: 0;
-	color: rgb(252, 251, 104);
+	color: rgb(255, 220, 70);
 }
 
 ratingSelection span {
@@ -1282,7 +1282,7 @@ eventLocationInputHelper {
 	display: block;
 	max-height: 25em;
 	overflow-y: auto;
-	padding-top: 0.25em;
+	margin: 0.25em 0;
 }
 
 locationNameInputHelper li,
@@ -1294,10 +1294,6 @@ eventLocationInputHelper li {
 	cursor: pointer;
 	margin: 0.5em;
 	text-align: center;
-}
-
-.eventLocationInputHelperButton {
-	margin-top: 0.5em;
 }
 
 badgeChats,
@@ -1337,7 +1333,7 @@ badge span {
 	font-weight: bold;
 	height: 100%;
 	line-height: 2.5em;
-	color: rgb(252, 251, 104);
+	color: rgb(255, 220, 70);
 }
 
 chatDateTitle {
@@ -1775,12 +1771,12 @@ buttonIcon svg {
 }
 
 buttonIcon.highlight {
-	color: rgb(252, 251, 104);
+	color: rgb(255, 220, 70);
 }
 
 buttonIcon.highlight svg {
-	fill: rgb(252, 251, 104);
-	stroke: rgb(252, 251, 104);
+	fill: rgb(255, 220, 70);
+	stroke: rgb(255, 220, 70);
 }
 
 buttonIcon.left {
@@ -1883,7 +1879,7 @@ row extra img {
 
 .participate::before {
 	content: '✓';
-	color: rgb(252, 251, 104);
+	color: rgb(255, 220, 70);
 }
 
 .canceled::before {
@@ -1995,12 +1991,8 @@ chat.location chatButtons {
 	display: none;
 }
 
-.bgBonus {
-	background: linear-gradient(160deg, rgb(255, 220, 80) 0%, rgb(110, 90, 10) 130%) !important;
-}
-
 .highlightColor {
-	color: rgb(252, 251, 104);
+	color: rgb(255, 220, 70);
 }
 
 eventOutdated {
@@ -2210,7 +2202,7 @@ detail detailHeader matchIndicator svg .circle {
 	stroke-width: 2.8;
 	stroke-linecap: round;
 	animation: progress 1s ease-out forwards;
-	stroke: rgb(252, 251, 104);
+	stroke: rgb(255, 220, 70);
 }
 
 detail detailHeader matchIndicator svg .percentage {
@@ -2260,7 +2252,7 @@ tabHeader {
 
 .tabActive {
 	opacity: 1 !important;
-	color: rgb(252, 251, 104);
+	color: rgb(255, 220, 70);
 	font-weight: bold;
 }
 
@@ -2297,7 +2289,7 @@ progressbar {
 }
 
 .highlightBackground {
-	background: rgb(252, 251, 104) !important;
+	background: rgb(255, 220, 70) !important;
 }
 
 .highlightMap::before {
@@ -2308,7 +2300,7 @@ progressbar {
 	top: 0.7em;
 	opacity: 0.25;
 	font-size: 5em;
-	color: rgb(252, 251, 104);
+	color: rgb(255, 220, 70);
 }
 
 info {
@@ -2344,7 +2336,7 @@ infoblock {
 	position: relative;
 	width: 96%;
 	display: block;
-	background: rgba(0, 0, 0, 0.05);
+	background: rgba(0, 0, 0, 0.1);
 	border: solid 1em transparent;
 	border-radius: 0.5em;
 	margin: -0.5em 0 1em 2%;

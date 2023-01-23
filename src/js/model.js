@@ -59,9 +59,7 @@ class Contact extends BaseEntity {
 	ageMale;
 	birthday;
 	birthdayDisplay;
-	budget;
-	filter;
-	findMe;
+	bluetooth;
 	gender;
 	idDisplay;
 	image;
@@ -173,7 +171,6 @@ class EventRating extends BaseEntity {
 
 class Location extends BaseEntity {
 	address;
-	budget;
 	contactId;
 	description;
 	image;

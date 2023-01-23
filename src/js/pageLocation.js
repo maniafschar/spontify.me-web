@@ -305,10 +305,8 @@ ${v.rating}
 		} else
 			v.matchIndicatorPercent = 0;
 		v.matchIndicatorHint = ui.l('locations.matchIndicatorHint').replace('{0}', v.attr.totalMatch).replace('{1}', v.attr.total).replace('{2}', v.matchIndicatorPercent).replace('{3}', v.attr.categories);
-		if (eventWithLocation || v.event.contactId != user.contact.id) {
-			v.budget = v.attr.budget.toString();
+		if (eventWithLocation || v.event.contactId != user.contact.id)
 			v.attributes = v.attr.textAttributes();
-		}
 		v.chatLocation = eventWithLocation;
 		v.chatId = v.chatLocation ? v.locID : v.contact.id;
 		var r = eventWithLocation && v.rating || !eventWithLocation && v.contact.rating;
@@ -497,8 +495,6 @@ ${v.rating}
 				v.image = global.serverImg + v.imageList;
 			else
 				v.image = 'images/location.svg" style="padding: 1em; ';
-			if (v.bonus)
-				v.present = '<badge class="bgBonus" style="display:block;"><img src="images/present.svg" class="present"></badge>';
 			v.type = 'Location';
 			v._message = v._message1 ? v._message1 + '<br/>' : '';
 			v._message += v._message2 ? v._message2 : '';
@@ -529,7 +525,7 @@ ${v.rating}
 		}
 	}
 	static showLocationsNearby(event) {
-		if (geoData.localized && ui.q('input[name="name"]')) {
+		if (ui.q('input[name="name"]')) {
 			communication.ajax({
 				url: global.server + 'action/google?param=' + encodeURIComponent('place/nearbysearch/json?radius=100&sensor=false&location=' + geoData.latlon.lat + ',' + geoData.latlon.lon),
 				responseType: 'json',

@@ -30,7 +30,7 @@
 			}
 
 			.name tspan {
-				fill: rgb(252, 251, 104);
+				fill: rgb(255, 220, 70);
 				letter-spacing: 0;
 			}
 		</style>
@@ -42,7 +42,7 @@
 		</g>
 		<g class="small">
 			<text x="98%" y="51%" font-size="220" font-family="Adelina" text-anchor="end" class="name"><tspan>skill</tspan>vents</text>
-			<text x="100%" y="80%" font-size="90" font-family="Adelina" text-anchor="end" class="position"></text>
+			<text x="100%" y="85%" font-size="110" font-family="Adelina" text-anchor="end" class="position"></text>
 		</g>
 	</g>
 </svg>

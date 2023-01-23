@@ -68,7 +68,6 @@ ${v.rating}
 	${v.birthday}
 </text>
 ${v.attributes}
-${v.budget}
 <detailButtons style="margin-top:1em;">
 	<buttontext class="bgColor${v.blocked}${v.hideMe}"
 		onclick="pageChat.open(${v.id})">${ui.l('chat.title')}</buttontext>
@@ -256,7 +255,6 @@ ${v.budget}
 		if (v.contactLink.status == 'Friends')
 			v.favorite = 'favorite';
 		v.attr = ui.getSkills(v, 'detail');
-		v.budget = v.attr.budget.toString();
 		v.attributes = v.attr.textAttributes();
 		if (preview && !v.attributes)
 			v.attributes = '<previewHint>' + ui.l('settings.previewHintAttributes') + '</previewHint>';

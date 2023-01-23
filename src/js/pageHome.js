@@ -35,6 +35,9 @@ ${ui.l('home.labelSkill')}
 <textarea name="hashtagsDisp" maxlength="250" onkeyup="pageHome.synchonizeTags(event)" style="height:2em;">${v.hashtagsDisp}</textarea>
 <hashtags>${v.hashtagSelection}</hashtags>
 </field>
+<field><br/>
+<textarea name="text" maxlength="250" placeholder="${ui.l('description')}" class="noDisp">${v.text}</textarea>
+</field>
 <dialogButtons>
 <buttontext onclick="pageHome.saveEvent()" class="bgColor noDisp save">${ui.l('home.saveEvent')}</buttontext>
 <buttontext onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" class="bgColor noDisp delete">${ui.l('delete')}</buttontext>
@@ -96,10 +99,13 @@ ${ui.l('home.labelSkill')}
 			Object.defineProperty(input, 'value', {
 				set: function () {
 					var r = descriptor.set.apply(this, arguments);
-					if (this.value)
+					if (this.value) {
+						ui.classRemove('home textarea[name="text"]', 'noDisp');
 						ui.classRemove('home buttontext.save', 'noDisp');
-					else
+					} else {
+						ui.classAdd('home textarea[name="text"]', 'noDisp');
 						ui.classAdd('home buttontext.save', 'noDisp');
+					}
 					return r;
 				},
 				get: function () {
@@ -109,7 +115,7 @@ ${ui.l('home.labelSkill')}
 		}
 		pageHome.initNotificationButton();
 		if (user.contact)
-			ui.html('home item.bluetooth text', ui.l(bluetooth.state == 'on' && user.contact.findMe ? 'bluetooth.activated' : 'bluetooth.deactivated'));
+			ui.html('home item.bluetooth text', ui.l(bluetooth.state == 'on' && user.contact.bluetooth ? 'bluetooth.activated' : 'bluetooth.deactivated'));
 		var p = pageEvent.getParticipationNext();
 		if (p && global.date.server2Local(p.eventDate).toDateString() == new Date().toDateString()) {
 			var s = global.date.formatDate(p.event.startDate);
@@ -243,10 +249,13 @@ ${ui.l('home.labelSkill')}
 	}
 	static synchonizeTags(event) {
 		hashtags.synchonizeTags(event);
-		if (event.target.value)
+		if (event.target.value) {
+			ui.classRemove('home textarea[name="text"]', 'noDisp');
 			ui.classRemove('home buttontext.save', 'noDisp');
-		else
+		} else {
+			ui.classAdd('home textarea[name="text"]', 'noDisp');
 			ui.classAdd('home buttontext.save', 'noDisp');
+		}
 	}
 	static toggleNotification() {
 		if (!user.contact)

@@ -281,7 +281,7 @@ class communication {
 							bluetooth.stop();
 							bluetooth.requestAuthorization(true);
 						}
-						if (!user.contact.aboutMe && !user.contact.budget
+						if (!user.contact.aboutMe
 							&& !user.contact.gender && !user.contact.birthday
 							&& !user.contact.ageMale && !user.contact.ageFemale && !user.contact.ageDivers
 							&& !pageSettings.hasAttributes()

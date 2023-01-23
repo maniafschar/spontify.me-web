@@ -6,6 +6,7 @@ import { intro } from './intro';
 import { lists } from './lists';
 import { Chat, Contact, model } from './model';
 import { pageContact } from './pageContact';
+import { pageEvent } from './pageEvent';
 import { pageHome } from './pageHome';
 import { pageInfo } from './pageInfo';
 import { pageLocation } from './pageLocation';
@@ -112,8 +113,8 @@ class pageChat {
 			var activeID = ui.navigation.getActiveID();
 			if (activeID == 'contacts')
 				pageContact.init();
-			else if (activeID == 'locations' || activeID == 'events')
-				pageLocation.init(activeID);
+			else if (activeID == 'events')
+				pageEvent.init();
 			else if (activeID == 'info')
 				pageInfo.init();
 			else if (activeID == 'home')
