@@ -28,15 +28,17 @@ class pageHome {
 <homeBody>
 <form name="editElement" onsubmit="return false">
 <input type="hidden" name="type" value="${v.type}" />
+<input type="hidden" name="skills" value="${v.skills}" />
+<input type="hidden" name="skillsText" value="${v.skillsText}" />
 ${ui.l('home.labelTime')}<br/>
 <input type="time" name="startDate" placeholder="HH:MM" step="900" value="${v.startDate}" /><br/>
 ${ui.l('home.labelSkill')}
 <field>
-<textarea name="hashtagsDisp" maxlength="250" onkeyup="pageHome.synchonizeTags(event)" style="height:2em;">${v.hashtagsDisp}</textarea>
+<textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="pageHome.synchonizeTags(event)" style="height:2em;">${v.hashtagsDisp}</textarea>
 <hashtags>${v.hashtagSelection}</hashtags>
 </field>
-<field><br/>
-<textarea name="text" maxlength="250" placeholder="${ui.l('description')}" class="noDisp">${v.text}</textarea>
+<field class="noDisp"><br/>
+<textarea name="text" maxlength="250" placeholder="${ui.l('description')}">${v.text}</textarea>
 </field>
 <dialogButtons>
 <buttontext onclick="pageHome.saveEvent()" class="bgColor noDisp save">${ui.l('home.saveEvent')}</buttontext>
@@ -81,7 +83,6 @@ ${ui.l('home.labelSkill')}
 				v.clickHeader = 'ui.navigation.goTo(&quot;settings&quot;)';
 			} else {
 				v.lang = global.language;
-				v.bluetoothButton = ' noDisp';
 				v.clickHeader = 'pageHome.openHintDescription()';
 			}
 			if (!v.startDate) {
@@ -91,6 +92,7 @@ ${ui.l('home.labelSkill')}
 				v.startDate = ('0' + d).slice(-2) + ':00';
 			}
 			v.hashtagSelection = hashtags.display();
+			v.type = 'o';
 			e.innerHTML = pageHome.template(v);
 			formFunc.initFields('home');
 			initialisation.reposition();
@@ -100,10 +102,10 @@ ${ui.l('home.labelSkill')}
 				set: function () {
 					var r = descriptor.set.apply(this, arguments);
 					if (this.value) {
-						ui.classRemove('home textarea[name="text"]', 'noDisp');
+						ui.classRemove(ui.parents(ui.q('home textarea[name="text"]'), 'field'), 'noDisp');
 						ui.classRemove('home buttontext.save', 'noDisp');
 					} else {
-						ui.classAdd('home textarea[name="text"]', 'noDisp');
+						ui.classAdd(ui.parents(ui.q('home textarea[name="text"]'), 'field'), 'noDisp');
 						ui.classAdd('home buttontext.save', 'noDisp');
 					}
 					return r;
@@ -211,20 +213,25 @@ ${ui.l('home.labelSkill')}
 			intro.openHint({ desc: 'whatToDo', pos: '10%,5em', size: '80%,auto' });
 			return;
 		}
-		formFunc.resetError(ui.q('popup form input[name="startDate"]'));
-		formFunc.resetError(ui.q('popup form input[name="visibility"]'));
-		formFunc.resetError(ui.q('popup form textarea[name="text"]'));
-		var v = formFunc.getForm('popup form');
+		formFunc.resetError(ui.q('home input[name="startDate"]'));
+		formFunc.resetError(ui.q('home textarea[name="text"]'));
+		var t = ui.q('home textarea[name="hashtagsDisp"]');
+		if (!t.value)
+			formFunc.setError(t, 'error.hashtags');
+		else
+			formFunc.validation.filterWords(t);
+		t = hashtags.convert(t.value);
+		ui.q('home input[name="skills"]').value = t.category;
+		ui.q('home input[name="skillsText"]').value = t.hashtags;
+		var v = formFunc.getForm('home homeBody');
 		var h = v.values.startDate.split(':')[0];
 		if (!h)
-			formFunc.setError(ui.q('popup form input[name="startDate"]'), 'events.errorDate')
+			formFunc.setError(ui.q('home input[name="startDate"]'), 'events.errorDate')
 		if (!v.values.text)
-			formFunc.setError(ui.q('popup form textarea[name="text"]'), 'error.description');
+			formFunc.setError(ui.q('home textarea[name="text"]'), 'error.description');
 		else
-			formFunc.validation.filterWords(ui.q('popup form textarea[name="text"]'));
-		if (v.values.visibility == 2 && (!user.contact.attr || !user.contact.attrInterest))
-			formFunc.setError(ui.q('popup input[name="visibility"]'), 'events.errorVisibility');
-		if (ui.q('popup errorHint'))
+			formFunc.validation.filterWords(ui.q('home textarea[name="text"]'));
+		if (ui.q('home errorHint'))
 			return;
 		var d = new Date();
 		if (h < d.getHours())
@@ -250,10 +257,10 @@ ${ui.l('home.labelSkill')}
 	static synchonizeTags(event) {
 		hashtags.synchonizeTags(event);
 		if (event.target.value) {
-			ui.classRemove('home textarea[name="text"]', 'noDisp');
+			ui.classRemove(ui.parents(ui.q('home textarea[name="text"]'), 'field'), 'noDisp');
 			ui.classRemove('home buttontext.save', 'noDisp');
 		} else {
-			ui.classAdd('home textarea[name="text"]', 'noDisp');
+			ui.classAdd(ui.parents(ui.q('home textarea[name="text"]'), 'field'), 'noDisp');
 			ui.classAdd('home buttontext.save', 'noDisp');
 		}
 	}

@@ -25,8 +25,8 @@ class pageEvent {
 <input type="hidden" name="id" value="${v.id}"/>
 <input type="hidden" name="locationId" value="${v.locationID}"/>
 <input type="hidden" name="confirm" />
-<input type="hidden" name="category" />
-<input type="hidden" name="hashtags" />
+<input type="hidden" name="skills" value="${v.skills}" />
+<input type="hidden" name="skillsText" value="${v.skillsText}" />
 <field class="location${v.classLocation}">
 	<label style="padding-top:0;">${ui.l('events.location')}</label>
 	<value style="text-align:center;">
@@ -837,6 +837,8 @@ ${v.eventParticipationButtons}
 		formFunc.resetError(ui.q('popup input[name="visibility"]'));
 		if (!hashtags.value)
 			formFunc.setError(hashtags, 'error.hashtags');
+		else
+			formFunc.validation.filterWords(hashtags);
 		if (!text.value)
 			formFunc.setError(text, 'error.description');
 		else
@@ -872,8 +874,8 @@ ${v.eventParticipationButtons}
 			}
 		}
 		var v = hashtags.convert(ui.q('popup [name="hashtagsDisp"]').value);
-		ui.q('popup input[name="category"]').value = v.category;
-		ui.q('popup input[name="hashtags"]').value = v.hashtags;
+		ui.q('popup input[name="skills"]').value = v.category;
+		ui.q('popup input[name="skillsText"]').value = v.hashtags;
 		v = formFunc.getForm('popup form');
 		if (v.values.visibility == 2 && (!user.contact.attr || !user.contact.attrInterest))
 			formFunc.setError(ui.q('popup input[name="visibility"]'), 'events.errorVisibility');

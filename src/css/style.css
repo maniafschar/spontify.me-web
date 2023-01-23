@@ -678,27 +678,18 @@ settings {
 	z-index: 2;
 }
 
-settings>div {
+settings save {
 	position: absolute;
-	top: 4em;
-	left: 0;
-	bottom: 0;
-	width: 300%;
-	transition: all 0.4s ease-out 0s;
-}
-
-settings page {
-	width: 33.3333%;
-	display: block;
-	position: relative;
-	float: left;
-	overflow-y: auto;
-	height: 100%;
-}
-
-settings page.page1,
-settings page.page2 {
-	padding: 0 0.5em 2em 0.5em;
+	font-size: 6em;
+	opacity: 0.9;
+	right: 0;
+	bottom: 0.1em;
+	display: none;
+	filter: drop-shadow(0 0 0.1em rgba(0, 0, 0, 0.3));
+	z-index: 1;
+	height: 1em;
+	width: 1em;
+	line-height: 1;
 }
 
 #info6 {

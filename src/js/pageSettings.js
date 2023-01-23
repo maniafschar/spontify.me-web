@@ -32,7 +32,7 @@ class pageSettings {
 	<div style="padding:0 0.5em 2em 0.5em;">${v.settings1}</div>
 	<div style="padding:0 0.5em 2em 0.5em;">${v.settings2}</div>
 	<div style="text-align:left;">${v.settings3}</div>
-</tabBody>`;
+</tabBody><save class="highlightColor" onclick="pageSettings.save()">&check;</save>`;
 	static templateSettings1 = v =>
 		global.template`<field>
 	<label style="padding-top:1em;">${ui.l('pseudonym')}</label>
@@ -445,12 +445,15 @@ ${v.info}`;
 			communication.login.logoff();
 			return;
 		}
-		user.contact.ageFemale = ui.val('input[name="ageFemale"]');
-		user.contact.ageMale = ui.val('input[name="ageMale"]');
-		user.contact.ageDivers = ui.val('input[name="ageDivers"]');
-		user.contact.pseudonym = ui.val('input[name="pseudonym"]');
-		user.contact.gender = ui.val('input[name="gender"]:checked');
-		user.contact.birthday = ui.val('input[name="birthday"]');
+		user.contact.ageFemale = ui.val('settings input[name="ageFemale"]');
+		user.contact.ageMale = ui.val('settings input[name="ageMale"]');
+		user.contact.ageDivers = ui.val('settings input[name="ageDivers"]');
+		user.contact.pseudonym = ui.val('settings input[name="pseudonym"]');
+		user.contact.gender = ui.val('settings input[name="gender"]:checked');
+		user.contact.birthday = ui.val('settings input[name="birthday"]');
+		user.contact.skills = hashtags.convert(ui.val('settings textarea[name="hashtagsDisp"]'));
+		user.contact.skillsText = user.contact.skills.hashtags;
+		user.contact.skills = user.contact.skills.category;
 		user.contact.age = user.contact.birthday ? pageContact.getBirthday(user.contact.birthday)[2] : null;
 		if (ui.q('[name="image_disp"] img')) {
 			communication.ajax({
@@ -478,6 +481,7 @@ ${v.info}`;
 		var l = ui.val('[name="language"]:checked');
 		if (l != global.language)
 			initialisation.setLanguage(l);
+		ui.css('settings save', 'display', '');
 	}
 	static reset() {
 		formFunc.resetError(ui.q('input[name="pseudonym"]'));
