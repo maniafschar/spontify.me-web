@@ -154,15 +154,10 @@ ${v.eventParticipationButtons}
 		v.copyLinkHint = ui.l('copyLinkHint.event');
 		if (v.event.contactId != user.contact.id)
 			v.hideMeEdit = ' noDisp';
-		if (v.event.type == 'o') {
-			if (v.event.marketingEvent && v.event.contactId == user.contact.id)
-				v.event.text = '<b>' + ui.l('events.acceptedMarketingEvent') + '</b><br/>' + v.event.text;
-		} else {
+		if (v.event.type != 'o') {
 			var s = global.date.formatDate(v.event.endDate);
 			v.endDate = ' (' + ui.l('events.type_' + v.event.type) + ' ' + ui.l('to') + ' ' + s.substring(s.indexOf(' ') + 1, s.lastIndexOf(' ')) + ')';
 		}
-		if (!v.locID)
-			v.event.text = ui.categories[v.event.category].label + '<br/>' + v.event.text;
 		v.id = pageEvent.getId(v);
 		if (('' + v.id).indexOf('_') < 0) {
 			v.date = global.date.formatDate(v.event.startDate);
@@ -524,7 +519,7 @@ ${v.eventParticipationButtons}
 						v.name = t + ' ' + v.name;
 					else {
 						v.name = t + ' ' + v.contact.pseudonym + (v.contact.age ? ' (' + v.contact.age + ')' : '');
-						v._message1 = ui.categories[v.event.category].label;
+						v._message1 = hashtags.ids2Text(v.event.skills) + (v.event.skillsText ? ' ' + v.event.skillsText : '');
 					}
 					v._message = v.event.text + '<br/>';
 					v.locID = v.id;

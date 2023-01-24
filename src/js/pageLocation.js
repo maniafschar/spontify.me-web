@@ -316,7 +316,6 @@ ${v.rating}
 		if (eventWithLocation)
 			v.distanceDisplay = ' style="display:none;"';
 		else {
-			v.category = v.event.category;
 			v.compassDisplay = ' style="display:none;"';
 			v.gender = '<img src="images/gender' + v.contact.gender + '.svg" />';
 		}
@@ -343,15 +342,6 @@ ${v.rating}
 		if (global.isBrowser())
 			v.displaySocialShare = 'display: none; ';
 		v.pressedCopyButton = pageChat.copyLink.indexOf(global.encParam((v.event.id ? 'e' : 'l') + '=' + id)) > -1 ? ' buttonPressed' : '';
-		var c = v.category;
-		if (!c)
-			c = v.event.category;
-		v.cat = '';
-		if (c) {
-			for (var i = 0; i < c.length; i++)
-				v.cat = v.cat + ',' + c.substring(i, i + 1);
-			v.cat = v.cat.substring(1);
-		}
 		if (v.address)
 			communication.ajax({
 				url: global.server + 'action/map?source=' + geoData.latlon.lat + ',' + geoData.latlon.lon + '&destination=' + v.latitude + ',' + v.longitude,

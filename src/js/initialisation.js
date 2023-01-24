@@ -339,7 +339,6 @@ class initialisation {
 		}
 		r(s.labels);
 		ui.categories = s.categories;
-		ui.attributes = s.attributes;
 		ui.labels = s.labels;
 		communication.ajax({
 			url: (window.location && window.location.href && window.location.href.indexOf(global.server) == 0 ? '/' : '') + 'js/lang/' + lang + '.html',
