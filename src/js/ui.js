@@ -208,9 +208,7 @@ class ui {
 			f.call();
 		},
 		fade(id, back, exec) {
-			var oldID = ui.navigation.getActiveID();
 			var newDiv = ui.q(id);
-			var oldDiv = ui.q(oldID);
 			var o = back ? 'detailBack' : 'detail';
 			ui.classAdd(newDiv, o + 'SlideIn');
 			ui.css(newDiv, 'display', 'block');
@@ -218,8 +216,8 @@ class ui {
 				var e = ui.q('main');
 				ui.css(e, 'overflow', '');
 				e.scrollTop = 0;
-				ui.css(oldDiv, 'display', 'none');
-				ui.css(oldDiv, 'marginLeft', 0);
+				ui.css('content>.content:not(' + id + ')', 'display', 'none');
+				ui.css('content>.content:not(' + id + ')', 'marginLeft', 0);
 				ui.classRemove(newDiv, o + 'SlideIn');
 				ui.css(newDiv, 'transform', '');
 				if (id == 'home')
@@ -253,6 +251,21 @@ class ui {
 			var currentID = ui.navigation.getActiveID();
 			if (currentID == 'chat' && ui.q('content>chat:not([style*="none"])') && id != 'detail' && id != 'settings') {
 				pageChat.close();
+				return;
+			}
+			if (currentID == 'detail' && id == 'detail' && ui.qa('detail card').length > 1) {
+				var e = ui.q('detail>div');
+				ui.on(e, 'transitionend', function () {
+					ui.css(e, 'transition', 'none');
+					if (e.lastChild)
+						e.lastChild.outerHTML = '';
+					var x = e.clientWidth / ui.q('content').clientWidth;
+					ui.css(e, 'width', x == 2 ? '' : ((x - 1) * 100) + '%');
+					setTimeout(function () {
+						ui.css(e, 'transition', null);
+					}, 50);
+				}, true);
+				ui.css(e, 'margin-left', ((ui.qa('detail card').length - 2) * 100) + '%');
 				return;
 			}
 			// AGBs opened from login, go back to login

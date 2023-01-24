@@ -176,7 +176,7 @@ class initialisation {
 						return;
 					e = e.parentNode;
 				}
-				ui.navigation.goTo(ui.q('detail').getAttribute('from'));
+				ui.navigation.goTo(ui.qa('detail card').length > 1 ? 'detail' : ui.q('detail').getAttribute('from'));
 			}
 		});
 		ui.on('popup', 'click', function (event) {

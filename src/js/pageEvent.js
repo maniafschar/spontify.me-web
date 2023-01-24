@@ -123,7 +123,7 @@ class pageEvent {
 </form>`;
 	static templateDetail = v =>
 		global.template`<text class="description${v.classParticipate}" ${v.oc}>
-<div>${ui.l('events.createdBy')}<br/><a class="chatLinks" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;),event)"><img src="${v.imageEventOwner}"><br>${v.contact.pseudonym}</a></div>
+<div>${ui.l('events.createdBy')}<br/><span class="chatLinks" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;),event)"><img src="${v.imageEventOwner}"><br>${v.contact.pseudonym}</span></div>
 ${v.eventLinkOpen}
 <div class="date">${v.date}${v.endDate}</div>
 <div>${v.event.text}${v.eventMore}</div>
@@ -775,7 +775,7 @@ ${v.eventParticipationButtons}
 				image = new Image();
 				image.src = 'data:image/svg+xml;utf8,' + ui.q('home homeHeader svg').outerHTML;
 				image.onload = function () {
-					context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight, 680, 25, 200, image.naturalHeight / image.naturalWidth * 200);
+					context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight, 655, 30, 200, image.naturalHeight / image.naturalWidth * 200);
 					if (location)
 						pageEvent.qrcodeExport(canvas);
 					else {
