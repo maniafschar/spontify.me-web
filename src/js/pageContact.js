@@ -225,14 +225,14 @@ ${v.attributes}
 		if (!v.distance && preview)
 			v.previewHintLocationService = '<previewHint class="locationService">' + ui.l('settings.previewHintLocationService') + '</previewHint>';
 		v.birthday = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
-		if (v.birthday[2]) {
+		if (v.birthday.age) {
 			if (v.age)
 				v.ageDisplay = ' (' + v.age + ')';
-			if (v.birthday[1]) {
-				v.birthday = ui.l('contacts.birthdayToday') + '<br/>' + v.birthday[0];
+			if (v.birthday.present) {
+				v.birthday = ui.l('contacts.birthdayToday') + '<br/>' + v.birthday.birthday;
 				v.birthdayClass = ' class="highlightColor"';
 			} else
-				v.birthday = v.birthday[0];
+				v.birthday = v.birthday.birthday;
 		} else
 			v.birthday = preview ? '<previewHint>' + ui.l('settings.previewHintBirthday') + '</previewHint>' : '';
 		v.link = '';
@@ -313,20 +313,20 @@ ${v.attributes}
 		return pageContact.templateDetail(v);
 	}
 	static getBirthday(b, bd) {
-		var birth = '', present = '', age = 0;
+		var r = { birthday: null, present: null, age: null };
 		if (b) {
 			var d1 = global.date.server2Local(b), d2 = new Date();
-			age = d2.getYear() - d1.getYear();
+			r.age = d2.getYear() - d1.getYear();
 			if (d2.getMonth() < d1.getMonth() || d2.getMonth() == d1.getMonth() && d2.getDate() < d1.getDate())
-				age--;
+				r.age--;
 			if (bd == 2) {
-				birth = global.date.formatDate(b);
-				birth = ui.l('contacts.bday').replace('{0}', birth.substring(0, birth.lastIndexOf(' ')));
+				r.birthday = global.date.formatDate(b);
+				r.birthday = ui.l('contacts.bday').replace('{0}', r.birthday.substring(0, r.birthday.lastIndexOf(' ')));
 				if (d2.getMonth() == d1.getMonth() && d2.getDate() == d1.getDate())
-					present = '<img src="images/present.svg"/>';
+					r.present = '<img src="images/present.svg"/>';
 			}
 		}
-		return [birth, present, age];
+		return r;
 	}
 	static groups = {
 		addGroup(id) {
@@ -546,7 +546,6 @@ ${v.attributes}
 		var s = '', activeID = ui.navigation.getActiveID();
 		for (var i = 1; i < l.length; i++) {
 			var v = model.convert(new Contact(), l, i);
-			var birth = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
 			if (v.imageList)
 				v.image = global.serverImg + v.imageList;
 			else
@@ -562,16 +561,17 @@ ${v.attributes}
 				v.extra += '<br/><img src="images/gender' + v.gender + '.svg" />';
 			if (!v._message1)
 				v._message1 = v.attr.textAttributes();
+			var birth = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
 			if (birth)
-				v.birth = birth[2] ? ' (' + v.age + ')' : '';
+				v.birth = birth.age ? ' (' + v.age + ')' : '';
 			if (!v._message2)
 				v._message2 = v.aboutMe;
 			v._message = v._message1 ? v._message1 + '<br/>' : '';
 			v._message += v._message2 ? v._message2 : '';
 			v.dist = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
 			if (!v._badgeDisp) {
-				v._badgeDisp = birth[1] ? 'block' : 'none';
-				v._badge = birth[1] ? birth[1] : 0;
+				v._badgeDisp = birth.present ? 'block' : 'none';
+				v._badge = birth[1] ? birth.present : 0;
 			}
 			if (!v.badgeAction)
 				v.badgeAction = birth[1] ? '' : 'remove';

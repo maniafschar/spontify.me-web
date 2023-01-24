@@ -34,17 +34,19 @@ ${ui.l('home.labelTime')}<br/>
 <input type="time" name="startDate" placeholder="HH:MM" step="900" value="${v.startDate}" /><br/>
 ${ui.l('home.labelSkill')}
 <field>
-<textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="pageHome.synchonizeTags(event)" style="height:2em;">${v.hashtagsDisp}</textarea>
+<textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="pageHome.synchonizeTags()" style="height:2em;">${v.hashtagsDisp}</textarea>
 <hashtags>${v.hashtagSelection}</hashtags>
 </field>
-<field class="noDisp"><br/>
+<div class="eventText" style="display:none;">
+<br/>
+<field>
 <textarea name="text" maxlength="250" placeholder="${ui.l('description')}">${v.text}</textarea>
 </field>
 <dialogButtons>
-<buttontext onclick="pageHome.saveEvent()" class="bgColor noDisp save">${ui.l('home.saveEvent')}</buttontext>
+<buttontext onclick="pageHome.saveEvent()" class="bgColor">${ui.l('home.saveEvent')}</buttontext>
 <buttontext onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" class="bgColor noDisp delete">${ui.l('delete')}</buttontext>
-<popupHint></popupHint>
 </dialogButtons>
+</div>
 </form>
 </homeBody>`;
 	static clickNotification(id, action) {
@@ -101,13 +103,7 @@ ${ui.l('home.labelSkill')}
 			Object.defineProperty(input, 'value', {
 				set: function () {
 					var r = descriptor.set.apply(this, arguments);
-					if (this.value) {
-						ui.classRemove(ui.parents(ui.q('home textarea[name="text"]'), 'field'), 'noDisp');
-						ui.classRemove('home buttontext.save', 'noDisp');
-					} else {
-						ui.classAdd(ui.parents(ui.q('home textarea[name="text"]'), 'field'), 'noDisp');
-						ui.classAdd('home buttontext.save', 'noDisp');
-					}
+					pageHome.synchonizeTags();
 					return r;
 				},
 				get: function () {
@@ -122,11 +118,11 @@ ${ui.l('home.labelSkill')}
 		if (p && global.date.server2Local(p.eventDate).toDateString() == new Date().toDateString()) {
 			var s = global.date.formatDate(p.event.startDate);
 			s = s.substring(s.lastIndexOf(' ')).trim();
-			// ui.q('home item.event text').innerHTML = s + ' ' + p.event.text;
-			// ui.attr('home item.event', 'i', p.event.id);
+			ui.q('home textarea[name="text"]').value = p.event.text;
+			ui.attr('home homeBody form', 'i', p.event.id);
 		} else {
-			//ui.q('home item.event text').innerHTML = ui.l('wtd.todayIWant');
-			//ui.attr('home item.event', 'i', null);
+			ui.q('home textarea[name="text"]').value = '';
+			ui.attr('home homeBody form', 'i', null);
 		}
 		formFunc.image.replaceSVGs();
 		if (user.contact)
@@ -238,7 +234,7 @@ ${ui.l('home.labelSkill')}
 			d.setDate(d.getDate() + 1);
 		v.values.startDate = global.date.local2server(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + v.values.startDate + ':00');
 		v.classname = 'Event';
-		v.id = ui.q('home item.event').getAttribute('i');
+		v.id = ui.q('home homeBody form').getAttribute('i');
 		communication.ajax({
 			url: global.server + 'db/one',
 			method: v.id ? 'PUT' : 'POST',
@@ -254,15 +250,13 @@ ${ui.l('home.labelSkill')}
 		geoData.save({ latitude: pageHome.map.getCenter().lat(), longitude: pageHome.map.getCenter().lng(), manual: true });
 		ui.navigation.hidePopup();
 	}
-	static synchonizeTags(event) {
-		hashtags.synchonizeTags(event);
-		if (event.target.value) {
-			ui.classRemove(ui.parents(ui.q('home textarea[name="text"]'), 'field'), 'noDisp');
-			ui.classRemove('home buttontext.save', 'noDisp');
-		} else {
-			ui.classAdd(ui.parents(ui.q('home textarea[name="text"]'), 'field'), 'noDisp');
-			ui.classAdd('home buttontext.save', 'noDisp');
-		}
+	static synchonizeTags() {
+		var e = ui.q('home textarea[name="hashtagsDisp"]');
+		hashtags.synchonizeTags(e);
+		if (e.value && ui.cssValue('home .eventText', 'display') == 'none')
+			ui.toggleHeight('home .eventText');
+		else if (!e.value && ui.cssValue('home .eventText', 'display') != 'none')
+			ui.toggleHeight('home .eventText');
 	}
 	static toggleNotification() {
 		if (!user.contact)

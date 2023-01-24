@@ -454,7 +454,7 @@ ${v.info}`;
 		user.contact.skills = hashtags.convert(ui.val('settings textarea[name="hashtagsDisp"]'));
 		user.contact.skillsText = user.contact.skills.hashtags;
 		user.contact.skills = user.contact.skills.category;
-		user.contact.age = user.contact.birthday ? pageContact.getBirthday(user.contact.birthday)[2] : null;
+		user.contact.age = user.contact.birthday ? pageContact.getBirthday(user.contact.birthday).age : null;
 		if (ui.q('[name="image_disp"] img')) {
 			communication.ajax({
 				url: global.server + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id),

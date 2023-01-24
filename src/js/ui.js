@@ -291,10 +291,10 @@ class ui {
 			pageHome.closeList();
 			ui.navigation.hidePopup();
 			if (currentID != id) {
-				var e = ui.q('navigation item.' + id);
-				var i1 = 0;
 				if (back == null) {
+					var e = ui.q('navigation item.' + id);
 					if (e) {
+						var i1 = 0;
 						while ((e = e.previousSibling) != null)
 							i1++;
 						e = ui.q('navigation item.' + currentID);
@@ -306,10 +306,7 @@ class ui {
 						}
 					}
 					if (back == null)
-						back = currentID == 'detail' ||
-							id == 'home' && currentID == 'login' ||
-							id == 'home' && currentID == 'info' ||
-							id == 'login' && currentID == 'info';
+						back = currentID == 'detail' || currentID == 'login' || currentID == 'info' || currentID == 'settings';
 				}
 				if (back && currentID == 'detail') {
 					e = ui.qa('detail card');

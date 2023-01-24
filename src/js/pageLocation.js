@@ -28,7 +28,6 @@ class pageLocation {
 	static reopenEvent;
 	static templateList = v =>
 		global.template`<row onclick="${v.oc}" i="${v.id}" class="location${v.classFavorite}">
-			${v.present}
 	<div>
 		<text>
 			<title>${v.name}</title>
