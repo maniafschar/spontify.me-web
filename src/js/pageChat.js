@@ -4,12 +4,11 @@ import { geoData } from './geoData';
 import { global } from './global';
 import { intro } from './intro';
 import { lists } from './lists';
-import { Chat, Contact, model } from './model';
+import { Contact, ContactChat, model } from './model';
 import { pageContact } from './pageContact';
 import { pageEvent } from './pageEvent';
 import { pageHome } from './pageHome';
 import { pageInfo } from './pageInfo';
-import { pageLocation } from './pageLocation';
 import { pageSettings } from './pageSettings';
 import { ui, formFunc } from './ui';
 import { user } from './user';
@@ -144,7 +143,7 @@ class pageChat {
 		if (l.length > 1) {
 			var date, s = '', d;
 			for (var i = l.length - 1; i > 0; i--) {
-				v = model.convert(new Chat(), l, i);
+				v = model.convert(new ContactChat(), l, i);
 				d = global.date.formatDate(v.createdAt);
 				d = d.substring(0, d.lastIndexOf(' '));
 				if (date != d) {
@@ -155,19 +154,9 @@ class pageChat {
 			}
 			d = ui.q('chat[i="' + id + '"] chatConversation');
 			d.innerHTML = d.innerHTML + s;
-		} else if (ui.q('chat').getAttribute('type') == 'location') {
-			v = new Chat();
-			v.contactId = pageChat.admin.id;
-			v.createdAt = new Date();
-			v.note = ui.l('chat.empty');
-			v.type = 0;
-			v.imageList = pageChat.admin.image;
-			v._pseudonym = pageChat.admin.pseudonym;
-			var e = ui.q('chat[i="' + id + '"] chatConversation');
-			e.innerHTML = e.innerHTML + pageChat.renderMsg(v);
 		}
 		if (l.length < 3) {
-			e = ui.q('chatInput closeHint');
+			var e = ui.q('chatInput closeHint');
 			e.style.display = 'block';
 			e.style.transition = 'all 2s ease-out';
 			setTimeout(function () {
@@ -331,10 +320,10 @@ class pageChat {
 		};
 		f.call();
 	}
-	static open(id, location) {
+	static open(id) {
 		if (id.indexOf && id.indexOf('_') > 0)
 			id = id.substring(0, id.indexOf('_'));
-		var e = ui.q('chat[i="' + id + '"][type="' + (location ? 'location' : 'contact') + '"]');
+		var e = ui.q('chat[i="' + id + '"]');
 		if (e) {
 			if (ui.cssValue(e, 'display') == 'none') {
 				pageChat.saveDraft();
@@ -345,7 +334,7 @@ class pageChat {
 			}
 		}
 		communication.ajax({
-			url: global.server + 'action/chat/' + (location ? true : false) + '/' + id + '/true',
+			url: global.server + 'action/chat/' + id + '/true',
 			responseType: 'json',
 			success(r) {
 				if (!r || r.length < 1)
@@ -353,39 +342,23 @@ class pageChat {
 				ui.attr('chat', 'from', ui.navigation.getActiveID());
 				var f = function () {
 					var e = ui.q('chat');
-					ui.attr(e, 'type', location ? 'location' : 'contact');
 					ui.html(e, '<listHeader><chatName><img/><span></span></chatName><chatDate></chatDate></listHeader><div></div>');
-					if (location) {
-						ui.classAdd(e, 'location');
-						var path = 'popup detail';
-						if (!ui.q(path))
-							path = 'detail';
-						ui.html('chat listHeader chatName span', ui.q(path + ' title').innerText);
-						e = ui.q('chat listHeader img');
-						ui.attr(e, 'src', ui.q(path + ' detailImg img').getAttribute('src'));
-						if (e.getAttribute('src').indexOf('.svg') > 0) {
-							ui.classAdd(e, 'bgColor');
-							ui.css(e, 'padding', '0.6em');
-						}
-					} else {
-						ui.classRemove(e, 'location');
-						communication.ajax({
-							url: global.server + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + id),
-							responseType: 'json',
-							success(r2) {
-								ui.attr('chat[i="' + id + '"] listHeader chatName', 'onclick', 'ui.navigation.autoOpen("' + global.encParam('p=' + id) + '",event)');
-								ui.html('chat[i="' + id + '"] listHeader chatName span', r2['contact.pseudonym']);
-								if (r2['contact.imageList'])
-									ui.attr('chat[i="' + id + '"] listHeader img', 'src', global.serverImg + r2['contact.imageList']);
-								else {
-									var e2 = ui.q('chat[i="' + id + '"] listHeader img');
-									ui.attr(e2, 'src', 'images/contact.svg');
-									ui.classAdd(e2, 'bgColor');
-									ui.css(e2, 'padding', '0.6em');
-								}
+					communication.ajax({
+						url: global.server + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + id),
+						responseType: 'json',
+						success(r2) {
+							ui.attr('chat[i="' + id + '"] listHeader chatName', 'onclick', 'ui.navigation.autoOpen("' + global.encParam('p=' + id) + '",event)');
+							ui.html('chat[i="' + id + '"] listHeader chatName span', r2['contact.pseudonym']);
+							if (r2['contact.imageList'])
+								ui.attr('chat[i="' + id + '"] listHeader img', 'src', global.serverImg + r2['contact.imageList']);
+							else {
+								var e2 = ui.q('chat[i="' + id + '"] listHeader img');
+								ui.attr(e2, 'src', 'images/contact.svg');
+								ui.classAdd(e2, 'bgColor');
+								ui.css(e2, 'padding', '0.6em');
 							}
-						});
-					}
+						}
+					});
 					communication.notification.close();
 					ui.navigation.hideMenu();
 					ui.navigation.hidePopup();
@@ -446,7 +419,7 @@ class pageChat {
 						responseType: 'json',
 						success(r2) {
 							var e = document.createElement('div');
-							e.innerHTML = pageChat.renderMsg(model.convert(new Chat(), r2));
+							e.innerHTML = pageChat.renderMsg(model.convert(new ContactChat(), r2));
 							ui.q('chat[i="' + r.contactId + '"] chatConversation').insertBefore(e.children[0], null);
 							pageChat.scrollToBottom();
 						}
@@ -466,12 +439,12 @@ class pageChat {
 				responseType: 'json',
 				success(r) {
 					if (ui.q('chat[i="' + id + '"] chatConversation')) {
-						var e = ui.q('chat:not(.location)[i="' + id + '"] chatConversation');
+						var e = ui.q('chat[i="' + id + '"] chatConversation');
 						if (!e)
 							return;
 						var showButton = e.scrollTop + e.clientHeight < e.scrollHeight;
 						for (var i = 1; i < r.length; i++) {
-							var v = model.convert(new Chat(), r, i);
+							var v = model.convert(new ContactChat(), r, i);
 							var f = ui.q('chat chatMessage');
 							if (ui.classContains(f, 'me'))
 								ui.classAdd(f, 'following');
@@ -571,12 +544,9 @@ class pageChat {
 		}
 		if (msg) {
 			var v = {
-				note: msg.replace(/</g, '&lt;')
+				note: msg.replace(/</g, '&lt;'),
+				contactId2: id
 			};
-			if (ui.q('chat.location'))
-				v.locationId = id;
-			else
-				v.contactId2 = id;
 			communication.ajax({
 				url: global.server + 'db/one',
 				method: 'POST',
