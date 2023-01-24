@@ -800,13 +800,11 @@ ${v.rating}
 			setTimeout(function () { ui.classRemove('locations listResults row div.highlightMap', 'highlightMap'); }, 500);
 		} else if (!ui.q('locations row')) {
 			pageLocation.map.open = true;
-			pageLocation.search();
+			//pageLocation.search();
 		} else {
 			ui.attr('map', 'created', new Date().getTime());
-			communication.loadMap(function () {
-				pageLocation.toggleMap();
-				ui.on('locations listBody', 'scroll', pageLocation.scrollMap);
-			});
+			communication.loadMap('pageLocation.toggleMap');
+			ui.on('locations listBody', 'scroll', pageLocation.scrollMap);
 		}
 	}
 	static toggleMatchIndicatorHint(id, event) {

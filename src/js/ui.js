@@ -251,7 +251,7 @@ class ui {
 				return;
 			communication.notification.close();
 			var currentID = ui.navigation.getActiveID();
-			if (currentID == 'chat' && ui.q('content>chat:not([style*="none"])') && id != 'detail') {
+			if (currentID == 'chat' && ui.q('content>chat:not([style*="none"])') && id != 'detail' && id != 'settings') {
 				pageChat.close();
 				return;
 			}

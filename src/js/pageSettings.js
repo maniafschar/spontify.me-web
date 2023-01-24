@@ -338,12 +338,6 @@ ${v.info}`;
 					if (user.contact.imageList)
 						v.image = 'src="' + global.serverImg + user.contact.imageList + '"';
 					v.settings1 = pageSettings.templateSettings1(v);
-					if (!v['contact.ageFemale'])
-						ui.css(ui.q('#settingsInterest2').nextElementSibling, 'display', 'none');
-					if (!v['contact.ageMale'])
-						ui.css(ui.q('#settingsInterest1').nextElementSibling, 'display', 'none');
-					if (!v['contact.ageDivers'])
-						ui.css(ui.q('#settingsInterest3').nextElementSibling, 'display', 'none');
 					for (var i = 0; i < ui.categories.length; i++)
 						v['att' + i + 'Ex'] = user.contact['attr' + i + 'Ex'] ? user.contact['attr' + i + 'Ex'].replace(/\u0015/g, ',') : '';
 					v.hashtagSelection = hashtags.display();
@@ -358,6 +352,12 @@ ${v.info}`;
 					v.settings3 = pageSettings.templateSettings3(v);
 					ui.q('settings').innerHTML = pageSettings.template(v);
 					formFunc.initFields('settings');
+					if (!v['contact.ageFemale'])
+						ui.css(ui.q('#settingsInterest2').nextElementSibling, 'display', 'none');
+					if (!v['contact.ageMale'])
+						ui.css(ui.q('#settingsInterest1').nextElementSibling, 'display', 'none');
+					if (!v['contact.ageDivers'])
+						ui.css(ui.q('#settingsInterest3').nextElementSibling, 'display', 'none');
 					if (v.hashtagsDisp)
 						setTimeout(function () { hashtags.synchonizeTags(ui.q('settings textarea[name="hashtagsDisp"]')); }, 500);
 					pageSettings.currentSettings = pageSettings.getCurrentSettings();

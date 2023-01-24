@@ -182,7 +182,7 @@ ${ui.l('home.labelSkill')}
 		event.preventDefault();
 		event.stopPropagation();
 		if (user.contact) {
-			communication.loadMap();
+			communication.loadMap('pageHome.openLocationPickerDialog');
 		} else
 			intro.openHint({ desc: 'position', pos: '10%,5em', size: '80%,auto' });
 	}

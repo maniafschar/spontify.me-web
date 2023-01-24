@@ -145,7 +145,7 @@ class communication {
 			}
 		});
 	}
-	static loadMap() {
+	static loadMap(callback) {
 		if (communication.mapScriptAdded) {
 			var f = function () {
 				if (ui.q('head script[t="map"]'))
@@ -161,7 +161,7 @@ class communication {
 				responseType: 'text',
 				success(r) {
 					var script = document.createElement('script');
-					script.src = r + '&callback=pageHome.openLocationPickerDialog';
+					script.src = r + '&callback=' + callback;
 					script.setAttribute('t', 'map');
 					document.head.appendChild(script);
 				}
