@@ -206,7 +206,7 @@ class global {
 	}
 	static getRegEx(field, value) {
 		if (value)
-			return 'REGEXP_LIKE(' + field + ',\'' + value.replace(value.indexOf(' ') > -1 ? / /g : /\u0015/g, '|') + '\')=1';
+			return 'REGEXP_LIKE(' + field + ',\'' + value + '\')=1';
 		return '1=0';
 	}
 	static isBrowser() {

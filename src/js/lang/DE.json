@@ -538,6 +538,7 @@
 			"hintLocation": "Name, Beschreibung, Telefonnummer, Adresse inklusive Stadtteil werden durchsucht.",
 			"map": "in diesem Bereich suchen",
 			"matches": "mit gemeinsamen Skills",
+			"matchesEvent": "die zu meinen Skills passen",
 			"results": "{0} Treffer in",
 			"title": "Suche",
 			"type": "Suchen in"
@@ -582,7 +583,6 @@
 			"tooShort": "Mindestens 2 Buchstaben.",
 			"aboutMe": "Über mich",
 			"aboutMeEmpty": "Beschreibe was Du als Guide anbietest",
-			"attributes": "Du bist",
 			"confirmEmailChange": "Du hast Deine Email-Adresse geändert. Wenn Du fortfährst, senden wir Dir eine Bestätigungsemail und setzen zur Sicherheit Dein Passwort zurück. Dein Profil ist dann bis zur erneuten Aktivierung deaktiviert.<br/><br/>Möchtest Du fortfahren?",
 			"delete": "Profil löschen",
 			"edit": "Meine Einstellungen bearbeiten",

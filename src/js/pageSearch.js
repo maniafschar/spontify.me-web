@@ -33,13 +33,7 @@ class pageSearch {
 		filter: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
-	<input type="radio" name="gender" value="1" label="${ui.l('male')}" deselect="true" ${v.gender1}/>
-	<input type="radio" name="gender" value="2" label="${ui.l('female')}" deselect="true" ${v.gender2}/>
-	<input type="radio" name="gender" value="3" label="${ui.l('divers')}" deselect="true" ${v.gender3}/>
-	<filterSeparator></filterSeparator>
 	<input type="checkbox" label="${ui.l('search.matches')}" name="matches" ${v.matches}/>
-	<filterSeparator></filterSeparator>
-	<input type="text" name="age" slider="range" min="18" max="99" id="age" ${v.age}/>
 	<filterSeparator></filterSeparator>
 	<input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
 	<explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
@@ -47,82 +41,43 @@ class pageSearch {
 	<buttontext class="bgColor defaultButton" onclick="pageSearch.contacts.search()">${ui.l('search.action')}</buttontext></form>`,
 		getFields() {
 			var v = {};
-			if (pageSearch.contacts.filter.age)
-				v.age = ' value="' + pageSearch.contacts.filter.age + '"';
 			if (pageSearch.contacts.filter.keywords)
 				v.keywords = ' value="' + pageSearch.contacts.filter.keywords + '"';
 			if (pageSearch.contacts.filter.matches == 'on')
 				v.matches = ' checked="true"';
-			if (pageSearch.contacts.filter.guide == 'on')
-				v.guide = ' checked="true"';
-			v['gender' + pageSearch.contacts.filter.gender] = ' checked="true"';
 			return pageSearch.contacts.template(v);
 		},
 		getMatches() {
-			var search = '(' + global.getRegEx("contact.attr", user.contact.attrInterest) + ' or ' + global.getRegEx('contact.attrEx', user.contact.attrInterestEx) + ')';
-			var sMale = '', sFemale = '', sDivers = '', sContactInterestedInMyGender = ' and contact.' + (user.contact.gender == 2 ? 'ageFemale' : user.contact.gender == 3 ? 'ageDivers' : 'ageMale') + ' like \'%,%\'';
-			if (user.contact.ageMale && user.contact.ageMale != '18,99') {
-				var s = user.contact.ageMale.split(','), s2 = '';
-				if (s[0] > 18)
-					s2 = 'contact.age>=' + s[0];
-				if (s[1] < 99)
-					s2 += (s2 ? ' and ' : '') + 'contact.age<=' + s[1];
-				if (s2)
-					sMale = '(contact.gender=1' + sContactInterestedInMyGender + ' and ' + s2 + ')';
+			var search = '(' + global.getRegEx("contact.skills", user.contact.skills) + ' or ' + global.getRegEx('contact.skillsText', user.contact.skillsText) + ')';
+			var gender = function (age, i) {
+				if (age) {
+					var ageSplit = age.split(','), s2 = '';
+					if (ageSplit[0] > 18)
+						s2 = 'contact.age>=' + ageSplit[0];
+					if (ageSplit[1] < 99)
+						s2 += (s2 ? ' and ' : '') + 'contact.age<=' + ageSplit[1];
+					return 'contact.gender=' + i + (s2 ? ' and ' + s2 : '');
+				}
+				return '';
 			}
-			if (!sMale && user.contact.ageMale)
-				sMale = '(contact.gender=1' + sContactInterestedInMyGender + ')';
-			if (user.contact.ageFemale && user.contact.ageFemale != '18,99') {
-				var s = user.contact.ageFemale.split(','), s2 = '';
-				if (s[0] > 18)
-					s2 = 'contact.age>=' + s[0];
-				if (s[1] < 99)
-					s2 += (s2 ? ' and ' : '') + 'contact.age<=' + s[1];
-				if (s2)
-					sFemale = '(contact.gender=2' + sContactInterestedInMyGender + ' and ' + s2 + ')';
-			}
-			if (!sFemale && user.contact.ageFemale)
-				sFemale = '(contact.gender=2' + sContactInterestedInMyGender + ')';
-			if (user.contact.ageDivers && user.contact.ageDivers != '18,99') {
-				var s = user.contact.ageDivers.split(','), s2 = '';
-				if (s[0] > 18)
-					s2 = 'contact.age>=' + s[0];
-				if (s[1] < 99)
-					s2 += (s2 ? ' and ' : '') + 'contact.age<=' + s[1];
-				if (s2)
-					sDivers = '(contact.gender=3' + sContactInterestedInMyGender + ' and ' + s2 + ')';
-			}
-			if (!sDivers && user.contact.ageDivers)
-				sDivers = '(contact.gender=3' + sContactInterestedInMyGender + ')';
-			if (sMale || sFemale || sDivers) {
-				var s3 = sMale;
-				if (sFemale)
-					s3 += (s3 ? ' or ' : '') + sFemale;
-				if (sDivers)
-					s3 += (s3 ? ' or ' : '') + sDivers;
-				search += ' and (' + s3 + ')';
-			} else
-				search += ' and (1=1)';
+			var s = gender(user.contact.ageMale, 1), g = '';
+			if (s)
+				g += ' or ' + s;
+			s = gender(user.contact.ageFemale, 2);
+			if (s)
+				g += ' or ' + s;
+			s = gender(user.contact.ageDivers, 3);
+			if (s)
+				g += ' or ' + s;
+			if (g)
+				search += ' and (' + g.substring(4) + ')';
 			return search;
 		},
 		getSearch() {
 			var s = '', s2 = '';
 			if (ui.q('search tabBody div.contacts [name="matches"]:checked'))
 				s = ' and ' + pageSearch.contacts.getMatches();
-			var v = ui.q('search tabBody div.contacts [name="gender"]:checked');
-			if (v && v.checked)
-				s += ' and contact.gender=' + v.value;
-			if (ui.q('search tabBody div.contacts [name="guide"]:checked'))
-				s += ' and contact.guide=1';
-			v = ui.q('search tabBody div.contacts [name="age"]').value;
-			if (v) {
-				v = v.split(',');
-				if (v[0] && v[0] > 18)
-					s += ' and contact.age>=' + v[0];
-				if (v[1] && v[1] < 99)
-					s += ' and contact.age<=' + v[1];
-			}
-			v = ui.val('search tabBody div.contacts [name="keywords"]').trim();
+			var v = ui.val('search tabBody div.contacts [name="keywords"]').trim();
 			if (v) {
 				v = v.replace(/'/g, '\'\'').split(' ');
 				s += ' and (';
@@ -159,23 +114,45 @@ class pageSearch {
 		filter: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
+<input type="checkbox" label="${ui.l('search.matchesEvent')}" name="matches" ${v.matches}/>
+<filterSeparator></filterSeparator>
 <input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
 <explain class="searchKeywordHint">${ui.l('search.hintEvent')}</explain>
 <errorHint></errorHint>
 <buttontext class="bgColor defaultButton" onclick="pageSearch.events.search()">${ui.l('search.action')}</buttontext></form>`,
 		getFields() {
 			var v = {};
-			var l = lists.data[ui.navigation.getActiveID()];
-			if (pageSearch.events.filter.filterCategories) {
-				var c = pageSearch.events.filter.filterCategories.split(global.separatorTech);
-				for (var i = 0; i < c.length; i++)
-					v['valueCat' + c[i]] = ' checked="true"';
-			}
 			if (pageSearch.events.filter.keywords)
 				v.keywords = ' value="' + pageSearch.events.filter.keywords + '"';
 			if (pageSearch.events.filter.matches == 'on')
 				v.matches = ' checked="true"';
 			return pageSearch.events.template(v);
+		},
+		getMatches() {
+			var search = '(' + global.getRegEx("event.skills", user.contact.skills) + ' or ' + global.getRegEx('event.skillsText', user.contact.skillsText) + ')';
+			var gender = function (age, i) {
+				if (age) {
+					var ageSplit = age.split(','), s2 = '';
+					if (ageSplit[0] > 18)
+						s2 = 'contact.age>=' + ageSplit[0];
+					if (ageSplit[1] < 99)
+						s2 += (s2 ? ' and ' : '') + 'contact.age<=' + ageSplit[1];
+					return 'contact.gender=' + i + (s2 ? ' and ' + s2 : '');
+				}
+				return '';
+			}
+			var s = gender(user.contact.ageMale, 1), g = '';
+			if (s)
+				g += ' or ' + s;
+			s = gender(user.contact.ageFemale, 2);
+			if (s)
+				g += ' or ' + s;
+			s = gender(user.contact.ageDivers, 3);
+			if (s)
+				g += ' or ' + s;
+			if (g)
+				search += ' and (' + g.substring(4) + ')';
+			return search;
 		},
 		getSearch() {
 			var v = ui.val('search tabBody div.events [name="keywords"]').trim(), s = '';
@@ -197,6 +174,8 @@ class pageSearch {
 				if (t.category)
 					s += (s ? ' and ' : '') + global.getRegEx('event.category', t.category);
 			}
+			if (ui.q('search tabBody div.events [name="matches"]:checked'))
+				s += (s ? ' and ' : '') + pageSearch.events.getMatches();
 			return s;
 		},
 		getSearch1(bounds) {
