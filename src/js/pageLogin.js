@@ -129,8 +129,8 @@ class pageLogin {
 			${ui.l('login.hintsTitle')}
         </buttontext>
     </dialogButtons>
+	<registerHint onclick="pageLogin.toggleRegistrationHints()">${ui.l('login.hints')}</registerHint>
 </form>
-<registerHint onclick="pageLogin.toggleRegistrationHints()">${ui.l('login.hints')}</registerHint>
 </tabBody>`;
 
 	static fromForm() {
@@ -209,7 +209,7 @@ class pageLogin {
 				body: formFunc.getForm('form[name=loginRegister]').values,
 				method: 'POST',
 				error(r) {
-					communication.login.checkUnique(ui.q('input[name="email"]'));
+					communication.login.checkUnique(ui.q('login tabBody form[name="loginRegister"] input[name="email"]'));
 				},
 				success(r) {
 					ui.q('login').innerHTML = '<div style="padding:2em;text-align:center;">' + ui.l('register.success') + '<br/><br/><br/><buttontext onclick="pageLogin.init()" class="bgColor">&lt;</buttontext></div>';

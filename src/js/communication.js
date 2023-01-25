@@ -376,7 +376,7 @@ class communication {
 				url: global.server + 'authentication/recoverSendEmail?email=' + encodeURIComponent(Encryption.encPUB(email)),
 				success(r) {
 					if (r.indexOf('nok:') == 0)
-						ui.navigation.openPopup(ui.l('login.recoverPassword'), ui.l('login.recoverPasswordError' + r.substring(4)));
+						formFunc.setError(ui.q('login form[name="loginRecover"]'), 'login.recoverPasswordError' + r.substring(4));
 					else {
 						ui.navigation.hidePopup();
 						communication.login.removeCredentials();
