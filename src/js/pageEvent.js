@@ -124,15 +124,13 @@ class pageEvent {
 	static templateDetail = v =>
 		global.template`<text class="description${v.classParticipate}" ${v.oc}>
 <div>${ui.l('events.createdBy')}<br/><span class="chatLinks" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;),event)"><img src="${v.imageEventOwner}"><br>${v.contact.pseudonym}</span></div>
-${v.eventLinkOpen}
-<div class="date">${v.date}${v.endDate}</div>
-<div>${v.event.text}${v.eventMore}</div>
+<div class="date" d="${v.dateRaw}">${v.date}${v.endDate}</div>
+<div>${v.event.text}</div>
 <div>${v.eventMustBeConfirmed}</div>
 <div class="price">${v.eventPrice}</div>
 <div>${v.maxParticipants}</div>
 <div>${v.reason}</div>
 <span id="eventParticipants"></span>
-${v.eventLinkClose}
 ${v.eventParticipationButtons}
 </text>`;
 	static checkPrice() {
@@ -169,6 +167,7 @@ ${v.eventParticipationButtons}
 			var d2 = global.date.getDateFields(v.event.startDate);
 			d.hour = d2.hour;
 			d.minute = d2.minute;
+			v.dateRaw = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute + ':00';
 			v.date = global.date.formatDate(d);
 			v.eventParticipationButtons = pageEvent.getParticipateButton(x, v);
 			var p = pageEvent.getParticipation(x);
@@ -194,11 +193,6 @@ ${v.eventParticipationButtons}
 					}
 				}
 			});
-		}
-		if (v.event.link) {
-			v.eventLinkOpen = '<a onclick="ui.navigation.openHTML(&quot;' + v.event.link + '&quot;)">';
-			v.eventLinkClose = '</a>';
-			v.eventMore = ' ' + ui.l('locations.clickForMoreDetails');
 		}
 		v.eventPrice = (v.event.price > 0 ? ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2)) : ui.l('events.priceDisp0'));
 		if (v.event.maxParticipants)
@@ -391,7 +385,7 @@ ${v.eventParticipationButtons}
 			text += '<buttontext class="bgColor" onclick="pageEvent.qrcode(' + (v.event.contactId == user.contact.id) + ')">' + ui.l('events.qrcodeButton') + '</buttontext><br/><br/>';
 		text += '<buttontext pID="' + (participation.id ? participation.id : '') + '" s="' + (participation.id ? participation.state : '') + '" confirm="' + v.event.confirm + '" class="bgColor" onclick="pageEvent.participate(event,' + JSON.stringify(p).replace(/"/g, '&quot;') + ')" max="' + (v.maxParticipants ? v.maxParticipants : 0) + '" style="display:none;">' + ui.l('events.participante' + (participation.state == 1 ? 'Stop' : '')) + '</buttontext>';
 		text += '<buttontext class="bgColor" onclick="pageEvent.toggleParticipants(event,' + JSON.stringify(p).replace(/"/g, '&quot;') + ',' + v.event.confirm + ')"><participantCount></participantCount>' + ui.l('events.participants') + '</buttontext>';
-		text += '</div><text name="participants" style="margin:0 -1em;"></text>';
+		text += '</div><text name="participants" style="margin:0 -1em;display:none;"></text>';
 		return text;
 	}
 	static getParticipation(p) {
@@ -413,6 +407,16 @@ ${v.eventParticipationButtons}
 					return pageEvent.participations[i];
 			}
 		}
+	}
+	static hasParticipated(eventId) {
+		if (pageEvent.participations) {
+			for (var i = 0; i < pageEvent.participations.length; i++) {
+				if (pageEvent.participations[i].event.id == eventId && pageEvent.participations[i].state == 1 &&
+					global.date.server2Local(pageEvent.participations[i].eventDate + pageEvent.participations[i].event.startDate.substring(10) < new Date()))
+					return true;
+			}
+		}
+		return false;
 	}
 	static init() {
 		if (!ui.q('events').innerHTML)
@@ -581,17 +585,21 @@ ${v.eventParticipationButtons}
 		else if (!ui.q('events listResults row'))
 			setTimeout(lists.openFilter, 500);
 	}
-	static loadPotentialParticipants(category, visibility) {
+	static loadPotentialParticipants() {
 		var i = ui.q('detail card:last-child').getAttribute('i');
 		if (ui.q('detail card[i="' + i + '"] [name="potentialParticipants"] detailTogglePanel').innerText) {
 			details.togglePanel(ui.q('detail card[i="' + i + '"] [name="potentialParticipants"]'));
 			return;
 		}
-		var search = (visibility == 1 ? 'contactLink.status=\'Friends\'' : pageContact.getSearchMatches()) +
-			' and (length(contact.attr' + category + ')>0 or length(contact.attr' + category + 'Ex)>0) and contact.id<>' + user.contact.id;
+		var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
+		var search = (e.event.visibility == 2 ? global.getRegEx('contact.skills', e.event.skills) + ' or ' + global.getRegEx('contact.skillsText', e.event.skillsText) + ' and ' : '') +
+			'contact.id<>' + user.contact.id;
 		communication.loadList('query=contact_list&distance=50&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent(search),
 			function (r) {
-				ui.q('detail card[i="' + i + '"] [name="potentialParticipants"] detailTogglePanel').innerHTML = pageContact.listContacts(r);
+				var s = pageContact.listContacts(r);
+				if (!s)
+					s = ui.l('events.noPotentialParticipant');
+				ui.q('detail card[i="' + i + '"] [name="potentialParticipants"] detailTogglePanel').innerHTML = s;
 				details.togglePanel(ui.q('detail card[i="' + i + '"] [name="potentialParticipants"]'));
 			});
 	}
@@ -895,11 +903,6 @@ ${v.eventParticipationButtons}
 	}
 	static saveDraft() {
 		formFunc.saveDraft('event', formFunc.getForm('popup form'));
-	}
-	static search() {
-		pageEvent.filter = formFunc.getForm('events filters form').values;
-		communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_listEventCurrent&search=' + encodeURIComponent(pageEvent.getSearch()), pageEvent.listEvents, 'events', 'search');
-		formFunc.saveDraft('searchEvents', pageEvent.filter);
 	}
 	static setForm() {
 		var b = ui.q('popup [name="type"]').checked;

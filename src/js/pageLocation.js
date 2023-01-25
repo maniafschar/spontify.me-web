@@ -79,12 +79,12 @@ ${v.rating}
 <detailButtons>
 	<buttontext class="bgColor${v.hideMeEvents}" name="buttonEvents"
 		onclick="pageEvent.toggle(${v.locID})">${ui.l('events.title')}</buttontext>
-	<buttontext class="bgColor${v.favorite}" name="buttonFavorite"
+	<buttontext class="bgColor${v.favorite}${v.hideMeFavorite}" name="buttonFavorite"
 		onclick="pageLocation.toggleFavorite(&quot;${v.id}&quot;)">${ui.l('locations.favoritesButton')}</buttontext>
 	<buttontext class="bgColor${v.pressedCopyButton}" name="buttonCopy"
 		onclick="pageChat.doCopyLink(event,&quot;${v.event.id ? 'e' : 'l'}=${v.id}&quot;)">${ui.l('share')}</buttontext>
 	<buttontext class="bgColor${v.hideMePotentialParticipants}" name="buttonPotentialParticipants"
-		onclick="pageEvent.loadPotentialParticipants(${v.category},${v.event.visibility})">${ui.l('events.potentialParticipants')}</buttontext>
+		onclick="pageEvent.loadPotentialParticipants()">${ui.l('events.potentialParticipants')}</buttontext>
 	<buttontext class="bgColor" name="buttonEdit"
 		onclick="${v.editAction}">${ui.l('edit')}</buttontext>
 	<buttontext class="bgColor" name="buttonGoogle"
@@ -311,7 +311,7 @@ ${v.rating}
 		var r = eventWithLocation && v.rating || !eventWithLocation && v.contact.rating;
 		if (r > 0)
 			v.rating = '<detailRating onclick="ratings.open(' + v.event.id + ',&quot;' + (eventWithLocation ? 'event.locationId=' + v.locID : 'event.contactId=' + v.contact.id) + '&quot;)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + r) + '%;">★★★★★</full></ratingSelection></detailRating>';
-		else if (v.event.id && v.event.locationId)
+		else if (v.event.id && v.event.locationId && v.event.contactId != user.contact.id && pageEvent.hasParticipated(v.event.id))
 			v.rating = '<div style="margin:1em 0;"><buttontext class="bgColor" onclick="ratings.open(' + v.event.id + ')">' + ui.l('rating.save') + '</buttontext></div>';
 		if (eventWithLocation)
 			v.distanceDisplay = ' style="display:none;"';
@@ -419,7 +419,6 @@ ${v.rating}
 				ui.attr(e, 'filtered', !match);
 			}
 		}
-		lists.execFilter();
 		pageLocation.scrollMap();
 	}
 	static hasCategory(cats, catString) {
@@ -703,10 +702,6 @@ ${v.rating}
 				},
 				position: new google.maps.LatLng(d.latitude, d.longitude)
 			});
-	}
-	static searchFromMap() {
-		pageLocation.map.loadActive = true;
-		communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent(pageLocation.getSearch(pageLocation.map.canvas.getBounds())), pageLocation.listLocation, 'locations', 'search');
 	}
 	static setLocationName(event) {
 		var e = event.target;

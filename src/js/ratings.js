@@ -1,6 +1,7 @@
 import { communication } from './communication';
 import { global } from './global';
 import { EventRating, Location, model } from './model';
+import { pageEvent } from './pageEvent';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 
@@ -46,41 +47,61 @@ class ratings {
 		return ratings.templateForm(v);
 	}
 	static open(id, search) {
-		communication.ajax({
-			url: global.server + 'db/list?query=misc_rating&search=' + encodeURIComponent(search),
-			responseType: 'json',
-			success(r) {
-				var f = r._lastRating;
-				if (f) {
-					f = f.split(' ');
-					f = f[0] + ' ' + f[1];
-					f = global.date.server2Local(f);
-				}
+		var lastRating = null, list = null;
+		var render = function () {
+			if (lastRating && list) {
+				var form;
 				if (!id) {
 					var name = ui.q('detail:not([style*="none"]) card:last-child title, [i="' + id + '"] title').innerText.trim();
-					f = '<ratingHint>' + ui.l('rating.' + (search.indexOf('location') > -1 ? 'location' : 'contact')).replace('{0}', name) + '</ratingHint>';
-				} else if (r._lastRating && (new Date().getTime() - f) / 86400000 < 7)
-					f = '<ratingHint>' + ui.l('rating.lastRate').replace('{0}', global.date.formatDate(f)).replace('{1}', '<br/><br/><rating><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + parseInt(r._lastRating.split(' ')[2])) + '%;">★★★★★</full></rating><br/><br/>') + '</ratingHint>';
+					form = '<ratingHint>' + ui.l('rating.' + (search.indexOf('location') > -1 ? 'location' : 'contact')).replace('{0}', name) + '</ratingHint>';
+				} else if (lastRating.createdAt && (new Date().getTime() - global.date.server2Local(lastRating.createdAt)) / 86400000 < 7)
+					form = '<ratingHint>' + ui.l('rating.lastRate').replace('{0}', global.date.formatDate(lastRating)).replace('{1}', '<br/><br/><rating><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + lastRating.rating) + '%;">★★★★★</full></rating><br/><br/>') + '</ratingHint>';
+				else if (!pageEvent.getParticipation({ id: id, date: ui.q('detail card:last-child .date').getAttribute('d').substring(0, 10) }))
+					form = '<ratingHint>' + ui.l('rating.notParticipated') + '</ratingHint>';
+				else if (global.date.server2Local(ui.q('detail card:last-child .date')) > new Date())
+					form = '<ratingHint>' + ui.l('rating.notParticipated') + '</ratingHint>';
+				else if (!pageEvent.hasParticipated(id))
+					form = '<ratingHint>' + ui.l('rating.notParticipated') + '</ratingHint>';
 				else
-					f = ratings.getForm(id);
+					form = ratings.getForm(id);
 				ui.html('detail card:last-child [name="favLoc"]', '');
 				var s = '', date, pseudonym, text, img, rate;
-				for (var i = r.length - 1; i > 0; i--) {
-					var v = model.convert(new EventRating(), r, i);
+				for (var i = list.length - 1; i > 0; i--) {
+					var v = model.convert(new EventRating(), list, i);
 					date = global.date.formatDate(v.createdAt);
 					pseudonym = v.contact.id == user.contact.id ? ui.l('you') : v.contact.pseudonym;
 					text = v.text ? ': ' + v.text : '';
 					img = v.image ? '<br/><img src="' + global.serverImg + v.image + '"/>' : '';
-					s += '<ratingItem';
 					rate = '<rating><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></rating>';
-					s += ' onclick="ui.navigation.autoOpen(&quot;' + global.encParam('e=' + v.eventId) + '&quot;,event)" style="cursor:pointer;"';
-					s += '>' + rate + date + ' ' + pseudonym + text + img + '</ratingItem>';
+					s += '<ratingItem onclick="ui.navigation.autoOpen(&quot;' + global.encParam('e=' + v.eventId) + '&quot;,event)">' + rate + date + ' ' + pseudonym + text + img + '</ratingItem>';
 				}
 				if (s)
 					s = '<ratingHistory>' + s + '</ratingHistory>';
-				ui.navigation.openPopup(ui.l('rating.title'), f + s, 'ratings.saveDraft()');
+				ui.navigation.openPopup(ui.l('rating.title'), form + s, 'ratings.saveDraft()');
 			}
-		});
+		};
+		if (id) {
+			communication.ajax({
+				url: global.server + 'db/list?query=misc_rating&search=' + encodeURIComponent('event.id=' + id + ' and event.contactId=' + user.contact.id),
+				responseType: 'json',
+				success(r) {
+					lastRating = r.length > 1 ? model.convert(new EventRating(), r, r.length - 1) : {};
+					render();
+				}
+			});
+		} else
+			lastRating = {};
+		if (search) {
+			communication.ajax({
+				url: global.server + 'db/list?query=misc_rating&search=' + encodeURIComponent(search),
+				responseType: 'json',
+				success(r) {
+					list = r;
+					render();
+				}
+			});
+		} else
+			list = [];
 	}
 	static postSave(r) {
 		formFunc.removeDraft('rating' + r.cid);

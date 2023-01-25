@@ -187,7 +187,7 @@ class pageLogin {
 			communication.login.recoverPasswordSendEmail(email.value);
 	}
 	static recoverPasswordSetNew() {
-		if (!ui.navigation.openPopup(ui.l('login.changePassword'), '<span style="padding-bottom:1em;display:block;">' + ui.l('login.changePasswordBody') + '</span><field><label>' + ui.l('login.password') + '</label><value><input type="password" name="passwd" maxlength="30"></value></div><dialogButtons><buttontext class="bgColor" onclick="communication.login.recoverPasswordSetNew()">' + ui.l('login.changePassword') + '</buttontext></dialogButtons><popupHint></popupHint>', 'communication.login.warningRegNotComplete()', true))
+		if (!ui.navigation.openPopup(ui.l('login.changePassword'), '<span>' + ui.l('login.changePasswordBody') + '</span><field><label>' + ui.l('login.password') + '</label><value><input type="password" name="passwd" maxlength="30"></value></field><dialogButtons><buttontext class="bgColor" onclick="communication.login.recoverPasswordSetNew()">' + ui.l('login.changePassword') + '</buttontext></dialogButtons><popupHint></popupHint>', 'communication.login.warningRegNotComplete()', true))
 			setTimeout(pageLogin.recoverPasswordSetNew, 500);
 	}
 	static register() {

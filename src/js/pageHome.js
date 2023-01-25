@@ -75,10 +75,11 @@ ${ui.l('home.labelSkill')}
 		if (force || !e.innerHTML) {
 			var v = {};
 			if (user.contact) {
-				if (user.contact.imageList) {
+				if (user.contact.imageList)
 					v.imgProfile = '<img src="' + global.serverImg + user.contact.imageList + '"/>';
-					v.logoSmall = ' class="logoSmall"';
-				}
+				else
+					v.imgProfile = '<img src="images/contact.svg" style="box-shadow:none;"/>';
+				v.logoSmall = ' class="logoSmall"';
 				v.name = user.contact.pseudonym;
 				v.infoButton = ' noDisp';
 				v.langButton = ' noDisp';

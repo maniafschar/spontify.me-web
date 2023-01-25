@@ -273,6 +273,7 @@
 			"noEvents": "Momentan wurden keine Events gefunden.",
 			"noImage": "Lade eine Profilbild hoch, dann kannst Du hier etwas unternehmen.<br/>Würdest Du mit neuen Buddies etwas unternehmen wollen, die kein schönes Profil hier haben?",
 			"noParticipant": "Noch kein Teilnehmer, sei der Erste!",
+			"noPotentialParticipant": "Kein poteltiellen Teilnehmer gefunden.",
 			"outdated": "Vergangene Events",
 			"participante": "Ticket sichern!",
 			"participanteStop": "Absagen",
@@ -513,13 +514,15 @@
 			"locationImmediate": "Möchtest Du die Location auch bewerten?",
 			"login": "Sobald Du eingeloggt bist, kannst Du Locations und Buddies bewerten und andere Bewertungen sehen.",
 			"negativeRateValidation": "Bitte beschreibe Deine negative Bewertung.",
+			"notParticipated": "Du hast an diesem skillvent nicht teilgenommen. Du kannst nur skillvents bewerten an denen Du teilgenommen hast.",
+			"notStarted": "Das skillvent hat noch nihct angefangen. Nach ",
 			"notYourself": "Du kannst Dich selbst nicht bewerten.",
 			"onlyFriends": "Du kannst diesen Buddy nicht bewerten, da Ihr keine Freunde seid.",
 			"publish": "auch an meine Facebook Wand posten",
 			"save": "Bewerten",
 			"saved": "Deine Bewertung wurde gespeichert.",
 			"subTitle": "Du kannst eine Bewertung pro {0} und Woche abgeben:",
-			"title": "Bewertung${separator}"
+			"title": "Bewertung"
 		},
 		"register": {
 			"errorPseudonym": "Der Name muss mindestens 4-stellig sein.",
