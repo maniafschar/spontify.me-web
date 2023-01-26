@@ -144,6 +144,8 @@ class Event extends BaseEntity {
 	maxParticipants;
 	price;
 	startDate;
+	skills;
+	skillsText;
 	text;
 	type;
 	visibility;
