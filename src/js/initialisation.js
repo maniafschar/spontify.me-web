@@ -370,7 +370,7 @@ class initialisation {
 	static showStartDialogs() {
 		var p = global.getParam();
 		if (p) {
-			if (p.indexOf('merchantIdInPayPal')) {
+			if (p.indexOf('merchantIdInPayPal') > -1) {
 				communication.ajax({
 					url: global.server + 'action/paypalRegister',
 					method: 'PUT',
