@@ -79,7 +79,7 @@ class pageEvent {
 	<label>${ui.l('events.price')}</label>
 	<value>
 		<input type="number" step="any" name="price" value="${v.price}" onkeyup="pageEvent.checkPrice()" onmousewheel="return false;" />
-		<explain class="paypal">${ui.l('events.paypalSignUpHint')}
+		<explain class="paypal" style="display:none;">${ui.l('events.paypalSignUpHint')}
 			<dialogButtons>
 				<buttontext class="bgColor" onclick="pageEvent.signUpPaypal()">${ui.l('events.paypalSignUpButton')}</buttontext>
 			</dialogButtons>
@@ -269,7 +269,8 @@ ${v.eventParticipationButtons}
 		}
 		v.hashtagSelection = hashtags.display();
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
-		pageEvent.setForm();
+		if (locationID)
+			pageEvent.setForm();
 	}
 	static getCalendarList(data, onlyMine) {
 		if (!data || data.length == 0)
@@ -652,9 +653,10 @@ ${v.eventParticipationButtons}
 		ui.q('popup input[name="locationId"]').value = e ? e.getAttribute('i') : -1;
 		ui.q('popup .locationName').innerHTML = e ? e.innerHTML : ui.l('events.newOnlineEvent');
 		ui.toggleHeight('popup .location', function () {
-			ui.toggleHeight('popup .event', pageEvent.checkPrice);
+			ui.toggleHeight('popup .event');
+			pageEvent.setForm();
 			if (ui.q('popup [name="hashtagsDisp"]').value)
-				setTimeout(function () { ui.adjustTextarea(ui.q('popup [name="hashtagsDisp"]')); }, 2000);
+				setTimeout(function () { ui.adjustTextarea(ui.q('popup [name="hashtagsDisp"]')); }, 500);
 		});
 	}
 	static participate(event, id) {
