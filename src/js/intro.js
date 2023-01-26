@@ -92,34 +92,4 @@ class intro {
 		ui.css(e, 'display', 'block');
 		setTimeout(function () { ui.css(e, 'opacity', 1) }, 10);
 	}
-	static openIntro(event) {
-		if (intro.steps.length == 0) {
-			intro.steps.push({ desc: 'home', pos: '10%,20em', size: '80%,auto', hinky: '', action: '' });
-			intro.steps.push({ desc: 'settings', pos: '10%,18em', size: '80%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'top', action: '' });
-			intro.steps.push({ desc: 'bluetooth', pos: '10%,18em', size: '80%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'top', action: '' });
-			intro.steps.push({ desc: 'listMenu', pos: '10%,-12em', size: '80%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'bottom', action: 'ui.navigation.goTo("locations")' });
-			intro.steps.push({ desc: 'listExplained', pos: '10%,10em', size: '80%,auto', hinky: 'right:2em;', hinkyClass: 'top', action: 'intro.loadLocations()' });
-			intro.steps.push({ desc: 'listFilter', pos: '10%,50%', size: '80%,auto', hinky: 'left:2em;', hinkyClass: 'top', action: 'lists.toggleFilter(event, pageLocation.getFilterFields)' });
-			intro.steps.push({ desc: 'detail', pos: '10%,4em', size: '80%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'bottom', action: 'var e=ui.q("locations row");if(e)e.click();intro.introMode=2' });
-			intro.steps.push({ desc: 'register', pos: '10%,-5em', size: '80%,auto', hinky: 'left:2em;', hinkyClass: 'top', action: 'pageLogin.lastTab=3;ui.navigation.goTo("login")' });
-		}
-		if ((!user.contact && intro.currentStep == intro.steps.length - 1) || (user.contact && intro.currentStep == intro.steps.length - 2)) {
-			intro.currentStep = -1;
-			intro.closeHint();
-			return;
-		}
-		if (!event) {
-			intro.currentStep = -1;
-			if (ui.cssValue('home', 'display') == 'none')
-				ui.navigation.goTo('home');
-			ui.html('locations', '');
-		}
-		var e = ui.q('hint');
-		ui.css(e, 'opacity', 0);
-		intro.currentStep++;
-		if (ui.cssValue(e, 'display') == 'block')
-			setTimeout(function () { intro.openHint(intro.steps[intro.currentStep]) }, 400);
-		else
-			intro.openHint(intro.steps[intro.currentStep]);
-	}
 }

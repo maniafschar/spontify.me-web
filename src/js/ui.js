@@ -349,7 +349,8 @@ class ui {
 			}
 		},
 		hidePopup() {
-			ui.attr('popup', 'error', '');
+			ui.attr('popup', 'error');
+			ui.attr('popup popupTitle', 'modal');
 			var e = ui.q('popupTitle');
 			if (!e || ui.cssValue('popup', 'display') != 'none' && e.getAttribute('modal') != 'true') {
 				ui.navigation.animation(ui.q('popup'), 'popupSlideOut', ui.navigation.hidePopupHard);
@@ -362,7 +363,8 @@ class ui {
 			var e = ui.q('popup');
 			ui.css(e, 'display', 'none');
 			ui.html(e, '');
-			ui.attr('popup', 'error', '');
+			ui.attr('popup', 'error');
+			ui.attr('popup popupTitle', 'modal');
 			ui.classRemove(e, 'animated popupSlideIn popupSlideOut');
 		},
 		hideMenu(exec) {
@@ -390,7 +392,7 @@ class ui {
 		},
 		openPopup(title, data, closeAction, modal, exec) {
 			var p = ui.q('popup'), pt = ui.q('popupTitle'), visible = p.style.display != 'none';
-			if (ui.classContains(p, 'animated') || visible && pt && pt.getAttribute('modal') == 'true')
+			if (visible && pt && pt.getAttribute('modal') == 'true')
 				return false;
 			if (global.isBrowser() && location.href.indexOf('#') < 0)
 				history.pushState(null, null, '#x');
@@ -398,7 +400,7 @@ class ui {
 				ui.navigation.hidePopup();
 			else if (data) {
 				ui.navigation.lastPopup = title + global.separatorTech + data;
-				data = '<popupContent ts="' + new Date().getTime() + '"><div>' + data + '</div></popupContent>';
+				data = '<popupContent><div>' + data + '</div></popupContent>';
 				if (title)
 					data = '<popupTitle' + (modal ? ' modal="true"' : '') + '><div>' + title + '</div></popupTitle>' + data;
 				var f = function () {

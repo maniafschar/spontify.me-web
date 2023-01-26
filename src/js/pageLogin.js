@@ -212,7 +212,7 @@ class pageLogin {
 					communication.login.checkUnique(ui.q('login tabBody form[name="loginRegister"] input[name="email"]'));
 				},
 				success(r) {
-					ui.q('login').innerHTML = '<div style="padding:2em;text-align:center;">' + ui.l('register.success') + '<br/><br/><br/><buttontext onclick="pageLogin.init()" class="bgColor">&lt;</buttontext></div>';
+					ui.q('login tabBody form[name="loginRegister"]').innerHTML = '<div style="padding:2em;">' + ui.l('register.success') + '</div>';
 					communication.login.removeCredentials();
 				}
 			});

@@ -546,12 +546,8 @@ ${v.rating}
 	}
 	static save() {
 		ui.html('popupHint', '');
-		formFunc.resetError(ui.q('[name="locationcategory"]'));
 		formFunc.resetError(ui.q('[name="name"]'));
 		formFunc.resetError(ui.q('[name="address"]'));
-		formFunc.resetError(ui.q('[name="parkingOption"]'));
-		if (!ui.q('[name="locationcategory"]:checked'))
-			formFunc.setError(ui.q('[name="locationcategory"]'), 'locations.errorCategory');
 		if (!ui.val('[name="name"]'))
 			formFunc.setError(ui.q('[name="name"]'), 'locations.errorName');
 		else
@@ -562,11 +558,6 @@ ${v.rating}
 			formFunc.setError(ui.q('[name="address"]'), 'locations.errorAddress');
 		else if (ui.val('[name="address"]').indexOf('\n') < 0)
 			formFunc.setError(ui.q('[name="address"]'), 'locations.errorAddressFormat');
-		if (!ui.qa('[name="parkingOption"]')[0].checked &&
-			!ui.qa('[name="parkingOption"]')[1].checked &&
-			!ui.qa('[name="parkingOption"]')[2].checked &&
-			!ui.qa('[name="parkingOption"]')[3].checked)
-			formFunc.setError(ui.q('[name="parkingOption"]'), 'locations.errorParking');
 		if (ui.q('popup errorHint')) {
 			ui.scrollTo('popupContent', 0);
 			return;
@@ -593,7 +584,6 @@ ${v.rating}
 				formFunc.removeDraft('location');
 				details.open(id ? id : r, 'location_list&search=' + encodeURIComponent('location.id=' + r), id ? function (l, id) {
 					ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id);
-					ui.navigation.hidePopup();
 				} : pageLocation.detailLocationEvent);
 				if (!id && pageLocation.reopenEvent)
 					setTimeout(function () { pageEvent.edit(r); }, 1000);

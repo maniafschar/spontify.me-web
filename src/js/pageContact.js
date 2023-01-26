@@ -562,8 +562,8 @@ ${v.attributes}
 			if (!v._message1)
 				v._message1 = v.attr.textAttributes();
 			var birth = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
-			if (birth)
-				v.birth = birth.age ? ' (' + v.age + ')' : '';
+			if (birth.age)
+				v.birth = ' (' + birth.age + ')';
 			if (!v._message2)
 				v._message2 = v.aboutMe;
 			v._message = v._message1 ? v._message1 + '<br/>' : '';
@@ -571,10 +571,9 @@ ${v.attributes}
 			v.dist = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
 			if (!v._badgeDisp) {
 				v._badgeDisp = birth.present ? 'block' : 'none';
-				v._badge = birth[1] ? birth.present : 0;
+				v._badge = birth.present ? birth.present : 0;
 			}
-			if (!v.badgeAction)
-				v.badgeAction = birth[1] ? '' : 'remove';
+			v.badgeAction = birth.present ? '' : 'remove';
 			if (activeID == 'detail')
 				v.oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)';
 			else if (activeID == 'settings')

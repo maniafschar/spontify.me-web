@@ -144,29 +144,4 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 		if (ui.cssValue(e, 'transform').indexOf('1') > 0)
 			ui.css(e, 'transform', 'scale(0)');
 	}
-	static openFilter() {
-		var e = ui.q(ui.navigation.getActiveID() + ' filters');
-		if (ui.cssValue(e, 'transform').indexOf('1') < 0)
-			lists.toggleFilter();
-
-	}
-	static toggleFilter() {
-		setTimeout(function () {
-			var activeID = ui.navigation.getActiveID();
-			var e = ui.q(activeID + ' filters>div');
-			if (e) {
-				if (!e.innerHTML) {
-					e.innerHTML = activeID == 'locations' ? pageLocation.getFilterFields() : activeID == 'events' ? pageEvent.getFilterFields() : pageContact.getFilterFields();
-					formFunc.initFields(activeID + ' filters');
-				}
-				e = ui.q(activeID + ' filters');
-				if (ui.cssValue(e, 'transform').indexOf('1') < 0) {
-					if (ui.q('menu').style.transform.indexOf('1') > 0)
-						ui.navigation.toggleMenu();
-					ui.css(e, 'transform', 'scale(1)');
-				} else
-					ui.css(e, 'transform', 'scale(0)');
-			}
-		}, 50);
-	}
 }

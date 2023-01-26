@@ -270,8 +270,6 @@ ${v.eventParticipationButtons}
 		v.hashtagSelection = hashtags.display();
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
 		pageEvent.setForm();
-		if (locationID)
-			setTimeout(pageEvent.checkPrice, 500);
 	}
 	static getCalendarList(data, onlyMine) {
 		if (!data || data.length == 0)
@@ -830,18 +828,18 @@ ${v.eventParticipationButtons}
 		var start = ui.q('popup input[name="startDate"]');
 		var end = ui.q('popup input[name="endDate"]');
 		var text = ui.q('popup [name="text"]');
-		var hashtags = ui.q('popup [name="hashtagsDisp"]');
+		var tags = ui.q('popup [name="hashtagsDisp"]');
 		var id = ui.q('popup [name="id"]').value;
 		ui.html('popup popupHint', '');
 		formFunc.resetError(start);
 		formFunc.resetError(end);
 		formFunc.resetError(text);
-		formFunc.resetError(hashtags);
+		formFunc.resetError(tags);
 		formFunc.resetError(ui.q('popup input[name="visibility"]'));
-		if (!hashtags.value)
-			formFunc.setError(hashtags, 'error.hashtags');
+		if (!tags.value)
+			formFunc.setError(tags, 'error.hashtags');
 		else
-			formFunc.validation.filterWords(hashtags);
+			formFunc.validation.filterWords(tags);
 		if (!text.value)
 			formFunc.setError(text, 'error.description');
 		else
@@ -894,9 +892,12 @@ ${v.eventParticipationButtons}
 			url: global.server + 'db/one',
 			method: id ? 'PUT' : 'POST',
 			body: v,
-			success() {
+			success(r) {
 				ui.navigation.hidePopup();
-				formFunc.removeDraft('event' + v.locationId + (id ? '_' + id : ''));
+				formFunc.removeDraft('event');
+				details.open(id ? id : r, 'location_listEvent&search=' + encodeURIComponent('event.id=' + r), id ? function (l, id) {
+					ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id);
+				} : pageLocation.detailLocationEvent);
 				pageEvent.refreshToggle();
 			}
 		});
@@ -908,6 +909,7 @@ ${v.eventParticipationButtons}
 		var b = ui.q('popup [name="type"]').checked;
 		ui.q('popup label[name="startDate"]').innerText = ui.l('events.' + (b ? 'date' : 'start'));
 		ui.css('popup field[name="endDate"]', 'display', b ? 'none' : '');
+		pageEvent.checkPrice();
 	}
 	static signUpPaypal() {
 		if (pageEvent.paypal) {
