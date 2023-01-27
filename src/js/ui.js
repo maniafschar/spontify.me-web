@@ -29,7 +29,7 @@ class ui {
 		${ui.l('search.title')}
 	</a><a onclick="communication.loadList(ui.query.eventTickets(),pageEvent.listTickets,&quot;events&quot;,&quot;eventsTicket&quot;)">
 		${ui.l('events.myTickets')}
-	</a><a onclick="communication.loadList(ui.query.eventMy(),pageEvent.listEventsMy,&quot;events&quot;,&quot;eventsMy&quot;)">
+	</a><a onclick="communication.loadList(ui.query.eventMy(),pageEvent.listEvents,&quot;events&quot;,&quot;eventsMy&quot;)">
 		${ui.l('events.myEvents')}
 	</a><a onclick="pageEvent.edit()">
 		${ui.l('events.new')}

@@ -263,20 +263,6 @@ ${v.rating}
 		var v = model.convert(new Location(), l);
 		v.data = encodeURIComponent(JSON.stringify(v));
 		l = l[1];
-		v.parking = '';
-		var p = v.parkingOption;
-		if (p && p.indexOf('1') > -1)
-			v.parking = global.separator + ui.l('locations.parking1');
-		if (p && p.indexOf('2') > -1)
-			v.parking += global.separator + ui.l('locations.parking2');
-		if (p && p.indexOf('3') > -1)
-			v.parking += global.separator + ui.l('locations.parking3');
-		if (p && p.indexOf('4') > -1)
-			v.parking += global.separator + ui.l('locations.parking4');
-		if (v.parkingText)
-			v.parking += global.separator + v.parkingText;
-		if (v.parking)
-			v.parking = '<div>' + v.parking.substring(global.separator.length) + '</div>';
 		if (!v.id)
 			v.name = v.contact.pseudonym + (v.contact.age ? ' (' + v.contact.age + ')' : '');
 		v.id = id;
@@ -311,7 +297,7 @@ ${v.rating}
 		var r = eventWithLocation && v.rating || !eventWithLocation && v.contact.rating;
 		if (r > 0)
 			v.rating = '<detailRating onclick="ratings.open(' + v.event.id + ',&quot;' + (eventWithLocation ? 'event.locationId=' + v.locID : 'event.contactId=' + v.contact.id) + '&quot;)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + r) + '%;">★★★★★</full></ratingSelection></detailRating>';
-		else if (v.event.id && v.event.locationId && v.event.contactId != user.contact.id && pageEvent.hasParticipated(v.event.id))
+		else if (v.event.id && v.event.locationId > -1 && v.event.contactId != user.contact.id && pageEvent.hasParticipated(v.event.id))
 			v.rating = '<div style="margin:1em 0;"><buttontext class="bgColor" onclick="ratings.open(' + v.event.id + ')">' + ui.l('rating.save') + '</buttontext></div>';
 		if (eventWithLocation)
 			v.distanceDisplay = ' style="display:none;"';
@@ -455,15 +441,6 @@ ${v.rating}
 			v._message1 = v.attr.textAttributes();
 		if (!v._message2)
 			v._message2 = v.description;
-		if (v.parkingOption) {
-			var p = v.parkingOption.indexOf('1') > -1 ||
-				v.parkingOption.indexOf('2') > -1 ? ui.l('locations.parkingPossible') :
-				v.parkingOption.indexOf('4') > -1 ? ui.l('locations.parking4') : '';
-			if (!v._message1)
-				v._message1 = p;
-			else if (!v._message2)
-				v._message2 = p;
-		}
 	}
 	static listLocation(l) {
 		if (ui.q('locations buttontext.map'))
@@ -594,35 +571,6 @@ ${v.rating}
 		if (ui.q('popup input[name="id"]').value)
 			return;
 		formFunc.saveDraft('location', formFunc.getForm('popup form'));
-	}
-	static saveEvent(locationId) {
-		formFunc.resetError(ui.q('popup form input[name="startDate"]'));
-		formFunc.resetError(ui.q('popup form textarea[name="text"]'));
-		var v = formFunc.getForm('popup form');
-		var h = v.values.startDate.split(':')[0];
-		if (!h)
-			formFunc.setError(ui.q('popup form input[name="startDate"]'), 'events.errorDate')
-		if (!v.values.text)
-			formFunc.setError(ui.q('popup form textarea[name="text"]'), 'error.description');
-		else
-			formFunc.validation.filterWords(ui.q('popup form textarea[name="text"]'));
-		if (ui.q('detail form errorHint'))
-			return;
-		var d = new Date();
-		if (h < d.getHours())
-			d.setDate(d.getDate() - 1);
-		v.values.startDate = global.date.local2server(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + v.values.startDate + ':00');
-		v.values.locationId = locationId;
-		v.classname = 'Event';
-		communication.ajax({
-			url: global.server + 'db/one',
-			method: 'POST',
-			body: v,
-			success(r) {
-				ui.navigation.autoOpen(global.encParam('e=' + r));
-				pageEvent.initParticipation();
-			}
-		});
 	}
 	static scrollMap() {
 		if (ui.cssValue('map', 'display') == 'none')

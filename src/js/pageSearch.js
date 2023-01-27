@@ -176,7 +176,9 @@ class pageSearch {
 			}
 			if (ui.q('search tabBody div.events [name="matches"]:checked'))
 				s += (s ? ' and ' : '') + pageSearch.events.getMatches();
-			return s;
+			var d = new Date();
+			d.setDate(new Date().getDate() + 14);
+			return 'event.startDate<\'' + global.date.local2server(d) + '\' and event.endDate>\'' + global.date.local2server(new Date()) + '\'' + (s ? ' and ' + s : '');
 		},
 		getSearch1(bounds) {
 			var s = '';

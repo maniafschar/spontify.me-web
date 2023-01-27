@@ -6,7 +6,7 @@ import { global } from "./global";
 import { hashtags } from "./hashtags";
 import { intro } from "./intro";
 import { lists } from "./lists";
-import { Contact, Location, model } from "./model";
+import { Contact, Event, Location, model } from "./model";
 import { pageContact } from "./pageContact";
 import { pageHome } from "./pageHome";
 import { pageLocation } from "./pageLocation";
@@ -272,13 +272,13 @@ ${v.eventParticipationButtons}
 		if (locationID)
 			pageEvent.setForm();
 	}
-	static getCalendarList(data, onlyMine) {
+	static getCalendarList(data) {
 		if (!data || data.length == 0)
 			return '';
 		var today = new Date();
 		var s;
 		var todayPlus14 = new Date();
-		var actualEvents = [], actualEventsIndex = [], otherEvents = [], otherEventsIndex = [];
+		var actualEvents = [], otherEvents = [];
 		today.setHours(0);
 		today.setMinutes(0);
 		today.setSeconds(0);
@@ -306,17 +306,11 @@ ${v.eventParticipationButtons}
 						d1.setFullYear(d1.getFullYear() + 1);
 				}
 				do {
-					if (d1 > today && (!added || d1 < todayPlus14)) {
-						s = pageEvent.getParticipation({ id: v.event.id, date: d1.getFullYear() + '-' + ('0' + (d1.getMonth() + 1)).slice(-2) + '-' + ('0' + d1.getDate()).slice(-2) });
-						if (!onlyMine || s.id || v.event.contactId == user.contact.id) {
-							added = true;
-							if (!actualEvents[d1.getTime() + '.' + v.event.id]) {
-								var v2 = JSON.parse(JSON.stringify(v));
-								v2.event.startDate = new Date(d1.getTime());
-								actualEventsIndex.push(d1.getTime() + '.' + v.event.id);
-								actualEvents[d1.getTime() + '.' + v.event.id] = v2;
-							}
-						}
+					if (d1 > today && d1 < todayPlus14) {
+						added = true;
+						var v2 = JSON.parse(JSON.stringify(v));
+						v2.event.startDate = new Date(d1.getTime());
+						actualEvents.push(v2);
 					}
 					if (v.event.type == 'w1')
 						d1.setDate(d1.getDate() + 7);
@@ -330,24 +324,18 @@ ${v.eventParticipationButtons}
 						break;
 				} while (v.event.type != 'o' && d1 < todayPlus14);
 			}
-			if (onlyMine && !added && user.contact.id == v.event.contactId && !otherEvents[d1.getTime() + '.' + v.event.id]) {
+			if (!added && user.contact.id == v.event.contactId) {
 				v.event.startDate = global.date.server2Local(v.event.startDate);
-				otherEvents[d1.getTime() + '.' + v.event.id] = v;
-				otherEventsIndex.push(d1.getTime() + '.' + v.event.id);
+				otherEvents.push(v);
 			}
 		}
-		actualEventsIndex.sort();
-		var a = [];
-		a.push(data[0]);
-		for (var i = 0; i < actualEventsIndex.length; i++)
-			a.push(actualEvents[actualEventsIndex[i]]);
-		if (otherEventsIndex.length > 0) {
-			otherEventsIndex.sort();
-			a.push('outdated');
-			for (var i = 0; i < otherEventsIndex.length; i++)
-				a.push(otherEvents[otherEventsIndex[i]]);
+		actualEvents.sort(function (a, b) { return a.event.startDate > b.event.startDate ? 1 : -1; });
+		if (otherEvents.length > 0) {
+			otherEvents.sort(function (a, b) { return a.event.startDate > b.event.startDate ? -1 : 1; });
+			actualEvents.push('outdated');
+			actualEvents = actualEvents.concat(otherEvents);
 		}
-		return a;
+		return actualEvents;
 	}
 	static getId(v) {
 		var endDate = global.date.server2Local(v['event.endDate'] || v.event.endDate), today = new Date(), id = v.id || v['event.id'];
@@ -489,100 +477,94 @@ ${v.eventParticipationButtons}
 		lists.data[activeID] = as;
 		return pageEvent.listEventsInternal(as);
 	}
-	static listEventsInternal(as, date) {
-		if (as.length < 2)
+	static listEventsInternal(as) {
+		if (!as.length)
 			return '';
-		var s = '', v, outdated = false;
-		var current = '', dateString;
-		if (date) {
-			dateString = global.date.formatDate(date, 'weekdayLong');
-			dateString = dateString.substring(0, dateString.lastIndexOf(' '));
-		}
+		var today = new Date();
+		today.setHours(0);
+		today.setMinutes(0);
+		today.setSeconds(0);
+		var s = '', v;
+		var current = '';
 		var bg = 'mainBG';
-		for (var i = 1; i < as.length; i++) {
-			if (as[i] == 'outdated') {
-				if (date)
-					break;
-				outdated = true;
-				s += '<listSeparator style="margin-top:2em;">' + ui.l('events.outdated') + '</listSeparator>';
-			} else {
+		for (var i = 0; i < as.length; i++) {
+			if (as[i] == 'outdated')
+				s += '<listSeparator class="highlightColor strong">' + ui.l('events.outdated') + '</listSeparator>';
+			else {
 				v = as[i];
 				var startDate = global.date.server2Local(v.event.startDate);
 				var s2 = global.date.formatDate(startDate, 'weekdayLong');
 				var s3 = s2.substring(0, s2.lastIndexOf(' '));
-				if (!date || s3 == dateString) {
-					if (s3 != current) {
-						current = s3;
-						if (!outdated && !date)
-							s += '<listSeparator>' + global.date.getDateHint(startDate).replace('{0}', s3) + '</listSeparator>';
-					}
-					var t = global.date.formatDate(startDate);
-					t = t.substring(t.lastIndexOf(' ') + 1);
-					if (v.name)
-						v.name = t + ' ' + v.name;
-					else {
-						v.name = t + ' ' + v.contact.pseudonym + (v.contact.age ? ' (' + v.contact.age + ')' : '');
-						v._message1 = hashtags.ids2Text(v.event.skills) + (v.event.skillsText ? ' ' + v.event.skillsText : '');
-					}
-					v._message = v.event.text + '<br/>';
-					v.locID = v.id;
-					pageLocation.listInfos(v);
-					v._message += v._message1 ? v._message1 : v._message2 ? v._message2 : '';
-					v.id = v.event.id;
-					v.classFavorite = v.locationFavorite.favorite ? ' favorite' : '';
-					if (!outdated) {
-						var d = global.date.getDateFields(v.event.startDate);
-						var state = pageEvent.getParticipation({ id: v.id, date: d.year + '-' + d.month + '-' + d.day }).state;
-						if (state == 1)
-							v.classFavorite += ' participate';
-						else if (state == -1 && v.event.confirm == 1)
-							v.classFavorite += ' canceled';
-						v.id += '_' + d.year + '-' + d.month + '-' + d.day;
-					}
-					v.classBGImg = v.imageList ? '' : bg;
-					if (v.event.imageList)
-						v.image = global.serverImg + v.event.imageList;
-					else if (v.imageList)
-						v.image = global.serverImg + v.imageList;
-					else if (v.contact.imageList)
-						v.image = global.serverImg + v.contact.imageList;
-					else if (v.id)
-						v.image = 'images/event.svg" style="padding: 1em;';
-					else
-						v.image = 'images/contact.svg" style="padding: 1em;';
-					v.classBg = bg;
-					if (v.parkingOption) {
-						if (v.parkingOption.indexOf('1') > -1 ||
-							v.parkingOption.indexOf('2') > -1)
-							v.parking = ui.l('locations.parkingPossible');
-						else if (v.parkingOption.indexOf('4') > -1)
-							v.parking = ui.l('locations.parking4');
-					}
-					v._geolocationDistance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 ? 0 : 1).replace('.', ',') : '';
-					v.type = 'Event';
-					if (ui.navigation.getActiveID() == 'settings')
-						v.oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';
-					else
-						v.oc = 'details.open(&quot;' + v.id + '&quot;,&quot;location_listEvent&search=' + encodeURIComponent('event.id=' + v.event.id) + '&quot;,pageLocation.detailLocationEvent)';
-					s += pageLocation.templateList(v);
+				if (s3 != current) {
+					current = s3;
+					if (startDate >= today)
+						s += '<listSeparator>' + global.date.getDateHint(startDate).replace('{0}', s3) + '</listSeparator>';
 				}
+				var t = global.date.formatDate(startDate);
+				if (startDate >= today)
+					t = t.substring(t.lastIndexOf(' ') + 1);
+				if (v.name)
+					v.name = t + ' ' + v.name;
+				else {
+					v.name = t + ' ' + v.contact.pseudonym + (v.contact.age ? ' (' + v.contact.age + ')' : '');
+					v._message1 = hashtags.ids2Text(v.event.skills) + (v.event.skillsText ? ' ' + v.event.skillsText : '');
+				}
+				v._message = v.event.text + '<br/>';
+				v.locID = v.id;
+				pageLocation.listInfos(v);
+				v._message += v._message1 ? v._message1 : v._message2 ? v._message2 : '';
+				v.id = v.event.id;
+				v.classFavorite = v.locationFavorite.favorite ? ' favorite' : '';
+				if (v.eventParticipate.state == 1)
+					v.classFavorite += ' participate';
+				else if (v.eventParticipate.state == -1 && v.event.confirm == 1)
+					v.classFavorite += ' canceled';
+				if (startDate >= today) {
+					var d = global.date.getDateFields(v.event.startDate);
+					v.id += '_' + d.year + '-' + d.month + '-' + d.day;
+				}
+				v.classBGImg = v.imageList ? '' : bg;
+				if (v.event.imageList)
+					v.image = global.serverImg + v.event.imageList;
+				else if (v.imageList)
+					v.image = global.serverImg + v.imageList;
+				else if (v.contact.imageList)
+					v.image = global.serverImg + v.contact.imageList;
+				else if (v.id)
+					v.image = 'images/event.svg" style="padding: 1em;';
+				else
+					v.image = 'images/contact.svg" style="padding: 1em;';
+				v.classBg = bg;
+				v._geolocationDistance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 ? 0 : 1).replace('.', ',') : '';
+				v.type = 'Event';
+				if (ui.navigation.getActiveID() == 'settings')
+					v.oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';
+				else
+					v.oc = 'details.open(&quot;' + v.id + '&quot;,&quot;location_listEvent&search=' + encodeURIComponent('event.id=' + v.event.id) + '&quot;,pageLocation.detailLocationEvent)';
+				s += pageLocation.templateList(v);
 			}
 		}
 		return s;
 	}
-	static listEventsMy(l) {
-		var as = pageEvent.getCalendarList(l, true);
-		lists.data[ui.navigation.getActiveID()] = as;
-		return pageEvent.listEventsInternal(as);
-	}
 	static listTickets(r) {
-		var s = pageEvent.listEvents(r);
-		if (s)
-			ui.q('events listResults').innerHTML = '<listSeparator class="highlightColor strong">Aktuelle Tickets</listSeparator>' +
-				s + '<listSeparator class="highlightColor strong">Für Dich interessante Tickets</listSeparator>' +
-				'<listSeparator class="highlightColor strong">Vergangene Tickets</listSeparator>';
-		else if (!ui.q('events listResults row'))
-			setTimeout(lists.openFilter, 500);
+		var as = [], ap = [], today = new Date();
+		today.setHours(0);
+		today.setMinutes(0);
+		today.setSeconds(0);
+		for (var i = 1; i < r.length; i++) {
+			var e = model.convert(new Location(), r, i);
+			e.event.startDate = global.date.server2Local(e.eventParticipate.eventDate + e.event.startDate.substring(10));
+			if (e.event.startDate >= today)
+				as.push(e);
+			else
+				ap.push(e);
+		}
+		as.sort(function (a, b) { return a.event.startDate > b.event.startDate ? 1 : -1; });
+		ap.sort(function (a, b) { return a.event.startDate > b.event.startDate ? -1 : 1; });
+		var s = pageEvent.listEventsInternal(as),
+			p = pageEvent.listEventsInternal(ap);
+		return (s ? '<listSeparator class="highlightColor strong">' + ui.l('events.ticketCurrent') + '</listSeparator>' + s : '') +
+			(p ? '<listSeparator class="highlightColor strong">' + ui.l('events.ticketPast') + '</listSeparator>' + p : '');
 	}
 	static loadPotentialParticipants() {
 		var i = ui.q('detail card:last-child').getAttribute('i');
@@ -901,6 +883,7 @@ ${v.eventParticipationButtons}
 					ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id);
 				} : pageLocation.detailLocationEvent);
 				pageEvent.refreshToggle();
+				pageEvent.initParticipation();
 			}
 		});
 	}
