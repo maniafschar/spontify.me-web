@@ -1,7 +1,6 @@
 import { communication } from './communication';
 import { global } from './global';
 import { EventRating, Location, model } from './model';
-import { pageEvent } from './pageEvent';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 
@@ -55,7 +54,7 @@ class ratings {
 					var name = ui.q('detail:not([style*="none"]) card:last-child title, [i="' + id + '"] title').innerText.trim();
 					form = '<ratingHint>' + ui.l('rating.' + (search.indexOf('location') > -1 ? 'location' : 'contact')).replace('{0}', name) + '</ratingHint>';
 				} else if (lastRating.createdAt && (new Date().getTime() - global.date.server2Local(lastRating.createdAt)) / 86400000 < 7)
-					form = '<ratingHint>' + ui.l('rating.lastRate').replace('{0}', global.date.formatDate(lastRating)).replace('{1}', '<br/><br/><rating><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + lastRating.rating) + '%;">★★★★★</full></rating><br/><br/>') + '</ratingHint>';
+					form = '<ratingHint>' + ui.l('rating.lastRate').replace('{0}', global.date.formatDate(lastRating.createdAt)).replace('{1}', '<br/><br/><rating><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + lastRating.rating) + '%;">★★★★★</full></rating><br/><br/>') + '</ratingHint>';
 				else if (JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).eventParticipate.state != 1)
 					form = '<ratingHint>' + ui.l('rating.notParticipated') + '</ratingHint>';
 				else if (global.date.server2Local(ui.q('detail card:last-child .date').getAttribute('d')) > new Date())
@@ -80,7 +79,7 @@ class ratings {
 		};
 		if (id) {
 			communication.ajax({
-				url: global.server + 'db/list?query=misc_rating&search=' + encodeURIComponent('event.id=' + id + ' and event.contactId=' + user.contact.id),
+				url: global.server + 'db/list?query=misc_rating&search=' + encodeURIComponent('eventRating.eventId=' + id + ' and eventRating.contactId=' + user.contact.id),
 				responseType: 'json',
 				success(r) {
 					lastRating = r.length > 1 ? model.convert(new EventRating(), r, r.length - 1) : {};

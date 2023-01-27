@@ -75,6 +75,13 @@ class global {
 				l = 'yesterday';
 			return l ? ui.l('events.' + l) : '{0}';
 		},
+		getToday() {
+			var today = new Date();
+			today.setHours(0);
+			today.setMinutes(0);
+			today.setSeconds(0);
+			return today;
+		},
 		getWeekNumber(date) {
 			var d = new Date(+date);
 			d.setHours(0, 0, 0);

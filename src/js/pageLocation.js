@@ -281,9 +281,9 @@ ${v.rating}
 		v.matchIndicatorHint = ui.l('locations.matchIndicatorHint').replace('{0}', v.attr.totalMatch).replace('{1}', v.attr.total).replace('{2}', v.matchIndicatorPercent).replace('{3}', v.attr.categories);
 		if (eventWithLocation || v.event.contactId != user.contact.id)
 			v.attributes = v.attr.textAttributes();
-		var r = eventWithLocation && v.rating || !eventWithLocation && v.contact.rating;
+		var r = v.event.rating || (eventWithLocation ? v.rating : v.contact.rating);
 		if (r > 0)
-			v.rating = '<detailRating onclick="ratings.open(' + v.event.id + ',&quot;' + (eventWithLocation ? 'event.locationId=' + v.locID : 'event.contactId=' + v.contact.id) + '&quot;)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + r) + '%;">★★★★★</full></ratingSelection></detailRating>';
+			v.rating = '<detailRating onclick="ratings.open(' + v.event.id + ',&quot;' + (v.event.id ? 'event.id=' + v.event.id : eventWithLocation ? 'event.locationId=' + v.locID : 'event.contactId=' + v.contact.id) + '&quot;)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + r) + '%;">★★★★★</full></ratingSelection></detailRating>';
 		else if (v.event.id && v.event.locationId > -1 && v.event.contactId != user.contact.id && v.eventParticipate.state == 1)
 			v.rating = '<div style="margin:1em 0;"><buttontext class="bgColor" onclick="ratings.open(' + v.event.id + ')">' + ui.l('rating.save') + '</buttontext></div>';
 		if (eventWithLocation)

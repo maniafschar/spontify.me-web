@@ -156,7 +156,7 @@ ${v.eventParticipationButtons}
 			v.endDate = ' (' + ui.l('events.type_' + v.event.type) + ' ' + ui.l('to') + ' ' + s.substring(s.indexOf(' ') + 1, s.lastIndexOf(' ')) + ')';
 		}
 		v.id = pageEvent.getId(v);
-		if (('' + v.id).indexOf('_') < 0) {
+		if (v.event.startDate < global.date.getToday()) {
 			v.date = global.date.formatDate(v.event.startDate);
 			v.date = '<eventOutdated>&nbsp;' + v.date;
 			v[v.endDate ? 'endDate' : 'date'] += '&nbsp;</eventOutdated>';
@@ -272,13 +272,10 @@ ${v.eventParticipationButtons}
 	static getCalendarList(data) {
 		if (!data || data.length == 0)
 			return '';
-		var today = new Date();
 		var s;
+		var today = global.date.getToday();
 		var todayPlus14 = new Date();
 		var actualEvents = [], otherEvents = [];
-		today.setHours(0);
-		today.setMinutes(0);
-		today.setSeconds(0);
 		todayPlus14.setDate(todayPlus14.getDate() + 13);
 		todayPlus14.setHours(23);
 		todayPlus14.setMinutes(59);
@@ -335,10 +332,7 @@ ${v.eventParticipationButtons}
 		return actualEvents;
 	}
 	static getId(v) {
-		var endDate = global.date.server2Local(v['event.endDate'] || v.event.endDate), today = new Date(), id = v.id || v['event.id'];
-		today.setHours(0);
-		today.setMinutes(0);
-		today.setSeconds(0);
+		var endDate = global.date.server2Local(v['event.endDate'] || v.event.endDate), today = global.date.getToday(), id = v.id || v['event.id'];
 		if (('' + v.id).indexOf('_') < 0 && (endDate.getFullYear() > today.getFullYear() || endDate.getFullYear() == today.getFullYear() &&
 			(endDate.getMonth() > today.getMonth() || endDate.getMonth() == today.getMonth() &&
 				endDate.getDate() >= today.getDate()))) {
@@ -398,13 +392,6 @@ ${v.eventParticipationButtons}
 					pageLocation.map.svgMe = 'data:image/svg+xml;base64,' + btoa(e.outerHTML);
 				}
 			});
-		if (!pageEvent.paypal && !user.contact.paypalMerchantId)
-			communication.ajax({
-				url: global.server + 'action/paypalSignUpSellerUrl',
-				success(r) {
-					pageEvent.paypal = r + '&displayMode=minibrowser';
-				}
-			});
 	}
 	static listEvents(l) {
 		var activeID = ui.navigation.getActiveID()
@@ -415,10 +402,7 @@ ${v.eventParticipationButtons}
 	static listEventsInternal(as) {
 		if (!as.length)
 			return '';
-		var today = new Date();
-		today.setHours(0);
-		today.setMinutes(0);
-		today.setSeconds(0);
+		var today = global.date.getToday();
 		var s = '', v;
 		var current = '';
 		var bg = 'mainBG';
@@ -480,10 +464,7 @@ ${v.eventParticipationButtons}
 		return s;
 	}
 	static listTickets(r) {
-		var as = [], ap = [], today = new Date();
-		today.setHours(0);
-		today.setMinutes(0);
-		today.setSeconds(0);
+		var as = [], ap = [], today = global.date.getToday();
 		for (var i = 1; i < r.length; i++) {
 			var e = model.convert(new Location(), r, i);
 			e.event.startDate = global.date.server2Local(e.eventParticipate.eventDate + e.event.startDate.substring(10));
@@ -830,7 +811,13 @@ ${v.eventParticipationButtons}
 			pageEvent.saveDraft();
 			ui.navigation.openHTML(pageEvent.paypal + '&displayMode=minibrowser', 'paypal');
 		} else
-			setTimeout(pageEvent.signUpPaypal, 100);
+			communication.ajax({
+				url: global.server + 'action/paypalSignUpSellerUrl',
+				success(r) {
+					pageEvent.paypal = r + '&displayMode=minibrowser';
+					pageEvent.signUpPaypal();
+				}
+			});
 	}
 	static toggle(id) {
 		var d = ui.q('detail card:last-child [name="events"]');

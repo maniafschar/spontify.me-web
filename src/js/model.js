@@ -161,8 +161,8 @@ class EventParticipate extends BaseEntity {
 
 class EventRating extends BaseEntity {
 	contactId;
+	eventId;
 	image;
-	locationId;
 	rating;
 	text;
 
