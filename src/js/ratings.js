@@ -19,11 +19,11 @@ class ratings {
 </ratingSelection>
 <div style="clear:both;text-align:center;padding:0.5em 1em 0 1em;margin-bottom:0.5em;">
     <form onsubmit="return false">
-        <input type="hidden" id="cid" value="${v.id}" />
-        <input type="hidden" name="locationId" value="${v.id}" />
-        <input type="hidden" name="rating" value="80" />
-        <textarea maxlength="1000" placeholder="${ui.l('locations.shortDesc')}" name="text" ${v.textareaStyle}>${v.draft}</textarea>
-        <errorHint class="highlightColor"></errorHint>
+		<input type="hidden" name="eventId" value="${v.id}" />
+		<input type="hidden" name="rating" value="80" />
+        <field>
+			<textarea maxlength="1000" placeholder="${ui.l('locations.shortDesc')}" name="text" ${v.textareaStyle}>${v.draft}</textarea>
+        </field>
         <field style="margin:0.5em 0 0 0;">
             <input type="file" name="image" accept=".gif, .png, .jpg" />
         </field>
@@ -101,36 +101,29 @@ class ratings {
 		} else
 			list = [];
 	}
-	static postSave(r) {
-		formFunc.removeDraft('rating' + r.cid);
-		ui.navigation.hidePopup();
-	}
 	static save() {
-		var e = ui.q('[name="text"]');
+		var e = ui.q('popup [name="text"]');
 		ui.classRemove(e, 'dialogFieldError');
-		if (ui.val('popup [name="rating"]') < 25 && !e.value) {
-			ui.classAdd(e, 'dialogFieldError');
-			e.nextSibling.innerHTML = ui.l('rating.negativeRateValidation');
+		if (ui.val('popup [name="rating"]') < 25 && !e.value)
+			formFunc.setError(e, 'rating.negativeRateValidation');
+		formFunc.validation.filterWords(e);
+		if (ui.q('popup  errorHint'))
 			return;
-		}
-		var data = {
-			cid: ui.val('#cid'),
-			ratings: ui.val('[name="ratings"]')
-		};
 		var v = formFunc.getForm('popup form');
-		v.classname = 'LocationRating';
+		v.classname = 'EventRating';
 		communication.ajax({
 			url: global.server + 'db/one',
 			method: 'POST',
 			body: v,
 			success(r) {
-				data.id = r;
-				ratings.postSave(data);
+				formFunc.removeDraft('rating');
+				ui.navigation.hidePopup();
+				ui.q('detail card:last-child buttontext[onclick*="ratings.open"]').outerHTML = '';
 			}
 		});
 	}
 	static saveDraft() {
 		var f = formFunc.getForm('popup form');
-		formFunc.saveDraft('rating' + ui.val('#cid'), f.values.text ? f : null);
+		formFunc.saveDraft('rating', f.values.text ? f : null);
 	}
 }

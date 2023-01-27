@@ -281,8 +281,6 @@ ${v.rating}
 		v.matchIndicatorHint = ui.l('locations.matchIndicatorHint').replace('{0}', v.attr.totalMatch).replace('{1}', v.attr.total).replace('{2}', v.matchIndicatorPercent).replace('{3}', v.attr.categories);
 		if (eventWithLocation || v.event.contactId != user.contact.id)
 			v.attributes = v.attr.textAttributes();
-		v.chatLocation = eventWithLocation;
-		v.chatId = v.chatLocation ? v.locID : v.contact.id;
 		var r = eventWithLocation && v.rating || !eventWithLocation && v.contact.rating;
 		if (r > 0)
 			v.rating = '<detailRating onclick="ratings.open(' + v.event.id + ',&quot;' + (eventWithLocation ? 'event.locationId=' + v.locID : 'event.contactId=' + v.contact.id) + '&quot;)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + r) + '%;">★★★★★</full></ratingSelection></detailRating>';
