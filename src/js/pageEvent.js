@@ -454,10 +454,8 @@ ${v.eventParticipationButtons}
 					v.classFavorite += ' participate';
 				else if (v.eventParticipate.state == -1 && v.event.confirm == 1)
 					v.classFavorite += ' canceled';
-				if (startDate >= today) {
-					var d = global.date.getDateFields(v.event.startDate);
-					v.id += '_' + d.year + '-' + d.month + '-' + d.day;
-				}
+				if (v.eventParticipate.eventDate)
+					v.id += '_' + v.eventParticipate.eventDate;
 				v.classBGImg = v.imageList ? '' : bg;
 				if (v.event.imageList)
 					v.image = global.serverImg + v.event.imageList;
@@ -835,7 +833,7 @@ ${v.eventParticipationButtons}
 			setTimeout(pageEvent.signUpPaypal, 100);
 	}
 	static toggle(id) {
-		var d = ui.q('detail card:last-child[i="' + id + '"] [name="events"]');
+		var d = ui.q('detail card:last-child [name="events"]');
 		if (d) {
 			if (!d.innerHTML) {
 				var field = ui.q('detail card:last-child').getAttribute('type');
@@ -847,11 +845,11 @@ ${v.eventParticipationButtons}
 					}
 				});
 			} else
-				details.togglePanel(ui.q('detail card:last-child[i="' + id + '"] [name="events"]'));
+				details.togglePanel(ui.q('detail card:last-child [name="events"]'));
 		}
 	}
 	static toggleInternal(r, id, field) {
-		var e = ui.q('detail card:last-child[i="' + id + '"] [name="events"]');
+		var e = ui.q('detail card:last-child [name="events"]');
 		if (!e)
 			return;
 		var bg = 'bgColor';
@@ -897,12 +895,13 @@ ${v.eventParticipationButtons}
 	static toggleParticipants(event) {
 		if (event.stopPropagation)
 			event.stopPropagation();
-		var e = ui.q('detail card:last-child[i="' + id.id + '_' + id.date + '"] [name="participants"]');
+		var e = ui.q('detail card:last-child [name="participants"]');
 		if (e) {
 			if (e.innerHTML)
 				ui.toggleHeight(e);
 			else {
-				communication.loadList('query=contact_listEventParticipate&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&limit=0&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id.id + ' and eventParticipate.eventDate=\'' + id.date + '\''), function (l) {
+				var id = decodeURIComponent(ui.q('detail card:last-child').getAttribute('i')).split('_');
+				communication.loadList('query=contact_listEventParticipate&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&limit=0&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\''), function (l) {
 					e.innerHTML = l.length < 2 ? '<div style="margin-bottom:1em;">' + ui.l('events.noParticipant') + '</div>' : pageContact.listContacts(l);
 					ui.toggleHeight(e);
 					return '&nbsp;';
