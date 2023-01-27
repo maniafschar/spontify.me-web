@@ -8,8 +8,6 @@ import { ui, formFunc } from './ui';
 export { lists };
 
 class lists {
-	static data = [];
-
 	static template = v =>
 		global.template`<listHeader>
 <buttonicon class="right bgColor" onclick="ui.navigation.toggleMenu()"><img source="menu"/></buttonicon>
@@ -36,21 +34,15 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 			s = s.replace('{1}', '<br/><br/><buttontext onclick="pageInfo.socialShare()" class="bgColor">' + ui.l('sendSocialShareLocation') + '</buttontext><buttontext onclick="pageLocation.edit()" class="bgColor">' + ui.l('locations.new') + '</buttontext>');
 		else if (errorID == 'eventsMy')
 			s = s.replace('{1}', '<br/><br/><buttontext class="bgColor">' + ui.l('events.participante') + '</buttontext><br/><br/>');
-		else if (errorID == 'search' && ui.val('[name="searchKeywords"]'))
-			s += '<br/><br/>' + ui.l('noResults.searchWithoutKeywords') + '<br/><br/><buttontext onclick="lists.repeatSearch()" class="bgColor">' + ui.l('noResults.repeat') + '</buttontext>';
+		else if (errorID == 'search' &&
+			ui.val('search div.' + ui.q('search tabHeader tab.tabActive').getAttribute('i') + ' [name="keywords"]'))
+			s += '<br/><br/>' + ui.l('noResults.searchWithoutKeywords') + '<br/><br/><buttontext onclick="pageSearch.repeatSearch()" class="bgColor">' + ui.l('noResults.repeat') + '</buttontext>';
 		return '<noResult>' + s.replace(/\{0\}/g, ui.l(activeID + '.title')).replace('{1}', '') + '</noResult>';
 	}
 	static removeListEntry(id, activeID) {
 		ui.attr(activeID + ' [i="' + id + '"]', 'remove', '1');
 		if (ui.q('detail card:last-child [i="' + id + '"]'))
 			ui.q('detail card:last-child [i="' + id + '"]').outerHTML = '';
-		var l = lists.data[activeID];
-		if (l) {
-			for (var i = l.length - 1; i > 0; i--) {
-				if (id == model.convert(activeID == 'locations' ? new Location() : new Contact(), l, i).id)
-					l.splice(i, 1);
-			}
-		}
 		var e = ui.q(activeID + ' row[i="' + id + '"]');
 		if (e) {
 			ui.navigation.animation(e, 'homeSlideOut', function () {
@@ -69,16 +61,6 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 					ui.navigation.toggleMenu();
 			});
 		}
-	}
-	static repeatSearch() {
-		ui.q('[name="searchKeywords"]').value = '';
-		if (ui.navigation.getActiveID() == 'locations')
-			pageLocation.search();
-		else
-			pageContact.search();
-	}
-	static reset() {
-		lists.data = [];
 	}
 	static setListDivs(id) {
 		var e = ui.q(id);

@@ -122,7 +122,6 @@ class communication {
 			success(r) {
 				var s = callback(r);
 				if (divID) {
-					lists.data[divID] = r;
 					if (!s)
 						s = lists.getListNoResults(divID.indexOf('.') ? divID.substring(divID.lastIndexOf('.') + 1) : divID, errorID)
 					lists.hideFilter();
@@ -271,7 +270,6 @@ class communication {
 							ui.navigation.goTo('home');
 						}
 						pageHome.init(true);
-						lists.reset();
 						communication.ping();
 						setTimeout(communication.notification.register, 100);
 						pageChat.initActiveChats();
@@ -443,7 +441,6 @@ class communication {
 			pageLocation.reset();
 			pageChat.reset();
 			communication.reset();
-			lists.reset();
 			pageEvent.reset();
 			ui.html('head title', global.appTitle);
 			ui.navigation.goTo('home', true);

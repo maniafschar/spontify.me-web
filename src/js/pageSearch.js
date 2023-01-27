@@ -304,6 +304,11 @@ class pageSearch {
 			pageSearch.selectTab('contacts');
 		}
 	}
+	static repeatSearch() {
+		var type = ui.q('search tabHeader tab.tabActive').getAttribute('i');
+		ui.q('search div.' + type + ' [name="keywords"]').value = '';
+		pageSearch[type].search();
+	}
 	static selectTab(id) {
 		var e = ui.q('search tabBody div.' + id);
 		if (!e.innerHTML)

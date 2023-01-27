@@ -473,9 +473,7 @@ ${v.eventParticipationButtons}
 		var activeID = ui.navigation.getActiveID()
 		if (activeID == 'search')
 			ui.attr('search', 'type', 'events');
-		var as = pageEvent.getCalendarList(l);
-		lists.data[activeID] = as;
-		return pageEvent.listEventsInternal(as);
+		return pageEvent.listEventsInternal(pageEvent.getCalendarList(l));
 	}
 	static listEventsInternal(as) {
 		if (!as.length)

@@ -183,15 +183,6 @@ ${v.attributes}
 					lists.setListHint('contacts');
 				}
 				ui.navigation.goTo('contacts');
-				var e = lists.data['contacts'];
-				if (e) {
-					for (var i = 1; i < e.length; i++) {
-						if (model.convert(new Contact(), e, i).id == id) {
-							e.splice(i, 1);
-							break;
-						}
-					}
-				}
 			}
 		});
 	}

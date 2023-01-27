@@ -213,15 +213,6 @@ ${v.rating}
 					lists.setListHint('locations');
 				}
 				ui.navigation.goTo('locations');
-				var e = lists.data['locations'];
-				if (e) {
-					for (var i = 1; i < e.length; i++) {
-						if (model.convert(new Location(), e, i).id == id) {
-							e.splice(i, 1);
-							break;
-						}
-					}
-				}
 			}
 		});
 	}
@@ -388,24 +379,6 @@ ${v.rating}
 		if (v.image)
 			v.image = 'src="' + global.serverImg + v.image + '"';
 		ui.navigation.openPopup(ui.l('locations.' + (id ? 'edit' : 'new')).replace('{0}', v.name), pageLocation.templateEdit(v), id ? '' : 'pageLocation.saveDraft()');
-	}
-	static filterList() {
-		var d = lists.data['locations'];
-		if (!d)
-			return;
-		var cats = ui.qa('locations filters input[name="filterCategories"]:checked');
-		var categories = [], comp = [];
-		for (var i = 0; i < cats.length; i++)
-			categories[cats[i].value] = 1;
-		for (var i = 1; i < d.length; i++) {
-			if (d[i] != 'outdated') {
-				var e = model.convert(new Location(), d, i);
-				var match = (cats.length == 0 || pageLocation.hasCategory(categories, e.category));
-				e = ui.q('locations [i="' + e.id + '"]');
-				ui.attr(e, 'filtered', !match);
-			}
-		}
-		pageLocation.scrollMap();
 	}
 	static hasCategory(cats, catString) {
 		catString = '' + catString;

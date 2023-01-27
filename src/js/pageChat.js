@@ -429,7 +429,6 @@ class pageChat {
 		}
 	}
 	static refresh() {
-		lists.data['chats'] = '';
 		pageChat.initActiveChats();
 		var e = ui.q('chat[i]');
 		if (e) {
