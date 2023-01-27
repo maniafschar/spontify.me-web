@@ -56,12 +56,10 @@ class ratings {
 					form = '<ratingHint>' + ui.l('rating.' + (search.indexOf('location') > -1 ? 'location' : 'contact')).replace('{0}', name) + '</ratingHint>';
 				} else if (lastRating.createdAt && (new Date().getTime() - global.date.server2Local(lastRating.createdAt)) / 86400000 < 7)
 					form = '<ratingHint>' + ui.l('rating.lastRate').replace('{0}', global.date.formatDate(lastRating)).replace('{1}', '<br/><br/><rating><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + lastRating.rating) + '%;">★★★★★</full></rating><br/><br/>') + '</ratingHint>';
-				else if (!pageEvent.getParticipation({ id: id, date: ui.q('detail card:last-child .date').getAttribute('d').substring(0, 10) }))
+				else if (JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).eventParticipate.state != 1)
 					form = '<ratingHint>' + ui.l('rating.notParticipated') + '</ratingHint>';
-				else if (global.date.server2Local(ui.q('detail card:last-child .date')) > new Date())
-					form = '<ratingHint>' + ui.l('rating.notParticipated') + '</ratingHint>';
-				else if (!pageEvent.hasParticipated(id))
-					form = '<ratingHint>' + ui.l('rating.notParticipated') + '</ratingHint>';
+				else if (global.date.server2Local(ui.q('detail card:last-child .date').getAttribute('d')) > new Date())
+					form = '<ratingHint>' + ui.l('rating.notStarted') + '</ratingHint>';
 				else
 					form = ratings.getForm(id);
 				ui.html('detail card:last-child [name="favLoc"]', '');

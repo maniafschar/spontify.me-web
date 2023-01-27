@@ -273,7 +273,6 @@ class communication {
 						communication.ping();
 						setTimeout(communication.notification.register, 100);
 						pageChat.initActiveChats();
-						pageEvent.initParticipation();
 						geoData.init();
 						if (!global.isBrowser()) {
 							bluetooth.stop();
@@ -441,7 +440,6 @@ class communication {
 			pageLocation.reset();
 			pageChat.reset();
 			communication.reset();
-			pageEvent.reset();
 			ui.html('head title', global.appTitle);
 			ui.navigation.goTo('home', true);
 			setTimeout(function () {

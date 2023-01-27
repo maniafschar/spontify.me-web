@@ -111,20 +111,33 @@ ${ui.l('home.labelSkill')}
 					return descriptor.get.apply(this);
 				}
 			});
+			if (user.contact)
+				communication.ajax({
+					url: global.server + 'db/list?query=contact_listEventParticipate&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id),
+					responseType: 'json',
+					success(r) {
+						if (r.length > 1) {
+							var a = [];
+							for (var i = 1; i < r.length; i++) {
+								var e = model.convert(new Contact(), r, i);
+								var e2 = e.eventParticipate;
+								e2.event = e.event;
+								a.push(e2);
+							}
+							var today = global.date.local2server(new Date());
+							var s = global.date.formatDate(a[0].event.startDate);
+							s = s.substring(s.lastIndexOf(' ')).trim();
+							ui.q('home textarea[name="text"]').value = a[0].event.text;
+							ui.attr('home homeBody form', 'i', a[0].event.id);
+						}
+					}
+				});
 		}
 		pageHome.initNotificationButton();
 		if (user.contact)
 			ui.html('home item.bluetooth text', ui.l(bluetooth.state == 'on' && user.contact.bluetooth ? 'bluetooth.activated' : 'bluetooth.deactivated'));
-		var p = pageEvent.getParticipationNext();
-		if (p && global.date.server2Local(p.eventDate).toDateString() == new Date().toDateString()) {
-			var s = global.date.formatDate(p.event.startDate);
-			s = s.substring(s.lastIndexOf(' ')).trim();
-			ui.q('home textarea[name="text"]').value = p.event.text;
-			ui.attr('home homeBody form', 'i', p.event.id);
-		} else {
-			ui.q('home textarea[name="text"]').value = '';
-			ui.attr('home homeBody form', 'i', null);
-		}
+		ui.q('home textarea[name="text"]').value = '';
+		ui.attr('home homeBody form', 'i', null);
 		formFunc.image.replaceSVGs();
 		if (user.contact)
 			ui.classAdd('home homeHeader svg>g', 'pure');
@@ -243,7 +256,6 @@ ${ui.l('home.labelSkill')}
 			success(r) {
 				ui.navigation.hidePopup();
 				ui.navigation.autoOpen(global.encParam('e=' + (r ? r : v.id)));
-				pageEvent.initParticipation();
 			}
 		});
 	}

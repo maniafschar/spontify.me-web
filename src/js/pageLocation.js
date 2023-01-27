@@ -234,8 +234,6 @@ ${v.rating}
 				success(r) {
 					ui.navigation.hidePopup();
 					ui.navigation.goTo('home');
-					if (classname == 'Event')
-						pageEvent.initParticipation();
 					setTimeout(function () {
 						if (classname == 'Location')
 							lists.removeListEntry(id, 'locations');
@@ -288,7 +286,7 @@ ${v.rating}
 		var r = eventWithLocation && v.rating || !eventWithLocation && v.contact.rating;
 		if (r > 0)
 			v.rating = '<detailRating onclick="ratings.open(' + v.event.id + ',&quot;' + (eventWithLocation ? 'event.locationId=' + v.locID : 'event.contactId=' + v.contact.id) + '&quot;)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + r) + '%;">★★★★★</full></ratingSelection></detailRating>';
-		else if (v.event.id && v.event.locationId > -1 && v.event.contactId != user.contact.id && pageEvent.hasParticipated(v.event.id))
+		else if (v.event.id && v.event.locationId > -1 && v.event.contactId != user.contact.id && v.eventParticipate.state == 1)
 			v.rating = '<div style="margin:1em 0;"><buttontext class="bgColor" onclick="ratings.open(' + v.event.id + ')">' + ui.l('rating.save') + '</buttontext></div>';
 		if (eventWithLocation)
 			v.distanceDisplay = ' style="display:none;"';

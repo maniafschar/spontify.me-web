@@ -22,7 +22,6 @@ class geoData {
 	static localized = false;
 	static manual = false;
 	static rad = 0.017453292519943295;
-	static trackAll = null;
 
 	static deviceOrientationHandler(event) {
 		var alpha;
@@ -141,13 +140,8 @@ class geoData {
 		}
 		if (position.manual)
 			geoData.manual = true;
-		if (geoData.trackAll != null && new Date().getHours() > geoData.trackAll + 2)
-			geoData.trackAll = null;
 		if (user.contact && user.contact.id && new Date().getTime() - geoData.lastSave > 5000 &&
-			(!geoData.localized ||
-				geoData.trackAll != null && new Date().getHours() >= geoData.trackAll - 1 ||
-				d > 0.05 && !geoData.manual ||
-				position.manual)) {
+			(!geoData.localized || d > 0.05 && !geoData.manual || position.manual)) {
 			communication.ajax({
 				url: global.server + 'action/position',
 				progressBar: false,

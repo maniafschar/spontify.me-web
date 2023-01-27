@@ -18,7 +18,6 @@ export { pageEvent };
 class pageEvent {
 	static filter = null;
 	static nearByExec = null;
-	static participations = null;
 	static paypal = null;
 	static templateEdit = v =>
 		global.template`<form name="editElement" onsubmit="return false">
@@ -162,23 +161,21 @@ ${v.eventParticipationButtons}
 			v.date = '<eventOutdated>&nbsp;' + v.date;
 			v[v.endDate ? 'endDate' : 'date'] += '&nbsp;</eventOutdated>';
 		} else {
-			var x = { id: v.id.split('_')[0], date: v.id.split('_')[1] };
-			var d = global.date.getDateFields(x.date);
+			var d = global.date.getDateFields(v.eventParticipate.eventDate);
 			var d2 = global.date.getDateFields(v.event.startDate);
 			d.hour = d2.hour;
 			d.minute = d2.minute;
 			v.dateRaw = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute + ':00';
 			v.date = global.date.formatDate(d);
-			v.eventParticipationButtons = pageEvent.getParticipateButton(x, v);
-			var p = pageEvent.getParticipation(x);
-			if (p.state == 1)
+			v.eventParticipationButtons = pageEvent.getParticipateButton(v);
+			if (v.eventParticipate.state == 1)
 				v.classParticipate = ' participate';
 			else if (p.state == -1 && v.event.confirm == 1) {
 				v.classParticipate = ' canceled';
 				v.reason = ui.l('events.canceled') + p.reason;
 			}
 			communication.ajax({
-				url: global.server + 'db/list?query=contact_eventParticipateCount&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + x.id + ' and eventParticipate.eventDate=\'' + x.date + '\''),
+				url: global.server + 'db/list?query=contact_eventParticipateCount&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + v.event.id + ' and eventParticipate.eventDate=\'' + v.eventParticipate.eventDate + '\''),
 				responseType: 'json',
 				success(r) {
 					if (r[1][0] > -1) {
@@ -363,47 +360,16 @@ ${v.eventParticipationButtons}
 		}
 		return id;
 	}
-	static getParticipateButton(p, v) {
-		var participation = pageEvent.getParticipation(p);
-		if (v.event.confirm && participation.state == -1)
+	static getParticipateButton(v) {
+		if (v.event.confirm && v.eventParticipate.state == -1)
 			return '';
 		var text = '<div style="margin:1em 0;">';
-		if (v.event.contactId == user.contact.id && v.event.locationId || participation.state == 1)
+		if (v.event.contactId == user.contact.id && v.event.locationId || v.eventParticipate.state == 1)
 			text += '<buttontext class="bgColor" onclick="pageEvent.qrcode(' + (v.event.contactId == user.contact.id) + ')">' + ui.l('events.qrcodeButton') + '</buttontext><br/><br/>';
-		text += '<buttontext pID="' + (participation.id ? participation.id : '') + '" s="' + (participation.id ? participation.state : '') + '" confirm="' + v.event.confirm + '" class="bgColor" onclick="pageEvent.participate(event,' + JSON.stringify(p).replace(/"/g, '&quot;') + ')" max="' + (v.maxParticipants ? v.maxParticipants : 0) + '" style="display:none;">' + ui.l('events.participante' + (participation.state == 1 ? 'Stop' : '')) + '</buttontext>';
-		text += '<buttontext class="bgColor" onclick="pageEvent.toggleParticipants(event,' + JSON.stringify(p).replace(/"/g, '&quot;') + ',' + v.event.confirm + ')"><participantCount></participantCount>' + ui.l('events.participants') + '</buttontext>';
+		text += '<buttontext pID="' + (v.eventParticipate.id ? v.eventParticipate.id : '') + '" s="' + (v.eventParticipate.id ? v.eventParticipate.state : '') + '" confirm="' + v.event.confirm + '" class="bgColor" onclick="pageEvent.participate(event)" max="' + (v.maxParticipants ? v.maxParticipants : 0) + '" style="display:none;">' + ui.l('events.participante' + (v.eventParticipate.state == 1 ? 'Stop' : '')) + '</buttontext>';
+		text += '<buttontext class="bgColor" onclick="pageEvent.toggleParticipants(event)"><participantCount></participantCount>' + ui.l('events.participants') + '</buttontext>';
 		text += '</div><text name="participants" style="margin:0 -1em;display:none;"></text>';
 		return text;
-	}
-	static getParticipation(p) {
-		if (pageEvent.participations) {
-			for (var i = 0; i < pageEvent.participations.length; i++) {
-				if (pageEvent.participations[i].eventId == p.id && pageEvent.participations[i].eventDate == p.date)
-					return pageEvent.participations[i];
-			}
-		}
-		return {};
-	}
-	static getParticipationNext(eventId) {
-		if (pageEvent.participations) {
-			var today = new Date();
-			today.setDate(today.getDate() - 1);
-			for (var i = 0; i < pageEvent.participations.length; i++) {
-				if (global.date.server2Local(pageEvent.participations[i].eventDate).getTime() > today &&
-					(!eventId || pageEvent.participations[i].event.id == eventId))
-					return pageEvent.participations[i];
-			}
-		}
-	}
-	static hasParticipated(eventId) {
-		if (pageEvent.participations) {
-			for (var i = 0; i < pageEvent.participations.length; i++) {
-				if (pageEvent.participations[i].event.id == eventId && pageEvent.participations[i].state == 1 &&
-					global.date.server2Local(pageEvent.participations[i].eventDate + pageEvent.participations[i].event.startDate.substring(10) < new Date()))
-					return true;
-			}
-		}
-		return false;
 	}
 	static init() {
 		if (!ui.q('events').innerHTML)
@@ -439,35 +405,6 @@ ${v.eventParticipationButtons}
 					pageEvent.paypal = r + '&displayMode=minibrowser';
 				}
 			});
-	}
-	static initParticipation() {
-		if (!pageEvent.filter)
-			pageEvent.filter = formFunc.getDraft('searchEvents') || {};
-		communication.ajax({
-			url: global.server + 'db/list?query=contact_listEventParticipate&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id),
-			responseType: 'json',
-			success(r) {
-				pageEvent.participations = [];
-				geoData.trackAll = null;
-				var today = global.date.local2server(new Date());
-				for (var i = 1; i < r.length; i++) {
-					var e = model.convert(new Contact(), r, i);
-					var e2 = e.eventParticipate;
-					e2.event = e.event;
-					pageEvent.participations.push(e2);
-					if (e2.event.contactId == user.contact.id && today.indexOf(e2.eventDate) == 0) {
-						e = global.date.server2Local(e2.event.startDate);
-						geoData.trackAll = e.getHours();
-					}
-				}
-				pageEvent.participations.sort(
-					function (a, b) {
-						return a.eventDate > b.eventDate || a.eventDate == b.eventDate && a.event.startDate.substring(11) > b.event.startDate.substring(11) ? 1 : -1
-					});
-				if (ui.navigation.getActiveID() == 'home')
-					pageHome.init();
-			}
-		});
 	}
 	static listEvents(l) {
 		var activeID = ui.navigation.getActiveID()
@@ -639,7 +576,7 @@ ${v.eventParticipationButtons}
 				setTimeout(function () { ui.adjustTextarea(ui.q('popup [name="hashtagsDisp"]')); }, 500);
 		});
 	}
-	static participate(event, id) {
+	static participate(event) {
 		event.stopPropagation();
 		var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
 		if (e.event.price > 0 && !user.contact.image) {
@@ -649,12 +586,13 @@ ${v.eventParticipationButtons}
 		var button = event.target;
 		var participateID = button.getAttribute('pID');
 		var d = { classname: 'EventParticipate', values: {} };
+		var eventDate = e.event.startDate.substring(0, 10);
 		if (participateID) {
 			d.values.state = button.getAttribute('s') == 1 ? -1 : 1;
 			d.id = participateID;
 			if (button.getAttribute('confirm') == 1) {
 				if (!ui.q('#stopParticipateReason')) {
-					ui.navigation.openPopup(ui.l('events.stopParticipate'), ui.l('events.stopParticipateText') + '<br/><textarea id="stopParticipateReason" placeholder="' + ui.l('events.stopParticipateHint') + '" style="margin-top:0.5em;"></textarea><buttontext class="bgColor" style="margin-top:1em;" pID="' + button.getAttribute('pID') + '" s="' + button.getAttribute('s') + '" confirm="1" onclick="pageEvent.participate(event,' + JSON.stringify(id).replace(/"/g, '&quot;') + ')">' + ui.l('events.stopParticipateButton') + '</buttontext>');
+					ui.navigation.openPopup(ui.l('events.stopParticipate'), ui.l('events.stopParticipateText') + '<br/><textarea id="stopParticipateReason" placeholder="' + ui.l('events.stopParticipateHint') + '" style="margin-top:0.5em;"></textarea><buttontext class="bgColor" style="margin-top:1em;" pID="' + button.getAttribute('pID') + '" s="' + button.getAttribute('s') + '" confirm="1" onclick="pageEvent.participate(event)">' + ui.l('events.stopParticipateButton') + '</buttontext>');
 					return;
 				}
 				if (!ui.q('#stopParticipateReason').value)
@@ -663,8 +601,8 @@ ${v.eventParticipationButtons}
 			}
 		} else {
 			d.values.state = 1;
-			d.values.eventId = id.id;
-			d.values.eventDate = id.date;
+			d.values.eventId = e.event.id;
+			d.values.eventDate = eventDate;
 		}
 		communication.ajax({
 			url: global.server + 'db/one',
@@ -673,14 +611,14 @@ ${v.eventParticipationButtons}
 			success(r) {
 				if (r)
 					ui.attr(button, 'pID', r);
-				var e = ui.q('detail card[i="' + id.id + '_' + id.date + '"] participantCount');
+				var e = ui.q('detail card[i="' + e.event.id + '_' + eventDate + '"] participantCount');
 				if (button.getAttribute('s') == '1') {
 					ui.classRemove('detail card:last-child .event', 'participate');
-					ui.classRemove('row[i="' + id.id + '_' + id.date + '"]', 'participate');
+					ui.classRemove('row[i="' + e.event.id + '_' + eventDate + '"]', 'participate');
 					e.innerHTML = e.innerHTML && parseInt(e.innerHTML) > 1 ? (parseInt(e.innerHTML) - 1) + ' ' : '';
 					if (button.getAttribute('confirm') == '1') {
 						ui.classAdd('detail card:last-child .event', 'canceled');
-						ui.classAdd('row[i="' + id.id + '_' + id.date + '"]', 'canceled');
+						ui.classAdd('row[i="' + e.event.id + '_' + eventDate + '"]', 'canceled');
 						ui.q('detail card:last-child buttontext[pID="' + participateID + '"]').outerHTML = '';
 					} else {
 						ui.attr(button, 's', '-1');
@@ -691,14 +629,13 @@ ${v.eventParticipationButtons}
 					button.innerText = ui.l('events.participanteStop');
 					e.innerHTML = e.innerHTML ? (parseInt(e.innerHTML) + 1) + ' ' : '1 ';
 					ui.classAdd('detail card:last-child .event', 'participate');
-					ui.classAdd('row[i="' + id.id + '_' + id.date + '"]', 'participate');
+					ui.classAdd('row[i="' + e.event.id + '_' + eventDate + '"]', 'participate');
 				}
-				e = ui.q('detail card:last-child[i="' + id.id + '_' + id.date + '"] [name="participants"]');
+				e = ui.q('detail card:last-child[i="' + e.event.id + '_' + eventDate + '"] [name="participants"]');
 				e.innerHTML = '';
 				e.removeAttribute('h');
 				e.style.display = 'none';
 				ui.navigation.hidePopup();
-				pageEvent.initParticipation();
 			}
 		});
 	}
@@ -802,9 +739,6 @@ ${v.eventParticipationButtons}
 			});
 		}
 	}
-	static reset() {
-		pageEvent.participations = null;
-	}
 	static save() {
 		var d1, d2;
 		var start = ui.q('popup input[name="startDate"]');
@@ -881,7 +815,6 @@ ${v.eventParticipationButtons}
 					ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id);
 				} : pageLocation.detailLocationEvent);
 				pageEvent.refreshToggle();
-				pageEvent.initParticipation();
 			}
 		});
 	}
@@ -945,7 +878,6 @@ ${v.eventParticipationButtons}
 				text += global.separator + ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2));
 			if (v.event.maxParticipants)
 				text += global.separator + ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
-			var p = pageEvent.getParticipation({ id: v.event.id, date: date });
 			if (v.event.confirm == 1)
 				text += global.separator + ui.l('events.participationMustBeConfirmed');
 			if (text)
@@ -953,7 +885,7 @@ ${v.eventParticipationButtons}
 			text += '<br/>' + v.event.text;
 			if (field == 'contact')
 				text = '<br/>' + v.name + text;
-			s += '<row' + (p.state == 1 ? ' class="participate"' : p.state == -1 ? ' class="canceled"' : '') + ' onclick="details.open(&quot;' + idIntern + '&quot;,&quot;location_listEvent&search=' + encodeURIComponent('event.id=' + v.event.id) + '&quot;,pageLocation.detailLocationEvent)"><div><text>' + s2 + text + '</text><imageList><img src="' + img + '"/></imageList></div></row>';
+			s += '<row' + (v.eventParticipate.state == 1 ? ' class="participate"' : v.eventParticipate.state == -1 ? ' class="canceled"' : '') + ' onclick="details.open(&quot;' + idIntern + '&quot;,&quot;location_listEvent&search=' + encodeURIComponent('event.id=' + v.event.id) + '&quot;,pageLocation.detailLocationEvent)"><div><text>' + s2 + text + '</text><imageList><img src="' + img + '"/></imageList></div></row>';
 		}
 		if (s)
 			s += newButton;
@@ -962,7 +894,7 @@ ${v.eventParticipationButtons}
 		e.innerHTML = s;
 		details.togglePanel(e);
 	}
-	static toggleParticipants(event, id, confirm) {
+	static toggleParticipants(event) {
 		if (event.stopPropagation)
 			event.stopPropagation();
 		var e = ui.q('detail card:last-child[i="' + id.id + '_' + id.date + '"] [name="participants"]');
