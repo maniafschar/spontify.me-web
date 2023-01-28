@@ -26,7 +26,7 @@ class pageHome {
 	</buttonIcon>
 </homeHeader>
 <homeBody>
-<form name="editElement" onsubmit="return false">
+<form onsubmit="return false">
 <input type="hidden" name="type" value="${v.type}" />
 <input type="hidden" name="skills" value="${v.skills}" />
 <input type="hidden" name="skillsText" value="${v.skillsText}" />
@@ -70,15 +70,17 @@ ${ui.l('home.labelSkill')}
 		if (ui.cssValue(e, 'display') != 'none')
 			ui.toggleHeight(e);
 	}
-	static deleteEvent(id) {
-		communication.ajax({
-			url: global.server + 'db/one',
-			method: 'DELETE',
-			body: { classname: 'Event', id: id },
-			success(r) {
-				pageHome.init(true);
-			}
-		});
+	static deleteEvent() {
+		var id = ui.q('home homeBody form').getAttribute('i');
+		if (id)
+			communication.ajax({
+				url: global.server + 'db/one',
+				method: 'DELETE',
+				body: { classname: 'Event', id: id },
+				success(r) {
+					pageHome.init(true);
+				}
+			});
 	}
 	static init(force) {
 		var e = ui.q('home');
@@ -134,7 +136,8 @@ ${ui.l('home.labelSkill')}
 								ui.q('home homeBody textarea[name="text"]').value = e.event.text;
 								ui.q('home homeBody textarea[name="hashtagsDisp"]').value = hashtags.ids2Text(e.event.skills) + (e.event.skillsText ? ' ' + e.event.skillsText : '').trim();
 								ui.classRemove('home homeBody buttontext.delete', 'noDisp');
-								ui.attr('home homeBody buttontext.delete', 'onclick', 'pageHome.deleteEvent(' + e.event.id + ')');
+								ui.attr('home homeBody form', 'i', e.event.id);
+								ui.attr('home homeBody buttontext.delete', 'onclick', 'pageHome.deleteEvent()');
 							}
 						}
 					}
@@ -143,8 +146,6 @@ ${ui.l('home.labelSkill')}
 		pageHome.initNotificationButton();
 		if (user.contact)
 			ui.html('home item.bluetooth text', ui.l(bluetooth.state == 'on' && user.contact.bluetooth ? 'bluetooth.activated' : 'bluetooth.deactivated'));
-		ui.q('home textarea[name="text"]').value = '';
-		ui.attr('home homeBody form', 'i', null);
 		formFunc.image.replaceSVGs();
 		if (user.contact)
 			ui.classAdd('home homeHeader svg>g', 'pure');

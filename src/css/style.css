@@ -1950,6 +1950,10 @@ detail .canceled::before {
 	right: 0;
 }
 
+detail .price {
+	font-weight: bold;
+}
+
 detail row.participate::before,
 detail row.canceled::before {
 	text-align: right;

@@ -126,7 +126,7 @@ class pageEvent {
 <div class="date" d="${v.dateRaw}">${v.date}${v.endDate}</div>
 <div>${v.event.text}</div>
 <div>${v.eventMustBeConfirmed}</div>
-<div class="price">${v.eventPrice}</div>
+<div class="price highlightColor">${v.eventPrice}</div>
 <div>${v.maxParticipants}</div>
 <div>${v.reason}</div>
 <span id="eventParticipants"></span>
@@ -191,7 +191,10 @@ ${v.eventParticipationButtons}
 				}
 			});
 		}
-		v.eventPrice = (v.event.price > 0 ? ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2)) : ui.l('events.priceDisp0'));
+		if (v.event.price > 0)
+			v.eventPrice = ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2));
+		else if (v.event.locationId)
+			v.eventPrice = ui.l('events.priceDisp0');
 		if (v.event.maxParticipants)
 			v.maxParticipants = ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
 		if (v.event.confirm == 1)
