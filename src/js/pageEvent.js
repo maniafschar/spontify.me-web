@@ -39,7 +39,7 @@ class pageEvent {
 	</value>
 </field>
 <div class="event" ${v.styleEvent}>
-<div class="locationName"></div>
+<div class="locationName">${v.locationName}</div>
 <field${v.hideNonWTDFields}>
 	<label style="padding-top:0;">${ui.l('type')}</label>
 	<value>
@@ -263,7 +263,10 @@ ${v.eventParticipationButtons}
 		}
 		if (id) {
 			v.classLocation = ' noDisp';
-			if (!locationID)
+			if (locationID) {
+				var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')))
+				v.locationName = e.name + '<br/>' + e.address.replace(/\n/g, global.separator);
+			} else
 				v.hideNonWTDFields = ' style="display:none;"';
 		} else {
 			v.styleEvent = ' style="display:none;"';
