@@ -44,7 +44,7 @@ ${ui.l('home.labelSkill')}
 </field>
 <dialogButtons>
 <buttontext onclick="pageHome.saveEvent()" class="bgColor">${ui.l('home.saveEvent')}</buttontext>
-<buttontext onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" class="bgColor noDisp delete">${ui.l('delete')}</buttontext>
+<buttontext class="bgColor noDisp delete">${ui.l('delete')}</buttontext>
 </dialogButtons>
 </div>
 </form>
@@ -69,6 +69,16 @@ ${ui.l('home.labelSkill')}
 		var e = ui.q('notificationList');
 		if (ui.cssValue(e, 'display') != 'none')
 			ui.toggleHeight(e);
+	}
+	static deleteEvent(id) {
+		communication.ajax({
+			url: global.server + 'db/one',
+			method: 'DELETE',
+			body: { classname: 'Event', id: id },
+			success(r) {
+				pageHome.init(true);
+			}
+		});
 	}
 	static init(force) {
 		var e = ui.q('home');
@@ -113,22 +123,19 @@ ${ui.l('home.labelSkill')}
 			});
 			if (user.contact)
 				communication.ajax({
-					url: global.server + 'db/list?query=contact_listEventParticipate&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id),
+					url: global.server + 'db/list?query=contact_listEventParticipate&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id + ' and eventParticipate.eventDate=\'' + global.date.local2server(new Date()).substring(0, 10) + '\' and event.locationId is null'),
 					responseType: 'json',
 					success(r) {
 						if (r.length > 1) {
-							var a = [];
-							for (var i = 1; i < r.length; i++) {
-								var e = model.convert(new Contact(), r, i);
-								var e2 = e.eventParticipate;
-								e2.event = e.event;
-								a.push(e2);
+							var e = model.convert(new Contact(), r, r.length - 1);
+							if (e.eventParticipate.state == 1) {
+								var d = global.date.getDateFields(global.date.server2Local(e.event.startDate));
+								ui.q('home homeBody input[name="startDate"]').value = d.hour + ':' + d.minute;
+								ui.q('home homeBody textarea[name="text"]').value = e.event.text;
+								ui.q('home homeBody textarea[name="hashtagsDisp"]').value = hashtags.ids2Text(e.event.skills) + (e.event.skillsText ? ' ' + e.event.skillsText : '').trim();
+								ui.classRemove('home homeBody buttontext.delete', 'noDisp');
+								ui.attr('home homeBody buttontext.delete', 'onclick', 'pageHome.deleteEvent(' + e.event.id + ')');
 							}
-							var today = global.date.local2server(new Date());
-							var s = global.date.formatDate(a[0].event.startDate);
-							s = s.substring(s.lastIndexOf(' ')).trim();
-							ui.q('home textarea[name="text"]').value = a[0].event.text;
-							ui.attr('home homeBody form', 'i', a[0].event.id);
 						}
 					}
 				});
@@ -256,6 +263,7 @@ ${ui.l('home.labelSkill')}
 			success(r) {
 				ui.navigation.hidePopup();
 				ui.navigation.autoOpen(global.encParam('e=' + (r ? r : v.id)));
+				pageHome.init(true);
 			}
 		});
 	}

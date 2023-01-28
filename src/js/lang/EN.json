@@ -211,8 +211,6 @@
 			"homeButton": "Buddies",
 			"matchIndicatorHint": "{0} of your {1} specified skills match. That's a {2}% match.",
 			"matchIndicatorHintPulse": "The indicator is pulsing, your <b>Prefered from</b> settings also match!",
-			"recommendPostedToWall": "Your invitation was successfully posted on your Facebook wall!",
-			"recommendPostedToWallError": "You already posted {0} hours ago. You may only post once within 12 hours.",
 			"relation": "Relation",
 			"requestFriendship": "Send friendship request!",
 			"requestFriendshipAlreadySent": "Friendship request sent, wait for confirmance!",
@@ -504,7 +502,7 @@
 		"rating": {
 			"contact": "Here you can see all reviews of events organized by {0}.",
 			"history": "Votings",
-			"lastRate": "You have already voted {1} on {0}. You can vote once a week.",
+			"lastRate": "You rating from {0}",
 			"location": "Here you can see all ratings for events that took place at the location {0}.",
 			"locationImmediate": "Do you also want to vote for this location?",
 			"login": "Once you are logged in, you can vote for locations and Buddies and see other votes.",

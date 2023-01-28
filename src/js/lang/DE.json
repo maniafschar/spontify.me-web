@@ -211,8 +211,6 @@
 			"homeButton": "Buddies",
 			"matchIndicatorHint": "{0} Deiner {1} angegebenen Skills stimmen überein, eine Übereinstimmung von {2}%.",
 			"matchIndicatorHintPulse": "Der Indikator pulsiert, d.h. Deine <b>Bevorzugt von</b> Angaben stimmen mit dem Buddy überein!",
-			"recommendPostedToWall": "Deine Einladungen wurde erfolgreich an Deine Wand gepostet!",
-			"recommendPostedToWallError": "Du hast bereits vor {0} Stunden an Deine Wand gepostet. Du kannst nur einmal innerhalb von 12 Stunden posten.",
 			"relation": "Verbindung",
 			"requestFriendship": "Freundschaftsanfrage senden",
 			"requestFriendshipAlreadySent": "Freundschaftsanfrage versendet, warte auf Bestätigung.",
@@ -504,7 +502,7 @@
 		"rating": {
 			"contact": "Hier siehst Du alle Bewertungen zu Events, die von {0} organisiert wurden.",
 			"history": "Bisherige Bewertungen",
-			"lastRate": "Du hast bereits am {0} mit {1} bewertet. Du kannst einmal pro Woche bewerten.",
+			"lastRate": "Deine Bewertung vom {0}",
 			"location": "Hier siehst Du alle Bewertungen zu Events, die in der Location {0} stattgefunden haben.",
 			"locationImmediate": "Möchtest Du die Location auch bewerten?",
 			"login": "Sobald Du eingeloggt bist, kannst Du Locations und Buddies bewerten und andere Bewertungen sehen.",

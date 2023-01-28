@@ -18,7 +18,7 @@ class ratings {
 </ratingSelection>
 <div style="clear:both;text-align:center;padding:0.5em 1em 0 1em;margin-bottom:0.5em;">
     <form onsubmit="return false">
-		<input type="hidden" name="eventId" value="${v.id}" />
+		<input type="hidden" name="eventParticipateId" value="${v.participateId}" />
 		<input type="hidden" name="rating" value="80" />
         <field>
 			<textarea maxlength="1000" placeholder="${ui.l('locations.shortDesc')}" name="text" ${v.textareaStyle}>${v.draft}</textarea>
@@ -39,7 +39,7 @@ class ratings {
 	}
 	static getForm(id) {
 		var v = {}, draft = formFunc.getDraft('rating' + id);
-		v.id = id;
+		v.participateId = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).eventParticipate.id;
 		v.bg = 'bgColor';
 		if (draft)
 			v.draft = draft.values.text;
@@ -53,8 +53,8 @@ class ratings {
 				if (!id) {
 					var name = ui.q('detail:not([style*="none"]) card:last-child title, [i="' + id + '"] title').innerText.trim();
 					form = '<ratingHint>' + ui.l('rating.' + (search.indexOf('location') > -1 ? 'location' : 'contact')).replace('{0}', name) + '</ratingHint>';
-				} else if (lastRating.createdAt && (new Date().getTime() - global.date.server2Local(lastRating.createdAt)) / 86400000 < 7)
-					form = '<ratingHint>' + ui.l('rating.lastRate').replace('{0}', global.date.formatDate(lastRating.createdAt)).replace('{1}', '<br/><br/><rating><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + lastRating.rating) + '%;">★★★★★</full></rating><br/><br/>') + '</ratingHint>';
+				} else if (lastRating.createdAt)
+					form = '<ratingHint>' + ui.l('rating.lastRate').replace('{0}', global.date.formatDate(lastRating.createdAt)) + '<br/><br/><rating><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + lastRating.rating) + '%;">★★★★★</full></rating></ratingHint>';
 				else if (JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).eventParticipate.state != 1)
 					form = '<ratingHint>' + ui.l('rating.notParticipated') + '</ratingHint>';
 				else if (global.date.server2Local(ui.q('detail card:last-child .date').getAttribute('d')) > new Date())
@@ -63,7 +63,7 @@ class ratings {
 					form = ratings.getForm(id);
 				ui.html('detail card:last-child [name="favLoc"]', '');
 				var s = '', date, pseudonym, text, img, rate;
-				for (var i = list.length - 1; i > 0; i--) {
+				for (var i = 1; i < list.length; i++) {
 					var v = model.convert(new EventRating(), list, i);
 					date = global.date.formatDate(v.createdAt);
 					pseudonym = v.contact.id == user.contact.id ? ui.l('you') : v.contact.pseudonym;
@@ -79,7 +79,7 @@ class ratings {
 		};
 		if (id) {
 			communication.ajax({
-				url: global.server + 'db/list?query=misc_rating&search=' + encodeURIComponent('eventRating.eventId=' + id + ' and eventRating.contactId=' + user.contact.id),
+				url: global.server + 'db/list?query=misc_rating&search=' + encodeURIComponent('event.id=' + id + ' and eventRating.contactId=' + user.contact.id),
 				responseType: 'json',
 				success(r) {
 					lastRating = r.length > 1 ? model.convert(new EventRating(), r, r.length - 1) : {};

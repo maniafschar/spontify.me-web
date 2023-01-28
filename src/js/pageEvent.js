@@ -40,7 +40,7 @@ class pageEvent {
 </field>
 <div class="event" ${v.styleEvent}>
 <div class="locationName"></div>
-<field>
+<field${v.hideNonWTDFields}>
 	<label style="padding-top:0;">${ui.l('type')}</label>
 	<value>
 		<input type="radio" name="type" value="o" label="${ui.l('events.type_o')}" onclick="pageEvent.setForm()" ${v.type_o}/>
@@ -56,7 +56,7 @@ class pageEvent {
 		<input type="datetime-local" name="startDate" placeholder="TT.MM.JJJJ HH:MM" value="${v.startDate}" step="900" min="${v.today}T00:00:00" />
 	</value>
 </field>
-<field name="endDate">
+<field name="endDate"${v.hideNonWTDFields}>
 	<label>${ui.l('events.end')}</label>
 	<value>
 		<input type="date" name="endDate" placeholder="TT.MM.JJJJ" value="${v.endDate}" min="${v.today}" />
@@ -68,13 +68,13 @@ class pageEvent {
 		<textarea name="text" maxlength="1000">${v.text}</textarea>
 	</value>
 </field>
-<field>
+<field${v.hideNonWTDFields}>
 	<label>${ui.l('events.maxParticipants')}</label>
 	<value>
 		<input type="number" name="maxParticipants" maxlength="250" value="${v.maxParticipants}" onmousewheel="return false;" />
 	</value>
 </field>
-<field>
+<field${v.hideNonWTDFields}>
 	<label>${ui.l('events.price')}</label>
 	<value>
 		<input type="number" step="any" name="price" value="${v.price}" onkeyup="pageEvent.checkPrice()" onmousewheel="return false;" />
@@ -92,7 +92,7 @@ class pageEvent {
 	</value>
 </field>
 <div class="unpaid">
-<field>
+<field${v.hideNonWTDFields}>
 	<label>${ui.l('events.confirmLabel')}</label>
 	<value>
 		<input type="checkbox" name="eventconfirm" transient="true" label="${ui.l('events.confirm')}" value="1" ${v.confirm}/>
@@ -203,7 +203,10 @@ ${v.eventParticipationButtons}
 		v.hideMeFavorite = ' noDisp';
 		v.hideMeEvents = ' noDisp';
 		v.hideMeMarketing = ' noDisp';
-		v.editAction = 'pageEvent.edit(' + v.locID + ',' + v.event.id + ')';
+		if (user.contact.id == v.event.contactId)
+			v.editAction = 'pageEvent.edit(' + v.locID + ',' + v.event.id + ')';
+		else
+			v.hideMeEdit = ' noDisp';
 		return pageEvent.templateDetail(v);
 	}
 	static edit(locationID, id) {
@@ -258,15 +261,18 @@ ${v.eventParticipationButtons}
 			d.setMonth(d.getMonth() + 6);
 			v.endDate = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
 		}
-		if (locationID)
+		if (id) {
 			v.classLocation = ' noDisp';
-		else {
+			if (!locationID)
+				v.hideNonWTDFields = ' style="display:none;"';
+		} else {
 			v.styleEvent = ' style="display:none;"';
 			pageEvent.locationsOfPastEvents();
 		}
 		v.hashtagSelection = hashtags.display();
+		v.hashtagsDisp = hashtags.ids2Text(v.skills) + (v.skillsText ? ' ' + v.skillsText : '').trim();
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
-		if (locationID)
+		if (id)
 			pageEvent.setForm();
 	}
 	static getCalendarList(data) {
@@ -357,10 +363,12 @@ ${v.eventParticipationButtons}
 	static getParticipateButton(v) {
 		if (v.event.confirm && v.eventParticipate.state == -1)
 			return '';
+		var futureEvent = global.date.server2Local(v.eventParticipate.eventDate) >= global.date.getToday();
 		var text = '<div style="margin:1em 0;">';
-		if (v.event.contactId == user.contact.id && v.event.locationId || v.eventParticipate.state == 1)
+		if (futureEvent && v.event.locationId > 0 && (v.event.contactId == user.contact.id || v.eventParticipate.state == 1))
 			text += '<buttontext class="bgColor" onclick="pageEvent.qrcode(' + (v.event.contactId == user.contact.id) + ')">' + ui.l('events.qrcodeButton') + '</buttontext><br/><br/>';
-		text += '<buttontext pID="' + (v.eventParticipate.id ? v.eventParticipate.id : '') + '" s="' + (v.eventParticipate.id ? v.eventParticipate.state : '') + '" confirm="' + v.event.confirm + '" class="bgColor" onclick="pageEvent.participate(event)" max="' + (v.maxParticipants ? v.maxParticipants : 0) + '" style="display:none;">' + ui.l('events.participante' + (v.eventParticipate.state == 1 ? 'Stop' : '')) + '</buttontext>';
+		if (futureEvent)
+			text += '<buttontext pID="' + (v.eventParticipate.id ? v.eventParticipate.id : '') + '" s="' + (v.eventParticipate.id ? v.eventParticipate.state : '') + '" confirm="' + v.event.confirm + '" class="bgColor" onclick="pageEvent.participate(event)" max="' + (v.maxParticipants ? v.maxParticipants : 0) + '" style="display:none;">' + ui.l('events.participante' + (v.eventParticipate.state == 1 ? 'Stop' : '')) + '</buttontext>';
 		text += '<buttontext class="bgColor" onclick="pageEvent.toggleParticipants(event)"><participantCount></participantCount>' + ui.l('events.participants') + '</buttontext>';
 		text += '</div><text name="participants" style="margin:0 -1em;display:none;"></text>';
 		return text;
@@ -754,8 +762,6 @@ ${v.eventParticipationButtons}
 		}
 		if (ui.q('popup [name="price"]').value > 0 && !user.contact.paypalMerchantId)
 			formFunc.setError(ui.q('popup [name="price"]'), 'events.errorActivatePaypal');
-		if (!ui.q('popup [name="locationId"]').value)
-			formFunc.setError(ui.q('popup input[name="location"]'), 'events.errorLocation');
 		if (!ui.q('popup [name="type"]').checked) {
 			if (!end.value)
 				formFunc.setError(end, 'events.errorDateNoEnd');

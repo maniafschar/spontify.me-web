@@ -85,11 +85,11 @@ ${v.rating}
 		onclick="pageChat.doCopyLink(event,&quot;${v.event.id ? 'e' : 'l'}=${v.id}&quot;)">${ui.l('share')}</buttontext>
 	<buttontext class="bgColor${v.hideMePotentialParticipants}" name="buttonPotentialParticipants"
 		onclick="pageEvent.loadPotentialParticipants()">${ui.l('events.potentialParticipants')}</buttontext>
-	<buttontext class="bgColor" name="buttonEdit"
+	<buttontext class="bgColor${v.hideMeEdit}" name="buttonEdit"
 		onclick="${v.editAction}">${ui.l('edit')}</buttontext>
 	<buttontext class="bgColor" name="buttonGoogle"
 		onclick="ui.navigation.openHTML(&quot;https://google.com/search?q=${encodeURIComponent(v.name + ' ' + v.town)}&quot;)">${ui.l('locations.google')}</buttontext>
-	<buttontext class="bgColor${v.blocked}" name="buttonBlock"
+	<buttontext class="bgColor${v.hideMeBlock}" name="buttonBlock"
 		onclick="pageLocation.toggleBlock(&quot;${v.id}&quot;)">${ui.l('contacts.blockAction')}</buttontext>
 </detailButtons>
 <text name="events" class="collapsed" style="margin:0 -1em;"></text>
@@ -310,6 +310,8 @@ ${v.rating}
 		}
 		if (v.event.contactId != user.contact.id)
 			v.hideMePotentialParticipants = ' noDisp';
+		if (v.event.contactId == user.contact.id || v.contactId == user.contact.id)
+			v.hideMeBlock = ' noDisp';
 		if (v.locationFavorite.favorite)
 			v.favorite = ' favorite';
 		if (global.isBrowser())
