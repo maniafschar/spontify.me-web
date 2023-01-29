@@ -97,7 +97,8 @@ class global {
 				d = global.date.getDateFields(d);
 				d = new Date(d.year, parseInt(d.month) - 1, d.day, d.hour, d.minute, d.second);
 			}
-			return d.toISOString();
+			d = d.toISOString();
+			return d.substring(0, d.indexOf('.'));
 		},
 		server2Local(d) {
 			if (!d)

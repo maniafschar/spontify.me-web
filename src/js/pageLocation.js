@@ -87,7 +87,7 @@ ${v.rating}
 		onclick="pageEvent.loadPotentialParticipants()">${ui.l('events.potentialParticipants')}</buttontext>
 	<buttontext class="bgColor${v.hideMeEdit}" name="buttonEdit"
 		onclick="${v.editAction}">${ui.l('edit')}</buttontext>
-	<buttontext class="bgColor" name="buttonGoogle"
+	<buttontext class="bgColor${v.hideMeGoogle}" name="buttonGoogle"
 		onclick="ui.navigation.openHTML(&quot;https://google.com/search?q=${encodeURIComponent(v.name + ' ' + v.town)}&quot;)">${ui.l('locations.google')}</buttontext>
 	<buttontext class="bgColor${v.hideMeBlock}" name="buttonBlock"
 		onclick="pageLocation.toggleBlock(&quot;${v.id}&quot;)">${ui.l('contacts.blockAction')}</buttontext>
@@ -284,7 +284,7 @@ ${v.rating}
 		var r = v.event.rating || (eventWithLocation ? v.rating : v.contact.rating);
 		if (r > 0)
 			v.rating = '<detailRating onclick="ratings.open(' + v.event.id + ',&quot;' + (v.event.id ? 'event.id=' + v.event.id : eventWithLocation ? 'event.locationId=' + v.locID : 'event.contactId=' + v.contact.id) + '&quot;)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + r) + '%;">★★★★★</full></ratingSelection></detailRating>';
-		else if (v.event.id && v.event.locationId > -1 && v.event.contactId != user.contact.id && v.eventParticipate.state == 1)
+		else if (v.event.id && v.event.locationId >= -1 && v.event.contactId != user.contact.id && v.eventParticipate.state == 1)
 			v.rating = '<div style="margin:1em 0;"><buttontext class="bgColor" onclick="ratings.open(' + v.event.id + ')">' + ui.l('rating.save') + '</buttontext></div>';
 		if (eventWithLocation)
 			v.distanceDisplay = ' style="display:none;"';
@@ -333,6 +333,8 @@ ${v.rating}
 					f.call();
 				}
 			});
+		else
+			v.hideMeGoogle = ' noDisp';
 		return pageLocation.templateDetail(v);
 	}
 	static edit(id) {
