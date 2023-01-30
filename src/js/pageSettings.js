@@ -362,6 +362,7 @@ ${v.info}`;
 					if (v.hashtagsDisp)
 						setTimeout(function () { hashtags.synchonizeTags(ui.q('settings textarea[name="hashtagsDisp"]')); }, 500);
 					pageSettings.currentSettings = pageSettings.getCurrentSettings();
+					pageInfo.updateLocalisation();
 					if (exec)
 						exec.call()
 					var x = Math.min(300, ui.q('settings').offsetWidth - 2 * ui.emInPX);

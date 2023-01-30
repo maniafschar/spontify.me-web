@@ -7,7 +7,6 @@ import { initialisation } from './initialisation';
 import { intro } from './intro';
 import { Contact, model } from './model';
 import { pageChat } from './pageChat';
-import { pageEvent } from './pageEvent';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 
