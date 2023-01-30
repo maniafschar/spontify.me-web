@@ -100,6 +100,11 @@ ${ui.l('home.labelSkill')}
 				v.lang = global.language;
 				v.clickHeader = 'pageHome.openHintDescription()';
 			}
+			if (ui.q('home homeBody')) {
+				v.startDate = ui.q('home homeBody input[name="startDate"]').value;
+				v.text = ui.q('home homeBody textarea[name="text"]').value;
+				v.hashtagsDisp = ui.q('home homeBody textarea[name="hashtagsDisp"]').value;
+			}
 			if (!v.startDate) {
 				var d = new Date().getHours() + 2;
 				if (d > 23)
@@ -111,6 +116,8 @@ ${ui.l('home.labelSkill')}
 			e.innerHTML = pageHome.template(v);
 			formFunc.initFields('home');
 			initialisation.reposition();
+			if (v.text)
+				ui.q('home homeBody .eventText').style.display = '';
 			var input = ui.q('home homeBody textarea[name="hashtagsDisp"]');
 			var descriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(input), 'value');
 			Object.defineProperty(input, 'value', {
