@@ -1,5 +1,6 @@
 import { communication } from './communication';
 import { geoData } from './geoData';
+import { lists } from './lists';
 import { Contact, Location, model } from './model';
 import { ui } from './ui';
 import { user } from './user';
@@ -285,7 +286,7 @@ class global {
 				var search = '';
 				for (var i = 0; i < load[table].length; i++)
 					search += ' or ' + table + '.id=' + load[table][i];
-				communication.loadList('query=' + table + '_list&distance=100000&search=' + encodeURIComponent('(' + search.substring(4) + ')'), function (l) {
+				lists.loadList('query=' + table + '_list&distance=100000&search=' + encodeURIComponent('(' + search.substring(4) + ')'), function (l) {
 					var s, e, processed = [], t = l[0][0].substring(0, l[0][0].indexOf('.'));
 					for (var i = 1; i < l.length; i++) {
 						var v = model.convert(t == 'contact' ? new Contact() : new Location(), l, i);

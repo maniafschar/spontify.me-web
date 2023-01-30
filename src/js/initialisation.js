@@ -138,10 +138,10 @@ class initialisation {
 			initialisation.initApp();
 		ui.html('head title', global.appTitle);
 		if (global.getParam('r')) {
-			communication.login.removeCredentials();
+			pageLogin.removeCredentials();
 			initialisation.recoverPassword();
 		} else
-			communication.login.autoLogin(initialisation.showStartDialogs);
+			pageLogin.autoLogin(initialisation.showStartDialogs);
 		window.onresize = initialisation.reposition;
 		ui.on(window, 'orientationchange', initialisation.reposition);
 		ui.on(window, 'popstate', ui.navigation.goBack);
@@ -214,9 +214,9 @@ class initialisation {
 		}, 'detailButtons');
 		ui.swipe('settings', function (dir) {
 			if (dir == 'right')
-				pageSettings.previous();
+				pageSettings.swipeRight();
 			else if (dir == 'left')
-				pageSettings.next();
+				pageSettings.swipeLeft();
 		}, 'input,textarea,img,slider,thumb,val');
 		ui.swipe('search', function (dir) {
 			if (dir == 'left')
@@ -362,8 +362,8 @@ class initialisation {
 			return;
 		initialisation.recoverInvoked = true;
 		var e = pageLogin.getDraft() || {};
-		communication.login.removeCredentials();
-		communication.login.recoverPasswordVerifyEmail(global.getParam('r'), e.email ? e.email : '');
+		pageLogin.removeCredentials();
+		pageLogin.verifyEmail(global.getParam('r'), e.email ? e.email : '');
 		history.pushState(null, null, window.location.origin);
 	}
 	static showStartDialogs() {

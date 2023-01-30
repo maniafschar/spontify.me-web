@@ -27,9 +27,9 @@ class ui {
 		global.template`<container>
 	<a style="display:none;">
 		${ui.l('search.title')}
-	</a><a onclick="communication.loadList(ui.query.eventTickets(),pageEvent.listTickets,&quot;events&quot;,&quot;eventsTicket&quot;)">
+	</a><a onclick="lists.loadList(ui.query.eventTickets(),pageEvent.listTickets,&quot;events&quot;,&quot;eventsTicket&quot;)">
 		${ui.l('events.myTickets')}
-	</a><a onclick="communication.loadList(ui.query.eventMy(),pageEvent.listEvents,&quot;events&quot;,&quot;eventsMy&quot;)">
+	</a><a onclick="lists.loadList(ui.query.eventMy(),pageEvent.listEvents,&quot;events&quot;,&quot;eventsMy&quot;)">
 		${ui.l('events.myEvents')}
 	</a><a onclick="pageEvent.edit()">
 		${ui.l('events.new')}
@@ -39,11 +39,11 @@ class ui {
 		global.template`<container>
     <a style="display:none;">
 			${ui.l('search.title')}
-    </a><a onclick="communication.loadList(ui.query.contactFriends(),pageContact.listContacts,&quot;contacts&quot;,&quot;friends&quot;)">
+    </a><a onclick="lists.loadList(ui.query.contactFriends(),pageContact.listContacts,&quot;contacts&quot;,&quot;friends&quot;)">
 		${ui.l('contacts.friendshipTitle')}
-    </a><a onclick="communication.loadList(ui.query.contactVisitees(),pageContact.listContacts,&quot;contacts&quot;,&quot;visits&quot;)">
+    </a><a onclick="lists.loadList(ui.query.contactVisitees(),pageContact.listContacts,&quot;contacts&quot;,&quot;visits&quot;)">
 		${ui.l('title.history')}
-	</a><a onclick="communication.loadList(ui.query.contactVisits(),pageContact.listContacts,&quot;contacts&quot;,&quot;profile&quot;)">
+	</a><a onclick="lists.loadList(ui.query.contactVisits(),pageContact.listContacts,&quot;contacts&quot;,&quot;profile&quot;)">
 		${ui.l('title.visits')}
 	</a>
 </container>`;
@@ -1358,10 +1358,10 @@ class formFunc {
 		},
 		pseudonym(e) {
 			formFunc.resetError(e);
-			var s = communication.login.getRealPseudonym(e.value);
+			var s = pageLogin.getRealPseudonym(e.value);
 			if (s.length < 4)
 				formFunc.setError(e, 'register.errorPseudonym');
-			else if (s.match(communication.login.regexPW))
+			else if (s.match(pageLogin.regexPW))
 				formFunc.setError(e, 'register.errorPseudonymSyntax');
 			else
 				formFunc.validation.filterWords(e);

@@ -503,7 +503,7 @@ ${v.eventParticipationButtons}
 		var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
 		var search = (e.event.visibility == 2 ? global.getRegEx('contact.skills', e.event.skills) + ' or ' + global.getRegEx('contact.skillsText', e.event.skillsText) + ' and ' : '') +
 			'contact.id<>' + user.contact.id;
-		communication.loadList('query=contact_list&distance=50&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent(search),
+		lists.loadList('query=contact_list&distance=50&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent(search),
 			function (r) {
 				var s = pageContact.listContacts(r);
 				if (!s)
@@ -900,7 +900,7 @@ ${v.eventParticipationButtons}
 				ui.toggleHeight(e);
 			else {
 				var id = decodeURIComponent(ui.q('detail card:last-child').getAttribute('i')).split('_');
-				communication.loadList('query=contact_listEventParticipate&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&limit=0&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\''), function (l) {
+				lists.loadList('query=contact_listEventParticipate&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&limit=0&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\''), function (l) {
 					e.innerHTML = l.length < 2 ? '<div style="margin-bottom:1em;">' + ui.l('events.noParticipant') + '</div>' : pageContact.listContacts(l);
 					ui.toggleHeight(e);
 					return '&nbsp;';

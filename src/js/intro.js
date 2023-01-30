@@ -1,5 +1,6 @@
 import { communication } from './communication';
 import { geoData } from './geoData';
+import { lists } from './lists';
 import { pageLocation } from './pageLocation';
 import { ui } from './ui';
 import { user } from './user';
@@ -29,7 +30,7 @@ class intro {
 		ui.css(e, 'opacity', 0);
 	}
 	static loadLocations() {
-		communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&query=' + (user.contact ? 'location_list' : 'location_anonymousList'), pageLocation.listLocation, 'locations', 'list');
+		lists.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&query=' + (user.contact ? 'location_list' : 'location_anonymousList'), pageLocation.listLocation, 'locations', 'list');
 	}
 	static openHint(data, save) {
 		if (save && new Date().getTime() / 60000 - intro.lastHint < 4)

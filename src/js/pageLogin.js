@@ -1,10 +1,22 @@
-import { communication } from './communication';
+import { bluetooth } from './bluetooth';
+import { communication, Encryption, FB } from './communication';
+import { geoData } from './geoData';
 import { global } from './global';
+import { initialisation } from './initialisation';
+import { intro } from './intro';
+import { Contact } from './model';
+import { pageChat } from './pageChat';
+import { pageHome } from './pageHome';
+import { pageLocation } from './pageLocation';
+import { pageSettings } from './pageSettings';
 import { formFunc, ui } from './ui';
+import { user } from './user';
 
 export { pageLogin };
 
 class pageLogin {
+	static regexPseudonym = /[^A-Za-zÀ-ÿ]/;
+	static regexPW = /[^a-zA-ZÀ-ÿ0-9-_.+*#§$%&/\\ \^']/;
 	static timestamp = new Date().getTime();
 	static template = v =>
 		global.template`<tabHeader>
@@ -43,13 +55,13 @@ class pageLogin {
 			${ui.l('login.action')}
 		</buttontext>
 		<div style="padding:2em 0 1em 0;">${ui.l('login.alternative')}</div>
-		<buttontext onclick="communication.login.openFB()" class="bgColor">
+		<buttontext onclick="pageLogin.openFB()" class="bgColor">
 			Facebook
 		</buttontext>
 		<br />
 		<br />
 		<br />
-		<buttontext onclick="communication.login.openApple()" class="loginExternal"
+		<buttontext onclick="pageLogin.openApple()" class="loginExternal"
 			style="background:black;color:white;${v['hideApple']}">
 			<svg xmlns="http://www.w3.org/2000/svg" width="1em" viewBox="0 0 170 170" version="1.1" height="1em">
 				<path
@@ -68,7 +80,7 @@ class pageLogin {
 	</field>
 	<dialogButtons>
 		<br/>
-		<buttontext onclick="pageLogin.recoverPasswordSendEmail()" class="bgColor defaultButton">
+		<buttontext onclick="pageLogin.sendVerificationEmail()" class="bgColor defaultButton">
 		${ui.l('login.recoverPassword')}
 		</buttontext>
 	</dialogButtons>
@@ -79,7 +91,7 @@ class pageLogin {
         <label>${ui.l('email')}</label>
         <value>
             <input type="email" name="email" value="${v.email}" maxlength="100" size="50"
-                onblur="communication.login.checkUnique(this)" />
+                onblur="pageLogin.checkUnique(this)" />
         </value>
     </field>
     <field>
@@ -132,7 +144,50 @@ class pageLogin {
 	<registerHint onclick="pageLogin.toggleRegistrationHints()">${ui.l('login.hints')}</registerHint>
 </form>
 </tabBody>`;
-
+	static autoLogin(exec) {
+		var token = window.localStorage && window.localStorage.getItem('autoLogin');
+		if (token) {
+			communication.ajax({
+				url: global.server + 'authentication/loginAuto?token=' + encodeURIComponent(Encryption.encPUB(token)) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
+				error(e) {
+					if (e.status >= 500)
+						pageLogin.removeCredentials();
+				},
+				success(r) {
+					r = Encryption.jsEncrypt.decrypt(r);
+					if (r) {
+						r = r.split(global.separatorTech);
+						pageLogin.login(r[0], r[1], true, exec);
+					} else
+						pageLogin.removeCredentials();
+				}
+			});
+			return true;
+		}
+		if (exec)
+			exec.call();
+		return false;
+	}
+	static checkUnique(f, exec) {
+		if (!f)
+			return;
+		if (!f.value || formFunc.validation.email(f) > -1)
+			return;
+		communication.ajax({
+			url: global.server + 'action/unique?email=' + encodeURIComponent(pageLogin.getRealPseudonym(f.value)),
+			responseType: 'json',
+			success(r) {
+				if (f.value == r.email) {
+					if (r.unique && !r.blocked) {
+						formFunc.resetError(f);
+						if (exec)
+							exec.call();
+					} else
+						formFunc.setError(f, r.blocked ? 'email.domainBlocked' : 'email.alreadyExists');
+				}
+			}
+		});
+	}
 	static fromForm() {
 		var u = ui.q('input[name="email"]');
 		var p = ui.q('input[name="password"]');
@@ -144,7 +199,7 @@ class pageLogin {
 		if (ui.q('login .dialogFieldError'))
 			p.value = '';
 		else
-			communication.login.login(u.value, p.value, ui.q('[name="autoLogin"]:checked'));
+			pageLogin.login(u.value, p.value, ui.q('[name="autoLogin"]:checked'));
 	}
 	static getDraft() {
 		var v = window.localStorage && window.localStorage.getItem('login');
@@ -154,6 +209,12 @@ class pageLogin {
 			} catch (e) {
 			}
 		return {};
+	}
+	static getRealPseudonym(s) {
+		s = s.replace(/\t/g, ' ').trim();
+		while (s.indexOf('  ') > - 1)
+			s = s.replace(/  /g, ' ');
+		return s.trim();
 	}
 	static goToLogin() {
 		if (ui.navigation.getActiveID() == 'login') {
@@ -173,22 +234,183 @@ class pageLogin {
 			formFunc.initFields('login');
 		}
 	}
-	static toggleRegistrationHints() {
-		var e = ui.q('registerHint');
-		ui.css(e, 'transform', ui.cssValue(e, 'transform').indexOf('1') > -1 ? 'scale(0)' : 'scale(1)');
+	static login(u, p, autoLogin, exec) {
+		user.contact = new Contact();
+		user.contact.id = 0;
+		user.password = p;
+		communication.ajax({
+			url: global.server + 'authentication/login?os=' + global.getOS() + '&device=' + global.getDevice() + '&version=' + global.appVersion + '&timezone=' + encodeURIComponent(Intl.DateTimeFormat().resolvedOptions().timeZone) + '&email=' + encodeURIComponent(Encryption.encPUB(u)) + (autoLogin ? '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()) : ''),
+			responseType: 'json',
+			success(v) {
+				if (v && v['contact.verified']) {
+					user.email = u;
+					user.password = p;
+					user.init(v);
+					if (v['geo_location'])
+						geoData.initManual(JSON.parse(v['geo_location']));
+					ui.css('progressbar', 'display', 'none');
+					if (global.language != user.contact.language)
+						initialisation.setLanguage(user.contact.language);
+					if (user.contact.birthday && user.contact.birthday.trim().length > 8 && !exec) {
+						var d = new Date();
+						if (d.getMonth() == user.contact.birthday.substring(5, 7) - 1 && d.getDate() == user.contact.birthday.substring(8, 10)) {
+							ui.navigation.openPopup(ui.l('birthday'), ui.l('birthday.gratulation').replace('{0}', d.getFullYear() - user.contact.birthday.substring(0, 4)) + '<br/><br/><span id="birthdayCleverTip"></span><br/><img src="images/happyBirthday.png" style="width:40%;"/>');
+							communication.ajax({
+								url: global.server + 'action/quotation',
+								success(r) {
+									var e = ui.q('#birthdayCleverTip');
+									if (e)
+										e.innerHTML = r;
+								}
+							});
+						}
+					}
+					pageLogin.removeCredentials();
+					if (v.auto_login_token) {
+						var token = Encryption.jsEncrypt.decrypt(v.auto_login_token);
+						if (token)
+							window.localStorage.setItem('autoLogin', token);
+					}
+					if (!global.isBrowser() && v.script_correction) {
+						try {
+							eval(v.script_correction);
+						} catch (ex) {
+							communication.sendError('script_correction: ' + ex);
+						}
+					}
+					if (ui.navigation.getActiveID() != 'home') {
+						setTimeout(function () { ui.html('login', ''); }, 500);
+						ui.navigation.goTo('home');
+					}
+					pageHome.init(true);
+					communication.ping();
+					setTimeout(communication.notification.register, 100);
+					pageChat.initActiveChats();
+					geoData.init();
+					if (!global.isBrowser()) {
+						bluetooth.stop();
+						bluetooth.requestAuthorization(true);
+					}
+					if (!user.contact.aboutMe
+						&& !user.contact.gender && !user.contact.birthday
+						&& !user.contact.ageMale && !user.contact.ageFemale && !user.contact.ageDivers
+						&& !pageSettings.hasAttributes()
+						&& !exec) {
+						setTimeout(function () {
+							if (ui.navigation.getActiveID() == 'home')
+								intro.openHint({ desc: 'goToSettings', pos: '-0.5em,5em', size: '60%,auto', hinky: 'right:1em;', hinkyClass: 'top', onclick: 'ui.navigation.goTo(\'settings\')' });
+						}, 2000);
+					}
+					pageLocation.locationsAdded = v.location_added;
+					if (exec)
+						setTimeout(exec, 1500);
+				} else {
+					user.reset();
+					pageLogin.removeCredentials();
+					if (v)
+						ui.navigation.openPopup(ui.l('login.finishRegTitle'), ui.l('login.finishRegBody'));
+					else
+						formFunc.setError(ui.q('input[name="password"]'), 'login.failedData');
+				}
+			},
+			error(r) {
+				user.reset();
+				var s;
+				if (r.status >= 200 && r.status < 502) {
+					s = 'login.failedData';
+					pageLogin.removeCredentials();
+				} else
+					s = 'error.noNetworkConnection';
+				pageLogin.setError(s, r.status == 200);
+			}
+		});
 	}
-	static recoverPasswordSendEmail() {
-		var email = ui.qa('input[name="email"]')[1];
-		formFunc.resetError(email);
-		var b = -1;
-		if (!email.value)
-			b = formFunc.setError(email, 'settings.noEmail');
-		if (b == -1 && formFunc.validation.email(email) == -1)
-			communication.login.recoverPasswordSendEmail(email.value);
+	static loginToServer(os, u, exec) {
+		u.id = Encryption.encPUB(u.id);
+		if (u.email && u.email.indexOf('@') > 0)
+			u.email = Encryption.encPUB(u.email);
+		else
+			u.email = null;
+		communication.ajax({
+			url: global.server + 'authentication/loginExternal',
+			method: 'PUT',
+			body: {
+				user: u,
+				from: os,
+				language: global.language,
+				version: global.appVersion,
+				device: global.getDevice(),
+				os: global.getOS(),
+				publicKey: Encryption.jsEncrypt.getPublicKeyB64()
+			},
+			success(r) {
+				if (r) {
+					r = Encryption.jsEncrypt.decrypt(r).split(global.separatorTech);
+					if (r.length == 2)
+						pageLogin.login(r[0], r[1], ui.q('[name="autoLogin"]:checked'), exec);
+				}
+			}
+		});
 	}
-	static recoverPasswordSetNew() {
-		if (!ui.navigation.openPopup(ui.l('login.changePassword'), '<span>' + ui.l('login.changePasswordBody') + '</span><field><label>' + ui.l('login.password') + '</label><value><input type="password" name="passwd" maxlength="30"></value></field><dialogButtons><buttontext class="bgColor" onclick="communication.login.recoverPasswordSetNew()">' + ui.l('login.changePassword') + '</buttontext></dialogButtons><popupHint></popupHint>', 'communication.login.warningRegNotComplete()', true))
-			setTimeout(pageLogin.recoverPasswordSetNew, 500);
+	static logoff() {
+		if (!user.contact)
+			return;
+		var token = window.localStorage && window.localStorage.getItem('autoLogin');
+		token = token ? '?token=' + encodeURIComponent(Encryption.encPUB(token)) : '';
+		communication.ajax({
+			url: global.server + 'authentication/logoff' + token,
+			error() {
+				pageLogin.resetAfterLogoff();
+			},
+			success() {
+				pageLogin.resetAfterLogoff();
+			}
+		});
+	}
+	static openApple(exec) {
+		window.cordova.plugins.SignInWithApple.signin(
+			{ requestedScopes: [0, 1] },
+			function (data) {
+				data.name = data.fullName.givenName + ' ' + (data.fullName.middleName ? data.fullName.middleName + ' ' : '') + data.fullName.familyName;
+				data.id = data.user;
+				delete data.fullName;
+				delete data.user;
+				pageLogin.loginToServer('Apple', data, exec);
+			}
+		)
+	}
+	static openFB(exec) {
+		FB.init({
+			appId: '672104933632183',
+			accessToken: 'cb406e0fe7fd07415c7bea50e86ed3f6',
+			xfbml: true,
+			version: 'v13.0'
+		});
+		FB.login(
+			function (response) {
+				if (response.status == 'connected') {
+					if (user.contact && !response.authResponse)
+						user.save({ fbToken: response.token }, exec);
+					else
+						FB.api({
+							path: '/me',
+							params: { fields: 'name,email,picture.width(2048)' },
+							success(data) {
+								if (data.picture && data.picture.data && !data.picture.data.is_silhouette)
+									data.picture = data.picture.data.url;
+								else
+									data.picture = null;
+								data.accessToken = Encryption.encPUB(response.token);
+								pageLogin.loginToServer('Facebook', data, exec);
+							}
+						});
+				}
+			}, { scope: 'email' }
+		);
+	}
+	static passwordDialog() {
+		if (!ui.navigation.openPopup(ui.l('login.changePassword'), '<span>' + ui.l('login.changePasswordBody') + '</span><field><label>' + ui.l('login.password') + '</label><value><input type="password" name="passwd" maxlength="30"></value></field><dialogButtons><buttontext class="bgColor" onclick="pageLogin.savePassword()">' + ui.l('login.changePassword') + '</buttontext></dialogButtons><popupHint></popupHint>', 'pageLogin.warningRegNotComplete()', true))
+			setTimeout(pageLogin.passwordDialog, 500);
 	}
 	static register() {
 		formFunc.validation.email(ui.q('input[name="email"]'));
@@ -209,19 +431,84 @@ class pageLogin {
 				body: formFunc.getForm('form[name=loginRegister]').values,
 				method: 'POST',
 				error(r) {
-					communication.login.checkUnique(ui.q('login tabBody form[name="loginRegister"] input[name="email"]'));
+					pageLogin.checkUnique(ui.q('login tabBody form[name="loginRegister"] input[name="email"]'));
 				},
 				success(r) {
 					ui.q('login tabBody form[name="loginRegister"]').innerHTML = '<div style="padding:2em;">' + ui.l('register.success') + '</div>';
-					communication.login.removeCredentials();
+					pageLogin.removeCredentials();
 				}
 			});
 		}
+	}
+	static removeCredentials() {
+		window.localStorage.removeItem('login');
+		window.localStorage.removeItem('autoLogin');
+	}
+	static resetAfterLogoff() {
+		user.reset();
+		bluetooth.stop();
+		initialisation.reset();
+		pageHome.reset();
+		pageLocation.reset();
+		pageChat.reset();
+		communication.reset();
+		ui.html('head title', global.appTitle);
+		ui.navigation.goTo('home', true);
+		setTimeout(function () {
+			ui.html('contacts', '');
+			ui.html('events', '');
+			ui.html('search', '');
+			ui.html('settings', '');
+			ui.html('chat', '');
+			ui.html('detail', '');
+			ui.html('info', '');
+		}, 500);
 	}
 	static saveDraft() {
 		var v = formFunc.getForm('login form:nth-child(3)').values;
 		v.email = ui.qa('login tabBody input[name="email"]')[parseInt(ui.q('login tabBody').style.marginLeft || 0) / -100].value;
 		window.localStorage.setItem('login', JSON.stringify(v));
+	}
+	static savePassword() {
+		if (ui.val('[name="passwd"]').length < 8)
+			formFunc.setError(ui.q('[name="passwd"]'), 'settings.passwordWrong');
+		else if (ui.val('[name="passwd"]').match(pageLogin.regexPW))
+			formFunc.setError(ui.q('[name="passwd"]'), 'register.errorPseudonymSyntax');
+		else
+			formFunc.resetError(ui.q('[name="passwd"]'));
+		if (!ui.q('popup errorHint')) {
+			user.save({ password: Encryption.encPUB(ui.val('popup [name="passwd"]')) }, function () {
+				pageLogin.removeCredentials();
+				user.password = ui.val('[name="passwd"]');
+				ui.attr('popupTitle', 'modal', '');
+				ui.navigation.hidePopup();
+				user.contact.verified = 1;
+			});
+		}
+	}
+	static sendVerificationEmail() {
+		var fromDialog = ui.q('popupContent');
+		var email = fromDialog ? ui.q('popup input') : ui.qa('input[name="email"]')[1];
+		formFunc.resetError(email);
+		var b = -1;
+		if (!email.value)
+			b = formFunc.setError(email, 'settings.noEmail');
+		if (b == -1 && formFunc.validation.email(email) == -1)
+			communication.ajax({
+				url: global.server + 'authentication/recoverSendEmail?email=' + encodeURIComponent(Encryption.encPUB(email)),
+				success(r) {
+					if (r.indexOf('nok:') == 0)
+						formFunc.setError(email, 'login.recoverPasswordError' + r.substring(4));
+					else {
+						ui.navigation.hidePopup();
+						pageLogin.removeCredentials();
+						if (fromDialog)
+							ui.navigation.openPopup(ui.l('login.recoverPassword'), ui.l('login.recoverPasswordBody'));
+						else
+							ui.html('login errorHint', ui.l('login.recoverPasswordBody'));
+					}
+				}
+			})
 	}
 	static setError(s, resetPW) {
 		if (ui.navigation.getActiveID() == 'home')
@@ -281,6 +568,33 @@ class pageLogin {
 		else
 			pageLogin.setTab2();
 	}
+	static toggleRegistrationHints() {
+		var e = ui.q('registerHint');
+		ui.css(e, 'transform', ui.cssValue(e, 'transform').indexOf('1') > -1 ? 'scale(0)' : 'scale(1)');
+	}
+	static verifyEmail(e, email) {
+		var x = 0;
+		for (var i = 0; i < e.length; i++) {
+			x += e.charCodeAt(i);
+			if (x > 99999999)
+				break;
+		}
+		var s2 = '' + x;
+		s2 += e.substring(1, 11 - s2.length);
+		communication.ajax({
+			url: global.server + 'authentication/recoverVerifyEmail?token=' + encodeURIComponent(Encryption.encPUB(e.substring(0, 10) + s2 + e.substring(10))) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
+			success(r) {
+				if (r) {
+					r = Encryption.jsEncrypt.decrypt(r).split(global.separatorTech);
+					pageLogin.login(r[0], r[1], global.getDevice() != 'computer', pageLogin.passwordDialog);
+				} else {
+					setTimeout(function () {
+						ui.navigation.openPopup(ui.l('attention'), ui.l('login.failedOutdated') + '<br/><br/><input' + (email ? ' value="' + email + '"' : '') + '/><br/><br/><buttontext class="bgColor" onclick="pageLogin.sendVerificationEmail()">' + ui.l('login.failedNotVerifiedButton') + '</buttontext>');
+					}, 2000);
+				}
+			}
+		});
+	}
 	static validateAGB() {
 		var e = ui.q('input[name="agb"]');
 		if (e.checked)
@@ -290,5 +604,14 @@ class pageLogin {
 	}
 	static validatePseudonym() {
 		formFunc.validation.pseudonym(ui.q('input[name="pseudonym"]'));
+	}
+	static warningRegNotComplete() {
+		if (ui.q('popupHint') && ui.q('popupHint').innerHTML) {
+			ui.attr('popupTitle', 'modal', '');
+			pageLogin.logoff();
+		} else {
+			ui.html('popupHint', ui.l('register.notComplete'));
+			return false;
+		}
 	}
 }

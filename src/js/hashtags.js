@@ -57,18 +57,19 @@ class hashtags {
 	static ids2Text(ids) {
 		if (!ids)
 			return '';
-		var s = '';
+		var a = [];
 		ids = ids.split('|');
 		for (var i = 0; i < ids.length; i++) {
 			var id = ids[i].split('\.');
 			for (var i2 = 0; i2 < ui.categories[id[0]].values.length; i2++) {
 				if (ui.categories[id[0]].values[i2].split('|')[1] == id[1]) {
-					s += ' ' + ui.categories[id[0]].values[i2].split('|')[0];
+					a.push(ui.categories[id[0]].values[i2].split('|')[0]);
 					break;
 				}
 			}
 		}
-		return s.trim();
+		a.sort(function (a, b) { return a.toLowerCase() > b.toLowerCase() ? 1 : -1 });
+		return a.join(' ').trim();
 	}
 	static synchonizeTags(e) {
 		if (e.target)

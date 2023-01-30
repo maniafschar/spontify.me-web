@@ -1,7 +1,6 @@
+import { communication } from './communication';
+import { geoData } from './geoData';
 import { global } from './global';
-import { Contact, Location, model } from './model';
-import { pageContact } from './pageContact';
-import { pageEvent } from './pageEvent';
 import { pageLocation } from './pageLocation';
 import { ui, formFunc } from './ui';
 
@@ -38,6 +37,47 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 			ui.val('search div.' + ui.q('search tabHeader tab.tabActive').getAttribute('i') + ' [name="keywords"]'))
 			s += '<br/><br/>' + ui.l('noResults.searchWithoutKeywords') + '<br/><br/><buttontext onclick="pageSearch.repeatSearch()" class="bgColor">' + ui.l('noResults.repeat') + '</buttontext>';
 		return '<noResult>' + s.replace(/\{0\}/g, ui.l(activeID + '.title')).replace('{1}', '') + '</noResult>';
+	}
+	static loadList(data, callback, divID, errorID) {
+		if (divID == 'contacts' && errorID != 'groups' && ui.q('groups') && ui.cssValue('groups', 'display') != 'none')
+			ui.toggleHeight('groups');
+		ui.css(divID + ' filters', 'transform', 'scale(0)');
+		ui.html('popupHint', '');
+		var menuIndex = -1;
+		var e = ui.qa('menu a');
+		for (var i = 0; i < e.length; i++) {
+			if (e[i].matches(':hover')) {
+				menuIndex = i;
+				break;
+			}
+		}
+		communication.ajax({
+			url: global.server + 'db/list?' + data,
+			responseType: 'json',
+			success(r) {
+				var s = callback(r);
+				if (divID) {
+					if (!s)
+						s = lists.getListNoResults(divID.indexOf('.') ? divID.substring(divID.lastIndexOf('.') + 1) : divID, errorID)
+					lists.hideFilter();
+					lists.setListDivs(divID);
+					ui.navigation.hideMenu();
+					ui.navigation.hidePopup();
+					ui.html(divID + ' listResults', s);
+					if (menuIndex > -1) {
+						ui.attr(divID, 'menuIndex', menuIndex);
+						if (ui.navigation.getActiveID() == 'locations' && menuIndex >= ui.q('menu container').childElementCount && ui.cssValue('map', 'display') != 'none')
+							pageLocation.toggleMap();
+					}
+					var e = ui.q(divID + ' listBody');
+					if (e)
+						e.scrollTop = 0;
+					lists.setListHint(divID);
+				}
+				formFunc.image.replaceSVGs();
+				geoData.updateCompass();
+			}
+		});
 	}
 	static removeListEntry(id, activeID) {
 		ui.attr(activeID + ' [i="' + id + '"]', 'remove', '1');

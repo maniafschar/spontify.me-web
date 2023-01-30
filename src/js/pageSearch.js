@@ -106,7 +106,7 @@ class pageSearch {
 		},
 		search() {
 			pageSearch.contacts.filter = formFunc.getForm('search tabBody div.contacts form').values;
-			communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=contact_list&search=' + encodeURIComponent(pageSearch.contacts.getSearch()), pageContact.listContacts, 'search tabBody>div.contacts', 'search');
+			lists.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=contact_list&search=' + encodeURIComponent(pageSearch.contacts.getSearch()), pageContact.listContacts, 'search tabBody>div.contacts', 'search');
 			formFunc.saveDraft('searchContacts', pageSearch.contacts.filter);
 		}
 	}
@@ -212,7 +212,7 @@ class pageSearch {
 		},
 		search() {
 			pageSearch.events.filter = formFunc.getForm('search tabBody div.events form').values;
-			communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_listEvent&search=' + encodeURIComponent(pageSearch.events.getSearch()), pageEvent.listEvents, 'search tabBody>div.events', 'search');
+			lists.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_listEvent&search=' + encodeURIComponent(pageSearch.events.getSearch()), pageEvent.listEvents, 'search tabBody>div.events', 'search');
 			formFunc.saveDraft('searchEvents', pageSearch.events.filter);
 		}
 	}
@@ -287,7 +287,7 @@ class pageSearch {
 		},
 		search() {
 			pageSearch.locations.filter = formFunc.getForm('search tabBody div.locations form').values;
-			communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent(pageSearch.locations.getSearch()), pageLocation.listLocation, 'search tabBody>div.locations', 'search');
+			lists.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent(pageSearch.locations.getSearch()), pageLocation.listLocation, 'search tabBody>div.locations', 'search');
 			formFunc.saveDraft('searchLocations', pageSearch.locations.filter);
 		}
 	}

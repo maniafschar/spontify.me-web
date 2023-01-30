@@ -11,6 +11,7 @@ import { pageLocation } from './pageLocation';
 import { pageInfo } from './pageInfo';
 import { hashtags } from './hashtags';
 import QRCodeStyling from 'qr-code-styling';
+import { pageLogin } from './pageLogin';
 
 export { pageSettings };
 
@@ -186,14 +187,14 @@ class pageSettings {
 <buttontext onclick="pageSettings.deleteProfile()" class="bgColor">${ui.l('settings.deleteProfile')}</buttontext>
 </div>
 </div>
-<buttontext class="bgColor settings2Button" onclick="communication.login.logoff()">${ui.l('logoff.title')}</buttontext><br/>
+<buttontext class="bgColor settings2Button" onclick="pageLogin.logoff()">${ui.l('logoff.title')}</buttontext><br/>
 ${v.info}`;
 
 	static checkUnique() {
 		if (user.email == ui.val('input[name="email"]'))
 			formFunc.resetError(ui.q('input[name="email"]'));
 		else
-			communication.login.checkUnique(ui.q('input[name="email"]'));
+			pageLogin.checkUnique(ui.q('input[name="email"]'));
 	}
 	static deleteProfile() {
 		ui.html('errorHint', '');
@@ -243,7 +244,7 @@ ${v.info}`;
 					url: global.server + 'authentication/one',
 					method: 'DELETE',
 					success(r) {
-						communication.login.resetAfterLogoff();
+						pageLogin.resetAfterLogoff();
 					}
 				});
 			}
@@ -419,30 +420,15 @@ ${v.info}`;
 		}
 		pageSettings.listBlocked(l[0].includes('event.id') ? 'event' : 'location', pageLocation.listLocation(l));
 	}
-	static next() {
-		var m = ui.q('settings tabBody').style.marginLeft;
-		m = !m ? 0 : parseInt(m);
-		if (m > -200)
-			pageSettings.selectTab(m / -100 + 1);
-		else
-			ui.navigation.goTo('home');
-	}
 	static preview() {
 		if (pageSettings.currentSettings == pageSettings.getCurrentSettings())
 			details.open(user.contact.id, 'contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id), pageContact.detail);
 		else
 			pageSettings.save('autoOpen');
 	}
-	static previous() {
-		var m = parseInt(ui.q('settings tabBody').style.marginLeft);
-		if (m < 0)
-			pageSettings.selectTab(m / -100 - 1);
-		else
-			ui.navigation.goTo('home', true);
-	}
 	static postSave(goToID) {
 		if (pageSettings.currentSettings && pageSettings.currentSettings.split(global.separatorTech)[0] != ui.val('input[name="email"]')) {
-			communication.login.logoff();
+			pageLogin.logoff();
 			return;
 		}
 		user.contact.ageFemale = ui.val('settings input[name="ageFemale"]');
@@ -549,6 +535,21 @@ ${v.info}`;
 		ui.classAdd(ui.qa('settings tab')[i], 'tabActive');
 		ui.q('settings tabBody').style.marginLeft = i * -100 + '%';
 	}
+	static swipeLeft() {
+		var m = ui.q('settings tabBody').style.marginLeft;
+		m = !m ? 0 : parseInt(m);
+		if (m > -200)
+			pageSettings.selectTab(m / -100 + 1);
+		else
+			ui.navigation.goTo('home', false);
+	}
+	static swipeRight() {
+		var m = parseInt(ui.q('settings tabBody').style.marginLeft);
+		if (m < 0)
+			pageSettings.selectTab(m / -100 - 1);
+		else
+			ui.navigation.goTo('home', true);
+	}
 	static toggleBlocked() {
 		var e = ui.q('#blocked');
 		if (e.innerHTML)
@@ -561,9 +562,9 @@ ${v.info}`;
 				e.innerHTML = '';
 			});
 		else {
-			communication.loadList('query=contact_listBlocked&limit=0', pageSettings.listContactsBlocked);
-			communication.loadList('query=location_listBlocked&limit=0', pageSettings.listLocationsBlocked);
-			communication.loadList('query=location_listEventBlocked&limit=0', pageSettings.listLocationsBlocked);
+			lists.loadList('query=contact_listBlocked&limit=0', pageSettings.listContactsBlocked);
+			lists.loadList('query=location_listBlocked&limit=0', pageSettings.listLocationsBlocked);
+			lists.loadList('query=location_listEventBlocked&limit=0', pageSettings.listLocationsBlocked);
 		}
 	}
 	static toggleGenderSlider(e) {
