@@ -550,7 +550,7 @@ class pageChat {
 				url: global.server + 'db/one',
 				method: 'POST',
 				body: {
-					classname: 'Chat',
+					classname: 'ContactChat',
 					values: v
 				},
 				error(r) {
@@ -604,7 +604,7 @@ class pageChat {
 		if (formFunc.image.hasImage('image')) {
 			var id = ui.q('chat').getAttribute('i');
 			var v = formFunc.getForm('popup form');
-			v.classname = 'Chat';
+			v.classname = 'ContactChat';
 			communication.ajax({
 				url: global.server + 'db/one',
 				method: 'POST',

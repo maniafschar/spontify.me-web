@@ -170,9 +170,9 @@ ${v.eventParticipationButtons}
 			v.eventParticipationButtons = pageEvent.getParticipateButton(v);
 			if (v.eventParticipate.state == 1)
 				v.classParticipate = ' participate';
-			else if (p.state == -1 && v.event.confirm == 1) {
+			else if (v.eventParticipate.state == -1 && v.event.confirm == 1) {
 				v.classParticipate = ' canceled';
-				v.reason = ui.l('events.canceled') + p.reason;
+				v.reason = ui.l('events.canceled') + v.eventParticipate.reason;
 			}
 			communication.ajax({
 				url: global.server + 'db/list?query=contact_eventParticipateCount&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + v.event.id + ' and eventParticipate.eventDate=\'' + v.eventParticipate.eventDate + '\''),

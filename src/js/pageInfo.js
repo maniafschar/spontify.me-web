@@ -69,49 +69,6 @@ ${ui.l('home.DescLink')}
 		else
 			ui.navigation.openPopup(ui.l('locations.serviceTitle'), ui.l('locations.serviceError').replace('{0}', geoData.currentStreet ? geoData.currentStreet : '-'));
 	}
-	static sendFeedback(text, exec) {
-		if (!text || text.trim().length == 0)
-			return;
-		text = text.trim();
-		if (text.length > 1800)
-			text = text.substring(0, 1800);
-		for (var i = 0; i < pageInfo.sentFeedback.length; i++) {
-			if (pageInfo.sentFeedback[i] == text)
-				return;
-		}
-		if (user.contact) {
-			communication.ajax({
-				url: global.server + 'db/one',
-				method: 'POST',
-				body: {
-					classname: 'Chat',
-					values: {
-						note: text.replace(/</g, '&lt;')
-					}
-				},
-				error(r) {
-					var e = ui.q('feedbackHint');
-					if (e)
-						ui.html(e, ui.l('error.text'));
-				},
-				success(r) {
-					pageInfo.sentFeedback.push(text);
-					pageChat.initActiveChats();
-					var e = ui.q('feedbackHint');
-					if (e) {
-						ui.css(e.parentNode, 'height', '');
-						ui.html(e, ui.l('info.feedbackUploadSuccess'));
-						setTimeout(function () {
-							ui.html(e, '');
-							ui.q('#feedbackText').value = '';
-						}, 5000);
-					}
-					if (exec)
-						exec.call();
-				}
-			});
-		}
-	}
 	static socialShare(extra) {
 		var msg = ui.l('info.socialShareText').replace('{0}', user.contact.idDisplay).replace('{1}', user.contact.gender == 1 ? '🙋‍♂️' : '🙋‍♀️');
 		if (global.isBrowser())
