@@ -251,7 +251,6 @@ ${v.rating}
 	static detailLocationEvent(l, id) {
 		var v = model.convert(new Location(), l);
 		v.data = encodeURIComponent(JSON.stringify(v));
-		l = l[1];
 		if (!v.id)
 			v.name = v.contact.pseudonym + (v.contact.age ? ' (' + v.contact.age + ')' : '');
 		v.id = id;
@@ -259,9 +258,19 @@ ${v.rating}
 		v.classBGImg = '';
 		if (v.classBGImg.length < 8)
 			v.classBGImg = 'class="mainBG"';
-		v.locID = v.event.id ? v.event.locationId : id;
+		v.locID = v.event.id ? v.event.locationId : v.id;
 		v.angle = geoData.getAngel(geoData.latlon, { lat: v.latitude, lon: v.longitude });
 		v.image = v.event.image ? v.event.image : v.image ? v.image : v.contact.image;
+		if (v.event.id) {
+			v.eventDetails = pageEvent.detail(v);
+			v.hideBlockReason2 = ' style="display:none;"';
+		} else {
+			if (global.isBrowser())
+				v.copyLinkHint = ui.l('copyLinkHint.location');
+			else
+				v.copyLinkHint = ui.l('copyLinkHint.locationSocial');
+			v.editAction = 'pageLocation.edit(' + v.id + ')';
+		}
 		if (v.image)
 			v.image = global.serverImg + v.image;
 		else
@@ -298,16 +307,6 @@ ${v.rating}
 			v.description = '<text class="description">' + global.string.replaceLinks(v.description.replace(/\n/g, '<br/>')) + '</text>';
 		if (v.bonus)
 			v.bonus = '<text style="margin:1em 0;" class="highlightBackground">' + ui.l('locations.bonus') + v.bonus + '<br/>' + ui.l('locations.bonusHint') + '</text>';
-		if (v.event.id) {
-			v.eventDetails = pageEvent.detail(v);
-			v.hideBlockReason2 = ' style="display:none;"';
-		} else {
-			if (global.isBrowser())
-				v.copyLinkHint = ui.l('copyLinkHint.location');
-			else
-				v.copyLinkHint = ui.l('copyLinkHint.locationSocial');
-			v.editAction = 'pageLocation.edit(' + v.locID + ')';
-		}
 		if (v.event.contactId != user.contact.id)
 			v.hideMePotentialParticipants = ' noDisp';
 		if (v.event.contactId == user.contact.id || v.contactId == user.contact.id)
@@ -316,7 +315,7 @@ ${v.rating}
 			v.favorite = ' favorite';
 		if (global.isBrowser())
 			v.displaySocialShare = 'display: none; ';
-		v.pressedCopyButton = pageChat.copyLink.indexOf(global.encParam((v.event.id ? 'e' : 'l') + '=' + id)) > -1 ? ' buttonPressed' : '';
+		v.pressedCopyButton = pageChat.copyLink.indexOf(global.encParam(v.event.id ? 'e=' + v.event.id : 'l=' + v.id)) > -1 ? ' buttonPressed' : '';
 		if (v.address)
 			communication.ajax({
 				url: global.server + 'action/map?source=' + geoData.latlon.lat + ',' + geoData.latlon.lon + '&destination=' + v.latitude + ',' + v.longitude,

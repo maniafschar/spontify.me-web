@@ -12,6 +12,7 @@ import { pageInfo } from './pageInfo';
 import { hashtags } from './hashtags';
 import QRCodeStyling from 'qr-code-styling';
 import { pageLogin } from './pageLogin';
+import { lists } from './lists';
 
 export { pageSettings };
 
@@ -565,7 +566,7 @@ ${v.info}`;
 		else {
 			lists.loadList('query=contact_listBlocked&limit=0', pageSettings.listContactsBlocked);
 			lists.loadList('query=location_listBlocked&limit=0', pageSettings.listLocationsBlocked);
-			lists.loadList('query=location_listEventBlocked&limit=0', pageSettings.listLocationsBlocked);
+			lists.loadList('query=event_listBlocked&limit=0', pageSettings.listLocationsBlocked);
 		}
 	}
 	static toggleGenderSlider(e) {

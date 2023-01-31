@@ -56,19 +56,19 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 			responseType: 'json',
 			success(r) {
 				var s = callback(r);
+				if (menuIndex > -1) {
+					ui.attr(divID, 'menuIndex', menuIndex);
+					if (ui.navigation.getActiveID() == 'locations' && menuIndex >= ui.q('menu container').childElementCount && ui.cssValue('map', 'display') != 'none')
+						pageLocation.toggleMap();
+				}
+				ui.navigation.hideMenu();
+				ui.navigation.hidePopup();
 				if (divID) {
 					if (!s)
 						s = lists.getListNoResults(divID.indexOf('.') ? divID.substring(divID.lastIndexOf('.') + 1) : divID, errorID)
 					lists.hideFilter();
 					lists.setListDivs(divID);
-					ui.navigation.hideMenu();
-					ui.navigation.hidePopup();
 					ui.html(divID + ' listResults', s);
-					if (menuIndex > -1) {
-						ui.attr(divID, 'menuIndex', menuIndex);
-						if (ui.navigation.getActiveID() == 'locations' && menuIndex >= ui.q('menu container').childElementCount && ui.cssValue('map', 'display') != 'none')
-							pageLocation.toggleMap();
-					}
 					var e = ui.q(divID + ' listBody');
 					if (e)
 						e.scrollTop = 0;

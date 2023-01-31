@@ -1871,13 +1871,10 @@ row extra img {
 
 .participate::before {
 	content: '✓';
-	color: rgb(255, 220, 70);
 }
 
 .canceled::before {
 	content: '✗';
-	color: rgb(180, 0, 0);
-	margin-top: -0.1em;
 }
 
 row.canceled::before {
@@ -1887,10 +1884,10 @@ row.canceled::before {
 row.participate::before,
 row.canceled::before {
 	position: absolute;
-	font-size: 6em;
-	opacity: 0.3;
-	top: 0.2em;
-	right: 0.1em;
+	font-size: 2em;
+	opacity: 0.2;
+	bottom: 0.2em;
+	right: 0.2em;
 	line-height: 1;
 }
 
@@ -1942,9 +1939,9 @@ row compass {
 detail .participate::before,
 detail .canceled::before {
 	position: absolute;
-	font-size: 6em;
-	opacity: 0.3;
-	top: 1.25em;
+	font-size: 4em;
+	opacity: 0.2;
+	top: 2em;
 	line-height: 1;
 	width: 100%;
 	right: 0;

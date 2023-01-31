@@ -53,8 +53,6 @@ class details {
 				var s = callback(r, id);
 				if (s) {
 					var d = ui.q('detail');
-					if (r['event.id'] && (!id.indexOf || id.indexOf('_') < 0))
-						id = pageEvent.getId(r);
 					s = '<card i="' + id + '" type="' + (action.indexOf('contact_') == 0 ? 'contact' : 'location') + '">' + s + '</card>';
 					if (activeID == 'detail') {
 						var c = document.createElement('div');

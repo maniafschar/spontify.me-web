@@ -27,9 +27,9 @@ class ui {
 		global.template`<container>
 	<a style="display:none;">
 		${ui.l('search.title')}
-	</a><a onclick="lists.loadList(ui.query.eventTickets(),pageEvent.listTickets,&quot;events&quot;,&quot;eventsTicket&quot;)">
+	</a><a onclick="ui.query.eventTickets()">
 		${ui.l('events.myTickets')}
-	</a><a onclick="lists.loadList(ui.query.eventMy(),pageEvent.listEvents,&quot;events&quot;,&quot;eventsMy&quot;)">
+	</a><a onclick="ui.query.eventMy()">
 		${ui.l('events.myEvents')}
 	</a><a onclick="pageEvent.edit()">
 		${ui.l('events.new')}
@@ -39,11 +39,11 @@ class ui {
 		global.template`<container>
     <a style="display:none;">
 			${ui.l('search.title')}
-    </a><a onclick="lists.loadList(ui.query.contactFriends(),pageContact.listContacts,&quot;contacts&quot;,&quot;friends&quot;)">
+    </a><a onclick="ui.query.contactFriends()">
 		${ui.l('contacts.friendshipTitle')}
-    </a><a onclick="lists.loadList(ui.query.contactVisitees(),pageContact.listContacts,&quot;contacts&quot;,&quot;visits&quot;)">
+    </a><a onclick="ui.query.contactVisitees()">
 		${ui.l('title.history')}
-	</a><a onclick="lists.loadList(ui.query.contactVisits(),pageContact.listContacts,&quot;contacts&quot;,&quot;profile&quot;)">
+	</a><a onclick="ui.query.contactVisits()">
 		${ui.l('title.visits')}
 	</a>
 </container>`;
@@ -196,7 +196,7 @@ class ui {
 					if (idIntern.indexOf('l=') == 0)
 						details.open(idIntern.substring(2), 'location_list&search=' + encodeURIComponent('location.id=' + idIntern.substring(2)), pageLocation.detailLocationEvent);
 					else if (idIntern.indexOf('e=') == 0)
-						details.open(idIntern.substring(2), 'location_listEvent&search=' + encodeURIComponent('event.id=' + idIntern.substring(2)), pageLocation.detailLocationEvent);
+						details.open(idIntern.substring(2), 'event_list&search=' + encodeURIComponent('event.id=' + idIntern.substring(2)), pageLocation.detailLocationEvent);
 					else if (idIntern.indexOf('f=') == 0)
 						pageContact.sendRequestForFriendship(idIntern.substring(2));
 					else if (idIntern.indexOf('q=') == 0)
@@ -491,10 +491,14 @@ class ui {
 	}
 	static query = {
 		contactFriends() {
-			return 'query=contact_list&distance=100000&limit=0&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactLink.status=\'Friends\'');
+			return lists.loadList(
+				'query=contact_list&distance=100000&limit=0&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactLink.status=\'Friends\''),
+				pageContact.listContacts, 'contacts', 'friends');
 		},
 		contactVisitees() {
-			return 'query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactVisit.contactId2=contact.id and contactVisit.contactId=' + user.contact.id);
+			return lists.loadList(
+				'query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactVisit.contactId2=contact.id and contactVisit.contactId=' + user.contact.id),
+				pageContact.listContacts, 'contacts', 'visits');
 		},
 		contactVisits() {
 			communication.ajax({
@@ -502,13 +506,17 @@ class ui {
 				method: 'PUT',
 				body: { classname: 'Contact', id: user.contact.id, values: { visitPage: global.date.local2server(new Date()) } }
 			});
-			return 'query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactVisit.contactId=contact.id and contactVisit.contactId2=' + user.contact.id);
+			return lists.loadList(
+				'query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactVisit.contactId=contact.id and contactVisit.contactId2=' + user.contact.id),
+				pageContact.listContacts, 'contacts', 'profile');
 		},
 		eventMy() {
-			return 'query=location_listEvent&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('event.contactId=' + user.contact.id);
+			pageEvent.loadEvents('query=event_list&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('event.contactId=' + user.contact.id + ' and event.endDate<\'' + global.date.local2server(new Date()).substring(0, 10) + '\''));
 		},
 		eventTickets() {
-			return 'query=location_listEvent&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('eventParticipate.id is not null');
+			return lists.loadList(
+				'query=event_list&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id),
+				pageEvent.listTickets, 'events', 'eventsTicket');
 		}
 	}
 	static l(id) {

@@ -6,9 +6,8 @@ import { global } from "./global";
 import { hashtags } from "./hashtags";
 import { intro } from "./intro";
 import { lists } from "./lists";
-import { Contact, Event, Location, model } from "./model";
+import { Contact, EventParticipate, Location, model } from "./model";
 import { pageContact } from "./pageContact";
-import { pageHome } from "./pageHome";
 import { pageLocation } from "./pageLocation";
 import { formFunc, ui } from "./ui";
 import { user } from "./user";
@@ -121,16 +120,15 @@ class pageEvent {
 </div>
 </form>`;
 	static templateDetail = v =>
-		global.template`<text class="description${v.classParticipate}" ${v.oc}>
+		global.template`<text class="description" ${v.oc}>
 <div>${ui.l('events.createdBy')}<br/><span class="chatLinks" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;),event)"><img src="${v.imageEventOwner}"><br>${v.contact.pseudonym}</span></div>
 <div class="date" d="${v.dateRaw}">${v.date}${v.endDate}</div>
 <div>${v.event.text}</div>
 <div>${v.eventMustBeConfirmed}</div>
 <div class="price highlightColor">${v.eventPrice}</div>
 <div>${v.maxParticipants}</div>
-<div>${v.reason}</div>
-<span id="eventParticipants"></span>
-${v.eventParticipationButtons}
+<div class="reason"></div>
+<span class="eventParticipationButtons"></span>
 </text>`;
 	static checkPrice() {
 		var e = ui.q('popup explain.paypal');
@@ -155,42 +153,43 @@ ${v.eventParticipationButtons}
 			var s = global.date.formatDate(v.event.endDate);
 			v.endDate = ' (' + ui.l('events.type_' + v.event.type) + ' ' + ui.l('to') + ' ' + s.substring(s.indexOf(' ') + 1, s.lastIndexOf(' ')) + ')';
 		}
-		v.id = pageEvent.getId(v);
-		if (v.event.startDate < global.date.getToday()) {
-			v.date = global.date.formatDate(v.event.startDate);
+		var date = v.id.split('_')[1];
+		if (global.date.server2Local(date) < global.date.getToday()) {
+			v.date = global.date.formatDate(date);
 			v.date = '<eventOutdated>&nbsp;' + v.date;
 			v[v.endDate ? 'endDate' : 'date'] += '&nbsp;</eventOutdated>';
-		} else {
-			var d = global.date.getDateFields(v.eventParticipate.eventDate);
-			var d2 = global.date.getDateFields(v.event.startDate);
-			d.hour = d2.hour;
-			d.minute = d2.minute;
-			v.dateRaw = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute + ':00';
-			v.date = global.date.formatDate(d);
-			v.eventParticipationButtons = pageEvent.getParticipateButton(v);
-			if (v.eventParticipate.state == 1)
-				v.classParticipate = ' participate';
-			else if (v.eventParticipate.state == -1 && v.event.confirm == 1) {
-				v.classParticipate = ' canceled';
-				v.reason = ui.l('events.canceled') + v.eventParticipate.reason;
-			}
-			communication.ajax({
-				url: global.server + 'db/list?query=contact_eventParticipateCount&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + v.event.id + ' and eventParticipate.eventDate=\'' + v.eventParticipate.eventDate + '\''),
-				responseType: 'json',
-				success(r) {
-					if (r[1][0] > -1) {
-						var e = ui.q('detail card[i="' + v.id + '"] participantCount');
-						if (e && r[1][0] > 0)
-							e.innerHTML = r[1][0] + ' ';
-						if (!v.event.maxParticipants || r[1][0] < v.event.maxParticipants) {
-							e = ui.q('detail card[i="' + v.id + '"] buttontext[pID]');
-							if (e)
-								e.style.display = '';
-						}
+		}
+		communication.ajax({
+			url: global.server + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + v.event.id + ' and eventParticipate.eventDate=\'' + date + '\''),
+			responseType: 'json',
+			success(r) {
+				var count = 0;
+				v.eventParticipate = new EventParticipate();
+				for (var i = 1; i < r.length; i++) {
+					var e = model.convert(new EventParticipate(), r, i);
+					if (e.contactId == user.contact.id)
+						v.eventParticipate = e;
+					if (e.state == 1)
+						count++;
+				}
+				if (ui.q('detail card[i="' + v.id + '"]')) {
+					ui.q('detail card[i="' + v.id + '"] .eventParticipationButtons').innerHTML = pageEvent.getParticipateButton(v);
+					if (v.eventParticipate.state == 1)
+						ui.classAdd('detail card[i="' + v.id + '"] text.description', 'participate');
+					else if (v.eventParticipate.state == -1) {
+						ui.classAdd('detail card[i="' + v.id + '"] text.description', 'canceled');
+						ui.q('detail card[i="' + v.id + '"] .reason').innerHTML = ui.l('events.canceled') + v.eventParticipate.reason;
+					}
+					if (count > 0) {
+						ui.q('detail card[i="' + v.id + '"] participantCount').innerHTML = count + ' ';
+						if ((!v.event.maxParticipants || count < v.event.maxParticipants) &&
+							ui.q('detail card[i="' + v.id + '"] buttontext[pID]'))
+							ui.q('detail card[i="' + v.id + '"] buttontext[pID]').style.display = '';
 					}
 				}
-			});
-		}
+			}
+		});
+		v.date = global.date.formatDate(date + v.event.startDate.substring(10));
 		if (v.event.price > 0)
 			v.eventPrice = ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2));
 		else if (v.event.locationId)
@@ -292,8 +291,8 @@ ${v.eventParticipationButtons}
 		todayPlus14.setHours(23);
 		todayPlus14.setMinutes(59);
 		todayPlus14.setSeconds(59);
-		for (var i = 1; i < data.length; i++) {
-			var v = model.convert(new Location(), data, i);
+		for (var i = 0; i < data.length; i++) {
+			var v = data[i];
 			var d1 = global.date.server2Local(v.event.startDate);
 			var d2 = global.date.server2Local(v.event.endDate);
 			var added = false;
@@ -344,27 +343,10 @@ ${v.eventParticipationButtons}
 		return actualEvents;
 	}
 	static getId(v) {
-		var endDate = global.date.server2Local(v['event.endDate'] || v.event.endDate), today = global.date.getToday(), id = v.id || v['event.id'];
-		if (('' + v.id).indexOf('_') < 0 && (endDate.getFullYear() > today.getFullYear() || endDate.getFullYear() == today.getFullYear() &&
-			(endDate.getMonth() > today.getMonth() || endDate.getMonth() == today.getMonth() &&
-				endDate.getDate() >= today.getDate()))) {
-			var d = global.date.server2Local(v['event.startDate'] || v.event.startDate), t = v['event.type'] || v.event.type;
-			if (t == 'w1') {
-				while (d < today)
-					d.setDate(d.getDate() + 7);
-			} else if (t == 'w2') {
-				while (d < today)
-					d.setDate(d.getDate() + 14);
-			} else if (t == 'm') {
-				while (d < today)
-					d.setMonth(d.getMonth() + 1);
-			} else if (t == 'y') {
-				while (d < today)
-					d.setFullYear(d.getFullYear() + 1);
-			}
-			id += '_' + d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
-		}
-		return id;
+		var id = v.event.id + '_';
+		if (v.eventParticipate.eventDate)
+			return id + v.eventParticipate.eventDate;
+		return id + global.date.local2server(v.event.startDate).substring(0, 10);
 	}
 	static getParticipateButton(v) {
 		if (v.event.confirm && v.eventParticipate.state == -1)
@@ -407,13 +389,7 @@ ${v.eventParticipationButtons}
 				}
 			});
 	}
-	static listEvents(l) {
-		var activeID = ui.navigation.getActiveID()
-		if (activeID == 'search')
-			ui.attr('search', 'type', 'events');
-		return pageEvent.listEventsInternal(pageEvent.getCalendarList(l));
-	}
-	static listEventsInternal(as) {
+	static listEvents(as) {
 		if (!as.length)
 			return '';
 		var today = global.date.getToday();
@@ -446,14 +422,12 @@ ${v.eventParticipationButtons}
 				v.locID = v.id;
 				pageLocation.listInfos(v);
 				v._message += v._message1 ? v._message1 : v._message2 ? v._message2 : '';
-				v.id = v.event.id;
+				v.id = pageEvent.getId(v);
 				v.classFavorite = v.locationFavorite.favorite ? ' favorite' : '';
-				if (v.eventParticipate.state == 1)
+				if (v.eventParticipate.state == 1 && global.date.local2server(v.event.startDate).indexOf(v.eventParticipate.eventDate) == 0)
 					v.classFavorite += ' participate';
-				else if (v.eventParticipate.state == -1 && v.event.confirm == 1)
+				else if (v.eventParticipate.state == -1)
 					v.classFavorite += ' canceled';
-				if (v.eventParticipate.eventDate)
-					v.id += '_' + v.eventParticipate.eventDate;
 				v.classBGImg = v.imageList ? '' : bg;
 				if (v.event.imageList)
 					v.image = global.serverImg + v.event.imageList;
@@ -470,8 +444,10 @@ ${v.eventParticipationButtons}
 				v.type = 'Event';
 				if (ui.navigation.getActiveID() == 'settings')
 					v.oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';
+				else if (v.eventParticipate.id)
+					v.oc = 'details.open(&quot;' + v.id + '&quot;,&quot;event_listParticipate&search=' + encodeURIComponent('eventParticipate.id=' + v.eventParticipate.id) + '&quot;,pageLocation.detailLocationEvent)';
 				else
-					v.oc = 'details.open(&quot;' + v.id + '&quot;,&quot;location_listEvent&search=' + encodeURIComponent('event.id=' + v.event.id) + '&quot;,pageLocation.detailLocationEvent)';
+					v.oc = 'details.open(&quot;' + v.id + '&quot;,&quot;event_list&search=' + encodeURIComponent('event.id=' + v.event.id) + '&quot;,pageLocation.detailLocationEvent)';
 				s += pageLocation.templateList(v);
 			}
 		}
@@ -489,10 +465,49 @@ ${v.eventParticipationButtons}
 		}
 		as.sort(function (a, b) { return a.event.startDate > b.event.startDate ? 1 : -1; });
 		ap.sort(function (a, b) { return a.event.startDate > b.event.startDate ? -1 : 1; });
-		var s = pageEvent.listEventsInternal(as),
-			p = pageEvent.listEventsInternal(ap);
+		var s = pageEvent.listEvents(as), p = pageEvent.listEvents(ap);
 		return (s ? '<listSeparator class="highlightColor strong">' + ui.l('events.ticketCurrent') + '</listSeparator>' + s : '') +
 			(p ? '<listSeparator class="highlightColor strong">' + ui.l('events.ticketPast') + '</listSeparator>' + p : '');
+	}
+	static loadEvents(params) {
+		var events = null, participations = null, divID = ui.navigation.getActiveID();
+		if (divID == 'search')
+			divID += ' tabBody>div.events';
+		var render = function () {
+			if (events != null && participations != null) {
+				lists.setListDivs(divID);
+				ui.navigation.hideMenu();
+				var list = [], participate = {};
+				for (var i = 1; i < events.length; i++)
+					list.push(model.convert(new Location(), events, i));
+				for (var i = 1; i < participations.length; i++) {
+					var e = model.convert(new EventParticipate(), participations, i);
+					participate[e.eventId + '.' + e.eventDate] = e;
+				}
+				events = pageEvent.getCalendarList(list);
+				for (var i = 0; i < events.length; i++) {
+					if (events[i].event)
+						events[i].eventParticipate = participate[events[i].event.id + '.' + global.date.local2server(events[i].event.startDate).substring(0, 10)] || {};
+				}
+				ui.html('events listResults', pageEvent.listEvents(events));
+				var e = ui.q('events listBody');
+				if (e)
+					e.scrollTop = 0;
+				lists.setListHint(divID);
+			}
+		};
+		lists.loadList(
+			params,
+			function (l) {
+				events = l;
+				render();
+			});
+		lists.loadList(
+			'query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id),
+			function (l) {
+				participations = l;
+				render();
+			});
 	}
 	static loadPotentialParticipants() {
 		var i = ui.q('detail card:last-child').getAttribute('i');
@@ -533,7 +548,7 @@ ${v.eventParticipationButtons}
 	}
 	static locationsOfPastEvents() {
 		communication.ajax({
-			url: global.server + 'db/list?query=location_listEvent&search=' + encodeURIComponent('event.locationId is not null and event.contactId=' + user.contact.id),
+			url: global.server + 'db/list?query=event_list&search=' + encodeURIComponent('event.locationId is not null and event.contactId=' + user.contact.id),
 			responseType: 'json',
 			success(r) {
 				var s = '', processed = {};
@@ -802,7 +817,7 @@ ${v.eventParticipationButtons}
 			success(r) {
 				ui.navigation.hidePopup();
 				formFunc.removeDraft('event');
-				details.open(id ? id : r, 'location_listEvent&search=' + encodeURIComponent('event.id=' + r), id ? function (l, id) {
+				details.open(id ? id : r, 'event_list&search=' + encodeURIComponent('event.id=' + r), id ? function (l, id) {
 					ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id);
 				} : pageLocation.detailLocationEvent);
 				pageEvent.refreshToggle();
@@ -837,7 +852,7 @@ ${v.eventParticipationButtons}
 			if (!d.innerHTML) {
 				var field = ui.q('detail card:last-child').getAttribute('type');
 				communication.ajax({
-					url: global.server + 'db/list?query=location_listEvent&search=' + encodeURIComponent('event.' + field + 'Id=' + id),
+					url: global.server + 'db/list?query=event_list&search=' + encodeURIComponent('event.' + field + 'Id=' + id),
 					responseType: 'json',
 					success(r) {
 						pageEvent.toggleInternal(r, id, field);
@@ -882,7 +897,7 @@ ${v.eventParticipationButtons}
 			text += '<br/>' + v.event.text;
 			if (field == 'contact')
 				text = '<br/>' + v.name + text;
-			s += '<row' + (v.eventParticipate.state == 1 ? ' class="participate"' : v.eventParticipate.state == -1 ? ' class="canceled"' : '') + ' onclick="details.open(&quot;' + idIntern + '&quot;,&quot;location_listEvent&search=' + encodeURIComponent('event.id=' + v.event.id) + '&quot;,pageLocation.detailLocationEvent)"><div><text>' + s2 + text + '</text><imageList><img src="' + img + '"/></imageList></div></row>';
+			s += '<row' + (v.eventParticipate.state == 1 ? ' class="participate"' : v.eventParticipate.state == -1 ? ' class="canceled"' : '') + ' onclick="details.open(&quot;' + idIntern + '&quot;,&quot;event_list&search=' + encodeURIComponent('event.id=' + v.event.id) + '&quot;,pageLocation.detailLocationEvent)"><div><text>' + s2 + text + '</text><imageList><img src="' + img + '"/></imageList></div></row>';
 		}
 		if (s)
 			s += newButton;
@@ -900,7 +915,7 @@ ${v.eventParticipationButtons}
 				ui.toggleHeight(e);
 			else {
 				var id = decodeURIComponent(ui.q('detail card:last-child').getAttribute('i')).split('_');
-				lists.loadList('query=contact_listEventParticipate&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&limit=0&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\''), function (l) {
+				lists.loadList('query=event_listParticipate&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&limit=0&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\''), function (l) {
 					e.innerHTML = l.length < 2 ? '<div style="margin-bottom:1em;">' + ui.l('events.noParticipant') + '</div>' : pageContact.listContacts(l);
 					ui.toggleHeight(e);
 					return '&nbsp;';
@@ -917,16 +932,16 @@ ${v.eventParticipationButtons}
 			u = u[1];
 		}
 		communication.ajax({
-			url: global.server + 'db/list?query=contact_listEventParticipate&search=' + encodeURIComponent('eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\' and eventParticipate.contactId=' + u),
+			url: global.server + 'db/list?query=event_listParticipate&search=' + encodeURIComponent('eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\' and eventParticipate.contactId=' + u),
 			responseType: 'json',
 			success(r) {
 				if (r.length > 1) {
-					var location = model.convert(new Location(), r, 1);
+					var location = model.convert(new Contact(), r, 1);
 					var date = location.eventParticipate.eventDate + location.event.startDate.substring(location.event.startDate.indexOf('T'));
 					if (location.eventParticipate.state == 1)
-						intro.openHint({ desc: '<title>' + location._name + '</title><br/>' + location._address.replace(/\n/g, '<br/>') + '<br/><br/>' + ui.l('events.qrcodeDate').replace('{0}', global.date.formatDate(date)) + '<br/>' + location.contact.pseudonym + '<br/><br/><qrCheck>&check;</qrCheck><img src="' + global.serverImg + location.contact.image + '" class="qrVerification"/>', pos: '5%,1em', size: '90%,auto' });
+						intro.openHint({ desc: '<title>' + location._locationName + '</title><br/>' + location._locationAddress.replace(/\n/g, '<br/>') + '<br/><br/>' + ui.l('events.qrcodeDate').replace('{0}', global.date.formatDate(date)) + '<br/>' + location.contact.pseudonym + '<br/><br/><qrCheck>&check;</qrCheck><img src="' + global.serverImg + location.contact.image + '" class="qrVerification"/>', pos: '5%,1em', size: '90%,auto' });
 					else
-						intro.openHint({ desc: '<title>' + location._name + '</title><br/>' + location._address.replace(/\n/g, '<br/>') + '<br/><br/>' + ui.l('events.qrcodeDate').replace('{0}', global.date.formatDate(date)) + '<br/>' + location.contact.pseudonym + '<br/><emphasis>' + ui.l('events.qrcodeCanceled').replace('{0}', global.date.formatDate(location.eventParticipate.modifiedAt)) + '</emphasis><qrCheck class="negative">&cross;</qrCheck><br/><br/><img src="' + global.serverImg + location.contact.image + '" class="qrVerification"/>', pos: '5%,1em', size: '90%,auto' });
+						intro.openHint({ desc: '<title>' + location._locationName + '</title><br/>' + location._locationAddress.replace(/\n/g, '<br/>') + '<br/><br/>' + ui.l('events.qrcodeDate').replace('{0}', global.date.formatDate(date)) + '<br/>' + location.contact.pseudonym + '<br/><emphasis>' + ui.l('events.qrcodeCanceled').replace('{0}', global.date.formatDate(location.eventParticipate.modifiedAt)) + '</emphasis><qrCheck class="negative">&cross;</qrCheck><br/><br/><img src="' + global.serverImg + location.contact.image + '" class="qrVerification"/>', pos: '5%,1em', size: '90%,auto' });
 				} else
 					intro.openHint({ desc: '<title>' + ui.l('events.qrcodeButton') + '</title><br/>' + ui.l('events.qrcodeError'), pos: '5%,1em', size: '90%,auto' });
 			}

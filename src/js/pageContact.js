@@ -206,12 +206,9 @@ ${v.attributes}
 			}
 		});
 	}
-	static detail(v, id) {
+	static detail(v) {
 		var preview = ui.navigation.getActiveID() == 'settings';
 		v = model.convert(new Contact(), v);
-		var idIntern = id;
-		if (idIntern.indexOf && idIntern.indexOf('_') > -1)
-			idIntern = idIntern.substring(0, idIntern.indexOf('_'));
 		v.distance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
 		if (!v.distance && preview)
 			v.previewHintLocationService = '<previewHint class="locationService">' + ui.l('settings.previewHintLocationService') + '</previewHint>';
@@ -231,18 +228,18 @@ ${v.attributes}
 		if (v.contactLink.id) {
 			if (v.contactLink.status == 'Pending') {
 				if (v.contactLink.contactId != user.contact.id)
-					v.link += '<div style="margin-bottom:0.5em;">' + ui.l('contacts.requestFriendshipHint') + '</div><buttontext class="bgColor" onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;Friends&quot;,' + id + ')" style="margin:0 0.5em;">' + ui.l('contacts.requestFriendshipConfirm') + '</buttontext><buttontext class="bgColor" onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;Rejected&quot;,' + id + ');" style="margin:0 0.5em;">' + ui.l('contacts.requestFriendshipReject') + '</buttontext>';
+					v.link += '<div style="margin-bottom:0.5em;">' + ui.l('contacts.requestFriendshipHint') + '</div><buttontext class="bgColor" onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;Friends&quot;,' + v.id + ')" style="margin:0 0.5em;">' + ui.l('contacts.requestFriendshipConfirm') + '</buttontext><buttontext class="bgColor" onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;Rejected&quot;,' + v.id + ');" style="margin:0 0.5em;">' + ui.l('contacts.requestFriendshipReject') + '</buttontext>';
 				else
 					v.link += '<span style="text-align:center;">' + ui.l('contacts.requestFriendshipAlreadySent') + '</span>';
 			} else if (v.contactLink.status == 'Friends') {
 				v.labelFriend = ui.l('contacts.terminateFriendship');
-				v.link += '<buttontext class="bgColor" onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;' + (v.contactLink.contactId == user.contact.id ? 'Terminated' : 'Terminated2') + '&quot;,' + id + ')">' + ui.l('contacts.terminateFriendshipConfirm') + '</buttontext>';
+				v.link += '<buttontext class="bgColor" onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;' + (v.contactLink.contactId == user.contact.id ? 'Terminated' : 'Terminated2') + '&quot;,' + v.id + ')">' + ui.l('contacts.terminateFriendshipConfirm') + '</buttontext>';
 			} else if (v.contactLink.status == 'Terminated' && v.contactLink.contactId == user.contact.id || v.contactLink.status == 'Terminated2' && v.contactLink.contactId2 == user.contact.id)
-				v.link += '<buttontext class="bgColor" onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;Friends&quot;,' + id + ')">' + ui.l('contacts.requestFriendshipRestart') + '</buttontext>';
+				v.link += '<buttontext class="bgColor" onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;Friends&quot;,' + v.id + ')">' + ui.l('contacts.requestFriendshipRestart') + '</buttontext>';
 			else
 				v.link += ui.l('contacts.requestFriendshipCanceled');
 		} else
-			v.link += '<buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + idIntern + ')">' + ui.l('contacts.requestFriendship') + '</buttontext>';
+			v.link += '<buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + v.id + ')">' + ui.l('contacts.requestFriendship') + '</buttontext>';
 		if (v.contactLink.status == 'Friends')
 			v.favorite = 'favorite';
 		v.attr = ui.getSkills(v, 'detail');
@@ -293,7 +290,7 @@ ${v.attributes}
 			v.aboutMe = '<previewHint>' + ui.l('settings.previewHintAboutMe') + '</previewHint>';
 		if (v.contactLink.status == 'Pending' && v.contactLink.contactId != user.contact.id)
 			setTimeout(function () {
-				pageContact.toggleFriend(id);
+				pageContact.toggleFriend(v.id);
 			}, 1000);
 		if (v.contactLink.status == 'Friends')
 			ui.classAdd('main>buttonIcon.bottom.right', 'highlight');

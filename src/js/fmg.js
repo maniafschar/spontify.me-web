@@ -1,4 +1,4 @@
-import { model } from './model';
+import { Block, Contact, ContactChat, ContactGroup, ContactGroupLink, ContactLink, ContactNotification, ContactVisit, Event, EventParticipate, EventRating, LocationFavorite, model } from './model';
 import { global } from './global';
 import { initialisation } from './initialisation';
 import { intro } from './intro';

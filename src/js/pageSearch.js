@@ -212,7 +212,7 @@ class pageSearch {
 		},
 		search() {
 			pageSearch.events.filter = formFunc.getForm('search tabBody div.events form').values;
-			lists.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_listEvent&search=' + encodeURIComponent(pageSearch.events.getSearch()), pageEvent.listEvents, 'search tabBody>div.events', 'search');
+			pageEvent.loadEvents('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=event_list&search=' + encodeURIComponent(pageSearch.events.getSearch()));
 			formFunc.saveDraft('searchEvents', pageSearch.events.filter);
 		}
 	}

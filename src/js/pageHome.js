@@ -131,7 +131,7 @@ ${ui.l('home.labelSkill')}
 			});
 			if (user.contact)
 				communication.ajax({
-					url: global.server + 'db/list?query=contact_listEventParticipate&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id + ' and eventParticipate.eventDate=\'' + global.date.local2server(new Date()).substring(0, 10) + '\' and event.locationId is null'),
+					url: global.server + 'db/list?query=event_listParticipate&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id + ' and eventParticipate.eventDate=\'' + global.date.local2server(new Date()).substring(0, 10) + '\' and event.locationId is null'),
 					responseType: 'json',
 					success(r) {
 						if (r.length > 1) {
