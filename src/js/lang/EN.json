@@ -262,6 +262,7 @@
 			"locationInputHint": "For searching enter 4 characters of the name or address of the Location.",
 			"locationInputHintCreateNew": "Location not found? No problem, create a",
 			"locationInputNoHit": "No hit",
+			"matchIndicatorHint": "{0} of your {1} specified skills match. That's a {2}% match.",
 			"maxParticipants": "Max. Participants",
 			"myEvents": "which I created",
 			"myTickets": "in which I participate",

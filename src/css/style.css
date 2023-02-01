@@ -750,6 +750,12 @@ search form explain {
 	padding: 0.25em 0.5em 0.5em 0.5em;
 }
 
+search separator {
+	margin: 0 2em 0.5em 2em;
+	display: block;
+	border: solid 1px transparent
+}
+
 settings qrcodeDescription {
 	margin-top: 3em;
 	display: block;
@@ -1991,12 +1997,6 @@ chat.location chatButtons {
 eventOutdated {
 	text-decoration: line-through;
 
-}
-
-filterSeparator {
-	margin: 0 2em 0.5em 2em;
-	display: block;
-	border: solid 1px transparent
 }
 
 title {

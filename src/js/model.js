@@ -1,6 +1,6 @@
 import { communication } from './communication';
 
-export { model, Contact, ContactLink, Location, ContactNotification, EventParticipate, LocationFavorite, Event, EventRating, Block, ContactChat, LocationOwnerHistory, ContactVisit, ContactGroup, ContactGroupLink };
+export { model, Contact, ContactLink, Location, ContactNotification, EventParticipate, LocationFavorite, Event, EventRating, Block, ContactChat, ContactVisit, ContactGroup, ContactGroupLink };
 
 class model {
 	static reportedErrors = {};
@@ -26,11 +26,14 @@ class model {
 				if (i2 == 0 && !o.hasOwnProperty(key[0]) && key.length > 0 && o.hasOwnProperty(key[1]) && key[0]) {
 					if (!table)
 						table = key[0];
-					else if (table == key[0])
+					if (table == key[0])
 						i2++;
 				}
-				if (key[i2].indexOf('_') != 0 && !model.reportedErrors[keys[i]] && !o.hasOwnProperty(key[i2])) {
-					communication.sendError('model.convert: property ' + keys[i] + ' not found, available properties\n' + Object.keys(object) + '\nproperties/values of object\n' + JSON.stringify(keys) + '\n' + JSON.stringify(object2Transform));
+				if (key[i2].indexOf('_') != 0 && !o.hasOwnProperty(key[i2]) && (i2 > 0 || key[i2].indexOf('location.') != 0 && key[i2].indexOf('contact.') != 0) && !model.reportedErrors[keys[i]]) {
+					var s = '';
+					for (var i3 = 0; i3 < keys.length; i3++)
+						s += '\n' + keys[i3] + '=' + object2Transform[keys[i3]];
+					communication.sendError('model.convert: property ' + keys[i] + ' not found, available properties\n' + Object.keys(object) + '\nserver object:' + s);
 					model.reportedErrors[keys[i]] = 1;
 				}
 				if (i2 < key.length - 1)
@@ -196,7 +199,4 @@ class Location extends BaseEntity {
 
 class LocationFavorite extends BaseEntity {
 	favorite;
-}
-
-class LocationOwnerHistory extends BaseEntity {
 }

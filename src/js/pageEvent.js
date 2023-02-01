@@ -122,7 +122,7 @@ class pageEvent {
 	static templateDetail = v =>
 		global.template`<text class="description" ${v.oc}>
 <div>${ui.l('events.createdBy')}<br/><span class="chatLinks" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;),event)"><img src="${v.imageEventOwner}"><br>${v.contact.pseudonym}</span></div>
-<div class="date" d="${v.dateRaw}">${v.date}${v.endDate}</div>
+<div class="date">${v.date}${v.endDate}</div>
 <div>${v.event.text}</div>
 <div>${v.eventMustBeConfirmed}</div>
 <div class="price highlightColor">${v.eventPrice}</div>
@@ -153,18 +153,19 @@ class pageEvent {
 			var s = global.date.formatDate(v.event.endDate);
 			v.endDate = ' (' + ui.l('events.type_' + v.event.type) + ' ' + ui.l('to') + ' ' + s.substring(s.indexOf(' ') + 1, s.lastIndexOf(' ')) + ')';
 		}
-		var date = v.id.split('_')[1];
-		if (global.date.server2Local(date) < global.date.getToday()) {
-			v.date = global.date.formatDate(date);
+		var d = v.id.split('_')[1].split('-');
+		v.date = global.date.server2Local(v.event.startDate);
+		v.date = global.date.formatDate(new Date(d[0], parseInt(d[1]) - 1, d[2], v.date.getHours(), v.date.getMinutes(), v.date.getSeconds()));
+		if (global.date.server2Local(v.date) < global.date.getToday()) {
 			v.date = '<eventOutdated>&nbsp;' + v.date;
 			v[v.endDate ? 'endDate' : 'date'] += '&nbsp;</eventOutdated>';
 		}
 		communication.ajax({
-			url: global.server + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + v.event.id + ' and eventParticipate.eventDate=\'' + date + '\''),
+			url: global.server + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + v.event.id + ' and eventParticipate.eventDate=\'' + v.id.split('_')[1] + '\''),
 			responseType: 'json',
 			success(r) {
-				var count = 0;
 				v.eventParticipate = new EventParticipate();
+				var count = 0;
 				for (var i = 1; i < r.length; i++) {
 					var e = model.convert(new EventParticipate(), r, i);
 					if (e.contactId == user.contact.id)
@@ -189,7 +190,6 @@ class pageEvent {
 				}
 			}
 		});
-		v.date = global.date.formatDate(date + v.event.startDate.substring(10));
 		if (v.event.price > 0)
 			v.eventPrice = ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2));
 		else if (v.event.locationId)
@@ -471,10 +471,14 @@ class pageEvent {
 	}
 	static loadEvents(params) {
 		var events = null, participations = null, divID = ui.navigation.getActiveID();
+		var menuIndex = -1;
+		ui.qa('menu a').forEach(function (e, i) { if (e.matches(':hover')) menuIndex = i; });
 		if (divID == 'search')
 			divID += ' tabBody>div.events';
 		var render = function () {
 			if (events != null && participations != null) {
+				if (menuIndex > -1)
+					ui.attr(divID, 'menuIndex', menuIndex);
 				lists.setListDivs(divID);
 				ui.navigation.hideMenu();
 				var list = [], participate = {};
@@ -489,8 +493,8 @@ class pageEvent {
 					if (events[i].event)
 						events[i].eventParticipate = participate[events[i].event.id + '.' + global.date.local2server(events[i].event.startDate).substring(0, 10)] || {};
 				}
-				ui.html('events listResults', pageEvent.listEvents(events));
-				var e = ui.q('events listBody');
+				ui.html(divID + ' listResults', pageEvent.listEvents(events));
+				var e = ui.q(divID + ' listBody');
 				if (e)
 					e.scrollTop = 0;
 				lists.setListHint(divID);

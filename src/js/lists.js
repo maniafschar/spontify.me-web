@@ -44,23 +44,14 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 		ui.css(divID + ' filters', 'transform', 'scale(0)');
 		ui.html('popupHint', '');
 		var menuIndex = -1;
-		var e = ui.qa('menu a');
-		for (var i = 0; i < e.length; i++) {
-			if (e[i].matches(':hover')) {
-				menuIndex = i;
-				break;
-			}
-		}
+		ui.qa('menu a').forEach(function (e, i) { if (e.matches(':hover')) menuIndex = i; });
 		communication.ajax({
 			url: global.server + 'db/list?' + data,
 			responseType: 'json',
 			success(r) {
 				var s = callback(r);
-				if (menuIndex > -1) {
+				if (menuIndex > -1)
 					ui.attr(divID, 'menuIndex', menuIndex);
-					if (ui.navigation.getActiveID() == 'locations' && menuIndex >= ui.q('menu container').childElementCount && ui.cssValue('map', 'display') != 'none')
-						pageLocation.toggleMap();
-				}
 				ui.navigation.hideMenu();
 				ui.navigation.hidePopup();
 				if (divID) {

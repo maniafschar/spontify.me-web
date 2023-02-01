@@ -30,20 +30,20 @@ class pageSearch {
 	<div class="locations"></div>
 </tabBody>`;
 	static contacts = {
-		filter: null,
+		fieldValues: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
 	<input type="checkbox" label="${ui.l('search.matches')}" name="matches" ${v.matches}/>
-	<filterSeparator></filterSeparator>
+	<separator></separator>
 	<input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
 	<explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
 	<errorHint></errorHint>
 	<buttontext class="bgColor defaultButton" onclick="pageSearch.contacts.search()">${ui.l('search.action')}</buttontext></form>`,
 		getFields() {
 			var v = {};
-			if (pageSearch.contacts.filter.keywords)
-				v.keywords = ' value="' + pageSearch.contacts.filter.keywords + '"';
-			if (pageSearch.contacts.filter.matches == 'on')
+			if (pageSearch.contacts.fieldValues.keywords)
+				v.keywords = ' value="' + pageSearch.contacts.fieldValues.keywords + '"';
+			if (pageSearch.contacts.fieldValues.matches == 'on')
 				v.matches = ' checked="true"';
 			return pageSearch.contacts.template(v);
 		},
@@ -105,26 +105,26 @@ class pageSearch {
 			return 'contact.id<>' + user.contact.id + s;
 		},
 		search() {
-			pageSearch.contacts.filter = formFunc.getForm('search tabBody div.contacts form').values;
+			pageSearch.contacts.fieldValues = formFunc.getForm('search tabBody div.contacts form').values;
 			lists.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=contact_list&search=' + encodeURIComponent(pageSearch.contacts.getSearch()), pageContact.listContacts, 'search tabBody>div.contacts', 'search');
-			formFunc.saveDraft('searchContacts', pageSearch.contacts.filter);
+			formFunc.saveDraft('searchContacts', pageSearch.contacts.fieldValues);
 		}
 	}
 	static events = {
-		filter: null,
+		fieldValues: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
 <input type="checkbox" label="${ui.l('search.matchesEvent')}" name="matches" ${v.matches}/>
-<filterSeparator></filterSeparator>
+<separator></separator>
 <input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
 <explain class="searchKeywordHint">${ui.l('search.hintEvent')}</explain>
 <errorHint></errorHint>
 <buttontext class="bgColor defaultButton" onclick="pageSearch.events.search()">${ui.l('search.action')}</buttontext></form>`,
 		getFields() {
 			var v = {};
-			if (pageSearch.events.filter.keywords)
-				v.keywords = ' value="' + pageSearch.events.filter.keywords + '"';
-			if (pageSearch.events.filter.matches == 'on')
+			if (pageSearch.events.fieldValues.keywords)
+				v.keywords = ' value="' + pageSearch.events.fieldValues.keywords + '"';
+			if (pageSearch.events.fieldValues.matches == 'on')
 				v.matches = ' checked="true"';
 			return pageSearch.events.template(v);
 		},
@@ -178,7 +178,7 @@ class pageSearch {
 				s += (s ? ' and ' : '') + pageSearch.events.getMatches();
 			var d = new Date();
 			d.setDate(new Date().getDate() + 14);
-			return 'event.startDate<\'' + global.date.local2server(d) + '\' and event.endDate>\'' + global.date.local2server(new Date()) + '\'' + (s ? ' and ' + s : '');
+			return 'event.startDate<=\'' + global.date.local2server(d).substring(0, 10) + '\' and event.endDate>=\'' + global.date.local2server(new Date()).substring(0, 10) + '\'' + (s ? ' and ' + s : '');
 		},
 		getSearch1(bounds) {
 			var s = '';
@@ -211,27 +211,27 @@ class pageSearch {
 			return s;
 		},
 		search() {
-			pageSearch.events.filter = formFunc.getForm('search tabBody div.events form').values;
-			pageEvent.loadEvents('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=event_list&search=' + encodeURIComponent(pageSearch.events.getSearch()));
-			formFunc.saveDraft('searchEvents', pageSearch.events.filter);
+			pageSearch.events.fieldValues = formFunc.getForm('search tabBody div.events form').values;
+			pageEvent.loadEvents('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=event_listMatching&search=' + encodeURIComponent(pageSearch.events.getSearch()));
+			formFunc.saveDraft('searchEvents', pageSearch.events.fieldValues);
 		}
 	}
 	static locations = {
-		filter: null,
+		fieldValues: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
 <input type="checkbox" label="${ui.l('search.favorites')}" name="favorites" ${v.favorites}/>
-<filterSeparator></filterSeparator>
+<separator></separator>
 <input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
 <errorHint></errorHint>
 <buttontext class="bgColor defaultButton" onclick="pageSearch.locations.search()">${ui.l('search.action')}</buttontext></form>`,
 		getFields() {
 			var v = {};
-			if (pageSearch.locations.filter.favorites)
+			if (pageSearch.locations.fieldValues.favorites)
 				v.favorites = ' checked="checked"';
-			if (pageSearch.locations.filter.keywords)
-				v.keywords = ' value="' + pageSearch.locations.filter.keywords + '"';
+			if (pageSearch.locations.fieldValues.keywords)
+				v.keywords = ' value="' + pageSearch.locations.fieldValues.keywords + '"';
 			return pageSearch.locations.template(v);
 		},
 		getSearch() {
@@ -286,18 +286,18 @@ class pageSearch {
 			return s;
 		},
 		search() {
-			pageSearch.locations.filter = formFunc.getForm('search tabBody div.locations form').values;
+			pageSearch.locations.fieldValues = formFunc.getForm('search tabBody div.locations form').values;
 			lists.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent(pageSearch.locations.getSearch()), pageLocation.listLocation, 'search tabBody>div.locations', 'search');
-			formFunc.saveDraft('searchLocations', pageSearch.locations.filter);
+			formFunc.saveDraft('searchLocations', pageSearch.locations.fieldValues);
 		}
 	}
 	static init() {
-		if (!pageSearch.contacts.filter)
-			pageSearch.contacts.filter = formFunc.getDraft('searchContacts') || {};
-		if (!pageSearch.events.filter)
-			pageSearch.events.filter = formFunc.getDraft('searchEvents') || {};
-		if (!pageSearch.locations.filter)
-			pageSearch.locations.filter = formFunc.getDraft('searchLocations') || {};
+		if (!pageSearch.contacts.fieldValues)
+			pageSearch.contacts.fieldValues = formFunc.getDraft('searchContacts') || {};
+		if (!pageSearch.events.fieldValues)
+			pageSearch.events.fieldValues = formFunc.getDraft('searchEvents') || {};
+		if (!pageSearch.locations.fieldValues)
+			pageSearch.locations.fieldValues = formFunc.getDraft('searchLocations') || {};
 		var e = ui.q('search');
 		if (!e.innerHTML) {
 			e.innerHTML = pageSearch.template();

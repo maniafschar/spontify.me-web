@@ -55,7 +55,7 @@ class pageLocation {
 			${v.gender}
 			<km>${v.distance}</km>
 		</detailDistance>
-		<matchIndicator onclick="pageLocation.toggleMatchIndicatorHint(${v.id}, event)">
+		<matchIndicator onclick="pageLocation.toggleMatchIndicatorHint(${v.id}, event)"${v.hideMeMatchIndicator}>
 			<svg viewBox="0 0 36 36">
 			<path class="circle-bg" d="M18 2.0845
 			a 15.9155 15.9155 0 0 1 0 31.831
@@ -261,15 +261,26 @@ ${v.rating}
 		v.locID = v.event.id ? v.event.locationId : v.id;
 		v.angle = geoData.getAngel(geoData.latlon, { lat: v.latitude, lon: v.longitude });
 		v.image = v.event.image ? v.event.image : v.image ? v.image : v.contact.image;
+		var eventWithLocation = v.address ? true : false;
 		if (v.event.id) {
 			v.eventDetails = pageEvent.detail(v);
 			v.hideBlockReason2 = ' style="display:none;"';
+			v.attr = ui.getSkills(eventWithLocation ? v : v.contact, 'detail');
+			if (v.attr.totalMatch) {
+				v.matchIndicator = v.attr.totalMatch + '/' + v.attr.total;
+				v.matchIndicatorPercent = parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5);
+			} else
+				v.matchIndicatorPercent = 0;
+			v.matchIndicatorHint = ui.l('events.matchIndicatorHint').replace('{0}', v.attr.totalMatch).replace('{1}', v.attr.total).replace('{2}', v.matchIndicatorPercent).replace('{3}', v.attr.categories);
+			if (eventWithLocation || v.event.contactId != user.contact.id)
+				v.attributes = v.attr.textAttributes();
 		} else {
 			if (global.isBrowser())
 				v.copyLinkHint = ui.l('copyLinkHint.location');
 			else
 				v.copyLinkHint = ui.l('copyLinkHint.locationSocial');
 			v.editAction = 'pageLocation.edit(' + v.id + ')';
+			v.hideMeMatchIndicator = ' class="noDisp"';
 		}
 		if (v.image)
 			v.image = global.serverImg + v.image;
@@ -280,16 +291,6 @@ ${v.rating}
 			v.telOpenTag = '<a href="tel:' + v.tel.replace(/[^+\d]*/g, '') + '" style="color:black;">';
 			v.telCloseTag = '</a>';
 		}
-		var eventWithLocation = v.address ? true : false;
-		v.attr = ui.getSkills(eventWithLocation ? v : v.contact, 'detail');
-		if (v.attr.totalMatch) {
-			v.matchIndicator = v.attr.totalMatch + '/' + v.attr.total;
-			v.matchIndicatorPercent = parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5);
-		} else
-			v.matchIndicatorPercent = 0;
-		v.matchIndicatorHint = ui.l('locations.matchIndicatorHint').replace('{0}', v.attr.totalMatch).replace('{1}', v.attr.total).replace('{2}', v.matchIndicatorPercent).replace('{3}', v.attr.categories);
-		if (eventWithLocation || v.event.contactId != user.contact.id)
-			v.attributes = v.attr.textAttributes();
 		var r = v.event.rating || (eventWithLocation ? v.rating : v.contact.rating);
 		if (r > 0)
 			v.rating = '<detailRating onclick="ratings.open(' + v.event.id + ',&quot;' + (v.event.id ? 'event.id=' + v.event.id : eventWithLocation ? 'event.locationId=' + v.locID : 'event.contactId=' + v.contact.id) + '&quot;)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + r) + '%;">★★★★★</full></ratingSelection></detailRating>';
