@@ -241,7 +241,7 @@
 		},
 		"events": {
 			"acceptedMarketingEvent": "Dein Event wurde genehmigt, viel Spaß!",
-			"canceled": "Du hast Deine Teilnahme abgesagt: ",
+			"canceled": "Du hast Deine Teilnahme abgesagt",
 			"confirm": "Sagt ein Buddy ab, kann er sich nicht wieder anmelden",
 			"confirmLabel": "Bestätigung",
 			"createdBy": "Event erstellt von",

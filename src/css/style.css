@@ -1511,7 +1511,7 @@ chatMessage time {
 }
 
 .chatLinks img {
-	border-radius: 0.5em;
+	border-radius: 2.4em;
 	height: 4.8em;
 }
 
@@ -1995,8 +1995,7 @@ chat.location chatButtons {
 }
 
 eventOutdated {
-	text-decoration: line-through;
-
+	opacity: 0.4;
 }
 
 title {

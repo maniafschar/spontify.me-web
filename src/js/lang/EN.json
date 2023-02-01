@@ -241,7 +241,7 @@
 		},
 		"events": {
 			"acceptedMarketingEvent": "Your event was accepted, have fun!",
-			"canceled": "You have canceled your participation: ",
+			"canceled": "You have canceled your participation",
 			"confirm": "If a Buddy cancels, he cannot re-participate",
 			"confirmLabel": "Confirmation",
 			"createdBy": "Event created by",

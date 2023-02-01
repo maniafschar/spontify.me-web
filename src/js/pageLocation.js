@@ -69,6 +69,7 @@ class pageLocation {
 	</detailImg>
 </detailHeader>
 ${v.eventDetails}
+${v.skills}
 ${v.description}
 ${v.rating}
 <text>
@@ -265,7 +266,7 @@ ${v.rating}
 		if (v.event.id) {
 			v.eventDetails = pageEvent.detail(v);
 			v.hideBlockReason2 = ' style="display:none;"';
-			var skills = ui.getSkills(eventWithLocation ? v : v.contact, 'detail');
+			var skills = ui.getSkills(eventWithLocation ? v.event : v.contact, 'detail');
 			if (skills.totalMatch) {
 				v.matchIndicator = skills.totalMatch + '/' + skills.total;
 				v.matchIndicatorPercent = parseInt(skills.totalMatch / skills.total * 100 + 0.5);
@@ -398,10 +399,9 @@ ${v.rating}
 			return 'N';
 	}
 	static listInfos(v) {
-		var skills = ui.getSkills(v.id ? v : v.contact, 'list');
+		var skills = ui.getSkills(v.event.id ? v.event : v.contact, 'list');
 		v.extra = v._geolocationDistance ?
-			parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 || !v.id ? 0 : 1).replace('.', ',') + 'km<br/>'
-			: '';
+			parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 || !v.id ? 0 : 1).replace('.', ',') + 'km<br/>' : '';
 		if (skills.total && skills.totalMatch / skills.total > 0)
 			v.extra += parseInt(skills.totalMatch / skills.total * 100 + 0.5) + '%';
 		v.extra += '<br/>';

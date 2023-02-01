@@ -36,9 +36,11 @@ class model {
 					communication.sendError('model.convert: property ' + keys[i] + ' not found, available properties\n' + Object.keys(object) + '\nserver object:' + s);
 					model.reportedErrors[keys[i]] = 1;
 				}
-				if (i2 < key.length - 1)
+				if (i2 < key.length - 1) {
 					o = o[key[i2]];
-				else if (o)
+					if (!o)
+						break;
+				} else if (o)
 					o[key[i2]] = object2Transform[i];
 			}
 		}

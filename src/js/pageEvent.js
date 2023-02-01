@@ -120,9 +120,9 @@ class pageEvent {
 </div>
 </form>`;
 	static templateDetail = v =>
-		global.template`<text class="description" ${v.oc}>
+		global.template`<text class="description event" ${v.oc}>
 <div>${ui.l('events.createdBy')}<br/><span class="chatLinks" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;),event)"><img src="${v.imageEventOwner}"><br>${v.contact.pseudonym}</span></div>
-<div class="date">${v.date}${v.endDate}</div>
+<div class="date highlightColor">${v.date}${v.endDate}</div>
 <div>${v.event.text}</div>
 <div>${v.eventMustBeConfirmed}</div>
 <div class="price highlightColor">${v.eventPrice}</div>
@@ -153,12 +153,12 @@ class pageEvent {
 			var s = global.date.formatDate(v.event.endDate);
 			v.endDate = ' (' + ui.l('events.type_' + v.event.type) + ' ' + ui.l('to') + ' ' + s.substring(s.indexOf(' ') + 1, s.lastIndexOf(' ')) + ')';
 		}
-		var d = v.id.split('_')[1].split('-');
-		v.date = global.date.server2Local(v.event.startDate);
-		v.date = global.date.formatDate(new Date(d[0], parseInt(d[1]) - 1, d[2], v.date.getHours(), v.date.getMinutes(), v.date.getSeconds()));
-		if (global.date.server2Local(v.date) < global.date.getToday()) {
-			v.date = '<eventOutdated>&nbsp;' + v.date;
-			v[v.endDate ? 'endDate' : 'date'] += '&nbsp;</eventOutdated>';
+		var d = v.id.split('_')[1].split('-'), d2 = global.date.server2Local(v.event.startDate);
+		d = new Date(d[0], parseInt(d[1]) - 1, d[2], d2.getHours(), d2.getMinutes(), d2.getSeconds());
+		v.date = global.date.formatDate(d);
+		if (d < global.date.getToday()) {
+			v.date = '<eventOutdated>' + v.date;
+			v[v.endDate ? 'endDate' : 'date'] += '</eventOutdated>';
 		}
 		communication.ajax({
 			url: global.server + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + v.event.id + ' and eventParticipate.eventDate=\'' + v.id.split('_')[1] + '\''),
@@ -176,17 +176,18 @@ class pageEvent {
 				if (ui.q('detail card[i="' + v.id + '"]')) {
 					ui.q('detail card[i="' + v.id + '"] .eventParticipationButtons').innerHTML = pageEvent.getParticipateButton(v);
 					if (v.eventParticipate.state == 1)
-						ui.classAdd('detail card[i="' + v.id + '"] text.description', 'participate');
+						ui.classAdd('detail card[i="' + v.id + '"] text.description.event', 'participate');
 					else if (v.eventParticipate.state == -1) {
-						ui.classAdd('detail card[i="' + v.id + '"] text.description', 'canceled');
-						ui.q('detail card[i="' + v.id + '"] .reason').innerHTML = ui.l('events.canceled') + v.eventParticipate.reason;
+						ui.classAdd('detail card[i="' + v.id + '"] text.description.event', 'canceled');
+						ui.q('detail card[i="' + v.id + '"] .reason').innerHTML = ui.l('events.canceled') + (v.eventParticipate.reason ? ': ' + v.eventParticipate.reason : '');
 					}
 					if (count > 0) {
 						ui.q('detail card[i="' + v.id + '"] participantCount').innerHTML = count + ' ';
 						if ((!v.event.maxParticipants || count < v.event.maxParticipants) &&
 							ui.q('detail card[i="' + v.id + '"] buttontext[pID]'))
 							ui.q('detail card[i="' + v.id + '"] buttontext[pID]').style.display = '';
-					}
+					} else if (e.event.start < global.date.getToday())
+						ui.parents('detail card[i="' + v.id + '"] participantCount', 'buttontext').style.display = 'none';
 				}
 			}
 		});
