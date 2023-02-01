@@ -67,7 +67,7 @@ ${v.rating}
 <text${v.birthdayClass}>
 	${v.birthday}
 </text>
-${v.attributes}
+${v.skills}
 <detailButtons style="margin-top:1em;">
 	<buttontext class="bgColor${v.blocked}${v.hideMe}"
 		onclick="pageChat.open(${v.id})">${ui.l('chat.title')}</buttontext>
@@ -242,12 +242,12 @@ ${v.attributes}
 			v.link += '<buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + v.id + ')">' + ui.l('contacts.requestFriendship') + '</buttontext>';
 		if (v.contactLink.status == 'Friends')
 			v.favorite = 'favorite';
-		v.attr = ui.getSkills(v, 'detail');
-		v.attributes = v.attr.textAttributes();
-		if (preview && !v.attributes)
-			v.attributes = '<previewHint>' + ui.l('settings.previewHintAttributes') + '</previewHint>';
+		var skills = ui.getSkills(v, 'detail');
+		v.skills = skills.text();
+		if (preview && !v.skills)
+			v.skills = '<previewHint>' + ui.l('settings.previewHintAttributes') + '</previewHint>';
 		if (v.gender) {
-			if (v.age && v.attr.totalMatch) {
+			if (v.age && skills.totalMatch) {
 				var a;
 				if (v.gender == 1)
 					a = user.contact.ageMale;
@@ -260,12 +260,12 @@ ${v.attributes}
 			}
 			v.gender = '<img src="images/gender' + v.gender + '.svg" />';
 		}
-		if (v.attr.totalMatch) {
-			v.matchIndicator = v.attr.totalMatch + '/' + v.attr.total;
-			v.matchIndicatorPercent = parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5);
+		if (skills.totalMatch) {
+			v.matchIndicator = skills.totalMatch + '/' + skills.total;
+			v.matchIndicatorPercent = parseInt(skills.totalMatch / skills.total * 100 + 0.5);
 		} else
 			v.matchIndicatorPercent = 0;
-		v.matchIndicatorHint = ui.l('contacts.matchIndicatorHint').replace('{0}', v.attr.totalMatch).replace('{1}', v.attr.total).replace('{2}', v.matchIndicatorPercent);
+		v.matchIndicatorHint = ui.l('contacts.matchIndicatorHint').replace('{0}', skills.totalMatch).replace('{1}', skills.total).replace('{2}', v.matchIndicatorPercent);
 		if (v.matchIndicatorClass)
 			v.matchIndicatorHint += '<br/>' + ui.l('contacts.matchIndicatorHintPulse');
 		if (preview && !v.image)
@@ -541,14 +541,14 @@ ${v.attributes}
 			v.classBGImg = v.imageList ? '' : 'mainBG';
 			if (v.contactLink.status == 'Friends')
 				v.classFavorite = ' favorite';
-			v.attr = ui.getSkills(v, 'list');
+			var skills = ui.getSkills(v, 'list');
 			v.extra = (v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) + 'km' : '') + '<br/>';
-			if (v.attr.total && v.attr.totalMatch / v.attr.total > 0)
-				v.extra += parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5) + '%';
+			if (skills.total && skills.totalMatch / skills.total > 0)
+				v.extra += parseInt(skills.totalMatch / skills.total * 100 + 0.5) + '%';
 			if (v.gender)
 				v.extra += '<br/><img src="images/gender' + v.gender + '.svg" />';
 			if (!v._message1)
-				v._message1 = v.attr.textAttributes();
+				v._message1 = skills.text();
 			var birth = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
 			if (birth.age)
 				v.birth = ' (' + birth.age + ')';

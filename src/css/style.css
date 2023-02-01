@@ -2310,18 +2310,17 @@ info {
 	z-index: 1;
 }
 
-attributes {
+skills {
 	display: block;
 	padding: 0.5em 0;
 }
 
-attributesDisplay {
-	padding: 0 1em 1em 1em;
-	display: block;
-	position: relative;
+skills label.multipleLabel {
+	color: black;
+	cursor: default;
 }
 
-.attributeFade {
+.skillsFade {
 	opacity: 0.35;
 }
 

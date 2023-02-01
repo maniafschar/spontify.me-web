@@ -5,7 +5,7 @@ export { model, Contact, ContactLink, Location, ContactNotification, EventPartic
 class model {
 	static reportedErrors = {};
 	static convert(object, list, index) {
-		var keys, object2Transform, table;
+		var keys, object2Transform, objectName;
 		if (index) {
 			if (index >= list.length)
 				return object;
@@ -24,12 +24,12 @@ class model {
 			key = key.split('.');
 			for (var i2 = 0; i2 < key.length; i2++) {
 				if (i2 == 0 && !o.hasOwnProperty(key[0]) && key.length > 0 && o.hasOwnProperty(key[1]) && key[0]) {
-					if (!table)
-						table = key[0];
-					if (table == key[0])
+					if (!objectName)
+						objectName = key[0];
+					if (objectName == key[0])
 						i2++;
 				}
-				if (key[i2].indexOf('_') != 0 && !o.hasOwnProperty(key[i2]) && (i2 > 0 || key[i2].indexOf('location.') != 0 && key[i2].indexOf('contact.') != 0) && !model.reportedErrors[keys[i]]) {
+				if (key[i2].indexOf('_') != 0 && !o.hasOwnProperty(key[i2]) && (i2 > 0 || (key[0] != 'location' && key[0] != 'contact')) && !model.reportedErrors[keys[i]]) {
 					var s = '';
 					for (var i3 = 0; i3 < keys.length; i3++)
 						s += '\n' + keys[i3] + '=' + object2Transform[keys[i3]];

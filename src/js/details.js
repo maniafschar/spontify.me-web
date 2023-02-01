@@ -68,7 +68,7 @@ class details {
 						}, 50);
 					} else {
 						ui.html(d, '<div>' + s + '</div>');
-						ui.navigation.goTo('detail');
+						ui.navigation.goTo('detail', false);
 					}
 					formFunc.initFields('detail');
 					formFunc.image.replaceSVGs();

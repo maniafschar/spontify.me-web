@@ -15,6 +15,7 @@ import { pageHome } from './pageHome';
 import { lists } from './lists';
 import { pageEvent } from './pageEvent';
 import { pageSearch } from './pageSearch';
+import { hashtags } from './hashtags';
 
 export { ui, formFunc };
 
@@ -56,71 +57,59 @@ class ui {
 	}
 	static getSkills(compare, style) {
 		var result = {
-			attributesCategories: [],
-			attributesUser: new Attribute('user'),
+			skills: new Skills(),
+			skillsText: new Skills(),
 			categories: '',
 			total: 0,
 			totalMatch: 0,
-			textAttributes() {
-				var s = this.attributesUser.toString(style);
-				for (var i = 0; i < this.attributesCategories.length; i++) {
-					var s2 = this.attributesCategories[i].toString(style);
-					if (s2)
-						s += (s && style == 'list' ? ', ' : '') + s2;
-				}
+			text() {
+				var s = this.skills.toString(style);
+				var s2 = this.skillsText.toString(style);
+				if (s2)
+					s += (s && style == 'list' ? ', ' : '') + s2;
 				return s;
 			}
 		};
-		var a, skills = user.contact.skills || '';
-		var add2List = function (label, highlight, list) {
+		var a, skills = user.contact.skills ? '|' + user.contact.skills + '|' : '';
+		var add2List = function (label, type, skill) {
+			if (!label)
+				return;
 			var l = { label: label };
-			if (highlight) {
+			if (type == 'fade')
+				l.class = 'skillsFade';
+			else if (type) {
 				l.class = 'highlightBackground';
 				result.totalMatch++;
 			}
-			list.list.push(l);
+			skill.list.push(l);
 		};
 		if (skills)
 			result.total += skills.split('|').length;
 		if (compare.skills) {
 			a = compare.skills.split('|');
 			for (var i = 0; i < a.length; i++)
-				add2List(ui.attributes[parseInt(a[i], 10)], skills.indexOf(a[i]) > -1, result.attributesUser);
+				add2List(hashtags.ids2Text(a[i]), skills.indexOf('|' + a[i] + '|') > -1, result.skills);
+			a = skills.split('|');
+			skills = '|' + compare.skills + '|';
+			for (var i = 0; i < a.length; i++) {
+				if (skills.indexOf('|' + a[i] + '|') < 0)
+					add2List(hashtags.ids2Text(a[i]), 'fade', result.skills);
+			}
 		}
-		skills = user.contact.skillsText ? ',' + user.contact.skillsText.toLowerCase() + ',' : '';
+		skills = user.contact.skillsText ? '|' + user.contact.skillsText.toLowerCase() + '|' : '';
 		if (skills)
 			result.total += skills.split('|').length - 2;
 		if (compare.skillsText) {
 			a = compare.skillsText.toLowerCase().split('|');
 			for (var i = 0; i < a.length; i++)
-				add2List(a[i].trim(), skills.indexOf('|' + a[i].trim() + '|') > -1, result.attributesUser);
-		}
-		for (var i = 0; i < ui.categories.length; i++) {
-			skills = user.contact.skills || '';
-			var compareHasCat = compare.category ? compare.category.indexOf(i) > -1 : compare['attr' + i] || compare['attr' + i + 'Ex'];
-			if (skills && (compare.idDisplay || compareHasCat)) {
-				result.total += skills.split(global.separatorTech).length + 1;
-				result.categories += '/' + ui.categories[i].label;
-			}
-			result.attributesCategories.push(new Attribute('category' + i));
-			if (compareHasCat)
-				add2List(ui.categories[i].label, skills, result.attributesCategories[i]);
-			if (compare['attr' + i]) {
-				a = compare['attr' + i].split(global.separatorTech);
-				for (var i2 = 0; i2 < a.length; i2++)
-					add2List(ui.categories[i].values[parseInt(a[i2], 10)], skills.indexOf(a[i2]) > -1, result.attributesCategories[i]);
-			}
-			skills = user.contact['attr' + i + 'Ex'] ? ',' + user.contact['attr' + i + 'Ex'].toLowerCase() + ',' : '';
-			if (skills && (compare.idDisplay || compareHasCat))
-				result.total += skills.split(',').length - 2;
-			if (compare['attr' + i + 'Ex']) {
-				a = compare['attr' + i + 'Ex'].split(',');
-				for (var i2 = 0; i2 < a.length; i2++)
-					add2List(a[i2].trim(), skills.indexOf(',' + a[i2] + ',') > -1, result.attributesCategories[i]);
+				add2List(a[i].trim(), skills.indexOf('|' + a[i].trim() + '|') > -1, result.skillsText);
+			a = skills.split('|');
+			skills = '|' + compare.skillsText + '|';
+			for (var i = 0; i < a.length; i++) {
+				if (skills.indexOf('|' + a[i] + '|') < 0)
+					add2List(a[i].trim(), 'fade', result.skillsText);
 			}
 		}
-		if (result.categories)
-			result.categories = result.categories.substring(1);
 		return result;
 	}
 	static getEvtPos(e, horizontal) {
@@ -461,34 +450,6 @@ class ui {
 			}, 10);
 		}
 	};
-	static openMatchingAttributes(button) {
-		var e = ui.q('detail card:last-child .matchIndicatorAttributesHint');
-		if (e.style.display == 'none') {
-			var attr = new Attribute(button.getAttribute('type')), index = ',';
-			for (var i = 0; i < button.children.length; i++) {
-				var label = button.children[i].innerHTML.trim();
-				attr.list.push({ label: label, class: ui.classContains(button.children[i], 'highlightBackground') ? 'highlightBackground' : '' });
-				index += label + ',';
-			}
-			var add2List = function (s) {
-				if (s && index.indexOf(',' + s + ',') < 0)
-					attr.list.push({ label: s, class: 'attributeFade' });
-			}
-			if (button.getAttribute('type') == 'user') {
-				var a = user.contact.skills ? user.contact.skills.split('|') : [];
-				for (var i = 0; i < a.length; i++)
-					add2List(ui.attributes[parseInt(a[i], 10)]);
-				a = user.contact.skillsText ? user.contact.skillsText.split('|') : [];
-				for (var i = 0; i < a.length; i++)
-					add2List(a[i].trim());
-			}
-			ui.q('detail card:last-child .matchIndicatorAttributesHint>div').innerHTML = attr.toString();
-			e.style.top = (button.offsetTop + 2 * ui.emInPX) + 'px';
-			e.style.height = '';
-			e.removeAttribute('h');
-		}
-		ui.toggleHeight(e);
-	}
 	static query = {
 		contactFriends() {
 			return lists.loadList(
@@ -744,22 +705,14 @@ class ui {
 	}
 };
 
-class Attribute {
+class Skills {
 	list = [];
-	type;
-	constructor(type) {
-		this.type = type;
-	}
 	toString(style) {
-		var s = '', first;
-		if (this.type.indexOf('category') == 0)
-			first = this.list.shift();
+		var s = '';
 		this.list.sort(function (a, b) { return a.label > b.label ? 1 : -1 });
-		if (first)
-			this.list.unshift(first);
 		for (var i = 0; i < this.list.length; i++) {
 			if (style == 'list') {
-				if (this.list[i].class)
+				if (this.list[i].class == 'highlightBackground')
 					s += ', ' + this.list[i].label;
 			} else
 				s += '<label class="multipleLabel' + (this.list[i].class ? ' ' + this.list[i].class : '') + '">' + this.list[i].label + '</label>';
@@ -767,7 +720,7 @@ class Attribute {
 		if (s) {
 			if (style == 'list')
 				return s.substring(2);
-			return '<attributes type="' + this.type + '" onclick="ui.openMatchingAttributes(this)">' + s + '</attributes>';
+			return '<skills>' + s + '</skills>';
 		}
 		return '';
 	}

@@ -265,15 +265,15 @@ ${v.rating}
 		if (v.event.id) {
 			v.eventDetails = pageEvent.detail(v);
 			v.hideBlockReason2 = ' style="display:none;"';
-			v.attr = ui.getSkills(eventWithLocation ? v : v.contact, 'detail');
-			if (v.attr.totalMatch) {
-				v.matchIndicator = v.attr.totalMatch + '/' + v.attr.total;
-				v.matchIndicatorPercent = parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5);
+			var skills = ui.getSkills(eventWithLocation ? v : v.contact, 'detail');
+			if (skills.totalMatch) {
+				v.matchIndicator = skills.totalMatch + '/' + skills.total;
+				v.matchIndicatorPercent = parseInt(skills.totalMatch / skills.total * 100 + 0.5);
 			} else
 				v.matchIndicatorPercent = 0;
-			v.matchIndicatorHint = ui.l('events.matchIndicatorHint').replace('{0}', v.attr.totalMatch).replace('{1}', v.attr.total).replace('{2}', v.matchIndicatorPercent).replace('{3}', v.attr.categories);
+			v.matchIndicatorHint = ui.l('events.matchIndicatorHint').replace('{0}', skills.totalMatch).replace('{1}', skills.total).replace('{2}', v.matchIndicatorPercent).replace('{3}', skills.categories);
 			if (eventWithLocation || v.event.contactId != user.contact.id)
-				v.attributes = v.attr.textAttributes();
+				v.skills = skills.text();
 		} else {
 			if (global.isBrowser())
 				v.copyLinkHint = ui.l('copyLinkHint.location');
@@ -398,12 +398,12 @@ ${v.rating}
 			return 'N';
 	}
 	static listInfos(v) {
-		v.attr = ui.getSkills(v.id ? v : v.contact, 'list');
+		var skills = ui.getSkills(v.id ? v : v.contact, 'list');
 		v.extra = v._geolocationDistance ?
 			parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 || !v.id ? 0 : 1).replace('.', ',') + 'km<br/>'
 			: '';
-		if (v.attr.total && v.attr.totalMatch / v.attr.total > 0)
-			v.extra += parseInt(v.attr.totalMatch / v.attr.total * 100 + 0.5) + '%';
+		if (skills.total && skills.totalMatch / skills.total > 0)
+			v.extra += parseInt(skills.totalMatch / skills.total * 100 + 0.5) + '%';
 		v.extra += '<br/>';
 		if (v._geolocationDistance && v.latitude)
 			v.extra += '<div><compass style="transform:rotate('
@@ -411,7 +411,7 @@ ${v.rating}
 		else if (v.contact.gender)
 			v.extra += '<img src="images/gender' + v.contact.gender + '.svg" />';
 		if (!v._message1)
-			v._message1 = v.attr.textAttributes();
+			v._message1 = skills.text();
 		if (!v._message2)
 			v._message2 = v.description;
 	}
