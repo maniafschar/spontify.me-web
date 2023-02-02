@@ -402,7 +402,7 @@ ${v.rating}
 	static listInfos(v) {
 		var skills = ui.getSkills(v.event.id ? v.event : v.contact, 'list');
 		v.extra = v._geolocationDistance ?
-			parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 || !v.id ? 0 : 1).replace('.', ',') + 'km<br/>' : '';
+			'<km>' + parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 || !v.id ? 0 : 1).replace('.', ',') + '</km><br/>' : '';
 		if (skills.total && skills.totalMatch / skills.total > 0)
 			v.extra += parseInt(skills.totalMatch / skills.total * 100 + 0.5) + '%';
 		v.extra += '<br/>';

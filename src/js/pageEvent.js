@@ -15,7 +15,6 @@ import { user } from "./user";
 export { pageEvent };
 
 class pageEvent {
-	static filter = null;
 	static nearByExec = null;
 	static paypal = null;
 	static templateEdit = v =>
@@ -442,10 +441,7 @@ class pageEvent {
 				v.type = 'Event';
 				if (ui.navigation.getActiveID() == 'settings')
 					v.oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';
-				else if (v.eventParticipate.id)
-					v.oc = 'details.open(&quot;' + v.id + '&quot;,&quot;event_listParticipate&search=' + encodeURIComponent('eventParticipate.id=' + v.eventParticipate.id) + '&quot;,pageLocation.detailLocationEvent)';
-				else
-					v.oc = 'details.open(&quot;' + v.id + '&quot;,&quot;event_list&search=' + encodeURIComponent('event.id=' + v.event.id) + '&quot;,pageLocation.detailLocationEvent)';
+				v.oc = 'details.open(&quot;' + v.id + '&quot;,&quot;event_list&search=' + encodeURIComponent('event.id=' + v.event.id) + '&quot;,pageLocation.detailLocationEvent)';
 				s += pageLocation.templateList(v);
 			}
 		}
@@ -835,7 +831,7 @@ class pageEvent {
 			success(r) {
 				ui.navigation.hidePopup();
 				formFunc.removeDraft('event');
-				details.open(id ? id : r, 'event_list&search=' + encodeURIComponent('event.id=' + r), id ? function (l, id) {
+				details.open(id ? id : r + '_' + global.date.local2server(v.values.startDate).substring(0, 10), 'event_list&search=' + encodeURIComponent('event.id=' + r), id ? function (l, id) {
 					ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id);
 				} : pageLocation.detailLocationEvent);
 				pageEvent.refreshToggle();

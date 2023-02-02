@@ -542,7 +542,7 @@ ${v.skills}
 			if (v.contactLink.status == 'Friends')
 				v.classFavorite = ' favorite';
 			var skills = ui.getSkills(v, 'list');
-			v.extra = (v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) + 'km' : '') + '<br/>';
+			v.extra = (v._geolocationDistance ? '<km>' + parseFloat(v._geolocationDistance).toFixed(0) + '</km>' : '') + '<br/>';
 			if (skills.total && skills.totalMatch / skills.total > 0)
 				v.extra += parseInt(skills.totalMatch / skills.total * 100 + 0.5) + '%';
 			if (v.gender)
