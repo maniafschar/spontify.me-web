@@ -29,7 +29,7 @@ class model {
 					if (objectName == key[0])
 						i2++;
 				}
-				if (key[i2].indexOf('_') != 0 && !o.hasOwnProperty(key[i2]) && (i2 > 0 || (key[0] != 'location' && key[0] != 'contact')) && !model.reportedErrors[keys[i]]) {
+				if (key[i2].indexOf('_') != 0 && !o.hasOwnProperty(key[i2]) && (i2 > 0 || (key[0].indexOf('location') != 0 && key[0].indexOf('contact') != 0)) && !model.reportedErrors[keys[i]]) {
 					var s = '';
 					for (var i3 = 0; i3 < keys.length; i3++)
 						s += '\n' + keys[i3] + '=' + object2Transform[keys[i3]];

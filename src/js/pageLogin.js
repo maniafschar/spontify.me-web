@@ -294,11 +294,11 @@ class pageLogin {
 					if (!user.contact.aboutMe
 						&& !user.contact.gender && !user.contact.birthday
 						&& !user.contact.ageMale && !user.contact.ageFemale && !user.contact.ageDivers
-						&& !pageSettings.hasAttributes()
+						&& !user.contact.skills && !user.contact.skillsText
 						&& !exec) {
 						setTimeout(function () {
 							if (ui.navigation.getActiveID() == 'home')
-								intro.openHint({ desc: 'goToSettings', pos: '-0.5em,5em', size: '60%,auto', hinky: 'right:1em;', hinkyClass: 'top', onclick: 'ui.navigation.goTo(\'settings\')' });
+								intro.openHint({ desc: 'goToSettings', pos: '10%,20vh', size: '80%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'top', onclick: 'ui.navigation.goTo(\'settings\')' });
 						}, 2000);
 					}
 					pageLocation.locationsAdded = v.location_added;

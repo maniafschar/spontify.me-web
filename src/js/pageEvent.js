@@ -629,7 +629,6 @@ class pageEvent {
 				if (e.eventParticipate.state == '1') {
 					ui.classRemove('detail card:last-child .event', 'canceled');
 					ui.classRemove('row[i="' + e.event.id + '_' + eventDate + '"]', 'canceled');
-					e2.innerHTML = e2.innerHTML && parseInt(e2.innerHTML) > 1 ? (parseInt(e2.innerHTML) - 1) + ' ' : '';
 					ui.classAdd('detail card:last-child .event', 'participate');
 					ui.classAdd('row[i="' + e.event.id + '_' + eventDate + '"]', 'participate');
 					ui.q('detail card:last-child .event .reason').innerHTML = '';
@@ -637,21 +636,28 @@ class pageEvent {
 						button.outerHTML = '';
 					else
 						button.innerText = ui.l('events.participante');
+					e2.innerHTML = e2.innerHTML ? (parseInt(e2.innerHTML) + 1) + ' ' : '1 ';
 				} else {
 					ui.classRemove('detail card:last-child .event', 'participate');
 					ui.classRemove('row[i="' + e.event.id + '_' + eventDate + '"]', 'participate');
 					ui.attr(button, 's', '1');
 					button.innerText = ui.l('events.participanteStop');
-					e2.innerHTML = e2.innerHTML ? (parseInt(e2.innerHTML) + 1) + ' ' : '1 ';
 					ui.classAdd('detail card:last-child .event', 'canceled');
 					ui.classAdd('row[i="' + e.event.id + '_' + eventDate + '"]', 'canceled');
 					ui.q('detail card:last-child .event .reason').innerHTML = ui.l('events.canceled') + (d.values.reason ? ': ' + d.values.reason : '');
+					e2.innerHTML = e2.innerHTML && parseInt(e2.innerHTML) > 1 ? (parseInt(e2.innerHTML) - 1) + ' ' : '';
 				}
-				e = ui.q('detail card:last-child[i="' + e.event.id + '_' + eventDate + '"] [name="participants"]');
-				e2.innerHTML = '';
-				e2.removeAttribute('h');
-				e2.style.display = 'none';
 				ui.navigation.hidePopup();
+				e = ui.q('detail card:last-child[i="' + e.event.id + '_' + eventDate + '"] [name="participants"]');
+				var f = function () {
+					e.innerHTML = '';
+					e.style.display = 'none';
+					e.removeAttribute('h');
+				};
+				if (e.style.display == 'none')
+					f.call();
+				else
+					ui.toggleHeight(e, f);
 			}
 		});
 	}
@@ -808,7 +814,11 @@ class pageEvent {
 		ui.q('popup input[name="skills"]').value = v.category;
 		ui.q('popup input[name="skillsText"]').value = v.hashtags;
 		v = formFunc.getForm('popup form');
-		if (v.values.visibility == 2 && (!user.contact.attr || !user.contact.attrInterest))
+		if (!v.values.price)
+			v.values.price;
+		if (v.values.price > 0)
+			v.values.visibility = 3;
+		if (v.values.visibility == 2 && !user.contact.skills && !user.contact.skillsText)
 			formFunc.setError(ui.q('popup input[name="visibility"]'), 'events.errorVisibility');
 		if (ui.q('popup errorHint'))
 			return;
