@@ -108,7 +108,6 @@ class pageChat {
 			ui.css(e, 'display', 'none');
 			ui.html(e, '');
 			ui.attr(e, 'i', null);
-			ui.attr(e, 'type', null);
 			var activeID = ui.navigation.getActiveID();
 			if (activeID == 'contacts')
 				pageContact.init();

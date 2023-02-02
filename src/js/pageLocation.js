@@ -4,7 +4,7 @@ import { pageEvent } from './pageEvent';
 import { geoData } from './geoData';
 import { global } from './global';
 import { lists } from './lists';
-import { Location, model } from './model';
+import { EventParticipate, Location, model } from './model';
 import { pageChat } from './pageChat';
 import { ui, formFunc } from './ui';
 import { user } from './user';
@@ -251,10 +251,11 @@ ${v.rating}
 	}
 	static detailLocationEvent(l, id) {
 		var v = model.convert(new Location(), l);
-		v.data = encodeURIComponent(JSON.stringify(v));
+		v.eventParticipate = new EventParticipate();
 		if (!v.id)
 			v.name = v.contact.pseudonym + (v.contact.age ? ' (' + v.contact.age + ')' : '');
 		v.id = id;
+		v.data = encodeURIComponent(JSON.stringify(v));
 		v.distance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 ? 0 : 1).replace('.', ',') : '';
 		v.classBGImg = '';
 		if (v.classBGImg.length < 8)

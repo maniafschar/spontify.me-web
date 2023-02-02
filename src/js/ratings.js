@@ -1,6 +1,7 @@
 import { communication } from './communication';
 import { global } from './global';
 import { EventRating, Location, model } from './model';
+import { pageEvent } from './pageEvent';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 
@@ -49,16 +50,16 @@ class ratings {
 		var lastRating = null, list = null;
 		var render = function () {
 			if (lastRating && list) {
-				var form;
+				var form, e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
 				if (!id) {
 					var name = ui.q('detail:not([style*="none"]) card:last-child title, [i="' + id + '"] title').innerText.trim();
 					form = '<ratingHint>' + ui.l('rating.' + (search.indexOf('location') > -1 ? 'location' : 'contact')).replace('{0}', name) + '</ratingHint>';
 				} else if (lastRating.createdAt)
 					form = '<ratingHint>' + ui.l('rating.lastRate').replace('{0}', global.date.formatDate(lastRating.createdAt)) + '<br/><br/><rating><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + lastRating.rating) + '%;">★★★★★</full></rating></ratingHint>';
-				else if (JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).eventParticipate.state != 1)
-					form = '<ratingHint>' + ui.l('rating.notParticipated') + '</ratingHint>';
-				else if (global.date.server2Local(ui.q('detail card:last-child .date').getAttribute('d')) > new Date())
+				else if (pageEvent.getDate(e) > new Date())
 					form = '<ratingHint>' + ui.l('rating.notStarted') + '</ratingHint>';
+				else if (e.eventParticipate.state != 1)
+					form = '<ratingHint>' + ui.l('rating.notParticipated') + '</ratingHint>';
 				else
 					form = ratings.getForm(id);
 				ui.html('detail card:last-child [name="favLoc"]', '');

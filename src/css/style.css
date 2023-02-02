@@ -1435,9 +1435,12 @@ emoji {
 	display: inline-block;
 	white-space: nowrap;
 	margin: 0 0.5em;
-	padding-top: 0.5em;
 	cursor: pointer;
 	position: relative;
+}
+
+chat .chatLinks {
+	padding-top: 0.5em;
 }
 
 chatMessage {
@@ -1994,6 +1997,10 @@ chat.location chatButtons {
 	color: rgb(255, 220, 70);
 }
 
+.eventMargin {
+	margin: 0.5em 0;
+}
+
 eventOutdated {
 	opacity: 0.4;
 }
@@ -2054,6 +2061,10 @@ text.description {
 	margin: 1em -1em;
 	padding: 1em;
 	background: rgba(100, 230, 255, 0.08);
+}
+
+text.description.event {
+	padding: 0.5em 1em 0 1em;
 }
 
 text.popup {
@@ -2310,7 +2321,7 @@ info {
 }
 
 skills {
-	display: block;
+	display: inline-block;
 	padding: 0.5em 0;
 }
 
@@ -2320,7 +2331,11 @@ skills label.multipleLabel {
 }
 
 .skillsFade {
-	opacity: 0.35;
+	opacity: 0.4;
+}
+
+card[type="location"] .skillsFade {
+	display: none;
 }
 
 infoblock {

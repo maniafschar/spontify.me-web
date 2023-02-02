@@ -121,14 +121,14 @@ class pageEvent {
 </form>`;
 	static templateDetail = v =>
 		global.template`<text class="description event" ${v.oc}>
-<div>${ui.l('events.createdBy')}<br/><span class="chatLinks" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;),event)"><img src="${v.imageEventOwner}"><br>${v.contact.pseudonym}</span></div>
-<div class="date highlightColor">${v.date}${v.endDate}</div>
-<div>${v.event.text}</div>
-<div>${v.eventMustBeConfirmed}</div>
-<div class="price highlightColor">${v.eventPrice}</div>
-<div>${v.maxParticipants}</div>
-<div class="reason"></div>
-<span class="eventParticipationButtons"></span>
+<div><span class="chatLinks" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;),event)"><img src="${v.imageEventOwner}"><br>${v.contact.pseudonym}</span></div>
+<div class="date highlightColor eventMargin">${v.date}${v.endDate}</div>
+<div class="eventMargin">${v.event.text}</div>
+<div class="eventMargin">${v.eventMustBeConfirmed}</div>
+<div class="price highlightColor eventMargin">${v.eventPrice}</div>
+<div class="eventMargin">${v.maxParticipants}</div>
+<div class="reason eventMargin"></div>
+<span class="eventParticipationButtons eventMargin"></span>
 </text>`;
 	static checkPrice() {
 		var e = ui.q('popup explain.paypal');
@@ -153,8 +153,7 @@ class pageEvent {
 			var s = global.date.formatDate(v.event.endDate);
 			v.endDate = ' (' + ui.l('events.type_' + v.event.type) + ' ' + ui.l('to') + ' ' + s.substring(s.indexOf(' ') + 1, s.lastIndexOf(' ')) + ')';
 		}
-		var d = v.id.split('_')[1].split('-'), d2 = global.date.server2Local(v.event.startDate);
-		d = new Date(d[0], parseInt(d[1]) - 1, d[2], d2.getHours(), d2.getMinutes(), d2.getSeconds());
+		var d = pageEvent.getDate(v);
 		v.date = global.date.formatDate(d);
 		if (d < global.date.getToday()) {
 			v.date = '<eventOutdated>' + v.date;
@@ -164,30 +163,23 @@ class pageEvent {
 			url: global.server + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + v.event.id + ' and eventParticipate.eventDate=\'' + v.id.split('_')[1] + '\''),
 			responseType: 'json',
 			success(r) {
-				v.eventParticipate = new EventParticipate();
 				var count = 0;
 				for (var i = 1; i < r.length; i++) {
 					var e = model.convert(new EventParticipate(), r, i);
-					if (e.contactId == user.contact.id)
+					if (e.contactId == user.contact.id) {
 						v.eventParticipate = e;
-					if (e.state == 1)
+						ui.q('detail card[i="' + v.id + '"] detailHeader').setAttribute('data', encodeURIComponent(JSON.stringify(v)));
+					} if (e.state == 1)
 						count++;
 				}
 				if (ui.q('detail card[i="' + v.id + '"]')) {
-					ui.q('detail card[i="' + v.id + '"] .eventParticipationButtons').innerHTML = pageEvent.getParticipateButton(v);
+					ui.q('detail card[i="' + v.id + '"] .eventParticipationButtons').innerHTML = pageEvent.getParticipateButton(v, count);
 					if (v.eventParticipate.state == 1)
 						ui.classAdd('detail card[i="' + v.id + '"] text.description.event', 'participate');
 					else if (v.eventParticipate.state == -1) {
 						ui.classAdd('detail card[i="' + v.id + '"] text.description.event', 'canceled');
 						ui.q('detail card[i="' + v.id + '"] .reason').innerHTML = ui.l('events.canceled') + (v.eventParticipate.reason ? ': ' + v.eventParticipate.reason : '');
 					}
-					if (count > 0) {
-						ui.q('detail card[i="' + v.id + '"] participantCount').innerHTML = count + ' ';
-						if ((!v.event.maxParticipants || count < v.event.maxParticipants) &&
-							ui.q('detail card[i="' + v.id + '"] buttontext[pID]'))
-							ui.q('detail card[i="' + v.id + '"] buttontext[pID]').style.display = '';
-					} else if (e.event.start < global.date.getToday())
-						ui.parents('detail card[i="' + v.id + '"] participantCount', 'buttontext').style.display = 'none';
 				}
 			}
 		});
@@ -343,22 +335,27 @@ class pageEvent {
 		}
 		return actualEvents;
 	}
+	static getDate(v) {
+		var d = v.id.split('_')[1].split('-'), d2 = global.date.server2Local(v.event.startDate);
+		return new Date(d[0], parseInt(d[1]) - 1, d[2], d2.getHours(), d2.getMinutes(), d2.getSeconds());
+	}
 	static getId(v) {
 		var id = v.event.id + '_';
 		if (v.eventParticipate.eventDate)
 			return id + v.eventParticipate.eventDate;
 		return id + global.date.local2server(v.event.startDate).substring(0, 10);
 	}
-	static getParticipateButton(v) {
+	static getParticipateButton(v, participantCount) {
 		if (v.event.confirm && v.eventParticipate.state == -1)
 			return '';
-		var futureEvent = global.date.server2Local(v.eventParticipate.eventDate) >= global.date.getToday();
+		var futureEvent = pageEvent.getDate(v) > new Date();
 		var text = '<div style="margin:1em 0;">';
 		if (futureEvent && v.event.locationId > 0 && (v.event.contactId == user.contact.id || v.eventParticipate.state == 1))
 			text += '<buttontext class="bgColor" onclick="pageEvent.qrcode(' + (v.event.contactId == user.contact.id) + ')">' + ui.l('events.qrcodeButton') + '</buttontext><br/><br/>';
-		if (futureEvent)
-			text += '<buttontext pID="' + (v.eventParticipate.id ? v.eventParticipate.id : '') + '" s="' + (v.eventParticipate.id ? v.eventParticipate.state : '') + '" confirm="' + v.event.confirm + '" class="bgColor" onclick="pageEvent.participate(event)" max="' + (v.maxParticipants ? v.maxParticipants : 0) + '" style="display:none;">' + ui.l('events.participante' + (v.eventParticipate.state == 1 ? 'Stop' : '')) + '</buttontext>';
-		text += '<buttontext class="bgColor" onclick="pageEvent.toggleParticipants(event)"><participantCount></participantCount>' + ui.l('events.participants') + '</buttontext>';
+		if (futureEvent && (v.eventParticipate.state == 1 || !v.event.maxParticipants || participantCount < v.event.maxParticipants))
+			text += '<buttontext class="bgColor" onclick="pageEvent.participate(event)">' + ui.l('events.participante' + (v.eventParticipate.state == 1 ? 'Stop' : '')) + '</buttontext>';
+		if (participantCount > 0 || futureEvent)
+			text += '<buttontext class="bgColor" onclick="pageEvent.toggleParticipants(event)"><participantCount>' + (participantCount > 0 ? participantCount + '&nbsp;' : '') + '</participantCount>' + ui.l('events.participants') + '</buttontext>';
 		text += '</div><text name="participants" style="margin:0 -1em;display:none;"></text>';
 		return text;
 	}
@@ -597,15 +594,14 @@ class pageEvent {
 			return;
 		}
 		var button = event.target;
-		var participateID = button.getAttribute('pID');
 		var d = { classname: 'EventParticipate', values: {} };
-		var eventDate = e.event.startDate.substring(0, 10);
-		if (participateID) {
-			d.values.state = button.getAttribute('s') == 1 ? -1 : 1;
-			d.id = participateID;
-			if (button.getAttribute('confirm') == 1) {
+		var eventDate = e.id.split('_')[1];
+		if (e.eventParticipate.id) {
+			d.values.state = e.eventParticipate.state == 1 ? -1 : 1;
+			d.id = e.eventParticipate.id;
+			if (e.event.confirm == 1) {
 				if (!ui.q('#stopParticipateReason')) {
-					ui.navigation.openPopup(ui.l('events.stopParticipate'), ui.l('events.stopParticipateText') + '<br/><textarea id="stopParticipateReason" placeholder="' + ui.l('events.stopParticipateHint') + '" style="margin-top:0.5em;"></textarea><buttontext class="bgColor" style="margin-top:1em;" pID="' + button.getAttribute('pID') + '" s="' + button.getAttribute('s') + '" confirm="1" onclick="pageEvent.participate(event)">' + ui.l('events.stopParticipateButton') + '</buttontext>');
+					ui.navigation.openPopup(ui.l('events.stopParticipate'), ui.l('events.stopParticipateText') + '<br/><textarea id="stopParticipateReason" placeholder="' + ui.l('events.stopParticipateHint') + '" style="margin-top:0.5em;"></textarea><buttontext class="bgColor" style="margin-top:1em;" onclick="pageEvent.participate(event)">' + ui.l('events.stopParticipateButton') + '</buttontext>');
 					return;
 				}
 				if (!ui.q('#stopParticipateReason').value)
@@ -619,35 +615,42 @@ class pageEvent {
 		}
 		communication.ajax({
 			url: global.server + 'db/one',
-			method: participateID ? 'PUT' : 'POST',
+			method: e.eventParticipate.id ? 'PUT' : 'POST',
 			body: d,
 			success(r) {
-				if (r)
-					ui.attr(button, 'pID', r);
-				var e = ui.q('detail card[i="' + e.event.id + '_' + eventDate + '"] participantCount');
-				if (button.getAttribute('s') == '1') {
-					ui.classRemove('detail card:last-child .event', 'participate');
-					ui.classRemove('row[i="' + e.event.id + '_' + eventDate + '"]', 'participate');
-					e.innerHTML = e.innerHTML && parseInt(e.innerHTML) > 1 ? (parseInt(e.innerHTML) - 1) + ' ' : '';
-					if (button.getAttribute('confirm') == '1') {
-						ui.classAdd('detail card:last-child .event', 'canceled');
-						ui.classAdd('row[i="' + e.event.id + '_' + eventDate + '"]', 'canceled');
-						ui.q('detail card:last-child buttontext[pID="' + participateID + '"]').outerHTML = '';
-					} else {
-						ui.attr(button, 's', '-1');
-						button.innerText = ui.l('events.participante');
-					}
-				} else {
-					ui.attr(button, 's', '1');
-					button.innerText = ui.l('events.participanteStop');
-					e.innerHTML = e.innerHTML ? (parseInt(e.innerHTML) + 1) + ' ' : '1 ';
+				e.eventParticipate.state = d.values.state;
+				if (r) {
+					e.eventParticipate.eventId = d.values.eventId;
+					e.eventParticipate.eventDate = d.values.eventDate;
+					e.eventParticipate.id = r;
+				}
+				ui.q('detail card:last-child detailHeader').setAttribute('data', encodeURIComponent(JSON.stringify(e)));
+				var e2 = ui.q('detail card[i="' + e.event.id + '_' + eventDate + '"] participantCount');
+				if (e.eventParticipate.state == '1') {
+					ui.classRemove('detail card:last-child .event', 'canceled');
+					ui.classRemove('row[i="' + e.event.id + '_' + eventDate + '"]', 'canceled');
+					e2.innerHTML = e2.innerHTML && parseInt(e2.innerHTML) > 1 ? (parseInt(e2.innerHTML) - 1) + ' ' : '';
 					ui.classAdd('detail card:last-child .event', 'participate');
 					ui.classAdd('row[i="' + e.event.id + '_' + eventDate + '"]', 'participate');
+					ui.q('detail card:last-child .event .reason').innerHTML = '';
+					if (e.event.confirm == '1')
+						button.outerHTML = '';
+					else
+						button.innerText = ui.l('events.participante');
+				} else {
+					ui.classRemove('detail card:last-child .event', 'participate');
+					ui.classRemove('row[i="' + e.event.id + '_' + eventDate + '"]', 'participate');
+					ui.attr(button, 's', '1');
+					button.innerText = ui.l('events.participanteStop');
+					e2.innerHTML = e2.innerHTML ? (parseInt(e2.innerHTML) + 1) + ' ' : '1 ';
+					ui.classAdd('detail card:last-child .event', 'canceled');
+					ui.classAdd('row[i="' + e.event.id + '_' + eventDate + '"]', 'canceled');
+					ui.q('detail card:last-child .event .reason').innerHTML = ui.l('events.canceled') + (d.values.reason ? ': ' + d.values.reason : '');
 				}
 				e = ui.q('detail card:last-child[i="' + e.event.id + '_' + eventDate + '"] [name="participants"]');
-				e.innerHTML = '';
-				e.removeAttribute('h');
-				e.style.display = 'none';
+				e2.innerHTML = '';
+				e2.removeAttribute('h');
+				e2.style.display = 'none';
 				ui.navigation.hidePopup();
 			}
 		});
