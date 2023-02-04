@@ -9,6 +9,7 @@ import { lists } from "./lists";
 import { Contact, EventParticipate, Location, model } from "./model";
 import { pageContact } from "./pageContact";
 import { pageLocation } from "./pageLocation";
+import { pageLogin } from "./pageLogin";
 import { formFunc, ui } from "./ui";
 import { user } from "./user";
 
@@ -204,6 +205,10 @@ class pageEvent {
 		return pageEvent.templateDetail(v);
 	}
 	static edit(locationID, id) {
+		if (!user.contact) {
+			intro.openHint({ desc: 'teaserEvents', pos: '10%,5em', size: '80%,auto' });
+			return;
+		}
 		ui.navigation.hideMenu();
 		if (id)
 			pageEvent.editInternal(locationID, id, JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).event);
@@ -351,8 +356,10 @@ class pageEvent {
 		var text = '<div style="margin:1em 0;">';
 		if (futureEvent && v.event.locationId > 0 && (v.event.contactId == user.contact.id || v.eventParticipate.state == 1))
 			text += '<buttontext class="bgColor" onclick="pageEvent.qrcode(' + (v.event.contactId == user.contact.id) + ')">' + ui.l('events.qrcodeButton') + '</buttontext><br/><br/>';
-		if (futureEvent && (v.eventParticipate.state == 1 || !v.event.maxParticipants || participantCount < v.event.maxParticipants))
+		if (futureEvent && !v.event.price && (v.eventParticipate.state == 1 || !v.event.maxParticipants || participantCount < v.event.maxParticipants))
 			text += '<buttontext class="bgColor" onclick="pageEvent.participate(event)">' + ui.l('events.participante' + (v.eventParticipate.state == 1 ? 'Stop' : '')) + '</buttontext>';
+		if (futureEvent && v.event.price > 0 && !v.eventParticipate.state && v.contact.paypalMerchantId)
+			text += '<buttontext class="bgColor" onclick="pageEvent.openPaypal(&quot;' + v.contact.paypalMerchantId + '&quot;)">' + ui.l('events.participante') + '</buttontext>';
 		if (participantCount > 0 || futureEvent)
 			text += '<buttontext class="bgColor" onclick="pageEvent.toggleParticipants(event)"><participantCount>' + (participantCount > 0 ? participantCount + '&nbsp;' : '') + '</participantCount>' + ui.l('events.participants') + '</buttontext>';
 		text += '</div><text name="participants" style="margin:0 -1em;display:none;"></text>';
@@ -581,6 +588,52 @@ class pageEvent {
 			if (ui.q('popup [name="hashtagsDisp"]').value)
 				setTimeout(function () { ui.adjustTextarea(ui.q('popup [name="hashtagsDisp"]')); }, 500);
 		});
+	}
+	static openPaypal(paypalMerchantId) {
+		if (!ui.q('head script[src*="paypal.com"]')) {
+			var script = document.createElement('script');
+			script.onload = pageEvent.openPaypalPopup;
+			script.src = 'https://www.paypal.com/sdk/js?&client-id=AXvvZWO0WqF0RtYwhisZcZ0vsKXtrSMr08hVk3QuhM7VEbrN4i40JH_fDiHXu2Ol4smy7Z-6B2kdW6rx&merchant-id=' + paypalMerchantId + '&currency=EUR';
+			document.head.appendChild(script);
+		} else
+			pageEvent.openPaypalPopup();
+	}
+	static openPaypalPopup() {
+		intro.openHint({ desc: '<br/><div id="paypal-button-container"></div>', pos: '15%,20vh', size: '70%,auto' });
+		var amount = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).event.price;
+		paypal.Buttons({
+			createOrder: function (data, actions) {
+				return actions.order.create({
+					purchase_units: [{
+						amount: {
+							currency_code: "EUR",
+							value: '' + amount
+						},
+						payment_instruction: {
+							disbursement_mode: "INSTANT",
+							platform_fees: [
+								{
+									amount: {
+										currency_code: "EUR",
+										value: '' + (0.2 * amount)
+									},
+								},
+							],
+						}
+					}]
+				});
+			},
+			onApprove: function (data, actions) {
+				console.log('Capture result', JSON.stringify(data));
+				console.log('Capture result', JSON.stringify(actions));
+				actions.order.capture().then(function (orderData) {
+					console.log('Capture result', JSON.stringify(orderData));
+					intro.closeHint();
+				}).error(function (e) {
+					console.log('Capture error', JSON.stringify(e));
+				});
+			}
+		}).render('#paypal-button-container');
 	}
 	static participate(event) {
 		event.stopPropagation();
@@ -848,9 +901,13 @@ class pageEvent {
 		pageEvent.checkPrice();
 	}
 	static signUpPaypal() {
+		if (!window.localStorage.getItem('autoLogin')) {
+			pageLogin.login(user.email, user.password, true, pageEvent.signUpPaypal);
+			return;
+		}
 		if (pageEvent.paypal) {
 			pageEvent.saveDraft();
-			ui.navigation.openHTML(pageEvent.paypal + '&displayMode=minibrowser', 'paypal');
+			ui.navigation.openHTML(pageEvent.paypal, 'paypal');
 		} else
 			communication.ajax({
 				url: global.server + 'action/paypalSignUpSellerUrl',

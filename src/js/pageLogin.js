@@ -104,6 +104,7 @@ class pageLogin {
 			<input type="hidden" name="os" />
 			<input type="hidden" name="device" />
 			<input type="hidden" name="version" />
+			<input type="hidden" name="timezone" />
         </value>
     </field>
     <field>
@@ -278,7 +279,7 @@ class pageLogin {
 							communication.sendError('script_correction: ' + ex);
 						}
 					}
-					if (ui.navigation.getActiveID() != 'home') {
+					if (ui.navigation.getActiveID() == 'login') {
 						setTimeout(function () { ui.html('login', ''); }, 500);
 						ui.navigation.goTo('home');
 					}
@@ -341,6 +342,7 @@ class pageLogin {
 				version: global.appVersion,
 				device: global.getDevice(),
 				os: global.getOS(),
+				timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
 				publicKey: Encryption.jsEncrypt.getPublicKeyB64()
 			},
 			success(r) {
@@ -426,6 +428,7 @@ class pageLogin {
 			ui.q('input[name="version"]').value = global.appVersion;
 			ui.q('input[name="device"]').value = global.getDevice();
 			ui.q('input[name="os"]').value = global.getOS();
+			ui.q('input[name="timezone"]').value = Intl.DateTimeFormat().resolvedOptions().timeZone;
 			communication.ajax({
 				url: global.server + 'authentication/register',
 				body: formFunc.getForm('form[name=loginRegister]').values,

@@ -304,8 +304,8 @@ homeHeader {
 	display: block;
 	cursor: pointer;
 	color: white;
-	padding-top: 5%;
-	height: 25%;
+	padding-top: 5vh;
+	height: 40%;
 }
 
 homeHeader>svg {
@@ -316,7 +316,7 @@ homeHeader>svg {
 }
 
 homeHeader img {
-	height: 80%;
+	height: 60%;
 	border-radius: 50%;
 	box-shadow: 0 0 1em rgba(0, 0, 0, 0.6);
 }
@@ -330,38 +330,72 @@ homeHeader.logoSmall>svg {
 }
 
 homeBody {
-	position: absolute;
+	position: relative;
 	width: 100%;
 	display: block;
-	height: 75%;
-	overflow-y: auto;
-	padding-top: 5%;
+	height: 60%;
 }
 
-homeBody input {
-	width: 8em;
-	margin-bottom: 1em;
+homeBody teaser {
+	position: absolute;
+	width: 100%;
+	left: 0;
+	opacity: 0;
+	transition: all 0.4s ease-out;
 }
 
-homeBody field {
-	padding: 0 1em;
+homeBody teaser div {
+	white-space: nowrap;
+	overflow-x: auto;
+}
+
+homeBody teaser.contacts {
+	bottom: 5vh;
+}
+
+homeBody teaser.events {
+	bottom: 34vh;
+}
+
+homeBody teaser card {
+	margin: 0 1em;
+	border-radius: 1em;
+	overflow: hidden;
+	position: relative;
+	display: inline-block;
+	cursor: pointer;
+	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+}
+
+homeBody teaser card img {
+	height: 15vh;
+}
+
+homeBody teaser card text {
+	position: absolute;
+	width: 100%;
+	bottom: 0.25em;
+	border-right: solid 0.5em transparent;
+	border-left: solid 0.5em transparent;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+homeBody teaser title {
+	font-weight: bold;
+	margin-bottom: 0.75em;
+	font-size: 1.3em;
+}
+
+homeBody teaser buttonIcon {
+	right: 0;
+	font-size: 3em;
+	bottom: -1.4em;
+	box-shadow: none;
 }
 
 home {
 	z-index: 1;
-}
-
-home item.bluetooth {
-	position: absolute;
-	bottom: 1em;
-	left: 0;
-	width: 100%;
-}
-
-home item {
-	right: 1em;
-	top: 4em;
-	position: absolute;
 }
 
 .bgColor {

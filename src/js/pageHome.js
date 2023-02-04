@@ -5,7 +5,8 @@ import { global } from './global';
 import { hashtags } from './hashtags';
 import { initialisation } from './initialisation';
 import { intro } from './intro';
-import { Contact, model } from './model';
+import { lists } from './lists';
+import { Contact, Location, model } from './model';
 import { pageChat } from './pageChat';
 import { formFunc, ui } from './ui';
 import { user } from './user';
@@ -25,28 +26,15 @@ class pageHome {
 	</buttonIcon>
 </homeHeader>
 <homeBody>
-<form onsubmit="return false">
-<input type="hidden" name="type" value="${v.type}" />
-<input type="hidden" name="skills" value="${v.skills}" />
-<input type="hidden" name="skillsText" value="${v.skillsText}" />
-${ui.l('home.labelTime')}<br/>
-<input type="time" name="startDate" placeholder="HH:MM" step="900" value="${v.startDate}" /><br/>
-${ui.l('home.labelSkill')}
-<field>
-<textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="pageHome.synchonizeTags()" style="height:2em;">${v.hashtagsDisp}</textarea>
-<hashtags>${v.hashtagSelection}</hashtags>
-</field>
-<div class="eventText" style="display:none;">
-<br/>
-<field>
-<textarea name="text" maxlength="250" placeholder="${ui.l('description')}">${v.text}</textarea>
-</field>
-<dialogButtons>
-<buttontext onclick="pageHome.saveEvent()" class="bgColor">${ui.l('home.saveEvent')}</buttontext>
-<buttontext class="bgColor noDisp delete">${ui.l('delete')}</buttontext>
-</dialogButtons>
-</div>
-</form>
+<teaser class="events">
+	<title>${ui.l('events.title')}</title>
+	<div></div>
+	<buttonIcon onclick="pageEvent.edit()">+</buttonIcon>
+</teaser>
+<teaser class="contacts">
+	<title>${ui.l('contacts.title')}</title>
+	<div></div>
+</teaser>
 </homeBody>`;
 	static clickNotification(id, action) {
 		communication.ajax({
@@ -99,55 +87,45 @@ ${ui.l('home.labelSkill')}
 				v.lang = global.language;
 				v.clickHeader = 'pageHome.openHintDescription()';
 			}
-			if (ui.q('home homeBody')) {
-				v.startDate = ui.q('home homeBody input[name="startDate"]').value;
-				v.text = ui.q('home homeBody textarea[name="text"]').value;
-				v.hashtagsDisp = ui.q('home homeBody textarea[name="hashtagsDisp"]').value;
-			}
-			if (!v.startDate) {
-				var d = new Date().getHours() + 2;
-				if (d > 23)
-					d = 8;
-				v.startDate = ('0' + d).slice(-2) + ':00';
-			}
-			v.hashtagSelection = hashtags.display();
-			v.type = 'o';
 			e.innerHTML = pageHome.template(v);
-			formFunc.initFields('home');
 			initialisation.reposition();
-			if (v.text)
-				ui.q('home homeBody .eventText').style.display = '';
-			var input = ui.q('home homeBody textarea[name="hashtagsDisp"]');
-			var descriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(input), 'value');
-			Object.defineProperty(input, 'value', {
-				set: function () {
-					var r = descriptor.set.apply(this, arguments);
-					pageHome.synchonizeTags();
-					return r;
-				},
-				get: function () {
-					return descriptor.get.apply(this);
+			var renderContacts = function (l) {
+				var s = '', oc = user.contact ? null : 'intro.openHint({ desc: \'teaserContacts\', pos: \'10%,5em\', size: \'80%,auto\' })';
+				for (var i = 1; i < l.length; i++) {
+					var e = model.convert(new Contact(), l, i);
+					s += '<card onclick="' + (oc ? oc : 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + e.id) + '&quot;)') + '"><img src="' + global.serverImg + e.imageList + '"/><text>' + e.pseudonym + '</text></card>';
 				}
-			});
-			if (user.contact)
+				ui.q('home teaser.contacts>div').innerHTML = s;
+				ui.css('home teaser.contacts', 'opacity', 1);
+			};
+			var renderEvents = function (l) {
+				var s = '', oc = user.contact ? null : 'intro.openHint({ desc: \'teaserEvents\', pos: \'10%,5em\', size: \'80%,auto\' })';
+				for (var i = 1; i < l.length; i++) {
+					var e = model.convert(new Location(), l, i);
+					s += '<card onclick="' + (oc ? oc : 'ui.navigation.autoOpen(&quot;' + global.encParam('e=' + e.event.id) + '&quot;)') + '"><img src="' + global.serverImg + (e.imageList ? e.imageList : e.event.imageList) + '"/><text>' + e.event.text + '</text></card>';
+				}
+				ui.q('home teaser.events>div').innerHTML = s;
+				ui.css('home teaser.events', 'opacity', 1);
+			};
+			if (user.contact) {
+				lists.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&query=contact_list&limit=20&search=' + encodeURIComponent('contact.imageList is not null'), renderContacts);
+				lists.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&query=event_list&limit=20&search=' + encodeURIComponent('event.imageList is not null or location.imageList is not null'), renderEvents);
+			} else {
 				communication.ajax({
-					url: global.server + 'db/list?query=event_listParticipate&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id + ' and eventParticipate.eventDate=\'' + global.date.local2server(new Date()).substring(0, 10) + '\' and event.locationId is null'),
+					url: global.server + 'action/teaser/contacts',
 					responseType: 'json',
 					success(r) {
-						if (r.length > 1) {
-							var e = model.convert(new Contact(), r, r.length - 1);
-							if (e.eventParticipate.state == 1) {
-								var d = global.date.getDateFields(global.date.server2Local(e.event.startDate));
-								ui.q('home homeBody input[name="startDate"]').value = d.hour + ':' + d.minute;
-								ui.q('home homeBody textarea[name="text"]').value = e.event.text;
-								ui.q('home homeBody textarea[name="hashtagsDisp"]').value = hashtags.ids2Text(e.event.skills) + (e.event.skillsText ? ' ' + e.event.skillsText : '').trim();
-								ui.classRemove('home homeBody buttontext.delete', 'noDisp');
-								ui.attr('home homeBody form', 'i', e.event.id);
-								ui.attr('home homeBody buttontext.delete', 'onclick', 'pageHome.deleteEvent()');
-							}
-						}
+						renderContacts(r);
 					}
 				});
+				communication.ajax({
+					url: global.server + 'action/teaser/events',
+					responseType: 'json',
+					success(r) {
+						renderEvents(r);
+					}
+				});
+			}
 		}
 		pageHome.initNotificationButton();
 		if (user.contact)

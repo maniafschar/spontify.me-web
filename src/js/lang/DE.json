@@ -379,6 +379,8 @@
 			"register": "Nach der Registrierung zeigen wir Dir, wie Du Dein Profil individualisieren kannst. Lieben Dank dass Du Dir die Zeit für die Intro genommen hast.",
 			"settings": "<title>Einstellungen</title><br/>Hier beschreibst Du Dich und was <emphasis>Du magst</emphasis>. Basierend auf diesen Angaben matchen wir:<ul><li>Locations</li><li>Events</li><li>und Buddies</li></ul>",
 			"settingsLoggedIn": "<ul><li>Ändere hier Dein Profilbild und gib weitere, allgemeine Infos an</li><li>Ein Wisch nach links und Du kannst Dich über diverse Attribute selbst beschreiben und angeben, was Du an anderen Buddies magst</li></ul>",
+			"teaserContacts": "<title>Buddies</title><br/>Wir matchen Buddies nach folgenden Kriterien, die Du in Deinen <emphasis>Einstellungen</emphasis> angeben kannst:<ul><li>Skills</li><li>Alter</li><li>Geschlecht</li><li>favorisierte Locations</li></ul>So können wir Dir passende skillvents vorschlagen und Du kannst die <emphasis>Community</emphasis> nach anderen Buddies mit ähnlichen Skills durchsuchen.",
+			"teaserEvents": "<title>skillvents</title><br/>Hier sind sie, Deine skillvents an denen Du teilnimmst und die, die Du erstellt hast.<br/><br/>Zudem schlagen wir Dir <emphasis>interessante</emphasis> und zu Dir <emphasis>passende</emphasis> skillvents vor, so dass Du Dich stets weiterentwickelst und Neues erlebst.",
 			"whatToDo": "<title>Heute suche ich...</title><br/>Du gibst einfach an, was Du gerne <emphasis>heute</emphasis> machen möchtest, z.B. Essen gehen oder ein Museum besuchen, etc.<br/><br/>Die Aktivität wird Buddies, <emphasis>die zu Dir passen</emphasis> und nicht weiter als 50 KM entfernt sind, angezeigt."
 		},
 		"locations": {

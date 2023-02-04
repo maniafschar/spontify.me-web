@@ -235,7 +235,7 @@ class initialisation {
 				ui.navigation.goTo(user.contact ? 'search' : 'login');
 			else if (dir == 'right')
 				ui.navigation.goTo(user.contact ? 'contacts' : 'login', true);
-		}, 'input');
+		}, 'teaser');
 		ui.swipe('info', function (dir) {
 			if (dir == 'right')
 				ui.navigation.goTo(ui.q('info').getAttribute('from'));
