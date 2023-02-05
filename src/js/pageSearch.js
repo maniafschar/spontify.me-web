@@ -303,6 +303,10 @@ class pageSearch {
 		var e = ui.q('search');
 		if (!e.innerHTML) {
 			e.innerHTML = pageSearch.template();
+			ui.q('search tabBody div.contacts').innerHTML = pageSearch.contacts.getFields() + '<listResults></listResults>';
+			ui.q('search tabBody div.events').innerHTML = pageSearch.events.getFields() + '<listResults></listResults>';
+			ui.q('search tabBody div.locations').innerHTML = pageSearch.locations.getFields() + '<listResults></listResults>';
+			formFunc.initFields('search');
 			pageSearch.selectTab('contacts');
 		}
 	}
@@ -313,14 +317,11 @@ class pageSearch {
 	}
 	static selectTab(id) {
 		var e = ui.q('search tabBody div.' + id);
-		if (!e.innerHTML) {
-			e.innerHTML = pageSearch[id].getFields() + '<listResults></listResults>';
-			formFunc.image.replaceSVGs();
-		}
-		formFunc.initFields('search');
 		ui.q('search tabBody').style.marginLeft = ((id == 'contacts' ? 0 : id == 'events' ? 1 : 2) * -100) + '%';
 		ui.classRemove('search tab', 'tabActive');
 		ui.classAdd('search tab[i="' + id + '"]', 'tabActive');
+		if (ui.q('locationPicker').style.display != 'none')
+			ui.toggleHeight('locationPicker');
 	}
 	static swipeLeft() {
 		var x = parseInt(ui.q('search tabBody').style.marginLeft) || 0;

@@ -40,8 +40,15 @@ class pageEvent {
 </field>
 <div class="event" ${v.styleEvent}>
 <div class="locationName">${v.locationName}</div>
-<field${v.hideNonWTDFields}>
-	<label style="padding-top:0;">${ui.l('type')}</label>
+<field>
+	<label style="padding-top:0;">${ui.l('events.hashtags')}</label>
+	<value>
+		<textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
+		<hashtags>${v.hashtagSelection}</hashtags>
+	</value>
+</field>
+<field class="noWTDField">
+	<label>${ui.l('type')}</label>
 	<value>
 		<input type="radio" name="type" value="o" label="${ui.l('events.type_o')}" onclick="pageEvent.setForm()" ${v.type_o}/>
 		<input type="radio" name="type" value="w1" label="${ui.l('events.type_w1')}" onclick="pageEvent.setForm()" ${v.type_w1}/>
@@ -56,7 +63,7 @@ class pageEvent {
 		<input type="datetime-local" name="startDate" placeholder="TT.MM.JJJJ HH:MM" value="${v.startDate}" step="900" min="${v.today}T00:00:00" />
 	</value>
 </field>
-<field name="endDate"${v.hideNonWTDFields}>
+<field class="noWTDField" name="endDate">
 	<label>${ui.l('events.end')}</label>
 	<value>
 		<input type="date" name="endDate" placeholder="TT.MM.JJJJ" value="${v.endDate}" min="${v.today}" />
@@ -68,13 +75,13 @@ class pageEvent {
 		<textarea name="text" maxlength="1000">${v.text}</textarea>
 	</value>
 </field>
-<field${v.hideNonWTDFields}>
+<field class="noWTDField">
 	<label>${ui.l('events.maxParticipants')}</label>
 	<value>
 		<input type="number" name="maxParticipants" maxlength="250" value="${v.maxParticipants}" onmousewheel="return false;" />
 	</value>
 </field>
-<field${v.hideNonWTDFields}>
+<field class="noWTDField">
 	<label>${ui.l('events.price')}</label>
 	<value>
 		<input type="number" step="any" name="price" value="${v.price}" onkeyup="pageEvent.checkPrice()" onmousewheel="return false;" />
@@ -91,26 +98,10 @@ class pageEvent {
 		<input type="file" name="image" accept=".gif, .png, .jpg" />
 	</value>
 </field>
-<div class="unpaid">
-<field${v.hideNonWTDFields}>
+<field class="unpaid noWTDField">
 	<label>${ui.l('events.confirmLabel')}</label>
 	<value>
 		<input type="checkbox" name="eventconfirm" transient="true" label="${ui.l('events.confirm')}" value="1" ${v.confirm}/>
-	</value>
-</field>
-<field>
-	<label>${ui.l('events.visibility')}</label>
-	<value>
-		<input type="radio" name="visibility" value="2" label="${ui.l('events.visibility2')}" ${v.visibility2}/>
-		<input type="radio" name="visibility" value="3" label="${ui.l('events.visibility3')}" ${v.visibility3}/>
-	</value>
-</field>
-</div>
-<field>
-	<label>${ui.l('events.hashtags')}</label>
-	<value>
-		<textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
-		<hashtags>${v.hashtagSelection}</hashtags>
 	</value>
 </field>
 <dialogButtons style="margin-bottom:0;">
@@ -248,9 +239,6 @@ class pageEvent {
 			v.type_y = ' checked';
 		if (v.confirm)
 			v.confirm = ' checked';
-		if (!v.visibility)
-			v.visibility = '3';
-		v['visibility' + v.visibility] = ' checked';
 		if (!v.startDate) {
 			d = new Date();
 			d.setDate(d.getDate() + 1);
@@ -266,8 +254,7 @@ class pageEvent {
 			if (locationID) {
 				var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')))
 				v.locationName = e.name + '<br/>' + e.address.replace(/\n/g, global.separator);
-			} else
-				v.hideNonWTDFields = ' style="display:none;"';
+			}
 		} else {
 			v.styleEvent = ' style="display:none;"';
 			pageEvent.locationsOfPastEvents();
@@ -522,8 +509,7 @@ class pageEvent {
 			return;
 		}
 		var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
-		var search = (e.event.visibility == 2 ? global.getRegEx('contact.skills', e.event.skills) + ' or ' + global.getRegEx('contact.skillsText', e.event.skillsText) + ' and ' : '') +
-			'contact.id<>' + user.contact.id;
+		var search = global.getRegEx('contact.skills', e.event.skills) + ' or ' + global.getRegEx('contact.skillsText', e.event.skillsText) + ' and contact.id<>' + user.contact.id;
 		lists.loadList('query=contact_list&distance=50&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent(search),
 			function (r) {
 				var s = pageContact.listContacts(r);
@@ -823,7 +809,6 @@ class pageEvent {
 		formFunc.resetError(end);
 		formFunc.resetError(text);
 		formFunc.resetError(tags);
-		formFunc.resetError(ui.q('popup input[name="visibility"]'));
 		if (!tags.value)
 			formFunc.setError(tags, 'error.hashtags');
 		else
@@ -866,10 +851,6 @@ class pageEvent {
 		v = formFunc.getForm('popup form');
 		if (!v.values.price)
 			v.values.price;
-		if (v.values.price > 0)
-			v.values.visibility = 3;
-		if (v.values.visibility == 2 && !user.contact.skills && !user.contact.skillsText)
-			formFunc.setError(ui.q('popup input[name="visibility"]'), 'events.errorVisibility');
 		if (ui.q('popup errorHint'))
 			return;
 		if (ui.q('popup [name="type"]').checked)
@@ -899,6 +880,9 @@ class pageEvent {
 		var b = ui.q('popup [name="type"]').checked;
 		ui.q('popup label[name="startDate"]').innerText = ui.l('events.' + (b ? 'date' : 'start'));
 		ui.css('popup field[name="endDate"]', 'display', b ? 'none' : '');
+		b = ui.q('popup input[name="locationId"]').value;
+		if (!b || b == -2)
+			ui.css('popup .noWTDField', 'display', 'none');
 		pageEvent.checkPrice();
 	}
 	static signUpPaypal() {

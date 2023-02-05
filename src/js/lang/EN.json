@@ -338,7 +338,7 @@
 			"feedbackUploadSuccess": "Thank you, your feedback has successfully been sent.<br/>You find it in your chat conversation with Buddy Support.",
 			"imprint": "JNet Quality Consulting GmbH<br/>Whistlerweg 27b<br/>81479 München<br/>Deutschland<br/>E-Mail: support@skills.community<br/>Internet: https://skills.community<br/><br/>Geschäftsführer: Mani Afschar Yazdi<br/>Registergericht: Amtsgericht München<br/>Registernummer: HRB 135182",
 			"imprintTitle": "Imprint",
-			"infoOther": "You are {0} and you use app version ${appVersion}",
+			"infoOther": "App version ${appVersion}",
 			"legalTitle": "Conditions",
 			"like": "I like it",
 			"link2blog": "More about this in our blog",
@@ -381,6 +381,8 @@
 			"register": "After registration, we will show you how you can individualize your profile. Thank you for taking the time for this intro.",
 			"settings": "<title>Settings</title><br/>Here you describe yourself and what <emphasis>you like</emphasis>. Based on this information we match:<ul><li>Locations</li><li>Events</li><li>and Buddies</li></ul>",
 			"settingsLoggedIn": "<ul><li>Change your profile image and enter general information here</li><li>Swipe left to enter attributes that describe you and that you like about other Buddies</li><li>provide yourself as a guide for Buddies fitting your settings</li></ul>",
+			"teaserContacts": "<title>Buddies</title><br/>Wir matchen Buddies nach folgenden Kriterien, die Du in Deinen <emphasis>Einstellungen</emphasis> angeben kannst:<ul><li>Skills</li><li>Alter</li><li>Geschlecht</li><li>favorisierte Locations</li></ul>So können wir Dir passende skillvents vorschlagen und Du kannst die <emphasis>Community</emphasis> nach anderen Buddies mit ähnlichen Skills durchsuchen.",
+			"teaserEvents": "<title>skillvents</title><br/>Hier sind sie, Deine skillvents an denen Du teilnimmst und die, die Du erstellt hast.<br/><br/>Zudem schlagen wir Dir <emphasis>interessante</emphasis> und zu Dir <emphasis>passende</emphasis> skillvents vor, so dass Du Dich stets weiterentwickelst und Neues erlebst.",
 			"whatToDo": "<title>Today I want..</title><br/>You can easily enter what you would like to do <emphasis>today</emphasis>, e.g. go out for dinner or visit a museum, etc.<br/><br/>The activity will be presented to Buddies <emphasis>who suit you</emphasis> and are no further than 50 KM away."
 		},
 		"locations": {
@@ -536,8 +538,8 @@
 			"hintEvent": "Skills, name/address/phone number of the location, description event/location/creator are searched.",
 			"hintLocation": "Name, address (including district name), phone number, description are searched.",
 			"map": "search in this area",
-			"matches": "with imilar interests",
-			"matchesEvent": "which fit to my skills",
+			"matches": "with similar interests",
+			"matchesEvent": "fitting to my skills",
 			"results": "{0} hits in",
 			"title": "Search",
 			"type": "Search in"

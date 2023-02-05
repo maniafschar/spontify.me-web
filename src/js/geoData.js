@@ -164,7 +164,6 @@ class geoData {
 	static reset() {
 		geoData.manual = false;
 		geoData.current = geoData.currentNonManual || { lat: 48.13684, lon: 11.57685, street: null, town: 'München' };
-		pageInfo.updateLocalisation();
 		pageHome.updateLocalisation();
 		pageSearch.updateLocalisation();
 		geoData.init();
@@ -189,7 +188,7 @@ class geoData {
 				responseType: 'json',
 				error(r) {
 					geoData.current.street = r.status + ' ' + r.responseText;
-					pageInfo.updateLocalisation();
+					pageSearch.updateLocalisation();
 					pageHome.updateLocalisation();
 				},
 				success(r) {
@@ -210,7 +209,6 @@ class geoData {
 						}
 						geoData.current.town = r.town;
 						geoData.current.street = r.street;
-						pageInfo.updateLocalisation();
 						pageHome.updateLocalisation();
 						pageSearch.updateLocalisation();
 						if (ui.q('popup mapPicker'))

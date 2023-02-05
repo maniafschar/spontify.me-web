@@ -30,8 +30,7 @@ class pageInfo {
 <infoblock id="info2" style="display:none;">
 	${ui.l('info.imprint')}
 </infoblock>
-<div id="infoVersion" onclick="pageInfo.openMap()" style="text-align:center;padding:2em 3em 1em 3em;cursor:pointer;">${ui.l('info.infoOther').replace('{0}', '<span class="infoLocalized"></span>')}</div>
-<div style="text-align:center;">© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>`;
+<div style="text-align:center;padding:2em 3em 1em 3em;">${ui.l('info.infoOther')}<br/>© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>`;
 	static templateDesc = v =>
 		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#info4&quot;)">
 ${ui.l('home.DescLink')}
@@ -61,7 +60,6 @@ ${ui.l('home.DescLink')}
 					pageInfo.openSection = pageInfo.openSection == 1 ? -2 : -1;
 				}, 50);
 		}
-		pageInfo.updateLocalisation();
 	}
 	static openMap() {
 		if (geoData.localized)
@@ -85,8 +83,5 @@ ${ui.l('home.DescLink')}
 		if (event)
 			event.stopPropagation();
 		ui.toggleHeight(id);
-	}
-	static updateLocalisation() {
-		ui.html('span.infoLocalized', geoData.localized ? ui.l('info.localized').replace('{0}', geoData.current.town + global.separator + geoData.current.street) : ui.l('info.notLocalized').replace('{0}', geoData.current.street ? geoData.current.street : '-'));
 	}
 }

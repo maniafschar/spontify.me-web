@@ -338,7 +338,7 @@
 			"feedbackUploadSuccess": "Vielen Dank, Dein Feedback wurde erfolgreich gesendet.<br/>Du findest es im Chat mit Buddy Support wieder.",
 			"imprint": "JNet Quality Consulting GmbH<br/>Whistlerweg 27b<br/>81479 München<br/>Deutschland<br/>E-Mail: support@skills.community<br/>Internet: https://skills.community<br/><br/>Geschäftsführer: Mani Afschar Yazdi<br/>Registergericht: Amtsgericht München<br/>Registernummer: HRB 135182",
 			"imprintTitle": "Impressum",
-			"infoOther": "Du bist {0} und verwendest die App Version ${appVersion}",
+			"infoOther": "App Version ${appVersion}",
 			"legalTitle": "AGB",
 			"like": "Gefällt mir",
 			"link2blog": "Mehr dazu in unserem Blog",
@@ -539,7 +539,7 @@
 			"hintLocation": "Name, Adresse (inklusive Stadtteilname), Telefonnummer, Beschreibung werden durchsucht.",
 			"map": "in diesem Bereich suchen",
 			"matches": "mit gemeinsamen Skills",
-			"matchesEvent": "die zu meinen Skills passen",
+			"matchesEvent": "passend zu meinen Skills",
 			"results": "{0} Treffer in",
 			"title": "Suche",
 			"type": "Suchen in"
