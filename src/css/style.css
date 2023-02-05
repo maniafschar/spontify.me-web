@@ -798,7 +798,7 @@ search label {
 
 search .locationPicker {
 	position: absolute;
-	max-width: 6em;
+	max-width: 33%;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	right: 0;

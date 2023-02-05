@@ -126,7 +126,7 @@ class geoData {
 					if (e[i].town != geoData.current.town)
 						s += '<label onclick="geoData.saveLocationPicker(' + JSON.stringify(e[i]).replace(/"/g, '\'') + ')">' + e[i].town + '</label>';
 				}
-				s += '<label onclick="geoData.openLocationPicker(event,true)">' + ui.l('home.locationPickerTitle') + '</label>';
+				s += '<label class="bgColor" onclick="geoData.openLocationPicker(event,true)">' + ui.l('home.locationPickerTitle') + '</label>';
 				var e = ui.q('locationPicker');
 				e.innerHTML = s;
 				e.removeAttribute('h');
