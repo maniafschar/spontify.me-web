@@ -33,7 +33,7 @@ class pageSearch {
 		template: v =>
 			global.template`<form onsubmit="return false">
 <input type="checkbox" label="${ui.l('search.matches')}" name="matches" ${v.matches}/>
-<buttonIcon class="locationPicker" onclick="geoData.openLocationPicker(event)"><img source="location" /></buttonIcon>
+<label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
 <separator></separator>
 <input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
 <explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
@@ -115,7 +115,7 @@ class pageSearch {
 		template: v =>
 			global.template`<form onsubmit="return false">
 <input type="checkbox" label="${ui.l('search.matchesEvent')}" name="matches" ${v.matches}/>
-<buttonIcon class="locationPicker" onclick="geoData.openLocationPicker(event)"><img source="location" /></buttonIcon>
+<label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
 <separator></separator>
 <input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
 <explain class="searchKeywordHint">${ui.l('search.hintEvent')}</explain>
@@ -222,7 +222,7 @@ class pageSearch {
 		template: v =>
 			global.template`<form onsubmit="return false">
 <input type="checkbox" label="${ui.l('search.favorites')}" name="favorites" ${v.favorites}/>
-<buttonIcon class="locationPicker" onclick="geoData.openLocationPicker(event)"><img source="location" /></buttonIcon>
+<label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
 <separator></separator>
 <input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
@@ -339,5 +339,8 @@ class pageSearch {
 			pageSearch.selectTab('contacts');
 		else
 			pageSearch.selectTab('events');
+	}
+	static updateLocalisation() {
+		ui.html('search label.locationPicker', geoData.current.town);
 	}
 }

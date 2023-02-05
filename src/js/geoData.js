@@ -3,6 +3,7 @@ import { global } from './global';
 import { intro } from './intro';
 import { pageHome } from './pageHome';
 import { pageInfo } from './pageInfo';
+import { pageSearch } from './pageSearch';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 
@@ -165,6 +166,7 @@ class geoData {
 		geoData.current = geoData.currentNonManual || { lat: 48.13684, lon: 11.57685, street: null, town: 'München' };
 		pageInfo.updateLocalisation();
 		pageHome.updateLocalisation();
+		pageSearch.updateLocalisation();
 		geoData.init();
 		ui.navigation.hidePopup();
 		user.save({ latitude: geoData.current.lat, longitude: geoData.current.lon }, function () { pageHome.init(true); });
@@ -210,6 +212,7 @@ class geoData {
 						geoData.current.street = r.street;
 						pageInfo.updateLocalisation();
 						pageHome.updateLocalisation();
+						pageSearch.updateLocalisation();
 						if (ui.q('locationPicker').style.display != 'none')
 							ui.toggleHeight('locationPicker');
 						if (exec)

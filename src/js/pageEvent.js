@@ -30,7 +30,8 @@ class pageEvent {
 	<value style="text-align:center;">
 		<input transient="true" name="location" onkeyup="pageEvent.locations()" />
 		<eventLocationInputHelper><explain>${ui.l('events.locationInputHint')}</explain>
-			<li onclick="pageEvent.locationSelected()" class="highlightColor">${ui.l('events.newOnlineEvent')}</li>
+			<li onclick="pageEvent.locationSelected(-1)" class="highlightColor">${ui.l('events.newOnlineEvent')}</li>
+			<li onclick="pageEvent.locationSelected(-2)" class="highlightColor">${ui.l('events.newWithoutLocation')}</li>
 			<ul></ul>
 			<explain style="margin-bottom:0.5em;">${ui.l('events.locationInputHintCreateNew')}</explain>
 			<buttontext onclick="pageLocation.edit()" class="bgColor">${ui.l('locations.new')}</buttontext>
@@ -580,8 +581,8 @@ class pageEvent {
 		});
 	}
 	static locationSelected(e) {
-		ui.q('popup input[name="locationId"]').value = e ? e.getAttribute('i') : -1;
-		ui.q('popup .locationName').innerHTML = e ? e.innerHTML : ui.l('events.newOnlineEvent');
+		ui.q('popup input[name="locationId"]').value = e < 0 ? e : e.getAttribute('i');
+		ui.q('popup .locationName').innerHTML = e == -1 ? ui.l('events.newOnlineEvent') : e == -2 ? ui.l('events.newWithoutLocation') : e.innerHTML;
 		ui.toggleHeight('popup .location', function () {
 			ui.toggleHeight('popup .event');
 			pageEvent.setForm();

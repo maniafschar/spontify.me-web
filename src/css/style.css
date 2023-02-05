@@ -792,10 +792,23 @@ search separator {
 	border: solid 1px transparent
 }
 
+search label {
+	float: left;
+}
+
 search .locationPicker {
-	top: 0;
-	right: 0.5em;
-	box-shadow: none;
+	position: absolute;
+	max-width: 6em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	right: 0;
+	top: 0.5em;
+	background: rgba(255, 255, 255, 0.85);
+	padding: 0.34em 0.75em;
+	color: black;
+	cursor: pointer;
+	border-radius: 1em 0 0 1em;
+	white-space: nowrap;
 }
 
 settings qrcodeDescription {
@@ -813,7 +826,7 @@ locationPicker {
 	position: absolute;
 	display: inline-block;
 	right: 0;
-	top: 5.5em;
+	top: 6em;
 	z-index: 1;
 }
 
