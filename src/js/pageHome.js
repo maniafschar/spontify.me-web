@@ -89,43 +89,32 @@ class pageHome {
 			}
 			e.innerHTML = pageHome.template(v);
 			initialisation.reposition();
-			var renderContacts = function (l) {
-				var s = '', oc = user.contact ? null : 'intro.openHint({ desc: \'teaserContacts\', pos: \'10%,5em\', size: \'80%,auto\' })';
-				for (var i = 1; i < l.length; i++) {
-					var e = model.convert(new Contact(), l, i);
-					s += '<card onclick="' + (oc ? oc : 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + e.id) + '&quot;)') + '"><img src="' + global.serverImg + e.imageList + '"/><text>' + e.pseudonym + '</text></card>';
-				}
-				ui.q('home teaser.contacts>div').innerHTML = s;
-				ui.css('home teaser.contacts', 'opacity', 1);
-			};
-			var renderEvents = function (l) {
-				var s = '', oc = user.contact ? null : 'intro.openHint({ desc: \'teaserEvents\', pos: \'10%,5em\', size: \'80%,auto\' })';
-				for (var i = 1; i < l.length; i++) {
-					var e = model.convert(new Location(), l, i);
-					s += '<card onclick="' + (oc ? oc : 'ui.navigation.autoOpen(&quot;' + global.encParam('e=' + e.event.id) + '&quot;)') + '"><img src="' + global.serverImg + (e.imageList ? e.imageList : e.event.imageList) + '"/><text>' + e.event.text + '</text></card>';
-				}
-				ui.q('home teaser.events>div').innerHTML = s;
-				ui.css('home teaser.events', 'opacity', 1);
-			};
-			if (user.contact) {
-				lists.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&query=contact_list&limit=20&search=' + encodeURIComponent('contact.imageList is not null'), renderContacts);
-				lists.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&query=event_list&limit=20&search=' + encodeURIComponent('event.imageList is not null or location.imageList is not null'), renderEvents);
-			} else {
-				communication.ajax({
-					url: global.server + 'action/teaser/contacts',
-					responseType: 'json',
-					success(r) {
-						renderContacts(r);
+			communication.ajax({
+				url: global.server + 'action/teaser/contacts',
+				responseType: 'json',
+				success(l) {
+					var s = '', oc = user.contact ? null : 'intro.openHint({ desc: \'teaserContacts\', pos: \'10%,5em\', size: \'80%,auto\' })';
+					for (var i = 1; i < l.length; i++) {
+						var e = model.convert(new Contact(), l, i);
+						s += '<card onclick="' + (oc ? oc : 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + e.id) + '&quot;)') + '"><img src="' + global.serverImg + e.imageList + '"/><text>' + e.pseudonym + '</text></card>';
 					}
-				});
-				communication.ajax({
-					url: global.server + 'action/teaser/events',
-					responseType: 'json',
-					success(r) {
-						renderEvents(r);
+					ui.q('home teaser.contacts>div').innerHTML = s;
+					ui.css('home teaser.contacts', 'opacity', 1);
+				}
+			});
+			communication.ajax({
+				url: global.server + 'action/teaser/events',
+				responseType: 'json',
+				success(l) {
+					var s = '', oc = user.contact ? null : 'intro.openHint({ desc: \'teaserEvents\', pos: \'10%,5em\', size: \'80%,auto\' })';
+					for (var i = 1; i < l.length; i++) {
+						var e = model.convert(new Location(), l, i);
+						s += '<card onclick="' + (oc ? oc : 'ui.navigation.autoOpen(&quot;' + global.encParam('e=' + e.event.id) + '&quot;)') + '"><img src="' + global.serverImg + (e.imageList ? e.imageList : e.event.imageList) + '"/><text>' + e.event.text + '</text></card>';
 					}
-				});
-			}
+					ui.q('home teaser.events>div').innerHTML = s;
+					ui.css('home teaser.events', 'opacity', 1);
+				}
+			});
 		}
 		pageHome.initNotificationButton();
 		if (user.contact)

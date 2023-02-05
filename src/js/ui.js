@@ -618,9 +618,8 @@ class ui {
 	static swipe(e, exec, exclude) {
 		if (typeof e == 'string')
 			e = ui.q(e);
-		exclude = exclude ? ',' + exclude.toUpperCase() + ',' : '';
 		ui.on(e, 'touchstart', function (event) {
-			if (exclude.indexOf(',' + event.target.nodeName + ',') < 0 && (!event.target.parentNode || exclude.indexOf(',' + event.target.parentNode.nodeName + ',') < 0)) {
+			if (!exclude || !ui.parents(event.target, exclude)) {
 				e.startX = event.changedTouches[0].pageX;
 				e.startY = event.changedTouches[0].pageY;
 				e.startTime = new Date().getTime();

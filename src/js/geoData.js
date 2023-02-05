@@ -123,7 +123,7 @@ class geoData {
 			if (ui.q('locationPicker').style.display == 'none') {
 				var s = '';
 				for (var i = e.length - 1; i >= 0; i--)
-					s += '<label onclick="geoData.set(' + JSON.stringify(e) + ')">' + e[i].town + '</label>';
+					s += '<label onclick="geoData.saveLocationPicker(' + JSON.stringify(e[i]).replace(/"/g, '\'') + ')">' + e[i].town + '</label>';
 				s += '<label onclick="geoData.openLocationPicker(event,true)">' + ui.l('home.locationPickerTitle') + '</label>';
 				var e = ui.q('locationPicker');
 				e.innerHTML = s;
@@ -203,7 +203,12 @@ class geoData {
 								e.splice(0, e.length - 10);
 							formFunc.saveDraft('locationPicker', e);
 						}
-						geoData.set(r);
+						geoData.currentTown = r.town;
+						geoData.currentStreet = r.street;
+						pageInfo.updateLocalisation();
+						pageHome.updateLocalisation();
+						if (ui.q('locationPicker').style.display != 'none')
+							ui.toggleHeight('locationPicker');
 						if (exec)
 							exec.call();
 					}
@@ -213,19 +218,9 @@ class geoData {
 		geoData.localized = true;
 		geoData.updateCompass();
 	}
-	static saveLocationPicker() {
-		geoData.save({ latitude: pageHome.map.getCenter().lat(), longitude: pageHome.map.getCenter().lng(), manual: true }, function () { pageHome.init(true); });
+	static saveLocationPicker(e) {
+		geoData.save({ latitude: e ? e.lat : pageHome.map.getCenter().lat(), longitude: e ? e.lon : pageHome.map.getCenter().lng(), manual: true }, function () { pageHome.init(true); });
 		ui.navigation.hidePopup();
-	}
-	static set(e) {
-		if (e.lat) {
-			geoData.latlon.lat = e.lat;
-			geoData.latlon.lon = e.lon;
-		}
-		geoData.currentTown = e.town;
-		geoData.currentStreet = e.street;
-		pageInfo.updateLocalisation();
-		pageHome.updateLocalisation();
 	}
 	static updateCompass(angle) {
 		if (!angle)

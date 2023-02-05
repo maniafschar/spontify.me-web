@@ -318,11 +318,12 @@ homeHeader>svg {
 homeHeader img {
 	height: 50%;
 	border-radius: 50%;
+	margin-bottom: 0.5em;
 	box-shadow: 0 0 1em rgba(0, 0, 0, 0.6);
 }
 
 homeHeader.logoSmall>svg {
-	width: 33%;
+	width: 40%;
 	position: absolute;
 	right: 0.5em;
 	top: 0.5em;
