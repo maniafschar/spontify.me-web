@@ -2322,6 +2322,10 @@ detail text.list {
 	margin: 0 -1em;
 }
 
+detail urls label {
+	color: rgb(25, 50, 100) !important;
+}
+
 tabHeader {
 	height: 1.5em;
 	line-height: 1.6;

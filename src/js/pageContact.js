@@ -290,6 +290,7 @@ ${v.skills}
 					v.urls += '<label class="multipleLabel" onclick="ui.navigation.openHTML(&quot;' + s[i] + '&quot;)">' + h.toLowerCase() + '</label>';
 				}
 			}
+			v.urls = '<urls>' + v.urls + '</urls>';
 		}
 		if (v.rating > 0)
 			v.rating = '<detailRating onclick="ratings.open(null,&quot;' + 'event.contactId=' + v.id + '&quot;)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></ratingSelection></detailRating>';

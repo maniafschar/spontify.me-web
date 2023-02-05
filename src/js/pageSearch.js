@@ -84,25 +84,17 @@ class pageSearch {
 				for (var i = 0; i < v.length; i++) {
 					if (v[i]) {
 						s2 = v[i].trim().toLowerCase();
-						var skills = '';
 						for (var i2 = 0; i2 < ui.categories.length; i2++) {
-							if (ui.categories[i2].label.toLowerCase().indexOf(s2) > -1)
-								skills += 'contact.skills like \'%' + i2 + '.' + '%\' or ';
-							else {
-								for (var i3 = 0; i3 < ui.categories[i2].values.length; i3++) {
-									if (ui.categories[i2].values[i3].toLowerCase().indexOf(s2) > -1)
-										skills += 'contact.skills like \'%' + i2 + '.' + ui.categories[i2].values[i3].split('|')[1] + '%\' or ';
-								}
+							for (var i3 = 0; i3 < ui.categories[i2].values.length; i3++) {
+								if (ui.categories[i2].values[i3].toLowerCase().indexOf(s2) > -1)
+									s += 'contact.skills like \'%' + i2 + '.' + ui.categories[i2].values[i3].split('|')[1] + '%\' or ';
 							}
-							s += 'contact.idDisplay=\'' + s2 + '\' or (contact.search=1 and (LOWER(contact.aboutMe) like \'%' + s2 + '%\' or LOWER(contact.pseudonym) like \'%' + s2 + '%\')) or ';
-							if (skills)
-								s += skills;
 						}
+						s += 'contact.idDisplay=\'' + s2 + '\' or (contact.search=1 and (LOWER(contact.aboutMe) like \'%' + s2 + '%\' or LOWER(contact.pseudonym) like \'%' + s2 + '%\')) and ';
 					}
-					s = s.substring(0, s.length - 4) + ')';
 				}
 			}
-			return 'contact.id<>' + user.contact.id + s;
+			return 'contact.id<>' + user.contact.id + s.substring(0, s.length - 5) + ')';
 		},
 		search() {
 			pageSearch.contacts.fieldValues = formFunc.getForm('search tabBody div.contacts form').values;
