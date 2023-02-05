@@ -1,4 +1,3 @@
-import { communication } from "./communication";
 import { geoData } from "./geoData";
 import { global } from "./global";
 import { pageContact } from "./pageContact";
@@ -33,12 +32,13 @@ class pageSearch {
 		fieldValues: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
-	<input type="checkbox" label="${ui.l('search.matches')}" name="matches" ${v.matches}/>
-	<separator></separator>
-	<input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
-	<explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
-	<errorHint></errorHint>
-	<buttontext class="bgColor defaultButton" onclick="pageSearch.contacts.search()">${ui.l('search.action')}</buttontext></form>`,
+<input type="checkbox" label="${ui.l('search.matches')}" name="matches" ${v.matches}/>
+<buttonIcon class="locationPicker" onclick="geoData.openLocationPicker(event)"><img source="location" /></buttonIcon>
+<separator></separator>
+<input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
+<explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
+<errorHint></errorHint>
+<buttontext class="bgColor defaultButton" onclick="pageSearch.contacts.search()">${ui.l('search.action')}</buttontext></form>`,
 		getFields() {
 			var v = {};
 			if (pageSearch.contacts.fieldValues.keywords)
@@ -115,6 +115,7 @@ class pageSearch {
 		template: v =>
 			global.template`<form onsubmit="return false">
 <input type="checkbox" label="${ui.l('search.matchesEvent')}" name="matches" ${v.matches}/>
+<buttonIcon class="locationPicker" onclick="geoData.openLocationPicker(event)"><img source="location" /></buttonIcon>
 <separator></separator>
 <input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
 <explain class="searchKeywordHint">${ui.l('search.hintEvent')}</explain>
@@ -221,6 +222,7 @@ class pageSearch {
 		template: v =>
 			global.template`<form onsubmit="return false">
 <input type="checkbox" label="${ui.l('search.favorites')}" name="favorites" ${v.favorites}/>
+<buttonIcon class="locationPicker" onclick="geoData.openLocationPicker(event)"><img source="location" /></buttonIcon>
 <separator></separator>
 <input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
@@ -311,8 +313,10 @@ class pageSearch {
 	}
 	static selectTab(id) {
 		var e = ui.q('search tabBody div.' + id);
-		if (!e.innerHTML)
+		if (!e.innerHTML) {
 			e.innerHTML = pageSearch[id].getFields() + '<listResults></listResults>';
+			formFunc.image.replaceSVGs();
+		}
 		formFunc.initFields('search');
 		ui.q('search tabBody').style.marginLeft = ((id == 'contacts' ? 0 : id == 'events' ? 1 : 2) * -100) + '%';
 		ui.classRemove('search tab', 'tabActive');

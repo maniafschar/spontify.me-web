@@ -329,6 +329,8 @@ class ui {
 				if (!back)
 					ui.attr(id, 'from', currentID);
 				lists.hideFilter();
+				if (ui.q('locationPicker').style.display != 'none')
+					ui.toggleHeight('locationPicker');
 				ui.navigation.fade(id, back);
 				ui.navigation.hideMenu();
 				if (ui.q('navigation item.' + id)) {
@@ -731,7 +733,8 @@ class formFunc {
 	static dist = 0;
 
 	static getDraft(id) {
-		return user.contact.storage[id];
+		if (user.contact)
+			return user.contact.storage[id];
 	}
 	static getForm(id) {
 		var d = { values: {} }, cb = {};
@@ -1182,10 +1185,8 @@ class formFunc {
 	}
 	static saveDraft(key, value) {
 		if (value) {
-			if (user.contact.storage[key] != value) {
-				user.contact.storage[key] = value;
-				user.save({ storage: JSON.stringify(user.contact.storage) });
-			}
+			user.contact.storage[key] = value;
+			user.save({ storage: JSON.stringify(user.contact.storage) });
 		} else
 			formFunc.removeDraft(key);
 	}

@@ -316,7 +316,7 @@ homeHeader>svg {
 }
 
 homeHeader img {
-	height: 60%;
+	height: 50%;
 	border-radius: 50%;
 	box-shadow: 0 0 1em rgba(0, 0, 0, 0.6);
 }
@@ -350,11 +350,11 @@ homeBody teaser div {
 }
 
 homeBody teaser.contacts {
-	bottom: 5vh;
+	bottom: 10%;
 }
 
 homeBody teaser.events {
-	bottom: 34vh;
+	top: 0;
 }
 
 homeBody teaser card {
@@ -368,7 +368,7 @@ homeBody teaser card {
 }
 
 homeBody teaser card img {
-	height: 15vh;
+	height: 13vh;
 }
 
 homeBody teaser card text {
@@ -790,6 +790,12 @@ search separator {
 	border: solid 1px transparent
 }
 
+search .locationPicker {
+	top: 0;
+	right: 0.5em;
+	box-shadow: none;
+}
+
 settings qrcodeDescription {
 	margin-top: 3em;
 	display: block;
@@ -799,6 +805,25 @@ settings qrcodeDescription {
 settings qrcode {
 	display: block;
 	position: relative;
+}
+
+locationPicker {
+	position: absolute;
+	display: inline-block;
+	right: 0.5em;
+	top: 5.5em;
+	z-index: 1;
+}
+
+locationPicker label {
+	display: block;
+	color: black;
+	background: white;
+	cursor: pointer;
+	position: relative;
+	padding: 0.25em 0.75em;
+	border-radius: 0.5em;
+	margin: 0.25em;
 }
 
 img.qrVerification {

@@ -99,7 +99,7 @@ class communication {
 		if (communication.mapScriptAdded) {
 			var f = function () {
 				if (ui.q('head script[t="map"]'))
-					pageHome.openLocationPickerDialog();
+					geoData.openLocationPickerDialog();
 				else
 					setTimeout(f, 100);
 			}

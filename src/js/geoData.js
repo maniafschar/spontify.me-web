@@ -1,8 +1,9 @@
 import { communication } from './communication';
 import { global } from './global';
+import { intro } from './intro';
 import { pageHome } from './pageHome';
 import { pageInfo } from './pageInfo';
-import { ui } from './ui';
+import { formFunc, ui } from './ui';
 import { user } from './user';
 
 export { geoData };
@@ -114,6 +115,40 @@ class geoData {
 		geoData.currentStreet = data.street;
 		geoData.currentTown = data.town;
 	}
+	static openLocationPicker(event, noSelection) {
+		event.preventDefault();
+		event.stopPropagation();
+		var e = formFunc.getDraft('locationPicker');
+		if (e && !noSelection) {
+			if (ui.q('locationPicker').style.display == 'none') {
+				var s = '';
+				for (var i = e.length - 1; i >= 0; i--)
+					s += '<label onclick="geoData.set(' + JSON.stringify(e) + ')">' + e[i].town + '</label>';
+				s += '<label onclick="geoData.openLocationPicker(event,true)">' + ui.l('home.locationPickerTitle') + '</label>';
+				var e = ui.q('locationPicker');
+				e.innerHTML = s;
+				e.removeAttribute('h');
+				e.style.top = ui.navigation.getActiveID() == 'home' ? ui.q('homeHeader svg').clientHeight + 'px' : '';
+			}
+			ui.toggleHeight('locationPicker');
+		} else if (user.contact)
+			communication.loadMap('geoData.openLocationPickerDialog');
+		else
+			intro.openHint({ desc: 'position', pos: '10%,5em', size: '80%,auto' });
+	}
+	static openLocationPickerDialog() {
+		ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
+			'<mapPicker></mapPicker><br/>' +
+			(geoData.manual ? '<buttontext class="bgColor" onclick="geoData.resetLocationPicker()">' + ui.l('home.locationPickerReset') + '</buttontext>' : '') +
+			'<buttontext class="bgColor" onclick="geoData.saveLocationPicker()">' + ui.l('ready') + '</buttontext>', null, null,
+			function () {
+				setTimeout(function () {
+					if (ui.q('locationPicker').style.display != 'none')
+						ui.toggleHeight('locationPicker');
+					pageHome.map = new google.maps.Map(ui.q('mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 12, center: new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon), zoom: 9 });
+				}, 500);
+			});
+	}
 	static pause() {
 		if (geoData.id) {
 			navigator.geolocation.clearWatch(geoData.id);
@@ -131,8 +166,9 @@ class geoData {
 		pageInfo.updateLocalisation();
 		pageHome.updateLocalisation();
 		geoData.init();
+		ui.navigation.hidePopup();
 	}
-	static save(position) {
+	static save(position, exec) {
 		var d = geoData.getDistance(geoData.latlon.lat, geoData.latlon.lon, position.latitude, position.longitude);
 		if (position.manual || !geoData.manual) {
 			geoData.latlon.lat = position.latitude;
@@ -156,20 +192,40 @@ class geoData {
 				success(r) {
 					if (r) {
 						geoData.lastSave = new Date().getTime();
-						geoData.currentTown = r.town;
-						geoData.currentStreet = r.street;
 						if (!position.manual) {
 							geoData.currentTownNonManual = r.town;
 							geoData.currentStreetNonManual = r.street;
 						}
-						pageInfo.updateLocalisation();
-						pageHome.updateLocalisation();
+						if (position.manual) {
+							var e = formFunc.getDraft('locationPicker') || [];
+							e.push({ lat: position.latitude, lon: position.longitude, town: r.town, street: r.street });
+							if (e.length > 10)
+								e.splice(0, e.length - 10);
+							formFunc.saveDraft('locationPicker', e);
+						}
+						geoData.set(r);
+						if (exec)
+							exec.call();
 					}
 				}
 			});
 		}
 		geoData.localized = true;
 		geoData.updateCompass();
+	}
+	static saveLocationPicker() {
+		geoData.save({ latitude: pageHome.map.getCenter().lat(), longitude: pageHome.map.getCenter().lng(), manual: true }, function () { pageHome.init(true); });
+		ui.navigation.hidePopup();
+	}
+	static set(e) {
+		if (e.lat) {
+			geoData.latlon.lat = e.lat;
+			geoData.latlon.lon = e.lon;
+		}
+		geoData.currentTown = e.town;
+		geoData.currentStreet = e.street;
+		pageInfo.updateLocalisation();
+		pageHome.updateLocalisation();
 	}
 	static updateCompass(angle) {
 		if (!angle)

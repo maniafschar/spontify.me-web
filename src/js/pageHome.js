@@ -18,7 +18,7 @@ class pageHome {
 	static map;
 	static template = v =>
 		global.template`<homeHeader onclick="${v.clickHeader}"${v.logoSmall}>
-	<img onclick="pageHome.openLocationPicker(event)" source="logo"/>
+	<img onclick="geoData.openLocationPicker(event)" source="logo"/>
 	${v.imgProfile}
 	<text>${v.name}</text>
 	<buttonIcon class="language${v.langButton}" onclick="pageHome.openLanguage(event)">
@@ -184,31 +184,10 @@ class pageHome {
 			'<div style="padding:1em 0;"><buttontext class="bgColor' + (global.language == 'DE' ? ' favorite' : '') + '" onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE">Deutsch</buttontext>' +
 			'<buttontext class="bgColor' + (global.language == 'EN' ? ' favorite' : '') + '" onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</buttontext></div>');
 	}
-	static openLocationPicker(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		if (user.contact) {
-			communication.loadMap('pageHome.openLocationPickerDialog');
-		} else
-			intro.openHint({ desc: 'position', pos: '10%,5em', size: '80%,auto' });
-	}
-	static openLocationPickerDialog() {
-		ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
-			'<mapPicker></mapPicker><br/>' +
-			(geoData.manual ? '<buttontext class="bgColor" onclick="pageHome.resetLocationPicker()">' + ui.l('home.locationPickerReset') + '</buttontext>' : '') +
-			'<buttontext class="bgColor" onclick="pageHome.saveLocationPicker()">' + ui.l('ready') + '</buttontext>', null, null,
-			function () {
-				pageHome.map = new google.maps.Map(ui.q('mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 12, center: new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon), zoom: 9 });
-			});
-	}
 	static reset() {
 		pageHome.badge = -1;
 		ui.html('notificationList', '');
 		ui.html('home', '');
-	}
-	static resetLocationPicker() {
-		geoData.resetLocationPicker();
-		ui.navigation.hidePopup();
 	}
 	static saveEvent() {
 		if (!user.contact) {
@@ -251,10 +230,6 @@ class pageHome {
 				pageHome.init(true);
 			}
 		});
-	}
-	static saveLocationPicker() {
-		geoData.save({ latitude: pageHome.map.getCenter().lat(), longitude: pageHome.map.getCenter().lng(), manual: true });
-		ui.navigation.hidePopup();
 	}
 	static synchonizeTags() {
 		var e = ui.q('home textarea[name="hashtagsDisp"]');
