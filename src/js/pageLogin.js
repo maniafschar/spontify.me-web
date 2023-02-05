@@ -454,6 +454,7 @@ class pageLogin {
 		pageHome.reset();
 		pageLocation.reset();
 		pageChat.reset();
+		geoData.reset();
 		communication.reset();
 		ui.html('head title', global.appTitle);
 		ui.navigation.goTo('home', true);

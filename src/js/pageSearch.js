@@ -106,7 +106,7 @@ class pageSearch {
 		},
 		search() {
 			pageSearch.contacts.fieldValues = formFunc.getForm('search tabBody div.contacts form').values;
-			lists.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=contact_list&search=' + encodeURIComponent(pageSearch.contacts.getSearch()), pageContact.listContacts, 'search tabBody>div.contacts', 'search');
+			lists.loadList('latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&distance=100000&query=contact_list&search=' + encodeURIComponent(pageSearch.contacts.getSearch()), pageContact.listContacts, 'search tabBody>div.contacts', 'search');
 			formFunc.saveDraft('searchContacts', pageSearch.contacts.fieldValues);
 		}
 	}
@@ -213,7 +213,7 @@ class pageSearch {
 		},
 		search() {
 			pageSearch.events.fieldValues = formFunc.getForm('search tabBody div.events form').values;
-			pageEvent.loadEvents('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=event_listMatching&search=' + encodeURIComponent(pageSearch.events.getSearch()));
+			pageEvent.loadEvents('latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&distance=100000&query=event_listMatching&search=' + encodeURIComponent(pageSearch.events.getSearch()));
 			formFunc.saveDraft('searchEvents', pageSearch.events.fieldValues);
 		}
 	}
@@ -289,7 +289,7 @@ class pageSearch {
 		},
 		search() {
 			pageSearch.locations.fieldValues = formFunc.getForm('search tabBody div.locations form').values;
-			lists.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent(pageSearch.locations.getSearch()), pageLocation.listLocation, 'search tabBody>div.locations', 'search');
+			lists.loadList('latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent(pageSearch.locations.getSearch()), pageLocation.listLocation, 'search tabBody>div.locations', 'search');
 			formFunc.saveDraft('searchLocations', pageSearch.locations.fieldValues);
 		}
 	}

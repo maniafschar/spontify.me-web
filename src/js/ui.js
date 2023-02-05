@@ -455,12 +455,12 @@ class ui {
 	static query = {
 		contactFriends() {
 			return lists.loadList(
-				'query=contact_list&distance=100000&limit=0&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactLink.status=\'Friends\''),
+				'query=contact_list&distance=100000&limit=0&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('contactLink.status=\'Friends\''),
 				pageContact.listContacts, 'contacts', 'friends');
 		},
 		contactVisitees() {
 			return lists.loadList(
-				'query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactVisit.contactId2=contact.id and contactVisit.contactId=' + user.contact.id),
+				'query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('contactVisit.contactId2=contact.id and contactVisit.contactId=' + user.contact.id),
 				pageContact.listContacts, 'contacts', 'visits');
 		},
 		contactVisits() {
@@ -470,15 +470,15 @@ class ui {
 				body: { classname: 'Contact', id: user.contact.id, values: { visitPage: global.date.local2server(new Date()) } }
 			});
 			return lists.loadList(
-				'query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('contactVisit.contactId=contact.id and contactVisit.contactId2=' + user.contact.id),
+				'query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('contactVisit.contactId=contact.id and contactVisit.contactId2=' + user.contact.id),
 				pageContact.listContacts, 'contacts', 'profile');
 		},
 		eventMy() {
-			pageEvent.loadEvents('query=event_list&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('event.contactId=' + user.contact.id + ' and event.endDate<\'' + global.date.local2server(new Date()).substring(0, 10) + '\''));
+			pageEvent.loadEvents('query=event_list&distance=100000&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('event.contactId=' + user.contact.id + ' and event.endDate<\'' + global.date.local2server(new Date()).substring(0, 10) + '\''));
 		},
 		eventTickets() {
 			return lists.loadList(
-				'query=event_list&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id),
+				'query=event_list&distance=100000&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id),
 				pageEvent.listTickets, 'events', 'eventsTicket');
 		}
 	}

@@ -65,9 +65,9 @@ ${ui.l('home.DescLink')}
 	}
 	static openMap() {
 		if (geoData.localized)
-			ui.navigation.openHTML('https://maps.google.com/maps?q=' + geoData.latlon.lat + ',' + geoData.latlon.lon + '%28Your+current+location%29');
+			ui.navigation.openHTML('https://maps.google.com/maps?q=' + geoData.current.lat + ',' + geoData.current.lon + '%28Your+current+location%29');
 		else
-			ui.navigation.openPopup(ui.l('locations.serviceTitle'), ui.l('locations.serviceError').replace('{0}', geoData.currentStreet ? geoData.currentStreet : '-'));
+			ui.navigation.openPopup(ui.l('locations.serviceTitle'), ui.l('locations.serviceError').replace('{0}', geoData.current.street ? geoData.current.street : '-'));
 	}
 	static socialShare(extra) {
 		var msg = ui.l('info.socialShareText').replace('{0}', user.contact.idDisplay).replace('{1}', user.contact.gender == 1 ? '🙋‍♂️' : '🙋‍♀️');
@@ -87,6 +87,6 @@ ${ui.l('home.DescLink')}
 		ui.toggleHeight(id);
 	}
 	static updateLocalisation() {
-		ui.html('span.infoLocalized', geoData.localized ? ui.l('info.localized').replace('{0}', geoData.currentTown + global.separator + geoData.currentStreet) : ui.l('info.notLocalized').replace('{0}', geoData.currentStreet ? geoData.currentStreet : '-'));
+		ui.html('span.infoLocalized', geoData.localized ? ui.l('info.localized').replace('{0}', geoData.current.town + global.separator + geoData.current.street) : ui.l('info.notLocalized').replace('{0}', geoData.current.street ? geoData.current.street : '-'));
 	}
 }

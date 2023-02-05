@@ -39,7 +39,7 @@ class details {
 		if (ui.classContains('detail', 'detailSlideIn'))
 			return;
 		communication.ajax({
-			url: global.server + 'action/one?query=' + action + '&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon,
+			url: global.server + 'action/one?query=' + action + '&distance=100000&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon,
 			responseType: 'json',
 			success(r) {
 				ui.navigation.hideMenu();

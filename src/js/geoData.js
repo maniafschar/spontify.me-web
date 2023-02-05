@@ -10,15 +10,12 @@ export { geoData };
 
 class geoData {
 	static angle = -1;
-	static currentStreet = '';
-	static currentStreetNonManual = '';
-	static currentTown = 'München';
-	static currentTownNonManual = geoData.currentTown;
+	static current = { lat: 48.13684, lon: 11.57685, street: null, town: 'München' };
+	static currentNonManual = null;
 	static headingID = null;
 	static id = null;
 	static initDeviceOrientation = null;
 	static lastSave = 0;
-	static latlon = { lat: 48.13684, lon: 11.57685 };
 	static localizationAsked = false;
 	static localized = false;
 	static manual = false;
@@ -74,6 +71,8 @@ class geoData {
 			geoData.headingID = navigator.compass.watchHeading(geoData.deviceOrientationHandler, null);
 	}
 	static init() {
+		if (!user.contact)
+			return;
 		if (geoData.id)
 			geoData.pause();
 		if (global.isBrowser())
@@ -110,10 +109,10 @@ class geoData {
 	static initManual(data) {
 		geoData.localized = true;
 		geoData.manual = true;
-		geoData.latlon.lat = data.lat;
-		geoData.latlon.lon = data.lon;
-		geoData.currentStreet = data.street;
-		geoData.currentTown = data.town;
+		geoData.current.lat = data.lat;
+		geoData.current.lon = data.lon;
+		geoData.current.treet = data.street;
+		geoData.current.town = data.town;
 	}
 	static openLocationPicker(event, noSelection) {
 		event.preventDefault();
@@ -122,8 +121,10 @@ class geoData {
 		if (e && !noSelection) {
 			if (ui.q('locationPicker').style.display == 'none') {
 				var s = '';
-				for (var i = e.length - 1; i >= 0; i--)
-					s += '<label onclick="geoData.saveLocationPicker(' + JSON.stringify(e[i]).replace(/"/g, '\'') + ')">' + e[i].town + '</label>';
+				for (var i = e.length - 1; i >= 0; i--) {
+					if (e[i].town != geoData.current.town)
+						s += '<label onclick="geoData.saveLocationPicker(' + JSON.stringify(e[i]).replace(/"/g, '\'') + ')">' + e[i].town + '</label>';
+				}
 				s += '<label onclick="geoData.openLocationPicker(event,true)">' + ui.l('home.locationPickerTitle') + '</label>';
 				var e = ui.q('locationPicker');
 				e.innerHTML = s;
@@ -139,13 +140,13 @@ class geoData {
 	static openLocationPickerDialog() {
 		ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
 			'<mapPicker></mapPicker><br/>' +
-			(geoData.manual ? '<buttontext class="bgColor" onclick="geoData.resetLocationPicker()">' + ui.l('home.locationPickerReset') + '</buttontext>' : '') +
+			(geoData.manual ? '<buttontext class="bgColor" onclick="geoData.reset()">' + ui.l('home.locationPickerReset') + '</buttontext>' : '') +
 			'<buttontext class="bgColor" onclick="geoData.saveLocationPicker()">' + ui.l('ready') + '</buttontext>', null, null,
 			function () {
 				setTimeout(function () {
 					if (ui.q('locationPicker').style.display != 'none')
 						ui.toggleHeight('locationPicker');
-					pageHome.map = new google.maps.Map(ui.q('mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 12, center: new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon), zoom: 9 });
+					pageHome.map = new google.maps.Map(ui.q('mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 12, center: new google.maps.LatLng(geoData.current.lat, geoData.current.lon), zoom: 9 });
 				}, 500);
 			});
 	}
@@ -159,20 +160,20 @@ class geoData {
 		ui.navigation.hidePopup();
 		cordova.plugins.diagnostic.requestLocationAuthorization(geoData.init2, null, cordova.plugins.diagnostic.locationAuthorizationMode.WHEN_IN_USE);
 	}
-	static resetLocationPicker() {
+	static reset() {
 		geoData.manual = false;
-		geoData.currentStreet = geoData.currentStreetNonManual;
-		geoData.currentTown = geoData.currentTownNonManual;
+		geoData.current = geoData.currentNonManual || { lat: 48.13684, lon: 11.57685, street: null, town: 'München' };
 		pageInfo.updateLocalisation();
 		pageHome.updateLocalisation();
 		geoData.init();
 		ui.navigation.hidePopup();
+		user.save({ latitude: geoData.current.lat, longitude: geoData.current.lon }, function () { pageHome.init(true); });
 	}
 	static save(position, exec) {
-		var d = geoData.getDistance(geoData.latlon.lat, geoData.latlon.lon, position.latitude, position.longitude);
+		var d = geoData.getDistance(geoData.current.lat, geoData.current.lon, position.latitude, position.longitude);
 		if (position.manual || !geoData.manual) {
-			geoData.latlon.lat = position.latitude;
-			geoData.latlon.lon = position.longitude;
+			geoData.current.lat = position.latitude;
+			geoData.current.lon = position.longitude;
 		}
 		if (position.manual)
 			geoData.manual = true;
@@ -185,26 +186,28 @@ class geoData {
 				body: position,
 				responseType: 'json',
 				error(r) {
-					geoData.currentStreet = r.status + ' ' + r.responseText;
+					geoData.current.street = r.status + ' ' + r.responseText;
 					pageInfo.updateLocalisation();
 					pageHome.updateLocalisation();
 				},
 				success(r) {
 					if (r) {
 						geoData.lastSave = new Date().getTime();
-						if (!position.manual) {
-							geoData.currentTownNonManual = r.town;
-							geoData.currentStreetNonManual = r.street;
-						}
+						if (!position.manual)
+							geoData.currentNonManual = { lat: position.latitude, lon: position.longitude, street: r.street, town: r.town };
 						if (position.manual) {
 							var e = formFunc.getDraft('locationPicker') || [];
+							for (var i = e.length - 1; i >= 0; i--) {
+								if (e[i].town == r.town)
+									e.splice(i, 1);
+							}
 							e.push({ lat: position.latitude, lon: position.longitude, town: r.town, street: r.street });
 							if (e.length > 10)
 								e.splice(0, e.length - 10);
 							formFunc.saveDraft('locationPicker', e);
 						}
-						geoData.currentTown = r.town;
-						geoData.currentStreet = r.street;
+						geoData.current.town = r.town;
+						geoData.current.street = r.street;
 						pageInfo.updateLocalisation();
 						pageHome.updateLocalisation();
 						if (ui.q('locationPicker').style.display != 'none')

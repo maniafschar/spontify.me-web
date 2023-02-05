@@ -240,6 +240,6 @@ class pageHome {
 		}
 	}
 	static updateLocalisation() {
-		ui.html('home svg text.position', geoData.currentTown);
+		ui.html('home svg text.position', geoData.current.town);
 	}
 }

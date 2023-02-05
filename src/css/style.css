@@ -348,6 +348,7 @@ homeBody teaser {
 homeBody teaser div {
 	white-space: nowrap;
 	overflow-x: auto;
+	padding: 0 0.5em;
 }
 
 homeBody teaser.contacts {
@@ -359,7 +360,7 @@ homeBody teaser.events {
 }
 
 homeBody teaser card {
-	margin: 0 1em;
+	margin: 0 0.5em;
 	border-radius: 1em;
 	overflow: hidden;
 	position: relative;
@@ -811,20 +812,22 @@ settings qrcode {
 locationPicker {
 	position: absolute;
 	display: inline-block;
-	right: 0.5em;
+	right: 0;
 	top: 5.5em;
 	z-index: 1;
 }
 
 locationPicker label {
-	display: block;
+	display: inline;
 	color: black;
 	background: white;
 	cursor: pointer;
 	position: relative;
 	padding: 0.25em 0.75em;
-	border-radius: 0.5em;
-	margin: 0.25em;
+	border-radius: 1em 0 0 1em;
+	margin: 0.25em 0;
+	clear: both;
+	float: right;
 }
 
 img.qrVerification {

@@ -76,7 +76,7 @@ ${v.rating}
 	${v.telOpenTag}${v.address}<br/>${v.tel}${v.telCloseTag}
 </text>
 <img class="map"
-	onclick="ui.navigation.openHTML(&quot;https://maps.google.com/maps/dir/${geoData.latlon.lat},${geoData.latlon.lon}/${v.latitude},${v.longitude}&quot;)" />
+	onclick="ui.navigation.openHTML(&quot;https://maps.google.com/maps/dir/${geoData.current.lat},${geoData.current.lon}/${v.latitude},${v.longitude}&quot;)" />
 <detailButtons>
 	<buttontext class="bgColor${v.hideMeEvents}" name="buttonEvents"
 		onclick="pageEvent.toggle(${v.locID})">${ui.l('events.title')}</buttontext>
@@ -261,7 +261,7 @@ ${v.rating}
 		if (v.classBGImg.length < 8)
 			v.classBGImg = 'class="mainBG"';
 		v.locID = v.event.id ? v.event.locationId : v.id;
-		v.angle = geoData.getAngel(geoData.latlon, { lat: v.latitude, lon: v.longitude });
+		v.angle = geoData.getAngel(geoData.current, { lat: v.latitude, lon: v.longitude });
 		v.image = v.event.image ? v.event.image : v.image ? v.image : v.contact.image;
 		var eventWithLocation = v.address ? true : false;
 		if (v.event.id) {
@@ -321,7 +321,7 @@ ${v.rating}
 		v.pressedCopyButton = pageChat.copyLink.indexOf(global.encParam(v.event.id ? 'e=' + v.event.id : 'l=' + v.id)) > -1 ? ' buttonPressed' : '';
 		if (v.address)
 			communication.ajax({
-				url: global.server + 'action/map?source=' + geoData.latlon.lat + ',' + geoData.latlon.lon + '&destination=' + v.latitude + ',' + v.longitude,
+				url: global.server + 'action/map?source=' + geoData.current.lat + ',' + geoData.current.lon + '&destination=' + v.latitude + ',' + v.longitude,
 				progressBar: false,
 				success(r) {
 					var x = 0, f = function () {
@@ -375,9 +375,9 @@ ${v.rating}
 		for (var i = 0; i < ui.categories.length; i++)
 			v['attr' + i] = v['attr' + i] ? v['attr' + i].replace(/\u0015/g, ',') : '';
 		if (!v.longitude)
-			v.longitude = geoData.latlon.lon;
+			v.longitude = geoData.current.lon;
 		if (!v.latitude)
-			v.latitude = geoData.latlon.lat;
+			v.latitude = geoData.current.lat;
 		if (v.image)
 			v.image = 'src="' + global.serverImg + v.image + '"';
 		ui.navigation.openPopup(ui.l('locations.' + (id ? 'edit' : 'new')).replace('{0}', v.name), pageLocation.templateEdit(v), id ? '' : 'pageLocation.saveDraft()');
@@ -408,7 +408,7 @@ ${v.rating}
 		v.extra += '<br/>';
 		if (v._geolocationDistance && v.latitude)
 			v.extra += '<div><compass style="transform:rotate('
-				+ geoData.getAngel(geoData.latlon, { lat: v.latitude, lon: v.longitude }) + 'deg);"></compass></div>';
+				+ geoData.getAngel(geoData.current, { lat: v.latitude, lon: v.longitude }) + 'deg);"></compass></div>';
 		else if (v.contact.gender)
 			v.extra += '<img src="images/gender' + v.contact.gender + '.svg" />';
 		if (!v._message1)
@@ -423,7 +423,7 @@ ${v.rating}
 		var s = '', v;
 		for (var i = 1; i < l.length; i++) {
 			v = model.convert(new Location(), l, i);
-			v._angle = geoData.getAngel(geoData.latlon, { lat: v.latitude, lon: v.longitude });
+			v._angle = geoData.getAngel(geoData.current, { lat: v.latitude, lon: v.longitude });
 			l[i].push(v._angle);
 			v.locID = v.id;
 			v.classBGImg = v.imageList ? '' : 'mainBG';
@@ -454,7 +454,7 @@ ${v.rating}
 	static prefillAddress() {
 		if (geoData.localized && ui.q('input[name="name"]') && !ui.val('[name="address"]')) {
 			communication.ajax({
-				url: global.server + 'action/google?param=' + encodeURIComponent('latlng=' + geoData.latlon.lat + ',' + geoData.latlon.lon),
+				url: global.server + 'action/google?param=' + encodeURIComponent('latlng=' + geoData.current.lat + ',' + geoData.current.lon),
 				responseType: 'json',
 				success(r) {
 					if (r.formatted && !ui.val('[name="address"]'))
@@ -466,7 +466,7 @@ ${v.rating}
 	static showLocationsNearby(event) {
 		if (ui.q('input[name="name"]')) {
 			communication.ajax({
-				url: global.server + 'action/google?param=' + encodeURIComponent('place/nearbysearch/json?radius=100&sensor=false&location=' + geoData.latlon.lat + ',' + geoData.latlon.lon),
+				url: global.server + 'action/google?param=' + encodeURIComponent('place/nearbysearch/json?radius=100&sensor=false&location=' + geoData.current.lat + ',' + geoData.current.lon),
 				responseType: 'json',
 				success(r) {
 					if (r.status == 'OK') {
@@ -582,10 +582,10 @@ ${v.rating}
 			});
 		}
 		if (!pageLocation.map.loadActive) {
-			var deltaLat = Math.abs(geoData.latlon.lat - d.latitude) * 0.075, deltaLon = Math.abs(geoData.latlon.lon - d.longitude) * 0.075;
+			var deltaLat = Math.abs(geoData.current.lat - d.latitude) * 0.075, deltaLon = Math.abs(geoData.current.lon - d.longitude) * 0.075;
 			pageLocation.map.canvas.fitBounds(new google.maps.LatLngBounds(
-				new google.maps.LatLng(Math.max(geoData.latlon.lat, d.latitude) + deltaLat, Math.min(geoData.latlon.lon, d.longitude) - deltaLon), //south west
-				new google.maps.LatLng(Math.min(geoData.latlon.lat, d.latitude) - deltaLat, Math.max(geoData.latlon.lon, d.longitude) + deltaLon) //north east
+				new google.maps.LatLng(Math.max(geoData.current.lat, d.latitude) + deltaLat, Math.min(geoData.current.lon, d.longitude) - deltaLon), //south west
+				new google.maps.LatLng(Math.min(geoData.current.lat, d.latitude) - deltaLat, Math.max(geoData.current.lon, d.longitude) + deltaLon) //north east
 			));
 			pageLocation.map.markerMe = new google.maps.Marker(
 				{
@@ -598,7 +598,7 @@ ${v.rating}
 						origin: new google.maps.Point(0, 0),
 						anchor: new google.maps.Point(12, 24)
 					},
-					position: new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon)
+					position: new google.maps.LatLng(geoData.current.lat, geoData.current.lon)
 				});
 		}
 		pageLocation.map.markerLocation = new google.maps.Marker(
