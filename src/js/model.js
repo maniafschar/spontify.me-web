@@ -91,6 +91,7 @@ class Contact extends BaseEntity {
 	skillsText;
 	state;
 	storage;
+	urls;
 	verified;
 	visitPage;
 

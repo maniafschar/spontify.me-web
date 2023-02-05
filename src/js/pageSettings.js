@@ -61,6 +61,12 @@ class pageSettings {
 	</value>
 </field>
 <field>
+	<label>${ui.l('settings.urls')}</label>
+	<value>
+		<textarea name="urls" maxlength="1000">${v['contact.urls']}</textarea>
+	</value>
+</field>
+<field>
 	<label>${ui.l('birthday')}</label>
 	<value class="checkbox">
 		<input type="date" placeholder="TT.MM.JJJJ" name="birthday" maxlength="10" id="bd"
@@ -255,6 +261,7 @@ ${v.info}`;
 		var s = ui.val('settings input[name="email"]');
 		s += global.separatorTech + ui.q('settings [name="image_disp"] img');
 		s += global.separatorTech + ui.val('settings textarea[name="aboutMe"]');
+		s += global.separatorTech + ui.val('settings textarea[name="urls"]');
 		s += global.separatorTech + ui.val('settings input[name="birthday"]');
 		s += global.separatorTech + ui.val('settings input[name="birthdayDisplay"]:checked');
 		s += global.separatorTech + ui.val('settings input[name="gender"]:checked');
@@ -466,6 +473,7 @@ ${v.info}`;
 		formFunc.resetError(ui.q('input[name="birthday"]'));
 		formFunc.resetError(ui.q('input[name="gender"]'));
 		formFunc.resetError(ui.q('textarea[name="aboutMe"]'));
+		formFunc.resetError(ui.q('textarea[name="urls"]'));
 		formFunc.resetError(ui.q('#settingsInterest1'));
 		formFunc.resetError(ui.q('#settingsInterest2'));
 		formFunc.resetError(ui.q('#settingsInterest3'));
@@ -495,6 +503,26 @@ ${v.info}`;
 			formFunc.setError(ui.q('textarea[name="aboutMe"]'), 'settings.aboutMeEmpty');
 		else if (ui.val('textarea[name="aboutMe"]'))
 			formFunc.validation.filterWords(ui.q('textarea[name="aboutMe"]'));
+		var s = ui.val('textarea[name="urls"]').trim().replace(/\t/g, '');
+		if (s) {
+			if (s.indexOf(' ') > -1)
+				formFunc.setError(ui.q('textarea[name="urls"]'), 'settings.urlsFormat');
+			else {
+				while (s.indexOf('\n\n') > -1)
+					s = s.replace(/\n\n/g, '\n');
+				ui.q('textarea[name="urls"]').value = s;
+				s = s.split('\n');
+				for (var i = 0; i < s.length; i++) {
+					try {
+						var h = new URL(s[i]);
+						if (!h.hostname || !h.protocol)
+							formFunc.setError(ui.q('textarea[name="urls"]'), 'settings.urlsFormat');
+					} catch (e) {
+						formFunc.setError(ui.q('textarea[name="urls"]'), 'settings.urlsFormat');
+					}
+				}
+			}
+		}
 		formFunc.validation.email(ui.q('input[name="email"]'));
 		formFunc.validation.pseudonym(ui.q('input[name="pseudonym"]'));
 		if (ui.q('settings .dialogFieldError'))

@@ -623,7 +623,9 @@
 			"skills": "Meine Skills",
 			"tabLegal": "Rechtliches",
 			"tabProfile": "Profil",
-			"tabSkills": "Skills"
+			"tabSkills": "Skills",
+			"urls": "Links zu LinkedIn, Instagram, etc.",
+			"urlsFormat": "nur absolute Links sind erlaubt, z.B. https://linkedin.com/xyz/"
 		},
 		"wtd": {
 			"action": "Los geht's!",

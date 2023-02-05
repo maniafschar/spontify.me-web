@@ -63,6 +63,7 @@ class pageContact {
 	</detailImg>
 </detailHeader>
 ${v.aboutMe}
+${v.urls}
 ${v.rating}
 <text${v.birthdayClass}>
 	${v.birthday}
@@ -277,6 +278,18 @@ ${v.skills}
 			v.image = '<div class="mainBG" style="padding:8em;"><img src="images/contact.svg" ' + (preview ? 'class="fade"' : '') + '/></div>';
 			if (preview)
 				v.previewHintImage = '<previewHint class="image">' + ui.l('settings.previewHintImage') + '</previewHint>';
+		}
+		if (v.urls) {
+			var s = v.urls.split('\n');
+			v.urls = '';
+			for (var i = 0; i < s.length; i++) {
+				if (s[i]) {
+					var h = new URL(s[i]).hostname;
+					while (h.indexOf('.') != h.lastIndexOf('.'))
+						h = h.substring(h.indexOf('.') + 1);
+					v.urls += '<label class="multipleLabel" onclick="ui.navigation.openHTML(&quot;' + s[i] + '&quot;)">' + h.toLowerCase() + '</label>';
+				}
+			}
 		}
 		if (v.rating > 0)
 			v.rating = '<detailRating onclick="ratings.open(null,&quot;' + 'event.contactId=' + v.id + '&quot;)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></ratingSelection></detailRating>';
