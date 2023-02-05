@@ -320,6 +320,7 @@
 		"home": {
 			"labelSkill": "I am looking for following skills",
 			"labelTime": "Today from",
+			"locationNotSetable": "There's no town at this point.",
 			"locationPickerReset": "Reset",
 			"locationPickerTitle": "Choose location",
 			"saveEvent": "Let's go!"

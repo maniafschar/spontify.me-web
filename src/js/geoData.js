@@ -142,7 +142,7 @@ class geoData {
 		ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
 			'<mapPicker></mapPicker><br/>' +
 			(geoData.manual ? '<buttontext class="bgColor" onclick="geoData.reset()">' + ui.l('home.locationPickerReset') + '</buttontext>' : '') +
-			'<buttontext class="bgColor" onclick="geoData.saveLocationPicker()">' + ui.l('ready') + '</buttontext>', null, null,
+			'<buttontext class="bgColor" onclick="geoData.saveLocationPicker()">' + ui.l('ready') + '</buttontext><errorHint></errorHint>', null, null,
 			function () {
 				setTimeout(function () {
 					if (ui.q('locationPicker').style.display != 'none')
@@ -193,7 +193,7 @@ class geoData {
 					pageHome.updateLocalisation();
 				},
 				success(r) {
-					if (r) {
+					if (r && r.town) {
 						geoData.lastSave = new Date().getTime();
 						if (!position.manual)
 							geoData.currentNonManual = { lat: position.latitude, lon: position.longitude, street: r.street, town: r.town };
@@ -213,11 +213,14 @@ class geoData {
 						pageInfo.updateLocalisation();
 						pageHome.updateLocalisation();
 						pageSearch.updateLocalisation();
+						if (ui.q('popup mapPicker'))
+							ui.navigation.hidePopup();
 						if (ui.q('locationPicker').style.display != 'none')
 							ui.toggleHeight('locationPicker');
 						if (exec)
 							exec.call();
-					}
+					} else
+						ui.html('popup errorHint', ui.l('home.locationNotSetable'));
 				}
 			});
 		}
@@ -226,7 +229,6 @@ class geoData {
 	}
 	static saveLocationPicker(e) {
 		geoData.save({ latitude: e ? e.lat : pageHome.map.getCenter().lat(), longitude: e ? e.lon : pageHome.map.getCenter().lng(), manual: true }, function () { pageHome.init(true); });
-		ui.navigation.hidePopup();
 	}
 	static updateCompass(angle) {
 		if (!angle)

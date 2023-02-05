@@ -320,6 +320,7 @@
 		"home": {
 			"labelSkill": "suche ich folgende Skills",
 			"labelTime": "Heute ab",
+			"locationNotSetable": "An dieser Stelle existiert kein Ort.",
 			"locationPickerReset": "Zurücksetzen",
 			"locationPickerTitle": "Standort wählen",
 			"saveEvent": "Los geht's!"
