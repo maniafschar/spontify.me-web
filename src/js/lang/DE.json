@@ -311,10 +311,6 @@
 			"type_w1": "jede Woche",
 			"type_w2": "jede 2. Woche",
 			"type_y": "ein mal pro Jahr",
-			"visibility": "Sichtbar für",
-			"visibility1": "Freunde",
-			"visibility2": "Buddies mit ausgewählten Skills",
-			"visibility3": "Alle",
 			"yesterday": "Gestern, {0}"
 		},
 		"home": {
@@ -382,8 +378,7 @@
 			"settings": "<title>Einstellungen</title><br/>Hier beschreibst Du Dich und was <emphasis>Du magst</emphasis>. Basierend auf diesen Angaben matchen wir:<ul><li>Locations</li><li>Events</li><li>und Buddies</li></ul>",
 			"settingsLoggedIn": "<ul><li>Ändere hier Dein Profilbild und gib weitere, allgemeine Infos an</li><li>Ein Wisch nach links und Du kannst Dich über diverse Attribute selbst beschreiben und angeben, was Du an anderen Buddies magst</li></ul>",
 			"teaserContacts": "<title>Buddies</title><br/>Wir matchen Buddies nach folgenden Kriterien, die Du in Deinen <emphasis>Einstellungen</emphasis> angeben kannst:<ul><li>Skills</li><li>Alter</li><li>Geschlecht</li><li>favorisierte Locations</li></ul>So können wir Dir passende skillvents vorschlagen und Du kannst die <emphasis>Community</emphasis> nach anderen Buddies mit ähnlichen Skills durchsuchen.",
-			"teaserEvents": "<title>skillvents</title><br/>Hier sind sie, Deine skillvents an denen Du teilnimmst und die, die Du erstellt hast.<br/><br/>Zudem schlagen wir Dir <emphasis>interessante</emphasis> und zu Dir <emphasis>passende</emphasis> skillvents vor, so dass Du Dich stets weiterentwickelst und Neues erlebst.",
-			"whatToDo": "<title>Heute suche ich...</title><br/>Du gibst einfach an, was Du gerne <emphasis>heute</emphasis> machen möchtest, z.B. Essen gehen oder ein Museum besuchen, etc.<br/><br/>Die Aktivität wird Buddies, <emphasis>die zu Dir passen</emphasis> und nicht weiter als 50 KM entfernt sind, angezeigt."
+			"teaserEvents": "<title>skillvents</title><br/>Hier sind sie, Deine skillvents an denen Du teilnimmst und die, die Du erstellt hast.<br/><br/>Zudem schlagen wir Dir <emphasis>interessante</emphasis> und zu Dir <emphasis>passende</emphasis> skillvents vor, so dass Du Dich stets weiterentwickelst und Neues erlebst."
 		},
 		"locations": {
 			"address": "Adresse",
@@ -490,8 +485,7 @@
 			"search": "Keine Ergebnisse gefunden.",
 			"searchWithoutKeywords": "Du hast nach Schlagwörtern gesucht. Möchtest Du Deine Suche ohne Schlagwörter wiederholen?",
 			"title": "Keine",
-			"visits": "Du hast noch keine {0} angeklickt.",
-			"whatToDo": "Keine {0} zu Deinem Vorhaben gefunden.${noResults.openSettings}"
+			"visits": "Du hast noch keine {0} angeklickt."
 		},
 		"notification": {
 			"birthday": "An Geburtstagen Deiner Freunde",
@@ -625,7 +619,7 @@
 			"tabProfile": "Profil",
 			"tabSkills": "Skills",
 			"teaser": "Mein Profil und meine skillvents dürfen",
-			"teaserLabel": "nicht eingeloggten Buddies auf der Startseite angezeigt werden",
+			"teaserLabel": "auf der Startseite nichteingeloggten Buddies angezeigt werden",
 			"urls": "Links zu LinkedIn, Instagram, etc.",
 			"urlsFormat": "Ein Link pro Zeile in der Form https://linkedin.com/xyz/"
 		},

@@ -311,10 +311,6 @@
 			"type_w1": "every week",
 			"type_w2": "every 2. weeks",
 			"type_y": "once a year",
-			"visibility": "Visible to",
-			"visibility1": "Friends",
-			"visibility2": "Buddies with chosen skills",
-			"visibility3": "All",
 			"yesterday": "Yesterday, {0}"
 		},
 		"home": {
@@ -382,8 +378,7 @@
 			"settings": "<title>Settings</title><br/>Here you describe yourself and what <emphasis>you like</emphasis>. Based on this information we match:<ul><li>Locations</li><li>Events</li><li>and Buddies</li></ul>",
 			"settingsLoggedIn": "<ul><li>Change your profile image and enter general information here</li><li>Swipe left to enter attributes that describe you and that you like about other Buddies</li><li>provide yourself as a guide for Buddies fitting your settings</li></ul>",
 			"teaserContacts": "<title>Buddies</title><br/>Wir matchen Buddies nach folgenden Kriterien, die Du in Deinen <emphasis>Einstellungen</emphasis> angeben kannst:<ul><li>Skills</li><li>Alter</li><li>Geschlecht</li><li>favorisierte Locations</li></ul>So können wir Dir passende skillvents vorschlagen und Du kannst die <emphasis>Community</emphasis> nach anderen Buddies mit ähnlichen Skills durchsuchen.",
-			"teaserEvents": "<title>skillvents</title><br/>Hier sind sie, Deine skillvents an denen Du teilnimmst und die, die Du erstellt hast.<br/><br/>Zudem schlagen wir Dir <emphasis>interessante</emphasis> und zu Dir <emphasis>passende</emphasis> skillvents vor, so dass Du Dich stets weiterentwickelst und Neues erlebst.",
-			"whatToDo": "<title>Today I want..</title><br/>You can easily enter what you would like to do <emphasis>today</emphasis>, e.g. go out for dinner or visit a museum, etc.<br/><br/>The activity will be presented to Buddies <emphasis>who suit you</emphasis> and are no further than 50 KM away."
+			"teaserEvents": "<title>skillvents</title><br/>Hier sind sie, Deine skillvents an denen Du teilnimmst und die, die Du erstellt hast.<br/><br/>Zudem schlagen wir Dir <emphasis>interessante</emphasis> und zu Dir <emphasis>passende</emphasis> skillvents vor, so dass Du Dich stets weiterentwickelst und Neues erlebst."
 		},
 		"locations": {
 			"address": "Address",
@@ -490,8 +485,7 @@
 			"search": "No items found.",
 			"searchWithoutKeywords": "Tip: You have searched with keywords. Do you want to repeat the search without keywords?",
 			"title": "None",
-			"visits": "You haven't clicked any {0}.",
-			"whatToDo": "Currently, there are no {0} found for your what you want to do.${noResults.openSettings}"
+			"visits": "You haven't clicked any {0}."
 		},
 		"notification": {
 			"birthday": "On birthdays of your friends",

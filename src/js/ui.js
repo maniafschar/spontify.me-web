@@ -254,7 +254,7 @@ class ui {
 						ui.css(e, 'transition', null);
 					}, 50);
 				}, true);
-				ui.css(e, 'margin-left', ((ui.qa('detail card').length - 2) * 100) + '%');
+				ui.css(e, 'margin-left', ((ui.qa('detail card').length - 2) * -100) + '%');
 				return;
 			}
 			// AGBs opened from login, go back to login

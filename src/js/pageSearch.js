@@ -79,22 +79,20 @@ class pageSearch {
 				s = ' and ' + pageSearch.contacts.getMatches();
 			var v = ui.val('search tabBody div.contacts [name="keywords"]').trim();
 			if (v) {
+				var t = hashtags.convert(v);
 				v = v.replace(/'/g, '\'\'').split(' ');
 				s += ' and (';
 				for (var i = 0; i < v.length; i++) {
 					if (v[i]) {
 						s2 = v[i].trim().toLowerCase();
-						for (var i2 = 0; i2 < ui.categories.length; i2++) {
-							for (var i3 = 0; i3 < ui.categories[i2].values.length; i3++) {
-								if (ui.categories[i2].values[i3].toLowerCase().indexOf(s2) > -1)
-									s += 'contact.skills like \'%' + i2 + '.' + ui.categories[i2].values[i3].split('|')[1] + '%\' or ';
-							}
-						}
-						s += 'contact.idDisplay=\'' + s2 + '\' or (contact.search=1 and (LOWER(contact.aboutMe) like \'%' + s2 + '%\' or LOWER(contact.pseudonym) like \'%' + s2 + '%\')) and ';
+						s += 'contact.idDisplay=\'' + s2 + '\' or (contact.search=1 and (LOWER(contact.aboutMe) like \'%' + s2 + '%\' or LOWER(contact.pseudonym) like \'%' + s2 + '%\' or LOWER(contact.skillsText) like \'%' + s2 + '%\')) and ';
 					}
 				}
+				s = s.substring(0, s.length - 5) + ')';
+				if (t.category)
+					s += (s ? ' and ' : '') + global.getRegEx('contact.skills', t.category);
 			}
-			return 'contact.id<>' + user.contact.id + s.substring(0, s.length - 5) + ')';
+			return 'contact.id<>' + user.contact.id + s;
 		},
 		search() {
 			pageSearch.contacts.fieldValues = formFunc.getForm('search tabBody div.contacts form').values;
@@ -144,28 +142,28 @@ class pageSearch {
 			if (s)
 				g += ' or ' + s;
 			if (g)
-				search += ' and (' + g.substring(4) + ')';
+				search += ' and (event.price>0 or ' + g.substring(4) + ')';
 			return search;
 		},
 		getSearch() {
 			var v = ui.val('search tabBody div.events [name="keywords"]').trim(), s = '';
 			if (v) {
 				var t = hashtags.convert(v);
-				v = t.hashtags.replace(/'/g, '\'\'').split(' ');
+				v = v.replace(/'/g, '\'\'').split(' ');
 				for (var i = 0; i < v.length; i++) {
 					if (v[i].trim()) {
 						v[i] = v[i].trim().toLowerCase();
 						var l = ') like \'%' + v[i].trim().toLowerCase() + '%\' or LOWER(';
 						s += '((contact.search=true or event.price>0) and (LOWER(contact.pseudonym' + l + 'contact.aboutMe' + l;
 						s = s.substring(0, s.lastIndexOf(' or LOWER')) + ') or '
-						s += 'LOWER(location.name' + l + 'location.description' + l + 'location.address' + l + 'location.address2' + l + 'location.telephone' + l + 'event.text' + l;
+						s += 'LOWER(location.name' + l + 'location.description' + l + 'location.address' + l + 'location.address2' + l + 'location.telephone' + l + 'event.text' + l + 'event.skillsText' + l;
 						s = s.substring(0, s.lastIndexOf(' or LOWER')) + ') and ';
 					}
 				}
+				if (t.category)
+					s = (s ? s.substring(0, s.length - 5) + ' or ' : '') + global.getRegEx('event.skills', t.category) + ' and ';
 				if (s)
 					s = '(' + s.substring(0, s.length - 5) + ')';
-				if (t.category)
-					s += (s ? ' and ' : '') + global.getRegEx('event.category', t.category);
 			}
 			if (ui.q('search tabBody div.events [name="matches"]:checked'))
 				s += (s ? ' and ' : '') + pageSearch.events.getMatches();
@@ -205,7 +203,7 @@ class pageSearch {
 		},
 		search() {
 			pageSearch.events.fieldValues = formFunc.getForm('search tabBody div.events form').values;
-			pageEvent.loadEvents('latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&distance=100000&query=event_listMatching&search=' + encodeURIComponent(pageSearch.events.getSearch()));
+			pageEvent.loadEvents('latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&distance=100000&query=event_list&search=' + encodeURIComponent(pageSearch.events.getSearch()));
 			formFunc.saveDraft('searchEvents', pageSearch.events.fieldValues);
 		}
 	}
