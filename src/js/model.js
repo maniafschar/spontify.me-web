@@ -102,6 +102,7 @@ class Contact extends BaseEntity {
 	contactVisit = new ContactVisit();
 	event = new Event();
 	eventParticipate = new EventParticipate();
+	eventRating = new EventRating();
 }
 
 class ContactGroup extends BaseEntity {
@@ -175,8 +176,6 @@ class EventRating extends BaseEntity {
 	image;
 	rating;
 	text;
-
-	contact = new Contact();
 }
 
 class Location extends BaseEntity {

@@ -624,8 +624,10 @@
 			"tabLegal": "Rechtliches",
 			"tabProfile": "Profil",
 			"tabSkills": "Skills",
+			"teaser": "Mein Profil und meine skillvents dürfen",
+			"teaserLabel": "nicht eingeloggten Buddies auf der Startseite angezeigt werden",
 			"urls": "Links zu LinkedIn, Instagram, etc.",
-			"urlsFormat": "nur absolute Links sind erlaubt, z.B. https://linkedin.com/xyz/"
+			"urlsFormat": "Ein Link pro Zeile in der Form https://linkedin.com/xyz/"
 		},
 		"wtd": {
 			"action": "Los geht's!",

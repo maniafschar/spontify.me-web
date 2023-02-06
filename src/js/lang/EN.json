@@ -624,8 +624,10 @@
 			"tabLegal": "Legal",
 			"tabProfile": "Profile",
 			"tabSkills": "Skills",
+			"teaser": "My profile and my skillvents may be",
+			"teaserLabel": "shown to not logged in buddies on the home page",
 			"urls": "Links to LinkedIn, Instagram...",
-			"urlsFormat": "only absolute links are allowed, e.g. https://linkedin.com/xyz/"
+			"urlsFormat": "One links per row in that format: https://linkedin.com/xyz/"
 		},
 		"wtd": {
 			"action": "Let's go!",

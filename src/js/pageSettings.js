@@ -93,6 +93,12 @@ class pageSettings {
 	</value>
 </field>
 <field>
+	<label>${ui.l('settings.teaser')}</label>
+	<value class="checkbox">
+		<input type="checkbox" name="teaser" value="true" label="${ui.l('settings.teaserLabel')}" ${v.teaser} />
+	</value>
+</field>
+<field>
 	<label>${ui.l('settings.search')}</label>
 	<value class="checkbox">
 		<input type="checkbox" name="search" value="true" label="${ui.l('settings.searchPseudonym')}" ${v.search} />
@@ -272,8 +278,8 @@ ${v.info}`;
 		s += global.separatorTech + (ui.q('settings input[name="genderInterest2"]:checked') ? 1 : 0);
 		s += global.separatorTech + (ui.q('settings input[name="genderInterest3"]:checked') ? 1 : 0);
 		s += global.separatorTech + ui.val('settings input[name="language"]:checked');
+		s += global.separatorTech + (ui.q('settings input[name="teaser"]:checked') ? 1 : 0);
 		s += global.separatorTech + (ui.q('settings input[name="search"]:checked') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings input[name="guide"]:checked') ? 1 : 0);
 		s += global.separatorTech + ui.val('settings input[name="pseudonym"]');
 		s += global.separatorTech + (ui.q('settings input[name="genderInterest1"]:checked') ? 1 : 0);
 		s += global.separatorTech + (ui.q('settings input[name="genderInterest2"]:checked') ? 1 : 0);
@@ -330,6 +336,8 @@ ${v.info}`;
 					v.gender1 = v['contact.gender'] == 1 ? ' checked' : '';
 					v.gender2 = v['contact.gender'] == 2 ? ' checked' : '';
 					v.gender3 = v['contact.gender'] == 3 ? ' checked' : '';
+					v.search = v['contact.search'] ? ' checked' : '';
+					v.teaser = v['contact.teaser'] ? ' checked' : '';
 					v.hashtagsDisp = (hashtags.ids2Text(v['contact.skills']) + ' ' + (v['contact.skillsText'] || '')).trim();
 					if (v['contact.search'] == 1)
 						v['search'] = ' checked';

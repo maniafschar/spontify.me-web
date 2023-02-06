@@ -8,6 +8,7 @@ import { intro } from './intro';
 import { lists } from './lists';
 import { Contact, Location, model } from './model';
 import { pageChat } from './pageChat';
+import { pageEvent } from './pageEvent';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 
@@ -57,18 +58,6 @@ class pageHome {
 		if (ui.cssValue(e, 'display') != 'none')
 			ui.toggleHeight(e);
 	}
-	static deleteEvent() {
-		var id = ui.q('home homeBody form').getAttribute('i');
-		if (id)
-			communication.ajax({
-				url: global.server + 'db/one',
-				method: 'DELETE',
-				body: { classname: 'Event', id: id },
-				success(r) {
-					pageHome.init(true);
-				}
-			});
-	}
 	static init(force) {
 		var e = ui.q('home');
 		if (force || !e.innerHTML) {
@@ -107,10 +96,13 @@ class pageHome {
 				responseType: 'json',
 				success(l) {
 					var s = '', oc = user.contact ? null : 'intro.openHint({ desc: \'teaserEvents\', pos: \'10%,5em\', size: \'80%,auto\' })';
-					for (var i = 1; i < l.length; i++) {
-						var e = model.convert(new Location(), l, i);
-						s += '<card onclick="' + (oc ? oc : 'ui.navigation.autoOpen(&quot;' + global.encParam('e=' + e.event.id) + '&quot;)') + '"><img src="' + global.serverImg + (e.imageList ? e.imageList : e.event.imageList) + '"/><text>' + e.event.text + '</text></card>';
-					}
+					var e = [];
+					for (var i = 1; i < l.length; i++)
+						e.push(model.convert(new Location(), l, i));
+					if (user.contact)
+						e = pageEvent.getCalendarList(e);
+					for (var i = 0; i < e.length; i++)
+						s += '<card onclick="' + (oc ? oc : 'ui.navigation.autoOpen(&quot;' + global.encParam('e=' + pageEvent.getId(e[i])) + '&quot;)') + '"><img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList) + '"/><text>' + e[i].event.text + '</text></card>';
 					ui.q('home teaser.events>div').innerHTML = s;
 					ui.css('home teaser.events', 'opacity', 1);
 				}
@@ -177,56 +169,6 @@ class pageHome {
 		pageHome.badge = -1;
 		ui.html('notificationList', '');
 		ui.html('home', '');
-	}
-	static saveEvent() {
-		if (!user.contact) {
-			intro.openHint({ desc: 'whatToDo', pos: '10%,5em', size: '80%,auto' });
-			return;
-		}
-		formFunc.resetError(ui.q('home input[name="startDate"]'));
-		formFunc.resetError(ui.q('home textarea[name="text"]'));
-		var t = ui.q('home textarea[name="hashtagsDisp"]');
-		if (!t.value)
-			formFunc.setError(t, 'error.hashtags');
-		else
-			formFunc.validation.filterWords(t);
-		t = hashtags.convert(t.value);
-		ui.q('home input[name="skills"]').value = t.category;
-		ui.q('home input[name="skillsText"]').value = t.hashtags;
-		var v = formFunc.getForm('home homeBody');
-		var h = v.values.startDate.split(':')[0];
-		if (!h)
-			formFunc.setError(ui.q('home input[name="startDate"]'), 'events.errorDate')
-		if (!v.values.text)
-			formFunc.setError(ui.q('home textarea[name="text"]'), 'error.description');
-		else
-			formFunc.validation.filterWords(ui.q('home textarea[name="text"]'));
-		if (ui.q('home errorHint'))
-			return;
-		var d = new Date();
-		if (h < d.getHours())
-			d.setDate(d.getDate() + 1);
-		v.values.startDate = global.date.local2server(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + v.values.startDate + ':00');
-		v.classname = 'Event';
-		v.id = ui.q('home homeBody form').getAttribute('i');
-		communication.ajax({
-			url: global.server + 'db/one',
-			method: v.id ? 'PUT' : 'POST',
-			body: v,
-			success(r) {
-				ui.navigation.hidePopup();
-				ui.navigation.autoOpen(global.encParam('e=' + (r ? r : v.id)));
-				pageHome.init(true);
-			}
-		});
-	}
-	static synchonizeTags() {
-		var e = ui.q('home textarea[name="hashtagsDisp"]');
-		hashtags.synchonizeTags(e);
-		if (e.value && ui.cssValue('home .eventText', 'display') == 'none')
-			ui.toggleHeight('home .eventText');
-		else if (!e.value && ui.cssValue('home .eventText', 'display') != 'none')
-			ui.toggleHeight('home .eventText');
 	}
 	static toggleNotification() {
 		if (!user.contact)

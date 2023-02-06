@@ -1,6 +1,6 @@
 import { communication } from './communication';
 import { global } from './global';
-import { EventRating, Location, model } from './model';
+import { Contact, EventRating, Location, model } from './model';
 import { pageEvent } from './pageEvent';
 import { ui, formFunc } from './ui';
 import { user } from './user';
@@ -65,13 +65,13 @@ class ratings {
 				ui.html('detail card:last-child [name="favLoc"]', '');
 				var s = '', date, pseudonym, text, img, rate;
 				for (var i = 1; i < list.length; i++) {
-					var v = model.convert(new EventRating(), list, i);
-					date = global.date.formatDate(v.createdAt);
-					pseudonym = v.contact.id == user.contact.id ? ui.l('you') : v.contact.pseudonym;
-					text = v.text ? ': ' + v.text : '';
-					img = v.image ? '<br/><img src="' + global.serverImg + v.image + '"/>' : '';
-					rate = '<rating><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></rating>';
-					s += '<ratingItem onclick="ui.navigation.autoOpen(&quot;' + global.encParam('e=' + v.eventId) + '&quot;,event)">' + rate + date + ' ' + pseudonym + text + img + '</ratingItem>';
+					var v = model.convert(new Contact(), list, i);
+					date = global.date.formatDate(v.eventRating.createdAt);
+					pseudonym = v.id == user.contact.id ? ui.l('you') : v.pseudonym;
+					text = v.eventRating.text ? ': ' + v.eventRating.text : '';
+					img = v.eventRating.image ? '<br/><img src="' + global.serverImg + v.eventRating.image + '"/>' : '';
+					rate = '<rating><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.eventRating.rating) + '%;">★★★★★</full></rating>';
+					s += '<ratingItem onclick="ui.navigation.autoOpen(&quot;' + global.encParam('e=' + pageEvent.getId(v)) + '&quot;,event)">' + rate + date + ' ' + pseudonym + text + img + '</ratingItem>';
 				}
 				if (s)
 					s = '<ratingHistory>' + s + '</ratingHistory>';

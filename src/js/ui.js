@@ -185,7 +185,7 @@ class ui {
 					if (idIntern.indexOf('l=') == 0)
 						details.open(idIntern.substring(2), 'location_list&search=' + encodeURIComponent('location.id=' + idIntern.substring(2)), pageLocation.detailLocationEvent);
 					else if (idIntern.indexOf('e=') == 0)
-						details.open(idIntern.substring(2), 'event_list&search=' + encodeURIComponent('event.id=' + idIntern.substring(2)), pageLocation.detailLocationEvent);
+						details.open(idIntern.substring(2), 'event_list&search=' + encodeURIComponent('event.id=' + idIntern.substring(2, idIntern.indexOf('_'))), pageLocation.detailLocationEvent);
 					else if (idIntern.indexOf('f=') == 0)
 						pageContact.sendRequestForFriendship(idIntern.substring(2));
 					else if (idIntern.indexOf('q=') == 0)
