@@ -17,7 +17,7 @@ export { pageEvent };
 
 class pageEvent {
 	static nearByExec = null;
-	static paypal = null;
+	static paypal = { fee: null, currency: null, merchantUrl: null };
 	static templateEdit = v =>
 		global.template`<form name="editElement" onsubmit="return false">
 <input type="hidden" name="id" value="${v.id}"/>
@@ -345,9 +345,9 @@ class pageEvent {
 		if (futureEvent && v.event.locationId > 0 && (v.event.contactId == user.contact.id || v.eventParticipate.state == 1))
 			text += '<buttontext class="bgColor" onclick="pageEvent.qrcode(' + (v.event.contactId == user.contact.id) + ')">' + ui.l('events.qrcodeButton') + '</buttontext><br/><br/>';
 		if (futureEvent && !v.event.price && (v.eventParticipate.state == 1 || !v.event.maxParticipants || participantCount < v.event.maxParticipants))
-			text += '<buttontext class="bgColor" onclick="pageEvent.participate(event)">' + ui.l('events.participante' + (v.eventParticipate.state == 1 ? 'Stop' : '')) + '</buttontext>';
+			text += '<buttontext class="bgColor participation" onclick="pageEvent.participate()">' + ui.l('events.participante' + (v.eventParticipate.state == 1 ? 'Stop' : '')) + '</buttontext>';
 		if (futureEvent && v.event.price > 0 && !v.eventParticipate.state && v.contact.paypalMerchantId)
-			text += '<buttontext class="bgColor" onclick="pageEvent.openPaypal(&quot;' + v.contact.paypalMerchantId + '&quot;)">' + ui.l('events.participante') + '</buttontext>';
+			text += '<buttontext class="bgColor participation" onclick="pageEvent.openPaypal(&quot;' + v.contact.paypalMerchantId + '&quot;)">' + ui.l('events.participante') + '</buttontext>';
 		if (participantCount > 0 || futureEvent)
 			text += '<buttontext class="bgColor" onclick="pageEvent.toggleParticipants(event)"><participantCount>' + (participantCount > 0 ? participantCount + '&nbsp;' : '') + '</participantCount>' + ui.l('events.participants') + '</buttontext>';
 		text += '</div><text name="participants" style="margin:0 -1em;display:none;"></text>';
@@ -578,10 +578,17 @@ class pageEvent {
 	}
 	static openPaypal(paypalMerchantId) {
 		if (!ui.q('head script[src*="paypal.com"]')) {
-			var script = document.createElement('script');
-			script.onload = pageEvent.openPaypalPopup;
-			script.src = 'https://www.paypal.com/sdk/js?&client-id=AXvvZWO0WqF0RtYwhisZcZ0vsKXtrSMr08hVk3QuhM7VEbrN4i40JH_fDiHXu2Ol4smy7Z-6B2kdW6rx&merchant-id=' + paypalMerchantId + '&currency=EUR';
-			document.head.appendChild(script);
+			communication.ajax({
+				url: global.server + 'action/paypalKey',
+				success(r) {
+					pageEvent.paypal.fee = r.fee;
+					pageEvent.paypal.currency = r.currency;
+					var script = document.createElement('script');
+					script.onload = pageEvent.openPaypalPopup;
+					script.src = 'https://www.paypal.com/sdk/js?&client-id=' + r.key + '&currency=' + r.currency + '&merchant-id=' + paypalMerchantId;
+					document.head.appendChild(script);
+				}
+			});
 		} else
 			pageEvent.openPaypalPopup();
 	}
@@ -593,16 +600,16 @@ class pageEvent {
 				return actions.order.create({
 					purchase_units: [{
 						amount: {
-							currency_code: "EUR",
+							currency_code: pageEvent.paypal.currency,
 							value: '' + amount
 						},
 						payment_instruction: {
-							disbursement_mode: "INSTANT",
+							disbursement_mode: 'INSTANT',
 							platform_fees: [
 								{
 									amount: {
-										currency_code: "EUR",
-										value: '' + (0.2 * amount)
+										currency_code: pageEvent.paypal.currency,
+										value: '' + (pageEvent.paypal.fee * amount)
 									},
 								},
 							],
@@ -611,25 +618,23 @@ class pageEvent {
 				});
 			},
 			onApprove: function (data, actions) {
-				console.log('Capture result', JSON.stringify(data));
-				console.log('Capture result', JSON.stringify(actions));
+				console.log('data', data);
+				console.log('actions', actions);
 				actions.order.capture().then(function (orderData) {
-					console.log('Capture result', JSON.stringify(orderData));
-					intro.closeHint();
-				}).error(function (e) {
-					console.log('Capture error', JSON.stringify(e));
+					console.log('order', orderData);
+					if (orderData.status == 'COMPLETED')
+						pageEvent.participate(JSON.stringify(orderData));
 				});
 			}
 		}).render('#paypal-button-container');
 	}
-	static participate(event) {
-		event.stopPropagation();
+	static participate(order) {
 		var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
 		if (e.event.price > 0 && !user.contact.image) {
 			ui.navigation.openPopup(ui.l('attention'), ui.l('events.participationNoImage') + '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.editProfile') + '</buttontext > ');
 			return;
 		}
-		var button = event.target;
+		var button = ui.q('detail card:last-child buttontext.participation');
 		var d = { classname: 'EventParticipate', values: {} };
 		var eventDate = e.id.split('_')[1];
 		if (e.eventParticipate.id) {
@@ -637,7 +642,7 @@ class pageEvent {
 			d.id = e.eventParticipate.id;
 			if (e.event.confirm == 1) {
 				if (!ui.q('#stopParticipateReason')) {
-					ui.navigation.openPopup(ui.l('events.stopParticipate'), ui.l('events.stopParticipateText') + '<br/><textarea id="stopParticipateReason" placeholder="' + ui.l('events.stopParticipateHint') + '" style="margin-top:0.5em;"></textarea><buttontext class="bgColor" style="margin-top:1em;" onclick="pageEvent.participate(event)">' + ui.l('events.stopParticipateButton') + '</buttontext>');
+					ui.navigation.openPopup(ui.l('events.stopParticipate'), ui.l('events.stopParticipateText') + '<br/><textarea id="stopParticipateReason" placeholder="' + ui.l('events.stopParticipateHint') + '" style="margin-top:0.5em;"></textarea><buttontext class="bgColor" style="margin-top:1em;" onclick="pageEvent.participate()">' + ui.l('events.stopParticipateButton') + '</buttontext>');
 					return;
 				}
 				if (!ui.q('#stopParticipateReason').value)
@@ -648,6 +653,7 @@ class pageEvent {
 			d.values.state = 1;
 			d.values.eventId = e.event.id;
 			d.values.eventDate = eventDate;
+			d.values.payment = order;
 		}
 		communication.ajax({
 			url: global.server + 'db/one',
@@ -684,6 +690,8 @@ class pageEvent {
 					e2.innerHTML = e2.innerHTML && parseInt(e2.innerHTML) > 1 ? (parseInt(e2.innerHTML) - 1) + ' ' : '';
 				}
 				ui.navigation.hidePopup();
+				if (order)
+					intro.closeHint();
 				e = ui.q('detail card:last-child[i="' + e.event.id + '_' + eventDate + '"] [name="participants"]');
 				var f = function () {
 					e.innerHTML = '';
@@ -890,14 +898,14 @@ class pageEvent {
 			pageLogin.login(user.email, user.password, true, pageEvent.signUpPaypal);
 			return;
 		}
-		if (pageEvent.paypal) {
+		if (pageEvent.paypal.merchantUrl) {
 			pageEvent.saveDraft();
-			ui.navigation.openHTML(pageEvent.paypal, 'paypal');
+			ui.navigation.openHTML(pageEvent.paypal.merchantUrl, 'paypal');
 		} else
 			communication.ajax({
 				url: global.server + 'action/paypalSignUpSellerUrl',
 				success(r) {
-					pageEvent.paypal = r + '&displayMode=minibrowser';
+					pageEvent.paypal.merchantUrl = r + '&displayMode=minibrowser';
 					pageEvent.signUpPaypal();
 				}
 			});

@@ -167,8 +167,12 @@ class pageHome {
 	}
 	static reset() {
 		pageHome.badge = -1;
+		ui.html('chatList', '');
 		ui.html('notificationList', '');
 		ui.html('home', '');
+		ui.classRemove('navigation buttonIcon', 'pulse highlight');
+		ui.q('navigation buttonIcon.chats badgeChats').innerHTML = '';
+		ui.q('navigation buttonIcon.notifications badgeNotifications').innerHTML = 0;
 	}
 	static toggleNotification() {
 		if (!user.contact)
