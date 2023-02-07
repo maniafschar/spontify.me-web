@@ -433,7 +433,7 @@ class pageChat {
 		if (e) {
 			var id = e.getAttribute('i');
 			communication.ajax({
-				url: global.server + 'action/chat/false/' + id + '/false',
+				url: global.server + 'action/chat/' + id + '/false',
 				responseType: 'json',
 				success(r) {
 					if (ui.q('chat[i="' + id + '"] chatConversation')) {
