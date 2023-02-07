@@ -740,7 +740,7 @@ class pageEvent {
 				var h = 80;
 				context.fillText(e.name, canvas.width / 2, h);
 				context.font = '30px Comfortaa';
-				var a = e.address.split('\n');
+				var a = e.address.replace(/<br \/>/g, '\n').replace(/<br\/>/g, '\n').split('\n');
 				h += 40;
 				for (var i = 0; i < a.length; i++) {
 					h += 40;
