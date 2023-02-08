@@ -474,7 +474,7 @@ class ui {
 				pageContact.listContacts, 'contacts', 'profile');
 		},
 		eventMy() {
-			pageEvent.loadEvents('query=event_list&distance=100000&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('event.contactId=' + user.contact.id + ' and event.endDate<\'' + global.date.local2server(new Date()).substring(0, 10) + '\''));
+			pageEvent.loadEvents('query=event_list&distance=100000&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('event.contactId=' + user.contact.id));
 		},
 		eventTickets() {
 			return lists.loadList(
