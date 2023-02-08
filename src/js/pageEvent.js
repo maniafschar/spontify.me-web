@@ -119,6 +119,7 @@ class pageEvent {
 <div class="eventMargin">${v.eventMustBeConfirmed}</div>
 <div class="price highlightColor eventMargin">${v.eventPrice}</div>
 <div class="eventMargin">${v.maxParticipants}</div>
+<div class="eventMargin"><urls>${v.url}</urls></div>
 <div class="reason eventMargin"></div>
 <span class="eventParticipationButtons eventMargin"></span>
 </text>`;
@@ -190,6 +191,12 @@ class pageEvent {
 		v.hideMeFavorite = ' noDisp';
 		v.hideMeEvents = ' noDisp';
 		v.hideMeMarketing = ' noDisp';
+		if (v.event.url) {
+			var h = new URL(v.event.url).hostname;
+			while (h.indexOf('.') != h.lastIndexOf('.'))
+				h = h.substring(h.indexOf('.') + 1);
+			v.url = '<label class="multipleLabel" onclick="ui.navigation.openHTML(&quot;' + v.event.url + '&quot;)">' + h.toLowerCase() + '</label>';
+		}
 		if (user.contact.id == v.event.contactId)
 			v.editAction = 'pageEvent.edit(' + v.locID + ',' + v.event.id + ')';
 		else
@@ -356,9 +363,9 @@ class pageEvent {
 		var text = '<div style="margin:1em 0;">';
 		if (futureEvent && v.event.locationId > 0 && (v.event.contactId == user.contact.id || v.eventParticipate.state == 1))
 			text += '<buttontext class="bgColor" onclick="pageEvent.qrcode(' + (v.event.contactId == user.contact.id) + ')">' + ui.l('events.qrcodeButton') + '</buttontext><br/><br/>';
-		if (futureEvent && !v.event.price && (v.eventParticipate.state == 1 || !v.event.maxParticipants || participantCount < v.event.maxParticipants))
+		if (futureEvent && (!v.event.price || user.contact.id == v.event.concatId) && (v.eventParticipate.state == 1 || !v.event.maxParticipants || participantCount < v.event.maxParticipants))
 			text += '<buttontext class="bgColor participation" onclick="pageEvent.participate()">' + ui.l('events.participante' + (v.eventParticipate.state == 1 ? 'Stop' : '')) + '</buttontext>';
-		if (futureEvent && v.event.price > 0 && !v.eventParticipate.state && v.contact.paypalMerchantId)
+		else if (futureEvent && v.event.price > 0 && !v.eventParticipate.state && v.contact.paypalMerchantId)
 			text += '<buttontext class="bgColor participation" onclick="pageEvent.openPaypal(&quot;' + v.contact.paypalMerchantId + '&quot;)">' + ui.l('events.participante') + '</buttontext>';
 		if (participantCount > 0 || futureEvent)
 			text += '<buttontext class="bgColor" onclick="pageEvent.toggleParticipants(event)"><participantCount>' + (participantCount > 0 ? participantCount + '&nbsp;' : '') + '</participantCount>' + ui.l('events.participants') + '</buttontext>';
@@ -552,7 +559,7 @@ class pageEvent {
 	}
 	static locationsOfPastEvents() {
 		communication.ajax({
-			url: global.server + 'db/list?query=event_list&search=' + encodeURIComponent('event.locationId is not null and event.contactId=' + user.contact.id),
+			url: global.server + 'db/list?query=event_list&search=' + encodeURIComponent('event.locationId>0 and event.contactId=' + user.contact.id),
 			responseType: 'json',
 			success(r) {
 				var s = '', processed = {};
