@@ -1651,6 +1651,11 @@ chatInput errorHint {
 	margin-left: 0.75em;
 }
 
+chatInput textarea {
+	margin-right: -1em;
+	border-radius: 1.5em 0 0 1.5em;
+}
+
 km {
 	position: relative;
 }

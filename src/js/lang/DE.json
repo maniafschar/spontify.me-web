@@ -281,7 +281,7 @@
 			"participationMustBeConfirmed": "Bitte nur verbindliche Teilnahmen!",
 			"participationNoImage": "An kostenpflichtigen Events kann man nur mit einem Profilbild teilnehmen. Möchtest Du ein Profilbild hochladen?",
 			"paypalSignUpButton": "Paypal aktivieren",
-			"paypalSignUpHint": "Kostenpflichtige Events werden Vorab per Paypal von den Teilnehmern bezahlt. Dabei landet das Geld, abzüglich unserer Gebühr von 20%, direkt auf Deinen Paypal Konto. Hierzu benötigen wir die Aktivierung Deines Paypal Kontos.",
+			"paypalSignUpHint": "Kostenpflichtige Events werden Vorab per Paypal von den Teilnehmern bezahlt. Dabei landet das Geld, abzüglich unserer Gebühr von {0}%, direkt auf Deinen Paypal Konto. Hierzu benötigen wir die Aktivierung Deines Paypal Kontos.",
 			"potentialParticipants": "passende Buddies",
 			"price": "Eintritt in &euro;",
 			"priceDisp": "Eintritt {0}&euro;",

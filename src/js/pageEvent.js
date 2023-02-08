@@ -85,7 +85,7 @@ class pageEvent {
 	<label>${ui.l('events.price')}</label>
 	<value>
 		<input type="number" step="any" name="price" value="${v.price}" onkeyup="pageEvent.checkPrice()" onmousewheel="return false;" />
-		<explain class="paypal" style="display:none;">${ui.l('events.paypalSignUpHint')}
+		<explain class="paypal" style="display:none;">${ui.l('events.paypalSignUpHint').replace('{0}', pageEvent.paypal.fee)}
 			<dialogButtons>
 				<buttontext class="bgColor" onclick="pageEvent.signUpPaypal()">${ui.l('events.paypalSignUpButton')}</buttontext>
 			</dialogButtons>
@@ -199,6 +199,18 @@ class pageEvent {
 	static edit(locationID, id) {
 		if (!user.contact) {
 			intro.openHint({ desc: 'teaserEvents', pos: '10%,5em', size: '80%,auto' });
+			return;
+		}
+		if (!pageEvent.paypal.fee) {
+			communication.ajax({
+				url: global.server + 'action/paypalKey',
+				responseType: 'json',
+				success(r) {
+					pageEvent.paypal.fee = r.fee;
+					pageEvent.paypal.currency = r.currency;
+					pageEvent.edit(locationID, id);
+				}
+			});
 			return;
 		}
 		ui.navigation.hideMenu();
@@ -580,6 +592,7 @@ class pageEvent {
 		if (!ui.q('head script[src*="paypal.com"]')) {
 			communication.ajax({
 				url: global.server + 'action/paypalKey',
+				responseType: 'json',
 				success(r) {
 					pageEvent.paypal.fee = r.fee;
 					pageEvent.paypal.currency = r.currency;

@@ -281,7 +281,7 @@
 			"participationMustBeConfirmed": "Please only binding participation!",
 			"participationNoImage": "You can only participate in paid events with a profile picture. Would you like to upload a profile picture?",
 			"paypalSignUpButton": "Activate Paypal",
-			"paypalSignUpHint": "Paid events are paid for in advance by the participants via Paypal. The money, minus our fee of 20%, is transferred directly on your PayPal account. Therefore, we need the activation of your PayPal account.",
+			"paypalSignUpHint": "Paid events are paid for in advance by the participants via Paypal. The money, minus our fee of {0}%, is transferred directly on your PayPal account. Therefore, we need the activation of your PayPal account.",
 			"potentialParticipants": "suitable Buddies",
 			"price": "Entrance in &euro;",
 			"priceDisp": "Entrance {0} &euro;",
