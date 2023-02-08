@@ -311,6 +311,7 @@
 			"type_w1": "jede Woche",
 			"type_w2": "jede 2. Woche",
 			"type_y": "ein mal pro Jahr",
+			"url": "Link zum promopten",
 			"yesterday": "Gestern, {0}"
 		},
 		"home": {

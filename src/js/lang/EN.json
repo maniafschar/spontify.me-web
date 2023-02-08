@@ -311,6 +311,7 @@
 			"type_w1": "every week",
 			"type_w2": "every 2. weeks",
 			"type_y": "once a year",
+			"url": "Promoption link",
 			"yesterday": "Yesterday, {0}"
 		},
 		"home": {

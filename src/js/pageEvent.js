@@ -92,12 +92,20 @@ class pageEvent {
 		</explain>
 	</value>
 </field>
-<field class="paid" style="display:none;">
-	<label>${ui.l('picture')}</label>
-	<value>
-		<input type="file" name="image" accept=".gif, .png, .jpg" />
-	</value>
-</field>
+<div class="paid" style="display:none;">
+	<field>
+		<label>${ui.l('picture')}</label>
+		<value>
+			<input type="file" name="image" accept=".gif, .png, .jpg" />
+		</value>
+	</field>
+	<field>
+		<label>${ui.l('events.url')}</label>
+		<value>
+			<input name="url" />
+		</value>
+	</field>
+</div>
 <field class="unpaid noWTDField">
 	<label>${ui.l('events.confirmLabel')}</label>
 	<value>
