@@ -42,17 +42,38 @@ class hashtags {
 		return { category: category, hashtags: hashtags.replace(/ /g, '|') };
 	}
 	static display() {
-		var s = '';
+		var s = '<category>';
 		for (var i = 0; i < ui.categories.length; i++)
-			s += '<category class="bgColor" onclick="hashtags.toggleSubCategories(this,' + i + ')">' + ui.categories[i].label + '</category>';
+			s += '<label ' + (i == 0 ? ' class="selected"' : '') + 'onclick="hashtags.toggleSubCategories(this,' + i + ')">' + ui.categories[i].label + '</label>';
+		s += '</category>';
 		for (var i = 0; i < ui.categories.length; i++) {
-			s += '<div>';
+			s += '<div' + (i == 0 ? ' style="display:block;"' : '') + '>';
 			var subs = ui.categories[i].values.sort(function (a, b) { return a > b ? 1 : -1 });
 			for (var i2 = 0; i2 < subs.length; i2++)
-				s += '<label class="multipleLabel" onclick="hashtags.add(this,&quot;' + subs[i2].split('|')[0] + '&quot;)">' + subs[i2].split('|')[0] + '</label>';
+				s += '<label onclick="hashtags.add(this,&quot;' + subs[i2].split('|')[0] + '&quot;)">' + subs[i2].split('|')[0] + '</label>';
 			s += '</div>';
 		}
 		return s;
+	}
+	static filter(e) {
+		ui.adjustTextarea(e);
+		var s = e.value.toLowerCase(), id = 'popup ';
+		if (ui.q(id + 'hashtags').style.maxHeight)
+			ui.q(id + 'hashtags').style.maxHeight = null;
+		var list = ui.qa(id + 'hashtags label');
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.maxWidth = list[i].innerText.toLowerCase().indexOf(s) > -1 ? null : 0;
+			list[i].style.padding = list[i].style.maxWidth;
+			list[i].style.margin = list[i].style.maxWidth;
+		}
+		var list = ui.qa(id + 'hashtags>div');
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.maxHeight = list[i].querySelector('label:not([style*="max-width"])') ? null : 0;
+			list[i].style.padding = list[i].style.maxHeight;
+			list[i].previousElementSibling.style.maxHeight = list[i].style.maxHeight;
+			list[i].previousElementSibling.style.padding = list[i].style.maxHeight;
+		}
+		console.log(e.value + ': ' + e.selectionStart);
 	}
 	static ids2Text(ids) {
 		if (!ids)
@@ -76,19 +97,22 @@ class hashtags {
 			e = e.target;
 		if (e.nodeName != 'TEXTAREA')
 			e = ui.parents(e, 'hashtags').previousElementSibling
-		var tags = e.nextElementSibling.querySelectorAll('label');
+		var tags = e.nextElementSibling.querySelectorAll('div>label');
 		var s = e.value.toLowerCase();
 		for (var i = 0; i < tags.length; i++)
-			tags[i].style.color = s.indexOf(tags[i].innerText.toLowerCase()) < 0 ? '' : 'black';
+			s.indexOf(tags[i].innerText.toLowerCase()) < 0 ? ui.classRemove(tags[i], 'selected') : ui.classAdd(tags[i], 'selected');
 		ui.adjustTextarea(e);
 	}
 	static toggleSubCategories(e, i) {
 		e = ui.parents(e, 'hashtags');
-		var e2 = e.querySelector('div[style*="block"]');
-		e = e.querySelectorAll('div')[i];
-		var f = function () { ui.toggleHeight(e) };
-		if (e2 && e2 != e)
-			ui.toggleHeight(e2, f);
+		var visibleBlock = e.querySelector('div[style*="block"]');
+		ui.classRemove(e.querySelectorAll('category label.selected'), 'selected');
+		ui.classAdd(e.querySelectorAll('category label')[i], 'selected');
+		var a = e.querySelectorAll('div')[i];
+		e.style.minHeight = '12em';
+		var f = function () { ui.toggleHeight(a, function () { e.style.minHeight = null; }); };
+		if (visibleBlock && visibleBlock != a)
+			ui.toggleHeight(visibleBlock, f);
 		else
 			f.call();
 	}

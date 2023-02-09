@@ -391,9 +391,9 @@ homeBody teaser title {
 }
 
 homeBody teaser buttonIcon {
-	right: 0;
-	font-size: 3em;
-	bottom: -1.4em;
+	right: -0.3em;
+	font-size: 4em;
+	bottom: -1.15em;
 	box-shadow: none;
 }
 
@@ -823,6 +823,14 @@ settings qrcode {
 	position: relative;
 }
 
+settings field hashtags>div label {
+	color: rgba(255, 255, 255, 0.4);
+}
+
+settings field hashtags>div label.selected {
+	color: white;
+}
+
 locationPicker {
 	position: absolute;
 	display: inline-block;
@@ -911,6 +919,8 @@ field hashtags {
 
 field hashtags>div {
 	display: none;
+	width: 70%;
+	margin-left: 30%;
 }
 
 field hashtags buttontext {
@@ -918,18 +928,62 @@ field hashtags buttontext {
 }
 
 field hashtags category {
+	width: 30%;
+	position: absolute;
+	left: 0;
+}
+
+field hashtags label {
 	cursor: pointer;
-	display: inline-block;
+	display: block;
 	position: relative;
 	padding: 0.25em 0.75em;
-	border-radius: 0.5em;
-	margin: 0.25em;
+	text-align: left;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+	border-radius: 1em;
+	cursor: pointer;
+}
+
+field hashtags>div label {
+	color: rgba(0, 0, 0, 0.4);
+}
+
+field hashtags>div label.selected {
 	color: black;
 }
 
-field hashtags.limitHeight>div {
-	max-height: 14em;
-	overflow-y: auto;
+field hashtags category label.selected {
+	font-weight: bold;
+}
+
+field hashtags category label.selected::after {
+	content: '>';
+	position: absolute;
+	right: 0.5em;
+	top: 0.25em;
+}
+
+mapButton,
+field hashtagButton {
+	font-size: 2em;
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 0.2em;
+	cursor: pointer;
+	z-index: 1;
+	color: black;
+}
+
+mapButton {
+	position: relative;
+	float: right;
+	margin-top: -1.05em;
+}
+
+field hashtagButton::before {
+	content: '+';
 }
 
 dialogButtons {
@@ -1557,7 +1611,6 @@ chatMessage note {
 	box-sizing: initial;
 	overflow: hidden;
 	text-align: left;
-	margin: 0 -1px;
 	display: block;
 	background: rgba(220, 240, 255, 0.8);
 	color: black;
@@ -2116,6 +2169,10 @@ map {
 	position: relative;
 	display: block;
 	box-shadow: 0 0 1em rgb(0, 0, 0, 0.3);
+}
+
+mapButton::before {
+	content: '>';
 }
 
 img.map {

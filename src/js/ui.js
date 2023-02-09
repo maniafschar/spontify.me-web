@@ -53,7 +53,10 @@ class ui {
 		var h = e.scrollHeight;
 		if (h > ui.emInPX * 6)
 			h = ui.emInPX * 6;
-		ui.css(e, 'height', (h + 6) + 'px');
+		h += 6;
+		if (h < 2 * ui.emInPX)
+			h = 2 * ui.emInPX;
+		ui.css(e, 'height', h + 'px');
 	}
 	static getSkills(compare, style) {
 		var result = {
@@ -643,43 +646,53 @@ class ui {
 	}
 	static toggleHeight(e, exec) {
 		if (typeof e == 'string')
-			e = ui.q(e);
-		if (!e || e.getAttribute('toggle') && new Date().getTime() - e.getAttribute('toggle') < 450)
-			return;
-		e.setAttribute('toggle', new Date().getTime());
-		if (!e.getAttribute('h')) {
-			var p = e.style.position;
-			var d = e.style.display;
-			e.style.visibility = 'hidden';
-			e.style.display = 'block';
-			e.style.height = '';
-			e.style.position = 'absolute';
-			e.setAttribute('h', e.offsetHeight);
-			e.style.position = p;
-			e.style.display = d;
-			e.style.visibility = '';
-		}
-		var o = e.style.overflow;
-		var t = e.style.transition;
-		e.style.overflow = 'hidden';
-		var expand = ui.cssValue(e, 'display') == 'none';
-		e.style.height = (expand ? 0 : e.offsetHeight) + 'px';
-		e.style.transition = 'height .4s ease-' + (expand ? 'in' : 'out');
-		if (expand)
-			e.style.display = 'block';
-		setTimeout(function () {
-			ui.on(e, 'transitionend', function () {
-				e.style.overflow = o;
-				e.style.transition = t;
+			e = ui.qa(e);
+		var f = function (e) {
+			if (!e || e.getAttribute('toggle') && new Date().getTime() - e.getAttribute('toggle') < 450)
+				return;
+			e.setAttribute('toggle', new Date().getTime());
+			if (!e.getAttribute('h')) {
+				var p = e.style.position;
+				var d = e.style.display;
+				e.style.visibility = 'hidden';
+				e.style.display = 'block';
 				e.style.height = '';
-				if (!expand)
-					e.style.display = 'none';
-				e.removeAttribute('toggle');
-				if (exec)
-					exec.call();
-			}, true);
-			e.style.height = expand ? e.getAttribute('h') + 'px' : 0;
-		}, 10);
+				e.style.position = 'absolute';
+				e.setAttribute('h', e.offsetHeight);
+				e.style.position = p;
+				e.style.display = d;
+				e.style.visibility = '';
+			}
+			var o = e.style.overflow;
+			var t = e.style.transition;
+			e.style.overflow = 'hidden';
+			var expand = ui.cssValue(e, 'display') == 'none';
+			e.style.height = (expand ? 0 : e.offsetHeight) + 'px';
+			e.style.transition = 'height .4s ease-' + (expand ? 'in' : 'out');
+			if (expand)
+				e.style.display = 'block';
+			setTimeout(function () {
+				var h = parseInt(e.style.height);
+				ui.on(e, 'transitionend', function () {
+					e.style.overflow = o;
+					e.style.transition = t;
+					e.style.height = '';
+					if (!expand) {
+						e.style.display = 'none';
+						e.setAttribute('h', h);
+					}
+					e.removeAttribute('toggle');
+					if (exec)
+						exec.call();
+				}, true);
+				e.style.height = expand ? e.getAttribute('h') + 'px' : 0;
+			}, 10);
+		}
+		if (e.length)
+			for (var i = 0; i < e.length; i++)
+				f(e[i]);
+		else
+			f(e);
 	}
 	static val(id) {
 		var e = ui.qa(id);

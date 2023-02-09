@@ -43,8 +43,9 @@ class pageEvent {
 <field>
 	<label style="padding-top:0;">${ui.l('events.hashtags')}</label>
 	<value>
-		<textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
-		<hashtags>${v.hashtagSelection}</hashtags>
+		<hashtagButton onclick="ui.toggleHeight(&quot;popup hashtags&quot;)"></hashtagButton>
+		<textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="hashtags.filter(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
+		<hashtags style="display:none;">${v.hashtagSelection}</hashtags>
 	</value>
 </field>
 <field class="noWTDField">
@@ -92,20 +93,18 @@ class pageEvent {
 		</explain>
 	</value>
 </field>
-<div class="paid" style="display:none;">
-	<field>
-		<label>${ui.l('picture')}</label>
-		<value>
-			<input type="file" name="image" accept=".gif, .png, .jpg" />
-		</value>
-	</field>
-	<field>
-		<label>${ui.l('events.url')}</label>
-		<value>
-			<input name="url" />
-		</value>
-	</field>
-</div>
+<field class="paid" style="display:none;">
+	<label>${ui.l('picture')}</label>
+	<value>
+		<input type="file" name="image" accept=".gif, .png, .jpg" />
+	</value>
+</field>
+<field class="url" style="display:none;">
+	<label>${ui.l('events.url')}</label>
+	<value>
+		<input name="url" />
+	</value>
+</field>
 <field class="unpaid noWTDField">
 	<label>${ui.l('events.confirmLabel')}</label>
 	<value>
@@ -139,11 +138,16 @@ class pageEvent {
 				ui.toggleHeight(e);
 			if (ui.cssValue(e = ui.q('popup .unpaid'), 'display') != 'none')
 				ui.toggleHeight(e, function () { ui.toggleHeight('popup .paid') });
+			if (ui.cssValue(e = ui.q('popup .url'), 'display') == 'none')
+				ui.toggleHeight(e);
 		} else {
 			if (ui.cssValue(e, 'display') != 'none')
 				ui.toggleHeight(e);
 			if (ui.cssValue(e = ui.q('popup .paid'), 'display') != 'none')
 				ui.toggleHeight(e, function () { ui.toggleHeight('popup .unpaid') });
+			if (ui.cssValue(e = ui.q('popup .url'), 'display') != 'none' &&
+				ui.q('popup [name="locationId"]').value != -1)
+				ui.toggleHeight(e);
 		}
 	}
 	static detail(v) {
@@ -637,7 +641,7 @@ class pageEvent {
 								{
 									amount: {
 										currency_code: pageEvent.paypal.currency,
-										value: '' + (pageEvent.paypal.fee * amount)
+										value: '' + (pageEvent.paypal.fee / 100 * amount)
 									},
 								},
 							],
@@ -919,6 +923,10 @@ class pageEvent {
 		b = ui.q('popup input[name="locationId"]').value;
 		if (!b || b == -2)
 			ui.css('popup .noWTDField', 'display', 'none');
+		if (b == -1) {
+			ui.q('popup .url label').innerText = ui.l('events.urlOnlineEvent');
+			ui.css('popup .url', 'display', null);
+		}
 		pageEvent.checkPrice();
 	}
 	static signUpPaypal() {

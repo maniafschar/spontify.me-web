@@ -312,12 +312,14 @@
 			"type_w2": "jede 2. Woche",
 			"type_y": "ein mal pro Jahr",
 			"url": "Link zum promopten",
+			"urlOnlineEvent": "Link zum teilnehmen",
 			"yesterday": "Gestern, {0}"
 		},
 		"home": {
 			"labelSkill": "suche ich folgende Skills",
 			"labelTime": "Heute ab",
 			"locationNotSetable": "An dieser Stelle existiert kein Ort.",
+			"locationPickerInput": "auf der Karte Ort suchen oder hier eingeben",
 			"locationPickerReset": "Zurücksetzen",
 			"locationPickerTitle": "Standort wählen",
 			"saveEvent": "Los geht's!"

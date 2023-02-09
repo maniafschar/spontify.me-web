@@ -312,12 +312,14 @@
 			"type_w2": "every 2. weeks",
 			"type_y": "once a year",
 			"url": "Promoption link",
+			"urlOnlineEvent": "Participation link",
 			"yesterday": "Yesterday, {0}"
 		},
 		"home": {
 			"labelSkill": "I am looking for following skills",
 			"labelTime": "Today from",
 			"locationNotSetable": "There's no town at this point.",
+			"locationPickerInput": "search location on map or enter it here",
 			"locationPickerReset": "Reset",
 			"locationPickerTitle": "Choose location",
 			"saveEvent": "Let's go!"

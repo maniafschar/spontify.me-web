@@ -115,6 +115,16 @@ class geoData {
 		geoData.current.treet = data.street;
 		geoData.current.town = data.town;
 	}
+	static mapReposition() {
+		if (ui.q('popup input').value) {
+			new google.maps.Geocoder().geocode({ 'address': ui.q('popup input').value.trim() }, function (results, status) {
+				if (status === 'OK')
+					pageHome.map.setCenter(results[0].geometry.location);
+				else
+					formFunc.setError(ui.q('popup input'), status);
+			});
+		}
+	}
 	static openLocationPicker(event, noSelection) {
 		event.preventDefault();
 		event.stopPropagation();
@@ -140,7 +150,7 @@ class geoData {
 	}
 	static openLocationPickerDialog() {
 		ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
-			'<mapPicker></mapPicker><br/>' +
+			'<mapPicker></mapPicker><br/><input name="town" placeholder="' + ui.l('home.locationPickerInput') + '"/><mapButton onclick="geoData.mapReposition()"></mapButton><br/><br/>' +
 			(geoData.manual ? '<buttontext class="bgColor" onclick="geoData.reset()">' + ui.l('home.locationPickerReset') + '</buttontext>' : '') +
 			'<buttontext class="bgColor" onclick="geoData.saveLocationPicker()">' + ui.l('ready') + '</buttontext><errorHint></errorHint>', null, null,
 			function () {
