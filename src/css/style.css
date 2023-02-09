@@ -960,7 +960,7 @@ field hashtags category label.selected {
 field hashtags category label.selected::after {
 	content: '>';
 	position: absolute;
-	right: 0.5em;
+	right: 0;
 	top: 0.25em;
 }
 

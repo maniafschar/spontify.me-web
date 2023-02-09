@@ -1167,7 +1167,11 @@ class formFunc {
 	}
 	static pressDefaultButton(event) {
 		if (event.keyCode == 13) {
-			var e = ui.parents(event.target, 'form').querySelector('.defaultButton');
+			var e = ui.parents(event.target, 'form');
+			if (!e)
+				e = ui.parents(event.target, 'popup');
+			if (e)
+				e = e.querySelector('.defaultButton');
 			if (e)
 				e.click();
 		}

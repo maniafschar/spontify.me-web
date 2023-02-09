@@ -117,11 +117,12 @@ class geoData {
 	}
 	static mapReposition() {
 		if (ui.q('popup input').value) {
-			new google.maps.Geocoder().geocode({ 'address': ui.q('popup input').value.trim() }, function (results, status) {
-				if (status === 'OK')
-					pageHome.map.setCenter(results[0].geometry.location);
-				else
-					formFunc.setError(ui.q('popup input'), status);
+			communication.ajax({
+				url: global.server + 'action/geocode?town=' + encodeURIComponent(ui.q('popup input').value.trim()),
+				responseType: 'json',
+				success(r) {
+					pageHome.map.setCenter(r.results[0].geometry.location);
+				}
 			});
 		}
 	}
@@ -129,7 +130,7 @@ class geoData {
 		event.preventDefault();
 		event.stopPropagation();
 		var e = formFunc.getDraft('locationPicker');
-		if (e && !noSelection) {
+		if (e && e.length > 1 && !noSelection) {
 			if (ui.q('locationPicker').style.display == 'none') {
 				var s = '';
 				for (var i = e.length - 1; i >= 0; i--) {
@@ -150,7 +151,7 @@ class geoData {
 	}
 	static openLocationPickerDialog() {
 		ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
-			'<mapPicker></mapPicker><br/><input name="town" placeholder="' + ui.l('home.locationPickerInput') + '"/><mapButton onclick="geoData.mapReposition()"></mapButton><br/><br/>' +
+			'<mapPicker></mapPicker><br/><input name="town" maxlength="20" placeholder="' + ui.l('home.locationPickerInput') + '"/><mapButton onclick="geoData.mapReposition()" class="defaultButton"></mapButton><br/><br/>' +
 			(geoData.manual ? '<buttontext class="bgColor" onclick="geoData.reset()">' + ui.l('home.locationPickerReset') + '</buttontext>' : '') +
 			'<buttontext class="bgColor" onclick="geoData.saveLocationPicker()">' + ui.l('ready') + '</buttontext><errorHint></errorHint>', null, null,
 			function () {
@@ -213,8 +214,8 @@ class geoData {
 									e.splice(i, 1);
 							}
 							e.push({ lat: position.latitude, lon: position.longitude, town: r.town, street: r.street });
-							if (e.length > 10)
-								e.splice(0, e.length - 10);
+							if (e.length > 5)
+								e.splice(0, e.length - 5);
 							formFunc.saveDraft('locationPicker', e);
 						}
 						geoData.current.town = r.town;
