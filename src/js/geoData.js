@@ -118,10 +118,10 @@ class geoData {
 	static mapReposition() {
 		if (ui.q('popup input').value) {
 			communication.ajax({
-				url: global.server + 'action/geocode?town=' + encodeURIComponent(ui.q('popup input').value.trim()),
+				url: global.server + 'action/google?town=' + encodeURIComponent(ui.q('popup input').value.trim()),
 				responseType: 'json',
 				success(r) {
-					pageHome.map.setCenter(r.results[0].geometry.location);
+					pageHome.map.setCenter({ lat: r.latitude, lng: r.longitude });
 				}
 			});
 		}
