@@ -118,7 +118,7 @@ class pageSettings {
 		<textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
 		<hashtags style="display:none;">${v.hashtagSelection}</hashtags>
 	</value>
-</field><br/>
+</field>
 <field>
 	<label>${ui.l('settings.genderInterest')}</label>
 	<value>

@@ -423,8 +423,8 @@ class pageLogin {
 					page2 = '<field><label>' + ui.l('settings.skillDialog') + '</label><value><textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;"></textarea><hashtags>' + hashtags.display() + '</hashtags></value></field>';
 				if (page1 || page2) {
 					if (page1 && page2) {
-						page1 = '<tabHeader><tab style="width:50%;" class="tabActive">' + ui.l('settings.tabProfile') + '</tab><tab style="width:50%;">' + ui.l('settings.tabSkills') + '</tab></tabHeader><tabBody><div>' + page1;
-						page2 = '</div><div style="display:none;">' + page2 + '</div></tabBody>';
+						page1 = '<tabHeader><tab style="width:50%;" class="tabActive" i="profile" onclick="pageLogin.selectTab(&quot;profile&quot;)">' + ui.l('settings.tabProfile') + '</tab><tab style="width:50%;" onclick="pageLogin.selectTab(&quot;skills&quot;)" i="skills">' + ui.l('settings.tabSkills') + '</tab></tabHeader><tabBody><div><div>' + page1;
+						page2 = '</div><div>' + page2 + '</div></div></tabBody>';
 					}
 					setTimeout(function () {
 						if (ui.navigation.getActiveID() == 'home') {
@@ -513,8 +513,27 @@ class pageLogin {
 		}
 	}
 	static saveProfile() {
+		if (ui.q('hint tabBody') && !ui.q('hint textarea[name="hashtagsDisp"]').value && (!ui.q('hint tabBody').marginLeft || ui.q('hint tabBody').marginLeft.indexOf('-') < 0)) {
+			pageLogin.selectTab('skills');
+			return;
+		}
 		var t = hashtags.convert(ui.q('hint textarea[name="hashtagsDisp"]').value);
-		user.save({ skills: t.category, skillsText: t.hashtags }, intro.closeHint);
+		var d = {};
+		if (t.category)
+			d.skills = t.category;
+		if (t.hashtags)
+			d.skillsText = t.hashtags;
+		if (Object.keys(d).length)
+			user.save(d, intro.closeHint);
+		else
+			intro.closeHint();
+	}
+	static selectTab(id) {
+		if (id != ui.q('hint tabHeader tab.tabActive').getAttribute('i')) {
+			ui.classRemove('hint tab', 'tabActive');
+			ui.classAdd('hint tab[i="' + id + '"]', 'tabActive');
+			ui.q('hint tabBody>div').style.marginLeft = id == 'profile' ? 0 : '-100%';
+		}
 	}
 	static sendVerificationEmail() {
 		var fromDialog = ui.q('popupContent');

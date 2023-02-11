@@ -306,7 +306,6 @@ class pageSearch {
 		pageSearch[type].search();
 	}
 	static selectTab(id) {
-		var e = ui.q('search tabBody div.' + id);
 		ui.q('search tabBody').style.marginLeft = ((id == 'contacts' ? 0 : id == 'events' ? 1 : 2) * -100) + '%';
 		ui.classRemove('search tab', 'tabActive');
 		ui.classAdd('search tab[i="' + id + '"]', 'tabActive');
