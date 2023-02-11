@@ -21,29 +21,55 @@ class pageChat {
 	static chatsUnseen = 0;
 	static lastScroll = 0;
 	static oldCleverTip = '';
-	static admin = { id: 3, image: '' };
+	static admin = { id: 3, image: '', ai: 0, pseudonym: null };
 
-	static templateInput = v =>
-		global.template`<chatInput>
-	<chatMoreButton style="display:none;" onclick="pageChat.scrollToBottom()">v v v</chatMoreButton>
-	<closeHint>${ui.l('chat.closeHint')}</closeHint>
-	<chatButtons>
-		<buttontext class="bgColor" onclick="pageChat.askLink()">${ui.l('share')}</buttontext>
-		<buttontext class="bgColor" onclick="pageChat.askLocation()">${ui.l('chat.serviceLocation')}</buttontext>
-		<buttontext class="bgColor" onclick="pageChat.askImage()">${ui.l('picture')}</buttontext>
-		<buttontext class="bgColor quote" ${v.action}="pageChat.insertQuote(event);">${ui.l('quote')}</buttontext>
-	</chatButtons>
-	<textarea id="chatText" style="height:1.6em;" class="me" placeholder="${ui.l('chat.textHint')}"
-		onkeyup="pageChat.adjustTextarea(this)">${v.draft}</textarea>
-	<buttontext class="bgColor sendButton" ${v.action}="pageChat.sendChat(${v.id},null,event);">${ui.l('send')}</buttontext>
-	<div style="display:none;text-align:center;"></div>
-</chatInput>`;
+	static template = v =>
+		global.template`<listHeader>
+	<chatName><img/><span></span></chatName>
+	<chatDate></chatDate>
+</listHeader>
+<div>
+	<chatConversation></chatConversation>
+	<chatInput>
+		<chatMoreButton style="display:none;" onclick="pageChat.scrollToBottom()">v v v</chatMoreButton>
+		<closeHint>${ui.l('chat.closeHint')}</closeHint>
+		<chatButtons>
+			<buttontext class="bgColor" onclick="pageChat.askLink()">${ui.l('share')}</buttontext>
+			<buttontext class="bgColor" onclick="pageChat.askLocation()">${ui.l('chat.serviceLocation')}</buttontext>
+			<buttontext class="bgColor" onclick="pageChat.askImage()">${ui.l('picture')}</buttontext>
+			<buttontext class="bgColor quote" ${v.action}="pageChat.insertQuote(event);">${ui.l('quote')}</buttontext>
+		</chatButtons>
+		<textarea id="chatText" style="height:1.6em;" class="me" placeholder="${ui.l('chat.textHint')}"
+			onkeyup="pageChat.adjustTextarea(this)">${v.draft}</textarea>
+		<buttontext class="bgColor sendButton" ${v.action}="pageChat.sendChat(${v.id},null,event);">${ui.l('send')}</buttontext>
+		<div style="display:none;text-align:center;"></div>
+		<input type="checkbox" onclick="pageChat.aiHint()" label="ai"${v.ai}></input>
+	</chatInput>
+</div>`;
 	static templateMessage = v =>
 		global.template`<chatMessage${v.class}><time${v.classUnseen}>${v.time}</time>${v.note}</chatMessage>`;
 
 	static adjustTextarea(e) {
 		ui.adjustTextarea(e);
+		intro.closeHint();
 		ui.css('chatConversation', 'bottom', (ui.q('chatInput').clientHeight + ui.emInPX / 2) + 'px');
+	}
+	static aiEnabled(id, l) {
+		if (pageChat.admin.id == id) {
+			pageChat.admin.ai = 0;
+			for (var i = l.length - 1; i > 0; i--) {
+				var v = model.convert(new ContactChat(), l, i);
+				if (v.textId == 'engagement_ai')
+					pageChat.admin.ai++;
+			}
+			return pageChat.admin.ai <= 40;
+		}
+	}
+	static aiHint() {
+		if (ui.q('chatInput input:checked'))
+			intro.openHint({ desc: 'chatAi', pos: '10%,-10.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-0.75em' });
+		else
+			intro.closeHint();
 	}
 	static askLocation() {
 		if (document.activeElement)
@@ -97,9 +123,10 @@ class pageChat {
 	static close(event, exec) {
 		if (event) {
 			var s = event.target.nodeName;
-			if (event.target.onclick || event.target.onmousedown || s == 'TEXTAREA' || s == 'IMG' || s == 'NOTE')
+			if (event.target.onclick || event.target.onmousedown || s == 'TEXTAREA' || s == 'IMG' || s == 'NOTE' || s == 'INPUT')
 				return;
 		}
+		intro.closeHint();
 		var e = ui.q('chat');
 		if (ui.cssValue(e, 'display') == 'none')
 			return false;
@@ -132,11 +159,6 @@ class pageChat {
 			ui.toggleHeight(e);
 	}
 	static detailChat(l, id) {
-		ui.html('chat > div', '<chatConversation></chatConversation>' + pageChat.templateInput({
-			id: id,
-			draft: formFunc.getDraft('chat' + id),
-			action: global.getDevice() == 'computer' ? 'onclick' : 'onmousedown'
-		}));
 		ui.attr('chat', 'i', id);
 		var v;
 		if (l.length > 1) {
@@ -340,8 +362,13 @@ class pageChat {
 					return;
 				ui.attr('chat', 'from', ui.navigation.getActiveID());
 				var f = function () {
-					var e = ui.q('chat');
-					ui.html(e, '<listHeader><chatName><img/><span></span></chatName><chatDate></chatDate></listHeader><div></div>');
+					ui.html('chat', pageChat.template({
+						id: id,
+						draft: user.get('chat' + id),
+						ai: pageChat.aiEnabled(id, r) ? '' : ' class="noDisp"',
+						action: global.getDevice() == 'computer' ? 'onclick' : 'onmousedown'
+					}));
+					formFunc.initFields('chatInput');
 					communication.ajax({
 						url: global.server + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + id),
 						responseType: 'json',
@@ -504,7 +531,7 @@ class pageChat {
 	static saveDraft() {
 		var e = ui.q('#chatText');
 		if (e)
-			formFunc.saveDraft('chat' + ui.q('chat').getAttribute('i'), pageChat.oldCleverTip == e.value ? null : e.value);
+			user.set('chat' + ui.q('chat').getAttribute('i'), pageChat.oldCleverTip == e.value ? null : e.value);
 	}
 	static saveGroupText() {
 		user.contact.chatTextGroups = ui.val('#groupChatText');
@@ -545,6 +572,8 @@ class pageChat {
 				note: msg.replace(/</g, '&lt;'),
 				contactId2: id
 			};
+			if (ui.q('chatInput input:checked'))
+				v.textId = 'engagement_ai';
 			communication.ajax({
 				url: global.server + 'db/one',
 				method: 'POST',
@@ -557,7 +586,7 @@ class pageChat {
 					if (r.class == 'IllegalArgumentException' && r.msg == 'duplicate chat') {
 						ui.q('#chatText').value = '';
 						pageChat.adjustTextarea(ui.q('#chatText'));
-						formFunc.removeDraft('chat' + id);
+						user.remove('chat' + id);
 					} else
 						communication.onError(r);
 				},
@@ -572,7 +601,12 @@ class pageChat {
 						if (v.note) {
 							ui.q('#chatText').value = '';
 							pageChat.adjustTextarea(ui.q('#chatText'));
-							formFunc.removeDraft('chat' + id);
+							user.remove('chat' + id);
+							if (v.textId) {
+								pageChat.admin.ai += 2;
+								if (pageChat.admin.ai > 40)
+									ui.classAdd('chatInput input', 'noDisp');
+							}
 						}
 					}
 					pageChat.initActiveChats();

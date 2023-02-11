@@ -239,8 +239,8 @@ class pageEvent {
 			pageEvent.editInternal(locationID);
 	}
 	static editInternal(locationID, id, v) {
-		if (!id && (locationID && formFunc.getDraft('event' + locationID) || !locationID && formFunc.getDraft('event'))) {
-			v = formFunc.getDraft('event' + (locationID ? locationID : '')).values;
+		if (!id && (locationID && user.get('event' + locationID) || !locationID && user.get('event'))) {
+			v = user.get('event' + (locationID ? locationID : '')).values;
 			if (v.startDate &&
 				global.date.server2Local(v.startDate).getTime() < new Date().getTime())
 				v.startDate = null;
@@ -905,7 +905,7 @@ class pageEvent {
 			body: v,
 			success(r) {
 				ui.navigation.hidePopup();
-				formFunc.removeDraft('event');
+				user.remove('event');
 				details.open(id ? id : r + '_' + global.date.local2server(v.values.startDate).substring(0, 10), 'event_list&search=' + encodeURIComponent('event.id=' + r), id ? function (l, id) {
 					ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id);
 				} : pageLocation.detailLocationEvent);
@@ -914,7 +914,7 @@ class pageEvent {
 		});
 	}
 	static saveDraft() {
-		formFunc.saveDraft('event', formFunc.getForm('popup form'));
+		user.set('event', formFunc.getForm('popup form'));
 	}
 	static setForm() {
 		var b = ui.q('popup [name="type"]').checked;

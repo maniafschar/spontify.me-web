@@ -1,6 +1,6 @@
 import { communication } from './communication';
 import { global } from './global';
-import { Contact, EventRating, Location, model } from './model';
+import { Contact, EventRating, model } from './model';
 import { pageEvent } from './pageEvent';
 import { ui, formFunc } from './ui';
 import { user } from './user';
@@ -39,7 +39,7 @@ class ratings {
 		ui.q('popup [name="rating"]').value = x * 20;
 	}
 	static getForm(id) {
-		var v = {}, draft = formFunc.getDraft('rating' + id);
+		var v = {}, draft = user.get('rating' + id);
 		v.participateId = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).eventParticipate.id;
 		v.bg = 'bgColor';
 		if (draft)
@@ -116,7 +116,7 @@ class ratings {
 			method: 'POST',
 			body: v,
 			success(r) {
-				formFunc.removeDraft('rating');
+				user.remove('rating');
 				ui.navigation.hidePopup();
 				ui.q('detail card:last-child buttontext[onclick*="ratings.open"]').outerHTML = '';
 			}
@@ -124,6 +124,6 @@ class ratings {
 	}
 	static saveDraft() {
 		var f = formFunc.getForm('popup form');
-		formFunc.saveDraft('rating', f.values.text ? f : null);
+		user.set('rating', f.values.text ? f : null);
 	}
 }

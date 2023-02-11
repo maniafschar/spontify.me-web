@@ -97,7 +97,7 @@ class pageSearch {
 		search() {
 			pageSearch.contacts.fieldValues = formFunc.getForm('search tabBody div.contacts form').values;
 			lists.loadList('latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&distance=100000&query=contact_list&search=' + encodeURIComponent(pageSearch.contacts.getSearch()), pageContact.listContacts, 'search tabBody>div.contacts', 'search');
-			formFunc.saveDraft('searchContacts', pageSearch.contacts.fieldValues);
+			user.set('searchContacts', pageSearch.contacts.fieldValues);
 		}
 	}
 	static events = {
@@ -204,7 +204,7 @@ class pageSearch {
 		search() {
 			pageSearch.events.fieldValues = formFunc.getForm('search tabBody div.events form').values;
 			pageEvent.loadEvents('latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&distance=100000&query=event_list&search=' + encodeURIComponent(pageSearch.events.getSearch()));
-			formFunc.saveDraft('searchEvents', pageSearch.events.fieldValues);
+			user.set('searchEvents', pageSearch.events.fieldValues);
 		}
 	}
 	static locations = {
@@ -280,16 +280,16 @@ class pageSearch {
 		search() {
 			pageSearch.locations.fieldValues = formFunc.getForm('search tabBody div.locations form').values;
 			lists.loadList('latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent(pageSearch.locations.getSearch()), pageLocation.listLocation, 'search tabBody>div.locations', 'search');
-			formFunc.saveDraft('searchLocations', pageSearch.locations.fieldValues);
+			user.set('searchLocations', pageSearch.locations.fieldValues);
 		}
 	}
 	static init() {
 		if (!pageSearch.contacts.fieldValues)
-			pageSearch.contacts.fieldValues = formFunc.getDraft('searchContacts') || {};
+			pageSearch.contacts.fieldValues = user.get('searchContacts') || {};
 		if (!pageSearch.events.fieldValues)
-			pageSearch.events.fieldValues = formFunc.getDraft('searchEvents') || {};
+			pageSearch.events.fieldValues = user.get('searchEvents') || {};
 		if (!pageSearch.locations.fieldValues)
-			pageSearch.locations.fieldValues = formFunc.getDraft('searchLocations') || {};
+			pageSearch.locations.fieldValues = user.get('searchLocations') || {};
 		var e = ui.q('search');
 		if (!e.innerHTML) {
 			e.innerHTML = pageSearch.template();

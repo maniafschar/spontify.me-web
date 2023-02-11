@@ -1,8 +1,8 @@
-import { communication } from './communication';
 import { geoData } from './geoData';
+import { global } from './global';
 import { lists } from './lists';
 import { pageLocation } from './pageLocation';
-import { ui } from './ui';
+import { formFunc, ui } from './ui';
 import { user } from './user';
 
 export { intro };
@@ -41,11 +41,11 @@ class intro {
 			if (intro.introMode == 1)
 				intro.introMode = 0;
 		}
-		var e = ui.q('hint'), body = (data.desc.indexOf(' ') > -1 ? data.desc : ui.l('intro.' + data.desc))
+		var e = ui.q('hint'), body = (data.desc.indexOf('<') > -1 ? data.desc : ui.l('intro.' + data.desc))
 			+ (user.contact ? '' : '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;login&quot;)">' + ui.l('login.action') + '</buttontext>')
 			+ (data.hinky ? '<hinky style="' + data.hinky + '" class="' + data.hinkyClass + '"></hinky>' : '')
 			+ (data.desc == 'home' ? '' : '<close onclick="intro.close(event)">x</close>');
-		if (data.desc == e.getAttribute('i')) {
+		if (global.hash(data.desc) == e.getAttribute('i')) {
 			intro.closeHint();
 			return;
 		}
@@ -88,9 +88,10 @@ class intro {
 			ui.css(e, 'top', data.pos.split(',')[1]);
 		}
 		ui.attr(e, 'onclick', data.onclick ? data.onclick : 'intro.closeHint()');
-		ui.attr(e, 'i', data.desc);
+		ui.attr(e, 'i', global.hash(data.desc));
 		ui.attr(e, 'timestamp', new Date().getTime());
 		ui.css(e, 'display', 'block');
+		formFunc.initFields('hint');
 		setTimeout(function () { ui.css(e, 'opacity', 1) }, 10);
 	}
 }

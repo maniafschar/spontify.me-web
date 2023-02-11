@@ -159,6 +159,7 @@ class Event extends BaseEntity {
 	skillsText;
 	text;
 	type;
+	url;
 }
 
 class EventParticipate extends BaseEntity {

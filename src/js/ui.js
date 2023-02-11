@@ -744,10 +744,6 @@ class formFunc {
 	static cameraField = null;
 	static dist = 0;
 
-	static getDraft(id) {
-		if (user.contact)
-			return user.contact.storage[id];
-	}
 	static getForm(id) {
 		var d = { values: {} }, cb = {};
 		var e = ui.qa(id + ' textarea:not([transient="true"])');
@@ -1176,19 +1172,6 @@ class formFunc {
 				e.click();
 		}
 	}
-	static removeDraft(key) {
-		var d = {}, save = false;
-		for (var k in user.contact.storage) {
-			if (k == key)
-				save = true;
-			else
-				d[k] = user.contact.storage[k];
-		}
-		if (save) {
-			user.contact.storage = d;
-			user.save({ storage: JSON.stringify(user.contact.storage) });
-		}
-	}
 	static resetError(e) {
 		if (e) {
 			ui.classRemove(e, 'dialogFieldError');
@@ -1198,13 +1181,6 @@ class formFunc {
 					e.children[i].outerHTML = '';
 			}
 		}
-	}
-	static saveDraft(key, value) {
-		if (value) {
-			user.contact.storage[key] = value;
-			user.save({ storage: JSON.stringify(user.contact.storage) });
-		} else
-			formFunc.removeDraft(key);
 	}
 	static setError(e, t, v) {
 		if (e) {

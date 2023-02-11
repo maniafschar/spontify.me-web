@@ -2,9 +2,8 @@ import { communication } from './communication';
 import { global } from './global';
 import { intro } from './intro';
 import { pageHome } from './pageHome';
-import { pageInfo } from './pageInfo';
 import { pageSearch } from './pageSearch';
-import { formFunc, ui } from './ui';
+import { ui } from './ui';
 import { user } from './user';
 
 export { geoData };
@@ -129,7 +128,7 @@ class geoData {
 	static openLocationPicker(event, noSelection) {
 		event.preventDefault();
 		event.stopPropagation();
-		var e = formFunc.getDraft('locationPicker');
+		var e = user.get('locationPicker');
 		if (e && e.length > 1 && !noSelection) {
 			if (ui.q('locationPicker').style.display == 'none') {
 				var s = '';
@@ -208,7 +207,7 @@ class geoData {
 						if (!position.manual)
 							geoData.currentNonManual = { lat: position.latitude, lon: position.longitude, street: r.street, town: r.town };
 						if (position.manual) {
-							var e = formFunc.getDraft('locationPicker') || [];
+							var e = user.get('locationPicker') || [];
 							for (var i = e.length - 1; i >= 0; i--) {
 								if (e[i].town == r.town)
 									e.splice(i, 1);
@@ -216,7 +215,7 @@ class geoData {
 							e.push({ lat: position.latitude, lon: position.longitude, town: r.town, street: r.street });
 							if (e.length > 5)
 								e.splice(0, e.length - 5);
-							formFunc.saveDraft('locationPicker', e);
+							user.set('locationPicker', e);
 						}
 						geoData.current.town = r.town;
 						geoData.current.street = r.street;

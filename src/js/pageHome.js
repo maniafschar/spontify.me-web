@@ -56,6 +56,10 @@ class pageHome {
 		if (ui.cssValue(e, 'display') != 'none')
 			ui.toggleHeight(e);
 	}
+	static goToSettings(event) {
+		if (!ui.parents(event.target, 'hint'))
+			ui.navigation.goTo('settings');
+	}
 	static init(force) {
 		var e = ui.q('home');
 		if (force || !e.innerHTML) {
@@ -69,7 +73,7 @@ class pageHome {
 				v.name = user.contact.pseudonym;
 				v.infoButton = ' noDisp';
 				v.langButton = ' noDisp';
-				v.clickHeader = 'ui.navigation.goTo(&quot;settings&quot;)';
+				v.clickHeader = 'pageHome.goToSettings(event)';
 			} else {
 				v.lang = global.language;
 				v.clickHeader = 'pageHome.openHintDescription()';

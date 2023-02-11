@@ -184,11 +184,27 @@ alert close {
 	width: 6em;
 	height: 6em;
 	text-align: right;
-	padding-right: 0.75em;
+	padding: 0.25em 0.75em;
 	cursor: pointer;
 	font-weight: bold;
 	z-index: 1;
 	color: rgba(0, 0, 0, 0.2);
+}
+
+hint hashtags {
+	height: 17em;
+}
+
+hint hashtags div {
+	overflow-y: auto;
+	max-height: 17em;
+	padding-bottom: 1em;
+	margin-left: 30%;
+	display: none;
+}
+
+hint tab.tabActive {
+	color: black;
 }
 
 previewHint {
@@ -915,12 +931,6 @@ field hashtags {
 	display: block;
 	text-align: center;
 	margin-top: 0.25em;
-}
-
-field hashtags>div {
-	display: none;
-	width: 70%;
-	margin-left: 30%;
 }
 
 field hashtags buttontext {
@@ -1707,6 +1717,16 @@ chatInput errorHint {
 chatInput textarea {
 	margin-right: -1em;
 	border-radius: 1.5em 0 0 1.5em;
+}
+
+chatInput label {
+	position: absolute !important;
+	left: initial !important;
+	right: 0 !important;
+	margin: 0 !important;
+	border-radius: 1.5em 0 0 1.5em !important;
+	width: 6em !important;
+	bottom: 1em !important;
 }
 
 km {

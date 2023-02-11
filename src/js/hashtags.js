@@ -105,6 +105,8 @@ class hashtags {
 	}
 	static toggleSubCategories(e, i) {
 		e = ui.parents(e, 'hashtags');
+		if (ui.classContains(e.querySelectorAll('category label')[i], 'selected'))
+			return;
 		var visibleBlock = e.querySelector('div[style*="block"]');
 		ui.classRemove(e.querySelectorAll('category label.selected'), 'selected');
 		ui.classAdd(e.querySelectorAll('category label')[i], 'selected');

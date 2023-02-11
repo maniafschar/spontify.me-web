@@ -2,13 +2,13 @@ import { bluetooth } from './bluetooth';
 import { communication, Encryption, FB } from './communication';
 import { geoData } from './geoData';
 import { global } from './global';
+import { hashtags } from './hashtags';
 import { initialisation } from './initialisation';
 import { intro } from './intro';
 import { Contact } from './model';
 import { pageChat } from './pageChat';
 import { pageHome } from './pageHome';
 import { pageLocation } from './pageLocation';
-import { pageSettings } from './pageSettings';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 
@@ -292,19 +292,11 @@ class pageLogin {
 						bluetooth.stop();
 						bluetooth.requestAuthorization(true);
 					}
-					if (!user.contact.aboutMe
-						&& !user.contact.gender && !user.contact.birthday
-						&& !user.contact.ageMale && !user.contact.ageFemale && !user.contact.ageDivers
-						&& !user.contact.skills && !user.contact.skillsText
-						&& !exec) {
-						setTimeout(function () {
-							if (ui.navigation.getActiveID() == 'home')
-								intro.openHint({ desc: 'goToSettings', pos: '10%,20vh', size: '80%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'top', onclick: 'ui.navigation.goTo(\'settings\')' });
-						}, 2000);
-					}
 					pageLocation.locationsAdded = v.location_added;
 					if (exec)
 						setTimeout(exec, 1500);
+					else
+						pageLogin.profileCompletePrompt();
 				} else {
 					user.reset();
 					pageLogin.removeCredentials();
@@ -414,6 +406,36 @@ class pageLogin {
 		if (!ui.navigation.openPopup(ui.l('login.changePassword'), '<span>' + ui.l('login.changePasswordBody') + '</span><field><label>' + ui.l('login.password') + '</label><value><input type="password" name="passwd" maxlength="30"></value></field><dialogButtons><buttontext class="bgColor" onclick="pageLogin.savePassword()">' + ui.l('login.changePassword') + '</buttontext></dialogButtons><popupHint></popupHint>', 'pageLogin.warningRegNotComplete()', true))
 			setTimeout(pageLogin.passwordDialog, 500);
 	}
+	static profileCompletePrompt() {
+		if (!user.contact.image && !user.contact.birthday && !user.contact.gender
+			|| !user.contact.skills && !user.contact.skillsText) {
+			var today = global.date.getToday();
+			today.setDate(today.getDate() - 3);
+			if (global.date.server2Local(user.get('profileCompletePrompt')) < today) {
+				var page1 = '', page2 = '';
+				if (!user.contact.image)
+					page1 += '<field><label>' + ui.l('picture') + '</label><value style="text-align:center;"><input type="file" name="image" hint="' + ui.l('settings.imageHint') + '" accept=".gif, .png, .jpg" ${v.image}/></value></field>';
+				if (!user.contact.birthday)
+					page1 += '<field><label>' + ui.l('birthday') + '</label><value class="checkbox"><input type="date" placeholder="TT.MM.JJJJ" name="birthday" maxlength="10" id="bd"/><input type="radio" name="birthdayDisplay" value="2" label="' + ui.l('settings.showBirthday') + '" style="margin-top:0.5em;"/><input type="radio" name="birthdayDisplay" value="1" label="' + ui.l('settings.showAge') + '"/></value></field>';
+				if (!user.contact.gender)
+					page1 += '<field><label>' + ui.l('gender') + '</label><value class="checkbox"><input type="radio" name="gender" value="2" label="' + ui.l('female') + '"/><input type="radio" name="gender" value="1" label="' + ui.l('male') + '"/><input type="radio" name="gender" value="3" label="' + ui.l('divers') + '"/></value></field>';
+				if (!user.contact.skills && !user.contact.skillsText)
+					page2 = '<field><label>' + ui.l('settings.skillDialog') + '</label><value><textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;"></textarea><hashtags>' + hashtags.display() + '</hashtags></value></field>';
+				if (page1 || page2) {
+					if (page1 && page2) {
+						page1 = '<tabHeader><tab style="width:50%;" class="tabActive">' + ui.l('settings.tabProfile') + '</tab><tab style="width:50%;">' + ui.l('settings.tabSkills') + '</tab></tabHeader><tabBody><div>' + page1;
+						page2 = '</div><div style="display:none;">' + page2 + '</div></tabBody>';
+					}
+					setTimeout(function () {
+						if (ui.navigation.getActiveID() == 'home') {
+							intro.openHint({ desc: '<div style="margin-bottom:0.5em;">' + ui.l('settings.completeProfile') + '</div>' + page1 + page2 + '<br/><buttontext class="bgColor" onclick="pageLogin.saveProfile()">' + ui.l('save') + '</buttontext>', pos: '5%,20vh', size: '90%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'top', onclick: 'return false' });
+							user.set('profileCompletePrompt', global.date.local2server(global.date.getToday()));
+						}
+					}, 2000);
+				}
+			}
+		}
+	}
 	static register() {
 		formFunc.validation.email(ui.q('input[name="email"]'));
 		pageLogin.validatePseudonym();
@@ -489,6 +511,10 @@ class pageLogin {
 				user.contact.verified = 1;
 			});
 		}
+	}
+	static saveProfile() {
+		var t = hashtags.convert(ui.q('hint textarea[name="hashtagsDisp"]').value);
+		user.save({ skills: t.category, skillsText: t.hashtags }, intro.closeHint);
 	}
 	static sendVerificationEmail() {
 		var fromDialog = ui.q('popupContent');

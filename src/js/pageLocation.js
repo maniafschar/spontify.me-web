@@ -363,8 +363,8 @@ ${v.rating}
 		if (v) {
 			if (v.contactId == user.contact.id)
 				v.deleteButton = '<buttontext onclick="pageLocation.deleteElement(' + id + ',&quot;Location&quot;)" class="bgColor" id="deleteElement">' + ui.l('delete') + '</buttontext>';
-		} else if (!id && formFunc.getDraft('location'))
-			v = formFunc.getDraft('location').values;
+		} else if (!id && user.get('location'))
+			v = user.get('location').values;
 		if (!v)
 			v = {};
 		var d = '' + v.category;
@@ -532,7 +532,7 @@ ${v.rating}
 			},
 			success(r) {
 				ui.navigation.hidePopup();
-				formFunc.removeDraft('location');
+				user.remove('location');
 				details.open(id ? id : r, 'location_list&search=' + encodeURIComponent('location.id=' + r), id ? function (l, id) {
 					ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id);
 				} : pageLocation.detailLocationEvent);
@@ -544,7 +544,7 @@ ${v.rating}
 	static saveDraft() {
 		if (ui.q('popup input[name="id"]').value)
 			return;
-		formFunc.saveDraft('location', formFunc.getForm('popup form'));
+		user.set('location', formFunc.getForm('popup form'));
 	}
 	static scrollMap() {
 		if (ui.cssValue('map', 'display') == 'none')

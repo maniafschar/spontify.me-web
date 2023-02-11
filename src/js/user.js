@@ -10,6 +10,10 @@ class user {
 	static password = null;
 	static scale = 1;
 
+	static get(id) {
+		if (user.contact)
+			return user.contact.storage[id];
+	}
 	static init(v) {
 		user.contact = new Contact();
 		for (var k in v) {
@@ -21,6 +25,19 @@ class user {
 			user.contact.storage = user.contact.storage ? JSON.parse(user.contact.storage) : {};
 		} catch (e) {
 			user.contact.storage = {};
+		}
+	}
+	static remove(key) {
+		var d = {}, save = false;
+		for (var k in user.contact.storage) {
+			if (k == key)
+				save = true;
+			else
+				d[k] = user.contact.storage[k];
+		}
+		if (save) {
+			user.contact.storage = d;
+			user.save({ storage: JSON.stringify(user.contact.storage) });
 		}
 	}
 	static reset() {
@@ -51,5 +68,12 @@ class user {
 				}
 			});
 		}
+	}
+	static set(key, value) {
+		if (value) {
+			user.contact.storage[key] = value;
+			user.save({ storage: JSON.stringify(user.contact.storage) });
+		} else
+			user.remove(key);
 	}
 };
