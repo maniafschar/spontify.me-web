@@ -208,6 +208,12 @@ hint tabBody>div {
 hint tabBody>div>div {
 	width: 50%;
 	float: left;
+	height: 22em;
+	overflow-y: auto;
+}
+
+hint errorHint {
+	color: red !important;
 }
 
 previewHint {
@@ -543,7 +549,7 @@ inputFile {
 	color: black;
 }
 
-inputFile span {
+inputFile>span {
 	padding: 0.36em 0.75em;
 	display: inline-block;
 }
@@ -934,7 +940,6 @@ field hashtags {
 	display: block;
 	text-align: center;
 	margin-top: 0.25em;
-	height: 17em;
 }
 
 field hashtags buttontext {
@@ -964,7 +969,6 @@ field hashtags>div {
 	display: none;
 	overflow-y: auto;
 	max-height: 17em;
-	padding-bottom: 1em;
 }
 
 field hashtags>div label {

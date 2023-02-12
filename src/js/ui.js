@@ -741,7 +741,7 @@ class Skills {
 }
 
 class formFunc {
-	static cameraField = null;
+	static cameraField = { id: null, name: null, get(suffix) { return ui.q(formFunc.cameraField.id + ' [name="' + formFunc.cameraField.name + (suffix ? suffix : '') + '"]') } };
 	static dist = 0;
 
 	static getForm(id) {
@@ -802,18 +802,19 @@ class formFunc {
 			if (!e || e.toLowerCase().indexOf('select') < 0)
 				ui.navigation.openPopup(ui.l('attention'), ui.l('camera.notAvailabe').replace('{0}', e));
 		},
-		cameraPicture(name, camera) {
-			formFunc.cameraField = name;
+		cameraPicture(id, name, camera) {
+			formFunc.cameraField.id = id;
+			formFunc.cameraField.name = name;
 			navigator.camera.getPicture(formFunc.image.cameraSuccess, formFunc.image.cameraError,
 				{ sourceType: camera ? Camera.PictureSourceType.CAMERA : Camera.PictureSourceType.PHOTOLIBRARY, destinationType: Camera.DestinationType.FILE_URI });
 		},
 		cameraSuccess(e) {
-			ui.css('[name="' + formFunc.cameraField + '_appInput"]', 'display', 'none');
-			ui.css('[name="' + formFunc.cameraField + '_disp"]', 'display', 'block');
+			formFunc.cameraField.get('_appInput').setAttribute('display', 'none');
+			formFunc.cameraField.get('_disp').setAttribute('display', 'block');
 			window.resolveLocalFileSystemURL(e,
 				function (fe) {
 					fe.file(function (f) {
-						formFunc.image.preview2(f, formFunc.cameraField);
+						formFunc.image.preview2(f);
 					}, formFunc.image.cameraError);
 				}, formFunc.image.cameraError);
 		},
@@ -843,24 +844,26 @@ class formFunc {
 		getSVG(id) {
 			return formFunc.image.svg[id];
 		},
-		hasImage(name) {
-			var x = ui.q('[name="' + name + 'Preview"]');
+		hasImage() {
+			var x = formFunc.cameraField.get('Preview');
 			return x && x.getAttribute('src') && x.getAttribute('src').length > 100;
 		},
-		preview(e) {
-			formFunc.image.preview2(e.files && e.files.length > 0 ? e.files[0] : null, e.getAttribute('name'));
+		preview(e, id) {
+			formFunc.cameraField.id = id;
+			formFunc.cameraField.name = e.getAttribute('name');
+			formFunc.image.preview2(e.files && e.files.length > 0 ? e.files[0] : null);
 		},
-		preview2(file, name) {
-			ui.attr('[name="' + name + '"]', 'rotateImage', 0);
+		preview2(file) {
+			formFunc.cameraField.get().setAttribute('rotateImage', '0');
 			if (file) {
-				var ePrev = ui.q('[name="' + name + '_disp"]');
+				var ePrev = formFunc.cameraField.get('_disp');
 				ui.css(ePrev, 'z-index', 999);
-				var p = '<rotate onclick="formFunc.image.rotate(this)">&#8635;</rotate><img name="' + name + 'Preview"/>';
-				ui.html(ePrev, '<close onclick="formFunc.image.remove(&quot;' + name + '&quot;)">X</close>' + p + '<desc></desc>');
-				formFunc.image.previewInternal(file, name);
+				var p = '<rotate onclick="formFunc.image.rotate(this)">&#8635;</rotate><img name="' + formFunc.cameraField.name + 'Preview"/>';
+				ui.html(ePrev, '<close onclick="formFunc.image.remove()">X</close>' + p + '<desc></desc>');
+				formFunc.image.previewInternal(file);
 				ui.css('#popupSendImage', 'display', '');
 			} else
-				formFunc.image.remove(name);
+				formFunc.image.remove();
 		},
 		previewCalculateDistance(event) {
 			var t;
@@ -873,15 +876,15 @@ class formFunc {
 			if (t && t.length > 1)
 				return Math.hypot(t[0].pageX - t[1].pageX, t[0].pageY - t[1].pageY);
 		},
-		previewInternal(f, name) {
+		previewInternal(f) {
 			var reader = new FileReader();
 			reader.onload = function (r) {
-				var img = ui.q('[name="' + name + 'Preview"]');
+				var img = formFunc.cameraField.get('Preview');
 				if (img) {
 					var image = new Image();
 					image.onload = function () {
 						var whOrg = image.naturalWidth + ' x ' + image.naturalHeight;
-						ui.attr('[name="' + name + '"]', 'rotateImage', 0);
+						formFunc.cameraField.get().setAttribute('rotateImage', 0);
 						var scaled = formFunc.image.scale(image);
 						var size = formFunc.image.dataURItoBlob(scaled.data).size, sizeOrg = f.size, s, s2 = '', s0 = '';
 						if (size > 1024 * 1024) {
@@ -901,9 +904,9 @@ class formFunc {
 							x = (sizeOrg / 1024).toFixed(1) + ' KB';
 						else
 							x = sizeOrg + ' B';
-						ui.q('[name="' + name + '_disp"] desc').innerHTML = x + global.separator + whOrg + '<br/>' + ui.l('fileUpload.ratio') + ' ' + (100 - size / sizeOrg * 100).toFixed(0) + '%<br/>' + s0 + s + global.separator + s2 + '<span id="imagePreviewSize">' + scaled.width + ' x ' + scaled.height + '</span>';
+						var disp = formFunc.cameraField.get('_disp');
+						disp.querySelector('desc').innerHTML = x + global.separator + whOrg + '<br/>' + ui.l('fileUpload.ratio') + ' ' + (100 - size / sizeOrg * 100).toFixed(0) + '%<br/>' + s0 + s + global.separator + s2 + '<span id="imagePreviewSize">' + scaled.width + ' x ' + scaled.height + '</span>';
 						img.src = r.target.result;
-						var disp = ui.q('[name="' + name + '_disp"]');
 						ui.css(disp, 'height', disp.clientWidth + 'px');
 						if (image.naturalWidth > image.naturalHeight) {
 							ui.css(img, 'max-height', '100%');
@@ -949,18 +952,18 @@ class formFunc {
 			};
 			reader.readAsDataURL(f);
 		},
-		remove(name) {
-			var e = ui.q('[name="' + name + '"]');
+		remove() {
+			var e = formFunc.cameraField.get();
 			e.value = '';
 			ui.attr(e, 'rotateImage', 0);
-			var ePrev = ui.q('[name="' + name + '_disp"]');
-			ui.css(ePrev, 'z-index', '');
+			var ePrev = formFunc.cameraField.get('_disp');
 			ui.html(ePrev, '<span>' + (e.getAttribute('hint') ? e.getAttribute('hint') : ui.l('fileUpload.select')) + '</span>');
-			ui.css('[name="' + name + '_disp"]', 'height', '');
+			ePrev.style.zIndex = null;
+			ePrev.style.height = null;
 			ui.css('#popupSendImage', 'display', 'none');
 			if (!global.isBrowser()) {
-				ui.css('[name="' + name + '_appInput"]', 'display', 'block');
-				ui.css(ePrev, 'display', 'none');
+				formFunc.cameraField.get('_appInput').style.display = 'block';
+				ePrev.style.display = 'none';
 			}
 		},
 		replaceSVGs() {
@@ -1119,13 +1122,13 @@ class formFunc {
 			} else if (e[i].type == 'file') {
 				if (!e[i].previousElementSibling) {
 					if (!e[i].getAttribute('onchange'))
-						e[i].setAttribute('onchange', 'formFunc.image.preview(this);');
+						e[i].setAttribute('onchange', 'formFunc.image.preview(this,"' + id + '")');
 					var s = '';
 					if (!global.isBrowser()) {
 						e[i].setAttribute('style', 'display:none;');
 						var s2 = e[i].getAttribute('name');
-						s = '<div name="' + s2 + '_appInput" class="appInput"><buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + s2 + '&quot;,true)" style="border-radius:0.5em 0 0 0.5em;border-right:solid 1px rgba(255,255,255,0.1);">' + ui.l('camera.shoot') + '</buttontext>' +
-							'<buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + s2 + '&quot;)" style="border-radius:0 0.5em 0.5em 0;">' + ui.l('camera.select') + '</buttontext></div>';
+						s = '<div name="' + s2 + '_appInput" class="appInput"><buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + id + '&quot;,&quot;' + s2 + '&quot;,true)" style="border-radius:0.5em 0 0 0.5em;border-right:solid 1px rgba(255,255,255,0.1);">' + ui.l('camera.shoot') + '</buttontext>' +
+							'<buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + + id + '&quot;,&quot;' + s2 + '&quot;)" style="border-radius:0 0.5em 0.5em 0;">' + ui.l('camera.select') + '</buttontext></div>';
 					}
 					e[i].outerHTML = s + '<inputFile name="' + e[i].getAttribute('name') + '_disp" ' + (e[i].getAttribute('class') ? 'class="' + e[i].getAttribute('class') + '" ' : '') + (global.isBrowser() ? '' : ' style="display:none;"') + '>' + '<span>' + (e[i].getAttribute('hint') ? e[i].getAttribute('hint') : ui.l('fileUpload.select')) + '</span></inputFile>' + e[i].outerHTML + (e[i].getAttribute('src') ? '<img src="' + e[i].getAttribute('src') + '"/>' : '');
 				}
@@ -1246,11 +1249,11 @@ class formFunc {
 		badWords: [],
 		badWordsReplacement: [],
 
-		birthday(s) {
-			formFunc.resetError(s);
-			if (s.value.trim().length > 0) {
+		birthday(e) {
+			formFunc.resetError(e);
+			if (e.value.trim().length > 0) {
 				try {
-					var n = new Date(), d = global.date.getDateFields(s.value);
+					var n = new Date(), d = global.date.getDateFields(e.value);
 					var a = n.getFullYear() - d.year;
 					if (n.getMonth() + 1 < d.month || (n.getMonth() + 1 == d.month && n.getDate() < d.day))
 						a--;
@@ -1265,10 +1268,10 @@ class formFunc {
 							ex = 'TooOld2';
 						else
 							ex = 'TooOld';
-						formFunc.setError(s, 'settings.bday' + ex, [a < min ? min : max, a]);
+						formFunc.setError(e, 'settings.bday' + ex, [a < min ? min : max, a]);
 					}
 				} catch (e) {
-					formFunc.setError(s, 'validation.wrong');
+					formFunc.setError(e, 'validation.wrong');
 				}
 			}
 		},

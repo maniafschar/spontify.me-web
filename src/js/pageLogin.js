@@ -410,15 +410,15 @@ class pageLogin {
 		if (!user.contact.image && !user.contact.birthday && !user.contact.gender
 			|| !user.contact.skills && !user.contact.skillsText) {
 			var today = global.date.getToday();
-			today.setDate(today.getDate() - 3);
+			today.setDate(today.getDate() - 7);
 			if (global.date.server2Local(user.get('profileCompletePrompt')) < today) {
 				var page1 = '', page2 = '';
 				if (!user.contact.image)
-					page1 += '<field><label>' + ui.l('picture') + '</label><value style="text-align:center;"><input type="file" name="image" hint="' + ui.l('settings.imageHint') + '" accept=".gif, .png, .jpg" ${v.image}/></value></field>';
+					page1 += '<field><label>' + ui.l('picture') + '</label><value style="text-align:center;"><input type="file" name="image" hint="' + ui.l('settings.imageHint') + '" accept=".gif, .png, .jpg"/></value></field>';
 				if (!user.contact.birthday)
-					page1 += '<field><label>' + ui.l('birthday') + '</label><value class="checkbox"><input type="date" placeholder="TT.MM.JJJJ" name="birthday" maxlength="10" id="bd"/><input type="radio" name="birthdayDisplay" value="2" label="' + ui.l('settings.showBirthday') + '" style="margin-top:0.5em;"/><input type="radio" name="birthdayDisplay" value="1" label="' + ui.l('settings.showAge') + '"/></value></field>';
+					page1 += '<field><label>' + ui.l('birthday') + '</label><value><input type="date" placeholder="TT.MM.JJJJ" name="birthday" maxlength="10"/></value></field>';
 				if (!user.contact.gender)
-					page1 += '<field><label>' + ui.l('gender') + '</label><value class="checkbox"><input type="radio" name="gender" value="2" label="' + ui.l('female') + '"/><input type="radio" name="gender" value="1" label="' + ui.l('male') + '"/><input type="radio" name="gender" value="3" label="' + ui.l('divers') + '"/></value></field>';
+					page1 += '<field><label>' + ui.l('gender') + '</label><value><input type="radio" name="gender" value="2" label="' + ui.l('female') + '"/><input type="radio" name="gender" value="1" label="' + ui.l('male') + '"/><input type="radio" name="gender" value="3" label="' + ui.l('divers') + '"/></value></field>';
 				if (!user.contact.skills && !user.contact.skillsText)
 					page2 = '<field><label>' + ui.l('settings.skillDialog') + '</label><value><textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;"></textarea><hashtags>' + hashtags.display() + '</hashtags></value></field>';
 				if (page1 || page2) {
@@ -428,7 +428,7 @@ class pageLogin {
 					}
 					setTimeout(function () {
 						if (ui.navigation.getActiveID() == 'home') {
-							intro.openHint({ desc: '<div style="margin-bottom:0.5em;">' + ui.l('settings.completeProfile') + '</div>' + page1 + page2 + '<br/><buttontext class="bgColor" onclick="pageLogin.saveProfile()">' + ui.l('save') + '</buttontext>', pos: '5%,20vh', size: '90%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'top', onclick: 'return false' });
+							intro.openHint({ desc: '<div style="margin-bottom:0.5em;">' + ui.l('settings.completeProfile') + '</div>' + page1 + page2 + '<buttontext class="bgColor" style="margin-top:0.5em;" onclick="pageLogin.saveProfile()">' + ui.l('save') + '</buttontext>', pos: '5%,20vh', size: '90%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'top', onclick: 'return' });
 							user.set('profileCompletePrompt', global.date.local2server(global.date.getToday()));
 						}
 					}, 2000);
@@ -513,16 +513,30 @@ class pageLogin {
 		}
 	}
 	static saveProfile() {
+		var d = {};
+		var e = ui.q('hint input[name="birthday"]');
+		if (e && e.value) {
+			formFunc.validation.birthday(e);
+			if (ui.q('hint errorHint')) {
+				pageLogin.selectTab('profile');
+				return;
+			}
+			d.birthday = e.value;
+		}
 		if (ui.q('hint tabBody') && !ui.q('hint textarea[name="hashtagsDisp"]').value && (!ui.q('hint tabBody').marginLeft || ui.q('hint tabBody').marginLeft.indexOf('-') < 0)) {
 			pageLogin.selectTab('skills');
 			return;
 		}
-		var t = hashtags.convert(ui.q('hint textarea[name="hashtagsDisp"]').value);
-		var d = {};
-		if (t.category)
-			d.skills = t.category;
-		if (t.hashtags)
-			d.skillsText = t.hashtags;
+		if (ui.q('hint input[name="gender"]:checked'))
+			d.gender = ui.q('hint input[name="gender"]:checked').value;
+		e = hashtags.convert(ui.q('hint textarea[name="hashtagsDisp"]').value);
+		if (e.category)
+			d.skills = e.category;
+		if (e.hashtags)
+			d.skillsText = e.hashtags;
+		e = formFunc.getForm('hint');
+		if (e.values.image)
+			d.image = e.values.image;
 		if (Object.keys(d).length)
 			user.save(d, intro.closeHint);
 		else

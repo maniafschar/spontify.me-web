@@ -634,7 +634,7 @@ class pageChat {
 			ui.html('popupHint', ui.l('chat.groupNoInput'));
 	}
 	static sendChatImage() {
-		if (formFunc.image.hasImage('image')) {
+		if (formFunc.image.hasImage()) {
 			var id = ui.q('chat').getAttribute('i');
 			var v = formFunc.getForm('popup form');
 			v.classname = 'ContactChat';
