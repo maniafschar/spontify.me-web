@@ -1,8 +1,7 @@
-import { communication } from './communication';
 import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './initialisation';
-import { pageChat } from './pageChat';
+import { intro } from './intro';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 
@@ -67,17 +66,27 @@ ${ui.l('home.DescLink')}
 		else
 			ui.navigation.openPopup(ui.l('locations.serviceTitle'), ui.l('locations.serviceError').replace('{0}', geoData.current.street ? geoData.current.street : '-'));
 	}
-	static socialShare(extra) {
+	static socialShare() {
 		var msg = ui.l('info.socialShareText').replace('{0}', user.contact.idDisplay).replace('{1}', user.contact.gender == 1 ? '🙋‍♂️' : '🙋‍♀️');
 		if (global.isBrowser())
-			ui.navigation.openPopup(ui.l('sendSocialShare'), ui.l('info.socialShareBrowser') + '<infoblock class="selectable" style="margin-top:1em;">' + msg + '</infoblock>');
+			ui.navigation.openPopup(ui.l('info.sendSocialShare'), ui.l('info.socialShareBrowser') + '<infoblock class="selectable" style="margin-top:1em;">' + msg + '</infoblock>');
 		else {
 			window.plugins.socialsharing.shareWithOptions({
 				message: msg,
 				subject: global.appTitle + global.separator + ui.l('appSubTitle'),
-				url: global.server.substring(0, global.server.indexOf('/', 10)) + (extra ? '?' + extra : '')
+				url: global.server.substring(0, global.server.indexOf('/', 10))
 			}, initialisation.statusBar, initialisation.statusBar);
 		}
+	}
+	static socialShareDialog() {
+		var f = function () {
+			if (ui.navigation.getActiveID() == 'home') {
+				intro.openHint({ desc: '<div style="margin:0 0.5em 1em 0.5em;">' + ui.l('info.recommend') + '</div><buttontext class="bgColor" style="margin-top:0.5em;" onclick="pageInfo.socialShare()">' + ui.l('Yes') + '</buttontext>', pos: '15%,20vh', size: '70%,auto' });
+				user.save({ recommend: global.date.local2server(new Date()) });
+			} else
+				setTimeout(pageInfo.socialShareDialog, 2000);
+		}
+		f.call();
 	}
 	static toggleInfoBlock(id, event) {
 		if (event)

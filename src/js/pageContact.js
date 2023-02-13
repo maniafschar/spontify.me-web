@@ -75,7 +75,7 @@ ${v.skills}
 	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonFriend"
 		onclick="pageContact.toggleFriend(${v.id})">${v.labelFriend}</buttontext>
 	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonCopy"
-		onclick="pageChat.doCopyLink(event,&quot;p=${v.id}&quot;)">${ui.l('share')}</buttontext>
+		onclick="pageChat.doCopyLink(event,&quot;p=${v.id}&quot;)">${ui.l('chat.share')}</buttontext>
 	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonGroups"
 		onclick="pageContact.groups.toggleGroups(${v.id},&quot;${v.contactLinkStatus}&quot;)">${ui.l('group.action')}</buttontext>
 	<buttontext class="bgColor${v.blocked}" name="buttonEvents"
@@ -121,11 +121,8 @@ ${v.skills}
 	<buttontext onclick="pageContact.groups.addGroup(${v.id})" class="bgColor" style="margin-top:1em;">${ui.l('group.newButton')}</buttontext>
 </text>
 <text name="copy" class="collapsed">
-	<detailTogglePanel>${ui.l('copyLinkHint.contacts')}<br />
-		<buttontext onclick="pageInfo.socialShare()" style="margin-top:2em;${v.displaySocialShare}"
-			class="bgColor">
-			${ui.l('sendSocialShareLocation')}
-		</buttontext>
+	<detailTogglePanel>
+		${ui.l('copyLinkHint.contacts')}
 	</detailTogglePanel>
 </text>
 <text name="location" class="collapsed list"></text>`;

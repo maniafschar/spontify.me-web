@@ -741,7 +741,6 @@ class Skills {
 }
 
 class formFunc {
-	static cameraField = { id: null, name: null, get(suffix) { return ui.q(formFunc.cameraField.id + ' [name="' + formFunc.cameraField.name + (suffix ? suffix : '') + '"]') } };
 	static dist = 0;
 
 	static getForm(id) {
@@ -796,6 +795,7 @@ class formFunc {
 		return d;
 	}
 	static image = {
+		fieldId: { id: null, name: null, get(suffix) { return ui.q(formFunc.image.fieldId.id + ' [name="' + formFunc.image.fieldId.name + (suffix ? suffix : '') + '"]') } },
 		svg: {},
 
 		cameraError(e) {
@@ -803,14 +803,14 @@ class formFunc {
 				ui.navigation.openPopup(ui.l('attention'), ui.l('camera.notAvailabe').replace('{0}', e));
 		},
 		cameraPicture(id, name, camera) {
-			formFunc.cameraField.id = id;
-			formFunc.cameraField.name = name;
+			formFunc.image.fieldId.id = id;
+			formFunc.image.fieldId.name = name;
 			navigator.camera.getPicture(formFunc.image.cameraSuccess, formFunc.image.cameraError,
 				{ sourceType: camera ? Camera.PictureSourceType.CAMERA : Camera.PictureSourceType.PHOTOLIBRARY, destinationType: Camera.DestinationType.FILE_URI });
 		},
 		cameraSuccess(e) {
-			formFunc.cameraField.get('_appInput').setAttribute('display', 'none');
-			formFunc.cameraField.get('_disp').setAttribute('display', 'block');
+			formFunc.image.fieldId.get('_appInput').setAttribute('display', 'none');
+			formFunc.image.fieldId.get('_disp').setAttribute('display', 'block');
 			window.resolveLocalFileSystemURL(e,
 				function (fe) {
 					fe.file(function (f) {
@@ -845,20 +845,20 @@ class formFunc {
 			return formFunc.image.svg[id];
 		},
 		hasImage() {
-			var x = formFunc.cameraField.get('Preview');
+			var x = formFunc.image.fieldId.get('Preview');
 			return x && x.getAttribute('src') && x.getAttribute('src').length > 100;
 		},
 		preview(e, id) {
-			formFunc.cameraField.id = id;
-			formFunc.cameraField.name = e.getAttribute('name');
+			formFunc.image.fieldId.id = id;
+			formFunc.image.fieldId.name = e.getAttribute('name');
 			formFunc.image.preview2(e.files && e.files.length > 0 ? e.files[0] : null);
 		},
 		preview2(file) {
-			formFunc.cameraField.get().setAttribute('rotateImage', '0');
+			formFunc.image.fieldId.get().setAttribute('rotateImage', '0');
 			if (file) {
-				var ePrev = formFunc.cameraField.get('_disp');
+				var ePrev = formFunc.image.fieldId.get('_disp');
 				ui.css(ePrev, 'z-index', 999);
-				var p = '<rotate onclick="formFunc.image.rotate(this)">&#8635;</rotate><img name="' + formFunc.cameraField.name + 'Preview"/>';
+				var p = '<rotate onclick="formFunc.image.rotate(this)">&#8635;</rotate><img name="' + formFunc.image.fieldId.name + 'Preview"/>';
 				ui.html(ePrev, '<close onclick="formFunc.image.remove()">X</close>' + p + '<desc></desc>');
 				formFunc.image.previewInternal(file);
 				ui.css('#popupSendImage', 'display', '');
@@ -879,12 +879,12 @@ class formFunc {
 		previewInternal(f) {
 			var reader = new FileReader();
 			reader.onload = function (r) {
-				var img = formFunc.cameraField.get('Preview');
+				var img = formFunc.image.fieldId.get('Preview');
 				if (img) {
 					var image = new Image();
 					image.onload = function () {
 						var whOrg = image.naturalWidth + ' x ' + image.naturalHeight;
-						formFunc.cameraField.get().setAttribute('rotateImage', 0);
+						formFunc.image.fieldId.get().setAttribute('rotateImage', 0);
 						var scaled = formFunc.image.scale(image);
 						var size = formFunc.image.dataURItoBlob(scaled.data).size, sizeOrg = f.size, s, s2 = '', s0 = '';
 						if (size > 1024 * 1024) {
@@ -904,7 +904,7 @@ class formFunc {
 							x = (sizeOrg / 1024).toFixed(1) + ' KB';
 						else
 							x = sizeOrg + ' B';
-						var disp = formFunc.cameraField.get('_disp');
+						var disp = formFunc.image.fieldId.get('_disp');
 						disp.querySelector('desc').innerHTML = x + global.separator + whOrg + '<br/>' + ui.l('fileUpload.ratio') + ' ' + (100 - size / sizeOrg * 100).toFixed(0) + '%<br/>' + s0 + s + global.separator + s2 + '<span id="imagePreviewSize">' + scaled.width + ' x ' + scaled.height + '</span>';
 						img.src = r.target.result;
 						ui.css(disp, 'height', disp.clientWidth + 'px');
@@ -953,17 +953,19 @@ class formFunc {
 			reader.readAsDataURL(f);
 		},
 		remove() {
-			var e = formFunc.cameraField.get();
-			e.value = '';
-			ui.attr(e, 'rotateImage', 0);
-			var ePrev = formFunc.cameraField.get('_disp');
-			ui.html(ePrev, '<span>' + (e.getAttribute('hint') ? e.getAttribute('hint') : ui.l('fileUpload.select')) + '</span>');
-			ePrev.style.zIndex = null;
-			ePrev.style.height = null;
-			ui.css('#popupSendImage', 'display', 'none');
-			if (!global.isBrowser()) {
-				formFunc.cameraField.get('_appInput').style.display = 'block';
-				ePrev.style.display = 'none';
+			var e = formFunc.image.fieldId.get();
+			if (e) {
+				e.value = '';
+				ui.attr(e, 'rotateImage', 0);
+				var ePrev = formFunc.image.fieldId.get('_disp');
+				ui.html(ePrev, '<span>' + (e.getAttribute('hint') ? e.getAttribute('hint') : ui.l('fileUpload.select')) + '</span>');
+				ePrev.style.zIndex = null;
+				ePrev.style.height = null;
+				ui.css('#popupSendImage', 'display', 'none');
+				if (!global.isBrowser()) {
+					formFunc.image.fieldId.get('_appInput').style.display = 'block';
+					ePrev.style.display = 'none';
+				}
 			}
 		},
 		replaceSVGs() {

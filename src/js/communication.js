@@ -6,6 +6,7 @@ import { pageLogin } from './pageLogin';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 import { pageHome } from './pageHome';
+import { pageInfo } from './pageInfo';
 
 export { communication, FB, Encryption };
 
@@ -235,8 +236,8 @@ class communication {
 					return;
 				var total = 0;
 				var chat = 0;
-				if (r.chatNew) {
-					for (var i in r.chatNew) {
+				if (r.chat.new) {
+					for (var i in r.chat.new) {
 						chat++;
 						if (ui.q('chat[i="' + i + '"]'))
 							pageChat.refresh();
@@ -244,14 +245,14 @@ class communication {
 							ui.classAdd('chatList [i="' + i + '"]', 'highlightBackground');
 					}
 				}
-				if (r.firstChatId != ui.q('chatList').getAttribute('firstChatId') ||
+				if (r.chat.firstId != ui.q('chatList').getAttribute('firstChatId') ||
 					chat != pageChat.chatsNew ||
-					Object.keys(r.chatUnseen).length != pageChat.chatsUnseen) {
+					Object.keys(r.chat.unseen).length != pageChat.chatsUnseen) {
 					pageChat.initActiveChats();
 				}
 				total += chat;
 				pageChat.chatsNew = chat;
-				pageChat.chatsUnseen = Object.keys(r.chatUnseen).length;
+				pageChat.chatsUnseen = Object.keys(r.chat.unseen).length;
 				e = ui.q('badgeChats');
 				if (e) {
 					ui.html(e, pageChat.chatsNew == 0 ? '' : pageChat.chatsNew);
@@ -270,7 +271,9 @@ class communication {
 					});
 				}
 				total += r.notification;
-				pageChat.refreshActiveChat(r.chatUnseen);
+				pageChat.refreshActiveChat(r.chat.unseen);
+				if (r.recommend)
+					pageInfo.socialShareDialog();
 				if (total > 0)
 					ui.q('head title').innerHTML = total + global.separator + global.appTitle;
 				communication.setApplicationIconBadgeNumber(total);

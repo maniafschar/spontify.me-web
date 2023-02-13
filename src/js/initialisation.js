@@ -153,14 +153,8 @@ class initialisation {
 				document.activeElement.blur();
 		});
 		ui.on(window, 'wheel', function (event) {
-			if (event.ctrlKey) {
-				if (!event.defaultPrevented) {
-					try {
-						event.preventDefault();
-					} catch (e) { }
-				}
+			if (event.ctrlKey)
 				formFunc.image.zoom(event, event.deltaY);
-			}
 		});
 		ui.on(window, 'touchmove', function (event) {
 			if (event.touches.length > 1)

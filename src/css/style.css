@@ -940,6 +940,7 @@ field hashtags {
 	display: block;
 	text-align: center;
 	margin-top: 0.25em;
+	height: 17em;
 }
 
 field hashtags buttontext {

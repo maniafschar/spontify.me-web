@@ -83,7 +83,7 @@ ${v.rating}
 	<buttontext class="bgColor${v.favorite}${v.hideMeFavorite}" name="buttonFavorite"
 		onclick="pageLocation.toggleFavorite(&quot;${v.id}&quot;)">${ui.l('locations.favoritesButton')}</buttontext>
 	<buttontext class="bgColor${v.pressedCopyButton}" name="buttonCopy"
-		onclick="pageChat.doCopyLink(event,&quot;${v.event.id ? 'e' : 'l'}=${v.id}&quot;)">${ui.l('share')}</buttontext>
+		onclick="pageChat.doCopyLink(event,&quot;${v.event.id ? 'e' : 'l'}=${v.id}&quot;)">${ui.l('chat.share')}</buttontext>
 	<buttontext class="bgColor${v.hideMePotentialParticipants}" name="buttonPotentialParticipants"
 		onclick="pageEvent.loadPotentialParticipants()">${ui.l('events.potentialParticipants')}</buttontext>
 	<buttontext class="bgColor${v.hideMeEdit}" name="buttonEdit"
@@ -119,11 +119,7 @@ ${v.rating}
 </text>
 <text name="copy" class="collapsed">
 	<detailTogglePanel>
-		${v.copyLinkHint}<br />
-		<buttontext onclick="pageInfo.socialShare(global.encParam(&quot;l=${v.id}&quot;))"
-			style="margin-top:2em;${v.displaySocialShare}" class="bgColor">
-			${ui.l('sendSocialShareLocation')}
-		</buttontext>
+		${v.copyLinkHint}
 	</detailTogglePanel>
 </text>
 <text name="potentialParticipants" class="collapsed" style="margin:0 -1.5em;">

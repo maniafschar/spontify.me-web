@@ -143,7 +143,7 @@ class pageSettings {
 <buttontext onclick="pageSettings.preview()" class="bgColor">${ui.l('settings.preview')}</buttontext>
 </dialogButtons>`;
 	static templateSettings3 = v =>
-		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;settings tabBody .notification&quot;)">${ui.l('wtd.myNotifications')}</buttontext><br/>
+		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;settings tabBody .notification&quot;)">${ui.l('settings.myNotifications')}</buttontext><br/>
 <div class="notification" class="notifications" style="display:none;padding-top:0.25em;">
 	<div style="margin:0.25em 0.5em 1em 0.5em;">
 		<input type="checkbox" value="true" name="notificationChat" label="${ui.l('notification.chat')}" ${v['contact.notificationChat']} />

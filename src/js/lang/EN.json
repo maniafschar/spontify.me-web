@@ -169,6 +169,14 @@
 		}
 	],
 	"labels": {
+		"bluetooth": {
+			"activated": "Turned on",
+			"deactivated": "Turned off",
+			"deactivatedText": "Your Bluetooth is deactivated, hence unable to activate Bluetooth Matching.",
+			"error": "Failure on Bluetooth activation:<br />{0}",
+			"errorMatching": "Matching others for \"{0}\" needs:<ul><li>Your birthday/age</li><li>Your gender</li><li>Your \"Prefered from\" details</li></ ul>Please complete this information, then you can get started here.",
+			"matching": "Bluetooth Matching"
+		},
 		"chat": {
 			"askInsertCopyLink": "Send this link?",
 			"askInsertCopyLinks": "Send these links?",
@@ -185,6 +193,7 @@
 			"groupTitle": "Group chat",
 			"serviceLocation": "Location",
 			"serviceSendError": "Your site could not be determined, ${appTitle} can not send your position.",
+			"share": "Share",
 			"title": "Chat"
 		},
 		"contacts": {
@@ -345,7 +354,9 @@
 			"notLocalized": "not located (message: {0})",
 			"post": "Post to Facebook",
 			"promoSender": "This link is you sent by {0}",
-			"socialShareBrowser": "Invite your friends via email or chat. We prepared a text, which you may copy & paste:",
+			"recommend": "Would you recommend ${appTitle} to your friends?",
+			"sendSocialShare": "Invite your friends...",
+			"socialShareBrowser": "...via email or chat. We prepared a text, which you may copy & paste:",
 			"socialShareText": "Hey, I'm in ${appTitle} because of Bluetooth Matching, Guides, and Events 😎\n\nIt's fun strolling through the city and the app suggest Buddies with similar interests in your immediate vicinity! 😊\n\nWanna try it? ✌️😏\nYou'll find me in ${appTitle} as {0} {1}",
 			"url": "Link for sending in other Apps like WhatsApp:"
 		},
@@ -597,6 +608,7 @@
 			"interestFemale": "Females age",
 			"interestMale": "Men age",
 			"lang": "App-Language",
+			"myNotifications": "Notifications",
 			"noAttribs": "You didn't specify any preferences. ${appTitle} shows you personalized lists where items for which you have no reference, are filtered out. Do you wish to enter your preferences now?",
 			"noAttribsAction": "Yes, open my settings",
 			"noAttribsTitle": "Preferences",
@@ -629,24 +641,6 @@
 			"urls": "Links to LinkedIn, Instagram...",
 			"urlsFormat": "One links per row in that format: https://linkedin.com/xyz/"
 		},
-		"wtd": {
-			"action": "Let's go!",
-			"actionReset": "Delete action",
-			"autoNews": "wants to {1} {0}",
-			"autoNewsMe": "At {0} o'clock ",
-			"birthdays": "Birthdays",
-			"bluetoothMatching": "Bluetooth Matching",
-			"buttonSave": "Set as status message!",
-			"error": "Matching others for \"{0}\" needs:<ul><li>Your birthday/age</li><li>Your gender</li><li>Your \"Prefered from\" details</li></ ul>Please complete this information, then you can get started here.",
-			"myNotifications": "Notifications",
-			"noCategoriesEntered": "Please enter the category",
-			"noTimeEntered": "Please enter the time",
-			"offers": "Deals",
-			"ownTextHint": "Here you can describe what you want to do",
-			"setStatusEvent": "Your status has been updated, have fun event!",
-			"setStatusLocation": "Your status has been updated, a lot of fun in the Location!",
-			"time": "I want to start at"
-		},
 		"all": "Nearby",
 		"appSubTitle": "neue Leute hier und heute",
 		"attention": "Attention",
@@ -655,10 +649,6 @@
 		"birthday.gratulation": "Congratulations on your {0}. birthday!<br/>We wish you a wonderful day!",
 		"birthday": "Birthday",
 		"blocked.title": "Buddy blocked",
-		"bluetooth.activated": "Turned on",
-		"bluetooth.deactivated": "Turned off",
-		"bluetoothDeactivated": "Your Bluetooth is deactivated, hence unable to activate Bluetooth Matching.",
-		"bluetoothError": "Failure on Bluetooth activation:<br />{0}",
 		"camera.notAvailabe": "Selecting the picture raised an error:<br/>{0}",
 		"camera.select": "Select",
 		"camera.shoot": "Shoot",
@@ -734,9 +724,6 @@
 		"save": "Save",
 		"saved": "Saved",
 		"send": "Send",
-		"sendSocialShare": "Invite your friends...",
-		"sendSocialShareLocation": "send to friends",
-		"share": "Share",
 		"show": "Show",
 		"slider.from": "from",
 		"slider.until": "to",

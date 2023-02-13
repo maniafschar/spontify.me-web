@@ -39,7 +39,7 @@ class bluetooth {
 		}
 	}
 	static hidePopup() {
-		if (ui.q('popupContent') && ui.q('popupContent').innerHTML.indexOf(ui.l('bluetoothDeactivated')) > -1)
+		if (ui.q('popupContent') && ui.q('popupContent').innerHTML.indexOf(ui.l('bluetooth.deactivatedText')) > -1)
 			ui.navigation.hidePopup();
 	}
 	static requestAuthorization(logon) {
@@ -60,7 +60,7 @@ class bluetooth {
 						bluetooth.scanStart();
 						showHint = false;
 					} else
-						ui.navigation.openPopup(ui.l('attention'), ui.l('bluetoothDeactivated'));
+						ui.navigation.openPopup(ui.l('attention'), ui.l('bluetooth.deactivatedText'));
 				}
 			})
 		};
@@ -68,7 +68,7 @@ class bluetooth {
 			try {
 				cordova.plugins.diagnostic.requestBluetoothAuthorization(stateListener);
 			} catch (e) {
-				ui.navigation.openPopup(ui.l('attention'), ui.l('bluetoothError').replace('{0}', e));
+				ui.navigation.openPopup(ui.l('attention'), ui.l('bluetooth.error').replace('{0}', e));
 			}
 		} else
 			stateListener.call();
@@ -124,7 +124,7 @@ class bluetooth {
 			user.save({ bluetooth: false }, bluetooth.stop);
 		else {
 			if ((!user.contact.ageMale && !user.contact.ageFemale && !user.contact.ageDivers) || !user.contact.age || !user.contact.gender)
-				ui.navigation.openPopup(ui.l('attention'), ui.l('wtd.error').replace('{0}', ui.l('wtd.bluetoothMatching')) + '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.edit') + '</buttontext>');
+				ui.navigation.openPopup(ui.l('attention'), ui.l('bluetooth.errorMatching').replace('{0}', ui.l('bluetooth.matching')) + '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.edit') + '</buttontext>');
 			else
 				user.save({ bluetooth: true }, bluetooth.requestAuthorization);
 		}

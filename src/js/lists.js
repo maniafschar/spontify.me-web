@@ -30,7 +30,7 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 		else if (errorID == 'profile')
 			s = s.replace('{1}', '<br/><br/><buttontext onclick="ui.navigation.goTo(&quot;settings&quot;)" class="bgColor">' + ui.l('settings.edit') + '</buttontext>');
 		else if (errorID == 'list')
-			s = s.replace('{1}', '<br/><br/><buttontext onclick="pageInfo.socialShare()" class="bgColor">' + ui.l('sendSocialShareLocation') + '</buttontext><buttontext onclick="pageLocation.edit()" class="bgColor">' + ui.l('locations.new') + '</buttontext>');
+			s = s.replace('{1}', '<br/><br/><buttontext onclick="pageLocation.edit()" class="bgColor">' + ui.l('locations.new') + '</buttontext>');
 		else if (errorID == 'eventsMy')
 			s = s.replace('{1}', '<br/><br/><buttontext class="bgColor">' + ui.l('events.participante') + '</buttontext><br/><br/>');
 		else if (errorID == 'search' &&

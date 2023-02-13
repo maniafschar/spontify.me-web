@@ -169,6 +169,14 @@
 		}
 	],
 	"labels": {
+		"bluetooth": {
+			"activated": "Eingeschaltet",
+			"deactivated": "Ausgeschaltet",
+			"deactivatedText": "Dein Bluetooth ist ausgeschaltet, Bluetooth Matching konnte nicht aktiviert werden.",
+			"error": "Fehler beim Aktivieren von Bluetooth:<br />{0}",
+			"errorMatching": "Das Matching in \"{0}\" benötigt:<ul><li>Dein Geburtstag/Alter</li><li>Dein Geschlecht</li><li>Deine \"Bevorzugt von\" Angaben</li></ul>Ergänze diese Angaben bitte, dann kannst Du hier loslegen.",
+			"matching": "Bluetooth Matching"
+		},
 		"chat": {
 			"askInsertCopyLink": "Link senden?",
 			"askInsertCopyLinks": "Links senden?",
@@ -185,6 +193,7 @@
 			"groupTitle": "Gruppenchat",
 			"serviceLocation": "Standort",
 			"serviceSendError": "Dein Standort konnte nicht ermittelt werden, ${appTitle} kann Deine Position nicht senden.",
+			"share": "Teilen",
 			"title": "Chat"
 		},
 		"contacts": {
@@ -345,7 +354,9 @@
 			"notLocalized": "nicht geortet (Meldung: {0})",
 			"post": "Auf Facebook posten",
 			"promoSender": "Dieser Link wurde Dir gesendet von {0}",
-			"socialShareBrowser": "Lade Deine Freunde per Email oder Chat ein. Wir haben Dir hier einen Text vorbereitet, den Du mit Copy & Paste einfügen kannst:",
+			"recommend": "Würdest Du ${appTitle} Deinen Freunden weiterempfehlen?",
+			"sendSocialShare": "Lade Deine Freunde...",
+			"socialShareBrowser": "...per Email oder Chat ein. Wir haben Dir hier einen Text vorbereitet, den Du mit Copy & Paste einfügen kannst:",
 			"socialShareText": "Hey, ich bin in ${appTitle} weil es hier Bluetooth Matching, Guides und Events gibt 😎<br/><br/>Macht Spaß, wenn Du in der Stadt schlenderst und die App Dir Personen mit ähnlichen Interessen in unmittelbarer Nähe vorschlägt! 😊<br/><br/>Lust es auszuprobieren? 😏<br/>Du findest mich in unter {0} {1}",
 			"url": "Link zum Versenden in anderen Apps wie WhatsApp:"
 		},
@@ -597,6 +608,7 @@
 			"interestFemale": "Frauen im Alter",
 			"interestMale": "Männer im Alter",
 			"lang": "App-Sprache",
+			"myNotifications": "Benachrichtigungen",
 			"noAttribs": "Du hast noch keine Präferenzen angegeben. ${appTitle} zeigt Dir personalisierte Listen an, in denen Einträge, zu denen Du kein Bezug hast, ausgefiltert werden. Möchtest Du Deine Präferenzen nun eingeben?",
 			"noAttribsAction": "Ja, öffne mir die Seite",
 			"noAttribsTitle": "Präferenzen",
@@ -629,24 +641,6 @@
 			"urls": "Links zu LinkedIn, Instagram, etc.",
 			"urlsFormat": "Ein Link pro Zeile in der Form https://linkedin.com/xyz/"
 		},
-		"wtd": {
-			"action": "Los geht's!",
-			"actionReset": "Aktion löschen",
-			"autoNews": "will um {1} {0}",
-			"autoNewsMe": "Um {0} Uhr ",
-			"birthdays": "Geburtstage",
-			"bluetoothMatching": "Bluetooth Matching",
-			"buttonSave": "Als Statusmeldung setzen!",
-			"error": "Das Matching in \"{0}\" benötigt:<ul><li>Dein Geburtstag/Alter</li><li>Dein Geschlecht</li><li>Deine \"Bevorzugt von\" Angaben</li></ul>Ergänze diese Angaben bitte, dann kannst Du hier loslegen.",
-			"myNotifications": "Benachrichtigungen",
-			"noCategoriesEntered": "Gib bitte die Kategorie an",
-			"noTimeEntered": "Gib bitte die Zeit an",
-			"offers": "Angebote",
-			"ownTextHint": "hier kannst Du Dein Vorhaben genauer beschreiben",
-			"setStatusEvent": "Dein Status wurde aktualisiert, viel Spaß beim Event!",
-			"setStatusLocation": "Dein Status wurde aktualisiert, viel Spaß in der Location!",
-			"time": "Loslegen möchte ich ab"
-		},
 		"all": "in der Nähe",
 		"appSubTitle": "neue Leute hier und heute",
 		"attention": "Achtung",
@@ -655,10 +649,6 @@
 		"birthday.gratulation": "Herzlichen Glückwunsch zu Deinem {0}. Geburtstag!<br/>Wir wünschen Dir einen wunderschönen Tag!",
 		"birthday": "Geburtstag",
 		"blocked.title": "Buddy geblockt",
-		"bluetooth.activated": "Eingeschaltet",
-		"bluetooth.deactivated": "Ausgeschaltet",
-		"bluetoothDeactivated": "Dein Bluetooth ist ausgeschaltet, Bluetooth Matching konnte nicht aktiviert werden.",
-		"bluetoothError": "Fehler beim Aktivieren von Bluetooth:<br />{0}",
 		"camera.notAvailabe": "Bei der Bildauswahl ist ein Fehler aufgetreten:<br/>{0}",
 		"camera.select": "Auswählen",
 		"camera.shoot": "Aufnehmen",
@@ -734,9 +724,6 @@
 		"save": "Speichern",
 		"saved": "Gespeichert",
 		"send": "Senden",
-		"sendSocialShare": "Lade Deine Freunde ein...",
-		"sendSocialShareLocation": "Freunde weiterempfehlen",
-		"share": "Teilen",
 		"show": "Anzeigen",
 		"slider.from": "von",
 		"slider.until": "bis",
