@@ -264,7 +264,7 @@ class ui {
 			if (pageInfo.openSection == -2)
 				pageInfo.openSection = -1;
 			if (!user.contact && id != 'home' && id != 'info' && id != 'login') {
-				intro.openHint({ desc: id, pos: '10%,6vh', size: '80%,auto' });
+				intro.openHint({ desc: id, pos: '15%,-6em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:' + (id == 'contacts' ? 9.375 : 40.625) + '%;margin-right:-0.5em;' });
 				return;
 			}
 			geoData.headingClear();

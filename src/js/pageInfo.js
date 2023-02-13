@@ -2,6 +2,7 @@ import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './initialisation';
 import { intro } from './intro';
+import { pageLogin } from './pageLogin';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 
@@ -69,7 +70,7 @@ ${ui.l('home.DescLink')}
 	static socialShare() {
 		var msg = ui.l('info.socialShareText').replace('{0}', user.contact.idDisplay).replace('{1}', user.contact.gender == 1 ? '🙋‍♂️' : '🙋‍♀️');
 		if (global.isBrowser())
-			ui.navigation.openPopup(ui.l('info.sendSocialShare'), ui.l('info.socialShareBrowser') + '<infoblock class="selectable" style="margin-top:1em;">' + msg + '</infoblock>');
+			ui.navigation.openPopup(ui.l('info.sendSocialShare'), ui.l('info.socialShareBrowser') + '<infoblock class="selectable" style="margin-top:1em;">' + msg.replace(/\n/g, '<br/>') + '<br/><br/>' + global.server.substring(0, global.server.lastIndexOf('/', global.server.length - 2)) + '</infoblock>');
 		else {
 			window.plugins.socialsharing.shareWithOptions({
 				message: msg,
@@ -80,9 +81,12 @@ ${ui.l('home.DescLink')}
 	}
 	static socialShareDialog() {
 		var f = function () {
-			if (ui.navigation.getActiveID() == 'home') {
+			if (ui.navigation.getActiveID() == 'home' && pageLogin.timestamp && new Date().getTime() - pageLogin.timestamp > 10000) {
 				intro.openHint({ desc: '<div style="margin:0 0.5em 1em 0.5em;">' + ui.l('info.recommend') + '</div><buttontext class="bgColor" style="margin-top:0.5em;" onclick="pageInfo.socialShare()">' + ui.l('Yes') + '</buttontext>', pos: '15%,20vh', size: '70%,auto' });
-				user.save({ recommend: global.date.local2server(new Date()) });
+				setTimeout(function () {
+					if (ui.q('hint buttontext[onclick*="socialShare"]'))
+						user.save({ recommend: global.date.local2server(new Date()) });
+				}, 1500);
 			} else
 				setTimeout(pageInfo.socialShareDialog, 2000);
 		}

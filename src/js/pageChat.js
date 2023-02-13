@@ -17,8 +17,6 @@ export { pageChat };
 
 class pageChat {
 	static copyLink = '';
-	static chatsNew = 0;
-	static chatsUnseen = 0;
 	static lastScroll = 0;
 	static oldCleverTip = '';
 	static admin = { id: 3, image: '', ai: 0, pseudonym: null };
@@ -334,8 +332,6 @@ class pageChat {
 				e.innerHTML = s;
 				if (ui.cssValue(e, 'display') == 'none')
 					e.removeAttribute('h');
-				if (d.length > 1)
-					e.setAttribute('firstChatId', model.convert(new Contact(), d, 1)._chatId);
 				formFunc.image.replaceSVGs();
 			}
 		};
@@ -523,8 +519,6 @@ class pageChat {
 		}
 	}
 	static reset() {
-		pageChat.chatsNew = 0;
-		pageChat.chatsUnseen = 0;
 		pageChat.copyLink = '';
 		ui.html('chatList', '');
 	}

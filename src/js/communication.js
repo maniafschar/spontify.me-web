@@ -3,7 +3,7 @@ import { geoData } from './geoData';
 import { global } from './global';
 import { pageChat } from './pageChat';
 import { pageLogin } from './pageLogin';
-import { ui, formFunc } from './ui';
+import { ui } from './ui';
 import { user } from './user';
 import { pageHome } from './pageHome';
 import { pageInfo } from './pageInfo';
@@ -245,21 +245,19 @@ class communication {
 							ui.classAdd('chatList [i="' + i + '"]', 'highlightBackground');
 					}
 				}
-				if (r.chat.firstId != ui.q('chatList').getAttribute('firstChatId') ||
-					chat != pageChat.chatsNew ||
-					Object.keys(r.chat.unseen).length != pageChat.chatsUnseen) {
+				var chatHash = r.chat.firstId + '|' + chat + '|' + Object.keys(r.chat.unseen).length;
+				if (chatHash != ui.q('chatList').getAttribute('hash')) {
 					pageChat.initActiveChats();
+					ui.q('chatList').setAttribute('hash', chatHash);
 				}
 				total += chat;
-				pageChat.chatsNew = chat;
-				pageChat.chatsUnseen = Object.keys(r.chat.unseen).length;
 				e = ui.q('badgeChats');
-				if (e) {
-					ui.html(e, pageChat.chatsNew == 0 ? '' : pageChat.chatsNew);
-					if (pageChat.chatsNew)
-						ui.classAdd(e.parentNode, 'pulse highlight');
-					else
-						ui.classRemove(e.parentNode, 'pulse highlight');
+				if (chat) {
+					ui.classAdd(e.parentNode, 'pulse highlight');
+					ui.html(e, chat);
+				} else {
+					ui.classRemove(e.parentNode, 'pulse highlight');
+					ui.html(e, '');
 				}
 				if (r.notification != pageHome.badge) {
 					communication.ajax({

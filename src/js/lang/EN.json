@@ -356,8 +356,8 @@
 			"promoSender": "This link is you sent by {0}",
 			"recommend": "Would you recommend ${appTitle} to your friends?",
 			"sendSocialShare": "Invite your friends...",
-			"socialShareBrowser": "...via email or chat. We prepared a text, which you may copy & paste:",
-			"socialShareText": "Hey, I'm in ${appTitle} because of Bluetooth Matching, Guides, and Events 😎\n\nIt's fun strolling through the city and the app suggest Buddies with similar interests in your immediate vicinity! 😊\n\nWanna try it? ✌️😏\nYou'll find me in ${appTitle} as {0} {1}",
+			"socialShareBrowser": "via email or chat. We prepared a text, which you may copy & paste:",
+			"socialShareText": "Hi, ${appTitle} is constantly growing and you find cool events here 😎\n\nTry it, you'll find me as {0} {1}",
 			"url": "Link for sending in other Apps like WhatsApp:"
 		},
 		"intro": {
@@ -370,11 +370,11 @@
 			"chatDescription": "<title>Chats</title><br/>After logging in, you will see the list of Buddies with whom you have already <emphasis>chatted</emphasis>.",
 			"chatEmpty": "You don't have started any chats with other Buddies yet. Click on <b>Chat</b> in a Buddies's profile.",
 			"contactFavorite": "Here you can send friend requests or block other Buddies.",
-			"contacts": "<title>Buddies</title><br/>We match Buddies according to the following criteria, which you can specify in your <emphasis>settings</emphasis>:<ul><li>Skills</li><li>Age</li><li>Gender</li><li>favorite Locations</li></ul>Hence, we may suggest fitting skillvents for you and you may search the <emphasis>community</emphasis> for other Buddies with similar skills.",
+			"contacts": "<title>Buddies</title><br/>You can find your friends as well as profile visitors in this area after logging in.",
 			"description": "<title>skillvents</title><br/>More spontaneity needed? For example if:<ul><li>You  want to do something, but your <emphasis>friends</emphasis> don't have time</li><li>You are in another city and like to meet <emphasis>like minded</emphasis></li><li>You enjoy organizing <emphasis>events</emphasis> where new Buddies are welcome to join</li></ul>skillvents is the right app for you in such cases.",
 			"detail": "The detail page contains<ul><li>contact data</li><li>describtion of the location</li><li>reachability of the location</li><li>map</li><li>various buttons to e.g. add locations to your favorites.</li></ul>",
 			"eventNew": "<ul><li>Choose a location (list above)</li><li>Location doesn't exist? Click <b>enter Location</b></li><li>In the Location click <b>Events</b> at the bottom</li><li>Click <b>Add new Event</b></li></ul>",
-			"events": "<title>skillvents</title><br/>Here they are, skillvents you take part as well as the ones you created.<br/><br/>We also suggest you <emphasis>interessting</emphasis> and<emphasis> fitting</emphasis> skillvents, so that you constantly develop more skills and never run out of excitment.",
+			"events": "<title>skillvents</title><br/>skillvents in which you participate or which you have created can be found here after logging in.",
 			"goToSettings": "Let's create your profile so that you can also get good matches here.<br/>Clicking on the profile icon will take you to your profile.",
 			"goToSettings2": "A swipe to the left and you can enter attributes about yourself and locations.",
 			"home": "Sometimes you want to get out of the rut and discover new things. ${appTitle} helps<ul><li>to match contacts with <b>same interests</b>, e.g. dog lovers or concert goers</li><li>to find new locations/events through <b>Guides</b></li></ul>We do it in the following way...",
@@ -393,7 +393,7 @@
 			"settings": "<title>Settings</title><br/>Here you describe yourself and what <emphasis>you like</emphasis>. Based on this information we match:<ul><li>Locations</li><li>Events</li><li>and Buddies</li></ul>",
 			"settingsLoggedIn": "<ul><li>Change your profile image and enter general information here</li><li>Swipe left to enter attributes that describe you and that you like about other Buddies</li><li>provide yourself as a guide for Buddies fitting your settings</li></ul>",
 			"teaserContacts": "<title>Buddies</title><br/>Wir matchen Buddies nach folgenden Kriterien, die Du in Deinen <emphasis>Einstellungen</emphasis> angeben kannst:<ul><li>Skills</li><li>Alter</li><li>Geschlecht</li><li>favorisierte Locations</li></ul>So können wir Dir passende skillvents vorschlagen und Du kannst die <emphasis>Community</emphasis> nach anderen Buddies mit ähnlichen Skills durchsuchen.",
-			"teaserEvents": "<title>skillvents</title><br/>Hier sind sie, Deine skillvents an denen Du teilnimmst und die, die Du erstellt hast.<br/><br/>Zudem schlagen wir Dir <emphasis>interessante</emphasis> und zu Dir <emphasis>passende</emphasis> skillvents vor, so dass Du Dich stets weiterentwickelst und Neues erlebst."
+			"teaserEvents": "<title>skillvents</title><br/>You can see <emphasis>interesting</emphasis> and nearby skillvents immediately after logging in."
 		},
 		"locations": {
 			"address": "Address",
