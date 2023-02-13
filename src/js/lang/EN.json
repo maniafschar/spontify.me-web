@@ -338,7 +338,7 @@
 			"adsReinit": "View again",
 			"adsTitle": "Marekting Campaigns",
 			"copyright": "JNet Quality Consulting GmbH<br/>All rights reserved",
-			"description": "Each of us has special abilities - skills. Some would like to develop them, some would like to help others to develop them.<br/><br/>In <span class=\"highlightColor\">skillvents</span> organizers find participants and vice versa. Anyone can create skillvents and thus, for example, pass on their talent for rolling sushi to others.<br/><br/>skillvents is not only free of charge, you can even <span class=\"highlightColor\">earn money</span>. Build up your community, organize great skillvents that are fun, expand your level of awareness. If participants are willing to pay for your skillvent, you can use your PayPal account to set up fee-based skillvents. The payment of the participants, minus our fee of 20%, ends up directly and immediately on your PayPal account.",
+			"description": "Each of us has special abilities - skills. Some would like to develop them, some would like to help others to develop them.<br/><br/>In <span class=\"highlightColor\">skillvents</span> organizers find participants and vice versa. Anyone can create skillvents and thus, for example, pass on their talent for rolling sushi to others.<br/><br/>skillvents is not only free of charge, you can even <span class=\"highlightColor\">earn money</span>. Build up your community, organize great skillvents that are fun, expand your level of awareness. If participants are willing to pay for your skillvent, you can use your PayPal account to set up fee-based skillvents. The payment of the participants, minus our fee of {0}%, ends up directly and immediately on your PayPal account.",
 			"dislike": "I don't like it",
 			"dsgvoTitle": "Privacy Policy",
 			"feedback": "Feedback",
@@ -392,7 +392,7 @@
 			"register": "After registration, we will show you how you can individualize your profile. Thank you for taking the time for this intro.",
 			"settings": "<title>Settings</title><br/>Here you describe yourself and what <emphasis>you like</emphasis>. Based on this information we match:<ul><li>Locations</li><li>Events</li><li>and Buddies</li></ul>",
 			"settingsLoggedIn": "<ul><li>Change your profile image and enter general information here</li><li>Swipe left to enter attributes that describe you and that you like about other Buddies</li><li>provide yourself as a guide for Buddies fitting your settings</li></ul>",
-			"teaserContacts": "<title>Buddies</title><br/>Wir matchen Buddies nach folgenden Kriterien, die Du in Deinen <emphasis>Einstellungen</emphasis> angeben kannst:<ul><li>Skills</li><li>Alter</li><li>Geschlecht</li><li>favorisierte Locations</li></ul>So können wir Dir passende skillvents vorschlagen und Du kannst die <emphasis>Community</emphasis> nach anderen Buddies mit ähnlichen Skills durchsuchen.",
+			"teaserContacts": "<title>Buddies</title><br/>We match buddies by:<ul><li>Skills</li><li>Age</li><li>Gender</li><li>Favorite Locations</li></ul>So we can match you suggest skillvents and you can search the <emphasis>Community</emphasis> for similar skills.",
 			"teaserEvents": "<title>skillvents</title><br/>You can see <emphasis>interesting</emphasis> and nearby skillvents immediately after logging in."
 		},
 		"locations": {

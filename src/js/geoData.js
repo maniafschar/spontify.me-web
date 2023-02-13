@@ -146,7 +146,7 @@ class geoData {
 		} else if (user.contact)
 			communication.loadMap('geoData.openLocationPickerDialog');
 		else
-			intro.openHint({ desc: 'position', pos: '10%,5em', size: '80%,auto' });
+			intro.openHint({ desc: 'position', pos: '10%,10.5em', size: '80%,auto', hinkyClass: 'top', hinky: 'left:50%;margin-left:-0.5em;' });
 	}
 	static openLocationPickerDialog() {
 		ui.navigation.openPopup(ui.l('home.locationPickerTitle'),

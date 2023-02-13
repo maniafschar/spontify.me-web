@@ -65,7 +65,7 @@ class pageChat {
 	}
 	static aiHint() {
 		if (ui.q('chatInput input:checked'))
-			intro.openHint({ desc: 'chatAi', pos: '10%,-10.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-0.75em' });
+			intro.openHint({ desc: 'chatAi', pos: '10%,-10.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-0.5em' });
 		else
 			intro.closeHint();
 	}

@@ -84,7 +84,7 @@ class pageHome {
 				url: global.server + 'action/teaser/contacts',
 				responseType: 'json',
 				success(l) {
-					var s = '', oc = user.contact ? null : 'intro.openHint({ desc: \'teaserContacts\', pos: \'10%,5em\', size: \'80%,auto\' })';
+					var s = '', oc = user.contact ? null : 'intro.openHint({ desc: \'teaserContacts\', pos: \'10%,-27vh\', size: \'80%,auto\', hinkyClass: \'bottom\', hinky: \'left:50%;margin-right:-0.5em;\' })';
 					for (var i = 1; i < l.length; i++) {
 						var e = model.convert(new Contact(), l, i);
 						s += '<card onclick="' + (oc ? oc : 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + e.id) + '&quot;)') + '"><img src="' + global.serverImg + e.imageList + '"/><text>' + e.pseudonym + '</text></card>';
@@ -97,7 +97,7 @@ class pageHome {
 				url: global.server + 'action/teaser/events',
 				responseType: 'json',
 				success(l) {
-					var s = '', oc = user.contact ? null : 'intro.openHint({ desc: \'teaserEvents\', pos: \'10%,5em\', size: \'80%,auto\' })';
+					var s = '', oc = user.contact ? null : 'intro.openHint({ desc: \'teaserEvents\', pos: \'10%,-57vh\', size: \'80%,auto\', hinkyClass: \'bottom\', hinky: \'left:50%;margin-right:-0.5em;\' })';
 					var e = [];
 					for (var i = 1; i < l.length; i++)
 						e.push(model.convert(new Location(), l, i));
@@ -159,7 +159,7 @@ class pageHome {
 			ui.q('badgeNotifications').innerText = Math.max(pageHome.badge, 0);
 	}
 	static openHintDescription() {
-		intro.openHint({ desc: 'description', pos: '10%,5em', size: '80%,auto' });
+		intro.openHint({ desc: 'description', pos: '10%,10em', size: '80%,auto', hinkyClass: 'top', hinky: 'left:50%;margin-left:0.5em;' });
 	}
 	static openLanguage(event) {
 		event.stopPropagation();

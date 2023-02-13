@@ -1,3 +1,4 @@
+import { communication } from './communication';
 import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './initialisation';
@@ -30,29 +31,28 @@ class pageInfo {
 <infoblock id="info2" style="display:none;">
 	${ui.l('info.imprint')}
 </infoblock>
-<div style="text-align:center;padding:2em 3em 1em 3em;">${ui.l('info.infoOther')}<br/>© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>`;
+<div style="text-align:center;padding:2em 1em;">${ui.l('info.infoOther')}<br/>© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>`;
 	static templateDesc = v =>
 		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#info4&quot;)">
 ${ui.l('home.DescLink')}
 </buttontext><br/>
 <infoblock id="info4" style="display:none;">
 <div>
-	${ui.l('info.description')}
+	${ui.l('info.description').replace('{0}', v.fee)}
 </div>
 </infoblock>`;
 	static init() {
 		var e = ui.q('info');
 		if (!e.innerHTML) {
-			var v = {};
-			v.displayBlogButton = '';
-			e.innerHTML = pageInfo.templateDesc(v) + pageInfo.template(v);
-			formFunc.initFields('info');
-			if (!user.contact)
-				ui.css('#socialShare', 'display', 'none');
-			if (global.getDevice() == 'computer')
-				initialisation.reposition();
-		}
-		if (pageInfo.openSection > -1) {
+			communication.ajax({
+				url: global.server + 'action/paypalKey',
+				responseType: 'json',
+				success(r) {
+					e.innerHTML = pageInfo.templateDesc(r) + pageInfo.template();
+					pageInfo.init();
+				}
+			});
+		} else if (pageInfo.openSection > -1) {
 			ui.css('info infoblock', 'display', 'none');
 			if (ui.cssValue('#info' + pageInfo.openSection, 'display') == 'none')
 				setTimeout(function () {

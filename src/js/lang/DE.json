@@ -338,7 +338,7 @@
 			"adsReinit": "Nochmal anschauen",
 			"adsTitle": "Bisherige Werbeaktionen",
 			"copyright": "JNet Quality Consulting GmbH<br/>Alle Rechte vorbehalten",
-			"description": "Jeder von uns hat besondere Fähigkeiten - Skills. Manche möchten sie ausbauen, manche möchten anderen helfen, sie auszubauen.<br/><br/>In <span class=\"highlightColor\">skillvents</span> finden Veranstalter Teilnehmer und umgekehrt. Jeder kann skillvents erstellen und so z.B. sein Talent zum Sushi Rollen anderen weitergeben.<br/><br/>skillvents ist nicht nur kostenlos, Du kannst sogar <span class=\"highlightColor\">Geld verdienen</span>. Baue Dir Deine Community auf, veranstalte tolle skillvents die Spaß machen, erweitere Deinen Bekanntheitsgrad. Sind Teilnehmer bereit, für Dein skillvent zu bezahlen, dann kannst Du mit Deinem Paypal Account kostenpflichtige skillvents einstellen. Die Bezahlung der Teilnehmer landet, abzüglich unserer Gebühr von 20%, direkt und sofort auf Dein Paypal Account.",
+			"description": "Jeder von uns hat besondere Fähigkeiten - Skills. Manche möchten sie ausbauen, manche möchten anderen helfen, sie auszubauen.<br/><br/>In <span class=\"highlightColor\">skillvents</span> finden Veranstalter Teilnehmer und umgekehrt. Jeder kann skillvents erstellen und so z.B. sein Talent zum Sushi Rollen anderen weitergeben.<br/><br/>skillvents ist nicht nur kostenlos, Du kannst sogar <span class=\"highlightColor\">Geld verdienen</span>. Baue Dir Deine Community auf, veranstalte tolle skillvents die Spaß machen, erweitere Deinen Bekanntheitsgrad. Sind Teilnehmer bereit, für Dein skillvent zu bezahlen, dann kannst Du mit Deinem Paypal Account kostenpflichtige skillvents einstellen. Die Bezahlung der Teilnehmer landet, abzüglich unserer Gebühr von {0}%, direkt und sofort auf Dein Paypal Account.",
 			"dislike": "Gefällt mir nicht",
 			"dsgvoTitle": "Datenschutzerklärung",
 			"feedback": "Feedback",
@@ -392,7 +392,7 @@
 			"register": "Nach der Registrierung zeigen wir Dir, wie Du Dein Profil individualisieren kannst. Lieben Dank dass Du Dir die Zeit für die Intro genommen hast.",
 			"settings": "<title>Einstellungen</title><br/>Hier beschreibst Du Dich und was <emphasis>Du magst</emphasis>. Basierend auf diesen Angaben matchen wir:<ul><li>Locations</li><li>Events</li><li>und Buddies</li></ul>",
 			"settingsLoggedIn": "<ul><li>Ändere hier Dein Profilbild und gib weitere, allgemeine Infos an</li><li>Ein Wisch nach links und Du kannst Dich über diverse Attribute selbst beschreiben und angeben, was Du an anderen Buddies magst</li></ul>",
-			"teaserContacts": "<title>Buddies</title><br/>Wir matchen Buddies nach folgenden Kriterien, die Du in Deinen <emphasis>Einstellungen</emphasis> angeben kannst:<ul><li>Skills</li><li>Alter</li><li>Geschlecht</li><li>favorisierte Locations</li></ul>So können wir Dir passende skillvents vorschlagen und Du kannst die <emphasis>Community</emphasis> nach anderen Buddies mit ähnlichen Skills durchsuchen.",
+			"teaserContacts": "<title>Buddies</title><br/>Wir matchen Buddies nach:<ul><li>Skills</li><li>Alter</li><li>Geschlecht</li><li>favorisierte Locations</li></ul>So können wir Dir passende skillvents vorschlagen und Du kannst die <emphasis>Community</emphasis> nach ähnlichen Skills durchsuchen.",
 			"teaserEvents": "<title>skillvents</title><br/>Für Dich <emphasis>interessante</emphasis> und in der Nähe stattfindende skillvents siehst Du sofort nach dem Einloggen."
 		},
 		"locations": {
