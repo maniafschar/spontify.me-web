@@ -247,7 +247,6 @@ ${v.rating}
 	}
 	static detailLocationEvent(l, id) {
 		var v = model.convert(new Location(), l);
-		v.eventParticipate = new EventParticipate();
 		if (!v.id)
 			v.name = v.contact.pseudonym + (v.contact.age ? ' (' + v.contact.age + ')' : '');
 		v.id = id;
