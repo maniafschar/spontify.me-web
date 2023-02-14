@@ -1738,12 +1738,20 @@ chatInput textarea {
 
 chatInput label {
 	position: absolute !important;
-	left: initial !important;
-	right: 0 !important;
-	margin: 0 !important;
-	border-radius: 1.5em 0 0 1.5em !important;
+	border-radius: 0 1.5em 1.5em 0 !important;
 	width: 6em !important;
-	bottom: 1em !important;
+	bottom: 0.5em !important;
+	background: rgba(220, 240, 255, 0.8) !important;
+	text-align: right !important;
+	padding-right: 1.25em !important;
+}
+
+chatInput input:checked+label:before {
+	left: 3em;
+}
+
+chatInput input:checked+label {
+	padding-right: 1em !important;
 }
 
 km {
