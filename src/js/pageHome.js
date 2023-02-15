@@ -115,7 +115,7 @@ class pageHome {
 			ui.html('home item.bluetooth text', ui.l(bluetooth.state == 'on' && user.contact.bluetooth ? 'bluetooth.activated' : 'bluetooth.deactivated'));
 		formFunc.image.replaceSVGs();
 		if (user.contact)
-			ui.classAdd('home homeHeader svg>g', 'pure');
+			ui.classAdd('home homeHeader svg>g', 'loggedIn');
 		pageHome.updateLocalisation();
 		ui.css('navigation item.search', 'display', user.contact ? '' : 'none');
 		ui.css('navigation item.info', 'display', user.contact ? 'none' : '');

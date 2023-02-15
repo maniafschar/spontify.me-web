@@ -592,6 +592,18 @@ class ui {
 		}
 		return e;
 	}
+	static parentsAny(e, nodeNames) {
+		if (e && nodeNames) {
+			nodeNames = nodeNames.toUpperCase().split(',');
+			for (var i = 0; i < nodeNames.length; i++) {
+				var e2 = e;
+				while (e2 && e2.nodeName != nodeNames[i])
+					e2 = e2.parentNode;
+				if (e2)
+					return e2;
+			}
+		}
+	}
 	static scrollTo(e, position, exec) {
 		if (typeof e == 'string')
 			e = ui.q(e);
@@ -622,14 +634,14 @@ class ui {
 		if (typeof e == 'string')
 			e = ui.q(e);
 		ui.on(e, 'touchstart', function (event) {
-			if (!exclude || !ui.parents(event.target, exclude)) {
+			if (!ui.parentsAny(event.target, exclude)) {
 				e.startX = event.changedTouches[0].pageX;
 				e.startY = event.changedTouches[0].pageY;
 				e.startTime = new Date().getTime();
 			}
 		});
 		ui.on(e, 'touchend', function (event) {
-			if (exclude.indexOf(',' + event.target.nodeName + ',') < 0 && (!event.target.parentNode || exclude.indexOf(',' + event.target.parentNode.nodeName + ',') < 0)) {
+			if (!ui.parentsAny(event.target, exclude)) {
 				var distX = event.changedTouches[0].pageX - e.startX;
 				var distY = event.changedTouches[0].pageY - e.startY;
 				var elapsedTime = new Date().getTime() - e.startTime;
