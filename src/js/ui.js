@@ -73,7 +73,6 @@ class ui {
 				return s;
 			}
 		};
-		var a, skills = user.contact.skills ? '|' + user.contact.skills + '|' : '';
 		var add2List = function (label, type, skill) {
 			if (!label)
 				return;
@@ -86,31 +85,33 @@ class ui {
 			}
 			skill.list.push(l);
 		};
-		if (skills)
-			result.total += skills.split('|').length;
+		var compareSkills, userSkills;
+		userSkills = user.contact.skills ? '|' + user.contact.skills + '|' : '';
+		if (userSkills)
+			result.total += userSkills.split('|').length - 2;
 		if (compare.skills) {
-			a = compare.skills.split('|');
-			for (var i = 0; i < a.length; i++)
-				add2List(hashtags.ids2Text(a[i]), skills.indexOf('|' + a[i] + '|') > -1, result.skills);
-			a = skills.split('|');
-			skills = '|' + compare.skills + '|';
-			for (var i = 0; i < a.length; i++) {
-				if (skills.indexOf('|' + a[i] + '|') < 0)
-					add2List(hashtags.ids2Text(a[i]), 'fade', result.skills);
+			compareSkills = compare.skills.split('|');
+			for (var i = 0; i < compareSkills.length; i++)
+				add2List(hashtags.ids2Text(compareSkills[i]), userSkills.indexOf('|' + compareSkills[i] + '|') > -1, result.skills);
+			userSkills = userSkills.split('|');
+			compareSkills = '|' + compare.skills + '|';
+			for (var i = 0; i < userSkills.length; i++) {
+				if (compareSkills.indexOf('|' + userSkills[i] + '|') < 0)
+					add2List(hashtags.ids2Text(userSkills[i]), 'fade', result.skills);
 			}
 		}
-		skills = user.contact.skillsText ? '|' + user.contact.skillsText.toLowerCase() + '|' : '';
-		if (skills)
-			result.total += skills.split('|').length - 2;
+		userSkills = user.contact.skillsText ? '|' + user.contact.skillsText.toLowerCase() + '|' : '';
+		if (userSkills)
+			result.total += userSkills.split('|').length - 2;
 		if (compare.skillsText) {
-			a = compare.skillsText.toLowerCase().split('|');
-			for (var i = 0; i < a.length; i++)
-				add2List(a[i].trim(), skills.indexOf('|' + a[i].trim() + '|') > -1, result.skillsText);
-			a = skills.split('|');
-			skills = '|' + compare.skillsText + '|';
-			for (var i = 0; i < a.length; i++) {
-				if (skills.indexOf('|' + a[i] + '|') < 0)
-					add2List(a[i].trim(), 'fade', result.skillsText);
+			compareSkills = compare.skillsText.toLowerCase().split('|');
+			for (var i = 0; i < compareSkills.length; i++)
+				add2List(compareSkills[i].trim(), userSkills.indexOf('|' + compareSkills[i].trim() + '|') > -1, result.skillsText);
+			userSkills = userSkills.toLowerCase().split('|');
+			compareSkills = '|' + compare.skillsText.toLowerCase() + '|';
+			for (var i = 0; i < userSkills.length; i++) {
+				if (compareSkills.indexOf('|' + userSkills[i] + '|') < 0)
+					add2List(userSkills[i].trim(), 'fade', result.skillsText);
 			}
 		}
 		return result;
@@ -184,7 +185,7 @@ class ui {
 						return;
 					}
 					var idIntern = id.indexOf('&') > 0 ? id.substring(0, id.indexOf('&')) : id;
-					ui.navigation.hidePopup();
+					ui.navigation.closePopup();
 					if (idIntern.indexOf('l=') == 0)
 						details.open(idIntern.substring(2), 'location_list&search=' + encodeURIComponent('location.id=' + idIntern.substring(2)), pageLocation.detailLocationEvent);
 					else if (idIntern.indexOf('e=') == 0)
@@ -294,7 +295,7 @@ class ui {
 				pageChat.init();
 			pageChat.closeList();
 			pageHome.closeList();
-			ui.navigation.hidePopup();
+			ui.navigation.closePopup();
 			if (currentID != id) {
 				if (back == null) {
 					var e = ui.q('navigation item.' + id);
@@ -342,18 +343,18 @@ class ui {
 				}
 			}
 		},
-		hidePopup() {
+		closePopup() {
 			ui.attr('popup', 'error');
 			ui.attr('popup popupTitle', 'modal');
 			var e = ui.q('popupTitle');
 			if (!e || ui.cssValue('popup', 'display') != 'none' && e.getAttribute('modal') != 'true') {
-				ui.navigation.animation(ui.q('popup'), 'popupSlideOut', ui.navigation.hidePopupHard);
+				ui.navigation.animation(ui.q('popup'), 'popupSlideOut', ui.navigation.closePopupHard);
 				ui.navigation.lastPopup = null;
 				return true;
 			}
 			return false;
 		},
-		hidePopupHard() {
+		closePopupHard() {
 			var e = ui.q('popup');
 			ui.css(e, 'display', 'none');
 			ui.html(e, '');
@@ -391,7 +392,7 @@ class ui {
 			if (global.isBrowser() && location.href.indexOf('#') < 0)
 				history.pushState(null, null, '#x');
 			if (visible && ui.navigation.lastPopup == title + global.separatorTech + data)
-				ui.navigation.hidePopup();
+				ui.navigation.closePopup();
 			else if (data) {
 				ui.navigation.lastPopup = title + global.separatorTech + data;
 				data = '<popupContent><div>' + data + '</div></popupContent>';
@@ -413,7 +414,7 @@ class ui {
 				else
 					ui.navigation.animation(p, 'slideUp', f);
 			} else
-				ui.navigation.animation(p, 'popupSlideOut', ui.navigation.hidePopupHard);
+				ui.navigation.animation(p, 'popupSlideOut', ui.navigation.closePopupHard);
 			return true;
 		},
 		openSwipeLeftUI(event) {

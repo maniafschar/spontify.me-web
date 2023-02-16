@@ -2332,8 +2332,23 @@ detail>div>text.highlightBackground {
 }
 
 detail text.matchIndicatorAttributesHint {
-	left: 10%;
-	width: 80%;
+	left: 50%;
+	text-align: left;
+	padding-left: 0.25em;
+	line-height: 2;
+	width: 20em;
+	margin-left: -10em;
+}
+
+detail matchIndicatorHint {
+	display: inline-block;
+	width: 3em;
+	position: relative;
+	border: solid 1px black;
+	text-align: center;
+	line-height: 1;
+	padding: 0.25em;
+	border-radius: 0.5em;
 }
 
 popup buttontext.favorite::before,

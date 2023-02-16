@@ -721,7 +721,7 @@ class pageEvent {
 					ui.q('detail card:last-child .event .reason').innerHTML = ui.l('events.canceled') + (d.values.reason ? ': ' + d.values.reason : '');
 					e2.innerHTML = e2.innerHTML && parseInt(e2.innerHTML) > 1 ? (parseInt(e2.innerHTML) - 1) + ' ' : '';
 				}
-				ui.navigation.hidePopup();
+				ui.navigation.closePopup();
 				if (order)
 					intro.closeHint();
 				e = ui.q('detail card:last-child[i="' + e.event.id + '_' + eventDate + '"] [name="participants"]');
@@ -904,7 +904,7 @@ class pageEvent {
 			method: id ? 'PUT' : 'POST',
 			body: v,
 			success(r) {
-				ui.navigation.hidePopup();
+				ui.navigation.closePopup();
 				user.remove('event');
 				details.open(id ? id : r + '_' + global.date.local2server(v.values.startDate).substring(0, 10), 'event_list&search=' + encodeURIComponent('event.id=' + r), id ? function (l, id) {
 					ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id);

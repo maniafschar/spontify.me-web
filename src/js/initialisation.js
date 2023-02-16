@@ -184,7 +184,7 @@ class initialisation {
 				e = ui.q('popup');
 				if (e.getAttribute('close'))
 					eval(e.getAttribute('close'));
-				ui.navigation.hidePopup();
+				ui.navigation.closePopup();
 			}
 		});
 		ui.on('chat', 'click', pageChat.close);
@@ -349,7 +349,7 @@ class initialisation {
 			exec.call();
 		if (user.contact && oldLang != global.language)
 			user.save({ language: lang });
-		ui.navigation.hidePopup();
+		ui.navigation.closePopup();
 	}
 	static recoverPassword() {
 		if (user.contact || initialisation.recoverInvoked == true)

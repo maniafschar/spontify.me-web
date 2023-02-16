@@ -125,6 +125,7 @@ class pageChat {
 				return;
 		}
 		intro.closeHint();
+		ui.navigation.closePopup();
 		var e = ui.q('chat');
 		if (ui.cssValue(e, 'display') == 'none')
 			return false;
@@ -292,7 +293,7 @@ class pageChat {
 		}
 		if (s)
 			pageChat.sendChat(ui.q('chat').getAttribute('i'), s);
-		ui.navigation.hidePopup();
+		ui.navigation.closePopup();
 	}
 	static insertLinkInGroup() {
 		var s = pageChat.copyLink.split('\n'), s2 = '';
@@ -383,7 +384,7 @@ class pageChat {
 					});
 					communication.notification.close();
 					ui.navigation.hideMenu();
-					ui.navigation.hidePopup();
+					ui.navigation.closePopup();
 					pageChat.closeList();
 					pageChat.init();
 					ui.off('chatConversation', 'scroll', pageChat.reposition);
@@ -433,11 +434,11 @@ class pageChat {
 	static postSendChatImage(r) {
 		if (ui.q('chat').getAttribute('i') == r.contactId) {
 			ui.q('[name="image"]').value = '';
-			ui.navigation.hidePopup();
+			ui.navigation.closePopup();
 			setTimeout(function () {
 				if (ui.q('chat[i="' + r.contactId + '"] chatConversation')) {
 					communication.ajax({
-						url: global.server + 'db/one?query=contact_chat&search=' + encodeURIComponent('chat.id=' + r.chatId),
+						url: global.server + 'db/one?query=contact_chat&search=' + encodeURIComponent('contactChat.id=' + r.chatId),
 						responseType: 'json',
 						success(r2) {
 							var e = document.createElement('div');
@@ -619,7 +620,7 @@ class pageChat {
 				method: 'POST',
 				body: 'groups=' + s.substring(1) + '&text=' + encodeURIComponent(ui.val('#groupChatText')),
 				success() {
-					ui.navigation.hidePopup();
+					ui.navigation.closePopup();
 					user.contact.chatTextGroups = '';
 					pageChat.initActiveChats();
 				}
@@ -647,7 +648,7 @@ class pageChat {
 				}
 			});
 		} else
-			ui.navigation.hidePopup();
+			ui.navigation.closePopup();
 	}
 	static showScrollButton() {
 		var e = ui.q('chatMoreButton');

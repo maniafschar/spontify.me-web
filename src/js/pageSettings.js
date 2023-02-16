@@ -489,7 +489,7 @@ ${v.info}`;
 	}
 	static resetEmailToOldValue() {
 		ui.q('input[name="email"]').value = pageSettings.currentSettings.split(global.separatorTech)[0];
-		ui.navigation.hidePopup();
+		ui.navigation.closePopup();
 	}
 	static save(goToID, saveNewEmail) {
 		if (!ui.q('settings').innerHTML)
@@ -540,7 +540,7 @@ ${v.info}`;
 			if (saveNewEmail)
 				ui.q('input[name="verified"]').value = 'false';
 			else {
-				ui.navigation.openPopup(ui.l('attention'), ui.l('settings.confirmEmailChange') + '<br /><buttontext class="bgColor" onclick="pageSettings.save(&quot;' + goToID + '&quot;,true);ui.navigation.hidePopup()" style="margin-top:1em;">' + ui.l('Yes') + '</buttontext><buttontext class="bgColor" onclick="pageSettings.resetEmailToOldValue()" style="margin-top:1em;">' + ui.l('No') + '</buttontext>');
+				ui.navigation.openPopup(ui.l('attention'), ui.l('settings.confirmEmailChange') + '<br /><buttontext class="bgColor" onclick="pageSettings.save(&quot;' + goToID + '&quot;,true);ui.navigation.closePopup()" style="margin-top:1em;">' + ui.l('Yes') + '</buttontext><buttontext class="bgColor" onclick="pageSettings.resetEmailToOldValue()" style="margin-top:1em;">' + ui.l('No') + '</buttontext>');
 				return false;
 			}
 		}
@@ -610,7 +610,7 @@ ${v.info}`;
 				var e = ui.q('settings #blocked [i="' + id + '"]');
 				if (e)
 					e.outerHTML = '';
-				ui.navigation.hidePopup();
+				ui.navigation.closePopup();
 				e = ui.q('settings #blocked');
 				e.removeAttribute('h');
 				if (!ui.q('settings #blocked row'))

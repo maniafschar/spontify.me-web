@@ -507,7 +507,7 @@ class pageLogin {
 				pageLogin.removeCredentials();
 				user.password = ui.val('[name="passwd"]');
 				ui.attr('popupTitle', 'modal', '');
-				ui.navigation.hidePopup();
+				ui.navigation.closePopup();
 				user.contact.verified = 1;
 			});
 		}
@@ -563,7 +563,7 @@ class pageLogin {
 					if (r.indexOf('nok:') == 0)
 						formFunc.setError(email, 'login.recoverPasswordError' + r.substring(4));
 					else {
-						ui.navigation.hidePopup();
+						ui.navigation.closePopup();
 						pageLogin.removeCredentials();
 						if (fromDialog)
 							ui.navigation.openPopup(ui.l('login.recoverPassword'), ui.l('login.recoverPasswordBody'));

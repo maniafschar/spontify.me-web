@@ -38,9 +38,9 @@ class bluetooth {
 			}
 		}
 	}
-	static hidePopup() {
+	static closePopup() {
 		if (ui.q('popupContent') && ui.q('popupContent').innerHTML.indexOf(ui.l('bluetooth.deactivatedText')) > -1)
-			ui.navigation.hidePopup();
+			ui.navigation.closePopup();
 	}
 	static requestAuthorization(logon) {
 		bluetooth.reset();
@@ -56,7 +56,7 @@ class bluetooth {
 				bluetooth.state = state;
 				if (user.contact.bluetooth) {
 					if (state == 'on') {
-						bluetooth.hidePopup();
+						bluetooth.closePopup();
 						bluetooth.scanStart();
 						showHint = false;
 					} else
@@ -133,7 +133,7 @@ class bluetooth {
 		if (!global.isBrowser()) {
 			ble.stopScan();
 			ble.stopStateNotifications();
-			bluetooth.hidePopup();
+			bluetooth.closePopup();
 			if (ui.q('hint[i="bluetoothOn"]'))
 				intro.closeHint();
 		}

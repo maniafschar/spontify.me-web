@@ -7,7 +7,6 @@ import { pageLocation } from './pageLocation';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 import { model, Contact, ContactGroup } from './model';
-import { pageChat } from './pageChat';
 
 export { pageContact };
 
@@ -58,8 +57,10 @@ class pageContact {
 				<text x="18" y="21.35" class="percentage">${v.matchIndicator}</text>
 			</svg>
 		</matchIndicator>
+		<text name="matchIndicatorHint" class="popup" style="display:none;" onclick="ui.toggleHeight(this)">
+			<div>${v.matchIndicatorHint}</div>
+		</text>
 		${v.previewHintImage}
-		${v.previewHintLocationService}
 	</detailImg>
 </detailHeader>
 ${v.aboutMe}
@@ -69,6 +70,9 @@ ${v.rating}
 	${v.birthday}
 </text>
 ${v.skills}
+<text class="popup matchIndicatorAttributesHint" style="display:none;" onclick="ui.toggleHeight(this)">
+	<div>${v.matchIndicatorHintDescription}</div>
+</text>
 <detailButtons style="margin-top:1em;">
 	<buttontext class="bgColor${v.blocked}${v.hideMe}"
 		onclick="pageChat.open(${v.id})">${ui.l('chat.title')}</buttontext>
@@ -85,12 +89,6 @@ ${v.skills}
 	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonBlock"
 		onclick="pageContact.toggleBlockUser(${v.id})">${ui.l('contacts.blockAction')}</buttontext>
 </detailButtons>
-<text name="matchIndicatorHint" class="popup" style="display:none;" onclick="ui.toggleHeight(this)">
-	<div>${v.matchIndicatorHint}</div>
-</text>
-<text class="popup matchIndicatorAttributesHint" style="display:none;" onclick="ui.toggleHeight(this)">
-	<div></div>
-</text>
 <text name="friend" class="collapsed">
 	<div style="padding:2em 0;">
 		${v.link}
@@ -208,8 +206,6 @@ ${v.skills}
 		var preview = ui.navigation.getActiveID() == 'settings';
 		v = model.convert(new Contact(), v);
 		v.distance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
-		if (!v.distance && preview)
-			v.previewHintLocationService = '<previewHint class="locationService">' + ui.l('settings.previewHintLocationService') + '</previewHint>';
 		v.birthday = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
 		if (v.birthday.age) {
 			if (v.age)
@@ -242,7 +238,9 @@ ${v.skills}
 			v.favorite = 'favorite';
 		var skills = ui.getSkills(v, 'detail');
 		v.skills = skills.text();
-		if (preview && !v.skills)
+		if (v.skills)
+			v.skills = '<text onclick="pageContact.toggleSkills()">' + v.skills + '</text>';
+		else if (preview)
 			v.skills = '<previewHint>' + ui.l('settings.previewHintAttributes') + '</previewHint>';
 		if (v.gender) {
 			if (v.age && skills.totalMatch) {
@@ -265,7 +263,11 @@ ${v.skills}
 			v.matchIndicatorPercent = 0;
 		v.matchIndicatorHint = ui.l('contacts.matchIndicatorHint').replace('{0}', skills.totalMatch).replace('{1}', skills.total).replace('{2}', v.matchIndicatorPercent);
 		if (v.matchIndicatorClass)
-			v.matchIndicatorHint += '<br/>' + ui.l('contacts.matchIndicatorHintPulse');
+			v.matchIndicatorHint += '<div style="margin-top:0.5em;">' + ui.l('contacts.matchIndicatorHintPulse') + '</div>';
+		v.matchIndicatorHintDescription = ui.l('contacts.matchIndicatorHintDescription');
+		v.matchIndicatorHintDescription = v.matchIndicatorHintDescription.replace('{0}', '<matchIndicatorHint class="highlightBackground">abc</matchIndicatorHint>');
+		v.matchIndicatorHintDescription = v.matchIndicatorHintDescription.replace('{1}', '<matchIndicatorHint>def</matchIndicatorHint>');
+		v.matchIndicatorHintDescription = v.matchIndicatorHintDescription.replace('{2}', '<matchIndicatorHint class="skillsFade">ghi</matchIndicatorHint>');
 		if (preview && !v.image)
 			v.matchIndicatorClass = ' class="fade"';
 		v.hideMe = user.contact.id == v.id ? ' noDisp' : '';
@@ -461,7 +463,7 @@ ${v.skills}
 				method: 'POST',
 				body: { classname: 'ContactGroup', values: { name: e.value.replace(/</g, '&lt;') } },
 				success() {
-					ui.navigation.hidePopup();
+					ui.navigation.closePopup();
 					pageContact.groups.getGroups(function () {
 						var e2 = ui.qa('[name="groups"] detailTogglePanel input:checked'), e3 = ui.q('[i="' + id + '"] [name="groups"] detailTogglePanel');
 						var s = e3.innerHTML;
@@ -594,7 +596,7 @@ ${v.skills}
 			body: { classname: 'ContactLink', values: { contactId2: id } },
 			success() {
 				if (ui.q('popupContent'))
-					ui.navigation.hidePopup();
+					ui.navigation.closePopup();
 				else {
 					var e = ui.q('detail card:last-child[i="' + id + '"] [name="friend"] buttontext');
 					if (e)
@@ -658,5 +660,8 @@ ${v.skills}
 		e.style.top = (button.offsetTop + button.offsetHeight) + 'px';
 		e.style.left = '5%';
 		ui.toggleHeight(e);
+	}
+	static toggleSkills() {
+		ui.toggleHeight('detail card:last-child .matchIndicatorAttributesHint');
 	}
 }

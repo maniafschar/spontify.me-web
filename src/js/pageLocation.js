@@ -221,7 +221,7 @@ ${v.rating}
 	static deleteElement(id, classname) {
 		if (ui.q('#deleteElement').innerHTML.indexOf(' ') > 0) {
 			if (!id) {
-				ui.navigation.hidePopup();
+				ui.navigation.closePopup();
 				return;
 			}
 			communication.ajax({
@@ -229,7 +229,7 @@ ${v.rating}
 				method: 'DELETE',
 				body: { classname: classname, id: id },
 				success(r) {
-					ui.navigation.hidePopup();
+					ui.navigation.closePopup();
 					ui.navigation.goTo('home');
 					setTimeout(function () {
 						if (classname == 'Location')
@@ -526,7 +526,7 @@ ${v.rating}
 					communication.onError(e);
 			},
 			success(r) {
-				ui.navigation.hidePopup();
+				ui.navigation.closePopup();
 				user.remove('location');
 				details.open(id ? id : r, 'location_list&search=' + encodeURIComponent('location.id=' + r), id ? function (l, id) {
 					ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id);

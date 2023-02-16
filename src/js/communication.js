@@ -229,7 +229,7 @@ class communication {
 			},
 			success(r) {
 				if (ui.q('popup').getAttribute('error'))
-					ui.navigation.hidePopup();
+					ui.navigation.closePopup();
 				var e = ui.q('head title');
 				e.innerHTML = global.appTitle;
 				if (!user.contact || r.userId != user.contact.id)

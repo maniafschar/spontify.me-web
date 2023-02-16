@@ -168,7 +168,7 @@ class geoData {
 		}
 	}
 	static requestLocationAuthorization() {
-		ui.navigation.hidePopup();
+		ui.navigation.closePopup();
 		cordova.plugins.diagnostic.requestLocationAuthorization(geoData.init2, null, cordova.plugins.diagnostic.locationAuthorizationMode.WHEN_IN_USE);
 	}
 	static reset() {
@@ -177,7 +177,7 @@ class geoData {
 		pageHome.updateLocalisation();
 		pageSearch.updateLocalisation();
 		geoData.init();
-		ui.navigation.hidePopup();
+		ui.navigation.closePopup();
 		user.save({ latitude: geoData.current.lat, longitude: geoData.current.lon }, function () { pageHome.init(true); });
 	}
 	static save(position, exec) {
@@ -222,7 +222,7 @@ class geoData {
 						pageHome.updateLocalisation();
 						pageSearch.updateLocalisation();
 						if (ui.q('popup mapPicker'))
-							ui.navigation.hidePopup();
+							ui.navigation.closePopup();
 						if (ui.q('locationPicker').style.display != 'none')
 							ui.toggleHeight('locationPicker');
 						if (exec)

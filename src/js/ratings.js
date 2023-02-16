@@ -117,7 +117,7 @@ class ratings {
 			body: v,
 			success(r) {
 				user.remove('rating');
-				ui.navigation.hidePopup();
+				ui.navigation.closePopup();
 				ui.q('detail card:last-child buttontext[onclick*="ratings.open"]').outerHTML = '';
 			}
 		});

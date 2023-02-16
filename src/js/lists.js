@@ -53,7 +53,7 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 				if (menuIndex > -1)
 					ui.attr(divID, 'menuIndex', menuIndex);
 				ui.navigation.hideMenu();
-				ui.navigation.hidePopup();
+				ui.navigation.closePopup();
 				if (divID) {
 					if (!s)
 						s = lists.getListNoResults(divID.indexOf('.') ? divID.substring(divID.lastIndexOf('.') + 1) : divID, errorID)
