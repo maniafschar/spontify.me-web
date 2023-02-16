@@ -358,7 +358,8 @@ class initialisation {
 		var e = pageLogin.getDraft() || {};
 		pageLogin.removeCredentials();
 		pageLogin.verifyEmail(global.getParam('r'), e.email ? e.email : '');
-		history.pushState(null, null, window.location.origin);
+		if (global.isBrowser())
+			history.pushState(null, null, window.location.origin);
 	}
 	static showStartDialogs() {
 		var p = global.getParam();
@@ -381,7 +382,8 @@ class initialisation {
 					ui.navigation.autoOpen(p);
 				}, 100);
 		}
-		history.pushState(null, null, window.location.origin);
+		if (global.isBrowser())
+			history.pushState(null, null, window.location.origin);
 	}
 	static statusBar() {
 		if (!global.isBrowser()) {

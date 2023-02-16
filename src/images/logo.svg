@@ -59,7 +59,7 @@
 	</defs>
 	<g>
 		<g class="org">
-			<text x="50%" y="60%" font-size="220" font-family="Adelina" text-anchor="middle" class="name"><tspan>skill</tspan>vents</text>
+			<text x="48%" y="60%" font-size="220" font-family="Adelina" text-anchor="middle" class="name"><tspan>skill</tspan>vents</text>
 			<text x="50%" y="90%" font-size="90" font-family="Adelina" text-anchor="middle" class="position"></text>
 		</g>
 		<g class="right">
@@ -67,11 +67,11 @@
 			<text x="100%" y="77%" font-size="110" font-family="Adelina" text-anchor="end" class="position"></text>
 		</g>
 		<g class="min">
-			<text x="10%" y="50%" font-size="180" font-family="Adelina" class="name"><tspan>skill</tspan></text>
-			<text x="47%" y="75%" font-size="180" font-family="Adelina" text-anchor="middle" class="name">vents</text>
+			<text x="28%" y="50%" font-size="120" font-family="Adelina" class="name"><tspan>skill</tspan></text>
+			<text x="45%" y="75%" font-size="180" font-family="Adelina" text-anchor="middle" class="name">vents</text>
 		</g>
 		<g class="abbr">
-			<text x="-5%" y="75%" font-size="400" font-family="Adelina" class="name blue"><tspan>s</tspan></text>
+			<text x="-5%" y="75%" font-size="400" font-family="Adelina" class="name blue">s</text>
 			<text x="35%" y="75%" font-size="400" font-family="Adelina" class="name blue">v</text>
 		</g>
 	</g>
