@@ -83,7 +83,7 @@ class ratings {
 				url: global.server + 'db/list?query=misc_rating&search=' + encodeURIComponent('event.id=' + id + ' and eventParticipate.contactId=' + user.contact.id),
 				responseType: 'json',
 				success(r) {
-					lastRating = r.length > 1 ? model.convert(new EventRating(), r, r.length - 1) : {};
+					lastRating = r.length > 1 ? model.convert(new Contact(), r, r.length - 1).eventRating : {};
 					render();
 				}
 			});

@@ -9,7 +9,7 @@ export { global };
 
 class global {
 	static appTitle = 'skillvents';
-	static appVersion = '0.4.0';
+	static appVersion = '0.3.8';
 	static language = null;
 	static minLocations = 5;
 	static paused = false;

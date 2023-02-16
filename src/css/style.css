@@ -89,6 +89,7 @@ body.app>main content,
 body.app>main hint,
 body.app>main menu,
 body.app>main popup,
+body.app>main locationPicker,
 body.app>main progressbar {
 	margin-top: constant(safe-area-inset-top);
 	margin-top: env(safe-area-inset-top);
