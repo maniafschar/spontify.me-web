@@ -51,10 +51,6 @@
 				fill: rgb(255, 220, 70);
 				letter-spacing: 0;
 			}
-
-			.blue {
-				fill: rgb(25, 50, 100);
-			}
 		</style>
 	</defs>
 	<g>
@@ -67,12 +63,12 @@
 			<text x="100%" y="77%" font-size="110" font-family="Adelina" text-anchor="end" class="position"></text>
 		</g>
 		<g class="min">
-			<text x="28%" y="50%" font-size="120" font-family="Adelina" class="name"><tspan>skill</tspan></text>
-			<text x="45%" y="75%" font-size="180" font-family="Adelina" text-anchor="middle" class="name">vents</text>
+			<text x="29%" y="65%" font-size="110" font-family="Adelina" class="name"><tspan>skill</tspan></text>
+			<text x="47%" y="87%" font-size="150" font-family="Adelina" text-anchor="middle" class="name">vents</text>
 		</g>
 		<g class="abbr">
-			<text x="-5%" y="75%" font-size="400" font-family="Adelina" class="name blue">s</text>
-			<text x="35%" y="75%" font-size="400" font-family="Adelina" class="name blue">v</text>
+			<text x="1%" y="90%" font-size="350" font-family="Adelina" class="name"><tspan>s</tspan></text>
+			<text x="40%" y="90%" font-size="350" font-family="Adelina" class="name">v</text>
 		</g>
 	</g>
 </svg>

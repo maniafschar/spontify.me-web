@@ -12,6 +12,10 @@ class bluetooth {
 	static UUID_RX = 'a682b873-22a7-402b-b2ef-8cb432a7c3b1';
 	static UUID_TX = '32a9cb83-00f9-4714-b130-4d0c1d30e363';
 
+	static closePopup() {
+		if (ui.q('popupContent') && ui.q('popupContent').innerHTML.indexOf(ui.l('bluetooth.deactivatedText')) > -1)
+			ui.navigation.closePopup();
+	}
 	static decode(a) {
 		a = new Uint8Array(a);
 		var s = '';
@@ -26,6 +30,13 @@ class bluetooth {
 			a[i] = utf8.charCodeAt(i);
 		return a.buffer;
 	}
+	static init() {
+		// disable for now, bluetooth will come again later
+		if (!global.isBrowser() && false) {
+			bluetooth.stop();
+			bluetooth.requestAuthorization(true);
+		}
+	}
 	static registerDevice(device) {
 		if (user.contact && device && device.id) {
 			if (window.localStorage.getItem('bluetoothIDs') && window.localStorage.getItem('bluetoothIDs').indexOf('|' + device.id + '|') < 0) {
@@ -37,10 +48,6 @@ class bluetooth {
 				});
 			}
 		}
-	}
-	static closePopup() {
-		if (ui.q('popupContent') && ui.q('popupContent').innerHTML.indexOf(ui.l('bluetooth.deactivatedText')) > -1)
-			ui.navigation.closePopup();
 	}
 	static requestAuthorization(logon) {
 		bluetooth.reset();
@@ -115,6 +122,17 @@ class bluetooth {
 			communication.sendError('ble scan: ' + JSON.stringify(e));
 		});
 	}
+	static stop() {
+		if (!global.isBrowser()) {
+			ble.stopScan();
+			ble.stopStateNotifications();
+			bluetooth.closePopup();
+			if (ui.q('hint[i="bluetoothOn"]'))
+				intro.closeHint();
+		}
+		ui.html('home item.bluetooth text', ui.l('bluetooth.deactivated'));
+		window.localStorage.removeItem('bluetoothIDs');
+	}
 	static toggle() {
 		if (global.isBrowser())
 			intro.openHint({ desc: 'bluetoothDescriptionBrowser', pos: '10%,-14em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-0.5em' });
@@ -128,16 +146,5 @@ class bluetooth {
 			else
 				user.save({ bluetooth: true }, bluetooth.requestAuthorization);
 		}
-	}
-	static stop() {
-		if (!global.isBrowser()) {
-			ble.stopScan();
-			ble.stopStateNotifications();
-			bluetooth.closePopup();
-			if (ui.q('hint[i="bluetoothOn"]'))
-				intro.closeHint();
-		}
-		ui.html('home item.bluetooth text', ui.l('bluetooth.deactivated'));
-		window.localStorage.removeItem('bluetoothIDs');
 	}
 }

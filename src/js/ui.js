@@ -65,6 +65,12 @@ class ui {
 			categories: '',
 			total: 0,
 			totalMatch: 0,
+			hint(contact) {
+				var s = '<matchIndicatorHint><span class="mainBG"><label class="multipleLabel highlightBackground">' + ui.l('contacts.matchIndicatorHintDescription1') + '</label></span></matchIndicatorHint>';
+				s += '<matchIndicatorHint><span class="mainBG"><label class="multipleLabel">' + ui.l('contacts.matchIndicatorHintDescription' + (contact ? 2 : 4)) + '</label></span></matchIndicatorHint>';
+				s += '<matchIndicatorHint><span class="mainBG"><label class="multipleLabel"><span class="skillsFade">' + ui.l('contacts.matchIndicatorHintDescription3') + '</span></label></span></matchIndicatorHint>';
+				return '<text class="popup matchIndicatorAttributesHint" style="display:none;" onclick="ui.toggleHeight(this)"><div style="margin-bottom:0;">' + s + '</div></text>';
+			},
 			text() {
 				var s = this.skills.toString(style);
 				var s2 = this.skillsText.toString(style);
@@ -93,8 +99,10 @@ class ui {
 			compareSkills = compare.skills.split('|');
 			for (var i = 0; i < compareSkills.length; i++)
 				add2List(hashtags.ids2Text(compareSkills[i]), userSkills.indexOf('|' + compareSkills[i] + '|') > -1, result.skills);
+		}
+		if (userSkills) {
 			userSkills = userSkills.split('|');
-			compareSkills = '|' + compare.skills + '|';
+			compareSkills = compare.skills ? '|' + compare.skills + '|' : '';
 			for (var i = 0; i < userSkills.length; i++) {
 				if (compareSkills.indexOf('|' + userSkills[i] + '|') < 0)
 					add2List(hashtags.ids2Text(userSkills[i]), 'fade', result.skills);
@@ -107,8 +115,10 @@ class ui {
 			compareSkills = compare.skillsText.toLowerCase().split('|');
 			for (var i = 0; i < compareSkills.length; i++)
 				add2List(compareSkills[i].trim(), userSkills.indexOf('|' + compareSkills[i].trim() + '|') > -1, result.skillsText);
-			userSkills = userSkills.toLowerCase().split('|');
-			compareSkills = '|' + compare.skillsText.toLowerCase() + '|';
+		}
+		if (userSkills) {
+			userSkills = userSkills.split('|');
+			compareSkills = compare.skillsText ? '|' + compare.skillsText.toLowerCase() + '|' : '';
 			for (var i = 0; i < userSkills.length; i++) {
 				if (compareSkills.indexOf('|' + userSkills[i] + '|') < 0)
 					add2List(userSkills[i].trim(), 'fade', result.skillsText);
@@ -870,7 +880,7 @@ class formFunc {
 			formFunc.image.fieldId.get().setAttribute('rotateImage', '0');
 			if (file) {
 				var ePrev = formFunc.image.fieldId.get('_disp');
-				ui.css(ePrev, 'z-index', 999);
+				ui.css(ePrev, 'z-index', 6);
 				var p = '<rotate onclick="formFunc.image.rotate(this)">&#8635;</rotate><img name="' + formFunc.image.fieldId.name + 'Preview"/>';
 				ui.html(ePrev, '<close onclick="formFunc.image.remove()">X</close>' + p + '<desc></desc>');
 				formFunc.image.previewInternal(file);

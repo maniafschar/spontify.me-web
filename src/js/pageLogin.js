@@ -230,6 +230,7 @@ class pageLogin {
 			ui.navigation.goTo('login');
 	}
 	static init() {
+		ui.classRemove('navigation item', 'active');
 		if (!ui.q('login').innerHTML) {
 			ui.q('login').innerHTML = pageLogin.template(pageLogin.getDraft());
 			formFunc.initFields('login');
@@ -288,10 +289,7 @@ class pageLogin {
 					setTimeout(communication.notification.register, 100);
 					pageChat.initActiveChats();
 					geoData.init();
-					if (!global.isBrowser()) {
-						bluetooth.stop();
-						bluetooth.requestAuthorization(true);
-					}
+					bluetooth.init();
 					pageLocation.locationsAdded = v.location_added;
 					if (exec)
 						setTimeout(exec, 1500);

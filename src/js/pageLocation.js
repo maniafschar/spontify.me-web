@@ -70,6 +70,7 @@ class pageLocation {
 </detailHeader>
 ${v.eventDetails}
 ${v.skills}
+${v.matchIndicatorHintDescription}
 ${v.description}
 ${v.rating}
 <text>
@@ -96,9 +97,6 @@ ${v.rating}
 <text name="events" class="collapsed" style="margin:0 -1em;"></text>
 <text name="matchIndicatorHint" class="popup" style="display:none;" onclick="ui.toggleHeight(this)">
 	<div>${v.matchIndicatorHint}</div>
-</text>
-<text class="popup matchIndicatorAttributesHint" style="display:none;" onclick="ui.toggleHeight(this)">
-	<div></div>
 </text>
 <text name="block" class="collapsed">
 	<div style="padding:1em 0;">
@@ -269,8 +267,13 @@ ${v.rating}
 			} else
 				v.matchIndicatorPercent = 0;
 			v.matchIndicatorHint = ui.l('events.matchIndicatorHint').replace('{0}', skills.totalMatch).replace('{1}', skills.total).replace('{2}', v.matchIndicatorPercent).replace('{3}', skills.categories);
-			if (eventWithLocation || v.event.contactId != user.contact.id)
+			if (eventWithLocation || v.event.contactId != user.contact.id) {
 				v.skills = skills.text();
+				if (v.skills) {
+					v.skills = '<text onclick="ui.toggleHeight(&quot;detail card:last-child .matchIndicatorAttributesHint&quot;)">' + v.skills + '</text>';
+					v.matchIndicatorHintDescription = skills.hint();
+				}
+			}
 		} else {
 			if (global.isBrowser())
 				v.copyLinkHint = ui.l('copyLinkHint.location');

@@ -70,9 +70,7 @@ ${v.rating}
 	${v.birthday}
 </text>
 ${v.skills}
-<text class="popup matchIndicatorAttributesHint" style="display:none;" onclick="ui.toggleHeight(this)">
-	<div>${v.matchIndicatorHintDescription}</div>
-</text>
+${v.matchIndicatorHintDescription}
 <detailButtons style="margin-top:1em;">
 	<buttontext class="bgColor${v.blocked}${v.hideMe}"
 		onclick="pageChat.open(${v.id})">${ui.l('chat.title')}</buttontext>
@@ -238,9 +236,10 @@ ${v.skills}
 			v.favorite = 'favorite';
 		var skills = ui.getSkills(v, 'detail');
 		v.skills = skills.text();
-		if (v.skills)
-			v.skills = '<text onclick="pageContact.toggleSkills()">' + v.skills + '</text>';
-		else if (preview)
+		if (v.skills) {
+			v.skills = '<text onclick="ui.toggleHeight(&quot;detail card:last-child .matchIndicatorAttributesHint&quot;)">' + v.skills + '</text>';
+			v.matchIndicatorHintDescription = skills.hint(true);
+		} else if (preview)
 			v.skills = '<previewHint>' + ui.l('settings.previewHintAttributes') + '</previewHint>';
 		if (v.gender) {
 			if (v.age && skills.totalMatch) {
@@ -264,10 +263,6 @@ ${v.skills}
 		v.matchIndicatorHint = ui.l('contacts.matchIndicatorHint').replace('{0}', skills.totalMatch).replace('{1}', skills.total).replace('{2}', v.matchIndicatorPercent);
 		if (v.matchIndicatorClass)
 			v.matchIndicatorHint += '<div style="margin-top:0.5em;">' + ui.l('contacts.matchIndicatorHintPulse') + '</div>';
-		v.matchIndicatorHintDescription = ui.l('contacts.matchIndicatorHintDescription');
-		v.matchIndicatorHintDescription = v.matchIndicatorHintDescription.replace('{0}', '<matchIndicatorHint class="highlightBackground">abc</matchIndicatorHint>');
-		v.matchIndicatorHintDescription = v.matchIndicatorHintDescription.replace('{1}', '<matchIndicatorHint>def</matchIndicatorHint>');
-		v.matchIndicatorHintDescription = v.matchIndicatorHintDescription.replace('{2}', '<matchIndicatorHint class="skillsFade">ghi</matchIndicatorHint>');
 		if (preview && !v.image)
 			v.matchIndicatorClass = ' class="fade"';
 		v.hideMe = user.contact.id == v.id ? ' noDisp' : '';
@@ -660,8 +655,5 @@ ${v.skills}
 		e.style.top = (button.offsetTop + button.offsetHeight) + 'px';
 		e.style.left = '5%';
 		ui.toggleHeight(e);
-	}
-	static toggleSkills() {
-		ui.toggleHeight('detail card:last-child .matchIndicatorAttributesHint');
 	}
 }

@@ -1149,7 +1149,7 @@ notificationList {
 	bottom: 2.5em;
 	overflow-x: hidden;
 	overflow-y: auto;
-	z-index: 5;
+	z-index: 6;
 	max-height: 23em;
 }
 
@@ -2333,21 +2333,26 @@ detail>div>text.highlightBackground {
 
 detail text.matchIndicatorAttributesHint {
 	left: 50%;
-	text-align: left;
-	padding-left: 0.25em;
-	line-height: 2;
-	width: 20em;
-	margin-left: -10em;
+	width: 16em;
+	margin-left: -8em;
 }
 
 detail matchIndicatorHint {
-	display: inline-block;
-	width: 3em;
 	position: relative;
-	border: solid 1px black;
+	display: block;
+	width: 100%;
 	text-align: center;
-	line-height: 1;
-	padding: 0.25em;
+}
+
+detail matchIndicatorHint label {
+	color: black !important;
+	margin: 0 !important;
+}
+
+detail matchIndicatorHint>span {
+	margin: 0.25em;
+	display: inline-block;
+	overflow: hidden;
 	border-radius: 0.5em;
 }
 
@@ -2491,7 +2496,7 @@ progressbar {
 	left: 0;
 	top: 0;
 	right: 1em;
-	z-index: 6;
+	z-index: 5;
 	height: 0.75em;
 }
 
@@ -2531,15 +2536,10 @@ skills {
 
 skills label.multipleLabel {
 	color: black;
-	cursor: default;
 }
 
 .skillsFade {
-	opacity: 0.4;
-}
-
-card[type="location"] .skillsFade {
-	display: none;
+	opacity: 0.2;
 }
 
 infoblock {
@@ -2577,7 +2577,7 @@ menu {
 	background: rgba(255, 255, 255, 0.95);
 	position: absolute;
 	top: 3.7em;
-	z-index: 7;
+	z-index: 4;
 	right: 0;
 	padding: 1.25em 2em;
 	transition: all .4s ease-out;
