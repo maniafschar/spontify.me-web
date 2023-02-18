@@ -121,11 +121,11 @@ class pageEvent {
 	static templateDetail = v =>
 		global.template`<text class="description event" ${v.oc}>
 <div><span class="chatLinks" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;),event)"><img src="${v.imageEventOwner}"><br>${v.contact.pseudonym}</span></div>
-<div class="date highlightColor eventMargin">${v.date}${v.endDate}</div>
+<div class="date eventMargin">${v.date}${v.endDate}</div>
 <div class="eventMargin">${v.event.text}</div>
 <div class="eventMargin">${v.eventMustBeConfirmed}</div>
-<div class="price highlightColor eventMargin">${v.eventPrice}</div>
 <div class="eventMargin">${v.maxParticipants}</div>
+<div class="price eventMargin">${v.eventPrice}</div>
 <div class="eventMargin"><urls>${v.url}</urls></div>
 <div class="reason eventMargin"></div>
 <span class="eventParticipationButtons eventMargin"></span>
@@ -189,7 +189,7 @@ class pageEvent {
 			}
 		});
 		if (v.event.price > 0)
-			v.eventPrice = ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2));
+			v.eventPrice = ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2).replace('.', ','));
 		else if (v.event.locationId)
 			v.eventPrice = ui.l('events.priceDisp0');
 		if (v.event.maxParticipants)
@@ -991,7 +991,7 @@ class pageEvent {
 				img = 'images/event.svg" class="' + bg;
 			text = '';
 			if (v.event.price > 0)
-				text += global.separator + ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2));
+				text += global.separator + ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2).replace('.', ','));
 			if (v.event.maxParticipants)
 				text += global.separator + ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
 			if (v.event.confirm == 1)

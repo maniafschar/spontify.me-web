@@ -2121,7 +2121,6 @@ detail .canceled .date::after {
 	height: 1.6em;
 	line-height: 1.6;
 	border-radius: 0.8em;
-	margin-top: -0.15em;
 	color: white;
 }
 
@@ -2133,11 +2132,6 @@ detail .participate .date::after {
 detail .canceled .date::after {
 	content: '✗';
 	background: red;
-}
-
-
-detail .price {
-	font-weight: bold;
 }
 
 detail row.participate::before,
