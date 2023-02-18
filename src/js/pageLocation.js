@@ -28,6 +28,9 @@ class pageLocation {
 	static reopenEvent;
 	static templateList = v =>
 		global.template`<row onclick="${v.oc}" i="${v.id}" class="location${v.classFavorite}">
+	<badge class="${v.badgeDisp}">
+		${v.badge}
+	</badge>
 	<div>
 		<text>
 			<title>${v.name}</title>
@@ -421,6 +424,7 @@ ${v.rating}
 		var s = '', v;
 		for (var i = 1; i < l.length; i++) {
 			v = model.convert(new Location(), l, i);
+			v.badgeDisp = 'noDisp';
 			v._angle = geoData.getAngel(geoData.current, { lat: v.latitude, lon: v.longitude });
 			l[i].push(v._angle);
 			v.locID = v.id;

@@ -447,10 +447,14 @@ class pageEvent {
 				v._message += v._message1 ? v._message1 : v._message2 ? v._message2 : '';
 				v.id = pageEvent.getId(v);
 				v.classFavorite = v.locationFavorite.favorite ? ' favorite' : '';
-				if (v.eventParticipate.state == 1 && global.date.local2server(v.event.startDate).indexOf(v.eventParticipate.eventDate) == 0)
-					v.classFavorite += ' participate';
-				else if (v.eventParticipate.state == -1)
-					v.classFavorite += ' canceled';
+				if (v.eventParticipate.state == 1 && global.date.local2server(v.event.startDate).indexOf(v.eventParticipate.eventDate) == 0) {
+					v.badge = '✓';
+					v.badgeDisp = "participate";
+				} else if (v.eventParticipate.state == -1) {
+					v.badge = '✗';
+					v.badgeDisp = "canceled";
+				} else
+					v.badgeDisp = "noDisp";
 				v.classBGImg = v.imageList ? '' : bg;
 				if (v.event.imageList)
 					v.image = global.serverImg + v.event.imageList;
