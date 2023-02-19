@@ -90,12 +90,13 @@ class pageSearch {
 				for (var i = 0; i < v.length; i++) {
 					if (v[i]) {
 						s2 = v[i].trim().toLowerCase();
-						s += 'contact.idDisplay=\'' + s2 + '\' or (contact.search=1 and (LOWER(contact.aboutMe) like \'%' + s2 + '%\' or LOWER(contact.pseudonym) like \'%' + s2 + '%\' or LOWER(contact.skillsText) like \'%' + s2 + '%\')) and ';
+						s += 'contact.idDisplay=\'' + s2 + '\' or (contact.search=true and (LOWER(contact.aboutMe) like \'%' + s2 + '%\' or LOWER(contact.pseudonym) like \'%' + s2 + '%\' or LOWER(contact.skillsText) like \'%' + s2 + '%\')) or ';
 					}
 				}
-				s = s.substring(0, s.length - 5) + ')';
+				s = s.substring(0, s.length - 4);
 				if (t.category)
-					s += (s ? ' and ' : '') + global.getRegEx('contact.skills', t.category);
+					s += (s ? ' or ' : '') + global.getRegEx('contact.skills', t.category);
+				s += ')';
 			}
 			return 'contact.id<>' + user.contact.id + s;
 		},
@@ -167,13 +168,13 @@ class pageSearch {
 						s += '((contact.search=true or event.price>0) and (LOWER(contact.pseudonym' + l + 'contact.aboutMe' + l;
 						s = s.substring(0, s.lastIndexOf(' or LOWER')) + ') or '
 						s += 'LOWER(location.name' + l + 'location.description' + l + 'location.address' + l + 'location.address2' + l + 'location.telephone' + l + 'event.text' + l + 'event.skillsText' + l;
-						s = s.substring(0, s.lastIndexOf(' or LOWER')) + ') and ';
+						s = s.substring(0, s.lastIndexOf(' or LOWER')) + ') or ';
 					}
 				}
 				if (t.category)
-					s = (s ? s.substring(0, s.length - 5) + ' or ' : '') + global.getRegEx('event.skills', t.category) + ' and ';
+					s = (s ? s.substring(0, s.length - 5) + ' or ' : '') + global.getRegEx('event.skills', t.category) + ' or ';
 				if (s)
-					s = '(' + s.substring(0, s.length - 5) + ')';
+					s = '(' + s.substring(0, s.length - 4) + ')';
 			}
 			if (ui.q('search tabBody div.events [name="matches"]:checked'))
 				s += (s ? ' and ' : '') + pageSearch.events.getMatches();
@@ -247,11 +248,11 @@ class pageSearch {
 					if (v[i].trim()) {
 						var l = ') like \'%' + v[i].trim().toLowerCase() + '%\' or LOWER(';
 						s += '(LOWER(location.name' + l + 'location.description' + l + 'location.address' + l + 'location.address2' + l + 'location.telephone' + l;
-						s = s.substring(0, s.lastIndexOf(' or LOWER')) + ') and ';
+						s = s.substring(0, s.lastIndexOf(' or LOWER')) + ') or ';
 					}
 				}
 				if (s)
-					s = '(' + s.substring(0, s.length - 5) + ')';
+					s = '(' + s.substring(0, s.length - 4) + ')';
 			}
 			if (ui.val('search tabBody div.locations [name="favorites"]:checked'))
 				s += (s ? ' and ' : '') + 'locationFavorite.favorite=true';
