@@ -115,7 +115,7 @@ class pageSettings {
 	<label>${ui.l('settings.skills')}</label>
 	<value>
 		<hashtagButton onclick="ui.toggleHeight(&quot;settings hashtags&quot;)"></hashtagButton>
-		<textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
+		<textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="hashtags.synchonizeTags(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
 		<hashtags style="display:none;">${v.hashtagSelection}</hashtags>
 	</value>
 </field>

@@ -34,17 +34,22 @@ class pageSearch {
 			global.template`<form onsubmit="return false">
 <input type="checkbox" label="${ui.l('search.matches')}" name="matches" ${v.matches}/>
 <label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
-<separator></separator>
-<input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
+<hashtagButton onclick="ui.toggleHeight(&quot;search div.contacts hashtags&quot;)"></hashtagButton>
+<input type="text" name="keywords" maxlength="50" onkeyup="hashtags.synchonizeTags(this)" placeholder="${ui.l('keywords')}" ${v.keywords}/>
+<hashtags style="display:none;">${v.hashtagSelection}</hashtags>
 <explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
 <errorHint></errorHint>
-<buttontext class="bgColor defaultButton" onclick="pageSearch.contacts.search()">${ui.l('search.action')}</buttontext></form>`,
+<dialogButtons>
+<buttontext class="bgColor defaultButton" onclick="pageSearch.contacts.search()">${ui.l('search.action')}</buttontext>
+</dialogButtons>
+</form>`,
 		getFields() {
 			var v = {};
 			if (pageSearch.contacts.fieldValues.keywords)
 				v.keywords = ' value="' + pageSearch.contacts.fieldValues.keywords + '"';
 			if (pageSearch.contacts.fieldValues.matches == 'on')
 				v.matches = ' checked="true"';
+			v.hashtagSelection = hashtags.display();
 			return pageSearch.contacts.template(v);
 		},
 		getMatches() {
@@ -106,17 +111,22 @@ class pageSearch {
 			global.template`<form onsubmit="return false">
 <input type="checkbox" label="${ui.l('search.matchesEvent')}" name="matches" ${v.matches}/>
 <label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
-<separator></separator>
-<input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
+<hashtagButton onclick="ui.toggleHeight(&quot;search div.events hashtags&quot;)"></hashtagButton>
+<input type="text" name="keywords" maxlength="50" onkeyup="hashtags.synchonizeTags(this)" placeholder="${ui.l('keywords')}" ${v.keywords}/>
+<hashtags style="display:none;">${v.hashtagSelection}</hashtags>
 <explain class="searchKeywordHint">${ui.l('search.hintEvent')}</explain>
 <errorHint></errorHint>
-<buttontext class="bgColor defaultButton" onclick="pageSearch.events.search()">${ui.l('search.action')}</buttontext></form>`,
+<dialogButtons>
+<buttontext class="bgColor defaultButton" onclick="pageSearch.events.search()">${ui.l('search.action')}</buttontext>
+</dialogButtons>
+</form>`,
 		getFields() {
 			var v = {};
 			if (pageSearch.events.fieldValues.keywords)
 				v.keywords = ' value="' + pageSearch.events.fieldValues.keywords + '"';
 			if (pageSearch.events.fieldValues.matches == 'on')
 				v.matches = ' checked="true"';
+			v.hashtagSelection = hashtags.display();
 			return pageSearch.events.template(v);
 		},
 		getMatches() {
@@ -213,11 +223,13 @@ class pageSearch {
 			global.template`<form onsubmit="return false">
 <input type="checkbox" label="${ui.l('search.favorites')}" name="favorites" ${v.favorites}/>
 <label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
-<separator></separator>
 <input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
 <errorHint></errorHint>
-<buttontext class="bgColor defaultButton" onclick="pageSearch.locations.search()">${ui.l('search.action')}</buttontext></form>`,
+<dialogButtons>
+<buttontext class="bgColor defaultButton" onclick="pageSearch.locations.search()">${ui.l('search.action')}</buttontext>
+</dialogButtons>
+</form>`,
 		getFields() {
 			var v = {};
 			if (pageSearch.locations.fieldValues.favorites)

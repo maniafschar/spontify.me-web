@@ -55,26 +55,6 @@ class hashtags {
 		}
 		return s;
 	}
-	static filter(e) {
-		ui.adjustTextarea(e);
-		var s = e.value.toLowerCase(), id = 'popup ';
-		if (ui.q(id + 'hashtags').style.maxHeight)
-			ui.q(id + 'hashtags').style.maxHeight = null;
-		var list = ui.qa(id + 'hashtags label');
-		for (var i = 0; i < list.length; i++) {
-			list[i].style.maxWidth = list[i].innerText.toLowerCase().indexOf(s) > -1 ? null : 0;
-			list[i].style.padding = list[i].style.maxWidth;
-			list[i].style.margin = list[i].style.maxWidth;
-		}
-		var list = ui.qa(id + 'hashtags>div');
-		for (var i = 0; i < list.length; i++) {
-			list[i].style.maxHeight = list[i].querySelector('label:not([style*="max-width"])') ? null : 0;
-			list[i].style.padding = list[i].style.maxHeight;
-			list[i].previousElementSibling.style.maxHeight = list[i].style.maxHeight;
-			list[i].previousElementSibling.style.padding = list[i].style.maxHeight;
-		}
-		console.log(e.value + ': ' + e.selectionStart);
-	}
 	static ids2Text(ids) {
 		if (!ids)
 			return '';
@@ -95,8 +75,8 @@ class hashtags {
 	static synchonizeTags(e) {
 		if (e.target)
 			e = e.target;
-		if (e.nodeName != 'TEXTAREA')
-			e = ui.parents(e, 'hashtags').previousElementSibling
+		if (e.nodeName != 'TEXTAREA' && e.nodeName != 'INPUT')
+			e = ui.parents(e, 'hashtags').previousElementSibling;
 		var tags = e.nextElementSibling.querySelectorAll('div>label');
 		var s = e.value.toLowerCase();
 		for (var i = 0; i < tags.length; i++)

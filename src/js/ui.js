@@ -49,14 +49,16 @@ class ui {
 	</a>
 </container>`;
 	static adjustTextarea(e) {
-		ui.css(e, 'height', '1px');
-		var h = e.scrollHeight;
-		if (h > ui.emInPX * 6)
-			h = ui.emInPX * 6;
-		h += 6;
-		if (h < 2 * ui.emInPX)
-			h = 2 * ui.emInPX;
-		ui.css(e, 'height', h + 'px');
+		if (e && e.nodeName == 'TEXTAREA') {
+			ui.css(e, 'height', '1px');
+			var h = e.scrollHeight;
+			if (h > ui.emInPX * 6)
+				h = ui.emInPX * 6;
+			h += 6;
+			if (h < 2 * ui.emInPX)
+				h = 2 * ui.emInPX;
+			ui.css(e, 'height', h + 'px');
+		}
 	}
 	static getSkills(compare, style) {
 		var result = {
@@ -66,10 +68,10 @@ class ui {
 			total: 0,
 			totalMatch: 0,
 			hint(contact) {
-				var s = '<matchIndicatorHint><span class="mainBG"><label class="multipleLabel highlightBackground">' + ui.l('contacts.matchIndicatorHintDescription1') + '</label></span></matchIndicatorHint>';
-				s += '<matchIndicatorHint><span class="mainBG"><label class="multipleLabel">' + ui.l('contacts.matchIndicatorHintDescription' + (contact ? 2 : 4)) + '</label></span></matchIndicatorHint>';
-				s += '<matchIndicatorHint><span class="mainBG"><label class="multipleLabel"><span class="skillsFade">' + ui.l('contacts.matchIndicatorHintDescription3') + '</span></label></span></matchIndicatorHint>';
-				return '<text class="popup matchIndicatorAttributesHint" style="display:none;" onclick="ui.toggleHeight(this)"><div style="margin-bottom:0;">' + s + '</div></text>';
+				var s = '<matchIndicatorHint><span><label class="multipleLabel highlightBackground">' + ui.l('contacts.matchIndicatorHintDescription1') + '</label></span></matchIndicatorHint>';
+				s += '<matchIndicatorHint><span><label class="multipleLabel">' + ui.l('contacts.matchIndicatorHintDescription' + (contact ? 2 : 4)) + '</label></span></matchIndicatorHint>';
+				s += '<matchIndicatorHint><span><label class="multipleLabel skillsFade">' + ui.l('contacts.matchIndicatorHintDescription3') + '</label></span></matchIndicatorHint>';
+				return '<text class="popup matchIndicatorAttributesHint" style="display:none;" onclick="ui.toggleHeight(this)"><div>' + s + '</div></text>';
 			},
 			text() {
 				var s = this.skills.toString(style);

@@ -44,7 +44,7 @@ class pageEvent {
 	<label style="padding-top:0;">${ui.l('events.hashtags')}</label>
 	<value>
 		<hashtagButton onclick="ui.toggleHeight(&quot;popup hashtags&quot;)"></hashtagButton>
-		<textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="hashtags.filter(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
+		<textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="hashtags.synchonizeTags(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
 		<hashtags style="display:none;">${v.hashtagSelection}</hashtags>
 	</value>
 </field>
@@ -925,8 +925,10 @@ class pageEvent {
 		ui.q('popup label[name="startDate"]').innerText = ui.l('events.' + (b ? 'date' : 'start'));
 		ui.css('popup field[name="endDate"]', 'display', b ? 'none' : '');
 		b = ui.q('popup input[name="locationId"]').value;
-		if (!b || b == -2)
+		if (!b || b == -2) {
 			ui.css('popup .noWTDField', 'display', 'none');
+			ui.q('popup [name="price"]').value = null;
+		}
 		if (b == -1) {
 			ui.q('popup .url label').innerText = ui.l('events.urlOnlineEvent');
 			ui.css('popup .url', 'display', null);
