@@ -17,7 +17,7 @@ export { pageEvent };
 
 class pageEvent {
 	static nearByExec = null;
-	static paypal = { fee: null, currency: null, merchantUrl: null };
+	static paypal = { fee: null, feeDate: null, feeAfter: null, currency: null, merchantUrl: null };
 	static templateEdit = v =>
 		global.template`<form name="editElement" onsubmit="return false">
 <input type="hidden" name="id" value="${v.id}"/>
@@ -86,7 +86,7 @@ class pageEvent {
 	<label>${ui.l('events.price')}</label>
 	<value>
 		<input type="number" step="any" name="price" value="${v.price}" onkeyup="pageEvent.checkPrice()" onmousewheel="return false;" />
-		<explain class="paypal" style="display:none;">${ui.l('events.paypalSignUpHint').replace('{0}', pageEvent.paypal.fee)}
+		<explain class="paypal" style="display:none;">${v.payplaSignUpHint}
 			<dialogButtons>
 				<buttontext class="bgColor" onclick="pageEvent.signUpPaypal()">${ui.l('events.paypalSignUpButton')}</buttontext>
 			</dialogButtons>
@@ -226,6 +226,8 @@ class pageEvent {
 				responseType: 'json',
 				success(r) {
 					pageEvent.paypal.fee = r.fee;
+					pageEvent.paypal.feeDate = r.feeDate;
+					pageEvent.paypal.feeAfter = r.feeAfter;
 					pageEvent.paypal.currency = r.currency;
 					pageEvent.edit(locationID, id);
 				}
@@ -290,6 +292,9 @@ class pageEvent {
 			v.styleEvent = ' style="display:none;"';
 			pageEvent.locationsOfPastEvents();
 		}
+		v.payplaSignUpHint = ui.l('events.paypalSignUpHint').replace('{0}', pageEvent.paypal.feeDate ?
+			ui.l('settings.paypalSignUpHintFee').replace('{0}', pageEvent.paypal.fee).replace('{1}', global.date.formatDate(pageEvent.paypal.feeDate)).replace('{2}', pageEvent.paypal.feeAfter)
+			: pageEvent.paypal.fee);
 		v.hashtagSelection = hashtags.display();
 		v.hashtagsDisp = hashtags.ids2Text(v.skills) + (v.skillsText ? ' ' + v.skillsText : '').trim();
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');

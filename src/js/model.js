@@ -69,6 +69,7 @@ class Contact extends BaseEntity {
 	birthday;
 	birthdayDisplay;
 	bluetooth;
+	coach;
 	gender;
 	idDisplay;
 	image;

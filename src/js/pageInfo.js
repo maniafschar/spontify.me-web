@@ -13,27 +13,28 @@ class pageInfo {
 	static openSection = 4;
 	static sentFeedback = [];
 	static template = v =>
-		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#info1&quot;)">
+		global.template`<buttontext class="bgColor settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info1&quot;)">
 	${ui.l('info.legalTitle')}
 </buttontext><br/>
 <infoblock id="info1" style="display:none;" class="overflow">
 	${ui.l('infoLegal')}
 </infoblock>
-<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#info3&quot;)">
+<buttontext class="bgColor settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info3&quot;)">
 	${ui.l('info.dsgvoTitle')}
 </buttontext><br/>
 <infoblock id="info3" style="display:none;" class="overflow">
 	${ui.l('infoDSGVO')}
 </infoblock>
-<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#info2&quot;)">
+<buttontext class="bgColor settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info2&quot;)">
 	${ui.l('info.imprintTitle')}
 </buttontext><br/>
 <infoblock id="info2" style="display:none;">
 	${ui.l('info.imprint')}
-</infoblock>
-<div style="text-align:center;padding:2em 1em;">${ui.l('info.infoOther')}<br/>© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>`;
+</infoblock>`;
+	static templateCopyright = v =>
+		global.template`<div style="text-align:center;padding:2em 1em;clear:both;">${ui.l('info.infoOther')}<br/>© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>`;
 	static templateDesc = v =>
-		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;#info4&quot;)">
+		global.template`<buttontext class="bgColor settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info4&quot;)">
 ${ui.l('home.DescLink')}
 </buttontext><br/>
 <infoblock id="info4" style="display:none;">
@@ -48,7 +49,7 @@ ${ui.l('home.DescLink')}
 				url: global.server + 'action/paypalKey',
 				responseType: 'json',
 				success(r) {
-					e.innerHTML = pageInfo.templateDesc(r) + pageInfo.template();
+					e.innerHTML = pageInfo.templateDesc(r) + pageInfo.template() + pageInfo.templateCopyright();
 					pageInfo.init();
 				}
 			});

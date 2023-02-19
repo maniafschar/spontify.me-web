@@ -755,6 +755,11 @@ settings save {
 	line-height: 1;
 }
 
+settings paypalFees {
+	display: block;
+	padding-top: 2em;
+}
+
 #info6 {
 	margin-top: -0.5em;
 	text-align: center;
@@ -2512,13 +2517,17 @@ info {
 	overflow-y: auto;
 }
 
-.settings2Button {
-	display: inline-block;
-	position: relative;
+.settingsButton {
 	margin: 1em 0 0.25em 0;
 	border-radius: 0 2em 2em 0;
-	padding: 1em 2em 1em 1.5em;
 	z-index: 1;
+}
+
+.settingsButtonRight {
+	margin: 1em 0 0.25em 0;
+	float: right;
+	border-radius: 2em 0 0 2em;
+	clear: both;
 }
 
 skills {

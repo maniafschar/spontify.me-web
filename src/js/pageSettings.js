@@ -13,6 +13,7 @@ import { hashtags } from './hashtags';
 import QRCodeStyling from 'qr-code-styling';
 import { pageLogin } from './pageLogin';
 import { lists } from './lists';
+import { pageEvent } from './pageEvent';
 
 export { pageSettings };
 
@@ -63,7 +64,7 @@ class pageSettings {
 <field>
 	<label>${ui.l('settings.urls')}</label>
 	<value>
-		<textarea name="urls" maxlength="1000">${v['contact.urls']}</textarea>
+		<textarea name="urls" maxlength="1000" placeholder="${ui.l('settings.urlsHint')}">${v['contact.urls']}</textarea>
 	</value>
 </field>
 <field>
@@ -72,7 +73,7 @@ class pageSettings {
 		<input type="date" placeholder="TT.MM.JJJJ" name="birthday" maxlength="10" id="bd"
 			value="${v.birthday}" />
 		<input type="radio" name="birthdayDisplay" value="2" label="${ui.l('settings.showBirthday')}"
-			${v.birthdayDisplay2} style="margin-top:0.5em;"/>
+			${v.birthdayDisplay2} style="margin-top:0.5em;" />
 		<input type="radio" name="birthdayDisplay" value="1" label="${ui.l('settings.showAge')}"
 			${v.birthdayDisplay1} />
 	</value>
@@ -138,12 +139,13 @@ class pageSettings {
 			name="ageDivers" />
 	</value>
 </field>
+<paypalFees></paypalFees>
 <br/>
 <dialogButtons>
 <buttontext onclick="pageSettings.preview()" class="bgColor">${ui.l('settings.preview')}</buttontext>
 </dialogButtons>`;
 	static templateSettings3 = v =>
-		global.template`<buttontext class="bgColor settings2Button" onclick="pageInfo.toggleInfoBlock(&quot;settings tabBody .notification&quot;)">${ui.l('settings.myNotifications')}</buttontext><br/>
+		global.template`<buttontext class="bgColor settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;settings tabBody .notification&quot;)">${ui.l('settings.myNotifications')}</buttontext><br/>
 <div class="notification" class="notifications" style="display:none;padding:0.5em 1em 1em 1em;">
 	<input type="checkbox" value="true" name="notificationChat" label="${ui.l('notification.chat')}" ${v['contact.notificationChat']} />
 	<br />
@@ -159,9 +161,9 @@ class pageSettings {
 	<br />
 	<input type="checkbox" value="true" name="notificationMarkEvent" label="${ui.l('notification.markEvent')}" ${v['contact.notificationMarkEvent']} />
 </div>
-<buttontext class="bgColor settings2Button" onclick="pageSettings.toggleBlocked()">${ui.l('contacts.blocked')}</buttontext><br/>
+<buttontext class="bgColor settingsButton" onclick="pageSettings.toggleBlocked()">${ui.l('contacts.blocked')}</buttontext><br/>
 <div id="blocked" style="display:none;"></div>
-<buttontext onclick="ui.toggleHeight(&quot;#delete&quot;)" class="bgColor settings2Button">${ui.l('settings.delete')}</buttontext><br/>
+<buttontext onclick="ui.toggleHeight(&quot;#delete&quot;)" class="bgColor settingsButton">${ui.l('settings.delete')}</buttontext><br/>
 <div id="delete" style="display:none;margin:0 1em 1em 1em;">
 <div style="margin:0.25em 0 0.5em 0.5em;">${ui.l('settings.deleteProfileHint')}</div>
 <div>
@@ -199,7 +201,6 @@ class pageSettings {
 <buttontext onclick="pageSettings.deleteProfile()" class="bgColor">${ui.l('settings.deleteProfile')}</buttontext>
 </div>
 </div>
-<buttontext class="bgColor settings2Button" onclick="pageLogin.logoff()">${ui.l('logoff.title')}</buttontext><br/>
 ${v.info}`;
 
 	static checkUnique() {
@@ -354,9 +355,21 @@ ${v.info}`;
 					if (user.contact.ageDivers)
 						v.genderInterest3 = 'checked';
 					v.settings2 = pageSettings.templateSettings2(v);
-					v.info = pageInfo.template();
+					v.info = pageInfo.template()
+						+ '<buttontext class="bgColor settingsButtonRight" onclick="pageLogin.logoff()">' + ui.l('logoff.title') + '</buttontext>'
+						+ '<buttontext class="bgColor settingsButtonRight" onclick="pageInfo.socialShare()">' + ui.l('settings.socialShare') + '</buttontext>'
+						+ pageInfo.templateCopyright();
 					v.settings3 = pageSettings.templateSettings3(v);
 					ui.q('settings').innerHTML = pageSettings.template(v);
+					communication.ajax({
+						url: global.server + 'action/paypalKey',
+						responseType: 'json',
+						success(r) {
+							ui.q('settings paypalFees').innerHTML = ui.l('settings.paypalFees').replace('{0}', r.feeDate ?
+								'<br/>' + ui.l('events.paypalSignUpHintFee').replace('{0}', r.fee).replace('{1}', global.date.formatDate(r.feeDate)).replace('{2}', r.feeAfter)
+								: r.fee);
+						}
+					});
 					formFunc.initFields('settings');
 					if (!v['contact.ageFemale'])
 						ui.css(ui.q('#settingsInterest2').nextElementSibling, 'display', 'none');
