@@ -154,6 +154,7 @@ class Event extends BaseEntity {
 	locationId;
 	maxParticipants;
 	price;
+	rating;
 	startDate;
 	skills;
 	skillsText;
