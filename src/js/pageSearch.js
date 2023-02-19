@@ -311,6 +311,8 @@ class pageSearch {
 			ui.q('search tabBody div.locations').innerHTML = pageSearch.locations.getFields() + '<listResults></listResults>';
 			formFunc.initFields('search');
 			pageSearch.selectTab('contacts');
+			hashtags.synchonizeTags(ui.q('search div.contacts input[name="keywords"]'));
+			hashtags.synchonizeTags(ui.q('search div.events input[name="keywords"]'));
 		}
 	}
 	static repeatSearch() {
