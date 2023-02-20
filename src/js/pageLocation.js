@@ -4,7 +4,7 @@ import { pageEvent } from './pageEvent';
 import { geoData } from './geoData';
 import { global } from './global';
 import { lists } from './lists';
-import { EventParticipate, Location, model } from './model';
+import { Location, model } from './model';
 import { pageChat } from './pageChat';
 import { ui, formFunc } from './ui';
 import { user } from './user';
@@ -297,8 +297,8 @@ ${v.rating}
 		var r = v.event.rating || (eventWithLocation ? v.rating : v.contact.rating);
 		if (r > 0)
 			v.rating = '<detailRating onclick="ratings.open(' + v.event.id + ',&quot;' + (v.event.id ? 'event.id=' + v.event.id : eventWithLocation ? 'event.locationId=' + v.locID : 'event.contactId=' + v.contact.id) + '&quot;)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + r) + '%;">★★★★★</full></ratingSelection></detailRating>';
-		else if (v.event.id && v.event.locationId >= -1 && v.event.contactId != user.contact.id && v.eventParticipate.state == 1)
-			v.rating = '<div style="margin:1em 0;"><buttontext class="bgColor" onclick="ratings.open(' + v.event.id + ')">' + ui.l('rating.save') + '</buttontext></div>';
+		else if (v.event.id && v.event.locationId >= -1 && v.event.contactId != user.contact.id)
+			v.rating = '<div style="margin:1em 0;" class="ratingButton noDisp"><buttontext class="bgColor" onclick="ratings.open(' + v.event.id + ')">' + ui.l('rating.save') + '</buttontext></div>';
 		if (eventWithLocation)
 			v.distanceDisplay = ' style="display:none;"';
 		else {

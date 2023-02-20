@@ -151,12 +151,13 @@ class pageEvent {
 		}
 	}
 	static detail(v) {
+		v.eventParticipate = new EventParticipate();
 		v.copyLinkHint = ui.l('copyLinkHint.event');
 		if (v.event.contactId != user.contact.id)
 			v.hideMeEdit = ' noDisp';
 		if (v.event.type != 'o') {
 			var s = global.date.formatDate(v.event.endDate);
-			v.endDate = ' (' + ui.l('events.type_' + v.event.type) + ' ' + ui.l('to') + ' ' + s.substring(s.indexOf(' ') + 1, s.lastIndexOf(' ')) + ')';
+			v.endDate = ' (' + ui.l('events.type_' + v.event.type) + ' ' + ui.l('to') + s.substring(s.indexOf(' ')) + ')';
 		}
 		var d = pageEvent.getDate(v);
 		v.date = global.date.formatDate(d);
@@ -171,17 +172,18 @@ class pageEvent {
 				var count = 0;
 				for (var i = 1; i < r.length; i++) {
 					var e = model.convert(new EventParticipate(), r, i);
-					if (e.contactId == user.contact.id) {
+					if (e.contactId == user.contact.id)
 						v.eventParticipate = e;
-						ui.q('detail card[i="' + v.id + '"] detailHeader').setAttribute('data', encodeURIComponent(JSON.stringify(v)));
-					} if (e.state == 1)
+					if (e.state == 1)
 						count++;
 				}
+				ui.q('detail card[i="' + v.id + '"] detailHeader').setAttribute('data', encodeURIComponent(JSON.stringify(v)));
 				if (ui.q('detail card[i="' + v.id + '"]')) {
 					ui.q('detail card[i="' + v.id + '"] .eventParticipationButtons').innerHTML = pageEvent.getParticipateButton(v, count);
-					if (v.eventParticipate.state == 1)
+					if (v.eventParticipate.state == 1) {
 						ui.classAdd('detail card[i="' + v.id + '"] text.description.event', 'participate');
-					else if (v.eventParticipate.state == -1) {
+						ui.classRemove('detail  card[i="' + v.id + '"] div.ratingButton', 'noDisp');
+					} else if (v.eventParticipate.state == -1) {
 						ui.classAdd('detail card[i="' + v.id + '"] text.description.event', 'canceled');
 						ui.q('detail card[i="' + v.id + '"] .reason').innerHTML = ui.l('events.canceled') + (v.eventParticipate.reason ? ': ' + v.eventParticipate.reason : '');
 					}
@@ -293,7 +295,7 @@ class pageEvent {
 			pageEvent.locationsOfPastEvents();
 		}
 		v.payplaSignUpHint = ui.l('events.paypalSignUpHint').replace('{0}', pageEvent.paypal.feeDate ?
-			ui.l('settings.paypalSignUpHintFee').replace('{0}', pageEvent.paypal.fee).replace('{1}', global.date.formatDate(pageEvent.paypal.feeDate)).replace('{2}', pageEvent.paypal.feeAfter)
+			ui.l('events.paypalSignUpHintFee').replace('{0}', pageEvent.paypal.fee).replace('{1}', global.date.formatDate(pageEvent.paypal.feeDate)).replace('{2}', pageEvent.paypal.feeAfter)
 			: pageEvent.paypal.fee);
 		v.hashtagSelection = hashtags.display();
 		v.hashtagsDisp = hashtags.ids2Text(v.skills) + (v.skillsText ? ' ' + v.skillsText : '').trim();
@@ -378,12 +380,15 @@ class pageEvent {
 			return '';
 		var futureEvent = pageEvent.getDate(v) > new Date();
 		var text = '<div style="margin:1em 0;">';
-		if (futureEvent && v.event.locationId > 0 && (v.event.contactId == user.contact.id || v.eventParticipate.state == 1))
-			text += '<buttontext class="bgColor" onclick="pageEvent.qrcode(' + (v.event.contactId == user.contact.id) + ')">' + ui.l('events.qrcodeButton') + '</buttontext><br/><br/>';
-		if (futureEvent && (!v.event.price || user.contact.id == v.event.concatId) && (v.eventParticipate.state == 1 || !v.event.maxParticipants || participantCount < v.event.maxParticipants))
-			text += '<buttontext class="bgColor participation" onclick="pageEvent.participate()">' + ui.l('events.participante' + (v.eventParticipate.state == 1 ? 'Stop' : '')) + '</buttontext>';
-		else if (futureEvent && v.event.price > 0 && !v.eventParticipate.state && v.contact.paypalMerchantId)
-			text += '<buttontext class="bgColor participation" onclick="pageEvent.openPaypal(&quot;' + v.contact.paypalMerchantId + '&quot;)">' + ui.l('events.participante') + '</buttontext>';
+		if (futureEvent) {
+			if (v.event.locationId > 0 && (v.event.contactId == user.contact.id || v.eventParticipate.state == 1))
+				text += '<buttontext class="bgColor" onclick="pageEvent.qrcode(' + (v.event.contactId == user.contact.id) + ')">' + ui.l('events.qrcodeButton') + '</buttontext><br/><br/>';
+			if (v.event.price > 0 && user.contact.id != v.event.contactId) {
+				if (!v.eventParticipate.state && v.contact.paypalMerchantId)
+					text += '<buttontext class="bgColor participation" onclick="pageEvent.openPaypal(&quot;' + v.contact.paypalMerchantId + '&quot;)">' + ui.l('events.participante') + '</buttontext>';
+			} else if (v.eventParticipate.state == 1 || !v.event.maxParticipants || participantCount < v.event.maxParticipants)
+				text += '<buttontext class="bgColor participation" onclick="pageEvent.participate()">' + ui.l('events.participante' + (v.eventParticipate.state == 1 ? 'Stop' : '')) + '</buttontext>';
+		}
 		if (participantCount > 0 || futureEvent)
 			text += '<buttontext class="bgColor" onclick="pageEvent.toggleParticipants(event)"><participantCount>' + (participantCount > 0 ? participantCount + '&nbsp;' : '') + '</participantCount>' + ui.l('events.participants') + '</buttontext>';
 		text += '</div><text name="participants" style="margin:0 -1em;display:none;"></text>';
@@ -454,12 +459,12 @@ class pageEvent {
 				v.classFavorite = v.locationFavorite.favorite ? ' favorite' : '';
 				if (v.eventParticipate.state == 1 && global.date.local2server(v.event.startDate).indexOf(v.eventParticipate.eventDate) == 0) {
 					v.badge = '✓';
-					v.badgeDisp = "participate";
+					v.badgeDisp = 'participate';
 				} else if (v.eventParticipate.state == -1) {
 					v.badge = '✗';
-					v.badgeDisp = "canceled";
+					v.badgeDisp = 'canceled';
 				} else
-					v.badgeDisp = "noDisp";
+					v.badgeDisp = 'noDisp';
 				v.classBGImg = v.imageList ? '' : bg;
 				if (v.event.imageList)
 					v.image = global.serverImg + v.event.imageList;

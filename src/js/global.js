@@ -13,7 +13,7 @@ class global {
 	static language = null;
 	static minLocations = 5;
 	static paused = false;
-	static server = 'https://skills.community/rest/';
+	static server = 'https://skillvents.com/rest/';
 	static serverImg = '';
 	static separator = ' · ';
 	static separatorTech = '\u0015';

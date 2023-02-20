@@ -316,8 +316,7 @@ ${v.matchIndicatorHintDescription}
 			if (d2.getMonth() < d1.getMonth() || d2.getMonth() == d1.getMonth() && d2.getDate() < d1.getDate())
 				r.age--;
 			if (bd == 2) {
-				r.birthday = global.date.formatDate(b);
-				r.birthday = ui.l('contacts.bday').replace('{0}', r.birthday.substring(0, r.birthday.lastIndexOf(' ')));
+				r.birthday = ui.l('contacts.bday').replace('{0}', global.date.formatDate(b));
 				if (d2.getMonth() == d1.getMonth() && d2.getDate() == d1.getDate())
 					r.present = '<img src="images/present.svg"/>';
 			}
