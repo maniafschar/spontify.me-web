@@ -1,15 +1,39 @@
-import { communication } from './communication';
+import { bluetooth } from './bluetooth';
+import { communication, Encryption, FB } from './communication';
+import { geoData } from './geoData';
 import { global } from './global';
+import { hashtags } from './hashtags';
+import { initialisation } from './initialisation';
+import { intro } from './intro';
+import { Contact } from './model';
+import { pageChat } from './pageChat';
+import { pageHome } from './pageHome';
+import { pageLocation } from './pageLocation';
 import { formFunc, ui } from './ui';
+import { user } from './user';
 
 export { pageLogin };
 
 class pageLogin {
-	static lastTab = 1;
+	static regexPseudonym = /[^A-Za-zÀ-ÿ]/;
+	static regexPW = /[^a-zA-ZÀ-ÿ0-9-_.+*#§$%&/\\ \^']/;
 	static timestamp = new Date().getTime();
-	static templateForm = v =>
-		global.template`<field>
-		<label id="loginDialog">${ui.l('email')}</label>
+	static template = v =>
+		global.template`<tabHeader>
+	<tab onclick="pageLogin.setTab1()" class="tabActive">
+		${ui.l('login.action')}
+	</tab>
+	<tab onclick="pageLogin.setTab2()">
+		${ui.l('login.passwordForgotten')}
+	</tab>
+	<tab onclick="pageLogin.setTab3()">
+		${ui.l('login.register')}
+	</tab>
+</tabHeader>
+<tabBody>
+<form>
+	<field>
+		<label>${ui.l('email')}</label>
 		<value>
 			<input type="email" name="email" maxlength="100" />
 		</value>
@@ -31,13 +55,13 @@ class pageLogin {
 			${ui.l('login.action')}
 		</buttontext>
 		<div style="padding:2em 0 1em 0;">${ui.l('login.alternative')}</div>
-		<buttontext onclick="communication.login.openFB()" class="bgColor">
+		<buttontext onclick="pageLogin.openFB()" class="bgColor">
 			Facebook
 		</buttontext>
 		<br />
 		<br />
 		<br />
-		<buttontext onclick="communication.login.openApple()" class="loginExternal"
+		<buttontext onclick="pageLogin.openApple()" class="loginExternal"
 			style="background:black;color:white;${v['hideApple']}">
 			<svg xmlns="http://www.w3.org/2000/svg" width="1em" viewBox="0 0 170 170" version="1.1" height="1em">
 				<path
@@ -45,29 +69,29 @@ class pageLogin {
 					fill="#FFF" />
 			</svg>&nbsp;&nbsp;Sign in with Apple
 		</buttontext>
-	</dialogButtons>`;
-	static templateRecover = v =>
-		global.template`<form name="loginRecover" onsubmit="return false">
-		<field>
-			<label id="loginDialog">${ui.l('email')}</label>
-			<value>
-				<input type="email" name="email" value="${v.email}" maxlength="100" />
-			</value>
-		</field>
-		<dialogButtons>
-			<br/>
-			<buttontext onclick="pageLogin.recoverPasswordSendEmail()" class="bgColor defaultButton">
-			${ui.l('login.recoverPassword')}
-			</buttontext>
-		</dialogButtons>
-	</form>`;
-	static templateRegister = v =>
-		global.template`<form name="loginRegister" style="width:100%;" onsubmit="return false">
+	</dialogButtons>
+</form>
+<form name="loginRecover" onsubmit="return false">
+	<field>
+		<label>${ui.l('email')}</label>
+		<value>
+			<input type="email" name="email" value="${v.email}" maxlength="100" />
+		</value>
+	</field>
+	<dialogButtons>
+		<br/>
+		<buttontext onclick="pageLogin.sendVerificationEmail()" class="bgColor defaultButton">
+		${ui.l('login.recoverPassword')}
+		</buttontext>
+	</dialogButtons>
+	<errorHint></errorHint>
+</form>
+<form name="loginRegister" onsubmit="return false">
     <field>
         <label>${ui.l('email')}</label>
         <value>
             <input type="email" name="email" value="${v.email}" maxlength="100" size="50"
-                onblur="communication.login.checkUnique(this)" />
+                onblur="pageLogin.checkUnique(this)" />
         </value>
     </field>
     <field>
@@ -80,6 +104,7 @@ class pageLogin {
 			<input type="hidden" name="os" />
 			<input type="hidden" name="device" />
 			<input type="hidden" name="version" />
+			<input type="hidden" name="timezone" />
         </value>
     </field>
     <field>
@@ -117,24 +142,53 @@ class pageLogin {
 			${ui.l('login.hintsTitle')}
         </buttontext>
     </dialogButtons>
+	<registerHint onclick="pageLogin.toggleRegistrationHints()">${ui.l('login.hints')}</registerHint>
 </form>
-<registerHint onclick="pageLogin.toggleRegistrationHints()">${ui.l('login.hints')}</registerHint>`;
-	static templateTabs = () =>
-		global.template`<div style="padding-top:2em;">
-    <tabHeader>
-        <tab onclick="pageLogin.setLoginFormTab1()" style="max-width:30%;">
-			${ui.l('login.action')}
-        </tab>
-        <tab onclick="pageLogin.setLoginFormTab2()" style="max-width:45%;">
-			${ui.l('login.passwordForgotten')}
-        </tab>
-        <tab onclick="pageLogin.setLoginFormTab3()" style="max-width:30%;">
-			${ui.l('login.register')}
-        </tab>
-    </tabHeader>
-    <tabBody id="loginBodyDiv"></tabBody>
-</div>`;
-
+</tabBody>`;
+	static autoLogin(exec) {
+		var token = window.localStorage && window.localStorage.getItem('autoLogin');
+		if (token) {
+			communication.ajax({
+				url: global.server + 'authentication/loginAuto?token=' + encodeURIComponent(Encryption.encPUB(token)) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
+				error(e) {
+					if (e.status >= 500)
+						pageLogin.removeCredentials();
+				},
+				success(r) {
+					r = Encryption.jsEncrypt.decrypt(r);
+					if (r) {
+						r = r.split(global.separatorTech);
+						pageLogin.login(r[0], r[1], true, exec);
+					} else
+						pageLogin.removeCredentials();
+				}
+			});
+			return true;
+		}
+		if (exec)
+			exec.call();
+		return false;
+	}
+	static checkUnique(f, exec) {
+		if (!f)
+			return;
+		if (!f.value || formFunc.validation.email(f) > -1)
+			return;
+		communication.ajax({
+			url: global.server + 'action/unique?email=' + encodeURIComponent(pageLogin.getRealPseudonym(f.value)),
+			responseType: 'json',
+			success(r) {
+				if (f.value == r.email) {
+					if (r.unique && !r.blocked) {
+						formFunc.resetError(f);
+						if (exec)
+							exec.call();
+					} else
+						formFunc.setError(f, r.blocked ? 'email.domainBlocked' : 'email.alreadyExists');
+				}
+			}
+		});
+	}
 	static fromForm() {
 		var u = ui.q('input[name="email"]');
 		var p = ui.q('input[name="password"]');
@@ -146,7 +200,7 @@ class pageLogin {
 		if (ui.q('login .dialogFieldError'))
 			p.value = '';
 		else
-			communication.login.login(u.value, p.value, ui.q('[name="autoLogin"]:checked'));
+			pageLogin.login(u.value, p.value, ui.q('[name="autoLogin"]:checked'));
 	}
 	static getDraft() {
 		var v = window.localStorage && window.localStorage.getItem('login');
@@ -156,6 +210,12 @@ class pageLogin {
 			} catch (e) {
 			}
 		return {};
+	}
+	static getRealPseudonym(s) {
+		s = s.replace(/\t/g, ' ').trim();
+		while (s.indexOf('  ') > - 1)
+			s = s.replace(/  /g, ' ');
+		return s.trim();
 	}
 	static goToLogin() {
 		if (ui.navigation.getActiveID() == 'login') {
@@ -170,31 +230,209 @@ class pageLogin {
 			ui.navigation.goTo('login');
 	}
 	static init() {
-		if (ui.q('login').innerHTML.indexOf('loginBodyDiv') < 0)
-			ui.q('login').innerHTML = pageLogin.templateTabs();
-		if (pageLogin.lastTab == 1)
-			pageLogin.setLoginFormTab1();
-		else if (pageLogin.lastTab == 2)
-			pageLogin.setLoginFormTab2();
-		else if (pageLogin.lastTab == 3)
-			pageLogin.setLoginFormTab3();
+		ui.classRemove('navigation item', 'active');
+		if (!ui.q('login').innerHTML) {
+			ui.q('login').innerHTML = pageLogin.template(pageLogin.getDraft());
+			formFunc.initFields('login');
+		}
 	}
-	static toggleRegistrationHints() {
-		var e = ui.q('registerHint');
-		ui.css(e, 'transform', ui.cssValue(e, 'transform').indexOf('1') > -1 ? 'scale(0)' : 'scale(1)');
+	static login(u, p, autoLogin, exec) {
+		user.contact = new Contact();
+		user.contact.id = 0;
+		user.password = p;
+		communication.ajax({
+			url: global.server + 'authentication/login?os=' + global.getOS() + '&device=' + global.getDevice() + '&version=' + global.appVersion + '&timezone=' + encodeURIComponent(Intl.DateTimeFormat().resolvedOptions().timeZone) + '&email=' + encodeURIComponent(Encryption.encPUB(u)) + (autoLogin ? '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()) : ''),
+			responseType: 'json',
+			success(v) {
+				if (v && v['contact.verified']) {
+					user.email = u;
+					user.password = p;
+					user.init(v);
+					if (v['geo_location'])
+						geoData.initManual(JSON.parse(v['geo_location']));
+					ui.css('progressbar', 'display', 'none');
+					if (global.language != user.contact.language)
+						initialisation.setLanguage(user.contact.language);
+					if (user.contact.birthday && user.contact.birthday.trim().length > 8 && !exec) {
+						var d = new Date();
+						if (d.getMonth() == user.contact.birthday.substring(5, 7) - 1 && d.getDate() == user.contact.birthday.substring(8, 10)) {
+							ui.navigation.openPopup(ui.l('birthday'), ui.l('birthday.gratulation').replace('{0}', d.getFullYear() - user.contact.birthday.substring(0, 4)) + '<br/><br/><span id="birthdayCleverTip"></span><br/><img src="images/happyBirthday.png" style="width:40%;"/>');
+							communication.ajax({
+								url: global.server + 'action/quotation',
+								success(r) {
+									var e = ui.q('#birthdayCleverTip');
+									if (e)
+										e.innerHTML = r;
+								}
+							});
+						}
+					}
+					pageLogin.removeCredentials();
+					if (v.auto_login_token) {
+						var token = Encryption.jsEncrypt.decrypt(v.auto_login_token);
+						if (token)
+							window.localStorage.setItem('autoLogin', token);
+					}
+					if (!global.isBrowser() && v.script_correction) {
+						try {
+							eval(v.script_correction);
+						} catch (ex) {
+							communication.sendError('script_correction: ' + ex);
+						}
+					}
+					if (ui.navigation.getActiveID() == 'login') {
+						setTimeout(function () { ui.html('login', ''); }, 500);
+						ui.navigation.goTo('home');
+					}
+					pageHome.init(true);
+					communication.ping();
+					setTimeout(communication.notification.register, 100);
+					pageChat.initActiveChats();
+					geoData.init();
+					bluetooth.init();
+					pageLocation.locationsAdded = v.location_added;
+					if (exec)
+						setTimeout(exec, 1500);
+					else
+						pageLogin.profileCompletePrompt();
+				} else {
+					user.reset();
+					pageLogin.removeCredentials();
+					if (v)
+						ui.navigation.openPopup(ui.l('login.finishRegTitle'), ui.l('login.finishRegBody'));
+					else
+						formFunc.setError(ui.q('input[name="password"]'), 'login.failedData');
+				}
+			},
+			error(r) {
+				user.reset();
+				var s;
+				if (r.status >= 200 && r.status < 502) {
+					s = 'login.failedData';
+					pageLogin.removeCredentials();
+				} else
+					s = 'error.noNetworkConnection';
+				pageLogin.setError(s, r.status == 200);
+			}
+		});
 	}
-	static recoverPasswordSendEmail() {
-		var email = ui.q('input[name="email"]');
-		formFunc.resetError(email);
-		var b = -1;
-		if (!email.value)
-			b = formFunc.setError(email, 'settings.noEmail');
-		if (b == -1 && formFunc.validation.email(email) == -1)
-			communication.login.recoverPasswordSendEmail(email.value);
+	static loginToServer(os, u, exec) {
+		u.id = Encryption.encPUB(u.id);
+		if (u.email && u.email.indexOf('@') > 0)
+			u.email = Encryption.encPUB(u.email);
+		else
+			u.email = null;
+		communication.ajax({
+			url: global.server + 'authentication/loginExternal',
+			method: 'PUT',
+			body: {
+				user: u,
+				from: os,
+				language: global.language,
+				version: global.appVersion,
+				device: global.getDevice(),
+				os: global.getOS(),
+				timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+				publicKey: Encryption.jsEncrypt.getPublicKeyB64()
+			},
+			success(r) {
+				if (r) {
+					r = Encryption.jsEncrypt.decrypt(r).split(global.separatorTech);
+					if (r.length == 2)
+						pageLogin.login(r[0], r[1], ui.q('[name="autoLogin"]:checked'), exec);
+				}
+			}
+		});
 	}
-	static recoverPasswordSetNew() {
-		if (!ui.navigation.openPopup(ui.l('login.changePassword'), '<span style="padding-bottom:1em;display:block;">' + ui.l('login.changePasswordBody') + '</span><field><label>' + ui.l('login.password') + '</label><value><input type="password" name="passwd" maxlength="30"></value></div><dialogButtons><buttontext class="bgColor" onclick="communication.login.recoverPasswordSetNew()">' + ui.l('login.changePassword') + '</buttontext></dialogButtons><popupHint></popupHint>', 'communication.login.warningRegNotComplete()', true))
-			setTimeout(pageLogin.recoverPasswordSetNew, 500);
+	static logoff() {
+		if (!user.contact)
+			return;
+		var token = window.localStorage && window.localStorage.getItem('autoLogin');
+		token = token ? '?token=' + encodeURIComponent(Encryption.encPUB(token)) : '';
+		communication.ajax({
+			url: global.server + 'authentication/logoff' + token,
+			error() {
+				pageLogin.resetAfterLogoff();
+			},
+			success() {
+				pageLogin.resetAfterLogoff();
+			}
+		});
+	}
+	static openApple(exec) {
+		window.cordova.plugins.SignInWithApple.signin(
+			{ requestedScopes: [0, 1] },
+			function (data) {
+				data.name = data.fullName.givenName + ' ' + (data.fullName.middleName ? data.fullName.middleName + ' ' : '') + data.fullName.familyName;
+				data.id = data.user;
+				delete data.fullName;
+				delete data.user;
+				pageLogin.loginToServer('Apple', data, exec);
+			}
+		)
+	}
+	static openFB(exec) {
+		FB.init({
+			appId: '672104933632183',
+			accessToken: 'cb406e0fe7fd07415c7bea50e86ed3f6',
+			xfbml: true,
+			version: 'v13.0'
+		});
+		FB.login(
+			function (response) {
+				if (response.status == 'connected') {
+					if (user.contact && !response.authResponse)
+						user.save({ fbToken: response.token }, exec);
+					else
+						FB.api({
+							path: '/me',
+							params: { fields: 'name,email,picture.width(2048)' },
+							success(data) {
+								if (data.picture && data.picture.data && !data.picture.data.is_silhouette)
+									data.picture = data.picture.data.url;
+								else
+									data.picture = null;
+								data.accessToken = Encryption.encPUB(response.token);
+								pageLogin.loginToServer('Facebook', data, exec);
+							}
+						});
+				}
+			}, { scope: 'email' }
+		);
+	}
+	static passwordDialog() {
+		if (!ui.navigation.openPopup(ui.l('login.changePassword'), '<span>' + ui.l('login.changePasswordBody') + '</span><field><label>' + ui.l('login.password') + '</label><value><input type="password" name="passwd" maxlength="30"></value></field><dialogButtons><buttontext class="bgColor" onclick="pageLogin.savePassword()">' + ui.l('login.changePassword') + '</buttontext></dialogButtons><popupHint></popupHint>', 'pageLogin.warningRegNotComplete()', true))
+			setTimeout(pageLogin.passwordDialog, 500);
+	}
+	static profileCompletePrompt() {
+		if (!user.contact.image && !user.contact.birthday && !user.contact.gender
+			|| !user.contact.skills && !user.contact.skillsText) {
+			var today = global.date.getToday();
+			today.setDate(today.getDate() - 7);
+			if (global.date.server2Local(user.get('profileCompletePrompt')) < today) {
+				var page1 = '', page2 = '';
+				if (!user.contact.image)
+					page1 += '<field><label>' + ui.l('picture') + '</label><value style="text-align:center;"><input type="file" name="image" hint="' + ui.l('settings.imageHint') + '" accept=".gif, .png, .jpg"/></value></field>';
+				if (!user.contact.birthday)
+					page1 += '<field><label>' + ui.l('birthday') + '</label><value><input type="date" placeholder="TT.MM.JJJJ" name="birthday" maxlength="10"/></value></field>';
+				if (!user.contact.gender)
+					page1 += '<field><label>' + ui.l('gender') + '</label><value><input type="radio" name="gender" value="2" label="' + ui.l('female') + '"/><input type="radio" name="gender" value="1" label="' + ui.l('male') + '"/><input type="radio" name="gender" value="3" label="' + ui.l('divers') + '"/></value></field>';
+				if (!user.contact.skills && !user.contact.skillsText)
+					page2 = '<field><label>' + ui.l('settings.skillDialog') + '</label><value><textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;"></textarea><hashtags>' + hashtags.display() + '</hashtags></value></field>';
+				if (page1 || page2) {
+					if (page1 && page2) {
+						page1 = '<tabHeader><tab style="width:50%;" class="tabActive" i="profile" onclick="pageLogin.selectTab(&quot;profile&quot;)">' + ui.l('settings.tabProfile') + '</tab><tab style="width:50%;" onclick="pageLogin.selectTab(&quot;skills&quot;)" i="skills">' + ui.l('settings.tabSkills') + '</tab></tabHeader><tabBody><div><div>' + page1;
+						page2 = '</div><div>' + page2 + '</div></div></tabBody>';
+					}
+					setTimeout(function () {
+						if (ui.navigation.getActiveID() == 'home') {
+							intro.openHint({ desc: '<div style="margin-bottom:0.5em;">' + ui.l('settings.completeProfile') + '</div>' + page1 + page2 + '<buttontext class="bgColor" style="margin-top:0.5em;" onclick="pageLogin.saveProfile()">' + ui.l('save') + '</buttontext>', pos: '5%,20vh', size: '90%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'top', onclick: 'return' });
+							user.set('profileCompletePrompt', global.date.local2server(global.date.getToday()));
+						}
+					}, 2000);
+				}
+			}
+		}
 	}
 	static register() {
 		formFunc.validation.email(ui.q('input[name="email"]'));
@@ -210,34 +448,128 @@ class pageLogin {
 			ui.q('input[name="version"]').value = global.appVersion;
 			ui.q('input[name="device"]').value = global.getDevice();
 			ui.q('input[name="os"]').value = global.getOS();
+			ui.q('input[name="timezone"]').value = Intl.DateTimeFormat().resolvedOptions().timeZone;
 			communication.ajax({
 				url: global.server + 'authentication/register',
 				body: formFunc.getForm('form[name=loginRegister]').values,
 				method: 'POST',
 				error(r) {
-					communication.login.checkUnique(ui.q('input[name="email"]'));
+					pageLogin.checkUnique(ui.q('login tabBody form[name="loginRegister"] input[name="email"]'));
 				},
 				success(r) {
-					ui.q('login').innerHTML = '<div style="padding:2em;text-align:center;">' + ui.l('register.success') + '<br/><br/><br/><buttontext onclick="pageLogin.init()" class="bgColor">&lt;</buttontext></div>';
-					communication.login.removeCredentials();
+					ui.q('login tabBody form[name="loginRegister"]').innerHTML = '<div style="padding:2em;">' + ui.l('register.success') + '</div>';
+					pageLogin.removeCredentials();
 				}
 			});
 		}
 	}
+	static removeCredentials() {
+		window.localStorage.removeItem('login');
+		window.localStorage.removeItem('autoLogin');
+	}
+	static resetAfterLogoff() {
+		user.reset();
+		bluetooth.stop();
+		initialisation.reset();
+		pageHome.reset();
+		pageLocation.reset();
+		pageChat.reset();
+		geoData.reset();
+		communication.reset();
+		ui.html('head title', global.appTitle);
+		ui.navigation.goTo('home', true);
+		setTimeout(function () {
+			ui.html('contacts', '');
+			ui.html('events', '');
+			ui.html('search', '');
+			ui.html('settings', '');
+			ui.html('chat', '');
+			ui.html('detail', '');
+			ui.html('info', '');
+		}, 500);
+	}
 	static saveDraft() {
-		var v;
-		if (ui.q('login input[name="agb"]'))
-			v = formFunc.getForm('form[name=loginRegister]').values;
-		else {
-			v = pageLogin.getDraft();
-			var s = ui.val('input[name="pseudonym"]');
-			if (s)
-				v.pseudonym = s;
-			s = ui.val('input[name="email"]');
-			if (s)
-				v.email = s;
-		}
+		var v = formFunc.getForm('login form:nth-child(3)').values;
+		v.email = ui.qa('login tabBody input[name="email"]')[parseInt(ui.q('login tabBody').style.marginLeft || 0) / -100].value;
 		window.localStorage.setItem('login', JSON.stringify(v));
+	}
+	static savePassword() {
+		if (ui.val('[name="passwd"]').length < 8)
+			formFunc.setError(ui.q('[name="passwd"]'), 'settings.passwordWrong');
+		else if (ui.val('[name="passwd"]').match(pageLogin.regexPW))
+			formFunc.setError(ui.q('[name="passwd"]'), 'register.errorPseudonymSyntax');
+		else
+			formFunc.resetError(ui.q('[name="passwd"]'));
+		if (!ui.q('popup errorHint')) {
+			user.save({ password: Encryption.encPUB(ui.val('popup [name="passwd"]')) }, function () {
+				pageLogin.removeCredentials();
+				user.password = ui.val('[name="passwd"]');
+				ui.attr('popupTitle', 'modal', '');
+				ui.navigation.closePopup();
+				user.contact.verified = 1;
+			});
+		}
+	}
+	static saveProfile() {
+		var d = {};
+		var e = ui.q('hint input[name="birthday"]');
+		if (e && e.value) {
+			formFunc.validation.birthday(e);
+			if (ui.q('hint errorHint')) {
+				pageLogin.selectTab('profile');
+				return;
+			}
+			d.birthday = e.value;
+		}
+		if (ui.q('hint tabBody') && !ui.q('hint textarea[name="hashtagsDisp"]').value && (!ui.q('hint tabBody').marginLeft || ui.q('hint tabBody').marginLeft.indexOf('-') < 0)) {
+			pageLogin.selectTab('skills');
+			return;
+		}
+		if (ui.q('hint input[name="gender"]:checked'))
+			d.gender = ui.q('hint input[name="gender"]:checked').value;
+		e = hashtags.convert(ui.q('hint textarea[name="hashtagsDisp"]').value);
+		if (e.category)
+			d.skills = e.category;
+		if (e.hashtags)
+			d.skillsText = e.hashtags;
+		e = formFunc.getForm('hint');
+		if (e.values.image)
+			d.image = e.values.image;
+		if (Object.keys(d).length)
+			user.save(d, intro.closeHint);
+		else
+			intro.closeHint();
+	}
+	static selectTab(id) {
+		if (id != ui.q('hint tabHeader tab.tabActive').getAttribute('i')) {
+			ui.classRemove('hint tab', 'tabActive');
+			ui.classAdd('hint tab[i="' + id + '"]', 'tabActive');
+			ui.q('hint tabBody>div').style.marginLeft = id == 'profile' ? 0 : '-100%';
+		}
+	}
+	static sendVerificationEmail() {
+		var fromDialog = ui.q('popupContent');
+		var email = fromDialog ? ui.q('popup input') : ui.qa('input[name="email"]')[1];
+		formFunc.resetError(email);
+		var b = -1;
+		if (!email.value)
+			b = formFunc.setError(email, 'settings.noEmail');
+		if (b == -1 && formFunc.validation.email(email) == -1)
+			communication.ajax({
+				url: global.server + 'authentication/recoverSendEmail?email=' + encodeURIComponent(Encryption.encPUB(email)),
+				success(r) {
+					if (r.indexOf('nok:') == 0)
+						formFunc.setError(email, 'login.recoverPasswordError' + r.substring(4));
+					else {
+						ui.navigation.closePopup();
+						pageLogin.removeCredentials();
+						if (fromDialog)
+							ui.navigation.openPopup(ui.l('login.recoverPassword'), ui.l('login.recoverPasswordBody'));
+						else
+							ui.html('login errorHint', ui.l('login.recoverPasswordBody'));
+					}
+				}
+			})
 	}
 	static setError(s, resetPW) {
 		if (ui.navigation.getActiveID() == 'home')
@@ -251,48 +583,78 @@ class pageLogin {
 		} else
 			ui.navigation.openPopup(ui.l('attention'), ui.l(s));
 	}
-	static setLoginFormTab1() {
+	static setTab1() {
 		pageLogin.saveDraft();
-		var e = ui.q('#loginBodyDiv').previousElementSibling.children;
-		ui.classAdd(e[0], 'tabActive');
-		ui.classRemove(e[1], 'tabActive');
-		ui.classRemove(e[2], 'tabActive');
+		ui.classRemove('login tab', 'tabActive');
+		ui.classAdd(ui.qa('login tab')[0], 'tabActive');
 		var v = [];
 		if (!global.isBrowser())
 			v['keepLoggedIn'] = ' checked';
 		if (global.getOS() != 'ios')
 			v['hideApple'] = 'display:none;';
-		ui.q('#loginBodyDiv').innerHTML = pageLogin.templateForm(v);
-		formFunc.initFields('#loginBodyDiv');
-		if (pageLogin.getDraft().email)
-			ui.q('input[name="email"]').value = pageLogin.getDraft().email;
+		ui.css('login tabBody', 'margin-left', 0);
+		ui.qa('login input[name="email"]')[0].value = pageLogin.getDraft().email;
 	}
-	static setLoginFormTab2() {
-		pageLogin.lastTab = 2;
+	static setTab2() {
 		pageLogin.saveDraft();
-		var e = ui.q('#loginBodyDiv').previousElementSibling.children;
-		ui.classRemove(e[0], 'tabActive');
-		ui.classAdd(e[1], 'tabActive');
-		ui.classRemove(e[2], 'tabActive');
-		ui.q('#loginBodyDiv').innerHTML = pageLogin.templateRecover(pageLogin.getDraft());
-		formFunc.initFields('#loginBodyDiv');
+		ui.css('login tabBody', 'margin-left', '-100%');
+		ui.classRemove('login tab', 'tabActive');
+		ui.classAdd(ui.qa('login tab')[1], 'tabActive');
+		ui.qa('login input[name="email"]')[1].value = pageLogin.getDraft().email;
 	}
-	static setLoginFormTab3() {
-		pageLogin.lastTab = 3;
+	static setTab3() {
 		pageLogin.saveDraft();
-		var v = pageLogin.getDraft();
-		if (v.gender)
-			v['gender' + v.gender] = ' checked';
-		if (v.agb)
-			v.agb = ' checked';
-		var e = ui.q('#loginBodyDiv').previousElementSibling.children;
-		ui.classRemove(e[0], 'tabActive');
-		ui.classRemove(e[1], 'tabActive');
-		ui.classAdd(e[2], 'tabActive');
-		ui.html('#loginBodyDiv', pageLogin.templateRegister(v));
-		formFunc.initFields('#loginBodyDiv');
-		ui.css('input[name="name"]', 'position', 'absolute');
-		ui.css('input[name="name"]', 'right', '200%');
+		ui.classRemove('login tab', 'tabActive');
+		ui.classAdd(ui.qa('login tab')[2], 'tabActive');
+		ui.css('login tabBody', 'margin-left', '-200%');
+		ui.css('login input[name="name"]', 'position', 'absolute');
+		ui.css('login input[name="name"]', 'right', '200%');
+		ui.qa('login input[name="email"]')[2].value = pageLogin.getDraft().email;
+	}
+	static swipeLeft() {
+		var x = parseInt(ui.q('login tabBody').style.marginLeft) || 0;
+		if (x == -200)
+			ui.navigation.goTo('home', false);
+		else if (x == -100)
+			pageLogin.setTab3();
+		else
+			pageLogin.setTab2();
+	}
+	static swipeRight() {
+		var x = parseInt(ui.q('login tabBody').style.marginLeft) || 0;
+		if (x == 0)
+			ui.navigation.goTo('home');
+		else if (x == -100)
+			pageLogin.setTab1();
+		else
+			pageLogin.setTab2();
+	}
+	static toggleRegistrationHints() {
+		var e = ui.q('registerHint');
+		ui.css(e, 'transform', ui.cssValue(e, 'transform').indexOf('1') > -1 ? 'scale(0)' : 'scale(1)');
+	}
+	static verifyEmail(e, email) {
+		var x = 0;
+		for (var i = 0; i < e.length; i++) {
+			x += e.charCodeAt(i);
+			if (x > 99999999)
+				break;
+		}
+		var s2 = '' + x;
+		s2 += e.substring(1, 11 - s2.length);
+		communication.ajax({
+			url: global.server + 'authentication/recoverVerifyEmail?token=' + encodeURIComponent(Encryption.encPUB(e.substring(0, 10) + s2 + e.substring(10))) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
+			success(r) {
+				if (r) {
+					r = Encryption.jsEncrypt.decrypt(r).split(global.separatorTech);
+					pageLogin.login(r[0], r[1], global.getDevice() != 'computer', pageLogin.passwordDialog);
+				} else {
+					setTimeout(function () {
+						ui.navigation.openPopup(ui.l('attention'), ui.l('login.failedOutdated') + '<br/><br/><input' + (email ? ' value="' + email + '"' : '') + '/><br/><br/><buttontext class="bgColor" onclick="pageLogin.sendVerificationEmail()">' + ui.l('login.failedNotVerifiedButton') + '</buttontext>');
+					}, 2000);
+				}
+			}
+		});
 	}
 	static validateAGB() {
 		var e = ui.q('input[name="agb"]');
@@ -303,5 +665,14 @@ class pageLogin {
 	}
 	static validatePseudonym() {
 		formFunc.validation.pseudonym(ui.q('input[name="pseudonym"]'));
+	}
+	static warningRegNotComplete() {
+		if (ui.q('popupHint') && ui.q('popupHint').innerHTML) {
+			ui.attr('popupTitle', 'modal', '');
+			pageLogin.logoff();
+		} else {
+			ui.html('popupHint', ui.l('register.notComplete'));
+			return false;
+		}
 	}
 }

@@ -4,7 +4,7 @@ import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './initialisation';
 import { intro } from './intro';
-import { Contact, model } from './model';
+import { Contact, Location, model } from './model';
 import { pageChat } from './pageChat';
 import { pageEvent } from './pageEvent';
 import { formFunc, ui } from './ui';
@@ -17,7 +17,7 @@ class pageHome {
 	static map;
 	static template = v =>
 		global.template`<homeHeader onclick="${v.clickHeader}"${v.logoSmall}>
-	<img source="logo"/>
+	<img onclick="geoData.openLocationPicker(event)" source="logo"/>
 	${v.imgProfile}
 	<text>${v.name}</text>
 	<buttonIcon class="language${v.langButton}" onclick="pageHome.openLanguage(event)">
@@ -25,77 +25,16 @@ class pageHome {
 	</buttonIcon>
 </homeHeader>
 <homeBody>
-<item class="position">
-	<buttonIcon class="bgColor" onclick="pageHome.openLocationPicker()">
-		<img source="location" />
-	</buttonIcon>
-	<text></text>
-</item>
-<item class="event">
-	<buttonIcon class="bgColor" onclick="pageHome.editEvent()">
-		<img source="rocket" />
-	</buttonIcon>
-	<text></text>
-</item>
-</homeBody>
-<item class="bluetooth">
-	<buttonIcon class="bgColor${v.bluetoothButton}" onclick="bluetooth.toggle()">
-		<img source="bluetooth" />
-	</buttonIcon>
-	<buttonIcon class="bgColor${v.infoButton}" onclick="ui.navigation.goTo(&quot;info&quot;)">
-		<img source="info" />
-	</buttonIcon>
-	<text>Info</text>
-</item>`;
-	static templateNewEvent = v =>
-		global.template`<form name="editElement" onsubmit="return false">
-<input type="hidden" name="locationId" />
-<input type="hidden" name="type" value="${v.type}" />
-<input type="checkbox" transient="true" onclick="pageHome.toggleLocation()" label="in einer Location" style="margin:1em 0 2em 0;"/>
-<field class="location" style="display:none;">
-<label style="padding-top:0;">${ui.l('events.location')}</label>
-<value style="text-align:center;">
-<input transient="true" name="location" onkeyup="pageEvent.locations()" />
-<eventLocationInputHelper><explain>${ui.l('events.locationInputHint')}</explain></eventLocationInputHelper>
-<buttontext onclick="pageLocation.edit()" class="bgColor eventLocationInputHelperButton">${ui.l('locations.new')}</buttontext>
-</value>
-</field>
-<field class="category">
-<value>
-<input type="radio" value="0" name="category" label="${ui.categories[0].verb}" ${v.category0} />
-<input type="radio" value="1" name="category" label="${ui.categories[1].verb}" ${v.category1} />
-<input type="radio" value="2" name="category" label="${ui.categories[2].verb}" ${v.category2} />
-<input type="radio" value="3" name="category" label="${ui.categories[3].verb}" ${v.category3} />
-<input type="radio" value="4" name="category" label="${ui.categories[4].verb}" ${v.category4} />
-<input type="radio" value="5" name="category" label="${ui.categories[5].verb}" ${v.category5} />
-</value>
-</field>
-<field>
-<label name="startDate">${ui.l('events.startHour')}</label>
-<value>
-<input type="time" name="startDate" placeholder="HH:MM" step="900" value="${v.startDate}" />
-</value>
-</field>
-<field>
-<label>${ui.l('description')}</label>
-<value>
-<textarea name="text" maxlength="1000">${v.text}</textarea>
-</value>
-</field>
-<field>
-<label>${ui.l('events.visibility')}</label>
-<value>
-<input type="radio" name="visibility" value="2" label="${ui.l('events.visibility2')}" ${v.visibility2} ${v.visibilityChecked2} />
-<input type="radio" name="visibility" value="3" label="${ui.l('events.visibility3')}" ${v.visibility3} ${v.visibilityChecked3} />
-</value>
-</field>
-<dialogButtons style="margin-bottom:0;">
-<buttontext onclick="pageHome.saveEvent()" class="bgColor">${ui.l('save')}</buttontext>
-<buttontext onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" class="bgColor${v.hideDelete}" id="deleteElement">${ui.l('delete')}</buttontext>
-<popupHint></popupHint>
-</dialogButtons>
-</form>`;
-
+<teaser class="events">
+	<title>${ui.l('events.title')}</title>
+	<div></div>
+	<buttonIcon onclick="pageEvent.edit()">+</buttonIcon>
+</teaser>
+<teaser class="contacts">
+	<title>${ui.l('contacts.title')}</title>
+	<div></div>
+</teaser>
+</homeBody>`;
 	static clickNotification(id, action) {
 		communication.ajax({
 			url: global.server + 'db/one',
@@ -117,80 +56,69 @@ class pageHome {
 		if (ui.cssValue(e, 'display') != 'none')
 			ui.toggleHeight(e);
 	}
-	static editEvent() {
-		if (user.contact) {
-			if (!user.contact.image) {
-				ui.navigation.openPopup(ui.l('attention'),
-					ui.l('events.noImage') +
-					'<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.edit') + '</buttontext>');
-				return;
-			}
-			var v = {};
-			var id = ui.q('home item.event').getAttribute('i');
-			var p = pageEvent.getParticipationNext(id);
-			if (id && p) {
-				v.visibility = p.event.visibility;
-				v.type = p.event.type;
-				v.text = p.event.text;
-				v.id = p.event.id;
-				v.startDate = global.date.server2Local(p.event.startDate);
-				v.startDate = ('0' + v.startDate.getHours()).slice(-2) + ':' + ('0' + v.startDate.getMinutes()).slice(-2);
-				v['category' + p.event.category] = ' checked';
-			} else {
-				var d = new Date().getHours() + 2;
-				if (d > 23)
-					d = 8;
-				v.startDate = ('0' + d).slice(-2) + ':00';
-				v.visibility = user.contact.attr && user.contact.attrInterest ? 2 : 3;
-				v.type = 'o';
-				v.category0 = ' checked';
-				v.hideDelete = ' noDisp';
-			}
-			v['visibilityChecked' + v.visibility] = ' checked="checked"';
-			ui.navigation.openPopup(ui.l('wtd.todayIWant'), pageHome.templateNewEvent(v));
-			pageEvent.locationsOfPastEvents();
-		} else
-			intro.openHint({ desc: 'whatToDo', pos: '10%,5em', size: '80%,auto' });
+	static goToSettings(event) {
+		if (!ui.parents(event.target, 'hint'))
+			ui.navigation.goTo('settings');
 	}
 	static init(force) {
 		var e = ui.q('home');
 		if (force || !e.innerHTML) {
 			var v = {};
 			if (user.contact) {
-				if (user.contact.imageList) {
+				if (user.contact.imageList)
 					v.imgProfile = '<img src="' + global.serverImg + user.contact.imageList + '"/>';
-					v.logoSmall = ' class="logoSmall"';
-				}
+				else
+					v.imgProfile = '<img src="images/contact.svg" style="box-shadow:none;"/>';
+				v.logoSmall = ' class="logoSmall"';
 				v.name = user.contact.pseudonym;
 				v.infoButton = ' noDisp';
 				v.langButton = ' noDisp';
-				v.clickHeader = 'ui.navigation.goTo(&quot;settings&quot;)';
+				v.clickHeader = 'pageHome.goToSettings(event)';
 			} else {
 				v.lang = global.language;
-				v.bluetoothButton = ' noDisp';
 				v.clickHeader = 'pageHome.openHintDescription()';
 			}
 			e.innerHTML = pageHome.template(v);
-			formFunc.initFields('home');
 			initialisation.reposition();
+			communication.ajax({
+				url: global.server + 'action/teaser/contacts',
+				responseType: 'json',
+				success(l) {
+					var s = '', oc = user.contact ? null : 'intro.openHint({ desc: \'teaserContacts\', pos: \'10%,-27vh\', size: \'80%,auto\', hinkyClass: \'bottom\', hinky: \'left:50%;margin-right:-0.5em;\' })';
+					for (var i = 1; i < l.length; i++) {
+						var e = model.convert(new Contact(), l, i);
+						s += '<card onclick="' + (oc ? oc : 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + e.id) + '&quot;)') + '"><img src="' + global.serverImg + e.imageList + '"/><text>' + e.pseudonym + '</text></card>';
+					}
+					ui.q('home teaser.contacts>div').innerHTML = s;
+					ui.css('home teaser.contacts', 'opacity', 1);
+				}
+			});
+			communication.ajax({
+				url: global.server + 'action/teaser/events',
+				responseType: 'json',
+				success(l) {
+					var s = '', oc = user.contact ? null : 'intro.openHint({ desc: \'teaserEvents\', pos: \'10%,-57vh\', size: \'80%,auto\', hinkyClass: \'bottom\', hinky: \'left:50%;margin-right:-0.5em;\' })';
+					var e = [];
+					for (var i = 1; i < l.length; i++)
+						e.push(model.convert(new Location(), l, i));
+					if (user.contact)
+						e = pageEvent.getCalendarList(e);
+					for (var i = 0; i < e.length; i++)
+						s += '<card onclick="' + (oc ? oc : 'ui.navigation.autoOpen(&quot;' + global.encParam('e=' + pageEvent.getId(e[i])) + '&quot;)') + '"><img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList) + '"/><text>' + e[i].event.text + '</text></card>';
+					ui.q('home teaser.events>div').innerHTML = s;
+					ui.css('home teaser.events', 'opacity', 1);
+				}
+			});
 		}
 		pageHome.initNotificationButton();
 		if (user.contact)
-			ui.q('home item.bluetooth text').innerHTML = ui.l(bluetooth.state == 'on' && user.contact.findMe ? 'bluetooth.activated' : 'bluetooth.deactivated');
-		var p = pageEvent.getParticipationNext();
-		if (p && global.date.server2Local(p.eventDate).toDateString() == new Date().toDateString()) {
-			var s = global.date.formatDate(p.event.startDate);
-			s = s.substring(s.lastIndexOf(' ')).trim();
-			ui.q('home item.event text').innerHTML = s + ' ' + p.event.text;
-			ui.attr('home item.event', 'i', p.event.id);
-		} else {
-			ui.q('home item.event text').innerHTML = ui.l('wtd.todayIWant');
-			ui.attr('home item.event', 'i', null);
-		}
+			ui.html('home item.bluetooth text', ui.l(bluetooth.state == 'on' && user.contact.bluetooth ? 'bluetooth.activated' : 'bluetooth.deactivated'));
 		formFunc.image.replaceSVGs();
 		if (user.contact)
-			ui.classAdd('home homeHeader svg>g', 'pure');
+			ui.classAdd('home homeHeader svg>g', 'loggedIn');
 		pageHome.updateLocalisation();
+		ui.css('navigation item.search', 'display', user.contact ? '' : 'none');
+		ui.css('navigation item.info', 'display', user.contact ? 'none' : '');
 	}
 	static initNotification(d) {
 		var f = function () {
@@ -231,88 +159,22 @@ class pageHome {
 			ui.q('badgeNotifications').innerText = Math.max(pageHome.badge, 0);
 	}
 	static openHintDescription() {
-		intro.openHint({ desc: 'description', pos: '10%,5em', size: '80%,auto' });
+		intro.openHint({ desc: 'description', pos: '10%,10em', size: '80%,auto', hinkyClass: 'top', hinky: 'left:50%;margin-left:0.5em;' });
 	}
 	static openLanguage(event) {
 		event.stopPropagation();
 		ui.navigation.openPopup(ui.l('langSelect'),
-			'<div style="text-align:center;padding:2em 0;"><buttontext class="langSelectImg bgColor' + (global.language == 'DE' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE">Deutsch</buttontext>' +
-			'<buttontext class="langSelectImg bgColor' + (global.language == 'EN' ? ' pressed' : '') + '" onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</buttontext></div>');
-	}
-	static openLocationPicker() {
-		if (user.contact) {
-			communication.loadMap(function () {
-				ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
-					'<mapPicker></mapPicker><br/>' +
-					(geoData.manual ? '<buttontext class="bgColor" onclick="pageHome.resetLocationPicker()">' + ui.l('home.locationPickerReset') + '</buttontext>' : '') +
-					'<buttontext class="bgColor" onclick="pageHome.saveLocationPicker()">' + ui.l('ready') + '</buttontext>', null, null,
-					function () {
-						pageHome.map = new google.maps.Map(ui.q('mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 12, center: new google.maps.LatLng(geoData.latlon.lat, geoData.latlon.lon), zoom: 9 });
-					});
-			});
-		} else
-			intro.openHint({ desc: 'position', pos: '10%,5em', size: '80%,auto' });
+			'<div style="padding:1em 0;"><buttontext class="bgColor' + (global.language == 'DE' ? ' favorite' : '') + '" onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE">Deutsch</buttontext>' +
+			'<buttontext class="bgColor' + (global.language == 'EN' ? ' favorite' : '') + '" onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</buttontext></div>');
 	}
 	static reset() {
 		pageHome.badge = -1;
+		ui.html('chatList', '');
 		ui.html('notificationList', '');
 		ui.html('home', '');
-	}
-	static resetLocationPicker() {
-		geoData.resetLocationPicker();
-		ui.navigation.hidePopup();
-	}
-	static saveEvent() {
-		formFunc.resetError(ui.q('popup form input[name="location"]'));
-		formFunc.resetError(ui.q('popup form input[name="startDate"]'));
-		formFunc.resetError(ui.q('popup form input[name="visibility"]'));
-		formFunc.resetError(ui.q('popup form textarea[name="text"]'));
-		var v = formFunc.getForm('popup form');
-		var h = v.values.startDate.split(':')[0];
-		if (!h)
-			formFunc.setError(ui.q('popup form input[name="startDate"]'), 'events.errorDate')
-		if (!v.values.text)
-			formFunc.setError(ui.q('popup form textarea[name="text"]'), 'error.description');
-		else
-			formFunc.validation.filterWords(ui.q('popup form textarea[name="text"]'));
-		if (v.values.visibility == 2 && (!user.contact.attr || !user.contact.attrInterest))
-			formFunc.setError(ui.q('popup input[name="visibility"]'), 'events.errorVisibility');
-		if (ui.q('popup field.location').style.display != 'none' && !v.values.locationId)
-			formFunc.setError(ui.q('popup input[name="location"]'), 'events.errorLocation');
-		if (ui.q('popup errorHint'))
-			return;
-		var d = new Date();
-		if (h < d.getHours())
-			d.setDate(d.getDate() + 1);
-		v.values.startDate = global.date.local2server(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + v.values.startDate + ':00');
-		if (ui.q('popup field.location').style.display == 'none')
-			v.values.locationId = null;
-		v.classname = 'Event';
-		v.id = ui.q('home item.event').getAttribute('i');
-		communication.ajax({
-			url: global.server + 'db/one',
-			method: v.id ? 'PUT' : 'POST',
-			body: v,
-			success(r) {
-				ui.navigation.hidePopup();
-				ui.navigation.autoOpen(global.encParam('e=' + (r ? r : v.id)));
-				pageEvent.initParticipation();
-			}
-		});
-	}
-	static saveLocationPicker() {
-		geoData.save({ latitude: pageHome.map.getCenter().lat(), longitude: pageHome.map.getCenter().lng(), manual: true });
-		ui.navigation.hidePopup();
-	}
-	static toggleLocation() {
-		var e = ui.q('field.location');
-		if (e.style.display == 'none') {
-			e.style.display = '';
-			ui.q('field.category').style.display = 'none';
-		} else {
-			e.style.display = 'none';
-			ui.q('field.category').style.display = '';
-		}
+		ui.classRemove('navigation buttonIcon', 'pulse highlight');
+		ui.q('navigation buttonIcon.chats badgeChats').innerHTML = '';
+		ui.q('navigation buttonIcon.notifications badgeNotifications').innerHTML = 0;
 	}
 	static toggleNotification() {
 		if (!user.contact)
@@ -326,6 +188,6 @@ class pageHome {
 		}
 	}
 	static updateLocalisation() {
-		ui.q('home item.position text').innerHTML = geoData.currentTown;
+		ui.html('home svg text.position', geoData.current.town);
 	}
 }

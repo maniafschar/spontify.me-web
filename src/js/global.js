@@ -1,5 +1,6 @@
 import { communication } from './communication';
 import { geoData } from './geoData';
+import { lists } from './lists';
 import { Contact, Location, model } from './model';
 import { ui } from './ui';
 import { user } from './user';
@@ -7,14 +8,15 @@ import { user } from './user';
 export { global };
 
 class global {
-	static appTitle = 'spontify.me';
-	static appVersion = '0.3.7';
+	static appTitle = 'skillvents';
+	static appVersion = '0.3.8';
 	static language = null;
 	static minLocations = 5;
 	static paused = false;
-	static server = 'https://spontify.me/rest/';
+	static server = 'https://skillvents.com/rest/';
 	static serverImg = '';
 	static separator = ' · ';
+	static separatorTech = '\u0015';
 	static url = '';
 
 	static date = {
@@ -23,7 +25,8 @@ class global {
 				return '';
 			var d2 = global.date.server2Local(d);
 			if (d2 instanceof Date)
-				return ui.l('weekday' + (type ? 'Long' : '') + d2.getDay()) + ' ' + d2.getDate() + '.' + (d2.getMonth() + 1) + '.' + (d2.getFullYear() + ' ').slice(-3) + d2.getHours() + ':' + ('0' + d2.getMinutes()).slice(-2);
+				return ui.l('weekday' + (type ? 'Long' : '') + d2.getDay()) + ' ' + d2.getDate() + '.' + (d2.getMonth() + 1) + '.' + ('' + d2.getFullYear()).slice(-2)
+					+ (typeof d != 'string' || d.length > 10 ? ' ' + d2.getHours() + ':' + ('0' + d2.getMinutes()).slice(-2) : '');
 			return d2;
 		},
 		getDateFields(d) {
@@ -74,6 +77,13 @@ class global {
 				l = 'yesterday';
 			return l ? ui.l('events.' + l) : '{0}';
 		},
+		getToday() {
+			var today = new Date();
+			today.setHours(0);
+			today.setMinutes(0);
+			today.setSeconds(0);
+			return today;
+		},
 		getWeekNumber(date) {
 			var d = new Date(+date);
 			d.setHours(0, 0, 0);
@@ -89,7 +99,8 @@ class global {
 				d = global.date.getDateFields(d);
 				d = new Date(d.year, parseInt(d.month) - 1, d.day, d.hour, d.minute, d.second);
 			}
-			return d.toISOString();
+			d = d.toISOString();
+			return d.substring(0, d.indexOf('.'));
 		},
 		server2Local(d) {
 			if (!d)
@@ -203,10 +214,13 @@ class global {
 			}
 		}
 	}
-	static getRegEx(f, v) {
-		if (v)
-			return 'REGEXP_LIKE(' + f + ',\'' + v.replace(v.indexOf(' ') > -1 ? / /g : /\u0015/g, '|') + '\')=1';
+	static getRegEx(field, value) {
+		if (value)
+			return 'REGEXP_LIKE(' + field + ',\'' + value + '\')=1';
 		return '1=0';
+	}
+	static hash(s) {
+		return s.split('').reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0);
 	}
 	static isBrowser() {
 		return window.cordova ? false : true;
@@ -220,35 +234,6 @@ class global {
 	}
 	static string = {
 		emoji: /\p{Extended_Pictographic}/ug,
-		extractNewsAdHoc(s) {
-			var r = {};
-			if ((s.indexOf('rl:') == 0 || s.indexOf('rp:') == 0) && s.lastIndexOf(':') == s.length - 2) {
-				s = s.split(':');
-				r.type = 'rating';
-				r.subtype = s[0].substring(1);
-				r.id = s[1];
-				r.rate = 1 + parseInt(s[2], 10);
-			} else if (s.indexOf('fl:') == 0 || s.indexOf('fe:') == 0 || s.indexOf('fp:') == 0) {
-				s = s.split(':');
-				r.type = 'favorite';
-				r.subtype = s[0].substring(1);
-				r.id = s[1];
-				r.label = s[0] == 'fl' ? 'Favorites' : s[0] == 'fp' ? 'Friends' : 'Confirmed';
-			} else if (s.indexOf('wtd:') == 0 && s.indexOf('|') > 0 && s.lastIndexOf(':') > s.lastIndexOf('|') && s.length < 25) {
-				s = s.split('|');
-				r.type = 'wtd';
-				if (s.length > 2) {
-					r.subtype = 'l';
-					r.id = s[1];
-					r.time = s[2];
-				} else {
-					r.subtype = 'category';
-					r.categories = s[0].substring(4).split(',');
-					r.time = s[1];
-				}
-			}
-			return r;
-		},
 		isEmoji(c, subsequent) {
 			if (subsequent)
 				return 0x2000 <= c && c <= 0x1ffff;
@@ -276,26 +261,6 @@ class global {
 			}
 			return s;
 		},
-		replaceNewsAdHoc(s) {
-			var extracted = global.string.extractNewsAdHoc(s);
-			if (extracted.type == 'rating') {
-				var img = '<img class="autoNewsImg" src="images/rating' + extracted.rate + '.png"/>';
-				s = img + global.string.replaceInternalLinks(' :open(' + global.encParam(extracted.subtype + '=' + extracted.id) + '): ').replace('chatLinks', 'newsLinks');
-			} else if (extracted.type == 'favorite') {
-				var img = '<img class="autoNewsImg" src="images/button' + extracted.label + '.png"/>';
-				s = img + global.string.replaceInternalLinks(' :open(' + global.encParam(extracted.subtype + '=' + extracted.id) + '): ').replace('chatLinks', 'newsLinks');
-			} else if (extracted.type == 'wtd') {
-				if (extracted.subtype == 'l')
-					s = ui.l('locations.asMessage').replace('{0}', extracted.time) + '<br/>' + global.string.replaceInternalLinks(' :open(' + global.encParam('l=' + extracted.id) + '): ').replace('chatLinks', 'newsLinks');
-				else {
-					var cat = '';
-					for (var i2 = 0; i2 < extracted.categories.length; i2++)
-						cat += ui.categories[extracted.categories[i2]].verb + (i2 < extracted.categories.length - 1 ? ' ' + ui.l('or') + ' ' : '');
-					s = ui.l('wtd.autoNews').replace('{0}', cat).replace('{1}', extracted.time);
-				}
-			}
-			return s;
-		},
 		replaceInternalLinks(s) {
 			if (!s)
 				return '';
@@ -316,7 +281,7 @@ class global {
 							if (!load[table])
 								load[table] = [];
 							load[table].push(id.substring(2));
-							s = s.substring(0, p + 1) + '<a class="chatLinks" name="autoOpen' + id.replace('=', '_') + '" onclick="ui.navigation.autoOpen(&quot;' + s.substring(p + 7, p2) + '&quot;,event);"><img src="images/' + table + '.svg" class="bgColor"/><br/></a>' + s.substring(p2 + 3);
+							s = s.substring(0, p + 1) + '<span class="chatLinks" name="autoOpen' + id.replace('=', '_') + '" onclick="ui.navigation.autoOpen(&quot;' + s.substring(p + 7, p2) + '&quot;,event);"><img src="images/' + table + '.svg" class="bgColor"/><br/></span>' + s.substring(p2 + 3);
 						}
 					}
 				}
@@ -325,7 +290,7 @@ class global {
 				var search = '';
 				for (var i = 0; i < load[table].length; i++)
 					search += ' or ' + table + '.id=' + load[table][i];
-				communication.loadList('query=' + table + '_list&distance=100000&search=' + encodeURIComponent('(' + search.substring(4) + ')'), function (l) {
+				lists.loadList('query=' + table + '_list&distance=100000&search=' + encodeURIComponent('(' + search.substring(4) + ')'), function (l) {
 					var s, e, processed = [], t = l[0][0].substring(0, l[0][0].indexOf('.'));
 					for (var i = 1; i < l.length; i++) {
 						var v = model.convert(t == 'contact' ? new Contact() : new Location(), l, i);
@@ -340,9 +305,6 @@ class global {
 						if (img) {
 							ui.attr(e, 'src', img);
 							ui.classRemove(e, 'bgColor');
-						} else if (v['location.ownerId']) {
-							ui.classRemove(e, 'bgColor');
-							ui.classAdd(e, 'bgBonus');
 						}
 						for (var i2 = 0; i2 < e.length; i2++) {
 							e[i2].parentNode.removeAttribute('name');
@@ -370,7 +332,7 @@ class global {
 					if (l2.length == 2 && !isNaN(l2[0]) && !isNaN(l2[1])) {
 						l2 = l2[0] + ',' + l2[1];
 						var imgId = l2.replace(/\./g, '').replace(',', '');
-						s = s.substring(0, p + 1) + '<a class="chatLinks" onclick="ui.navigation.openHTML(&quot;https://maps.google.com/maps?saddr=' + geoData.latlon.lat + ',' + geoData.latlon.lon + '&daddr=' + l2 + '&quot;);"><img l="' + imgId + '" /><p>' + ui.l('hereAmI') + '</p></a>' + s.substring(p2 + 2);
+						s = s.substring(0, p + 1) + '<span class="chatLinks" onclick="ui.navigation.openHTML(&quot;https://maps.google.com/maps?saddr=' + geoData.current.lat + ',' + geoData.current.lon + '&daddr=' + l2 + '&quot;);"><img l="' + imgId + '" /><p>' + ui.l('hereAmI') + '</p></span>' + s.substring(p2 + 2);
 						communication.ajax({
 							url: global.server + 'action/map?destination=' + l2,
 							progressBar: false,

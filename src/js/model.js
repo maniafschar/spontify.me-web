@@ -1,11 +1,11 @@
 import { communication } from './communication';
 
-export { model, Contact, ContactLink, Location, ContactNotification, EventParticipate, LocationOpenTime, LocationFavorite, Event, Block, Chat, LocationOwnerHistory, ContactVisit, ContactGroup, ContactGroupLink };
+export { model, Contact, ContactLink, Location, ContactNotification, EventParticipate, LocationFavorite, Event, EventRating, Block, ContactChat, ContactVisit, ContactGroup, ContactGroupLink };
 
 class model {
 	static reportedErrors = {};
 	static convert(object, list, index) {
-		var keys, object2Transform;
+		var keys, object2Transform, objectName;
 		if (index) {
 			if (index >= list.length)
 				return object;
@@ -21,26 +21,27 @@ class model {
 			var o = object, key = keys[i];
 			if (key.indexOf('.') == 0)
 				key = key.substring(1);
-			else if (key == 'OT' && object2Transform[i]) {
-				var a = [];
-				for (var i2 = 1; i2 < object2Transform[i].length; i2++)
-					a.push(model.convert(new LocationOpenTime(), object2Transform[i], i2));
-				object.locationOpenTime = a;
-			}
 			key = key.split('.');
 			for (var i2 = 0; i2 < key.length; i2++) {
-				if (key[i2] != 'OT') {
-					if (i2 == 0 && !o.hasOwnProperty(key[i2]) && key.length > i2 && o.hasOwnProperty(key[i2 + 1]))
+				if (i2 == 0 && !o.hasOwnProperty(key[0]) && key.length > 0 && o.hasOwnProperty(key[1]) && key[0]) {
+					if (!objectName)
+						objectName = key[0];
+					if (objectName == key[0])
 						i2++;
-					if (key[i2].indexOf('_') != 0 && !model.reportedErrors[keys[i]] && !o.hasOwnProperty(key[i2])) {
-						communication.sendError('model.convert: property ' + keys[i] + ' not found, available properties\n' + Object.keys(object) + '\nproperties/values of object\n' + JSON.stringify(keys) + '\n' + JSON.stringify(object2Transform));
-						model.reportedErrors[keys[i]] = 1;
-					}
-					if (i2 < key.length - 1)
-						o = o[key[i2]];
-					else if (o)
-						o[key[i2]] = object2Transform[i];
 				}
+				if (key[i2].indexOf('_') != 0 && !o.hasOwnProperty(key[i2]) && (i2 > 0 || (key[0].indexOf('location') != 0 && key[0].indexOf('contact') != 0)) && !model.reportedErrors[keys[i]]) {
+					var s = '';
+					for (var i3 = 0; i3 < keys.length; i3++)
+						s += '\n' + keys[i3] + '=' + object2Transform[i3];
+					communication.sendError('model.convert: property ' + keys[i] + ' not found, available properties\n' + Object.keys(object) + '\nserver object:' + s);
+					model.reportedErrors[keys[i]] = 1;
+				}
+				if (i2 < key.length - 1) {
+					o = o[key[i2]];
+					if (!o)
+						break;
+				} else if (o)
+					o[key[i2]] = object2Transform[i];
 			}
 		}
 		return object;
@@ -65,29 +66,11 @@ class Contact extends BaseEntity {
 	ageDivers;
 	ageFemale;
 	ageMale;
-	attr;
-	attrEx;
-	attr0;
-	attr0Ex;
-	attr1;
-	attr1Ex;
-	attr2;
-	attr2Ex;
-	attr3;
-	attr3Ex;
-	attr4;
-	attr4Ex;
-	attr5;
-	attr5Ex;
-	attrInterest;
-	attrInterestEx;
 	birthday;
 	birthdayDisplay;
-	budget;
-	filter;
-	findMe;
+	bluetooth;
+	coach;
 	gender;
-	guide;
 	idDisplay;
 	image;
 	imageList;
@@ -105,9 +88,11 @@ class Contact extends BaseEntity {
 	pseudonym;
 	rating;
 	search;
+	skills;
+	skillsText;
 	state;
 	storage;
-	type;
+	urls;
 	verified;
 	visitPage;
 
@@ -115,10 +100,10 @@ class Contact extends BaseEntity {
 	contactGroupLink = new ContactGroupLink();
 	contactLink = new ContactLink();
 	contactNotification = new ContactNotification();
-	contactRating = new ContactRating();
 	contactVisit = new ContactVisit();
 	event = new Event();
 	eventParticipate = new EventParticipate();
+	eventRating = new EventRating();
 }
 
 class ContactGroup extends BaseEntity {
@@ -145,23 +130,15 @@ class ContactNotification extends BaseEntity {
 	text;
 }
 
-class ContactRating extends BaseEntity {
-	contactId;
-	contactId2;
-	rating;
-	text;
-}
-
 class ContactVisit extends BaseEntity {
 	count;
 }
 
-class Chat extends BaseEntity {
+class ContactChat extends BaseEntity {
 	action;
 	contactId;
 	contactId2;
 	image;
-	locationId;
 	note;
 	seen;
 	textId;
@@ -176,13 +153,15 @@ class Event extends BaseEntity {
 	imageList;
 	link;
 	locationId;
-	marketingEvent;
 	maxParticipants;
 	price;
+	rating;
 	startDate;
+	skills;
+	skillsText;
 	text;
 	type;
-	visibility;
+	url;
 }
 
 class EventParticipate extends BaseEntity {
@@ -193,44 +172,26 @@ class EventParticipate extends BaseEntity {
 	state;
 }
 
+class EventRating extends BaseEntity {
+	contactId;
+	eventId;
+	image;
+	rating;
+	text;
+}
+
 class Location extends BaseEntity {
 	address;
-	attr0;
-	attr0Ex;
-	attr1;
-	attr1Ex;
-	attr2;
-	attr2Ex;
-	attr3;
-	attr3Ex;
-	attr4;
-	attr4Ex;
-	attr5;
-	attr5Ex;
-	bonus;
-	budget;
 	contactId;
-	category;
 	description;
-	email;
 	image;
 	imageList;
-	isOpen;
 	latitude;
 	longitude;
 	name;
-	openTimesBankholiday;
-	openTimesEntries;
-	openTimesText;
-	ownerId;
-	parkingOption;
-	parkingText;
-	quater;
 	rating;
-	subcategories;
 	telephone;
 	town;
-	url;
 
 	block = new Block();
 	contact = new Contact();
@@ -238,29 +199,8 @@ class Location extends BaseEntity {
 	event = new Event();
 	eventParticipate = new EventParticipate();
 	locationFavorite = new LocationFavorite();
-	locationOpenTime;
-	locationRating = new LocationRating();
 }
 
 class LocationFavorite extends BaseEntity {
 	favorite;
-}
-
-class LocationOpenTime extends BaseEntity {
-	closeAt;
-	day;
-	locationId;
-	openAt;
-}
-
-class LocationOwnerHistory extends BaseEntity {
-}
-
-class LocationRating extends BaseEntity {
-	contactId;
-	image;
-	locationId;
-	paid;
-	rating;
-	text;
 }

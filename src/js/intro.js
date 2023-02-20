@@ -1,7 +1,8 @@
-import { communication } from './communication';
 import { geoData } from './geoData';
+import { global } from './global';
+import { lists } from './lists';
 import { pageLocation } from './pageLocation';
-import { ui } from './ui';
+import { formFunc, ui } from './ui';
 import { user } from './user';
 
 export { intro };
@@ -29,7 +30,7 @@ class intro {
 		ui.css(e, 'opacity', 0);
 	}
 	static loadLocations() {
-		communication.loadList('latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon + '&query=' + (user.contact ? 'location_list' : 'location_anonymousList'), pageLocation.listLocation, 'locations', 'list');
+		lists.loadList('latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&query=' + (user.contact ? 'location_list' : 'location_anonymousList'), pageLocation.listLocation, 'locations', 'list');
 	}
 	static openHint(data, save) {
 		if (save && new Date().getTime() / 60000 - intro.lastHint < 4)
@@ -40,11 +41,11 @@ class intro {
 			if (intro.introMode == 1)
 				intro.introMode = 0;
 		}
-		var e = ui.q('hint'), body = (data.desc.indexOf(' ') > -1 ? data.desc : ui.l('intro.' + data.desc))
+		var e = ui.q('hint'), body = (data.desc.indexOf('<') > -1 ? data.desc : ui.l('intro.' + data.desc))
 			+ (user.contact ? '' : '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;login&quot;)">' + ui.l('login.action') + '</buttontext>')
 			+ (data.hinky ? '<hinky style="' + data.hinky + '" class="' + data.hinkyClass + '"></hinky>' : '')
 			+ (data.desc == 'home' ? '' : '<close onclick="intro.close(event)">x</close>');
-		if (data.desc == e.getAttribute('i')) {
+		if (global.hash(data.desc) == e.getAttribute('i')) {
 			intro.closeHint();
 			return;
 		}
@@ -87,39 +88,10 @@ class intro {
 			ui.css(e, 'top', data.pos.split(',')[1]);
 		}
 		ui.attr(e, 'onclick', data.onclick ? data.onclick : 'intro.closeHint()');
-		ui.attr(e, 'i', data.desc);
+		ui.attr(e, 'i', global.hash(data.desc));
 		ui.attr(e, 'timestamp', new Date().getTime());
 		ui.css(e, 'display', 'block');
+		formFunc.initFields('hint');
 		setTimeout(function () { ui.css(e, 'opacity', 1) }, 10);
-	}
-	static openIntro(event) {
-		if (intro.steps.length == 0) {
-			intro.steps.push({ desc: 'home', pos: '10%,20em', size: '80%,auto', hinky: '', action: '' });
-			intro.steps.push({ desc: 'settings', pos: '10%,18em', size: '80%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'top', action: '' });
-			intro.steps.push({ desc: 'bluetooth', pos: '10%,18em', size: '80%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'top', action: '' });
-			intro.steps.push({ desc: 'listMenu', pos: '10%,-12em', size: '80%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'bottom', action: 'ui.navigation.goTo("locations")' });
-			intro.steps.push({ desc: 'listExplained', pos: '10%,10em', size: '80%,auto', hinky: 'right:2em;', hinkyClass: 'top', action: 'intro.loadLocations()' });
-			intro.steps.push({ desc: 'listFilter', pos: '10%,50%', size: '80%,auto', hinky: 'left:2em;', hinkyClass: 'top', action: 'lists.toggleFilter(event, pageLocation.getFilterFields)' });
-			intro.steps.push({ desc: 'detail', pos: '10%,4em', size: '80%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'bottom', action: 'var e=ui.q("locations row");if(e)e.click();intro.introMode=2' });
-			intro.steps.push({ desc: 'register', pos: '10%,-5em', size: '80%,auto', hinky: 'left:2em;', hinkyClass: 'top', action: 'pageLogin.lastTab=3;ui.navigation.goTo("login")' });
-		}
-		if ((!user.contact && intro.currentStep == intro.steps.length - 1) || (user.contact && intro.currentStep == intro.steps.length - 2)) {
-			intro.currentStep = -1;
-			intro.closeHint();
-			return;
-		}
-		if (!event) {
-			intro.currentStep = -1;
-			if (ui.cssValue('home', 'display') == 'none')
-				ui.navigation.goTo('home');
-			ui.html('locations', '');
-		}
-		var e = ui.q('hint');
-		ui.css(e, 'opacity', 0);
-		intro.currentStep++;
-		if (ui.cssValue(e, 'display') == 'block')
-			setTimeout(function () { intro.openHint(intro.steps[intro.currentStep]) }, 400);
-		else
-			intro.openHint(intro.steps[intro.currentStep]);
 	}
 }

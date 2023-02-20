@@ -4,11 +4,11 @@ import { geoData } from './geoData';
 import { global } from './global';
 import { intro } from './intro';
 import { lists } from './lists';
-import { Chat, Contact, model } from './model';
+import { Contact, ContactChat, model } from './model';
 import { pageContact } from './pageContact';
+import { pageEvent } from './pageEvent';
 import { pageHome } from './pageHome';
 import { pageInfo } from './pageInfo';
-import { pageLocation } from './pageLocation';
 import { pageSettings } from './pageSettings';
 import { ui, formFunc } from './ui';
 import { user } from './user';
@@ -17,43 +17,63 @@ export { pageChat };
 
 class pageChat {
 	static copyLink = '';
-	static chatsNew = 0;
-	static chatsUnseen = 0;
 	static lastScroll = 0;
 	static oldCleverTip = '';
-	static admin = { id: 3, image: '' };
+	static admin = { id: 3, image: '', ai: 0, pseudonym: null };
 
-	static templateInput = v =>
-		global.template`<chatInput>
-	<chatMoreButton style="display:none;" onclick="pageChat.scrollToBottom()">v v v</chatMoreButton>
-	<closeHint>${ui.l('chat.closeHint')}</closeHint>
-	<chatButtons>
-		<buttontext class="bgColor" onclick="pageChat.askLink()">${ui.l('share')}</buttontext>
-		<buttontext class="bgColor" onclick="pageChat.askLocation()">${ui.l('chat.serviceLocation')}</buttontext>
-		<buttontext class="bgColor" onclick="pageChat.askImage()">${ui.l('picture')}</buttontext>
-		<buttontext class="bgColor quote" ${v.action}="pageChat.insertQuote(event);">${ui.l('quote')}</buttontext>
-	</chatButtons>
-	<textarea id="chatText" style="height:1.6em;" class="me" placeholder="${ui.l('chat.textHint')}"
-		onkeyup="pageChat.adjustTextarea(this)">${v.draft}</textarea>
-	<buttontext class="bgColor sendButton" ${v.action}="pageChat.sendChat(${v.id},null,event);">${ui.l('send')}</buttontext>
-	<div style="display:none;text-align:center;"></div>
-</chatInput>`;
+	static template = v =>
+		global.template`<listHeader>
+	<chatName><img/><span></span></chatName>
+	<chatDate></chatDate>
+</listHeader>
+<div>
+	<chatConversation></chatConversation>
+	<chatInput>
+		<chatMoreButton style="display:none;" onclick="pageChat.scrollToBottom()">v v v</chatMoreButton>
+		<closeHint>${ui.l('chat.closeHint')}</closeHint>
+		<chatButtons>
+			<buttontext class="bgColor" onclick="pageChat.askLink()">${ui.l('chat.share')}</buttontext>
+			<buttontext class="bgColor" onclick="pageChat.askLocation()">${ui.l('chat.serviceLocation')}</buttontext>
+			<buttontext class="bgColor" onclick="pageChat.askImage()">${ui.l('picture')}</buttontext>
+			<buttontext class="bgColor quote" ${v.action}="pageChat.insertQuote(event);">${ui.l('quote')}</buttontext>
+		</chatButtons>
+		<textarea id="chatText" style="height:1.6em;" class="me" placeholder="${ui.l('chat.textHint')}"
+			onkeyup="pageChat.adjustTextarea(this)">${v.draft}</textarea>
+		<buttontext class="bgColor sendButton" ${v.action}="pageChat.sendChat(${v.id},null,event);">${ui.l('send')}</buttontext>
+		<div style="display:none;text-align:center;"></div>
+		<input type="checkbox" onclick="pageChat.aiHint()" label="ai"${v.ai}></input>
+	</chatInput>
+</div>`;
 	static templateMessage = v =>
 		global.template`<chatMessage${v.class}><time${v.classUnseen}>${v.time}</time>${v.note}</chatMessage>`;
 
 	static adjustTextarea(e) {
-		ui.css(e, 'height', '1px');
-		var h = e.scrollHeight;
-		if (h > ui.emInPX * 6)
-			h = ui.emInPX * 6;
-		ui.css(e, 'height', (h + 6) + 'px');
+		ui.adjustTextarea(e);
+		intro.closeHint();
 		ui.css('chatConversation', 'bottom', (ui.q('chatInput').clientHeight + ui.emInPX / 2) + 'px');
+	}
+	static aiEnabled(id, l) {
+		if (pageChat.admin.id == id) {
+			pageChat.admin.ai = 0;
+			for (var i = l.length - 1; i > 0; i--) {
+				var v = model.convert(new ContactChat(), l, i);
+				if (v.textId == 'engagement_ai')
+					pageChat.admin.ai++;
+			}
+			return pageChat.admin.ai <= 40;
+		}
+	}
+	static aiHint() {
+		if (ui.q('chatInput input:checked'))
+			intro.openHint({ desc: 'chatAi', pos: '10%,-10.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-0.5em' });
+		else
+			intro.closeHint();
 	}
 	static askLocation() {
 		if (document.activeElement)
 			document.activeElement.blur();
 		if (geoData.localized) {
-			var s = global.string.replaceInternalLinks(' :openPos(' + geoData.latlon.lat + ',' + geoData.latlon.lon + '): ');
+			var s = global.string.replaceInternalLinks(' :openPos(' + geoData.current.lat + ',' + geoData.current.lon + '): ');
 			s = s.replace(/onclick="ui.navigation.autoOpen/g, 'onclick="pageChat.doNothing');
 			ui.navigation.openPopup(ui.l('chat.askInsertCurrentLocationLink'), '<div style="text-align:center;margin-bottom:1em;"><div style="float:none;text-align:center;margin:1em 0;">' + s + '</div><buttontext class="bgColor" onclick="pageChat.insertLink()">' + ui.l('send') + '</buttontext></div>');
 		} else
@@ -79,7 +99,7 @@ class pageChat {
 			ui.navigation.openPopup(ui.l('chat.askInsertCopyLink' + (c > 1 ? 's' : '')), '<div style="text-align:center;margin:1em 0;">' + (c > 1 ? '<div id="askInsertCopyLinkHint">' + ui.l('chat.askInsertCopyLinksBody') + '</div>' : '') + '<div style="text-align:center;margin:1em 0;">' + s2 + '</div><buttontext class="bgColor" onclick="pageChat.insertLink(&quot;pressed&quot;)">' + ui.l('send') + '</buttontext></div>');
 			ui.classAdd('popup .chatLinks', 'pressed');
 		} else
-			ui.navigation.openPopup(ui.l('attention'), ui.l('link.sendError').replace('{0}', '<br/><buttontext class="bgColor" style="margin:1em;">' + ui.l('share') + '</buttontext><br/>'));
+			ui.navigation.openPopup(ui.l('attention'), ui.l('link.sendError').replace('{0}', '<br/><buttontext class="bgColor" style="margin:1em;">' + ui.l('chat.share') + '</buttontext><br/>'));
 	}
 	static askImage() {
 		if (document.activeElement)
@@ -101,9 +121,11 @@ class pageChat {
 	static close(event, exec) {
 		if (event) {
 			var s = event.target.nodeName;
-			if (event.target.onclick || event.target.onmousedown || s == 'TEXTAREA' || s == 'IMG' || s == 'NOTE')
+			if (event.target.onclick || event.target.onmousedown || s == 'TEXTAREA' || s == 'IMG' || s == 'NOTE' || s == 'INPUT')
 				return;
 		}
+		intro.closeHint();
+		ui.navigation.closePopup();
 		var e = ui.q('chat');
 		if (ui.cssValue(e, 'display') == 'none')
 			return false;
@@ -112,19 +134,18 @@ class pageChat {
 			ui.css(e, 'display', 'none');
 			ui.html(e, '');
 			ui.attr(e, 'i', null);
-			ui.attr(e, 'type', null);
 			var activeID = ui.navigation.getActiveID();
 			if (activeID == 'contacts')
 				pageContact.init();
-			else if (activeID == 'locations' || activeID == 'events')
-				pageLocation.init(activeID);
+			else if (activeID == 'events')
+				pageEvent.init();
 			else if (activeID == 'info')
 				pageInfo.init();
 			else if (activeID == 'home')
 				pageHome.init();
 			else if (activeID == 'detail')
 				details.init();
-			else if (activeID == 'settings' || activeID == 'settings2' || activeID == 'settings3')
+			else if (activeID == 'settings')
 				pageSettings.init();
 			if (exec && exec.call)
 				exec.call();
@@ -137,17 +158,12 @@ class pageChat {
 			ui.toggleHeight(e);
 	}
 	static detailChat(l, id) {
-		ui.html('chat > div', '<chatConversation></chatConversation>' + pageChat.templateInput({
-			id: id,
-			draft: formFunc.getDraft('chat' + id),
-			action: global.getDevice() == 'computer' ? 'onclick' : 'onmousedown'
-		}));
 		ui.attr('chat', 'i', id);
 		var v;
 		if (l.length > 1) {
 			var date, s = '', d;
 			for (var i = l.length - 1; i > 0; i--) {
-				v = model.convert(new Chat(), l, i);
+				v = model.convert(new ContactChat(), l, i);
 				d = global.date.formatDate(v.createdAt);
 				d = d.substring(0, d.lastIndexOf(' '));
 				if (date != d) {
@@ -158,19 +174,9 @@ class pageChat {
 			}
 			d = ui.q('chat[i="' + id + '"] chatConversation');
 			d.innerHTML = d.innerHTML + s;
-		} else if (ui.q('chat').getAttribute('type') == 'location') {
-			v = new Chat();
-			v.contactId = pageChat.admin.id;
-			v.createdAt = new Date();
-			v.note = ui.l('chat.empty');
-			v.type = 0;
-			v.imageList = pageChat.admin.image;
-			v._pseudonym = pageChat.admin.pseudonym;
-			var e = ui.q('chat[i="' + id + '"] chatConversation');
-			e.innerHTML = e.innerHTML + pageChat.renderMsg(v);
 		}
 		if (l.length < 3) {
-			e = ui.q('chatInput closeHint');
+			var e = ui.q('chatInput closeHint');
 			e.style.display = 'block';
 			e.style.transition = 'all 2s ease-out';
 			setTimeout(function () {
@@ -283,11 +289,11 @@ class pageChat {
 			if (e[i].getAttribute('insertID'))
 				s += ' :open(' + e[i].getAttribute('insertID') + '): ';
 			else
-				s += ' :openPos(' + geoData.latlon.lat + ',' + geoData.latlon.lon + '): ';
+				s += ' :openPos(' + geoData.current.lat + ',' + geoData.current.lon + '): ';
 		}
 		if (s)
 			pageChat.sendChat(ui.q('chat').getAttribute('i'), s);
-		ui.navigation.hidePopup();
+		ui.navigation.closePopup();
 	}
 	static insertLinkInGroup() {
 		var s = pageChat.copyLink.split('\n'), s2 = '';
@@ -304,7 +310,7 @@ class pageChat {
 			v = v.substring(0, p) + s2 + v.substring(p);
 			e.value = v;
 		} else
-			ui.html('popupHint', ui.l('link.sendError').replace('{0}', '<br/><buttontext class="bgColor" style="margin:1em;">' + ui.l('share') + '</buttontext><br/>'));
+			ui.html('popupHint', ui.l('link.sendError').replace('{0}', '<br/><buttontext class="bgColor" style="margin:1em;">' + ui.l('chat.share') + '</buttontext><br/>'));
 	}
 	static listActiveChats(d) {
 		var f = function () {
@@ -327,17 +333,15 @@ class pageChat {
 				e.innerHTML = s;
 				if (ui.cssValue(e, 'display') == 'none')
 					e.removeAttribute('h');
-				if (d.length > 1)
-					e.setAttribute('firstChatId', model.convert(new Contact(), d, 1)._chatId);
 				formFunc.image.replaceSVGs();
 			}
 		};
 		f.call();
 	}
-	static open(id, location) {
+	static open(id) {
 		if (id.indexOf && id.indexOf('_') > 0)
 			id = id.substring(0, id.indexOf('_'));
-		var e = ui.q('chat[i="' + id + '"][type="' + (location ? 'location' : 'contact') + '"]');
+		var e = ui.q('chat[i="' + id + '"]');
 		if (e) {
 			if (ui.cssValue(e, 'display') == 'none') {
 				pageChat.saveDraft();
@@ -348,50 +352,39 @@ class pageChat {
 			}
 		}
 		communication.ajax({
-			url: global.server + 'action/chat/' + (location ? true : false) + '/' + id + '/true',
+			url: global.server + 'action/chat/' + id + '/true',
 			responseType: 'json',
 			success(r) {
 				if (!r || r.length < 1)
 					return;
 				ui.attr('chat', 'from', ui.navigation.getActiveID());
 				var f = function () {
-					var e = ui.q('chat');
-					ui.attr(e, 'type', location ? 'location' : 'contact');
-					ui.html(e, '<listHeader><chatName><img/><span></span></chatName><chatDate></chatDate></listHeader><div></div>');
-					if (location) {
-						ui.classAdd(e, 'location');
-						var path = 'popup detail';
-						if (!ui.q(path))
-							path = 'detail';
-						ui.html('chat listHeader chatName span', ui.q(path + ' title').innerText);
-						e = ui.q('chat listHeader img');
-						ui.attr(e, 'src', ui.q(path + ' detailImg img').getAttribute('src'));
-						if (e.getAttribute('src').indexOf('.svg') > 0) {
-							ui.classAdd(e, 'bgColor');
-							ui.css(e, 'padding', '0.6em');
-						}
-					} else {
-						ui.classRemove(e, 'location');
-						communication.ajax({
-							url: global.server + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + id),
-							responseType: 'json',
-							success(r2) {
-								ui.attr('chat[i="' + id + '"] listHeader chatName', 'onclick', 'ui.navigation.autoOpen("' + global.encParam('p=' + id) + '",event)');
-								ui.html('chat[i="' + id + '"] listHeader chatName span', r2['contact.pseudonym']);
-								if (r2['contact.imageList'])
-									ui.attr('chat[i="' + id + '"] listHeader img', 'src', global.serverImg + r2['contact.imageList']);
-								else {
-									var e2 = ui.q('chat[i="' + id + '"] listHeader img');
-									ui.attr(e2, 'src', 'images/contact.svg');
-									ui.classAdd(e2, 'bgColor');
-									ui.css(e2, 'padding', '0.6em');
-								}
+					ui.html('chat', pageChat.template({
+						id: id,
+						draft: user.get('chat' + id),
+						ai: pageChat.aiEnabled(id, r) ? '' : ' class="noDisp"',
+						action: global.getDevice() == 'computer' ? 'onclick' : 'onmousedown'
+					}));
+					formFunc.initFields('chatInput');
+					communication.ajax({
+						url: global.server + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + id),
+						responseType: 'json',
+						success(r2) {
+							ui.attr('chat[i="' + id + '"] listHeader chatName', 'onclick', 'ui.navigation.autoOpen("' + global.encParam('p=' + id) + '",event)');
+							ui.html('chat[i="' + id + '"] listHeader chatName span', r2['contact.pseudonym']);
+							if (r2['contact.imageList'])
+								ui.attr('chat[i="' + id + '"] listHeader img', 'src', global.serverImg + r2['contact.imageList']);
+							else {
+								var e2 = ui.q('chat[i="' + id + '"] listHeader img');
+								ui.attr(e2, 'src', 'images/contact.svg');
+								ui.classAdd(e2, 'bgColor');
+								ui.css(e2, 'padding', '0.6em');
 							}
-						});
-					}
+						}
+					});
 					communication.notification.close();
 					ui.navigation.hideMenu();
-					ui.navigation.hidePopup();
+					ui.navigation.closePopup();
 					pageChat.closeList();
 					pageChat.init();
 					ui.off('chatConversation', 'scroll', pageChat.reposition);
@@ -421,16 +414,16 @@ class pageChat {
 		}
 		if (user.contact.groups) {
 			ui.navigation.hideMenu();
-			var s = '<div class="smilyBox" style="margin-bottom:1em;"><buttontext onclick="pageChat.insertLinkInGroup()" class="bgColor" style="margin:1em;">' + ui.l('share') + '</buttontext><buttontext class="bgColor" onclick="pageChat.sendChatGroup()">' + ui.l('send') + '</buttontext></div>';
+			var s = '<div class="smilyBox" style="margin-bottom:1em;"><buttontext onclick="pageChat.insertLinkInGroup()" class="bgColor" style="margin:1em;">' + ui.l('chat.share') + '</buttontext><buttontext class="bgColor" onclick="pageChat.sendChatGroup()">' + ui.l('send') + '</buttontext></div>';
 			var v = user.contact.chatTextGroups;
 			if (!v) {
 				v = ui.q('[name="groupdialog"]:checked');
 				if (v)
-					v = '\u0015' + v.value;
+					v = global.separatorTech + v.value;
 				else
 					v = '';
 			}
-			v = v.split('\u0015');
+			v = v.split(global.separatorTech);
 			var g = user.contact.groups;
 			for (var i = 1; i < v.length; i++)
 				g = g.replace('value="' + v[i] + '"', 'value="' + v[i] + '" checked="checked"');
@@ -441,15 +434,15 @@ class pageChat {
 	static postSendChatImage(r) {
 		if (ui.q('chat').getAttribute('i') == r.contactId) {
 			ui.q('[name="image"]').value = '';
-			ui.navigation.hidePopup();
+			ui.navigation.closePopup();
 			setTimeout(function () {
 				if (ui.q('chat[i="' + r.contactId + '"] chatConversation')) {
 					communication.ajax({
-						url: global.server + 'db/one?query=contact_chat&search=' + encodeURIComponent('chat.id=' + r.chatId),
+						url: global.server + 'db/one?query=contact_chat&search=' + encodeURIComponent('contactChat.id=' + r.chatId),
 						responseType: 'json',
 						success(r2) {
 							var e = document.createElement('div');
-							e.innerHTML = pageChat.renderMsg(model.convert(new Chat(), r2));
+							e.innerHTML = pageChat.renderMsg(model.convert(new ContactChat(), r2));
 							ui.q('chat[i="' + r.contactId + '"] chatConversation').insertBefore(e.children[0], null);
 							pageChat.scrollToBottom();
 						}
@@ -459,22 +452,21 @@ class pageChat {
 		}
 	}
 	static refresh() {
-		lists.data['chats'] = '';
 		pageChat.initActiveChats();
 		var e = ui.q('chat[i]');
 		if (e) {
 			var id = e.getAttribute('i');
 			communication.ajax({
-				url: global.server + 'action/chat/false/' + id + '/false',
+				url: global.server + 'action/chat/' + id + '/false',
 				responseType: 'json',
 				success(r) {
 					if (ui.q('chat[i="' + id + '"] chatConversation')) {
-						var e = ui.q('chat:not(.location)[i="' + id + '"] chatConversation');
+						var e = ui.q('chat[i="' + id + '"] chatConversation');
 						if (!e)
 							return;
 						var showButton = e.scrollTop + e.clientHeight < e.scrollHeight;
 						for (var i = 1; i < r.length; i++) {
-							var v = model.convert(new Chat(), r, i);
+							var v = model.convert(new ContactChat(), r, i);
 							var f = ui.q('chat chatMessage');
 							if (ui.classContains(f, 'me'))
 								ui.classAdd(f, 'following');
@@ -528,21 +520,19 @@ class pageChat {
 		}
 	}
 	static reset() {
-		pageChat.chatsNew = 0;
-		pageChat.chatsUnseen = 0;
 		pageChat.copyLink = '';
 		ui.html('chatList', '');
 	}
 	static saveDraft() {
 		var e = ui.q('#chatText');
 		if (e)
-			formFunc.saveDraft('chat' + ui.q('chat').getAttribute('i'), pageChat.oldCleverTip == e.value ? null : e.value);
+			user.set('chat' + ui.q('chat').getAttribute('i'), pageChat.oldCleverTip == e.value ? null : e.value);
 	}
 	static saveGroupText() {
 		user.contact.chatTextGroups = ui.val('#groupChatText');
 		var e = ui.qa('input[name="groupdialog"]:checked');
 		for (var i = 0; i < e.length; i++)
-			user.contact.chatTextGroups += '\u0015' + e[i].value;
+			user.contact.chatTextGroups += global.separatorTech + e[i].value;
 	}
 	static scrollToBottom() {
 		var e = ui.q('chatConversation');
@@ -574,17 +564,16 @@ class pageChat {
 		}
 		if (msg) {
 			var v = {
-				note: msg.replace(/</g, '&lt;')
+				note: msg.replace(/</g, '&lt;'),
+				contactId2: id
 			};
-			if (ui.q('chat.location'))
-				v.locationId = id;
-			else
-				v.contactId2 = id;
+			if (ui.q('chatInput input:checked'))
+				v.textId = 'engagement_ai';
 			communication.ajax({
 				url: global.server + 'db/one',
 				method: 'POST',
 				body: {
-					classname: 'Chat',
+					classname: 'ContactChat',
 					values: v
 				},
 				error(r) {
@@ -592,7 +581,7 @@ class pageChat {
 					if (r.class == 'IllegalArgumentException' && r.msg == 'duplicate chat') {
 						ui.q('#chatText').value = '';
 						pageChat.adjustTextarea(ui.q('#chatText'));
-						formFunc.removeDraft('chat' + id);
+						user.remove('chat' + id);
 					} else
 						communication.onError(r);
 				},
@@ -607,7 +596,12 @@ class pageChat {
 						if (v.note) {
 							ui.q('#chatText').value = '';
 							pageChat.adjustTextarea(ui.q('#chatText'));
-							formFunc.removeDraft('chat' + id);
+							user.remove('chat' + id);
+							if (v.textId) {
+								pageChat.admin.ai += 2;
+								if (pageChat.admin.ai > 40)
+									ui.classAdd('chatInput input', 'noDisp');
+							}
 						}
 					}
 					pageChat.initActiveChats();
@@ -626,7 +620,7 @@ class pageChat {
 				method: 'POST',
 				body: 'groups=' + s.substring(1) + '&text=' + encodeURIComponent(ui.val('#groupChatText')),
 				success() {
-					ui.navigation.hidePopup();
+					ui.navigation.closePopup();
 					user.contact.chatTextGroups = '';
 					pageChat.initActiveChats();
 				}
@@ -635,10 +629,10 @@ class pageChat {
 			ui.html('popupHint', ui.l('chat.groupNoInput'));
 	}
 	static sendChatImage() {
-		if (formFunc.image.hasImage('image')) {
+		if (formFunc.image.hasImage()) {
 			var id = ui.q('chat').getAttribute('i');
 			var v = formFunc.getForm('popup form');
-			v.classname = 'Chat';
+			v.classname = 'ContactChat';
 			communication.ajax({
 				url: global.server + 'db/one',
 				method: 'POST',
@@ -654,7 +648,7 @@ class pageChat {
 				}
 			});
 		} else
-			ui.navigation.hidePopup();
+			ui.navigation.closePopup();
 	}
 	static showScrollButton() {
 		var e = ui.q('chatMoreButton');

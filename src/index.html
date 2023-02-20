@@ -11,7 +11,7 @@
 	<meta name="email" content="spontify.me@jq-consulting.de" />
 	<meta name="description" content="das Beste kommt spontan" />
 	<meta name="keywords"
-		content="spontaneous, contact, bluetooth, social community, locations, events, chat, meet, organize events, party, dinner, guide" />
+		content="spontaneous, contact, bluetooth, social community, locations, events, chat, meet, organize events, party, dinner" />
 	<meta http-equiv="Content-Security-Policy"
 		content="default-src * gap://ready file: https:; child-src * gap://ready file: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' blob: data: https:; font-src 'self' data: https:; script-src * 'unsafe-inline' 'unsafe-eval' file: https:" />
 	<meta name="robots" content="index,follow,noodp" />
@@ -45,7 +45,7 @@
 			left: 0;
 			width: 100%;
 			height: 100%;
-			z-index: 9999999;
+			z-index: 6;
 			display: flex;
 			flex-flow: row nowrap;
 			justify-content: center;
@@ -105,16 +105,14 @@
 			<close onclick="communication.notification.close()">x</close>
 		</alert>
 		<content>
-			<home class="content"></home>
+			<home class="content mainBG"></home>
 			<login class="content"></login>
-			<settings class="content mainBG"></settings>
-			<settings2 class="content mainBG"></settings2>
-			<settings3 class="content mainBG"></settings3>
-			<locations class="content"></locations>
-			<events class="content"></events>
-			<contacts class="content"></contacts>
+			<search class="content"></search>
+			<events class="content mainBG"></events>
+			<contacts class="content mainBG"></contacts>
 			<info class="content"></info>
 			<detail class="content mainBG"></detail>
+			<settings class="content mainBG"></settings>
 			<chat class="content mainBG"></chat>
 			<chatList style="display:none;"></chatList>
 			<notificationList style="display:none;"></notificationList>
@@ -124,6 +122,7 @@
 			<hinky class="top" style="right:1.5em;"></hinky>
 			<div></div>
 		</menu>
+		<locationPicker style="display:none;"></locationPicker>
 		<navigation class="bgColor">
 			<buttonIcon onclick="pageChat.toggleUserList()" class="mainBG chats">
 				<badgeChats></badgeChats>
@@ -132,11 +131,14 @@
 			<item onclick="ui.navigation.goTo('home', true)" class="home active">
 				<img source="home" />
 			</item>
-			<item onclick="ui.navigation.goTo('events')" class="events">
-				<img source="rocket" />
+			<item onclick="ui.navigation.goTo('search')" class="search">
+				<img source="search" />
 			</item>
-			<item onclick="ui.navigation.goTo('locations')" class="locations">
-				<img source="location" />
+			<item onclick="ui.navigation.goTo('info')" class="info">
+				<img source="info" />
+			</item>
+			<item onclick="ui.navigation.goTo('events')" class="events">
+				<img source="event" />
 			</item>
 			<item onclick="ui.navigation.goTo('contacts')" class="contacts">
 				<img source="contact" />

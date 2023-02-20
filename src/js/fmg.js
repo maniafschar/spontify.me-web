@@ -1,4 +1,4 @@
-import { model } from './model';
+import { Block, Contact, ContactChat, ContactGroup, ContactGroupLink, ContactLink, ContactNotification, ContactVisit, Event, EventParticipate, EventRating, LocationFavorite, model } from './model';
 import { global } from './global';
 import { initialisation } from './initialisation';
 import { intro } from './intro';
@@ -18,6 +18,8 @@ import { user } from './user';
 import { geoData } from './geoData';
 import { bluetooth } from './bluetooth';
 import { pageEvent } from './pageEvent';
+import { pageSearch } from './pageSearch';
+import { hashtags } from './hashtags';
 
 window.model = model;
 window.global = global;
@@ -26,6 +28,7 @@ window.user = user;
 window.ui = ui;
 window.pageEvent = pageEvent;
 window.pageLogin = pageLogin;
+window.pageSearch = pageSearch;
 window.pageHome = pageHome;
 window.pageContact = pageContact;
 window.pageLocation = pageLocation;
@@ -41,3 +44,4 @@ window.FB = FB;
 window.ratings = ratings;
 window.geoData = geoData;
 window.bluetooth = bluetooth;
+window.hashtags = hashtags;

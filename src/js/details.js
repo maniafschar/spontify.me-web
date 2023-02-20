@@ -39,7 +39,7 @@ class details {
 		if (ui.classContains('detail', 'detailSlideIn'))
 			return;
 		communication.ajax({
-			url: global.server + 'action/one?query=' + action + '&distance=100000&latitude=' + geoData.latlon.lat + '&longitude=' + geoData.latlon.lon,
+			url: global.server + 'action/one?query=' + action + '&distance=100000&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon,
 			responseType: 'json',
 			success(r) {
 				ui.navigation.hideMenu();
@@ -53,8 +53,6 @@ class details {
 				var s = callback(r, id);
 				if (s) {
 					var d = ui.q('detail');
-					if (r['event.id'] && (!id.indexOf || id.indexOf('_') < 0))
-						id = pageEvent.getId(r);
 					s = '<card i="' + id + '" type="' + (action.indexOf('contact_') == 0 ? 'contact' : 'location') + '">' + s + '</card>';
 					if (activeID == 'detail') {
 						var c = document.createElement('div');
@@ -70,7 +68,7 @@ class details {
 						}, 50);
 					} else {
 						ui.html(d, '<div>' + s + '</div>');
-						ui.navigation.goTo('detail');
+						ui.navigation.goTo('detail', false);
 					}
 					formFunc.initFields('detail');
 					formFunc.image.replaceSVGs();

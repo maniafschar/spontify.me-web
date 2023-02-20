@@ -6,9 +6,9 @@ import { lists } from './lists';
 import { pageChat } from './pageChat';
 import { pageEvent } from './pageEvent';
 import { pageHome } from './pageHome';
-import { pageInfo } from './pageInfo';
-import { pageLocation } from './pageLocation';
 import { pageLogin } from './pageLogin';
+import { pageSearch } from './pageSearch';
+import { pageSettings } from './pageSettings';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 
@@ -138,10 +138,10 @@ class initialisation {
 			initialisation.initApp();
 		ui.html('head title', global.appTitle);
 		if (global.getParam('r')) {
-			communication.login.removeCredentials();
+			pageLogin.removeCredentials();
 			initialisation.recoverPassword();
 		} else
-			communication.login.autoLogin(initialisation.showStartDialogs);
+			pageLogin.autoLogin(initialisation.showStartDialogs);
 		window.onresize = initialisation.reposition;
 		ui.on(window, 'orientationchange', initialisation.reposition);
 		ui.on(window, 'popstate', ui.navigation.goBack);
@@ -153,14 +153,8 @@ class initialisation {
 				document.activeElement.blur();
 		});
 		ui.on(window, 'wheel', function (event) {
-			if (event.ctrlKey) {
-				if (!event.defaultPrevented) {
-					try {
-						event.preventDefault();
-					} catch (e) { }
-				}
+			if (event.ctrlKey)
 				formFunc.image.zoom(event, event.deltaY);
-			}
 		});
 		ui.on(window, 'touchmove', function (event) {
 			if (event.touches.length > 1)
@@ -176,22 +170,9 @@ class initialisation {
 						return;
 					e = e.parentNode;
 				}
-				ui.navigation.goTo(ui.q('detail').getAttribute('from'));
+				ui.navigation.goTo(ui.qa('detail card').length > 1 ? 'detail' : ui.q('detail').getAttribute('from'));
 			}
 		});
-		ui.on('chat', 'click', pageChat.close);
-		ui.swipe('chat', function (dir, event) {
-			if (dir == 'up') {
-				if (ui.parents(event.target, 'chatConversation')) {
-					if (pageChat.lastScroll + 500 > new Date().getTime())
-						return;
-					var e = ui.q('chatConversation');
-					if (e.lastChild && e.lastChild.offsetHeight + e.lastChild.offsetTop > e.scrollTop + e.offsetHeight)
-						return;
-				}
-				pageChat.close();
-			}
-		}, 'textarea');
 		ui.on('popup', 'click', function (event) {
 			var e = event.target;
 			if (ui.parents(e, 'popupTitle') || !ui.q('popup input') && !ui.q('popup textarea') && !ui.q('popup mapPicker')) {
@@ -203,49 +184,52 @@ class initialisation {
 				e = ui.q('popup');
 				if (e.getAttribute('close'))
 					eval(e.getAttribute('close'));
-				ui.navigation.hidePopup();
+				ui.navigation.closePopup();
 			}
 		});
+		ui.on('chat', 'click', pageChat.close);
+		ui.swipe('chat', function (dir, event) {
+			if (dir == 'up' || dir == 'left' || dir == 'right') {
+				if (ui.parents(event.target, 'chatConversation')) {
+					if (pageChat.lastScroll + 500 > new Date().getTime())
+						return;
+					var e = ui.q('chatConversation');
+					if (e.lastChild && e.lastChild.offsetHeight + e.lastChild.offsetTop > e.scrollTop + e.offsetHeight)
+						return;
+				}
+				pageChat.close();
+			}
+		}, 'textarea');
 		ui.swipe('detail', function (dir) {
 			if (dir == 'left')
 				details.swipeLeft();
 			else if (dir == 'right')
 				details.swipeRight();
 		}, 'detailButtons');
-		ui.swipe('settings2', function (dir) {
-			if (dir == 'right')
-				ui.navigation.goTo('settings');
-			else if (dir == 'left')
-				ui.navigation.goTo('settings3');
-		});
-		ui.swipe('settings3', function (dir) {
-			if (dir == 'right')
-				ui.navigation.goTo('settings2');
-			else if (dir == 'left')
-				ui.navigation.goTo('home');
-		});
 		ui.swipe('settings', function (dir) {
 			if (dir == 'right')
-				ui.navigation.goTo('contacts');
+				pageSettings.swipeRight();
 			else if (dir == 'left')
-				ui.navigation.goTo('settings2');
+				pageSettings.swipeLeft();
 		}, 'input,textarea,img,slider,thumb,val');
 		ui.swipe('search', function (dir) {
-			if (dir == 'right')
-				ui.navigation.goTo('home');
+			if (dir == 'left')
+				pageSearch.swipeLeft();
+			else if (dir == 'right')
+				pageSearch.swipeRight();
 		}, 'input,textarea,slider,thumb,val');
 		ui.swipe('login', function (dir) {
 			if (dir == 'left')
-				ui.navigation.goTo('info');
+				pageLogin.swipeLeft();
 			else if (dir == 'right')
-				ui.navigation.goTo('home');
+				pageLogin.swipeRight();
 		}, 'input');
 		ui.swipe('home', function (dir) {
 			if (dir == 'left')
-				ui.navigation.goTo(user.contact ? 'locations' : 'login');
-			else if (dir == 'right' && user.contact)
-				ui.navigation.goTo('settings', true);
-		}, 'input,listScroll');
+				ui.navigation.goTo(user.contact ? 'search' : 'login');
+			else if (dir == 'right')
+				ui.navigation.goTo(user.contact ? 'contacts' : 'login', true);
+		}, 'teaser');
 		ui.swipe('info', function (dir) {
 			if (dir == 'right')
 				ui.navigation.goTo(ui.q('info').getAttribute('from'));
@@ -301,7 +285,6 @@ class initialisation {
 		}
 		ui.css('body', 'font-size', f + 'px');
 		ui.emInPX = parseFloat(ui.cssValue(document.body, 'font-size'));
-		lists.repositionThumb();
 		if (window.innerWidth / w > 1.8) {
 			ui.css('add', 'width', ((window.innerWidth - w) / 2) + 'px');
 			ui.css('add', 'display', 'block');
@@ -350,7 +333,6 @@ class initialisation {
 		}
 		r(s.labels);
 		ui.categories = s.categories;
-		ui.attributes = s.attributes;
 		ui.labels = s.labels;
 		communication.ajax({
 			url: (window.location && window.location.href && window.location.href.indexOf(global.server) == 0 ? '/' : '') + 'js/lang/' + lang + '.html',
@@ -361,28 +343,28 @@ class initialisation {
 			}
 		});
 		ui.q('#addLeft > buttontext').innerHTML = global.appTitle + ' blog';
-		lists.reset();
 		ui.html('home', '');
 		pageHome.init();
 		if (exec)
 			exec.call();
 		if (user.contact && oldLang != global.language)
 			user.save({ language: lang });
-		ui.navigation.hidePopup();
+		ui.navigation.closePopup();
 	}
 	static recoverPassword() {
 		if (user.contact || initialisation.recoverInvoked == true)
 			return;
 		initialisation.recoverInvoked = true;
 		var e = pageLogin.getDraft() || {};
-		communication.login.removeCredentials();
-		communication.login.recoverPasswordVerifyEmail(global.getParam('r'), e.email ? e.email : '');
-		history.pushState(null, null, window.location.origin);
+		pageLogin.removeCredentials();
+		pageLogin.verifyEmail(global.getParam('r'), e.email ? e.email : '');
+		if (global.isBrowser())
+			history.pushState(null, null, window.location.origin);
 	}
 	static showStartDialogs() {
 		var p = global.getParam();
 		if (p) {
-			if (p.indexOf('merchantIdInPayPal')) {
+			if (p.indexOf('merchantIdInPayPal') > -1) {
 				communication.ajax({
 					url: global.server + 'action/paypalRegister',
 					method: 'PUT',
@@ -400,7 +382,8 @@ class initialisation {
 					ui.navigation.autoOpen(p);
 				}, 100);
 		}
-		history.pushState(null, null, window.location.origin);
+		if (global.isBrowser())
+			history.pushState(null, null, window.location.origin);
 	}
 	static statusBar() {
 		if (!global.isBrowser()) {

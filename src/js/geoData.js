@@ -1,7 +1,8 @@
 import { communication } from './communication';
 import { global } from './global';
+import { intro } from './intro';
 import { pageHome } from './pageHome';
-import { pageInfo } from './pageInfo';
+import { pageSearch } from './pageSearch';
 import { ui } from './ui';
 import { user } from './user';
 
@@ -9,20 +10,16 @@ export { geoData };
 
 class geoData {
 	static angle = -1;
-	static currentStreet = '';
-	static currentStreetNonManual = '';
-	static currentTown = 'München';
-	static currentTownNonManual = geoData.currentTown;
+	static current = { lat: 48.13684, lon: 11.57685, street: null, town: 'München' };
+	static currentNonManual = null;
 	static headingID = null;
 	static id = null;
 	static initDeviceOrientation = null;
 	static lastSave = 0;
-	static latlon = { lat: 48.13684, lon: 11.57685 };
 	static localizationAsked = false;
 	static localized = false;
 	static manual = false;
 	static rad = 0.017453292519943295;
-	static trackAll = null;
 
 	static deviceOrientationHandler(event) {
 		var alpha;
@@ -74,6 +71,8 @@ class geoData {
 			geoData.headingID = navigator.compass.watchHeading(geoData.deviceOrientationHandler, null);
 	}
 	static init() {
+		if (!user.contact)
+			return;
 		if (geoData.id)
 			geoData.pause();
 		if (global.isBrowser())
@@ -110,10 +109,57 @@ class geoData {
 	static initManual(data) {
 		geoData.localized = true;
 		geoData.manual = true;
-		geoData.latlon.lat = data.lat;
-		geoData.latlon.lon = data.lon;
-		geoData.currentStreet = data.street;
-		geoData.currentTown = data.town;
+		geoData.current.lat = data.lat;
+		geoData.current.lon = data.lon;
+		geoData.current.treet = data.street;
+		geoData.current.town = data.town;
+	}
+	static mapReposition() {
+		if (ui.q('popup input').value) {
+			communication.ajax({
+				url: global.server + 'action/google?param=' + encodeURIComponent('town=' + ui.q('popup input').value.trim()),
+				responseType: 'json',
+				success(r) {
+					pageHome.map.setCenter({ lat: r.latitude, lng: r.longitude });
+				}
+			});
+		}
+	}
+	static openLocationPicker(event, noSelection) {
+		event.preventDefault();
+		event.stopPropagation();
+		var e = user.get('locationPicker');
+		if (e && e.length > 1 && !noSelection) {
+			if (ui.q('locationPicker').style.display == 'none') {
+				var s = '';
+				for (var i = e.length - 1; i >= 0; i--) {
+					if (e[i].town != geoData.current.town)
+						s += '<label onclick="geoData.saveLocationPicker(' + JSON.stringify(e[i]).replace(/"/g, '\'') + ')">' + e[i].town + '</label>';
+				}
+				s += '<label class="bgColor" onclick="geoData.openLocationPicker(event,true)">' + ui.l('home.locationPickerTitle') + '</label>';
+				var e = ui.q('locationPicker');
+				e.innerHTML = s;
+				e.removeAttribute('h');
+				e.style.top = ui.navigation.getActiveID() == 'home' ? ui.q('homeHeader svg').clientHeight + 'px' : '';
+			}
+			ui.toggleHeight('locationPicker');
+		} else if (user.contact)
+			communication.loadMap('geoData.openLocationPickerDialog');
+		else
+			intro.openHint({ desc: 'position', pos: '10%,10.5em', size: '80%,auto', hinkyClass: 'top', hinky: 'left:50%;margin-left:-0.5em;' });
+	}
+	static openLocationPickerDialog() {
+		ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
+			'<mapPicker></mapPicker><br/><input name="town" maxlength="20" placeholder="' + ui.l('home.locationPickerInput') + '"/><mapButton onclick="geoData.mapReposition()" class="defaultButton"></mapButton><br/><br/>' +
+			(geoData.manual ? '<buttontext class="bgColor" onclick="geoData.reset()">' + ui.l('home.locationPickerReset') + '</buttontext>' : '') +
+			'<buttontext class="bgColor" onclick="geoData.saveLocationPicker()">' + ui.l('ready') + '</buttontext><errorHint></errorHint>', null, null,
+			function () {
+				setTimeout(function () {
+					if (ui.q('locationPicker').style.display != 'none')
+						ui.toggleHeight('locationPicker');
+					pageHome.map = new google.maps.Map(ui.q('mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 12, center: new google.maps.LatLng(geoData.current.lat, geoData.current.lon), zoom: 9 });
+				}, 500);
+			});
 	}
 	static pause() {
 		if (geoData.id) {
@@ -122,32 +168,28 @@ class geoData {
 		}
 	}
 	static requestLocationAuthorization() {
-		ui.navigation.hidePopup();
+		ui.navigation.closePopup();
 		cordova.plugins.diagnostic.requestLocationAuthorization(geoData.init2, null, cordova.plugins.diagnostic.locationAuthorizationMode.WHEN_IN_USE);
 	}
-	static resetLocationPicker() {
+	static reset() {
 		geoData.manual = false;
-		geoData.currentStreet = geoData.currentStreetNonManual;
-		geoData.currentTown = geoData.currentTownNonManual;
-		pageInfo.updateLocalisation();
+		geoData.current = geoData.currentNonManual || { lat: 48.13684, lon: 11.57685, street: null, town: 'München' };
 		pageHome.updateLocalisation();
+		pageSearch.updateLocalisation();
 		geoData.init();
+		ui.navigation.closePopup();
+		user.save({ latitude: geoData.current.lat, longitude: geoData.current.lon }, function () { pageHome.init(true); });
 	}
-	static save(position) {
-		var d = geoData.getDistance(geoData.latlon.lat, geoData.latlon.lon, position.latitude, position.longitude);
+	static save(position, exec) {
+		var d = geoData.getDistance(geoData.current.lat, geoData.current.lon, position.latitude, position.longitude);
 		if (position.manual || !geoData.manual) {
-			geoData.latlon.lat = position.latitude;
-			geoData.latlon.lon = position.longitude;
+			geoData.current.lat = position.latitude;
+			geoData.current.lon = position.longitude;
 		}
 		if (position.manual)
 			geoData.manual = true;
-		if (geoData.trackAll != null && new Date().getHours() > geoData.trackAll + 2)
-			geoData.trackAll = null;
 		if (user.contact && user.contact.id && new Date().getTime() - geoData.lastSave > 5000 &&
-			(!geoData.localized ||
-				geoData.trackAll != null && new Date().getHours() >= geoData.trackAll - 1 ||
-				d > 0.05 && !geoData.manual ||
-				position.manual)) {
+			(!geoData.localized || d > 0.05 && !geoData.manual || position.manual)) {
 			communication.ajax({
 				url: global.server + 'action/position',
 				progressBar: false,
@@ -155,27 +197,46 @@ class geoData {
 				body: position,
 				responseType: 'json',
 				error(r) {
-					geoData.currentStreet = r.status + ' ' + r.responseText;
-					pageInfo.updateLocalisation();
+					geoData.current.street = r.status + ' ' + r.responseText;
+					pageSearch.updateLocalisation();
 					pageHome.updateLocalisation();
 				},
 				success(r) {
-					if (r) {
+					if (r && r.town) {
 						geoData.lastSave = new Date().getTime();
-						geoData.currentTown = r.town;
-						geoData.currentStreet = r.street;
-						if (!position.manual) {
-							geoData.currentTownNonManual = r.town;
-							geoData.currentStreetNonManual = r.street;
+						if (!position.manual)
+							geoData.currentNonManual = { lat: position.latitude, lon: position.longitude, street: r.street, town: r.town };
+						if (position.manual) {
+							var e = user.get('locationPicker') || [];
+							for (var i = e.length - 1; i >= 0; i--) {
+								if (e[i].town == r.town)
+									e.splice(i, 1);
+							}
+							e.push({ lat: position.latitude, lon: position.longitude, town: r.town, street: r.street });
+							if (e.length > 5)
+								e.splice(0, e.length - 5);
+							user.set('locationPicker', e);
 						}
-						pageInfo.updateLocalisation();
+						geoData.current.town = r.town;
+						geoData.current.street = r.street;
 						pageHome.updateLocalisation();
-					}
+						pageSearch.updateLocalisation();
+						if (ui.q('popup mapPicker'))
+							ui.navigation.closePopup();
+						if (ui.q('locationPicker').style.display != 'none')
+							ui.toggleHeight('locationPicker');
+						if (exec)
+							exec.call();
+					} else
+						ui.html('popup errorHint', ui.l('home.locationNotSetable'));
 				}
 			});
 		}
 		geoData.localized = true;
 		geoData.updateCompass();
+	}
+	static saveLocationPicker(e) {
+		geoData.save({ latitude: e ? e.lat : pageHome.map.getCenter().lat(), longitude: e ? e.lon : pageHome.map.getCenter().lng(), manual: true }, function () { pageHome.init(true); });
 	}
 	static updateCompass(angle) {
 		if (!angle)

@@ -12,6 +12,10 @@ class bluetooth {
 	static UUID_RX = 'a682b873-22a7-402b-b2ef-8cb432a7c3b1';
 	static UUID_TX = '32a9cb83-00f9-4714-b130-4d0c1d30e363';
 
+	static closePopup() {
+		if (ui.q('popupContent') && ui.q('popupContent').innerHTML.indexOf(ui.l('bluetooth.deactivatedText')) > -1)
+			ui.navigation.closePopup();
+	}
 	static decode(a) {
 		a = new Uint8Array(a);
 		var s = '';
@@ -26,10 +30,17 @@ class bluetooth {
 			a[i] = utf8.charCodeAt(i);
 		return a.buffer;
 	}
+	static init() {
+		// disable for now, bluetooth will come again later
+		if (!global.isBrowser() && false) {
+			bluetooth.stop();
+			bluetooth.requestAuthorization(true);
+		}
+	}
 	static registerDevice(device) {
 		if (user.contact && device && device.id) {
-			if (window.localStorage.getItem('findMeIDs') && window.localStorage.getItem('findMeIDs').indexOf('|' + device.id + '|') < 0) {
-				window.localStorage.setItem('findMeIDs', window.localStorage.getItem('findMeIDs') + device.id + '|');
+			if (window.localStorage.getItem('bluetoothIDs') && window.localStorage.getItem('bluetoothIDs').indexOf('|' + device.id + '|') < 0) {
+				window.localStorage.setItem('bluetoothIDs', window.localStorage.getItem('bluetoothIDs') + device.id + '|');
 				ble.connect(device.id, function () {
 					ble.write(device.id, bluetooth.UUID_SERVICE, bluetooth.UUID_TX, bluetooth.encode(user.contact.id), function () {
 						ble.disconnect(device.id);
@@ -37,10 +48,6 @@ class bluetooth {
 				});
 			}
 		}
-	}
-	static hidePopup() {
-		if (ui.q('popupContent') && ui.q('popupContent').innerHTML.indexOf(ui.l('findMe.bluetoothDeactivated')) > -1)
-			ui.navigation.hidePopup();
 	}
 	static requestAuthorization(logon) {
 		bluetooth.reset();
@@ -54,13 +61,13 @@ class bluetooth {
 			var showHint = !logon;
 			ble.startStateNotifications(function (state) {
 				bluetooth.state = state;
-				if (user.contact.findMe) {
+				if (user.contact.bluetooth) {
 					if (state == 'on') {
-						bluetooth.hidePopup();
+						bluetooth.closePopup();
 						bluetooth.scanStart();
 						showHint = false;
 					} else
-						ui.navigation.openPopup(ui.l('attention'), ui.l('findMe.bluetoothDeactivated'));
+						ui.navigation.openPopup(ui.l('attention'), ui.l('bluetooth.deactivatedText'));
 				}
 			})
 		};
@@ -68,14 +75,14 @@ class bluetooth {
 			try {
 				cordova.plugins.diagnostic.requestBluetoothAuthorization(stateListener);
 			} catch (e) {
-				ui.navigation.openPopup(ui.l('attention'), ui.l('findMe.bluetoothError').replace('{0}', e));
+				ui.navigation.openPopup(ui.l('attention'), ui.l('bluetooth.error').replace('{0}', e));
 			}
 		} else
 			stateListener.call();
 	}
 	static reset() {
 		if (!global.isBrowser())
-			window.localStorage.setItem('findMeIDs', '|');
+			window.localStorage.setItem('bluetoothIDs', '|');
 	}
 	static scanStart() {
 		Promise.all([
@@ -100,14 +107,14 @@ class bluetooth {
 			})
 		]).then(
 			function () {
-				ui.q('home item.bluetooth text').innerHTML = ui.l('bluetooth.activated');
+				ui.html('home item.bluetooth text', ui.l('bluetooth.activated'));
 			},
 			function (e) {
 				if (e.indexOf('Advertising has already started') < 0) {
 					bluetooth.stop();
 					communication.sendError('ble peripheral: ' + JSON.stringify(e));
 				} else
-					ui.q('home item.bluetooth text').innerHTML = ui.l('bluetooth.activated');
+					ui.html('home item.bluetooth text', ui.l('bluetooth.activated'));
 			}
 		);
 		ble.startScan([bluetooth.UUID_SERVICE], bluetooth.registerDevice, function (e) {
@@ -115,29 +122,29 @@ class bluetooth {
 			communication.sendError('ble scan: ' + JSON.stringify(e));
 		});
 	}
-	static toggle() {
-		if (global.isBrowser())
-			intro.openHint({ desc: 'bluetoothDescriptionBrowser', pos: '10%,-14em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-0.75em' });
-		else if (!user.contact)
-			intro.openHint({ desc: 'bluetoothDescriptionLoggedOff', pos: '10%,-14em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-0.75em' });
-		else if (window.localStorage.getItem('findMeIDs'))
-			user.save({ findMe: false }, bluetooth.stop);
-		else {
-			if ((!user.contact.ageMale && !user.contact.ageFemale && !user.contact.ageDivers) || !user.contact.age || !user.contact.gender)
-				ui.navigation.openPopup(ui.l('attention'), ui.l('wtd.error').replace('{0}', ui.l('wtd.bluetoothMatching')) + '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.edit') + '</buttontext>');
-			else
-				user.save({ findMe: true }, bluetooth.requestAuthorization);
-		}
-	}
 	static stop() {
 		if (!global.isBrowser()) {
 			ble.stopScan();
 			ble.stopStateNotifications();
-			bluetooth.hidePopup();
+			bluetooth.closePopup();
 			if (ui.q('hint[i="bluetoothOn"]'))
 				intro.closeHint();
 		}
-		ui.q('home item.bluetooth text').innerHTML = ui.l('bluetooth.deactivated');
-		window.localStorage.removeItem('findMeIDs');
+		ui.html('home item.bluetooth text', ui.l('bluetooth.deactivated'));
+		window.localStorage.removeItem('bluetoothIDs');
+	}
+	static toggle() {
+		if (global.isBrowser())
+			intro.openHint({ desc: 'bluetoothDescriptionBrowser', pos: '10%,-14em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-0.5em' });
+		else if (!user.contact)
+			intro.openHint({ desc: 'bluetoothDescriptionLoggedOff', pos: '10%,-14em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-0.5em' });
+		else if (window.localStorage.getItem('bluetoothIDs'))
+			user.save({ bluetooth: false }, bluetooth.stop);
+		else {
+			if ((!user.contact.ageMale && !user.contact.ageFemale && !user.contact.ageDivers) || !user.contact.age || !user.contact.gender)
+				ui.navigation.openPopup(ui.l('attention'), ui.l('bluetooth.errorMatching').replace('{0}', ui.l('bluetooth.matching')) + '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.edit') + '</buttontext>');
+			else
+				user.save({ bluetooth: true }, bluetooth.requestAuthorization);
+		}
 	}
 }
