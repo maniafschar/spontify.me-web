@@ -374,7 +374,7 @@ homeBody teaser {
 homeBody teaser div {
 	white-space: nowrap;
 	overflow-x: auto;
-	padding: 0 0.5em;
+	padding: 0.5em;
 }
 
 homeBody teaser.contacts {
@@ -392,7 +392,7 @@ homeBody teaser card {
 	position: relative;
 	display: inline-block;
 	cursor: pointer;
-	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
 }
 
 homeBody teaser card img {
@@ -411,7 +411,7 @@ homeBody teaser card text {
 
 homeBody teaser title {
 	font-weight: bold;
-	margin-bottom: 0.75em;
+	margin-bottom: 0.25em;
 	font-size: 1.3em;
 	text-transform: lowercase;
 }
