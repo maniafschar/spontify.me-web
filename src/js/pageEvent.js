@@ -185,7 +185,7 @@ class pageEvent {
 						ui.classRemove('detail  card[i="' + v.id + '"] div.ratingButton', 'noDisp');
 					} else if (v.eventParticipate.state == -1) {
 						ui.classAdd('detail card[i="' + v.id + '"] text.description.event', 'canceled');
-						ui.q('detail card[i="' + v.id + '"] .reason').innerHTML = ui.l('events.canceled') + (v.eventParticipate.reason ? ': ' + v.eventParticipate.reason : '');
+						ui.q('detail card[i="' + v.id + '"] .reason').innerHTML = ui.l('events.canceled') + (v.eventParticipate.reason ? ':<br/>' + v.eventParticipate.reason : '');
 					}
 				}
 			}
@@ -732,7 +732,7 @@ class pageEvent {
 					button.innerText = ui.l('events.participanteStop');
 					ui.classAdd('detail card:last-child .event', 'canceled');
 					ui.classAdd('row[i="' + e.event.id + '_' + eventDate + '"]', 'canceled');
-					ui.q('detail card:last-child .event .reason').innerHTML = ui.l('events.canceled') + (d.values.reason ? ': ' + d.values.reason : '');
+					ui.q('detail card:last-child .event .reason').innerHTML = ui.l('events.canceled') + (d.values.reason ? ':<br/>' + d.values.reason : '');
 					e2.innerHTML = e2.innerHTML && parseInt(e2.innerHTML) > 1 ? (parseInt(e2.innerHTML) - 1) + ' ' : '';
 				}
 				ui.navigation.closePopup();
