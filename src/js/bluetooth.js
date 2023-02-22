@@ -124,8 +124,10 @@ class bluetooth {
 	}
 	static stop() {
 		if (!global.isBrowser()) {
-			ble.stopScan();
-			ble.stopStateNotifications();
+			try {
+				ble.stopScan();
+				ble.stopStateNotifications();
+			} catch (e) { }
 			bluetooth.closePopup();
 			if (ui.q('hint[i="bluetoothOn"]'))
 				intro.closeHint();

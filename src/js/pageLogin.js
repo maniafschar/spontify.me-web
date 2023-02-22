@@ -489,9 +489,11 @@ class pageLogin {
 		}, 500);
 	}
 	static saveDraft() {
-		var v = formFunc.getForm('login form:nth-child(3)').values;
-		v.email = ui.qa('login tabBody input[name="email"]')[parseInt(ui.q('login tabBody').style.marginLeft || 0) / -100].value;
-		window.localStorage.setItem('login', JSON.stringify(v));
+		try {
+			var v = formFunc.getForm('login form:nth-child(3)').values;
+			v.email = ui.qa('login tabBody input[name="email"]')[parseInt(ui.q('login tabBody').style.marginLeft || 0) / -100].value;
+			window.localStorage.setItem('login', JSON.stringify(v));
+		} catch (e) { }
 	}
 	static savePassword() {
 		if (ui.val('[name="passwd"]').length < 8)
