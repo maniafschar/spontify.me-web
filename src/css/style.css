@@ -96,8 +96,12 @@ body.app>main progressbar {
 }
 
 a {
-	color: rgb(25, 50, 100);
+	color: rgb(255, 220, 70);
 	cursor: pointer;
+}
+
+popup a {
+	color: rgb(25, 50, 100);
 }
 
 navigation {
