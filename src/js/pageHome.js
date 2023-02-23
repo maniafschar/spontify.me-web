@@ -84,10 +84,10 @@ class pageHome {
 				url: global.server + 'action/teaser/contacts',
 				responseType: 'json',
 				success(l) {
-					var s = '', oc = user.contact ? null : 'intro.openHint({ desc: \'teaserContacts\', pos: \'10%,-27vh\', size: \'80%,auto\', hinkyClass: \'bottom\', hinky: \'left:50%;margin-right:-0.5em;\' })';
+					var s = '';
 					for (var i = 1; i < l.length; i++) {
 						var e = model.convert(new Contact(), l, i);
-						s += '<card onclick="' + (oc ? oc : 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + e.id) + '&quot;)') + '"><img src="' + global.serverImg + e.imageList + '"/><text>' + e.pseudonym + '</text></card>';
+						s += '<card onclick="details.open(' + e.id + ',&quot;contact_list' + (user.contact ? '' : 'Teaser') + '&search=' + encodeURIComponent('contact.id=' + e.id) + '&quot;,pageContact.detail)"><img src="' + global.serverImg + e.imageList + '"/><text>' + e.pseudonym + '</text></card>';
 					}
 					ui.q('home teaser.contacts>div').innerHTML = s;
 					ui.css('home teaser.contacts', 'opacity', 1);
@@ -97,14 +97,14 @@ class pageHome {
 				url: global.server + 'action/teaser/events',
 				responseType: 'json',
 				success(l) {
-					var s = '', oc = user.contact ? null : 'intro.openHint({ desc: \'teaserEvents\', pos: \'10%,-57vh\', size: \'80%,auto\', hinkyClass: \'bottom\', hinky: \'left:50%;margin-right:-0.5em;\' })';
+					var s = '';
 					var e = [];
 					for (var i = 1; i < l.length; i++)
 						e.push(model.convert(new Location(), l, i));
 					if (user.contact)
 						e = pageEvent.getCalendarList(e);
 					for (var i = 0; i < e.length; i++)
-						s += '<card onclick="' + (oc ? oc : 'ui.navigation.autoOpen(&quot;' + global.encParam('e=' + pageEvent.getId(e[i])) + '&quot;)') + '"><img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList) + '"/><text>' + e[i].event.text + '</text></card>';
+						s += '<card onclick="details.open(&quot;' + pageEvent.getId(e[i]) + '&quot;,&quot;event_list' + (user.contact ? '' : 'Teaser') + '&search=' + encodeURIComponent('event.id=' + e[i].event.id) + '&quot;,pageLocation.detailLocationEvent)"><img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList) + '"/><text>' + e[i].event.text + '</text></card>';
 					ui.q('home teaser.events>div').innerHTML = s;
 					ui.css('home teaser.events', 'opacity', 1);
 				}

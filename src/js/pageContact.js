@@ -72,6 +72,8 @@ ${v.rating}
 ${v.skills}
 ${v.matchIndicatorHintDescription}
 <detailButtons style="margin-top:1em;">
+	<buttontext class="bgColor${v.loggedIn}"
+		onclick="ui.navigation.goTo(&quot;login&quot;)">${ui.l('login.action')}</buttontext>
 	<buttontext class="bgColor${v.blocked}${v.hideMe}"
 		onclick="pageChat.open(${v.id})">${ui.l('chat.title')}</buttontext>
 	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonFriend"
@@ -205,6 +207,8 @@ ${v.matchIndicatorHintDescription}
 		v = model.convert(new Contact(), v);
 		v.distance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
 		v.birthday = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
+		if (user.contact)
+			v.loggedIn = ' noDisp';
 		if (v.birthday.age) {
 			if (v.age)
 				v.ageDisplay = ' (' + v.age + ')';
@@ -242,7 +246,7 @@ ${v.matchIndicatorHintDescription}
 		} else if (preview)
 			v.skills = '<previewHint>' + ui.l('settings.previewHintAttributes') + '</previewHint>';
 		if (v.gender) {
-			if (v.age && skills.totalMatch) {
+			if (v.age && skills.totalMatch && user.contact) {
 				var a;
 				if (v.gender == 1)
 					a = user.contact.ageMale;
@@ -265,7 +269,12 @@ ${v.matchIndicatorHintDescription}
 			v.matchIndicatorHint += '<div style="margin-top:0.5em;">' + ui.l('contacts.matchIndicatorHintPulse') + '</div>';
 		if (preview && !v.image)
 			v.matchIndicatorClass = ' class="fade"';
-		v.hideMe = user.contact.id == v.id ? ' noDisp' : '';
+		if (!user.contact || ui.navigation.getActiveID() == 'settings')
+			v.blocked = ' noDisp';
+		else if (user.contact.id == v.id)
+			v.hideMe = ' noDisp';
+		if (!user.contact)
+			v.hideNotLoggedIn = ' noDisp';
 		if (v.image)
 			v.image = '<img src="' + global.serverImg + v.image + '" />';
 		else {

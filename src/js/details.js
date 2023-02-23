@@ -1,5 +1,4 @@
 import { communication } from './communication';
-import { pageEvent } from './pageEvent';
 import { geoData } from './geoData';
 import { global } from './global';
 import { lists } from './lists';

@@ -94,7 +94,7 @@ class ui {
 			skill.list.push(l);
 		};
 		var compareSkills, userSkills;
-		userSkills = user.contact.skills ? '|' + user.contact.skills + '|' : '';
+		userSkills = user.contact && user.contact.skills ? '|' + user.contact.skills + '|' : '';
 		if (userSkills)
 			result.total += userSkills.split('|').length - 2;
 		if (compare.skills) {
@@ -110,7 +110,7 @@ class ui {
 					add2List(hashtags.ids2Text(userSkills[i]), 'fade', result.skills);
 			}
 		}
-		userSkills = user.contact.skillsText ? '|' + user.contact.skillsText.toLowerCase() + '|' : '';
+		userSkills = user.contact && user.contact.skillsText ? '|' + user.contact.skillsText.toLowerCase() + '|' : '';
 		if (userSkills)
 			result.total += userSkills.split('|').length - 2;
 		if (compare.skillsText) {
@@ -276,7 +276,7 @@ class ui {
 			// AGBs opened from login, go back to login
 			if (pageInfo.openSection == -2)
 				pageInfo.openSection = -1;
-			if (!user.contact && id != 'home' && id != 'info' && id != 'login') {
+			if (!user.contact && id != 'home' && id != 'info' && id != 'login' && id != 'detail') {
 				intro.openHint({ desc: id, pos: '15%,-6em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:' + (id == 'contacts' ? 9.375 : 40.625) + '%;margin-right:-0.5em;' });
 				return;
 			}

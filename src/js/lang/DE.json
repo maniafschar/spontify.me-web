@@ -403,12 +403,12 @@
 			"notification": "<title>Benachrichtigungen</title><br/>Hier siehst Du Deine Benachrichtigungen, z.B. Zusagen zu Deinen Events.",
 			"notificationEmpty": "Du hast noch keine Benachrichtigungen.",
 			"open": "Intro starten...",
-			"position": "<title>Standort</title><br/>Hier kannst Du Deinen <emphasis>Standort</emphasis> auswählen. Wenn Du z.B. planst morgen in einer anderen Stadt zu sein und jetzt schon mal schauen möchtest was da los ist, wählst Du die Stadt hier aus und Dein Standort wird <emphasis>virtuell</emphasis> dorthin verlegt.",
+			"position": "Was magst Du? Mountainbiken? Sushi rollen? Über Nietzsche philosophieren? Bei einem Gläschen Wein Dein Französisch vertiefen? Karten spielen? Jeder hat <emphasis>Begabungen</emphasis>, viele möchten sie <emphasis>ausbauen</emphasis>, manche möchten sie anderen beibringen.<br/><emphasis>Gemeinsam</emphasis> etwas zu erlernen macht einfach <emphasis>Spaß</emphasis>. skillvents hilft Euch, Eure <emphasis>Freizeit</emphasis> sinnvoll zu nutzen.",
 			"register": "Nach der Registrierung zeigen wir Dir, wie Du Dein Profil individualisieren kannst. Lieben Dank dass Du Dir die Zeit für die Intro genommen hast.",
 			"settings": "<title>Einstellungen</title><br/>Hier beschreibst Du Dich und was <emphasis>Du magst</emphasis>. Basierend auf diesen Angaben matchen wir:<ul><li>Locations</li><li>Events</li><li>und Buddies</li></ul>",
 			"settingsLoggedIn": "<ul><li>Ändere hier Dein Profilbild und gib weitere, allgemeine Infos an</li><li>Ein Wisch nach links und Du kannst Dich über diverse Attribute selbst beschreiben und angeben, was Du an anderen Buddies magst</li></ul>",
 			"teaserContacts": "<title>Buddies</title><br/>Wir matchen Buddies nach:<ul><li>Skills</li><li>Alter</li><li>Geschlecht</li><li>favorisierte Locations</li></ul>So können wir Dir passende skillvents vorschlagen und Du kannst die <emphasis>Community</emphasis> nach ähnlichen Skills durchsuchen.",
-			"teaserEvents": "<title>skillvents</title><br/>Für Dich <emphasis>interessante</emphasis> und in der Nähe stattfindende skillvents siehst Du sofort nach dem Einloggen."
+			"teaserEvents": "<title>skillvents</title><br/>Möchtest Du etwas <emphasis>unternehmen</emphasis>? Hier kannst Du Events einfach und schnell hinzufügen."
 		},
 		"locations": {
 			"address": "Adresse",

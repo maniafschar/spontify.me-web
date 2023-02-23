@@ -223,19 +223,7 @@ ${v.info}`;
 			ui.q('errorHint.textarea').innerHTML = s ? ui.l('settings.deleteExplainMoreWords') : ui.l('settings.deleteExplain');
 			return;
 		}
-		communication.ajax({
-			url: global.server + 'action/prevent/delete',
-			responseType: 'json',
-			success(r) {
-				if (r && r.text)
-					ui.navigation.openPopup(ui.l('attention'), r.text + (r.url ? '<br/><br/><a onclick="ui.navigation.openHTML(&quot;' + r.url + '&quot;,&quot;preventDelete&quot;)">' + r.url + '</a>' : '') + '<br/><br/><buttontext class="bgColor" onclick="pageSettings.deleteProfileSaveReason()">' + ui.l('settings.deleteProfileFinal') + '</buttontext>');
-				else
-					pageSettings.deleteProfileSaveReason();
-			}
-		});
-	}
-	static deleteProfileSaveReason() {
-		var s = '\n' + ui.val('#deleteAccountFeedback').trim();
+		s = '\n' + ui.val('#deleteAccountFeedback').trim();
 		while (s.indexOf('  ') > -1)
 			s = s.replace(/  /g, ' ');
 		var reasons = ui.qa('input[name="deletionReason"]:checked');

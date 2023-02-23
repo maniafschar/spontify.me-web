@@ -153,8 +153,6 @@ class pageEvent {
 	static detail(v) {
 		v.eventParticipate = new EventParticipate();
 		v.copyLinkHint = ui.l('copyLinkHint.event');
-		if (v.event.contactId != user.contact.id)
-			v.hideMeEdit = ' noDisp';
 		if (v.event.type != 'o') {
 			var s = global.date.formatDate(v.event.endDate);
 			v.endDate = ' (' + ui.l('events.type_' + v.event.type) + ' ' + ui.l('to') + s.substring(s.indexOf(' ')) + ')';
@@ -165,31 +163,32 @@ class pageEvent {
 			v.date = '<eventOutdated>' + v.date;
 			v[v.endDate ? 'endDate' : 'date'] += '</eventOutdated>';
 		}
-		communication.ajax({
-			url: global.server + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + v.event.id + ' and eventParticipate.eventDate=\'' + v.id.split('_')[1] + '\''),
-			responseType: 'json',
-			success(r) {
-				var count = 0;
-				for (var i = 1; i < r.length; i++) {
-					var e = model.convert(new EventParticipate(), r, i);
-					if (e.contactId == user.contact.id)
-						v.eventParticipate = e;
-					if (e.state == 1)
-						count++;
-				}
-				ui.q('detail card[i="' + v.id + '"] detailHeader').setAttribute('data', encodeURIComponent(JSON.stringify(v)));
-				if (ui.q('detail card[i="' + v.id + '"]')) {
-					ui.q('detail card[i="' + v.id + '"] .eventParticipationButtons').innerHTML = pageEvent.getParticipateButton(v, count);
-					if (v.eventParticipate.state == 1) {
-						ui.classAdd('detail card[i="' + v.id + '"] text.description.event', 'participate');
-						ui.classRemove('detail  card[i="' + v.id + '"] div.ratingButton', 'noDisp');
-					} else if (v.eventParticipate.state == -1) {
-						ui.classAdd('detail card[i="' + v.id + '"] text.description.event', 'canceled');
-						ui.q('detail card[i="' + v.id + '"] .reason').innerHTML = ui.l('events.canceled') + (v.eventParticipate.reason ? ':<br/>' + v.eventParticipate.reason : '');
+		if (user.contact)
+			communication.ajax({
+				url: global.server + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + v.event.id + ' and eventParticipate.eventDate=\'' + v.id.split('_')[1] + '\''),
+				responseType: 'json',
+				success(r) {
+					var count = 0;
+					for (var i = 1; i < r.length; i++) {
+						var e = model.convert(new EventParticipate(), r, i);
+						if (e.contactId == user.contact.id)
+							v.eventParticipate = e;
+						if (e.state == 1)
+							count++;
+					}
+					ui.q('detail card[i="' + v.id + '"] detailHeader').setAttribute('data', encodeURIComponent(JSON.stringify(v)));
+					if (ui.q('detail card[i="' + v.id + '"]')) {
+						ui.q('detail card[i="' + v.id + '"] .eventParticipationButtons').innerHTML = pageEvent.getParticipateButton(v, count);
+						if (v.eventParticipate.state == 1) {
+							ui.classAdd('detail card[i="' + v.id + '"] text.description.event', 'participate');
+							ui.classRemove('detail  card[i="' + v.id + '"] div.ratingButton', 'noDisp');
+						} else if (v.eventParticipate.state == -1) {
+							ui.classAdd('detail card[i="' + v.id + '"] text.description.event', 'canceled');
+							ui.q('detail card[i="' + v.id + '"] .reason').innerHTML = ui.l('events.canceled') + (v.eventParticipate.reason ? ':<br/>' + v.eventParticipate.reason : '');
+						}
 					}
 				}
-			}
-		});
+			});
 		if (v.event.price > 0)
 			v.eventPrice = ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2).replace('.', ','));
 		else if (v.event.locationId)
@@ -211,7 +210,7 @@ class pageEvent {
 				h = h.substring(h.indexOf('.') + 1);
 			v.url = '<label class="multipleLabel" onclick="ui.navigation.openHTML(&quot;' + v.event.url + '&quot;)">' + h.toLowerCase() + '</label>';
 		}
-		if (user.contact.id == v.event.contactId)
+		if (user.contact && user.contact.id == v.event.contactId)
 			v.editAction = 'pageEvent.edit(' + v.locID + ',' + v.event.id + ')';
 		else
 			v.hideMeEdit = ' noDisp';
@@ -219,7 +218,7 @@ class pageEvent {
 	}
 	static edit(locationID, id) {
 		if (!user.contact) {
-			intro.openHint({ desc: 'teaserEvents', pos: '10%,5em', size: '80%,auto' });
+			intro.openHint({ desc: 'teaserEvents', pos: '-1em,-45%', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:0.5em;' });
 			return;
 		}
 		if (!pageEvent.paypal.fee) {

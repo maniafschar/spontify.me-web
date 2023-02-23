@@ -82,19 +82,21 @@ ${v.rating}
 <img class="map"
 	onclick="ui.navigation.openHTML(&quot;https://maps.google.com/maps/dir/${geoData.current.lat},${geoData.current.lon}/${v.latitude},${v.longitude}&quot;)" />
 <detailButtons>
-	<buttontext class="bgColor${v.hideMeEvents}" name="buttonEvents"
+	<buttontext class="bgColor${v.loggedIn}"
+		onclick="ui.navigation.goTo(&quot;login&quot;)">${ui.l('login.action')}</buttontext>
+	<buttontext class="bgColor${v.hideMeEvents}${v.notLoggedIn}" name="buttonEvents"
 		onclick="pageEvent.toggle(${v.locID})">${ui.l('events.title')}</buttontext>
-	<buttontext class="bgColor${v.favorite}${v.hideMeFavorite}" name="buttonFavorite"
+	<buttontext class="bgColor${v.favorite}${v.hideMeFavorite}${v.notLoggedIn}" name="buttonFavorite"
 		onclick="pageLocation.toggleFavorite(&quot;${v.id}&quot;)">${ui.l('locations.favoritesButton')}</buttontext>
-	<buttontext class="bgColor${v.pressedCopyButton}" name="buttonCopy"
+	<buttontext class="bgColor${v.pressedCopyButton}${v.notLoggedIn}" name="buttonCopy"
 		onclick="pageChat.doCopyLink(event,&quot;${v.event.id ? 'e' : 'l'}=${v.id}&quot;)">${ui.l('chat.share')}</buttontext>
-	<buttontext class="bgColor${v.hideMePotentialParticipants}" name="buttonPotentialParticipants"
+	<buttontext class="bgColor${v.hideMePotentialParticipants}${v.notLoggedIn}" name="buttonPotentialParticipants"
 		onclick="pageEvent.loadPotentialParticipants()">${ui.l('events.potentialParticipants')}</buttontext>
-	<buttontext class="bgColor${v.hideMeEdit}" name="buttonEdit"
+	<buttontext class="bgColor${v.hideMeEdit}${v.notLoggedIn}" name="buttonEdit"
 		onclick="${v.editAction}">${ui.l('edit')}</buttontext>
-	<buttontext class="bgColor${v.hideMeGoogle}" name="buttonGoogle"
+	<buttontext class="bgColor${v.hideMeGoogle}${v.notLoggedIn}" name="buttonGoogle"
 		onclick="ui.navigation.openHTML(&quot;https://google.com/search?q=${encodeURIComponent(v.name + ' ' + v.town)}&quot;)">${ui.l('locations.google')}</buttontext>
-	<buttontext class="bgColor${v.hideMeBlock}" name="buttonBlock"
+	<buttontext class="bgColor${v.hideMeBlock}${v.notLoggedIn}" name="buttonBlock"
 		onclick="pageLocation.toggleBlock(&quot;${v.id}&quot;)">${ui.l('contacts.blockAction')}</buttontext>
 </detailButtons>
 <text name="events" class="collapsed" style="margin:0 -1em;"></text>
@@ -270,7 +272,7 @@ ${v.rating}
 			} else
 				v.matchIndicatorPercent = 0;
 			v.matchIndicatorHint = ui.l('events.matchIndicatorHint').replace('{0}', skills.totalMatch).replace('{1}', skills.total).replace('{2}', v.matchIndicatorPercent).replace('{3}', skills.categories);
-			if (eventWithLocation || v.event.contactId != user.contact.id) {
+			if (eventWithLocation || !user.contact || v.event.contactId != user.contact.id) {
 				v.skills = skills.text();
 				if (v.skills) {
 					v.skills = '<text onclick="ui.toggleHeight(&quot;detail card:last-child .matchIndicatorAttributesHint&quot;)">' + v.skills + '</text>';
@@ -297,13 +299,14 @@ ${v.rating}
 		var r = v.event.rating || (eventWithLocation ? v.rating : v.contact.rating);
 		if (r > 0)
 			v.rating = '<detailRating onclick="ratings.open(' + v.event.id + ',&quot;' + (v.event.id ? 'event.id=' + v.event.id : eventWithLocation ? 'event.locationId=' + v.locID : 'event.contactId=' + v.contact.id) + '&quot;)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + r) + '%;">★★★★★</full></ratingSelection></detailRating>';
-		else if (v.event.id && v.event.locationId >= -1 && v.event.contactId != user.contact.id)
+		else if (v.event.id && v.event.locationId >= -1 && user.contact && v.event.contactId != user.contact.id)
 			v.rating = '<div style="margin:1em 0;" class="ratingButton noDisp"><buttontext class="bgColor" onclick="ratings.open(' + v.event.id + ')">' + ui.l('rating.save') + '</buttontext></div>';
 		if (eventWithLocation)
 			v.distanceDisplay = ' style="display:none;"';
 		else {
 			v.compassDisplay = ' style="display:none;"';
-			v.gender = '<img src="images/gender' + v.contact.gender + '.svg" />';
+			if (v.contact.gender)
+				v.gender = '<img src="images/gender' + v.contact.gender + '.svg" />';
 		}
 		if (eventWithLocation)
 			v.address = v.address.replace(/\n/g, '<br />');
@@ -311,16 +314,20 @@ ${v.rating}
 			v.description = '<text class="description">' + global.string.replaceLinks(v.description.replace(/\n/g, '<br/>')) + '</text>';
 		if (v.bonus)
 			v.bonus = '<text style="margin:1em 0;" class="highlightBackground">' + ui.l('locations.bonus') + v.bonus + '<br/>' + ui.l('locations.bonusHint') + '</text>';
-		if (v.event.contactId != user.contact.id)
-			v.hideMePotentialParticipants = ' noDisp';
-		if (v.event.contactId == user.contact.id || v.contactId == user.contact.id)
-			v.hideMeBlock = ' noDisp';
+		if (user.contact) {
+			if (v.event.contactId != user.contact.id)
+				v.hideMePotentialParticipants = ' noDisp';
+			if (v.event.contactId == user.contact.id || v.contactId == user.contact.id)
+				v.hideMeBlock = ' noDisp';
+			v.loggedIn = ' noDisp';
+		} else
+			v.notLoggedIn = ' noDisp';
 		if (v.locationFavorite.favorite)
 			v.favorite = ' favorite';
 		if (global.isBrowser())
 			v.displaySocialShare = 'display: none; ';
 		v.pressedCopyButton = pageChat.copyLink.indexOf(global.encParam(v.event.id ? 'e=' + v.event.id : 'l=' + v.id)) > -1 ? ' buttonPressed' : '';
-		if (v.address)
+		if (v.address && user.contact)
 			communication.ajax({
 				url: global.server + 'action/map?source=' + geoData.current.lat + ',' + geoData.current.lon + '&destination=' + v.latitude + ',' + v.longitude,
 				progressBar: false,

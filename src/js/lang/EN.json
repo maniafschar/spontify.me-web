@@ -403,12 +403,12 @@
 			"notification": "<title>Notifications</title><br/>Here you will see your notifications, e.g. confirmations to your events.",
 			"notificationEmpty": "You do not have any notifications, yet.",
 			"open": "Start Intro...",
-			"position": "<title>Location</title><br/>Here you can choose your <emphasis>location</emphasis>. For example, if you plan to be in another city tomorrow and want to see what's going on there, you select the city here and your location will be <emphasis>virtually</emphasis> moved there.",
+			"position": "What do you like? Mountain biking? Roll sushi? Philosophize about Nietzsche? Would you like to improve your French over a glass of wine? Playing cards? Everyone has <emphasis>talents</emphasis>, many want to <emphasis>develop</emphasis> them, some want to teach them to others.<br/><emphasis>Together</emphasis> learning something is just <emphasis>fun</emphasis>. skillvents helps you to use your <emphasis>free time</emphasis> sensibly.",
 			"register": "After registration, we will show you how you can individualize your profile. Thank you for taking the time for this intro.",
 			"settings": "<title>Settings</title><br/>Here you describe yourself and what <emphasis>you like</emphasis>. Based on this information we match:<ul><li>Locations</li><li>Events</li><li>and Buddies</li></ul>",
 			"settingsLoggedIn": "<ul><li>Change your profile image and enter general information here</li><li>Swipe left to enter attributes that describe you and that you like about other Buddies</li><li>provide yourself as a guide for Buddies fitting your settings</li></ul>",
 			"teaserContacts": "<title>Buddies</title><br/>We match buddies by:<ul><li>Skills</li><li>Age</li><li>Gender</li><li>Favorite Locations</li></ul>So we can match you suggest skillvents and you can search the <emphasis>Community</emphasis> for similar skills.",
-			"teaserEvents": "<title>skillvents</title><br/>You can see <emphasis>interesting</emphasis> and nearby skillvents immediately after logging in."
+			"teaserEvents": "<title>skillvents</title><br/>Do you want to <emphasis>do something</emphasis>? Here you can add easily new events."
 		},
 		"locations": {
 			"address": "Address",
