@@ -343,8 +343,8 @@ class initialisation {
 			}
 		});
 		ui.q('#addLeft > buttontext').innerHTML = global.appTitle + ' blog';
-		ui.html('home', '');
-		pageHome.init();
+		ui.html('info', '');
+		pageHome.init(true);
 		if (exec)
 			exec.call();
 		if (user.contact && oldLang != global.language)
