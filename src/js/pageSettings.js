@@ -474,6 +474,7 @@ ${v.info}`;
 		if (l != global.language)
 			initialisation.setLanguage(l);
 		ui.css('settings save', 'display', '');
+		ui.q('homeHeader text').innerText = user.contact.pseudonym;
 	}
 	static reset() {
 		formFunc.resetError(ui.q('input[name="pseudonym"]'));
