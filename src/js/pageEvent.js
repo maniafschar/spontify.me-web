@@ -456,14 +456,11 @@ class pageEvent {
 				pageLocation.listInfos(v);
 				v._message += v._message1 ? v._message1 : v._message2 ? v._message2 : '';
 				v.id = pageEvent.getId(v);
+				v.badgeDisp = '';
 				v.classFavorite = v.locationFavorite.favorite ? ' favorite' : '';
-				if (v.eventParticipate.state == 1 && global.date.local2server(v.event.startDate).indexOf(v.eventParticipate.eventDate) == 0) {
-					v.badge = '✓';
-					v.badgeDisp = 'participate';
-				} else if (v.eventParticipate.state == -1) {
-					v.badge = '✗';
-					v.badgeDisp = 'canceled';
-				} else
+				if (global.date.local2server(v.event.startDate).indexOf(v.eventParticipate.eventDate) == 0)
+					v.classFavorite = v.eventParticipate.state == -1 ? ' canceled' : ' participate';
+				else
 					v.badgeDisp = 'noDisp';
 				v.classBGImg = v.imageList ? '' : bg;
 				if (v.event.imageList)
@@ -723,13 +720,13 @@ class pageEvent {
 					if (e.event.confirm == '1')
 						button.outerHTML = '';
 					else
-						button.innerText = ui.l('events.participante');
+						button.innerText = ui.l('events.participanteStop');
 					e2.innerHTML = e2.innerHTML ? (parseInt(e2.innerHTML) + 1) + ' ' : '1 ';
 				} else {
 					ui.classRemove('detail card:last-child .event', 'participate');
 					ui.classRemove('row[i="' + e.event.id + '_' + eventDate + '"]', 'participate');
 					ui.attr(button, 's', '1');
-					button.innerText = ui.l('events.participanteStop');
+					button.innerText = ui.l('events.participante');
 					ui.classAdd('detail card:last-child .event', 'canceled');
 					ui.classAdd('row[i="' + e.event.id + '_' + eventDate + '"]', 'canceled');
 					ui.q('detail card:last-child .event .reason').innerHTML = ui.l('events.canceled') + (d.values.reason ? ':<br/>' + d.values.reason : '');

@@ -2105,12 +2105,20 @@ row.favorite imagelist svg {
 	display: inline;
 }
 
-row badge.participate {
+row.participate badge {
 	background: green;
 }
 
-row badge.canceled {
+row.participate badge::after {
+	content: '✓';
+}
+
+row.canceled badge {
 	background: red;
+}
+
+row.canceled badge::after {
+	content: '✗';
 }
 
 row compass {
