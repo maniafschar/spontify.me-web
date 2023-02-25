@@ -104,7 +104,7 @@ class pageHome {
 					if (user.contact)
 						e = pageEvent.getCalendarList(e);
 					for (var i = 0; i < e.length; i++)
-						s += '<card onclick="details.open(&quot;' + pageEvent.getId(e[i]) + '&quot;,&quot;event_list' + (user.contact ? '' : 'Teaser') + '&search=' + encodeURIComponent('event.id=' + e[i].event.id) + '&quot;,pageLocation.detailLocationEvent)"><img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList) + '"/><text>' + e[i].event.text + '</text></card>';
+						s += '<card onclick="details.open(&quot;' + pageEvent.getId(e[i]) + '&quot;,&quot;event_list' + (user.contact ? '' : 'Teaser') + '&search=' + encodeURIComponent('event.id=' + e[i].event.id) + '&quot;,pageLocation.detailLocationEvent)"><img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList ? e[i].imageList : e[i].contact.imageList) + '"/><text>' + e[i].event.text + '</text></card>';
 					ui.q('home teaser.events>div').innerHTML = s;
 					ui.css('home teaser.events', 'opacity', 1);
 				}
