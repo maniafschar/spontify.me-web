@@ -714,6 +714,7 @@ class pageEvent {
 				if (e.eventParticipate.state == '1') {
 					ui.classRemove('detail card:last-child .event', 'canceled');
 					ui.classRemove('row[i="' + e.event.id + '_' + eventDate + '"]', 'canceled');
+					ui.classRemove('row[i="' + e.event.id + '_' + eventDate + '"] badge', 'noDisp');
 					ui.classAdd('detail card:last-child .event', 'participate');
 					ui.classAdd('row[i="' + e.event.id + '_' + eventDate + '"]', 'participate');
 					ui.q('detail card:last-child .event .reason').innerHTML = '';
