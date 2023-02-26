@@ -98,11 +98,14 @@ class pageHome {
 				responseType: 'json',
 				success(l) {
 					var s = '';
-					var e = [];
-					for (var i = 1; i < l.length; i++)
-						e.push(model.convert(new Location(), l, i));
+					var e;
 					if (user.contact)
-						e = pageEvent.getCalendarList(e);
+						e = pageEvent.getCalendarList(l);
+					else {
+						e = [];
+						for (var i = 1; i < l.length; i++)
+							e.push(model.convert(new Location(), l, i));
+					}
 					for (var i = 0; i < e.length; i++)
 						s += '<card onclick="details.open(&quot;' + pageEvent.getId(e[i]) + '&quot;,&quot;event_list' + (user.contact ? '' : 'Teaser') + '&search=' + encodeURIComponent('event.id=' + e[i].event.id) + '&quot;,pageLocation.detailLocationEvent)"><img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList ? e[i].imageList : e[i].contact.imageList) + '"/><text>' + e[i].event.text + '</text></card>';
 					ui.q('home teaser.events>div').innerHTML = s;

@@ -304,8 +304,11 @@ class pageEvent {
 			pageEvent.setForm();
 	}
 	static getCalendarList(data) {
-		if (!data || data.length == 0)
+		if (!data || data.length < 2)
 			return '';
+		var list = [];
+		for (var i = 1; i < data.length; i++)
+			list.push(model.convert(new Location(), data, i));
 		var s;
 		var today = global.date.getToday();
 		var todayPlus14 = new Date();
@@ -314,8 +317,8 @@ class pageEvent {
 		todayPlus14.setHours(23);
 		todayPlus14.setMinutes(59);
 		todayPlus14.setSeconds(59);
-		for (var i = 0; i < data.length; i++) {
-			var v = data[i];
+		for (var i = 0; i < list.length; i++) {
+			var v = list[i];
 			var d1 = global.date.server2Local(v.event.startDate);
 			var d2 = global.date.server2Local(v.event.endDate);
 			var added = false;
@@ -512,14 +515,12 @@ class pageEvent {
 					ui.attr(divID, 'menuIndex', menuIndex);
 				lists.setListDivs(divID);
 				ui.navigation.hideMenu();
-				var list = [], participate = {};
-				for (var i = 1; i < events.length; i++)
-					list.push(model.convert(new Location(), events, i));
+				var participate = {};
 				for (var i = 1; i < participations.length; i++) {
 					var e = model.convert(new EventParticipate(), participations, i);
 					participate[e.eventId + '.' + e.eventDate] = e;
 				}
-				events = pageEvent.getCalendarList(list);
+				events = pageEvent.getCalendarList(events);
 				for (var i = 0; i < events.length; i++) {
 					if (events[i].event)
 						events[i].eventParticipate = participate[events[i].event.id + '.' + global.date.local2server(events[i].event.startDate).substring(0, 10)] || {};
@@ -986,7 +987,7 @@ class pageEvent {
 		var b = user.contact.id == id;
 		if (b && e.getAttribute('active'))
 			b = false;
-		for (var i = 1; i < a.length; i++) {
+		for (var i = 0; i < a.length; i++) {
 			v = a[i];
 			v.bg = bg;
 			var s2 = global.date.formatDate(v.event.startDate, 'weekdayLong');
@@ -995,10 +996,10 @@ class pageEvent {
 			var idIntern = v.event.id + '_' + date;
 			s2 = global.date.getDateHint(v.event.startDate).replace('{0}', s2);
 			var img;
-			if (v.event.imageList || v.imageList)
-				img = global.serverImg + (v.event.imageList ? v.event.imageList : v.imageList);
+			if (v.event.imageList || v.imageList || v.event.locationId == -2 && v.contact.imageList)
+				img = global.serverImg + (v.event.imageList ? v.event.imageList : v.imageList ? v.imageList : v.contact.imageList);
 			else
-				img = 'images/event.svg" class="' + bg;
+				img = 'images/event.svg" style="padding:1em;" class="' + bg;
 			text = '';
 			if (v.event.price > 0)
 				text += global.separator + ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2).replace('.', ','));
@@ -1009,7 +1010,7 @@ class pageEvent {
 			if (text)
 				text = '<br/>' + text.substring(global.separator.length);
 			text += '<br/>' + v.event.text;
-			if (field == 'contact')
+			if (field == 'location')
 				text = '<br/>' + v.name + text;
 			s += '<row' + (v.eventParticipate.state == 1 ? ' class="participate"' : v.eventParticipate.state == -1 ? ' class="canceled"' : '') + ' onclick="details.open(&quot;' + idIntern + '&quot;,&quot;event_list&search=' + encodeURIComponent('event.id=' + v.event.id) + '&quot;,pageLocation.detailLocationEvent)"><div><text>' + s2 + text + '</text><imageList><img src="' + img + '"/></imageList></div></row>';
 		}
@@ -1029,7 +1030,7 @@ class pageEvent {
 				ui.toggleHeight(e);
 			else {
 				var id = decodeURIComponent(ui.q('detail card:last-child').getAttribute('i')).split('_');
-				lists.loadList('query=event_listParticipate&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&distance=100000&limit=0&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\''), function (l) {
+				lists.loadList('query=event_listParticipate&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&distance=100000&limit=0&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\' and eventParticipate.contactId=contact.id'), function (l) {
 					e.innerHTML = l.length < 2 ? '<div style="margin-bottom:1em;">' + ui.l('events.noParticipant') + '</div>' : pageContact.listContacts(l);
 					ui.toggleHeight(e);
 					return '&nbsp;';
@@ -1046,7 +1047,7 @@ class pageEvent {
 			u = u[1];
 		}
 		communication.ajax({
-			url: global.server + 'db/list?query=event_listParticipate&search=' + encodeURIComponent('eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\' and eventParticipate.contactId=' + u),
+			url: global.server + 'db/list?query=event_listParticipate&search=' + encodeURIComponent('eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\' and eventParticipate.contactId=' + u + ' and eventParticipate.contactId=contact.id'),
 			responseType: 'json',
 			success(r) {
 				if (r.length > 1) {

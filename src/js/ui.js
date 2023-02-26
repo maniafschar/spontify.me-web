@@ -494,7 +494,7 @@ class ui {
 		},
 		eventTickets() {
 			return lists.loadList(
-				'query=event_listParticipate&distance=100000&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id),
+				'query=event_listParticipate&distance=100000&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id + ' and event.contactId=contact.id'),
 				pageEvent.listTickets, 'events', 'eventsTicket');
 		}
 	}
