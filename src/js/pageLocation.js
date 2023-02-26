@@ -315,8 +315,6 @@ ${v.rating}
 		if (v.bonus)
 			v.bonus = '<text style="margin:1em 0;" class="highlightBackground">' + ui.l('locations.bonus') + v.bonus + '<br/>' + ui.l('locations.bonusHint') + '</text>';
 		if (user.contact) {
-			if (v.event.contactId != user.contact.id)
-				v.hideMePotentialParticipants = ' noDisp';
 			if (v.event.contactId == user.contact.id || v.contactId == user.contact.id)
 				v.hideMeBlock = ' noDisp';
 			v.loggedIn = ' noDisp';

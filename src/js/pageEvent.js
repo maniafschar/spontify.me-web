@@ -153,6 +153,7 @@ class pageEvent {
 	static detail(v) {
 		v.eventParticipate = new EventParticipate();
 		v.copyLinkHint = ui.l('copyLinkHint.event');
+		v.hideMePotentialParticipants = ' noDisp';
 		if (v.event.type != 'o') {
 			var s = global.date.formatDate(v.event.endDate);
 			v.endDate = ' (' + ui.l('events.type_' + v.event.type) + ' ' + ui.l('to') + s.substring(s.indexOf(' ')) + ')';
@@ -163,7 +164,9 @@ class pageEvent {
 			v.date = '<eventOutdated>' + v.date;
 			v[v.endDate ? 'endDate' : 'date'] += '</eventOutdated>';
 		}
-		if (user.contact)
+		if (user.contact) {
+			if (v.event.contactId == user.contact.id && d >= global.date.getToday())
+				v.hideMePotentialParticipants = '';
 			communication.ajax({
 				url: global.server + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + v.event.id + ' and eventParticipate.eventDate=\'' + v.id.split('_')[1] + '\''),
 				responseType: 'json',
@@ -189,6 +192,7 @@ class pageEvent {
 					}
 				}
 			});
+		}
 		if (v.event.price > 0)
 			v.eventPrice = ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2).replace('.', ','));
 		else if (v.event.locationId)
