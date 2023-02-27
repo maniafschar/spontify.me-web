@@ -2,7 +2,7 @@ import QRCodeStyling from "qr-code-styling";
 import { communication } from "./communication";
 import { details } from "./details";
 import { geoData } from "./geoData";
-import { global } from "./global";
+import { global, Strings } from "./global";
 import { hashtags } from "./hashtags";
 import { intro } from "./intro";
 import { lists } from "./lists";
@@ -205,7 +205,7 @@ class pageEvent {
 			v.imageEventOwner = global.serverImg + v.contact.imageList;
 		else
 			v.imageEventOwner = 'images/contact.svg" style="padding:1em;';
-		v.text = global.string.replaceLinks(v.event.text);
+		v.text = Strings.replaceLinks(v.event.text);
 		v.hideMeFavorite = ' noDisp';
 		v.hideMeEvents = ' noDisp';
 		v.hideMeMarketing = ' noDisp';

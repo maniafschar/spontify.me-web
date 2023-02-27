@@ -1,11 +1,11 @@
 import { communication } from './communication';
 import { details } from './details';
 import { geoData } from './geoData';
-import { global } from './global';
+import { global, Strings } from './global';
 import { intro } from './intro';
 import { lists } from './lists';
 import { Contact, ContactChat, model } from './model';
-import { pageContact } from './pageContact';
+import { groups, pageContact } from './pageContact';
 import { pageEvent } from './pageEvent';
 import { pageHome } from './pageHome';
 import { pageInfo } from './pageInfo';
@@ -73,7 +73,7 @@ class pageChat {
 		if (document.activeElement)
 			document.activeElement.blur();
 		if (geoData.localized) {
-			var s = global.string.replaceInternalLinks(' :openPos(' + geoData.current.lat + ',' + geoData.current.lon + '): ');
+			var s = Strings.replaceInternalLinks(' :openPos(' + geoData.current.lat + ',' + geoData.current.lon + '): ');
 			s = s.replace(/onclick="ui.navigation.autoOpen/g, 'onclick="pageChat.doNothing');
 			ui.navigation.openPopup(ui.l('chat.askInsertCurrentLocationLink'), '<div style="text-align:center;margin-bottom:1em;"><div style="float:none;text-align:center;margin:1em 0;">' + s + '</div><buttontext class="bgColor" onclick="pageChat.insertLink()">' + ui.l('send') + '</buttontext></div>');
 		} else
@@ -87,7 +87,7 @@ class pageChat {
 			for (var i = 0; i < s.length; i++) {
 				if (s[i]) {
 					c++;
-					s3 = global.string.replaceInternalLinks(' :open(' + s[i] + '): ').trim();
+					s3 = Strings.replaceInternalLinks(' :open(' + s[i] + '): ').trim();
 					s3 = s3.substring(0, s3.indexOf(' ')) + ' insertID="' + s[i] + '"' + s3.substring(s3.indexOf(' '));
 					s2 += s3;
 				}
@@ -199,12 +199,12 @@ class pageChat {
 			return '';
 		var s = v.note;
 		if (s.indexOf(' :open') == 0 && s.lastIndexOf('): ') == s.length - 3)
-			return global.string.replaceInternalLinks(s);
+			return Strings.replaceInternalLinks(s);
 		s = s.trim();
 		s = s.replace(/</g, '&lt;');
-		s = global.string.replaceLinks(s);
+		s = Strings.replaceLinks(s);
 		s = s.replace(/\n/g, '<br/>');
-		s = global.string.replaceEmoji(s);
+		s = Strings.replaceEmoji(s);
 		if (v.action)
 			s = '<a onclick="' + v.action + '">' + s + '</a>';
 		return s;
@@ -409,7 +409,7 @@ class pageChat {
 	}
 	static openGroup() {
 		if (user.contact.groups == null) {
-			pageContact.groups.getGroups(pageChat.openGroup);
+			groups.getGroups(pageChat.openGroup);
 			return;
 		}
 		if (user.contact.groups) {

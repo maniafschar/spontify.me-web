@@ -1,14 +1,14 @@
 import { details } from './details';
 import { communication } from './communication';
 import { geoData } from './geoData';
-import { global } from './global';
+import { global, Strings } from './global';
 import { lists } from './lists';
 import { pageLocation } from './pageLocation';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 import { model, Contact, ContactGroup } from './model';
 
-export { pageContact };
+export { pageContact, groups };
 
 class pageContact {
 	static filter = null;
@@ -81,7 +81,7 @@ ${v.matchIndicatorHintDescription}
 	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonCopy"
 		onclick="pageChat.doCopyLink(event,&quot;p=${v.id}&quot;)">${ui.l('chat.share')}</buttontext>
 	<buttontext class="bgColor${v.blocked}${v.hideMe}" name="buttonGroups"
-		onclick="pageContact.groups.toggleGroups(${v.id},&quot;${v.contactLinkStatus}&quot;)">${ui.l('group.action')}</buttontext>
+		onclick="groups.toggleGroups(${v.id},&quot;${v.contactLinkStatus}&quot;)">${ui.l('group.action')}</buttontext>
 	<buttontext class="bgColor${v.blocked}" name="buttonEvents"
 		onclick="pageEvent.toggle(${v.id})">${ui.l('events.title')}</buttontext>
 	<buttontext class="bgColor${v.blocked}" name="buttonLocation"
@@ -116,7 +116,7 @@ ${v.matchIndicatorHintDescription}
 <text name="events" class="collapsed list"></text>
 <text name="groups" class="collapsed">
 	<detailTogglePanel></detailTogglePanel>
-	<buttontext onclick="pageContact.groups.addGroup(${v.id})" class="bgColor" style="margin-top:1em;">${ui.l('group.newButton')}</buttontext>
+	<buttontext onclick="groups.addGroup(${v.id})" class="bgColor" style="margin-top:1em;">${ui.l('group.newButton')}</buttontext>
 </text>
 <text name="copy" class="collapsed">
 	<detailTogglePanel>
@@ -128,7 +128,7 @@ ${v.matchIndicatorHintDescription}
 		global.template`<div>
     ${v.groups}
 </div>
-<buttontext style="margin-top:0.5em;" class="bgColor" onclick="pageContact.groups.showRename()">
+<buttontext style="margin-top:0.5em;" class="bgColor" onclick="groups.showRename()">
     ${ui.l('rename')}
 </buttontext>
 <buttontext style="margin-top:0.5em;" class="bgColor"
@@ -141,9 +141,9 @@ ${v.matchIndicatorHintDescription}
 <br />
 <div id="groupsRename" style="display:none;margin-top:2em;">
     <input type="text" style="width:40%;margin-right:0.5em;float:none;" />
-    <buttontext onclick="pageContact.groups.rename()" class="bgColor">${ui.l('save')}</buttontext>
+    <buttontext onclick="groups.rename()" class="bgColor">${ui.l('save')}</buttontext>
 </div>
-<buttontext onclick="pageContact.groups.delete()" id="groupsDelete" style="display:none;margin-top:2em;"
+<buttontext onclick="groups.delete()" id="groupsDelete" style="display:none;margin-top:2em;"
     class="bgColor">
     ${ui.l('confirmDelete')}
 </buttontext>`;
@@ -302,7 +302,7 @@ ${v.matchIndicatorHintDescription}
 		if (global.isBrowser())
 			v.displaySocialShare = 'display:none;';
 		if (v.aboutMe)
-			v.aboutMe = (v.guide ? '<guide>' + ui.l('settings.guide') + '</guide>' : '') + '<text class="description">' + global.string.replaceLinks(v.aboutMe.replace(/\n/g, '<br/>')) + '</text>';
+			v.aboutMe = (v.guide ? '<guide>' + ui.l('settings.guide') + '</guide>' : '') + '<text class="description">' + Strings.replaceLinks(v.aboutMe.replace(/\n/g, '<br/>')) + '</text>';
 		else if (preview)
 			v.aboutMe = '<previewHint>' + ui.l('settings.previewHintAboutMe') + '</previewHint>';
 		if (v.contactLink.status == 'Pending' && v.contactLink.contactId != user.contact.id)
@@ -331,214 +331,6 @@ ${v.matchIndicatorHintDescription}
 			}
 		}
 		return r;
-	}
-	static groups = {
-		addGroup(id) {
-			ui.navigation.openPopup(ui.l('group.newButton'), '<field style="padding:1em;"><label>' + ui.l('name') + '</label><value><input type="text" name="name"/></value></field><dialogButtons><buttontext class="bgColor" onclick="pageContact.groups.saveGroup(' + id + ');">' + ui.l('save') + '</buttontext></dialogButtons>');
-		},
-		addToGroup(event, id) {
-			var d = { classname: 'ContactGroupLink' }, e = event.target;
-			if (e.checked && !e.getAttribute('gllID')) {
-				d.values = {};
-				d.values.contactId2 = id;
-				d.values.contactGroupId = e.getAttribute('value');
-			} else if (!e.checked && e.getAttribute('gllID'))
-				d.id = e.getAttribute('gllID');
-			if (d) {
-				communication.ajax({
-					url: global.server + 'db/one',
-					body: d,
-					method: d.id ? 'DELETE' : 'POST',
-					pos: e.getAttribute('value'),
-					success(r) {
-						var e2 = ui.q('detail card:last-child[i="' + id + '"] [name="groups"] input[value="' + this.pos + '"]');
-						if (d.id) {
-							ui.attr(e2, 'gllID', null);
-							ui.attr(e2, 'checked', null);
-						} else {
-							ui.attr(e2, 'gllID', r);
-							ui.attr(e2, 'checked', 'true');
-						}
-					}
-				});
-			}
-		},
-		delete() {
-			if (ui.q('input[name="groupdialog"]:checked'))
-				return;
-			communication.ajax({
-				url: global.server + 'db/one',
-				method: 'DELETE',
-				body: { classname: 'ContactGroup', id: ui.q('input[name="groupdialog"]:checked').getAttribute('value') },
-				success() {
-					pageContact.groups.getGroups(function () {
-						var s = user.contact.groups.replace(/type="checkbox"/g, 'type="radio"').replace(/<input /g, '<input onclick="pageContact.groups.loadListGroups()"');
-						if (s.indexOf('<input') > -1)
-							s = s.replace('<input', '<input checked="true"');
-						ui.html('groups', '<div>' + s + '</div>');
-						formFunc.initFields('groups');
-						ui.css('#groupsDelete', 'display', 'none');
-						ui.html('contacts listResults', '');
-					});
-				}
-			});
-		},
-		getGroups(exec) {
-			communication.ajax({
-				url: global.server + 'db/list?query=contact_listGroup&search=' + encodeURIComponent('contactGroup.contactId=' + user.contact.id),
-				responseType: 'json',
-				success(r) {
-					pageContact.groups.setGroups(r);
-					if (exec)
-						exec.call();
-				}
-			});
-		},
-		loadListGroups() {
-			var v = ui.q('input[name="groupdialog"]:checked').getAttribute('value');
-			if (!v)
-				return;
-			lists.loadList('latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&query=contact_listGroupLink&search=' + encodeURIComponent('contactGroupLink.contactGroupId=' + v), pageContact.listContacts, 'contacts', 'groups');
-		},
-		open() {
-			var activeID = ui.navigation.getActiveID();
-			var e = ui.qa('menu a');
-			for (var i = 0; i < e.length; i++) {
-				if (e[i].matches(':hover')) {
-					ui.attr(activeID, 'menuIndex', i);
-					break;
-				}
-			}
-			if (user.contact.groups == null) {
-				pageContact.groups.getGroups(pageContact.groups.open);
-				return;
-			}
-			var s = user.contact.groups.replace(/type="checkbox"/g, 'type="radio"').replace(/<input /g, '<input onclick="pageContact.groups.loadListGroups()"');
-			lists.setListDivs(activeID);
-			ui.html('contacts listTitle', '');
-			if (ui.cssValue('groups', 'display') == 'none') {
-				ui.html('contacts listResults', '');
-				ui.toggleHeight('groups');
-			}
-			if (s) {
-				e = ui.q('groups');
-				if (!e.innerHTML) {
-					ui.html(e, pageContact.templateGroups({ groups: s }));
-					formFunc.initFields(activeID + ' groups');
-				}
-				ui.q('[name="groupdialog"]').checked = false;
-				ui.css(e, 'display', '');
-				ui.navigation.hideMenu();
-			} else {
-				ui.html(activeID + ' listResults', lists.getListNoResults(activeID, 'noGroups'));
-				lists.setListHint('contacts');
-			}
-		},
-		rename() {
-			if (ui.q('input[name="groupdialog"]:checked'))
-				return;
-			var s = ui.q('#groupsRename').children[0].value;
-			if (s.trim().length == 0)
-				return;
-			s = s.replace(/</g, '&lt;');
-			ui.q('#groupsRename').children[0].value = s;
-			communication.ajax({
-				url: global.server + 'db/one',
-				responseType: 'json',
-				method: 'PUT',
-				body: { classname: 'ContactGroup', id: ui.q('input[name="groupdialog"]:checked').getAttribute('value'), values: { name: s } },
-				success(r) {
-					pageContact.groups.getGroups();
-					var s = ui.q('#groupsRename').children[0].value;
-					var e = ui.q('input[name="groupdialog"]:checked');
-					ui.attr(e, 'label', s);
-					e.nextSibling.innerHTML = s;
-					ui.css('#groupsRename', 'display', 'none');
-				}
-			});
-		},
-		saveGroup(id) {
-			var e = ui.q('popup input[name="name"]');
-			if (!e.value)
-				return;
-			communication.ajax({
-				url: global.server + 'db/one',
-				method: 'POST',
-				body: { classname: 'ContactGroup', values: { name: e.value.replace(/</g, '&lt;') } },
-				success() {
-					ui.navigation.closePopup();
-					pageContact.groups.getGroups(function () {
-						var e2 = ui.qa('[name="groups"] detailTogglePanel input:checked'), e3 = ui.q('[i="' + id + '"] [name="groups"] detailTogglePanel');
-						var s = e3.innerHTML;
-						e3.innerHTML = user.contact.groups.replace(/<input/g, '<input onclick="pageContact.groups.addToGroup(event,' + id + ');"') + s.substring(s.indexOf('<br>'));
-						formFunc.initFields('[i="' + id + '"] [name="groups"]');
-						for (var i = 0; i < e2.length; i++)
-							ui.attr('[i="' + id + '"] [name="groups"] input[value="' + e2[i].value + '"]', 'checked', 'checked');
-						e3 = ui.q('groups > div');
-						if (e2 && e3.innerHTML) {
-							s = user.contact.groups.replace(/type="checkbox"/g, 'type="radio"').replace(/<input /g, '<input onclick="pageContact.groups.loadListGroups()"');
-							var c = ui.val('groups input:checked');
-							e3.innerHTML = s.replace('value="' + c + '"', 'value="' + c + '" checked="true"');
-							formFunc.initFields('groups');
-						}
-					});
-				}
-			});
-		},
-		setGroups(r) {
-			var s = '';
-			for (var i = 1; i < r.length; i++) {
-				var v = model.convert(new ContactGroup(), r, i);
-				s += '<input type="checkbox" name="groupdialog" value="' + v.id + '" label="' + v.name + '"/>';
-			}
-			user.contact.groups = s;
-		},
-		showRename() {
-			ui.css('#groupsDelete', 'display', 'none');
-			var e = ui.q('#groupsRename');
-			e.style.display = e.style.display == 'block' ? 'none' : 'block';
-			e.children[0].value = ui.q('input[name="groupdialog"]:checked').getAttribute('label');
-		},
-		toggleGroups(id, friendship) {
-			if (user.contact.groups == null) {
-				pageContact.groups.getGroups(function () {
-					pageContact.groups.toggleGroups(id);
-				});
-				return;
-			}
-			var path = 'detail card:last-child[i="' + id + '"] [name="groups"] detailTogglePanel';
-			var e = ui.q(path);
-			if (!e.innerHTML) {
-				if (friendship != 'Friends') {
-					if (!e.innerHTML) {
-						if (friendship != 'Terminated' && friendship != 'Terminated2')
-							e.innerHTML = ui.l('contacts.denyAddToGroup');
-						else
-							e.innerHTML = ui.l('contacts.requestFriendship' + (friendship == 'Pending' ? 'AlreadySent' : 'Canceled'));
-					}
-					ui.css(path.substring(0, path.lastIndexOf(' ')) + '>buttontext', 'display', 'none');
-					details.togglePanel(e.parentNode);
-					return;
-				}
-				e.innerHTML = user.contact.groups.replace(/<input/g, '<input onclick="pageContact.groups.addToGroup(event,' + id + ')"') + e.innerHTML;
-				formFunc.initFields(path);
-				communication.ajax({
-					url: global.server + 'db/list?query=contact_listGroupLink&search=' + encodeURIComponent('contactGroupLink.contactId2=' + id),
-					responseType: 'json',
-					success(r) {
-						for (var i = 1; i < r.length; i++) {
-							var d = model.convert(new Contact(), r, i);
-							var e2 = ui.q(path + ' input[value="' + d.contactGroupLink.contactGroupId + '"]');
-							if (e2) {
-								ui.attr(e2, 'checked', 'true');
-								ui.attr(e2, 'gllID', d.contactGroupLink.id);
-							}
-						}
-					}
-				});
-			}
-			details.togglePanel(e.parentNode);
-		}
 	}
 	static init() {
 		if (!ui.q('contacts').innerHTML)
@@ -663,5 +455,214 @@ ${v.matchIndicatorHintDescription}
 		e.style.top = (button.offsetTop + button.offsetHeight) + 'px';
 		e.style.left = '5%';
 		ui.toggleHeight(e);
+	}
+}
+
+class groups {
+	static addGroup(id) {
+		ui.navigation.openPopup(ui.l('group.newButton'), '<field style="padding:1em;"><label>' + ui.l('name') + '</label><value><input type="text" name="name"/></value></field><dialogButtons><buttontext class="bgColor" onclick="groups.saveGroup(' + id + ');">' + ui.l('save') + '</buttontext></dialogButtons>');
+	}
+	static addToGroup(event, id) {
+		var d = { classname: 'ContactGroupLink' }, e = event.target;
+		if (e.checked && !e.getAttribute('gllID')) {
+			d.values = {};
+			d.values.contactId2 = id;
+			d.values.contactGroupId = e.getAttribute('value');
+		} else if (!e.checked && e.getAttribute('gllID'))
+			d.id = e.getAttribute('gllID');
+		if (d) {
+			communication.ajax({
+				url: global.server + 'db/one',
+				body: d,
+				method: d.id ? 'DELETE' : 'POST',
+				pos: e.getAttribute('value'),
+				success(r) {
+					var e2 = ui.q('detail card:last-child[i="' + id + '"] [name="groups"] input[value="' + this.pos + '"]');
+					if (d.id) {
+						ui.attr(e2, 'gllID', null);
+						ui.attr(e2, 'checked', null);
+					} else {
+						ui.attr(e2, 'gllID', r);
+						ui.attr(e2, 'checked', 'true');
+					}
+				}
+			});
+		}
+	}
+	static delete() {
+		if (ui.q('input[name="groupdialog"]:checked'))
+			return;
+		communication.ajax({
+			url: global.server + 'db/one',
+			method: 'DELETE',
+			body: { classname: 'ContactGroup', id: ui.q('input[name="groupdialog"]:checked').getAttribute('value') },
+			success() {
+				groups.getGroups(function () {
+					var s = user.contact.groups.replace(/type="checkbox"/g, 'type="radio"').replace(/<input /g, '<input onclick="groups.loadListGroups()"');
+					if (s.indexOf('<input') > -1)
+						s = s.replace('<input', '<input checked="true"');
+					ui.html('groups', '<div>' + s + '</div>');
+					formFunc.initFields('groups');
+					ui.css('#groupsDelete', 'display', 'none');
+					ui.html('contacts listResults', '');
+				});
+			}
+		});
+	}
+	static getGroups(exec) {
+		communication.ajax({
+			url: global.server + 'db/list?query=contact_listGroup&search=' + encodeURIComponent('contactGroup.contactId=' + user.contact.id),
+			responseType: 'json',
+			success(r) {
+				groups.setGroups(r);
+				if (exec)
+					exec.call();
+			}
+		});
+	}
+	static loadListGroups() {
+		var v = ui.q('input[name="groupdialog"]:checked').getAttribute('value');
+		if (!v)
+			return;
+		lists.loadList('latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&query=contact_listGroupLink&search=' + encodeURIComponent('contactGroupLink.contactGroupId=' + v), pageContact.listContacts, 'contacts', 'groups');
+	}
+	static open() {
+		var activeID = ui.navigation.getActiveID();
+		var e = ui.qa('menu a');
+		for (var i = 0; i < e.length; i++) {
+			if (e[i].matches(':hover')) {
+				ui.attr(activeID, 'menuIndex', i);
+				break;
+			}
+		}
+		if (user.contact.groups == null) {
+			groups.getGroups(groups.open);
+			return;
+		}
+		var s = user.contact.groups.replace(/type="checkbox"/g, 'type="radio"').replace(/<input /g, '<input onclick="groups.loadListGroups()"');
+		lists.setListDivs(activeID);
+		ui.html('contacts listTitle', '');
+		if (ui.cssValue('groups', 'display') == 'none') {
+			ui.html('contacts listResults', '');
+			ui.toggleHeight('groups');
+		}
+		if (s) {
+			e = ui.q('groups');
+			if (!e.innerHTML) {
+				ui.html(e, pageContact.templateGroups({ groups: s }));
+				formFunc.initFields(activeID + ' groups');
+			}
+			ui.q('[name="groupdialog"]').checked = false;
+			ui.css(e, 'display', '');
+			ui.navigation.hideMenu();
+		} else {
+			ui.html(activeID + ' listResults', lists.getListNoResults(activeID, 'noGroups'));
+			lists.setListHint('contacts');
+		}
+	}
+	static rename() {
+		if (ui.q('input[name="groupdialog"]:checked'))
+			return;
+		var s = ui.q('#groupsRename').children[0].value;
+		if (s.trim().length == 0)
+			return;
+		s = s.replace(/</g, '&lt;');
+		ui.q('#groupsRename').children[0].value = s;
+		communication.ajax({
+			url: global.server + 'db/one',
+			responseType: 'json',
+			method: 'PUT',
+			body: { classname: 'ContactGroup', id: ui.q('input[name="groupdialog"]:checked').getAttribute('value'), values: { name: s } },
+			success(r) {
+				groups.getGroups();
+				var s = ui.q('#groupsRename').children[0].value;
+				var e = ui.q('input[name="groupdialog"]:checked');
+				ui.attr(e, 'label', s);
+				e.nextSibling.innerHTML = s;
+				ui.css('#groupsRename', 'display', 'none');
+			}
+		});
+	}
+	static saveGroup(id) {
+		var e = ui.q('popup input[name="name"]');
+		if (!e.value)
+			return;
+		communication.ajax({
+			url: global.server + 'db/one',
+			method: 'POST',
+			body: { classname: 'ContactGroup', values: { name: e.value.replace(/</g, '&lt;') } },
+			success() {
+				ui.navigation.closePopup();
+				groups.getGroups(function () {
+					var e2 = ui.qa('[name="groups"] detailTogglePanel input:checked'), e3 = ui.q('[i="' + id + '"] [name="groups"] detailTogglePanel');
+					var s = e3.innerHTML;
+					e3.innerHTML = user.contact.groups.replace(/<input/g, '<input onclick="groups.addToGroup(event,' + id + ');"') + s.substring(s.indexOf('<br>'));
+					formFunc.initFields('[i="' + id + '"] [name="groups"]');
+					for (var i = 0; i < e2.length; i++)
+						ui.attr('[i="' + id + '"] [name="groups"] input[value="' + e2[i].value + '"]', 'checked', 'checked');
+					e3 = ui.q('groups > div');
+					if (e2 && e3.innerHTML) {
+						s = user.contact.groups.replace(/type="checkbox"/g, 'type="radio"').replace(/<input /g, '<input onclick="groups.loadListGroups()"');
+						var c = ui.val('groups input:checked');
+						e3.innerHTML = s.replace('value="' + c + '"', 'value="' + c + '" checked="true"');
+						formFunc.initFields('groups');
+					}
+				});
+			}
+		});
+	}
+	static setGroups(r) {
+		var s = '';
+		for (var i = 1; i < r.length; i++) {
+			var v = model.convert(new ContactGroup(), r, i);
+			s += '<input type="checkbox" name="groupdialog" value="' + v.id + '" label="' + v.name + '"/>';
+		}
+		user.contact.groups = s;
+	}
+	static showRename() {
+		ui.css('#groupsDelete', 'display', 'none');
+		var e = ui.q('#groupsRename');
+		e.style.display = e.style.display == 'block' ? 'none' : 'block';
+		e.children[0].value = ui.q('input[name="groupdialog"]:checked').getAttribute('label');
+	}
+	static toggleGroups(id, friendship) {
+		if (user.contact.groups == null) {
+			groups.getGroups(function () {
+				groups.toggleGroups(id);
+			});
+			return;
+		}
+		var path = 'detail card:last-child[i="' + id + '"] [name="groups"] detailTogglePanel';
+		var e = ui.q(path);
+		if (!e.innerHTML) {
+			if (friendship != 'Friends') {
+				if (!e.innerHTML) {
+					if (friendship != 'Terminated' && friendship != 'Terminated2')
+						e.innerHTML = ui.l('contacts.denyAddToGroup');
+					else
+						e.innerHTML = ui.l('contacts.requestFriendship' + (friendship == 'Pending' ? 'AlreadySent' : 'Canceled'));
+				}
+				ui.css(path.substring(0, path.lastIndexOf(' ')) + '>buttontext', 'display', 'none');
+				details.togglePanel(e.parentNode);
+				return;
+			}
+			e.innerHTML = user.contact.groups.replace(/<input/g, '<input onclick="groups.addToGroup(event,' + id + ')"') + e.innerHTML;
+			formFunc.initFields(path);
+			communication.ajax({
+				url: global.server + 'db/list?query=contact_listGroupLink&search=' + encodeURIComponent('contactGroupLink.contactId2=' + id),
+				responseType: 'json',
+				success(r) {
+					for (var i = 1; i < r.length; i++) {
+						var d = model.convert(new Contact(), r, i);
+						var e2 = ui.q(path + ' input[value="' + d.contactGroupLink.contactGroupId + '"]');
+						if (e2) {
+							ui.attr(e2, 'checked', 'true');
+							ui.attr(e2, 'gllID', d.contactGroupLink.id);
+						}
+					}
+				}
+			});
+		}
+		details.togglePanel(e.parentNode);
 	}
 }

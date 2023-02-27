@@ -2,7 +2,7 @@ import { communication } from './communication';
 import { details } from './details';
 import { pageEvent } from './pageEvent';
 import { geoData } from './geoData';
-import { global } from './global';
+import { global, Strings } from './global';
 import { lists } from './lists';
 import { Location, model } from './model';
 import { pageChat } from './pageChat';
@@ -311,7 +311,7 @@ ${v.rating}
 		if (eventWithLocation)
 			v.address = v.address.replace(/\n/g, '<br />');
 		if (v.description)
-			v.description = '<text class="description">' + global.string.replaceLinks(v.description.replace(/\n/g, '<br/>')) + '</text>';
+			v.description = '<text class="description">' + Strings.replaceLinks(v.description.replace(/\n/g, '<br/>')) + '</text>';
 		if (v.bonus)
 			v.bonus = '<text style="margin:1em 0;" class="highlightBackground">' + ui.l('locations.bonus') + v.bonus + '<br/>' + ui.l('locations.bonusHint') + '</text>';
 		if (user.contact) {

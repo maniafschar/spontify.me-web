@@ -52,9 +52,9 @@ class user {
 			data.classname = 'Contact';
 			data.id = user.contact.id;
 			communication.ajax({
-				progressBar: success ? true : false,
 				url: global.server + 'db/one',
 				method: 'PUT',
+				progressBar: success ? true : false,
 				body: data,
 				success() {
 					for (var k in data.values)

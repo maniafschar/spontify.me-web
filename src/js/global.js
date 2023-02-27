@@ -5,7 +5,7 @@ import { Contact, Location, model } from './model';
 import { ui } from './ui';
 import { user } from './user';
 
-export { global };
+export { global, Strings };
 
 class global {
 	static appTitle = 'skillvents';
@@ -232,120 +232,6 @@ class global {
 			'https://play.google.com/store/apps/details?id=com.jq.spontifyme' :
 			'https://itunes.apple.com/app/id1630967898');
 	}
-	static string = {
-		emoji: /\p{Extended_Pictographic}/ug,
-		isEmoji(c, subsequent) {
-			if (subsequent)
-				return 0x2000 <= c && c <= 0x1ffff;
-			return (0x2310 <= c && c <= 0x3299) || (0x1f000 <= c && c <= 0x1ffff);
-		},
-		replaceEmoji(s) {
-			if (s.codePointAt && global.string.emoji.test(s)) {
-				for (var i = 0; i < s.length; i++) {
-					if (global.string.isEmoji(s.codePointAt(i))) {
-						var l = 1;
-						while (global.string.isEmoji(s.codePointAt(i + l), true))
-							l++;
-						s = s.substring(0, i) + '<emoji>' + s.substring(i, i + l) + '</emoji>' + s.substring(i + l);
-						i += l - 1 + 15;
-					}
-				}
-			}
-			return s;
-		},
-		replaceLinks(s) {
-			var match = s.match(/https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)/g);
-			if (match) {
-				for (var i = 0; i < match.length; i++)
-					s = s.replaceAll(match[i], '<a onclick="ui.navigation.openHTML(&quot;' + match[i] + '&quot;);event.stopPropagation();" class="internalLink">' + match[i] + '</a>');
-			}
-			return s;
-		},
-		replaceInternalLinks(s) {
-			if (!s)
-				return '';
-			var p = -1, p2, load = [];
-			while ((p = s.indexOf(' :open(', p + 1)) > -1) {
-				p2 = s.indexOf('): ', p);
-				if (p2 > -1) {
-					var id = global.decParam(s.substring(p + 7, p2));
-					if (id && id.length > 2 && id.charAt(1) == '=') {
-						var table = 'location';
-						if (id.indexOf('p=') == 0)
-							table = 'contact';
-						else if (id.indexOf('e=') == 0) {
-							table = 'event';
-							id = id.substring(0, id.indexOf('_'));
-						}
-						if (!isNaN(id.substring(2))) {
-							if (!load[table])
-								load[table] = [];
-							load[table].push(id.substring(2));
-							s = s.substring(0, p + 1) + '<span class="chatLinks" name="autoOpen' + id.replace('=', '_') + '" onclick="ui.navigation.autoOpen(&quot;' + s.substring(p + 7, p2) + '&quot;,event);"><img src="images/' + table + '.svg" class="bgColor"/><br/></span>' + s.substring(p2 + 3);
-						}
-					}
-				}
-			}
-			for (var table in load) {
-				var search = '';
-				for (var i = 0; i < load[table].length; i++)
-					search += ' or ' + table + '.id=' + load[table][i];
-				lists.loadList('query=' + table + '_list&distance=100000&search=' + encodeURIComponent('(' + search.substring(4) + ')'), function (l) {
-					var s, e, processed = [], t = l[0][0].substring(0, l[0][0].indexOf('.'));
-					for (var i = 1; i < l.length; i++) {
-						var v = model.convert(t == 'contact' ? new Contact() : new Location(), l, i);
-						var img = v.imageList;
-						if (!img && t == 'event')
-							img = v.event.imageList;
-						if (img)
-							img = global.serverImg + img;
-						s = t == 'contact' ? v.pseudonym : t == 'location' ? v.name : v.text;
-						e = ui.qa('[name="autoOpen' + (t == 'contact' ? 'p' : t == 'event' ? 'e' : 'l') + '_' + v.id + '"] > img');
-						processed[v.id] = 1;
-						if (img) {
-							ui.attr(e, 'src', img);
-							ui.classRemove(e, 'bgColor');
-						}
-						for (var i2 = 0; i2 < e.length; i2++) {
-							e[i2].parentNode.removeAttribute('name');
-							e[i2].nextSibling.outerHTML = '<br/>' + s;
-						}
-					}
-					s = search.substring(search.indexOf('(') + 1, search.indexOf(')')).split(t + '.id=');
-					for (var i = 0; i < s.length; i++) {
-						if (s[i].indexOf(' ') > 0)
-							s[i] = s[i].substring(0, s[i].indexOf(' '));
-						if (s[i] && !processed[s[i]]) {
-							e = ui.q('[name="autoOpen' + (t == 'contact' ? 'p' : t == 'event' ? 'e' : 'l') + '_' + s[i] + '"]');
-							ui.html(e, ui.l('entry.removed'));
-							ui.attr(e, 'onclick', '');
-							ui.attr(e, 'name', '');
-						}
-					}
-				});
-			}
-			p = -1;
-			while ((p = s.indexOf(' :openPos(', p + 1)) > -1) {
-				p2 = s.indexOf('): ', p);
-				if (p2 > -1) {
-					var l2 = s.substring(p + 10, p2).split(',');
-					if (l2.length == 2 && !isNaN(l2[0]) && !isNaN(l2[1])) {
-						l2 = l2[0] + ',' + l2[1];
-						var imgId = l2.replace(/\./g, '').replace(',', '');
-						s = s.substring(0, p + 1) + '<span class="chatLinks" onclick="ui.navigation.openHTML(&quot;https://maps.google.com/maps?saddr=' + geoData.current.lat + ',' + geoData.current.lon + '&daddr=' + l2 + '&quot;);"><img l="' + imgId + '" /><p>' + ui.l('hereAmI') + '</p></span>' + s.substring(p2 + 2);
-						communication.ajax({
-							url: global.server + 'action/map?destination=' + l2,
-							progressBar: false,
-							success(r) {
-								ui.attr('img[l="' + imgId + '"]', 'src', 'data:image/png;base64,' + r);
-							}
-						});
-					}
-				}
-			}
-			return s;
-		}
-	}
 	static template(parts) {
 		var res = parts[0];
 		for (var i = 1; i < parts.length; i++) {
@@ -354,5 +240,119 @@ class global {
 			res += parts[i];
 		}
 		return res;
+	}
+}
+class Strings {
+	static emoji = /\p{Extended_Pictographic}/ug;
+	static isEmoji(c, subsequent) {
+		if (subsequent)
+			return 0x2000 <= c && c <= 0x1ffff;
+		return (0x2310 <= c && c <= 0x3299) || (0x1f000 <= c && c <= 0x1ffff);
+	}
+	static replaceEmoji(s) {
+		if (s.codePointAt && Strings.emoji.test(s)) {
+			for (var i = 0; i < s.length; i++) {
+				if (Strings.isEmoji(s.codePointAt(i))) {
+					var l = 1;
+					while (Strings.isEmoji(s.codePointAt(i + l), true))
+						l++;
+					s = s.substring(0, i) + '<emoji>' + s.substring(i, i + l) + '</emoji>' + s.substring(i + l);
+					i += l - 1 + 15;
+				}
+			}
+		}
+		return s;
+	}
+	static replaceLinks(s) {
+		var match = s.match(/https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)/g);
+		if (match) {
+			for (var i = 0; i < match.length; i++)
+				s = s.replaceAll(match[i], '<a onclick="ui.navigation.openHTML(&quot;' + match[i] + '&quot;);event.stopPropagation();" class="internalLink">' + match[i] + '</a>');
+		}
+		return s;
+	}
+	static replaceInternalLinks(s) {
+		if (!s)
+			return '';
+		var p = -1, p2, load = [];
+		while ((p = s.indexOf(' :open(', p + 1)) > -1) {
+			p2 = s.indexOf('): ', p);
+			if (p2 > -1) {
+				var id = global.decParam(s.substring(p + 7, p2));
+				if (id && id.length > 2 && id.charAt(1) == '=') {
+					var table = 'location';
+					if (id.indexOf('p=') == 0)
+						table = 'contact';
+					else if (id.indexOf('e=') == 0) {
+						table = 'event';
+						id = id.substring(0, id.indexOf('_'));
+					}
+					if (!isNaN(id.substring(2))) {
+						if (!load[table])
+							load[table] = [];
+						load[table].push(id.substring(2));
+						s = s.substring(0, p + 1) + '<span class="chatLinks" name="autoOpen' + id.replace('=', '_') + '" onclick="ui.navigation.autoOpen(&quot;' + s.substring(p + 7, p2) + '&quot;,event);"><img src="images/' + table + '.svg" class="bgColor"/><br/></span>' + s.substring(p2 + 3);
+					}
+				}
+			}
+		}
+		for (var table in load) {
+			var search = '';
+			for (var i = 0; i < load[table].length; i++)
+				search += ' or ' + table + '.id=' + load[table][i];
+			lists.loadList('query=' + table + '_list&distance=100000&search=' + encodeURIComponent('(' + search.substring(4) + ')'), function (l) {
+				var s, e, processed = [], t = l[0][0].substring(0, l[0][0].indexOf('.'));
+				for (var i = 1; i < l.length; i++) {
+					var v = model.convert(t == 'contact' ? new Contact() : new Location(), l, i);
+					var img = v.imageList;
+					if (!img && t == 'event')
+						img = v.event.imageList;
+					if (img)
+						img = global.serverImg + img;
+					s = t == 'contact' ? v.pseudonym : t == 'location' ? v.name : v.text;
+					e = ui.qa('[name="autoOpen' + (t == 'contact' ? 'p' : t == 'event' ? 'e' : 'l') + '_' + v.id + '"] > img');
+					processed[v.id] = 1;
+					if (img) {
+						ui.attr(e, 'src', img);
+						ui.classRemove(e, 'bgColor');
+					}
+					for (var i2 = 0; i2 < e.length; i2++) {
+						e[i2].parentNode.removeAttribute('name');
+						e[i2].nextSibling.outerHTML = '<br/>' + s;
+					}
+				}
+				s = search.substring(search.indexOf('(') + 1, search.indexOf(')')).split(t + '.id=');
+				for (var i = 0; i < s.length; i++) {
+					if (s[i].indexOf(' ') > 0)
+						s[i] = s[i].substring(0, s[i].indexOf(' '));
+					if (s[i] && !processed[s[i]]) {
+						e = ui.q('[name="autoOpen' + (t == 'contact' ? 'p' : t == 'event' ? 'e' : 'l') + '_' + s[i] + '"]');
+						ui.html(e, ui.l('entry.removed'));
+						ui.attr(e, 'onclick', '');
+						ui.attr(e, 'name', '');
+					}
+				}
+			});
+		}
+		p = -1;
+		while ((p = s.indexOf(' :openPos(', p + 1)) > -1) {
+			p2 = s.indexOf('): ', p);
+			if (p2 > -1) {
+				var l2 = s.substring(p + 10, p2).split(',');
+				if (l2.length == 2 && !isNaN(l2[0]) && !isNaN(l2[1])) {
+					l2 = l2[0] + ',' + l2[1];
+					var imgId = l2.replace(/\./g, '').replace(',', '');
+					s = s.substring(0, p + 1) + '<span class="chatLinks" onclick="ui.navigation.openHTML(&quot;https://maps.google.com/maps?saddr=' + geoData.current.lat + ',' + geoData.current.lon + '&daddr=' + l2 + '&quot;);"><img l="' + imgId + '" /><p>' + ui.l('hereAmI') + '</p></span>' + s.substring(p2 + 2);
+					communication.ajax({
+						url: global.server + 'action/map?destination=' + l2,
+						progressBar: false,
+						success(r) {
+							ui.attr('img[l="' + imgId + '"]', 'src', 'data:image/png;base64,' + r);
+						}
+					});
+				}
+			}
+		}
+		return s;
 	}
 }
