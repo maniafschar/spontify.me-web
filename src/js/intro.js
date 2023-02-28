@@ -1,7 +1,4 @@
-import { geoData } from './geoData';
 import { global } from './global';
-import { lists } from './lists';
-import { pageLocation } from './pageLocation';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 
@@ -28,9 +25,6 @@ class intro {
 			ui.html(e, '');
 		}, true);
 		ui.css(e, 'opacity', 0);
-	}
-	static loadLocations() {
-		lists.loadList('latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&query=' + (user.contact ? 'location_list' : 'location_anonymousList'), pageLocation.listLocation, 'locations', 'list');
 	}
 	static openHint(data, save) {
 		if (save && new Date().getTime() / 60000 - intro.lastHint < 4)

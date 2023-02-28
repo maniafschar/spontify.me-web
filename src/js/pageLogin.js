@@ -256,13 +256,11 @@ class pageLogin {
 					if (user.contact.birthday && user.contact.birthday.trim().length > 8 && !exec) {
 						var d = new Date();
 						if (d.getMonth() == user.contact.birthday.substring(5, 7) - 1 && d.getDate() == user.contact.birthday.substring(8, 10)) {
-							ui.navigation.openPopup(ui.l('birthday'), ui.l('birthday.gratulation').replace('{0}', d.getFullYear() - user.contact.birthday.substring(0, 4)) + '<br/><br/><span id="birthdayCleverTip"></span><br/><img src="images/happyBirthday.png" style="width:40%;"/>');
 							communication.ajax({
-								url: global.server + 'action/quotation',
+								url: global.server + 'action/birthday',
+								responseType: 'json',
 								success(r) {
-									var e = ui.q('#birthdayCleverTip');
-									if (e)
-										e.innerHTML = r;
+									ui.navigation.openPopup(ui.l('birthday'), ui.l('birthday.gratulation').replace('{0}', d.getFullYear() - user.contact.birthday.substring(0, 4)) + '<br/><br/>' + r.text + '<br/><img src="' + r.image + '" style="width:40%;"/>');
 								}
 							});
 						}

@@ -47,18 +47,19 @@ class user {
 	}
 	static save(data, success) {
 		if (user.contact && user.contact.id) {
-			if (!data.values)
-				data = { values: data };
-			data.classname = 'Contact';
-			data.id = user.contact.id;
+			var v = {
+				classname: 'Contact',
+				id: user.contact.id,
+				values: data.values ? data.values : data
+			}
 			communication.ajax({
 				url: global.server + 'db/one',
 				method: 'PUT',
 				progressBar: success ? true : false,
-				body: data,
+				body: v,
 				success() {
-					for (var k in data.values)
-						user.contact[k] = data.values[k];
+					for (var k in v.values)
+						user.contact[k] = v.values[k];
 					if (typeof user.contact.filter == 'string')
 						user.contact.filter = JSON.parse(user.contact.filter);
 					if (typeof user.contact.storage == 'string')
