@@ -66,6 +66,7 @@ class communication {
 			communication.currentCalls.push(param);
 			if (param.progressBar != false)
 				ui.css('progressbar', 'display', '');
+			xmlhttp.setRequestHeader('page', ui.navigation.getActiveID());
 			if (user.contact) {
 				var salt = ('' + (d.getTime() + d.getTimezoneOffset() * 60 * 1000) + Math.random()).replace(/[01]\./, '.');
 				xmlhttp.setRequestHeader('user', user.contact.id);
