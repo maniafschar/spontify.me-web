@@ -439,7 +439,14 @@ ${v.matchIndicatorHintDescription}
 	static toggleLocation(id) {
 		var e = ui.q('detail card:last-child[i="' + id + '"] [name="location"]');
 		if (!e.innerHTML) {
-			lists.load('webCall=pageContact.toggleLocation(id)&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent('location.contactId=' + id), function (l) {
+			lists.load({
+				webCall: 'pageContact.toggleLocation(id)',
+				latitude: geoData.current.lat,
+				longitude: geoData.current.lon,
+				distance: 100000,
+				query: 'location_list',
+				search: encodeURIComponent('location.contactId=' + id)
+			}, function (l) {
 				var s = pageLocation.listLocation(l);
 				if (s) {
 					e.innerHTML = ui.l('locations.my') + '<br/>' + s;
@@ -531,7 +538,13 @@ class groups {
 		var v = ui.q('input[name="groupdialog"]:checked').getAttribute('value');
 		if (!v)
 			return;
-		lists.load('webCall=pageContact.loadListGroups()&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&query=contact_listGroupLink&search=' + encodeURIComponent('contactGroupLink.contactGroupId=' + v), pageContact.listContacts, 'contacts', 'groups');
+		lists.load({
+			webCall: 'pageContact.loadListGroups()',
+			latitude: geoData.current.lat,
+			longitude: geoData.current.lon,
+			query: 'contact_listGroupLink',
+			search: encodeURIComponent('contactGroupLink.contactGroupId=' + v)
+		}, pageContact.listContacts, 'contacts', 'groups');
 	}
 	static open() {
 		var activeID = ui.navigation.getActiveID();

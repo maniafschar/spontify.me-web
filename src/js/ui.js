@@ -470,14 +470,26 @@ class ui {
 	};
 	static query = {
 		contactFriends() {
-			return lists.load(
-				'webCall=ui.query.contactFriends()&query=contact_list&distance=100000&limit=0&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('contactLink.status=\'Friends\''),
-				pageContact.listContacts, 'contacts', 'friends');
+			return lists.load({
+				webCall: 'ui.query.contactFriends()',
+				query: 'contact_list',
+				distance: 100000,
+				limit: 0,
+				latitude: geoData.current.lat,
+				longitude: geoData.current.lon,
+				search: encodeURIComponent('contactLink.status=\'Friends\'')
+			}, pageContact.listContacts, 'contacts', 'friends');
 		},
 		contactVisitees() {
-			return lists.load(
-				'webCall=ui.query.contactVisitees()&query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('contactVisit.contactId2=contact.id and contactVisit.contactId=' + user.contact.id),
-				pageContact.listContacts, 'contacts', 'visits');
+			return lists.load({
+				webCall: 'ui.query.contactVisitees()',
+				query: 'contact_listVisit',
+				distance: 100000,
+				sort: false,
+				latitude: geoData.current.lat,
+				longitude: geoData.current.lon,
+				search: encodeURIComponent('contactVisit.contactId2=contact.id and contactVisit.contactId=' + user.contact.id)
+			}, pageContact.listContacts, 'contacts', 'visits');
 		},
 		contactVisits() {
 			communication.ajax({
@@ -486,17 +498,35 @@ class ui {
 				method: 'PUT',
 				body: { classname: 'Contact', id: user.contact.id, values: { visitPage: global.date.local2server(new Date()) } }
 			});
-			return lists.load(
-				'webCall=ui.query.contactVisits()&query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('contactVisit.contactId=contact.id and contactVisit.contactId2=' + user.contact.id),
-				pageContact.listContacts, 'contacts', 'profile');
+			return lists.load({
+				webCall: 'ui.query.contactVisits()',
+				query: 'contact_listVisit',
+				distance: 100000,
+				sort: false,
+				latitude: geoData.current.lat,
+				longitude: geoData.current.lon,
+				search: encodeURIComponent('contactVisit.contactId=contact.id and contactVisit.contactId2=' + user.contact.id)
+			}, pageContact.listContacts, 'contacts', 'profile');
 		},
 		eventMy() {
-			pageEvent.loadEvents('webCall=ui.query.eventMy()&query=event_list&distance=100000&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('event.contactId=' + user.contact.id));
+			pageEvent.loadEvents({
+				webCall: 'ui.query.eventMy()',
+				query: 'event_list',
+				distance: 100000,
+				latitude: geoData.current.lat,
+				longitude: geoData.current.lon,
+				search: encodeURIComponent('event.contactId=' + user.contact.id)
+			});
 		},
 		eventTickets() {
-			return lists.load(
-				'webCall=ui.query.eventTickets()&query=event_listParticipate&distance=100000&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id + ' and event.contactId=contact.id'),
-				pageEvent.listTickets, 'events', 'eventsTicket');
+			return lists.load({
+				webCall: 'ui.query.eventTickets()',
+				query: 'event_listParticipate',
+				distance: 100000,
+				latitude: geoData.current.lat,
+				longitude: geoData.current.lon,
+				search: encodeURIComponent('eventParticipate.contactId=' + user.contact.id + ' and event.contactId=contact.id')
+			}, pageEvent.listTickets, 'events', 'eventsTicket');
 		}
 	}
 	static l(id) {

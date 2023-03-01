@@ -595,9 +595,21 @@ ${v.info}`;
 				e.innerHTML = '';
 			});
 		else {
-			lists.load('webCall=pageSettings.toggleBlocked()&query=contact_listBlocked&limit=0', pageSettings.listContactsBlocked);
-			lists.load('webCall=pageSettings.toggleBlocked()&query=location_listBlocked&limit=0', pageSettings.listLocationsBlocked);
-			lists.load('webCall=pageSettings.toggleBlocked()&query=event_listBlocked&limit=0', pageSettings.listLocationsBlocked);
+			lists.load({
+				webCall: 'pageSettings.toggleBlocked()',
+				query: 'contact_listBlocked',
+				limit: 0
+			}, pageSettings.listContactsBlocked);
+			lists.load({
+				webCall: 'pageSettings.toggleBlocked()',
+				query: 'location_listBlocked',
+				limit: 0
+			}, pageSettings.listLocationsBlocked);
+			lists.load({
+				webCall: 'pageSettings.toggleBlocked()',
+				query: 'event_listBlocked',
+				limit: 0
+			}, pageSettings.listLocationsBlocked);
 		}
 	}
 	static toggleGenderSlider(e) {

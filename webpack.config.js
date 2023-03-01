@@ -23,9 +23,7 @@ module.exports = {
 		{
 			apply: compiler => {
 				compiler.hooks.beforeCompile.tap('webCalls', () => {
-					var fs = require('fs'), dir = 'src/js/';
-					var files = fs.readdirSync(dir);
-					var call = function (s) {
+					var method = function (s) {
 						var i = s.lastIndexOf('static');
 						var s2 = s.substring(i + 6, s.indexOf('{', i)).trim();
 						if (s2.indexOf(' =') > 0) {
@@ -39,31 +37,17 @@ module.exports = {
 						}
 						return s2.replace(/ /g, '');
 					}
-					var ajax = function (s) {
-						var i2 = 0;
-						while ((i2 = s.indexOf('webCall: \'', i2)) > -1) {
-							var s2 = files[i].substring(0, files[i].length - 3) + '.' + call(s.substring(0, i2));
-							i2 += 10;
-							s = s.substring(0, i2) + s2 + s.substring(s.indexOf('\',', i2));
-							i2 += s2.length;
-						}
-						return s;
-					}
-					var lists = function (s) {
-						var i2 = 0;
-						while ((i2 = s.indexOf('\'webCall=', i2)) > -1) {
-							var s2 = files[i].substring(0, files[i].length - 3) + '.' + call(s.substring(0, i2));
-							i2 += 9;
-							s = s.substring(0, i2) + s2 + s.substring(s.indexOf('&', i2));
-							i2 += s2.length;
-						}
-						return s;
-					}
+					var fs = require('fs'), dir = 'src/js/';
+					var files = fs.readdirSync(dir);
 					for (var i = 0; i < files.length; i++) {
 						if (files[i].indexOf('.js') > 0) {
-							var s = fs.readFileSync(dir + files[i], 'utf8');
-							s = ajax(s);
-							s = lists(s);
+							var i2 = 0, s = fs.readFileSync(dir + files[i], 'utf8');
+							while ((i2 = s.indexOf('webCall: \'', i2)) > -1) {
+								var s2 = files[i].substring(0, files[i].length - 3) + '.' + method(s.substring(0, i2));
+								i2 += 10;
+								s = s.substring(0, i2) + s2 + s.substring(s.indexOf('\',', i2));
+								i2 += s2.length;
+							}
 							fs.writeFileSync(dir + files[i], s);
 						}
 					}

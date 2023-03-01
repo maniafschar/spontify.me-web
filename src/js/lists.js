@@ -44,11 +44,11 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 		ui.css(divID + ' filters', 'transform', 'scale(0)');
 		ui.html('popupHint', '');
 		var menuIndex = -1;
-		var wc = data.substring(data.indexOf('webCall=lists.load(data,callback,divID,errorID)&'));
-		data = data.substring(data.indexOf('&') + 1);
+		var wc = data.webCall;
+		delete data.webCall;
 		ui.qa('menu a').forEach(function (e, i) { if (e.matches(':hover')) menuIndex = i; });
 		communication.ajax({
-			url: global.server + 'db/list?' + data,
+			url: global.server + 'db/list?' + Object.keys(data).map(key => key + '=' + data[key]).join('&'),
 			responseType: 'json',
 			webCall: wc,
 			success(r) {

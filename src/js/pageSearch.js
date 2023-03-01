@@ -102,7 +102,14 @@ class pageSearch {
 		},
 		search() {
 			pageSearch.contacts.fieldValues = formFunc.getForm('search tabBody div.contacts form').values;
-			lists.load('webCall=pageSearch.contacts.search()&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&distance=100000&query=contact_list&search=' + encodeURIComponent(pageSearch.contacts.getSearch()), pageContact.listContacts, 'search tabBody>div.contacts', 'search');
+			lists.load({
+				webCall: 'pageSearch.contacts.search()',
+				latitude: geoData.current.lat,
+				longitude: geoData.current.lon,
+				distance: 100000,
+				query: 'contact_list',
+				search: encodeURIComponent(pageSearch.contacts.getSearch())
+			}, pageContact.listContacts, 'search tabBody>div.contacts', 'search');
 			user.set('searchContacts', pageSearch.contacts.fieldValues);
 		}
 	}
@@ -214,7 +221,14 @@ class pageSearch {
 		},
 		search() {
 			pageSearch.events.fieldValues = formFunc.getForm('search tabBody div.events form').values;
-			pageEvent.loadEvents('webCall=pageSearch.events.search()&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&distance=100000&query=event_list&search=' + encodeURIComponent(pageSearch.events.getSearch()));
+			pageEvent.loadEvents({
+				webCall: 'pageSearch.events.search()',
+				latitude: geoData.current.lat,
+				longitude: geoData.current.lon,
+				distance: 100000,
+				query: 'event_list',
+				search: encodeURIComponent(pageSearch.events.getSearch())
+			});
 			user.set('searchEvents', pageSearch.events.fieldValues);
 		}
 	}
@@ -292,7 +306,14 @@ class pageSearch {
 		},
 		search() {
 			pageSearch.locations.fieldValues = formFunc.getForm('search tabBody div.locations form').values;
-			lists.load('webCall=pageSearch.locations.search()&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent(pageSearch.locations.getSearch()), pageLocation.listLocation, 'search tabBody>div.locations', 'search');
+			lists.load({
+				webCall: 'pageSearch.locations.search()',
+				latitude: geoData.current.lat,
+				longitude: geoData.current.lon,
+				distance: 100000,
+				query: 'location_list',
+				search: encodeURIComponent(pageSearch.locations.getSearch())
+			}, pageLocation.listLocation, 'search tabBody>div.locations', 'search');
 			user.set('searchLocations', pageSearch.locations.fieldValues);
 		}
 	}
