@@ -43,10 +43,8 @@ module.exports = {
 						if (files[i].indexOf('.js') > 0) {
 							var i2 = 0, s = fs.readFileSync(dir + files[i], 'utf8');
 							while ((i2 = s.indexOf('webCall: \'', i2)) > -1) {
-								var s2 = files[i].substring(0, files[i].length - 3) + '.' + method(s.substring(0, i2));
 								i2 += 10;
-								s = s.substring(0, i2) + s2 + s.substring(s.indexOf('\',', i2));
-								i2 += s2.length;
+								s = s.substring(0, i2) + files[i].substring(0, files[i].length - 3) + '.' + method(s.substring(0, i2)) + s.substring(s.indexOf('\',', i2));
 							}
 							fs.writeFileSync(dir + files[i], s);
 						}
