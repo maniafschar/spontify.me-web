@@ -471,30 +471,31 @@ class ui {
 	static query = {
 		contactFriends() {
 			return lists.loadList(
-				'query=contact_list&distance=100000&limit=0&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('contactLink.status=\'Friends\''),
+				'webCall=ui.query.contactFriends()&query=contact_list&distance=100000&limit=0&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('contactLink.status=\'Friends\''),
 				pageContact.listContacts, 'contacts', 'friends');
 		},
 		contactVisitees() {
 			return lists.loadList(
-				'query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('contactVisit.contactId2=contact.id and contactVisit.contactId=' + user.contact.id),
+				'webCall=ui.query.contactVisitees()&query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('contactVisit.contactId2=contact.id and contactVisit.contactId=' + user.contact.id),
 				pageContact.listContacts, 'contacts', 'visits');
 		},
 		contactVisits() {
 			communication.ajax({
 				url: global.server + 'db/one',
+				webCall: 'ui.query.contactVisits()',
 				method: 'PUT',
 				body: { classname: 'Contact', id: user.contact.id, values: { visitPage: global.date.local2server(new Date()) } }
 			});
 			return lists.loadList(
-				'query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('contactVisit.contactId=contact.id and contactVisit.contactId2=' + user.contact.id),
+				'webCall=ui.query.contactVisits()&query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('contactVisit.contactId=contact.id and contactVisit.contactId2=' + user.contact.id),
 				pageContact.listContacts, 'contacts', 'profile');
 		},
 		eventMy() {
-			pageEvent.loadEvents('query=event_list&distance=100000&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('event.contactId=' + user.contact.id));
+			pageEvent.loadEvents('webCall=ui.query.eventMy()&query=event_list&distance=100000&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('event.contactId=' + user.contact.id));
 		},
 		eventTickets() {
 			return lists.loadList(
-				'query=event_listParticipate&distance=100000&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id + ' and event.contactId=contact.id'),
+				'webCall=ui.query.eventTickets()&query=event_listParticipate&distance=100000&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id + ' and event.contactId=contact.id'),
 				pageEvent.listTickets, 'events', 'eventsTicket');
 		}
 	}
@@ -857,6 +858,7 @@ class formFunc {
 				formFunc.image.svg[id] = 1;
 				communication.ajax({
 					url: '/images/' + id + '.svg',
+					webCall: 'ui.image.fetchSVG(id)',
 					success(r) {
 						var parser = new DOMParser();
 						var xmlDoc = parser.parseFromString(r, "text/xml");

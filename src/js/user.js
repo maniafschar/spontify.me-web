@@ -37,7 +37,7 @@ class user {
 		}
 		if (save) {
 			user.contact.storage = d;
-			user.save({ storage: JSON.stringify(user.contact.storage) });
+			user.save({ webCall: 'user.remove(key)', storage: JSON.stringify(user.contact.storage) });
 		}
 	}
 	static reset() {
@@ -47,6 +47,8 @@ class user {
 	}
 	static save(data, success) {
 		if (user.contact && user.contact.id) {
+			var wc = data.webCall;
+			delete data.webCall;
 			var v = {
 				classname: 'Contact',
 				id: user.contact.id,
@@ -57,6 +59,7 @@ class user {
 				method: 'PUT',
 				progressBar: success ? true : false,
 				body: v,
+				webCall: wc,
 				success() {
 					for (var k in v.values)
 						user.contact[k] = v.values[k];
@@ -73,7 +76,7 @@ class user {
 	static set(key, value) {
 		if (value) {
 			user.contact.storage[key] = value;
-			user.save({ storage: JSON.stringify(user.contact.storage) });
+			user.save({ webCall: 'user.set(key, value)', storage: JSON.stringify(user.contact.storage) });
 		} else
 			user.remove(key);
 	}

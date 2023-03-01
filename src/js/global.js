@@ -9,7 +9,7 @@ export { global, Strings };
 
 class global {
 	static appTitle = 'skillvents';
-	static appVersion = '0.3.8';
+	static appVersion = '0.3.9';
 	static language = null;
 	static minLocations = 5;
 	static paused = false;
@@ -300,7 +300,7 @@ class Strings {
 			var search = '';
 			for (var i = 0; i < load[table].length; i++)
 				search += ' or ' + table + '.id=' + load[table][i];
-			lists.loadList('query=' + table + '_list&distance=100000&search=' + encodeURIComponent('(' + search.substring(4) + ')'), function (l) {
+			lists.loadList('webCall=global.replaceInternalLinks(s)&query=' + table + '_list&distance=100000&search=' + encodeURIComponent('(' + search.substring(4) + ')'), function (l) {
 				var s, e, processed = [], t = l[0][0].substring(0, l[0][0].indexOf('.'));
 				for (var i = 1; i < l.length; i++) {
 					var v = model.convert(t == 'contact' ? new Contact() : new Location(), l, i);
@@ -346,6 +346,7 @@ class Strings {
 					communication.ajax({
 						url: global.server + 'action/map?destination=' + l2,
 						progressBar: false,
+						webCall: 'global.replaceInternalLinks(s)',
 						success(r) {
 							ui.attr('img[l="' + imgId + '"]', 'src', 'data:image/png;base64,' + r);
 						}

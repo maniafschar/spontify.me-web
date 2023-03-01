@@ -47,6 +47,7 @@ ${ui.l('home.DescLink')}
 		if (!e.innerHTML) {
 			communication.ajax({
 				url: global.server + 'action/paypalKey',
+				webCall: 'pageInfo.init()',
 				responseType: 'json',
 				success(r) {
 					e.innerHTML = pageInfo.templateDesc(r) + pageInfo.template() + pageInfo.templateCopyright();
@@ -86,7 +87,7 @@ ${ui.l('home.DescLink')}
 				intro.openHint({ desc: '<div style="margin:0 0.5em 1em 0.5em;">' + ui.l('info.recommend') + '</div><buttontext class="bgColor" style="margin-top:0.5em;" onclick="pageInfo.socialShare()">' + ui.l('Yes') + '</buttontext>', pos: '15%,20vh', size: '70%,auto' });
 				setTimeout(function () {
 					if (ui.q('hint buttontext[onclick*="socialShare"]'))
-						user.save({ recommend: global.date.local2server(new Date()) });
+						user.save({ webCall: 'pageInfo.socialShareDialog()', recommend: global.date.local2server(new Date()) });
 				}, 1500);
 			} else
 				setTimeout(pageInfo.socialShareDialog, 2000);

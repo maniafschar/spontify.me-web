@@ -169,6 +169,7 @@ class pageEvent {
 				v.hideMePotentialParticipants = '';
 			communication.ajax({
 				url: global.server + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + v.event.id + ' and eventParticipate.eventDate=\'' + v.id.split('_')[1] + '\''),
+				webCall: 'pageEvent.detail(v)',
 				responseType: 'json',
 				success(r) {
 					var count = 0;
@@ -229,6 +230,7 @@ class pageEvent {
 		if (!pageEvent.paypal.fee) {
 			communication.ajax({
 				url: global.server + 'action/paypalKey',
+				webCall: 'pageEvent.edit(locationID, id)',
 				responseType: 'json',
 				success(r) {
 					pageEvent.paypal.fee = r.fee;
@@ -409,6 +411,7 @@ class pageEvent {
 		if (!pageLocation.map.svgLocation)
 			communication.ajax({
 				url: '/images/location.svg',
+				webCall: 'pageEvent.init()',
 				success(r) {
 					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
 					e.setAttribute('fill', 'black');
@@ -420,6 +423,7 @@ class pageEvent {
 		if (!pageLocation.map.svgMe)
 			communication.ajax({
 				url: '/images/contact.svg',
+				webCall: 'pageEvent.init()',
 				success(r) {
 					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
 					e.setAttribute('fill', 'black');
@@ -543,7 +547,7 @@ class pageEvent {
 				render();
 			});
 		lists.loadList(
-			'query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id),
+			'webCall=pageEvent.loadEvents(params)&query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id),
 			function (l) {
 				participations = l;
 				render();
@@ -557,7 +561,7 @@ class pageEvent {
 		}
 		var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
 		var search = global.getRegEx('contact.skills', e.event.skills) + ' or ' + global.getRegEx('contact.skillsText', e.event.skillsText) + ' and contact.id<>' + user.contact.id;
-		lists.loadList('query=contact_list&distance=50&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent(search),
+		lists.loadList('webCall=pageEvent.loadPotentialParticipants()&query=contact_list&distance=50&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent(search),
 			function (r) {
 				var s = pageContact.listContacts(r);
 				if (!s)
@@ -573,6 +577,7 @@ class pageEvent {
 			pageEvent.nearByExec = setTimeout(function () {
 				communication.ajax({
 					url: global.server + 'action/searchLocation?search=' + encodeURIComponent(s),
+					webCall: 'pageEvent.locations()',
 					responseType: 'json',
 					success(r) {
 						var s = '', e = ui.q('popup eventLocationInputHelper ul');
@@ -588,6 +593,7 @@ class pageEvent {
 	static locationsOfPastEvents() {
 		communication.ajax({
 			url: global.server + 'db/list?query=event_list&search=' + encodeURIComponent('event.locationId>0 and event.contactId=' + user.contact.id),
+			webCall: 'pageEvent.locationsOfPastEvents()',
 			responseType: 'json',
 			success(r) {
 				var s = '', processed = {};
@@ -627,6 +633,7 @@ class pageEvent {
 		if (!ui.q('head script[src*="paypal.com"]')) {
 			communication.ajax({
 				url: global.server + 'action/paypalKey',
+				webCall: 'pageEvent.openPaypal(paypalMerchantId)',
 				responseType: 'json',
 				success(r) {
 					pageEvent.paypal.fee = r.fee;
@@ -705,6 +712,7 @@ class pageEvent {
 		}
 		communication.ajax({
 			url: global.server + 'db/one',
+			webCall: 'pageEvent.participate(order)',
 			method: e.eventParticipate.id ? 'PUT' : 'POST',
 			body: d,
 			success(r) {
@@ -919,6 +927,7 @@ class pageEvent {
 		communication.ajax({
 			url: global.server + 'db/one',
 			method: id ? 'PUT' : 'POST',
+			webCall: 'pageEvent.save()',
 			body: v,
 			success(r) {
 				ui.navigation.closePopup();
@@ -959,6 +968,7 @@ class pageEvent {
 		} else
 			communication.ajax({
 				url: global.server + 'action/paypalSignUpSellerUrl',
+				webCall: 'pageEvent.signUpPaypal()',
 				success(r) {
 					pageEvent.paypal.merchantUrl = r + '&displayMode=minibrowser';
 					pageEvent.signUpPaypal();
@@ -972,6 +982,7 @@ class pageEvent {
 				var field = ui.q('detail card:last-child').getAttribute('type');
 				communication.ajax({
 					url: global.server + 'db/list?query=event_list&search=' + encodeURIComponent('event.' + field + 'Id=' + id),
+					webCall: 'pageEvent.toggle(id)',
 					responseType: 'json',
 					success(r) {
 						pageEvent.toggleInternal(r, id, field);
@@ -1034,7 +1045,7 @@ class pageEvent {
 				ui.toggleHeight(e);
 			else {
 				var id = decodeURIComponent(ui.q('detail card:last-child').getAttribute('i')).split('_');
-				lists.loadList('query=event_listParticipate&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&distance=100000&limit=0&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\' and eventParticipate.contactId=contact.id'), function (l) {
+				lists.loadList('webCall=pageEvent.toggleParticipants(event)&query=event_listParticipate&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&distance=100000&limit=0&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\' and eventParticipate.contactId=contact.id'), function (l) {
 					e.innerHTML = l.length < 2 ? '<div style="margin-bottom:1em;">' + ui.l('events.noParticipant') + '</div>' : pageContact.listContacts(l);
 					ui.toggleHeight(e);
 					return '&nbsp;';
@@ -1052,6 +1063,7 @@ class pageEvent {
 		}
 		communication.ajax({
 			url: global.server + 'db/list?query=event_listParticipate&search=' + encodeURIComponent('eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\' and eventParticipate.contactId=' + u + ' and eventParticipate.contactId=contact.id'),
+			webCall: 'pageEvent.verifyParticipation(id)',
 			responseType: 'json',
 			success(r) {
 				if (r.length > 1) {

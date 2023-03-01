@@ -44,10 +44,13 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 		ui.css(divID + ' filters', 'transform', 'scale(0)');
 		ui.html('popupHint', '');
 		var menuIndex = -1;
+		var wc = data.substring(data.indexOf('webCall=') + 8, data.indexOf('&'));
+		data = data.substring(data.indexOf('&') + 1);
 		ui.qa('menu a').forEach(function (e, i) { if (e.matches(':hover')) menuIndex = i; });
 		communication.ajax({
 			url: global.server + 'db/list?' + data,
 			responseType: 'json',
+			webCall: wc,
 			success(r) {
 				var s = callback(r);
 				if (menuIndex > -1)

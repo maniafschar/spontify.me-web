@@ -231,6 +231,7 @@ ${v.info}`;
 			s = reasons[i].getAttribute('label') + '\n' + s;
 		communication.ajax({
 			url: global.server + 'db/one',
+			webCall: 'pageSettings.deleteProfile()',
 			method: 'POST',
 			body: {
 				classname: 'Ticket',
@@ -243,6 +244,7 @@ ${v.info}`;
 			success() {
 				communication.ajax({
 					url: global.server + 'authentication/one',
+					webCall: 'pageSettings.deleteProfile()',
 					method: 'DELETE',
 					success(r) {
 						pageLogin.resetAfterLogoff();
@@ -297,6 +299,7 @@ ${v.info}`;
 		if (!ui.q('settings').innerHTML) {
 			communication.ajax({
 				url: global.server + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id),
+				webCall: 'pageSettings.init(exec)',
 				responseType: 'json',
 				success(v) {
 					var d = v['contact.birthday'];
@@ -351,6 +354,7 @@ ${v.info}`;
 					ui.q('settings').innerHTML = pageSettings.template(v);
 					communication.ajax({
 						url: global.server + 'action/paypalKey',
+						webCall: 'pageSettings.init(exec)',
 						responseType: 'json',
 						success(r) {
 							ui.q('settings paypalFees').innerHTML = ui.l('settings.paypalFees').replace('{0}', r.feeDate ?
@@ -450,6 +454,7 @@ ${v.info}`;
 		if (ui.q('[name="image_disp"] img')) {
 			communication.ajax({
 				url: global.server + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id),
+				webCall: 'pageSettings.postSave(goToID)',
 				responseType: 'json',
 				success(r) {
 					user.contact.image = r['contact.image'];
@@ -556,7 +561,7 @@ ${v.info}`;
 		var t = hashtags.convert(ui.q('settings textarea[name="hashtagsDisp"]').value);
 		ui.q('settings input[name="skills"]').value = t.category;
 		ui.q('settings input[name="skillsText"]').value = t.hashtags;
-		user.save(formFunc.getForm('settings tabBody'), () => pageSettings.postSave(goToID));
+		user.save({ webCall: 'pageSettings.save(goToID, saveNewEmail)', ...formFunc.getForm('settings tabBody') }, () => pageSettings.postSave(goToID));
 	}
 	static selectTab(i) {
 		ui.classRemove('settings tab', 'tabActive');
@@ -590,9 +595,9 @@ ${v.info}`;
 				e.innerHTML = '';
 			});
 		else {
-			lists.loadList('query=contact_listBlocked&limit=0', pageSettings.listContactsBlocked);
-			lists.loadList('query=location_listBlocked&limit=0', pageSettings.listLocationsBlocked);
-			lists.loadList('query=event_listBlocked&limit=0', pageSettings.listLocationsBlocked);
+			lists.loadList('webCall=pageSettings.toggleBlocked()&query=contact_listBlocked&limit=0', pageSettings.listContactsBlocked);
+			lists.loadList('webCall=pageSettings.toggleBlocked()&query=location_listBlocked&limit=0', pageSettings.listLocationsBlocked);
+			lists.loadList('webCall=pageSettings.toggleBlocked()&query=event_listBlocked&limit=0', pageSettings.listLocationsBlocked);
 		}
 	}
 	static toggleGenderSlider(e) {
@@ -605,6 +610,7 @@ ${v.info}`;
 		}
 		communication.ajax({
 			url: global.server + 'db/one',
+			webCall: 'pageSettings.unblock(id, blockId)',
 			method: 'DELETE',
 			body: { classname: 'Block', id: blockId },
 			success() {

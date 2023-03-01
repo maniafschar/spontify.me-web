@@ -40,6 +40,7 @@ class details {
 		communication.ajax({
 			url: global.server + 'action/one?query=' + action + '&distance=100000&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon,
 			responseType: 'json',
+			webCall: 'details.open(id, action, callback)',
 			success(r) {
 				ui.navigation.hideMenu();
 				if (!r || Object.keys(r).length < 1) {

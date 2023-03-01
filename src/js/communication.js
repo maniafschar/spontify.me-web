@@ -66,7 +66,7 @@ class communication {
 			communication.currentCalls.push(param);
 			if (param.progressBar != false)
 				ui.css('progressbar', 'display', '');
-			xmlhttp.setRequestHeader('page', ui.navigation.getActiveID());
+			xmlhttp.setRequestHeader('webCall', param.webCall);
 			if (user.contact) {
 				var salt = ('' + (d.getTime() + d.getTimezoneOffset() * 60 * 1000) + Math.random()).replace(/[01]\./, '.');
 				xmlhttp.setRequestHeader('user', user.contact.id);
@@ -111,6 +111,7 @@ class communication {
 			communication.ajax({
 				url: global.server + 'action/google?param=js',
 				responseType: 'text',
+				webCall: 'communication.loadMap(callback)',
 				success(r) {
 					var script = document.createElement('script');
 					script.src = r + '&callback=' + callback;
@@ -163,7 +164,7 @@ class communication {
 			communication.notification.push.on('error', communication.notification.onError);
 		},
 		saveToken(e) {
-			user.save({ pushSystem: global.getOS(), pushToken: e.registrationId });
+			user.save({ webCall: 'communication.notification.saveToken(e)', pushSystem: global.getOS(), pushToken: e.registrationId });
 		}
 	}
 	static onError(r) {
@@ -223,6 +224,7 @@ class communication {
 		communication.ajax({
 			url: global.server + 'action/ping',
 			progressBar: false,
+			webCall: 'communication.ping()',
 			responseType: 'json',
 			error() {
 				clearTimeout(communication.pingExec);
@@ -264,6 +266,7 @@ class communication {
 					communication.ajax({
 						url: global.server + 'db/list?query=contact_listNotification',
 						responseType: 'json',
+						webCall: 'communication.ping()',
 						success(r2) {
 							pageHome.initNotification(r2);
 						}
@@ -310,6 +313,7 @@ class communication {
 		communication.ajax({
 			url: global.server + 'action/notify',
 			method: 'POST',
+			webCall: 'communication.sendError(text)',
 			body: 'text=' + encodeURIComponent(body),
 			error(r) {
 				console.log(r);

@@ -150,6 +150,7 @@ class pageLogin {
 		if (token) {
 			communication.ajax({
 				url: global.server + 'authentication/loginAuto?token=' + encodeURIComponent(Encryption.encPUB(token)) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
+				webCall: 'pageLogin.autoLogin(exec)',
 				error(e) {
 					if (e.status >= 500)
 						pageLogin.removeCredentials();
@@ -176,6 +177,7 @@ class pageLogin {
 			return;
 		communication.ajax({
 			url: global.server + 'action/unique?email=' + encodeURIComponent(pageLogin.getRealPseudonym(f.value)),
+			webCall: 'pageLogin.checkUnique(f, exec)',
 			responseType: 'json',
 			success(r) {
 				if (f.value == r.email) {
@@ -242,6 +244,7 @@ class pageLogin {
 		user.password = p;
 		communication.ajax({
 			url: global.server + 'authentication/login?os=' + global.getOS() + '&device=' + global.getDevice() + '&version=' + global.appVersion + '&timezone=' + encodeURIComponent(Intl.DateTimeFormat().resolvedOptions().timeZone) + '&email=' + encodeURIComponent(Encryption.encPUB(u)) + (autoLogin ? '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()) : ''),
+			webCall: 'pageLogin.login(u, p, autoLogin, exec)',
 			responseType: 'json',
 			success(v) {
 				if (v && v['contact.verified']) {
@@ -258,6 +261,7 @@ class pageLogin {
 						if (d.getMonth() == user.contact.birthday.substring(5, 7) - 1 && d.getDate() == user.contact.birthday.substring(8, 10)) {
 							communication.ajax({
 								url: global.server + 'action/birthday',
+								webCall: 'pageLogin.login(u, p, autoLogin, exec)',
 								responseType: 'json',
 								success(r) {
 									ui.navigation.openPopup(ui.l('birthday'), ui.l('birthday.gratulation').replace('{0}', d.getFullYear() - user.contact.birthday.substring(0, 4)) + '<br/><br/>' + r.text + '<br/><img src="' + r.image + '" style="width:40%;"/>');
@@ -322,6 +326,7 @@ class pageLogin {
 			u.email = null;
 		communication.ajax({
 			url: global.server + 'authentication/loginExternal',
+			webCall: 'pageLogin.loginToServer(os, u, exec)',
 			method: 'PUT',
 			body: {
 				user: u,
@@ -349,6 +354,7 @@ class pageLogin {
 		token = token ? '?token=' + encodeURIComponent(Encryption.encPUB(token)) : '';
 		communication.ajax({
 			url: global.server + 'authentication/logoff' + token,
+			webCall: 'pageLogin.logoff()',
 			error() {
 				pageLogin.resetAfterLogoff();
 			},
@@ -380,7 +386,7 @@ class pageLogin {
 			function (response) {
 				if (response.status == 'connected') {
 					if (user.contact && !response.authResponse)
-						user.save({ fbToken: response.token }, exec);
+						user.save({ webCall: 'pageLogin.openFB(exec)', fbToken: response.token }, exec);
 					else
 						FB.api({
 							path: '/me',
@@ -449,6 +455,7 @@ class pageLogin {
 			ui.q('input[name="timezone"]').value = Intl.DateTimeFormat().resolvedOptions().timeZone;
 			communication.ajax({
 				url: global.server + 'authentication/register',
+				webCall: 'pageLogin.register()',
 				body: formFunc.getForm('form[name=loginRegister]').values,
 				method: 'POST',
 				error(r) {
@@ -501,7 +508,7 @@ class pageLogin {
 		else
 			formFunc.resetError(ui.q('[name="passwd"]'));
 		if (!ui.q('popup errorHint')) {
-			user.save({ password: Encryption.encPUB(ui.val('popup [name="passwd"]')) }, function () {
+			user.save({ webCall: 'pageLogin.savePassword()', password: Encryption.encPUB(ui.val('popup [name="passwd"]')) }, function () {
 				pageLogin.removeCredentials();
 				user.password = ui.val('[name="passwd"]');
 				ui.attr('popupTitle', 'modal', '');
@@ -536,7 +543,7 @@ class pageLogin {
 		if (e.values.image)
 			d.image = e.values.image;
 		if (Object.keys(d).length)
-			user.save(d, intro.closeHint);
+			user.save({ webCall: 'pageLogin.saveProfile()', ...d }, intro.closeHint);
 		else
 			intro.closeHint();
 	}
@@ -557,6 +564,7 @@ class pageLogin {
 		if (b == -1 && formFunc.validation.email(email) == -1)
 			communication.ajax({
 				url: global.server + 'authentication/recoverSendEmail?email=' + encodeURIComponent(Encryption.encPUB(email)),
+				webCall: 'pageLogin.sendVerificationEmail()',
 				success(r) {
 					if (r.indexOf('nok:') == 0)
 						formFunc.setError(email, 'login.recoverPasswordError' + r.substring(4));
@@ -644,6 +652,7 @@ class pageLogin {
 		s2 += e.substring(1, 11 - s2.length);
 		communication.ajax({
 			url: global.server + 'authentication/recoverVerifyEmail?token=' + encodeURIComponent(Encryption.encPUB(e.substring(0, 10) + s2 + e.substring(10))) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
+			webCall: 'pageLogin.verifyEmail(e, email)',
 			success(r) {
 				if (r) {
 					r = Encryption.jsEncrypt.decrypt(r).split(global.separatorTech);

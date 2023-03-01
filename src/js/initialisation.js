@@ -2,7 +2,6 @@ import { communication, FB } from './communication';
 import { details } from './details';
 import { geoData } from './geoData';
 import { global } from './global';
-import { lists } from './lists';
 import { pageChat } from './pageChat';
 import { pageEvent } from './pageEvent';
 import { pageHome } from './pageHome';
@@ -62,6 +61,7 @@ class initialisation {
 			}
 		}
 		user.scale = global.getDevice() == 'phone' && ui.q('body').clientWidth < 360 ? 0.8 : 1;
+		ui.css('content>:not(home).content', 'display', 'none');
 		initialisation.reposition();
 		initialisation.setLanguage((navigator.language || navigator.userLanguage).toLowerCase().indexOf('en') > -1 ? 'EN' : 'DE', initialisation.initPostProcessor);
 	}
@@ -121,18 +121,17 @@ class initialisation {
 			geoData.pause();
 			if (!user.contact)
 				communication.setApplicationIconBadgeNumber(0);
-			user.save({ active: false });
+			user.save({ webCall: 'initialisation.initApp()', active: false });
 		});
 		ui.on(document, 'resume', function () {
 			global.paused = false;
 			geoData.init();
-			user.save({ active: true });
+			user.save({ webCall: 'initialisation.initApp()', active: true });
 			if (global.getParam('r'))
 				initialisation.recoverPassword();
 		});
 	}
 	static initPostProcessor() {
-		ui.css('content>:not(home).content', 'display', 'none');
 		ui.css('main', 'display', '');
 		if (!global.isBrowser())
 			initialisation.initApp();
@@ -302,6 +301,7 @@ class initialisation {
 		communication.ajax({
 			url: (window.location && window.location.href && window.location.href.indexOf(global.server) == 0 ? '/' : '') + 'js/lang/' + lang + '.json',
 			responseType: 'json',
+			webCall: 'initialisation.setLanguage(lang, exec)',
 			error(r) {
 				if (r.responseText && r.responseText.indexOf('categories') > -1 && r.responseText.indexOf('weekday') > -1)
 					initialisation.setLanguageInternal(r.responseText, lang, exec);
@@ -336,6 +336,7 @@ class initialisation {
 		ui.labels = s.labels;
 		communication.ajax({
 			url: (window.location && window.location.href && window.location.href.indexOf(global.server) == 0 ? '/' : '') + 'js/lang/' + lang + '.html',
+			webCall: 'initialisation.setLanguageInternal(s, lang, exec)',
 			success(r) {
 				r = r.split('\n\n');
 				ui.labels['infoDSGVO'] = r[0];
@@ -348,7 +349,7 @@ class initialisation {
 		if (exec)
 			exec.call();
 		if (user.contact && oldLang != global.language)
-			user.save({ language: lang });
+			user.save({ webCall: 'initialisation.setLanguageInternal(s, lang, exec)', language: lang });
 		ui.navigation.closePopup();
 	}
 	static recoverPassword() {
@@ -368,6 +369,7 @@ class initialisation {
 				communication.ajax({
 					url: global.server + 'action/paypalRegister',
 					method: 'PUT',
+					webCall: 'initialisation.showStartDialogs()',
 					body: p,
 					responseType: 'json',
 					success(r) {

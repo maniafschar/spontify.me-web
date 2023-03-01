@@ -38,6 +38,7 @@ class pageHome {
 	static clickNotification(id, action) {
 		communication.ajax({
 			url: global.server + 'db/one',
+			webCall: 'pageHome.clickNotification(id, action)',
 			method: 'PUT',
 			body: {
 				classname: 'ContactNotification',
@@ -82,6 +83,7 @@ class pageHome {
 			initialisation.reposition();
 			communication.ajax({
 				url: global.server + 'action/teaser/contacts',
+				webCall: 'pageHome.init(force)',
 				responseType: 'json',
 				success(l) {
 					var s = '';
@@ -95,6 +97,7 @@ class pageHome {
 			});
 			communication.ajax({
 				url: global.server + 'action/teaser/events',
+				webCall: 'pageHome.init(force)',
 				responseType: 'json',
 				success(l) {
 					var s = '';
