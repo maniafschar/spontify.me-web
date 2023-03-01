@@ -76,7 +76,7 @@ class user {
 	static set(key, value) {
 		if (value) {
 			user.contact.storage[key] = value;
-			user.save({ webCall: 'user.set(key, value)', storage: JSON.stringify(user.contact.storage) });
+			user.save({ webCall: 'user.set(key,value)', storage: JSON.stringify(user.contact.storage) });
 		} else
 			user.remove(key);
 	}

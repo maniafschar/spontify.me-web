@@ -579,7 +579,7 @@ class pageChat {
 			communication.ajax({
 				url: global.server + 'db/one',
 				method: 'POST',
-				webCall: 'pageChat.sendChat(id, msg, event)',
+				webCall: 'pageChat.sendChat(id,msg,event)',
 				body: {
 					classname: 'ContactChat',
 					values: v

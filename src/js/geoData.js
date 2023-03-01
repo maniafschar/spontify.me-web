@@ -195,7 +195,7 @@ class geoData {
 				url: global.server + 'action/position',
 				progressBar: false,
 				method: 'POST',
-				webCall: 'geoData.save(position, exec)',
+				webCall: 'geoData.save(position,exec)',
 				body: position,
 				responseType: 'json',
 				error(r) {

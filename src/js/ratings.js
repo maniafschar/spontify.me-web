@@ -81,7 +81,7 @@ class ratings {
 		if (id) {
 			communication.ajax({
 				url: global.server + 'db/list?query=misc_rating&search=' + encodeURIComponent('event.id=' + id + ' and eventParticipate.contactId=' + user.contact.id),
-				webCall: 'ratings.open(id, search)',
+				webCall: 'ratings.open(id,search)',
 				responseType: 'json',
 				success(r) {
 					lastRating = r.length > 1 ? model.convert(new Contact(), r, r.length - 1).eventRating : {};
@@ -93,7 +93,7 @@ class ratings {
 		if (search) {
 			communication.ajax({
 				url: global.server + 'db/list?query=misc_rating&search=' + encodeURIComponent(search),
-				webCall: 'ratings.open(id, search)',
+				webCall: 'ratings.open(id,search)',
 				responseType: 'json',
 				success(r) {
 					list = r;

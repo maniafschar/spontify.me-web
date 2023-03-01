@@ -230,7 +230,7 @@ ${v.rating}
 			}
 			communication.ajax({
 				url: global.server + 'db/one',
-				webCall: 'pageLocation.deleteElement(id, classname)',
+				webCall: 'pageLocation.deleteElement(id,classname)',
 				method: 'DELETE',
 				body: { classname: classname, id: id },
 				success(r) {
@@ -330,7 +330,7 @@ ${v.rating}
 		if (v.address && user.contact)
 			communication.ajax({
 				url: global.server + 'action/map?source=' + geoData.current.lat + ',' + geoData.current.lon + '&destination=' + v.latitude + ',' + v.longitude,
-				webCall: 'pageLocation.detailLocationEvent(l, id)',
+				webCall: 'pageLocation.detailLocationEvent(l,id)',
 				progressBar: false,
 				success(r) {
 					var x = 0, f = function () {

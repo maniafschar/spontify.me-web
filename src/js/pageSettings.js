@@ -561,7 +561,7 @@ ${v.info}`;
 		var t = hashtags.convert(ui.q('settings textarea[name="hashtagsDisp"]').value);
 		ui.q('settings input[name="skills"]').value = t.category;
 		ui.q('settings input[name="skillsText"]').value = t.hashtags;
-		user.save({ webCall: 'pageSettings.save(goToID, saveNewEmail)', ...formFunc.getForm('settings tabBody') }, () => pageSettings.postSave(goToID));
+		user.save({ webCall: 'pageSettings.save(goToID,saveNewEmail)', ...formFunc.getForm('settings tabBody') }, () => pageSettings.postSave(goToID));
 	}
 	static selectTab(i) {
 		ui.classRemove('settings tab', 'tabActive');
@@ -595,9 +595,9 @@ ${v.info}`;
 				e.innerHTML = '';
 			});
 		else {
-			lists.loadList('webCall=pageSettings.toggleBlocked()&query=contact_listBlocked&limit=0', pageSettings.listContactsBlocked);
-			lists.loadList('webCall=pageSettings.toggleBlocked()&query=location_listBlocked&limit=0', pageSettings.listLocationsBlocked);
-			lists.loadList('webCall=pageSettings.toggleBlocked()&query=event_listBlocked&limit=0', pageSettings.listLocationsBlocked);
+			lists.load('webCall=pageSettings.toggleBlocked()&query=contact_listBlocked&limit=0', pageSettings.listContactsBlocked);
+			lists.load('webCall=pageSettings.toggleBlocked()&query=location_listBlocked&limit=0', pageSettings.listLocationsBlocked);
+			lists.load('webCall=pageSettings.toggleBlocked()&query=event_listBlocked&limit=0', pageSettings.listLocationsBlocked);
 		}
 	}
 	static toggleGenderSlider(e) {
@@ -610,7 +610,7 @@ ${v.info}`;
 		}
 		communication.ajax({
 			url: global.server + 'db/one',
-			webCall: 'pageSettings.unblock(id, blockId)',
+			webCall: 'pageSettings.unblock(id,blockId)',
 			method: 'DELETE',
 			body: { classname: 'Block', id: blockId },
 			success() {

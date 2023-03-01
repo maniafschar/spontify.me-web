@@ -38,7 +38,7 @@ class pageHome {
 	static clickNotification(id, action) {
 		communication.ajax({
 			url: global.server + 'db/one',
-			webCall: 'pageHome.clickNotification(id, action)',
+			webCall: 'pageHome.clickNotification(id,action)',
 			method: 'PUT',
 			body: {
 				classname: 'ContactNotification',

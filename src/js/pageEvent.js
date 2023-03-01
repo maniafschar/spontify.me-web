@@ -230,7 +230,7 @@ class pageEvent {
 		if (!pageEvent.paypal.fee) {
 			communication.ajax({
 				url: global.server + 'action/paypalKey',
-				webCall: 'pageEvent.edit(locationID, id)',
+				webCall: 'pageEvent.edit(locationID,id)',
 				responseType: 'json',
 				success(r) {
 					pageEvent.paypal.fee = r.fee;
@@ -540,13 +540,13 @@ class pageEvent {
 				lists.setListHint(divID);
 			}
 		};
-		lists.loadList(
+		lists.load(
 			params,
 			function (l) {
 				events = l;
 				render();
 			});
-		lists.loadList(
+		lists.load(
 			'webCall=pageEvent.loadEvents(params)&query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id),
 			function (l) {
 				participations = l;
@@ -561,7 +561,7 @@ class pageEvent {
 		}
 		var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
 		var search = global.getRegEx('contact.skills', e.event.skills) + ' or ' + global.getRegEx('contact.skillsText', e.event.skillsText) + ' and contact.id<>' + user.contact.id;
-		lists.loadList('webCall=pageEvent.loadPotentialParticipants()&query=contact_list&distance=50&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent(search),
+		lists.load('webCall=pageEvent.loadPotentialParticipants()&query=contact_list&distance=50&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent(search),
 			function (r) {
 				var s = pageContact.listContacts(r);
 				if (!s)
@@ -1045,7 +1045,7 @@ class pageEvent {
 				ui.toggleHeight(e);
 			else {
 				var id = decodeURIComponent(ui.q('detail card:last-child').getAttribute('i')).split('_');
-				lists.loadList('webCall=pageEvent.toggleParticipants(event)&query=event_listParticipate&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&distance=100000&limit=0&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\' and eventParticipate.contactId=contact.id'), function (l) {
+				lists.load('webCall=pageEvent.toggleParticipants(event)&query=event_listParticipate&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&distance=100000&limit=0&search=' + encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\' and eventParticipate.contactId=contact.id'), function (l) {
 					e.innerHTML = l.length < 2 ? '<div style="margin-bottom:1em;">' + ui.l('events.noParticipant') + '</div>' : pageContact.listContacts(l);
 					ui.toggleHeight(e);
 					return '&nbsp;';

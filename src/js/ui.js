@@ -470,12 +470,12 @@ class ui {
 	};
 	static query = {
 		contactFriends() {
-			return lists.loadList(
+			return lists.load(
 				'webCall=ui.query.contactFriends()&query=contact_list&distance=100000&limit=0&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('contactLink.status=\'Friends\''),
 				pageContact.listContacts, 'contacts', 'friends');
 		},
 		contactVisitees() {
-			return lists.loadList(
+			return lists.load(
 				'webCall=ui.query.contactVisitees()&query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('contactVisit.contactId2=contact.id and contactVisit.contactId=' + user.contact.id),
 				pageContact.listContacts, 'contacts', 'visits');
 		},
@@ -486,7 +486,7 @@ class ui {
 				method: 'PUT',
 				body: { classname: 'Contact', id: user.contact.id, values: { visitPage: global.date.local2server(new Date()) } }
 			});
-			return lists.loadList(
+			return lists.load(
 				'webCall=ui.query.contactVisits()&query=contact_listVisit&distance=100000&sort=false&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('contactVisit.contactId=contact.id and contactVisit.contactId2=' + user.contact.id),
 				pageContact.listContacts, 'contacts', 'profile');
 		},
@@ -494,7 +494,7 @@ class ui {
 			pageEvent.loadEvents('webCall=ui.query.eventMy()&query=event_list&distance=100000&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('event.contactId=' + user.contact.id));
 		},
 		eventTickets() {
-			return lists.loadList(
+			return lists.load(
 				'webCall=ui.query.eventTickets()&query=event_listParticipate&distance=100000&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&search=' + encodeURIComponent('eventParticipate.contactId=' + user.contact.id + ' and event.contactId=contact.id'),
 				pageEvent.listTickets, 'events', 'eventsTicket');
 		}

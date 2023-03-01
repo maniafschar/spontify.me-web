@@ -37,7 +37,7 @@ module.exports = {
 							i += 3;
 							s2 += s.substring(i, s.indexOf('{', i)).trim();
 						}
-						return s2;
+						return s2.replace(/ /g, '');
 					}
 					var ajax = function (s) {
 						var i2 = 0;
@@ -51,10 +51,10 @@ module.exports = {
 					}
 					var lists = function (s) {
 						var i2 = 0;
-						while ((i2 = s.indexOf('\'webCall=&', i2)) > -1) {
+						while ((i2 = s.indexOf('\'webCall=', i2)) > -1) {
 							var s2 = files[i].substring(0, files[i].length - 3) + '.' + call(s.substring(0, i2));
 							i2 += 9;
-							s = s.substring(0, i2) + s2 + s.substring(i2 + 1);
+							s = s.substring(0, i2) + s2 + s.substring(s.indexOf('&', i2));
 							i2 += s2.length;
 						}
 						return s;

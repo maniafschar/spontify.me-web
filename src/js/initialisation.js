@@ -301,7 +301,7 @@ class initialisation {
 		communication.ajax({
 			url: (window.location && window.location.href && window.location.href.indexOf(global.server) == 0 ? '/' : '') + 'js/lang/' + lang + '.json',
 			responseType: 'json',
-			webCall: 'initialisation.setLanguage(lang, exec)',
+			webCall: 'initialisation.setLanguage(lang,exec)',
 			error(r) {
 				if (r.responseText && r.responseText.indexOf('categories') > -1 && r.responseText.indexOf('weekday') > -1)
 					initialisation.setLanguageInternal(r.responseText, lang, exec);
@@ -336,7 +336,7 @@ class initialisation {
 		ui.labels = s.labels;
 		communication.ajax({
 			url: (window.location && window.location.href && window.location.href.indexOf(global.server) == 0 ? '/' : '') + 'js/lang/' + lang + '.html',
-			webCall: 'initialisation.setLanguageInternal(s, lang, exec)',
+			webCall: 'initialisation.setLanguageInternal(s,lang,exec)',
 			success(r) {
 				r = r.split('\n\n');
 				ui.labels['infoDSGVO'] = r[0];
@@ -349,7 +349,7 @@ class initialisation {
 		if (exec)
 			exec.call();
 		if (user.contact && oldLang != global.language)
-			user.save({ webCall: 'initialisation.setLanguageInternal(s, lang, exec)', language: lang });
+			user.save({ webCall: 'initialisation.setLanguageInternal(s,lang,exec)', language: lang });
 		ui.navigation.closePopup();
 	}
 	static recoverPassword() {

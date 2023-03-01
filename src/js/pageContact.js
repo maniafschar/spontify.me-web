@@ -186,7 +186,7 @@ ${v.matchIndicatorHintDescription}
 	static confirmFriendship(linkId, status, id) {
 		communication.ajax({
 			url: global.server + 'db/one',
-			webCall: 'pageContact.confirmFriendship(linkId, status, id)',
+			webCall: 'pageContact.confirmFriendship(linkId,status,id)',
 			method: 'PUT',
 			body: { classname: 'ContactLink', id: linkId, values: { status: status } },
 			success() {
@@ -439,7 +439,7 @@ ${v.matchIndicatorHintDescription}
 	static toggleLocation(id) {
 		var e = ui.q('detail card:last-child[i="' + id + '"] [name="location"]');
 		if (!e.innerHTML) {
-			lists.loadList('webCall=pageContact.toggleLocation(id)&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent('location.contactId=' + id), function (l) {
+			lists.load('webCall=pageContact.toggleLocation(id)&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&distance=100000&query=location_list&search=' + encodeURIComponent('location.contactId=' + id), function (l) {
 				var s = pageLocation.listLocation(l);
 				if (s) {
 					e.innerHTML = ui.l('locations.my') + '<br/>' + s;
@@ -478,7 +478,7 @@ class groups {
 			communication.ajax({
 				url: global.server + 'db/one',
 				body: d,
-				webCall: 'pageContact.addToGroup(event, id)',
+				webCall: 'pageContact.addToGroup(event,id)',
 				method: d.id ? 'DELETE' : 'POST',
 				pos: e.getAttribute('value'),
 				success(r) {
@@ -531,7 +531,7 @@ class groups {
 		var v = ui.q('input[name="groupdialog"]:checked').getAttribute('value');
 		if (!v)
 			return;
-		lists.loadList('webCall=pageContact.loadListGroups()&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&query=contact_listGroupLink&search=' + encodeURIComponent('contactGroupLink.contactGroupId=' + v), pageContact.listContacts, 'contacts', 'groups');
+		lists.load('webCall=pageContact.loadListGroups()&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon + '&query=contact_listGroupLink&search=' + encodeURIComponent('contactGroupLink.contactGroupId=' + v), pageContact.listContacts, 'contacts', 'groups');
 	}
 	static open() {
 		var activeID = ui.navigation.getActiveID();
@@ -659,7 +659,7 @@ class groups {
 			formFunc.initFields(path);
 			communication.ajax({
 				url: global.server + 'db/list?query=contact_listGroupLink&search=' + encodeURIComponent('contactGroupLink.contactId2=' + id),
-				webCall: 'pageContact.toggleGroups(id, friendship)',
+				webCall: 'pageContact.toggleGroups(id,friendship)',
 				responseType: 'json',
 				success(r) {
 					for (var i = 1; i < r.length; i++) {

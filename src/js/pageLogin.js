@@ -177,7 +177,7 @@ class pageLogin {
 			return;
 		communication.ajax({
 			url: global.server + 'action/unique?email=' + encodeURIComponent(pageLogin.getRealPseudonym(f.value)),
-			webCall: 'pageLogin.checkUnique(f, exec)',
+			webCall: 'pageLogin.checkUnique(f,exec)',
 			responseType: 'json',
 			success(r) {
 				if (f.value == r.email) {
@@ -244,7 +244,7 @@ class pageLogin {
 		user.password = p;
 		communication.ajax({
 			url: global.server + 'authentication/login?os=' + global.getOS() + '&device=' + global.getDevice() + '&version=' + global.appVersion + '&timezone=' + encodeURIComponent(Intl.DateTimeFormat().resolvedOptions().timeZone) + '&email=' + encodeURIComponent(Encryption.encPUB(u)) + (autoLogin ? '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()) : ''),
-			webCall: 'pageLogin.login(u, p, autoLogin, exec)',
+			webCall: 'pageLogin.login(u,p,autoLogin,exec)',
 			responseType: 'json',
 			success(v) {
 				if (v && v['contact.verified']) {
@@ -261,7 +261,7 @@ class pageLogin {
 						if (d.getMonth() == user.contact.birthday.substring(5, 7) - 1 && d.getDate() == user.contact.birthday.substring(8, 10)) {
 							communication.ajax({
 								url: global.server + 'action/birthday',
-								webCall: 'pageLogin.login(u, p, autoLogin, exec)',
+								webCall: 'pageLogin.login(u,p,autoLogin,exec)',
 								responseType: 'json',
 								success(r) {
 									ui.navigation.openPopup(ui.l('birthday'), ui.l('birthday.gratulation').replace('{0}', d.getFullYear() - user.contact.birthday.substring(0, 4)) + '<br/><br/>' + r.text + '<br/><img src="' + r.image + '" style="width:40%;"/>');
@@ -326,7 +326,7 @@ class pageLogin {
 			u.email = null;
 		communication.ajax({
 			url: global.server + 'authentication/loginExternal',
-			webCall: 'pageLogin.loginToServer(os, u, exec)',
+			webCall: 'pageLogin.loginToServer(os,u,exec)',
 			method: 'PUT',
 			body: {
 				user: u,
@@ -652,7 +652,7 @@ class pageLogin {
 		s2 += e.substring(1, 11 - s2.length);
 		communication.ajax({
 			url: global.server + 'authentication/recoverVerifyEmail?token=' + encodeURIComponent(Encryption.encPUB(e.substring(0, 10) + s2 + e.substring(10))) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
-			webCall: 'pageLogin.verifyEmail(e, email)',
+			webCall: 'pageLogin.verifyEmail(e,email)',
 			success(r) {
 				if (r) {
 					r = Encryption.jsEncrypt.decrypt(r).split(global.separatorTech);

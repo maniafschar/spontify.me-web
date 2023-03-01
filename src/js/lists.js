@@ -38,13 +38,13 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 			s += '<br/><br/>' + ui.l('noResults.searchWithoutKeywords') + '<br/><br/><buttontext onclick="pageSearch.repeatSearch()" class="bgColor">' + ui.l('noResults.repeat') + '</buttontext>';
 		return '<noResult>' + s.replace(/\{0\}/g, ui.l(activeID + '.title')).replace('{1}', '') + '</noResult>';
 	}
-	static loadList(data, callback, divID, errorID) {
+	static load(data, callback, divID, errorID) {
 		if (divID == 'contacts' && errorID != 'groups' && ui.q('groups') && ui.cssValue('groups', 'display') != 'none')
 			ui.toggleHeight('groups');
 		ui.css(divID + ' filters', 'transform', 'scale(0)');
 		ui.html('popupHint', '');
 		var menuIndex = -1;
-		var wc = data.substring(data.indexOf('webCall=') + 8, data.indexOf('&'));
+		var wc = data.substring(data.indexOf('webCall=lists.load(data,callback,divID,errorID)&'));
 		data = data.substring(data.indexOf('&') + 1);
 		ui.qa('menu a').forEach(function (e, i) { if (e.matches(':hover')) menuIndex = i; });
 		communication.ajax({
