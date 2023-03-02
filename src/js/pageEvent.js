@@ -940,9 +940,8 @@ class pageEvent {
 			success(r) {
 				ui.navigation.closePopup();
 				user.remove('event');
-				details.open(id ? id : r + '_' + global.date.local2server(v.values.startDate).substring(0, 10), { webCall: 'pageEvent.save()', query: 'event_list', search: encodeURIComponent('event.id=' + r) }, id ? function (l, id) {
-					ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id);
-				} : pageLocation.detailLocationEvent);
+				details.open(id ? ui.q('detail card:last-child').getAttribute('i') : r + '_' + global.date.local2server(v.values.startDate).substring(0, 10), { webCall: 'pageEvent.save()', query: 'event_list', search: encodeURIComponent('event.id=' + (id ? id : r)) },
+					id ? function (l, id) { ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id); } : pageLocation.detailLocationEvent);
 				pageEvent.refreshToggle();
 			}
 		});

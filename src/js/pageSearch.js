@@ -179,7 +179,7 @@ class pageSearch {
 					}
 				}
 				if (t.category)
-					s = (s ? s.substring(0, s.length - 5) + ' or ' : '') + global.getRegEx('event.skills', t.category) + ' or ';
+					s = (s ? s.substring(0, s.length - 4) + ' or ' : '') + global.getRegEx('event.skills', t.category) + ' or ';
 				if (s)
 					s = '(' + s.substring(0, s.length - 4) + ')';
 			}
