@@ -489,7 +489,7 @@ class pageEvent {
 				v.type = 'Event';
 				if (ui.navigation.getActiveID() == 'settings')
 					v.oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';
-				v.oc = 'details.open(&quot;' + v.id + '&quot;,&quot;event_list&search=' + encodeURIComponent('event.id=' + v.event.id) + '&quot;,pageLocation.detailLocationEvent)';
+				v.oc = 'details.open(&quot;' + v.id + '&quot;,' + JSON.stringify({ webCall: 'pageEvent.listEvents(as)', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)';
 				s += pageLocation.templateList(v);
 			}
 		}
@@ -940,7 +940,7 @@ class pageEvent {
 			success(r) {
 				ui.navigation.closePopup();
 				user.remove('event');
-				details.open(id ? id : r + '_' + global.date.local2server(v.values.startDate).substring(0, 10), 'event_list&search=' + encodeURIComponent('event.id=' + r), id ? function (l, id) {
+				details.open(id ? id : r + '_' + global.date.local2server(v.values.startDate).substring(0, 10), { webCall: 'pageEvent.save()', query: 'event_list', search: encodeURIComponent('event.id=' + r) }, id ? function (l, id) {
 					ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id);
 				} : pageLocation.detailLocationEvent);
 				pageEvent.refreshToggle();
@@ -1035,7 +1035,7 @@ class pageEvent {
 			text += '<br/>' + v.event.text;
 			if (field == 'location')
 				text = '<br/>' + v.name + text;
-			s += '<row' + (v.eventParticipate.state == 1 ? ' class="participate"' : v.eventParticipate.state == -1 ? ' class="canceled"' : '') + ' onclick="details.open(&quot;' + idIntern + '&quot;,&quot;event_list&search=' + encodeURIComponent('event.id=' + v.event.id) + '&quot;,pageLocation.detailLocationEvent)"><div><text>' + s2 + text + '</text><imageList><img src="' + img + '"/></imageList></div></row>';
+			s += '<row' + (v.eventParticipate.state == 1 ? ' class="participate"' : v.eventParticipate.state == -1 ? ' class="canceled"' : '') + ' onclick="details.open(&quot;' + idIntern + '&quot;,' + JSON.stringify({ webCall: 'pageEvent.toggleInternal(r,id,field)', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)"><div><text>' + s2 + text + '</text><imageList><img src="' + img + '"/></imageList></div></row>';
 		}
 		if (s)
 			s += newButton;

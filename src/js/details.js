@@ -30,22 +30,27 @@ class details {
 	}
 	static init() {
 	}
-	static open(id, action, callback) {
+	static open(id, data, callback) {
 		if (ui.navigation.getActiveID() == 'chat' && ui.q('detail:not([style*="none"])[i="' + id + '"]')) {
 			pageChat.close();
 			return;
 		}
 		if (ui.classContains('detail', 'detailSlideIn'))
 			return;
+		var wc = data.webCall;
+		delete data.webCall;
+		data.distance = 100000;
+		data.latitude = geoData.current.lat;
+		data.longitude = geoData.current.lon;
 		communication.ajax({
-			url: global.server + 'action/one?query=' + action + '&distance=100000&latitude=' + geoData.current.lat + '&longitude=' + geoData.current.lon,
+			url: global.server + 'action/one?' + Object.keys(data).map(key => key + '=' + data[key]).join('&'),
 			responseType: 'json',
-			webCall: 'details.open(id,action,callback)',
+			webCall: wc,
 			success(r) {
 				ui.navigation.hideMenu();
 				if (!r || Object.keys(r).length < 1) {
 					ui.navigation.openPopup(ui.l('attention'), ui.l('error.detailNotFound'));
-					lists.removeListEntry(id, action.indexOf('location_') > -1 ? 'locations' : 'contacts');
+					lists.removeListEntry(id, data.query.indexOf('location_') > -1 ? 'locations' : 'contacts');
 					return;
 				}
 				var activeID = ui.navigation.getActiveID();
@@ -53,7 +58,7 @@ class details {
 				var s = callback(r, id);
 				if (s) {
 					var d = ui.q('detail');
-					s = '<card i="' + id + '" type="' + (action.indexOf('contact_') == 0 ? 'contact' : 'location') + '">' + s + '</card>';
+					s = '<card i="' + id + '" type="' + (data.query.indexOf('contact_') == 0 ? 'contact' : 'location') + '">' + s + '</card>';
 					if (activeID == 'detail') {
 						var c = document.createElement('div');
 						c.innerHTML = s;

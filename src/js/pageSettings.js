@@ -432,7 +432,7 @@ ${v.info}`;
 	}
 	static preview() {
 		if (pageSettings.currentSettings == pageSettings.getCurrentSettings())
-			details.open(user.contact.id, 'contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id), pageContact.detail);
+			details.open(user.contact.id, { webCall: 'pageSettings.preview()', query: 'contact_list', search: encodeURIComponent('contact.id=' + user.contact.id) }, pageContact.detail);
 		else
 			pageSettings.save('autoOpen');
 	}

@@ -89,7 +89,7 @@ class pageHome {
 					var s = '';
 					for (var i = 1; i < l.length; i++) {
 						var e = model.convert(new Contact(), l, i);
-						s += '<card onclick="details.open(' + e.id + ',&quot;contact_list' + (user.contact ? '' : 'Teaser') + '&search=' + encodeURIComponent('contact.id=' + e.id) + '&quot;,pageContact.detail)"><img src="' + global.serverImg + e.imageList + '"/><text>' + e.pseudonym + '</text></card>';
+						s += '<card onclick="details.open(' + e.id + ',' + JSON.stringify({ webCall: 'pageHome.init(force)', query: 'contact_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('contact.id=' + e.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)"><img src="' + global.serverImg + e.imageList + '"/><text>' + e.pseudonym + '</text></card>';
 					}
 					ui.q('home teaser.contacts>div').innerHTML = s;
 					ui.css('home teaser.contacts', 'opacity', 1);
@@ -110,7 +110,9 @@ class pageHome {
 							e.push(model.convert(new Location(), l, i));
 					}
 					for (var i = 0; i < e.length; i++)
-						s += '<card onclick="details.open(&quot;' + pageEvent.getId(e[i]) + '&quot;,&quot;event_list' + (user.contact ? '' : 'Teaser') + '&search=' + encodeURIComponent('event.id=' + e[i].event.id) + '&quot;,pageLocation.detailLocationEvent)"><img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList ? e[i].imageList : e[i].contact.imageList) + '"/><text>' + e[i].event.text + '</text></card>';
+						s += '<card onclick="details.open(&quot;' + pageEvent.getId(e[i]) + '&quot;,' + JSON.stringify({
+							webCall: 'pageHome.init(force)', query: 'event_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('event.id=' + e[i].event.id)
+						}).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)"><img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList ? e[i].imageList : e[i].contact.imageList) + '"/><text>' + e[i].event.text + '</text></card>';
 					ui.q('home teaser.events>div').innerHTML = s;
 					ui.css('home teaser.events', 'opacity', 1);
 				}

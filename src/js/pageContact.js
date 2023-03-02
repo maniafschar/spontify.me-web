@@ -379,9 +379,9 @@ ${v.matchIndicatorHintDescription}
 			else if (activeID == 'info')
 				v.oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)';
 			else if (v.contactNotification.id)
-				v.oc = 'details.open(' + v.id + ',&quot;contact_listNotification&search=' + encodeURIComponent('contactNotification.id=' + v.contactNotification.id) + '&quot;,pageContact.detail)';
+				v.oc = 'details.open(' + v.id + ',' + JSON.stringify({ webCall: 'pageContact.listContacts(l)', query: 'contact_listNotification', search: encodeURIComponent('contactNotification.id=' + v.contactNotification.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)';
 			else
-				v.oc = 'details.open(' + v.id + ',&quot;contact_list&search=' + encodeURIComponent('contact.id=' + v.id) + '&quot;,pageContact.detail)';
+				v.oc = 'details.open(' + v.id + ',' + JSON.stringify({ webCall: 'pageContact.listContacts(l)', query: 'contact_list', search: encodeURIComponent('contact.id=' + v.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)';
 			s += pageContact.templateList(v);
 		}
 		return s;

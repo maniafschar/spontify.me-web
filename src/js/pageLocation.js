@@ -450,7 +450,9 @@ ${v.rating}
 			if (ui.navigation.getActiveID() == 'settings')
 				v.oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';
 			else
-				v.oc = 'details.open(&quot;' + v.id + '&quot;,&quot;location_list&search=' + encodeURIComponent('location.id=' + v.id) + '&quot;,pageLocation.detailLocationEvent)';
+				v.oc = 'details.open(&quot;' + v.id + '&quot;,' + JSON.stringify({
+					webCall: 'pageLocation.listLocation(l)', query: 'location_list', search: encodeURIComponent('location.id=' + v.id)
+				}).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)';
 			s += pageLocation.templateList(v);
 		}
 		if (ui.q('locations map') && ui.q('locations map').style.display != 'none')
@@ -546,7 +548,7 @@ ${v.rating}
 			success(r) {
 				ui.navigation.closePopup();
 				user.remove('location');
-				details.open(id ? id : r, 'location_list&search=' + encodeURIComponent('location.id=' + r), id ? function (l, id) {
+				details.open(id ? id : r, { webCall: 'pageLocation.save()', query: 'location_list', search: encodeURIComponent('location.id=' + r) }, id ? function (l, id) {
 					ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id);
 				} : pageLocation.detailLocationEvent);
 				if (!id && pageLocation.reopenEvent)
