@@ -533,7 +533,10 @@ class pageEvent {
 					if (events[i].event)
 						events[i].eventParticipate = participate[events[i].event.id + '.' + global.date.local2server(events[i].event.startDate).substring(0, 10)] || {};
 				}
-				ui.html(divID + ' listResults', pageEvent.listEvents(events));
+				var s = pageEvent.listEvents(events);
+				if (!s)
+					s = lists.getListNoResults(divID.indexOf('.') ? divID.substring(divID.lastIndexOf('.') + 1) : divID, ui.navigation.getActiveID());
+				ui.html(divID + ' listResults', s);
 				var e = ui.q(divID + ' listBody');
 				if (e)
 					e.scrollTop = 0;

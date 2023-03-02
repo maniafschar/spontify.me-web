@@ -345,9 +345,10 @@ class initialisation {
 		});
 		ui.q('#addLeft > buttontext').innerHTML = global.appTitle + ' blog';
 		ui.html('info', '');
-		pageHome.init(true);
 		if (exec)
 			exec.call();
+		else
+			pageHome.init(true);
 		if (user.contact && oldLang != global.language)
 			user.save({ webCall: 'initialisation.setLanguageInternal(s,lang,exec)', language: lang });
 		ui.navigation.closePopup();
@@ -363,6 +364,7 @@ class initialisation {
 			history.pushState(null, null, window.location.origin);
 	}
 	static showStartDialogs() {
+		pageHome.init();
 		var p = global.getParam();
 		if (p) {
 			if (p.indexOf('merchantIdInPayPal') > -1) {

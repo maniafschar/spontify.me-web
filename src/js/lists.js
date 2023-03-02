@@ -59,7 +59,7 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 				ui.navigation.closePopup();
 				if (divID) {
 					if (!s)
-						s = lists.getListNoResults(divID.indexOf('.') ? divID.substring(divID.lastIndexOf('.') + 1) : divID, errorID)
+						s = lists.getListNoResults(divID.indexOf('.') ? divID.substring(divID.lastIndexOf('.') + 1) : divID, errorID);
 					lists.hideFilter();
 					lists.setListDivs(divID);
 					ui.html(divID + ' listResults', s);
