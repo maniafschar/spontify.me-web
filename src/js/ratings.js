@@ -68,10 +68,10 @@ class ratings {
 					var v = model.convert(new Contact(), list, i);
 					date = global.date.formatDate(v.eventRating.createdAt);
 					pseudonym = v.id == user.contact.id ? ui.l('you') : v.pseudonym;
-					text = v.eventRating.text ? ': ' + v.eventRating.text : '';
+					text = v.eventRating.text ? v.eventRating.text + global.separator : '';
 					img = v.eventRating.image ? '<br/><img src="' + global.serverImg + v.eventRating.image + '"/>' : '';
 					rate = '<rating><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.eventRating.rating) + '%;">★★★★★</full></rating>';
-					s += '<ratingItem onclick="ui.navigation.autoOpen(&quot;' + global.encParam('e=' + pageEvent.getId(v)) + '&quot;,event)">' + rate + date + ' ' + pseudonym + text + img + '</ratingItem>';
+					s += '<ratingItem><span onclick="ui.navigation.autoOpen(&quot;' + global.encParam('e=' + pageEvent.getId(v)) + '&quot;,event)">' + rate + date + ' ' + text + '</span><span onclick="ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)">' + pseudonym + '</span>' + img + '</ratingItem>';
 				}
 				if (s)
 					s = '<ratingHistory>' + s + '</ratingHistory>';

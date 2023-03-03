@@ -1384,6 +1384,10 @@ ratingSelection span {
 	position: relative;
 }
 
+ratingItem span {
+	cursor: pointer;
+}
+
 popupContent> :not(detail) ratingSelection {
 	width: 10em;
 	margin-left: -5em;
