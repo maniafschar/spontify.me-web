@@ -234,7 +234,12 @@ class pageLogin {
 	static init() {
 		ui.classRemove('navigation item', 'active');
 		if (!ui.q('login').innerHTML) {
-			ui.q('login').innerHTML = pageLogin.template(pageLogin.getDraft());
+			var v = pageLogin.getDraft();
+			if (!global.isBrowser())
+				v.keepLoggedIn = ' checked';
+			if (global.getOS() != 'ios')
+				v.hideApple = 'display:none;';
+			ui.q('login').innerHTML = pageLogin.template(v);
 			formFunc.initFields('login');
 		}
 	}
@@ -595,11 +600,6 @@ class pageLogin {
 		pageLogin.saveDraft();
 		ui.classRemove('login tab', 'tabActive');
 		ui.classAdd(ui.qa('login tab')[0], 'tabActive');
-		var v = [];
-		if (!global.isBrowser())
-			v['keepLoggedIn'] = ' checked';
-		if (global.getOS() != 'ios')
-			v['hideApple'] = 'display:none;';
 		ui.css('login tabBody', 'margin-left', 0);
 		ui.qa('login input[name="email"]')[0].value = pageLogin.getDraft().email;
 	}
