@@ -112,7 +112,7 @@ class pageHome {
 					for (var i = 0; i < e.length; i++)
 						s += '<card onclick="details.open(&quot;' + pageEvent.getId(e[i]) + '&quot;,' + JSON.stringify({
 							webCall: 'pageHome.init(force)', query: 'event_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('event.id=' + e[i].event.id)
-						}).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)"><img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList ? e[i].imageList : e[i].contact.imageList) + '"/><text>' + e[i].event.text + '</text></card>';
+						}).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)"><img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList ? e[i].imageList : e[i].contact.imageList) + '"/><text>' + e[i].event.description + '</text></card>';
 					ui.q('home teaser.events>div').innerHTML = s;
 					ui.css('home teaser.events', 'opacity', 1);
 				}

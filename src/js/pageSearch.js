@@ -90,7 +90,7 @@ class pageSearch {
 				for (var i = 0; i < v.length; i++) {
 					if (v[i]) {
 						s2 = v[i].trim().toLowerCase();
-						s += 'contact.idDisplay=\'' + s2 + '\' or (contact.search=true and (LOWER(contact.aboutMe) like \'%' + s2 + '%\' or LOWER(contact.pseudonym) like \'%' + s2 + '%\' or LOWER(contact.skillsText) like \'%' + s2 + '%\')) or ';
+						s += 'contact.idDisplay=\'' + s2 + '\' or (contact.search=true and (LOWER(contact.description) like \'%' + s2 + '%\' or LOWER(contact.pseudonym) like \'%' + s2 + '%\' or LOWER(contact.skillsText) like \'%' + s2 + '%\')) or ';
 					}
 				}
 				s = s.substring(0, s.length - 4);
@@ -172,9 +172,9 @@ class pageSearch {
 					if (v[i].trim()) {
 						v[i] = v[i].trim().toLowerCase();
 						var l = ') like \'%' + v[i].trim().toLowerCase() + '%\' or LOWER(';
-						s += '((contact.search=true or event.price>0) and (LOWER(contact.pseudonym' + l + 'contact.aboutMe' + l;
+						s += '((contact.search=true or event.price>0) and (LOWER(contact.pseudonym' + l + 'contact.description' + l;
 						s = s.substring(0, s.lastIndexOf(' or LOWER')) + ') or '
-						s += 'LOWER(location.name' + l + 'location.description' + l + 'location.address' + l + 'location.address2' + l + 'location.telephone' + l + 'event.text' + l + 'event.skillsText' + l;
+						s += 'LOWER(location.name' + l + 'location.description' + l + 'location.address' + l + 'location.address2' + l + 'location.telephone' + l + 'event.description' + l + 'event.skillsText' + l;
 						s = s.substring(0, s.lastIndexOf(' or LOWER')) + ') or ';
 					}
 				}

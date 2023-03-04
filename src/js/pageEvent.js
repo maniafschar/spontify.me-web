@@ -73,7 +73,7 @@ class pageEvent {
 <field>
 	<label>${ui.l('description')}</label>
 	<value>
-		<textarea name="text" maxlength="1000">${v.text}</textarea>
+		<textarea name="description" maxlength="1000">${v.description}</textarea>
 	</value>
 </field>
 <field class="noWTDField">
@@ -206,7 +206,7 @@ class pageEvent {
 			v.imageEventOwner = global.serverImg + v.contact.imageList;
 		else
 			v.imageEventOwner = 'images/contact.svg" style="padding:1em;';
-		v.text = Strings.replaceLinks(v.event.text);
+		v.text = Strings.replaceLinks(v.event.description).replace(/\n/g, '<br/>');
 		v.hideMeFavorite = ' noDisp';
 		v.hideMeEvents = ' noDisp';
 		v.hideMeMarketing = ' noDisp';
@@ -214,7 +214,7 @@ class pageEvent {
 			var h = new URL(v.event.url).hostname;
 			while (h.indexOf('.') != h.lastIndexOf('.'))
 				h = h.substring(h.indexOf('.') + 1);
-			v.url = '<label class="multipleLabel" onclick="ui.navigation.openHTML(&quot;' + v.event.url + '&quot;)">' + h.toLowerCase() + '</label>';
+			v.url = '<label class="multipleLabel" onclick="ui.navigation.openHTML(&quot;' + v.event.url + '&quot;)">' + (v.event.locationId == -1 ? ui.l('events.newOnlineEvent') + ': ' : '') + h.toLowerCase() + '</label>';
 		}
 		if (user.contact && user.contact.id == v.event.contactId)
 			v.editAction = 'pageEvent.edit(' + v.locID + ',' + v.event.id + ')';
@@ -292,7 +292,7 @@ class pageEvent {
 		}
 		if (id) {
 			v.classLocation = ' noDisp';
-			if (locationID) {
+			if (locationID > 0) {
 				var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')))
 				v.locationName = e.name + '<br/>' + e.address.replace(/\n/g, global.separator);
 			}
@@ -462,7 +462,7 @@ class pageEvent {
 					v.name = t + ' ' + v.contact.pseudonym + (v.contact.age ? ' (' + v.contact.age + ')' : '');
 					v._message1 = hashtags.ids2Text(v.event.skills) + (v.event.skillsText ? ' ' + v.event.skillsText : '');
 				}
-				v._message = v.event.text + '<br/>';
+				v._message = v.event.description + '<br/>';
 				v.locID = v.id;
 				pageLocation.listInfos(v);
 				v._message += v._message1 ? v._message1 : v._message2 ? v._message2 : '';
@@ -823,7 +823,7 @@ class pageEvent {
 				if (location) {
 					a = ui.q('detail card:last-child text.description .price').innerHTML;
 					context.fillText(a, canvas.width / 2, h);
-					var a = e.event.text.split('\n');
+					var a = e.event.description.split('\n');
 					h += 20;
 					for (var i = 0; i < a.length; i++) {
 						h += 40;
@@ -877,7 +877,7 @@ class pageEvent {
 		var d1, d2;
 		var start = ui.q('popup input[name="startDate"]');
 		var end = ui.q('popup input[name="endDate"]');
-		var text = ui.q('popup [name="text"]');
+		var text = ui.q('popup [name="description"]');
 		var tags = ui.q('popup [name="hashtagsDisp"]');
 		var id = ui.q('popup [name="id"]').value;
 		ui.html('popup popupHint', '');
@@ -1034,7 +1034,7 @@ class pageEvent {
 				text += global.separator + ui.l('events.participationMustBeConfirmed');
 			if (text)
 				text = '<br/>' + text.substring(global.separator.length);
-			text += '<br/>' + v.event.text;
+			text += '<br/>' + v.event.description;
 			if (field == 'location')
 				text = '<br/>' + v.name + text;
 			s += '<row' + (v.eventParticipate.state == 1 ? ' class="participate"' : v.eventParticipate.state == -1 ? ' class="canceled"' : '') + ' onclick="details.open(&quot;' + idIntern + '&quot;,' + JSON.stringify({ webCall: 'pageEvent.toggleInternal(r,id,field)', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)"><div><text>' + s2 + text + '</text><imageList><img src="' + img + '"/></imageList></div></row>';

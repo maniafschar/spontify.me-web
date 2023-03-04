@@ -56,9 +56,9 @@ class pageSettings {
 	</value>
 </field>
 <field>
-	<label>${ui.l('settings.aboutMe')}</label>
+	<label>${ui.l('settings.description')}</label>
 	<value>
-		<textarea name="aboutMe" maxlength="1000">${v['contact.aboutMe']}</textarea>
+		<textarea name="description" maxlength="1000">${v['contact.description']}</textarea>
 	</value>
 </field>
 <field>
@@ -256,7 +256,7 @@ ${v.info}`;
 	static getCurrentSettings() {
 		var s = ui.val('settings input[name="email"]');
 		s += global.separatorTech + ui.q('settings [name="image_disp"] img');
-		s += global.separatorTech + ui.val('settings textarea[name="aboutMe"]');
+		s += global.separatorTech + ui.val('settings textarea[name="description"]');
 		s += global.separatorTech + ui.val('settings textarea[name="urls"]');
 		s += global.separatorTech + ui.val('settings input[name="birthday"]');
 		s += global.separatorTech + ui.val('settings input[name="birthdayDisplay"]:checked');
@@ -487,7 +487,7 @@ ${v.info}`;
 		formFunc.resetError(ui.q('input[name="image"]'));
 		formFunc.resetError(ui.q('input[name="birthday"]'));
 		formFunc.resetError(ui.q('input[name="gender"]'));
-		formFunc.resetError(ui.q('textarea[name="aboutMe"]'));
+		formFunc.resetError(ui.q('textarea[name="description"]'));
 		formFunc.resetError(ui.q('textarea[name="urls"]'));
 		formFunc.resetError(ui.q('#settingsInterest1'));
 		formFunc.resetError(ui.q('#settingsInterest2'));
@@ -514,10 +514,10 @@ ${v.info}`;
 		}
 		if (ui.q('settings [name="birthday"]').parentNode.lastChild.tagName != 'ERRORHINT')
 			formFunc.validation.birthday(ui.q('input[name="birthday"]'));
-		if (ui.q('input[name="guide"]:checked') && !ui.val('textarea[name="aboutMe"]'))
-			formFunc.setError(ui.q('textarea[name="aboutMe"]'), 'settings.aboutMeEmpty');
-		else if (ui.val('textarea[name="aboutMe"]'))
-			formFunc.validation.filterWords(ui.q('textarea[name="aboutMe"]'));
+		if (ui.q('input[name="guide"]:checked') && !ui.val('textarea[name="description"]'))
+			formFunc.setError(ui.q('textarea[name="description"]'), 'settings.descriptionEmpty');
+		else if (ui.val('textarea[name="description"]'))
+			formFunc.validation.filterWords(ui.q('textarea[name="description"]'));
 		var s = ui.val('textarea[name="urls"]').trim().replace(/\t/g, '');
 		if (s) {
 			if (s.indexOf(' ') > -1)
@@ -556,7 +556,7 @@ ${v.info}`;
 			ui.q('#settingsInterest2').value = '';
 		if (!ui.q('input[name="genderInterest3"]:checked'))
 			ui.q('#settingsInterest3').value = '';
-		ui.q('textarea[name="aboutMe"]').value = ui.val('textarea[name="aboutMe"]').replace(/</g, '&lt;');
+		ui.q('textarea[name="description"]').value = ui.val('textarea[name="description"]').replace(/</g, '&lt;');
 		ui.q('input[name="email"]').value = ui.val('input[name="email"]').trim().toLowerCase();
 		var t = hashtags.convert(ui.q('settings textarea[name="hashtagsDisp"]').value);
 		ui.q('settings input[name="skills"]').value = t.category;

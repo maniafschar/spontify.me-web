@@ -22,7 +22,7 @@ class ratings {
 		<input type="hidden" name="eventParticipateId" value="${v.participateId}" />
 		<input type="hidden" name="rating" value="80" />
         <field>
-			<textarea maxlength="1000" placeholder="${ui.l('locations.shortDesc')}" name="text" ${v.textareaStyle}>${v.draft}</textarea>
+			<textarea maxlength="1000" placeholder="${ui.l('locations.shortDesc')}" name="description" ${v.textareaStyle}>${v.draft}</textarea>
         </field>
         <field style="margin:0.5em 0 0 0;">
             <input type="file" name="image" accept=".gif, .png, .jpg" />
@@ -68,7 +68,7 @@ class ratings {
 					var v = model.convert(new Contact(), list, i);
 					date = global.date.formatDate(v.eventRating.createdAt);
 					pseudonym = v.id == user.contact.id ? ui.l('you') : v.pseudonym;
-					text = v.eventRating.text ? v.eventRating.text + global.separator : '';
+					text = v.eventRating.description ? v.eventRating.description + global.separator : '';
 					img = v.eventRating.image ? '<br/><img src="' + global.serverImg + v.eventRating.image + '"/>' : '';
 					rate = '<rating><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.eventRating.rating) + '%;">★★★★★</full></rating>';
 					s += '<ratingItem><span onclick="ui.navigation.autoOpen(&quot;' + global.encParam('e=' + pageEvent.getId(v)) + '&quot;,event)">' + rate + date + ' ' + text + '</span><span onclick="ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)">' + pseudonym + '</span>' + img + '</ratingItem>';
@@ -104,7 +104,7 @@ class ratings {
 			list = [];
 	}
 	static save() {
-		var e = ui.q('popup [name="text"]');
+		var e = ui.q('popup [name="description"]');
 		ui.classRemove(e, 'dialogFieldError');
 		if (ui.val('popup [name="rating"]') < 25 && !e.value)
 			formFunc.setError(e, 'rating.negativeRateValidation');

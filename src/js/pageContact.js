@@ -63,7 +63,7 @@ class pageContact {
 		${v.previewHintImage}
 	</detailImg>
 </detailHeader>
-${v.aboutMe}
+${v.description}
 ${v.urls}
 ${v.rating}
 <text${v.birthdayClass}>
@@ -303,10 +303,10 @@ ${v.matchIndicatorHintDescription}
 			v.rating = '';
 		if (global.isBrowser())
 			v.displaySocialShare = 'display:none;';
-		if (v.aboutMe)
-			v.aboutMe = (v.guide ? '<guide>' + ui.l('settings.guide') + '</guide>' : '') + '<text class="description">' + Strings.replaceLinks(v.aboutMe.replace(/\n/g, '<br/>')) + '</text>';
+		if (v.description)
+			v.description = '<text class="description">' + Strings.replaceLinks(v.description.replace(/\n/g, '<br/>')) + '</text>';
 		else if (preview)
-			v.aboutMe = '<previewHint>' + ui.l('settings.previewHintAboutMe') + '</previewHint>';
+			v.description = '<previewHint>' + ui.l('settings.previewHintAboutMe') + '</previewHint>';
 		if (v.contactLink.status == 'Pending' && v.contactLink.contactId != user.contact.id)
 			setTimeout(function () {
 				pageContact.toggleFriend(v.id);
@@ -363,7 +363,7 @@ ${v.matchIndicatorHintDescription}
 			if (birth.age)
 				v.birth = ' (' + birth.age + ')';
 			if (!v._message2)
-				v._message2 = v.aboutMe;
+				v._message2 = v.description;
 			v._message = v._message1 ? v._message1 + '<br/>' : '';
 			v._message += v._message2 ? v._message2 : '';
 			v.dist = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';

@@ -60,7 +60,6 @@ class Block extends BaseEntity {
 }
 
 class Contact extends BaseEntity {
-	aboutMe;
 	active;
 	age;
 	ageDivers;
@@ -70,6 +69,7 @@ class Contact extends BaseEntity {
 	birthdayDisplay;
 	bluetooth;
 	coach;
+	description;
 	gender;
 	idDisplay;
 	image;
@@ -177,7 +177,7 @@ class EventRating extends BaseEntity {
 	eventId;
 	image;
 	rating;
-	text;
+	description;
 }
 
 class Location extends BaseEntity {
