@@ -201,7 +201,7 @@ class ui {
 					if (idIntern.indexOf('l=') == 0)
 						details.open(idIntern.substring(2), { webCall: 'ui.navigation.autoOpen(id,event)', query: 'location_list', search: encodeURIComponent('location.id=' + idIntern.substring(2)) }, pageLocation.detailLocationEvent);
 					else if (idIntern.indexOf('e=') == 0)
-						details.open(idIntern.substring(2), { webCall: 'ui.navigation.autoOpen(id,event)', query: 'event_list', search: encodeURIComponent('event.id=' + idIntern.substring(2, idIntern.indexOf('_'))) }, pageLocation.detailLocationEvent);
+						details.open(idIntern.substring(2), { webCall: 'ui.navigation.autoOpen(id,event)', query: 'event_list', search: encodeURIComponent('event.id=' + idIntern.substring(2, idIntern.indexOf('_') > 0 ? idIntern.indexOf('_') : idIntern.length)) }, pageLocation.detailLocationEvent);
 					else if (idIntern.indexOf('f=') == 0)
 						pageContact.sendRequestForFriendship(idIntern.substring(2));
 					else if (idIntern.indexOf('q=') == 0)
@@ -840,7 +840,7 @@ class formFunc {
 				if (e[i].checked)
 					cb[e[i].name] += global.separatorTech + e[i].value;
 				else if (e[i].value == 'true')
-					cb[e[i].name] += '\u0015false';
+					cb[e[i].name] += global.separatorTech + false;
 			} else if (e[i].type == 'datetime-local')
 				d.values[e[i].name] = global.date.local2server(e[i].value);
 			else if (e[i].name)
@@ -865,8 +865,8 @@ class formFunc {
 				{ sourceType: camera ? Camera.PictureSourceType.CAMERA : Camera.PictureSourceType.PHOTOLIBRARY, destinationType: Camera.DestinationType.FILE_URI });
 		},
 		cameraSuccess(e) {
-			formFunc.image.fieldId.get('_appInput').setAttribute('display', 'none');
-			formFunc.image.fieldId.get('_disp').setAttribute('display', 'block');
+			formFunc.image.fieldId.get('_appInput').style.display = 'none';
+			formFunc.image.fieldId.get('_disp').style.display = 'block';
 			window.resolveLocalFileSystemURL(e,
 				function (fe) {
 					fe.file(function (f) {
@@ -910,11 +910,18 @@ class formFunc {
 			formFunc.image.fieldId.name = e.getAttribute('name');
 			formFunc.image.preview2(e.files && e.files.length > 0 ? e.files[0] : null);
 		},
+		previewVideo(e, id) {
+			formFunc.image.fieldId.id = id;
+			formFunc.image.fieldId.name = e.getAttribute('name');
+			if (e.files && e.files.length > 0)
+				formFunc.image.fieldId.get('_disp').querySelector('span').innerText = e.files[0].name;
+		},
 		preview2(file) {
 			formFunc.image.fieldId.get().setAttribute('rotateImage', '0');
 			if (file) {
 				var ePrev = formFunc.image.fieldId.get('_disp');
 				ui.css(ePrev, 'z-index', 6);
+				formFunc.image.fieldId.get('_icon').style.display = 'none';
 				var p = '<rotate onclick="formFunc.image.rotate(this)">&#8635;</rotate><img name="' + formFunc.image.fieldId.name + 'Preview"/>';
 				ui.html(ePrev, '<close onclick="formFunc.image.remove()">X</close>' + p + '<desc></desc>');
 				formFunc.image.previewInternal(file);
@@ -1018,6 +1025,7 @@ class formFunc {
 				ui.html(ePrev, '<span>' + (e.getAttribute('hint') ? e.getAttribute('hint') : ui.l('fileUpload.select')) + '</span>');
 				ePrev.style.zIndex = null;
 				ePrev.style.height = null;
+				formFunc.image.fieldId.get('_icon').style.display = '';
 				ui.css('#popupSendImage', 'display', 'none');
 				if (!global.isBrowser()) {
 					formFunc.image.fieldId.get('_appInput').style.display = 'block';
@@ -1178,18 +1186,28 @@ class formFunc {
 				e[i].style.display = 'none';
 				formFunc.initSliderDrag(ui.q('#' + idSlider + '_left'));
 				formFunc.initSliderDrag(ui.q('#' + idSlider + '_right'));
+			} else if (e[i].name == 'authenticate') {
+				if (!e[i].parentElement.querySelector('[name="' + s2 + '_disp"]')) {
+					if (!e[i].getAttribute('onchange'))
+						e[i].setAttribute('onchange', 'formFunc.image.previewVideo(this,"' + id + '")');
+					var s = '', s2 = e[i].getAttribute('name');
+					if (!global.isBrowser()) {
+						e[i].style.display = 'none';
+						s = '<buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + id + '&quot;,&quot;' + s2 + '&quot;)">' + ui.l('camera.select') + '</buttontext>';
+					}
+					e[i].outerHTML = s + '<inputFile name="' + s2 + '_disp" ' + (e[i].getAttribute('class') ? 'class="' + e[i].getAttribute('class') + '" ' : '') + (global.isBrowser() ? '' : ' style="display:none;"') + '><span>' + ui.l('fileUpload.video') + '</span></inputFile>' + e[i].outerHTML;
+				}
 			} else if (e[i].type == 'file') {
 				if (!e[i].previousElementSibling) {
 					if (!e[i].getAttribute('onchange'))
 						e[i].setAttribute('onchange', 'formFunc.image.preview(this,"' + id + '")');
-					var s = '';
+					var s = '', s2 = e[i].getAttribute('name');
 					if (!global.isBrowser()) {
-						e[i].setAttribute('style', 'display:none;');
-						var s2 = e[i].getAttribute('name');
+						e[i].style.display = 'none';
 						s = '<div name="' + s2 + '_appInput" class="appInput"><buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + id + '&quot;,&quot;' + s2 + '&quot;,true)" style="border-radius:0.5em 0 0 0.5em;border-right:solid 1px rgba(255,255,255,0.1);">' + ui.l('camera.shoot') + '</buttontext>' +
-							'<buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + + id + '&quot;,&quot;' + s2 + '&quot;)" style="border-radius:0 0.5em 0.5em 0;">' + ui.l('camera.select') + '</buttontext></div>';
+							'<buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + id + '&quot;,&quot;' + s2 + '&quot;)" style="border-radius:0 0.5em 0.5em 0;">' + ui.l('camera.select') + '</buttontext></div>';
 					}
-					e[i].outerHTML = s + '<inputFile name="' + e[i].getAttribute('name') + '_disp" ' + (e[i].getAttribute('class') ? 'class="' + e[i].getAttribute('class') + '" ' : '') + (global.isBrowser() ? '' : ' style="display:none;"') + '>' + '<span>' + (e[i].getAttribute('hint') ? e[i].getAttribute('hint') : ui.l('fileUpload.select')) + '</span></inputFile>' + e[i].outerHTML + (e[i].getAttribute('src') ? '<img src="' + e[i].getAttribute('src') + '"/>' : '');
+					e[i].outerHTML = s + '<inputFile name="' + s2 + '_disp" ' + (e[i].getAttribute('class') ? 'class="' + e[i].getAttribute('class') + '" ' : '') + (global.isBrowser() ? '' : ' style="display:none;"') + '><span>' + (e[i].getAttribute('hint') ? e[i].getAttribute('hint') : ui.l('fileUpload.select')) + '</span></inputFile>' + e[i].outerHTML + (e[i].getAttribute('src') ? '<img name="' + s2 + '_icon" src="' + e[i].getAttribute('src') + '"/>' : '');
 				}
 			}
 		}

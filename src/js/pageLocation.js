@@ -376,13 +376,8 @@ ${v.rating}
 			v = user.get('location').values;
 		if (!v)
 			v = {};
-		var d = '' + v.category;
-		for (var i = 0; i < d.length; i++)
-			v['cat' + d.substring(i, i + 1)] = ' checked';
 		if (id)
 			v.showNearByButton = 'display:none';
-		for (var i = 0; i < ui.categories.length; i++)
-			v['attr' + i] = v['attr' + i] ? v['attr' + i].replace(/\u0015/g, ',') : '';
 		if (!v.longitude)
 			v.longitude = geoData.current.lon;
 		if (!v.latitude)

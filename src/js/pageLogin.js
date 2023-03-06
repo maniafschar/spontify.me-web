@@ -199,7 +199,7 @@ class pageLogin {
 			formFunc.setError(p, 'settings.passwordWrong');
 		else
 			formFunc.resetError(p);
-		if (ui.q('login .dialogFieldError'))
+		if (ui.q('login form:first-child .dialogFieldError'))
 			p.value = '';
 		else
 			pageLogin.login(u.value, p.value, ui.q('[name="autoLogin"]:checked'));
@@ -563,12 +563,13 @@ class pageLogin {
 		var fromDialog = ui.q('popupContent');
 		var email = fromDialog ? ui.q('popup input') : ui.qa('input[name="email"]')[1];
 		formFunc.resetError(email);
+		ui.html('login form[name="loginRecover"] errorHint', '');
 		var b = -1;
 		if (!email.value)
 			b = formFunc.setError(email, 'settings.noEmail');
 		if (b == -1 && formFunc.validation.email(email) == -1)
 			communication.ajax({
-				url: global.server + 'authentication/recoverSendEmail?email=' + encodeURIComponent(Encryption.encPUB(email)),
+				url: global.server + 'authentication/recoverSendEmail?email=' + encodeURIComponent(Encryption.encPUB(email.value)),
 				webCall: 'pageLogin.sendVerificationEmail()',
 				success(r) {
 					if (r.indexOf('nok:') == 0)
@@ -579,10 +580,10 @@ class pageLogin {
 						if (fromDialog)
 							ui.navigation.openPopup(ui.l('login.recoverPassword'), ui.l('login.recoverPasswordBody'));
 						else
-							ui.html('login errorHint', ui.l('login.recoverPasswordBody'));
+							ui.html('login form[name="loginRecover"] errorHint', ui.l('login.recoverPasswordBody'));
 					}
 				}
-			})
+			});
 	}
 	static setError(s, resetPW) {
 		if (ui.navigation.getActiveID() == 'home')

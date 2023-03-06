@@ -13,7 +13,7 @@ import { hashtags } from './hashtags';
 import QRCodeStyling from 'qr-code-styling';
 import { pageLogin } from './pageLogin';
 import { lists } from './lists';
-import { pageEvent } from './pageEvent';
+import { pageHome } from './pageHome';
 
 export { pageSettings };
 
@@ -336,8 +336,6 @@ ${v.info}`;
 					if (user.contact.imageList)
 						v.image = 'src="' + global.serverImg + user.contact.imageList + '"';
 					v.settings1 = pageSettings.templateSettings1(v);
-					for (var i = 0; i < ui.categories.length; i++)
-						v['att' + i + 'Ex'] = user.contact['attr' + i + 'Ex'] ? user.contact['attr' + i + 'Ex'].replace(/\u0015/g, ',') : '';
 					v.hashtagSelection = hashtags.display();
 					if (user.contact.ageMale)
 						v.genderInterest1 = 'checked';
@@ -459,8 +457,8 @@ ${v.info}`;
 				success(r) {
 					user.contact.image = r['contact.image'];
 					user.contact.imageList = r['contact.imageList'];
-					ui.q('home').innerHTML = '';
-					var e = ui.q('settings input[name="image"]+img');
+					pageHome.init(true);
+					var e = formFunc.image.fieldId.get('_icon');
 					if (e)
 						e.setAttribute('src', global.serverImg + user.contact.imageList);
 				}

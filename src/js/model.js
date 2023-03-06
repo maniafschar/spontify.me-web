@@ -65,6 +65,7 @@ class Contact extends BaseEntity {
 	ageDivers;
 	ageFemale;
 	ageMale;
+	authenticate;
 	birthday;
 	birthdayDisplay;
 	bluetooth;
@@ -84,7 +85,6 @@ class Contact extends BaseEntity {
 	notificationMarkEvent;
 	notificationVisitLocation;
 	notificationVisitProfile;
-	paypalMerchantId;
 	pseudonym;
 	rating;
 	search;

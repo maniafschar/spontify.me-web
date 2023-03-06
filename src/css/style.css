@@ -769,20 +769,25 @@ settings paypalFees {
 	text-align: center;
 }
 
-explain {
+.paypal explain {
 	font-size: 0.8em;
 	padding: 0 1.1em;
 	display: block;
 	line-height: 1.3;
 }
 
-explain.paypal {
+popup .paypal {
 	text-align: center;
 	padding: 0.25em 0.5em 0 0.5em;
 }
 
-explain.paypal buttontext {
-	font-size: 1.25em;
+popup .authenticate {
+	display: none;
+	margin-top: 1em;
+}
+
+popup .authenticate explain {
+	padding: 0.25em 0 0.5em 0.5em;
 }
 
 search {

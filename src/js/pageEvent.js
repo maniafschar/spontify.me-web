@@ -86,11 +86,19 @@ class pageEvent {
 	<label>${ui.l('events.price')}</label>
 	<value>
 		<input type="number" step="any" name="price" value="${v.price}" onkeyup="pageEvent.checkPrice()" onmousewheel="return false;" />
-		<explain class="paypal" style="display:none;">${v.payplaSignUpHint}
+		<div class="paypal" style="display:none;">
+			<explain>${v.payplaSignUpHint}</explain>
+			<div class="authenticate">
+				<explain>${ui.l('events.paypalSignUpHintUpload')}</explain>
+				<div style="position:relative;margin-bottom:0.5em;">
+					<input type="file" name="authenticate" accept="video/mp4,video/x-m4v,video/*" />
+				</div>
+				<input type="text" name="telephone" placeholder="${ui.l('locations.telephone')}" />
+			</div>
 			<dialogButtons>
 				<buttontext class="bgColor" onclick="pageEvent.signUpPaypal()">${ui.l('events.paypalSignUpButton')}</buttontext>
 			</dialogButtons>
-		</explain>
+		</div>
 	</value>
 </field>
 <field class="paid" style="display:none;">
@@ -131,10 +139,10 @@ class pageEvent {
 <span class="eventParticipationButtons eventMargin"></span>
 </text>`;
 	static checkPrice() {
-		var e = ui.q('popup explain.paypal');
+		var e = ui.q('popup .paypal');
 		if (ui.q('popup [name="price"]').value > 0) {
-			if (user.contact.paypalMerchantId && ui.cssValue(e, 'display') != 'none' ||
-				!user.contact.paypalMerchantId && ui.cssValue(e, 'display') == 'none')
+			if (user.contact.authenticate && ui.cssValue(e, 'display') != 'none' ||
+				!user.contact.authenticate && ui.cssValue(e, 'display') == 'none')
 				ui.toggleHeight(e);
 			if (ui.cssValue(e = ui.q('popup .unpaid'), 'display') != 'none')
 				ui.toggleHeight(e, function () { ui.toggleHeight('popup .paid') });
@@ -375,8 +383,11 @@ class pageEvent {
 		return actualEvents;
 	}
 	static getDate(v) {
-		var d = v.id.split('_')[1].split('-'), d2 = global.date.server2Local(v.event.startDate);
-		return new Date(d[0], parseInt(d[1]) - 1, d[2], d2.getHours(), d2.getMinutes(), d2.getSeconds());
+		var startDate = global.date.server2Local(v.event.startDate);
+		if (!v.id.indexOf || v.id.indexOf('_') < 0)
+			return startDate;
+		var d = v.id.split('_')[1].split('-');
+		return new Date(d[0], parseInt(d[1]) - 1, d[2], startDate.getHours(), startDate.getMinutes(), startDate.getSeconds());
 	}
 	static getId(v) {
 		var id = v.event.id + '_';
@@ -393,7 +404,7 @@ class pageEvent {
 			if (v.event.locationId > 0 && (v.event.contactId == user.contact.id || v.eventParticipate.state == 1))
 				text += '<buttontext class="bgColor" onclick="pageEvent.qrcode(' + (v.event.contactId == user.contact.id) + ')">' + ui.l('events.qrcodeButton') + '</buttontext><br/><br/>';
 			if (v.event.price > 0 && user.contact.id != v.event.contactId) {
-				if (!v.eventParticipate.state && v.contact.paypalMerchantId)
+				if (!v.eventParticipate.state && v.contact.authenticate)
 					text += '<buttontext class="bgColor participation" onclick="pageEvent.openPaypal(&quot;' + v.contact.paypalMerchantId + '&quot;)">' + ui.l('events.participante') + '</buttontext>';
 			} else if (v.eventParticipate.state == 1 || !v.event.maxParticipants || participantCount < v.event.maxParticipants)
 				text += '<buttontext class="bgColor participation" onclick="pageEvent.participate()">' + ui.l('events.participante' + (v.eventParticipate.state == 1 ? 'Stop' : '')) + '</buttontext>';
@@ -906,8 +917,8 @@ class pageEvent {
 				formFunc.setError(start, 'events.errorDateFormat');
 			}
 		}
-		if (ui.q('popup [name="price"]').value > 0 && !user.contact.paypalMerchantId)
-			formFunc.setError(ui.q('popup [name="price"]'), 'events.errorActivatePaypal');
+		if (ui.q('popup [name="price"]').value > 0 && !user.contact.authenticate)
+			formFunc.setError(ui.q('popup [name="price"]'), 'events.errorAuthenticate');
 		if (!ui.q('popup [name="type"]').checked) {
 			if (!end.value)
 				formFunc.setError(end, 'events.errorDateNoEnd');
@@ -968,22 +979,8 @@ class pageEvent {
 		pageEvent.checkPrice();
 	}
 	static signUpPaypal() {
-		if (!window.localStorage.getItem('autoLogin')) {
-			pageLogin.login(user.email, user.password, true, pageEvent.signUpPaypal);
-			return;
-		}
-		if (pageEvent.paypal.merchantUrl) {
-			pageEvent.saveDraft();
-			ui.navigation.openHTML(pageEvent.paypal.merchantUrl, 'paypal');
-		} else
-			communication.ajax({
-				url: global.server + 'action/paypalSignUpSellerUrl',
-				webCall: 'pageEvent.signUpPaypal()',
-				success(r) {
-					pageEvent.paypal.merchantUrl = r + '&displayMode=minibrowser';
-					pageEvent.signUpPaypal();
-				}
-			});
+		if (ui.cssValue('popup .authenticate', 'display') == 'none')
+			ui.toggleHeight('popup .authenticate');
 	}
 	static toggle(id) {
 		var d = ui.q('detail card:last-child [name="events"]');
