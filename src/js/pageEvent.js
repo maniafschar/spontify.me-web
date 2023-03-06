@@ -290,7 +290,7 @@ class pageEvent {
 			d.setMonth(d.getMonth() + 6);
 			v.endDate = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
 		}
-		if (id) {
+		if (id || locationID > 0) {
 			v.classLocation = ' noDisp';
 			if (locationID > 0) {
 				var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')))
@@ -1014,30 +1014,32 @@ class pageEvent {
 			b = false;
 		for (var i = 0; i < a.length; i++) {
 			v = a[i];
-			v.bg = bg;
-			var s2 = global.date.formatDate(v.event.startDate, 'weekdayLong');
-			var date = global.date.getDateFields(v.event.startDate);
-			date = date.year + '-' + date.month + '-' + date.day;
-			var idIntern = v.event.id + '_' + date;
-			s2 = global.date.getDateHint(v.event.startDate).replace('{0}', s2);
-			var img;
-			if (v.event.imageList || v.imageList || v.event.locationId == -2 && v.contact.imageList)
-				img = global.serverImg + (v.event.imageList ? v.event.imageList : v.imageList ? v.imageList : v.contact.imageList);
-			else
-				img = 'images/event.svg" style="padding:1em;" class="' + bg;
-			text = '';
-			if (v.event.price > 0)
-				text += global.separator + ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2).replace('.', ','));
-			if (v.event.maxParticipants)
-				text += global.separator + ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
-			if (v.event.confirm == 1)
-				text += global.separator + ui.l('events.participationMustBeConfirmed');
-			if (text)
-				text = '<br/>' + text.substring(global.separator.length);
-			text += '<br/>' + v.event.description;
-			if (field == 'location')
-				text = '<br/>' + v.name + text;
-			s += '<row' + (v.eventParticipate.state == 1 ? ' class="participate"' : v.eventParticipate.state == -1 ? ' class="canceled"' : '') + ' onclick="details.open(&quot;' + idIntern + '&quot;,' + JSON.stringify({ webCall: 'pageEvent.toggleInternal(r,id,field)', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)"><div><text>' + s2 + text + '</text><imageList><img src="' + img + '"/></imageList></div></row>';
+			if (v.id) {
+				v.bg = bg;
+				var s2 = global.date.formatDate(v.event.startDate, 'weekdayLong');
+				var date = global.date.getDateFields(v.event.startDate);
+				date = date.year + '-' + date.month + '-' + date.day;
+				var idIntern = v.event.id + '_' + date;
+				s2 = global.date.getDateHint(v.event.startDate).replace('{0}', s2);
+				var img;
+				if (v.event.imageList || v.imageList || v.event.locationId == -2 && v.contact.imageList)
+					img = global.serverImg + (v.event.imageList ? v.event.imageList : v.imageList ? v.imageList : v.contact.imageList);
+				else
+					img = 'images/event.svg" style="padding:1em;" class="' + bg;
+				text = '';
+				if (v.event.price > 0)
+					text += global.separator + ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2).replace('.', ','));
+				if (v.event.maxParticipants)
+					text += global.separator + ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
+				if (v.event.confirm == 1)
+					text += global.separator + ui.l('events.participationMustBeConfirmed');
+				if (text)
+					text = '<br/>' + text.substring(global.separator.length);
+				text += '<br/>' + v.event.description;
+				if (field == 'location')
+					text = '<br/>' + v.name + text;
+				s += '<row' + (v.eventParticipate.state == 1 ? ' class="participate"' : v.eventParticipate.state == -1 ? ' class="canceled"' : '') + ' onclick="details.open(&quot;' + idIntern + '&quot;,' + JSON.stringify({ webCall: 'pageEvent.toggleInternal(r,id,field)', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)"><div><text>' + s2 + text + '</text><imageList><img src="' + img + '"/></imageList></div></row>';
+			}
 		}
 		if (s)
 			s += newButton;

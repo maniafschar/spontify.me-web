@@ -63,7 +63,7 @@ class pageHome {
 	}
 	static init(force) {
 		var e = ui.q('home');
-		if (force || !e.innerHTML) {
+		if (force || !ui.q('home teaser.events>div card')) {
 			var v = {};
 			if (user.contact) {
 				if (user.contact.imageList)
@@ -85,6 +85,7 @@ class pageHome {
 				url: global.server + 'action/teaser/contacts',
 				webCall: 'pageHome.init(force)',
 				responseType: 'json',
+				error() { },
 				success(l) {
 					var s = '';
 					for (var i = 1; i < l.length; i++) {
@@ -99,6 +100,10 @@ class pageHome {
 				url: global.server + 'action/teaser/events',
 				webCall: 'pageHome.init(force)',
 				responseType: 'json',
+				error(e) {
+					ui.q('home teaser.events>div').innerHTML = ui.l('error.noNetworkConnection');
+					ui.css('home teaser.events', 'opacity', 1);
+				},
 				success(l) {
 					var s = '';
 					var e;
