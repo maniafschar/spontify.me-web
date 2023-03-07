@@ -88,15 +88,47 @@ class pageEvent {
 		<input type="number" step="any" name="price" value="${v.price}" onkeyup="pageEvent.checkPrice()" onmousewheel="return false;" />
 		<div class="paypal" style="display:none;">
 			<explain>${v.payplaSignUpHint}</explain>
-			<div class="authenticate">
-				<explain>${ui.l('events.paypalSignUpHintUpload')}</explain>
-				<div style="position:relative;margin-bottom:0.5em;">
-					<input type="file" name="authenticate" accept="video/mp4,video/x-m4v,video/*" />
-				</div>
-				<input type="text" name="telephone" placeholder="${ui.l('locations.telephone')}" />
-			</div>
+			<authenticate>
+				<explain>${ui.l('events.paypalSignUpHintMeet')}</explain>
+				<day class="day1" d="${v.authenticateDay1Raw}">
+					${v.authenticateDay1}
+					<hour class="hour09"></hour>
+					<hour class="hour10"></hour>
+					<hour class="hour11"></hour>
+					<hour class="hour12"></hour>
+					<hour class="hour13"></hour>
+					<hour class="hour14"></hour>
+					<hour class="hour15"></hour>
+					<hour class="hour16"></hour>
+					<hour class="hour17"></hour>
+				</day>
+				<day class="day2" d="${v.authenticateDay2Raw}">
+					${v.authenticateDay2}
+					<hour class="hour09"></hour>
+					<hour class="hour10"></hour>
+					<hour class="hour11"></hour>
+					<hour class="hour12"></hour>
+					<hour class="hour13"></hour>
+					<hour class="hour14"></hour>
+					<hour class="hour15"></hour>
+					<hour class="hour16"></hour>
+					<hour class="hour17"></hour>
+				</day>
+				<day class="day3" d="${v.authenticateDay3Raw}">
+					${v.authenticateDay3}
+					<hour class="hour09"></hour>
+					<hour class="hour10"></hour>
+					<hour class="hour11"></hour>
+					<hour class="hour12"></hour>
+					<hour class="hour13"></hour>
+					<hour class="hour14"></hour>
+					<hour class="hour15"></hour>
+					<hour class="hour16"></hour>
+					<hour class="hour17"></hour>
+				</day>
+			</authenticate>
 			<dialogButtons>
-				<buttontext class="bgColor" onclick="pageEvent.signUpPaypal()">${ui.l('events.paypalSignUpButton')}</buttontext>
+				<buttontext class="bgColor" onclick="pageEvent.videoCall()">${ui.l('events.paypalSignUpButton')}</buttontext>
 			</dialogButtons>
 		</div>
 	</value>
@@ -110,7 +142,7 @@ class pageEvent {
 <field class="url" style="display:none;">
 	<label>${ui.l('events.url')}</label>
 	<value>
-		<input name="url" />
+		<input name="url" value="${v.url}" />
 	</value>
 </field>
 <field class="unpaid noWTDField">
@@ -313,7 +345,26 @@ class pageEvent {
 			: pageEvent.paypal.fee);
 		v.hashtagSelection = hashtags.display();
 		v.hashtagsDisp = hashtags.ids2Text(v.skills) + (v.skillsText ? ' ' + v.skillsText : '').trim();
+		var next = function (d) {
+			d.setDate(d.getDate() + 1);
+			if (d.getDay() == 0)
+				d.setDate(d.getDate() + 1);
+			return d;
+		}
+		d = next(new Date());
+		v.authenticateDay1 = global.date.formatDate(d);
+		v.authenticateDay1 = v.authenticateDay1.substring(0, v.authenticateDay1.lastIndexOf(' '));
+		v.authenticateDay1Raw = global.date.local2server(d).substring(0, 10);
+		d = next(d);
+		v.authenticateDay2 = global.date.formatDate(d);
+		v.authenticateDay2 = v.authenticateDay2.substring(0, v.authenticateDay2.lastIndexOf(' '));
+		v.authenticateDay2Raw = global.date.local2server(d).substring(0, 10);
+		d = next(d);
+		v.authenticateDay3 = global.date.formatDate(d);
+		v.authenticateDay3 = v.authenticateDay3.substring(0, v.authenticateDay3.lastIndexOf(' '));
+		v.authenticateDay3Raw = global.date.local2server(d).substring(0, 10);
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
+		ui.attr('popup hour', 'onclick', 'pageEvent.selectVideoCall(this)');
 		if (id)
 			pageEvent.setForm();
 	}
@@ -405,7 +456,7 @@ class pageEvent {
 				text += '<buttontext class="bgColor" onclick="pageEvent.qrcode(' + (v.event.contactId == user.contact.id) + ')">' + ui.l('events.qrcodeButton') + '</buttontext><br/><br/>';
 			if (v.event.price > 0 && user.contact.id != v.event.contactId) {
 				if (!v.eventParticipate.state && v.contact.authenticate)
-					text += '<buttontext class="bgColor participation" onclick="pageEvent.openPaypal(&quot;' + v.contact.paypalMerchantId + '&quot;)">' + ui.l('events.participante') + '</buttontext>';
+					text += '<buttontext class="bgColor participation" onclick="pageLogin.paypal(' + v.contact.id + ')">' + ui.l('events.participante') + '</buttontext>';
 			} else if (v.eventParticipate.state == 1 || !v.event.maxParticipants || participantCount < v.event.maxParticipants)
 				text += '<buttontext class="bgColor participation" onclick="pageEvent.participate()">' + ui.l('events.participante' + (v.eventParticipate.state == 1 ? 'Stop' : '')) + '</buttontext>';
 		}
@@ -651,47 +702,38 @@ class pageEvent {
 				setTimeout(function () { ui.adjustTextarea(ui.q('popup [name="hashtagsDisp"]')); }, 500);
 		});
 	}
-	static openPaypal(paypalMerchantId) {
-		if (!ui.q('head script[src*="paypal.com"]')) {
-			communication.ajax({
-				url: global.server + 'action/paypalKey',
-				webCall: 'pageEvent.openPaypal(paypalMerchantId)',
-				responseType: 'json',
-				success(r) {
-					pageEvent.paypal.fee = r.fee;
-					pageEvent.paypal.currency = r.currency;
-					var script = document.createElement('script');
-					script.onload = pageEvent.openPaypalPopup;
-					script.src = 'https://www.paypal.com/sdk/js?&client-id=' + r.key + '&currency=' + r.currency + '&merchant-id=' + paypalMerchantId;
-					document.head.appendChild(script);
-				}
-			});
-		} else
-			pageEvent.openPaypalPopup();
+	static openPaypal() {
+		pageLogin.paypal();
 	}
-	static openPaypalPopup() {
+	static openPaypalPopup(email, merchant) {
 		intro.openHint({ desc: '<br/><div id="paypal-button-container"></div>', pos: '15%,20vh', size: '70%,auto' });
 		var amount = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).event.price;
 		paypal.Buttons({
 			createOrder: function (data, actions) {
 				return actions.order.create({
-					purchase_units: [{
-						amount: {
-							currency_code: pageEvent.paypal.currency,
-							value: '' + amount
+					intent: "CAPTURE",
+					purchase_units: [
+						{
+							amount: {
+								currency_code: pageEvent.paypal.currency,
+								value: '' + ((100 - pageEvent.paypal.fee) / 100 * amount)
+							},
+							payee: {
+								email_address: 'merchant.germany@jq-consulting.de'
+							},
+							reference_id: "1"
 						},
-						payment_instruction: {
-							disbursement_mode: 'INSTANT',
-							platform_fees: [
-								{
-									amount: {
-										currency_code: pageEvent.paypal.currency,
-										value: '' + (pageEvent.paypal.fee / 100 * amount)
-									},
-								},
-							],
+						{
+							amount: {
+								currency_code: pageEvent.paypal.currency,
+								value: '' + (pageEvent.paypal.fee / 100 * amount)
+							},
+							payee: {
+								email_address: 'mani.afschar-merchant@jq-consulting.de'
+							},
+							reference_id: "2"
 						}
-					}]
+					]
 				});
 			},
 			onApprove: function (data, actions) {
@@ -938,8 +980,10 @@ class pageEvent {
 		v = formFunc.getForm('popup form');
 		if (!v.values.price)
 			v.values.price;
-		if (ui.q('popup errorHint'))
+		if (ui.q('popup errorHint')) {
+			ui.q('popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });;
 			return;
+		}
 		if (ui.q('popup [name="type"]').checked)
 			end.value = start.value.substring(0, start.value.lastIndexOf('T'));
 		ui.q('popup [name="confirm"]').value = ui.q('popup [name="eventconfirm"]:checked') ? 1 : 0;
@@ -961,7 +1005,15 @@ class pageEvent {
 		});
 	}
 	static saveDraft() {
+		var v = hashtags.convert(ui.q('popup [name="hashtagsDisp"]').value);
+		ui.q('popup input[name="skills"]').value = v.category;
+		ui.q('popup input[name="skillsText"]').value = v.hashtags;
 		user.set('event', formFunc.getForm('popup form'));
+	}
+	static selectVideoCall(e) {
+		ui.classRemove('popup hour', 'selected');
+		if (!ui.classContains(e, 'closed'))
+			ui.classAdd(e, 'selected');
 	}
 	static setForm() {
 		var b = ui.q('popup [name="type"]').checked;
@@ -977,10 +1029,6 @@ class pageEvent {
 			ui.css('popup .url', 'display', null);
 		}
 		pageEvent.checkPrice();
-	}
-	static signUpPaypal() {
-		if (ui.cssValue('popup .authenticate', 'display') == 'none')
-			ui.toggleHeight('popup .authenticate');
 	}
 	static toggle(id) {
 		var d = ui.q('detail card:last-child [name="events"]');
@@ -1094,5 +1142,26 @@ class pageEvent {
 					intro.openHint({ desc: '<title>' + ui.l('events.qrcodeButton') + '</title><br/>' + ui.l('events.qrcodeError'), pos: '5%,1em', size: '90%,auto' });
 			}
 		});
+	}
+	static videoCall() {
+		if (ui.cssValue('popup authenticate', 'display') == 'none')
+			ui.toggleHeight('popup authenticate');
+		else {
+			var e = ui.q('popup authenticate hour.selected');
+			if (e) {
+				e = global.date.local2server(ui.parents(e, 'day').getAttribute('d') + ' ' + e.getAttribute('class').replace(/[a-z ]/gi, '') + ':00:00');
+				communication.ajax({
+					url: global.server + 'action/videoCall/' + e,
+					webCall: 'pageEvent.videoCall()',
+					method: 'POST',
+					responseType: 'json',
+					success(r) {
+						user.contact.videoCall = e;
+						ui.q('popup div.paypal dialogButtons').outerHTML = '';
+						ui.q('popup div.paypal authenticate').innerHTML = ui.l('events.videoCallDate').replace('{0}', global.date.formatDate(e));
+					}
+				});
+			}
+		}
 	}
 }

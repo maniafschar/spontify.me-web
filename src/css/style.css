@@ -769,7 +769,7 @@ settings paypalFees {
 	text-align: center;
 }
 
-.paypal explain {
+popup explain {
 	font-size: 0.8em;
 	padding: 0 1.1em;
 	display: block;
@@ -781,13 +781,90 @@ popup .paypal {
 	padding: 0.25em 0.5em 0 0.5em;
 }
 
-popup .authenticate {
+popup authenticate {
 	display: none;
 	margin-top: 1em;
+	position: relative;
 }
 
-popup .authenticate explain {
+popup authenticate explain {
 	padding: 0.25em 0 0.5em 0.5em;
+}
+
+popup authenticate day {
+	position: relative;
+	width: 33%;
+	overflow: hidden;
+	display: block;
+	float: left;
+	padding: 0.5em;
+}
+
+popup authenticate day hour {
+	position: relative;
+	height: 2em;
+	width: 100%;
+	display: block;
+	overflow: hidden;
+	margin: 0.5em 0;
+	background: rgba(0, 0, 0, 0.1);
+	border-radius: 0.5em;
+	line-height: 2;
+}
+
+popup authenticate day hour.closed {
+	background-color: red;
+	text-decoration: line-through;
+	opacity: 0.25;
+}
+
+popup authenticate day hour.selected {
+	background-color: rgba(0, 255, 0, 0.9);
+}
+
+popup authenticate day hour.selected::after {
+	content: '✓';
+	position: absolute;
+	opacity: 0.2;
+	font-size: 2em;
+	top: 0.1em;
+	line-height: 1;
+}
+
+popup authenticate day hour.hour09::before {
+	content: '9:00';
+}
+
+popup authenticate day hour.hour10::before {
+	content: '10:00';
+}
+
+popup authenticate day hour.hour11::before {
+	content: '11:00';
+}
+
+popup authenticate day hour.hour12::before {
+	content: '12:00';
+}
+
+popup authenticate day hour.hour13::before {
+	content: '13:00';
+}
+
+popup authenticate day hour.hour14::before {
+	content: '14:00';
+}
+
+popup authenticate day hour.hour15::before {
+	content: '15:00';
+}
+
+popup authenticate day hour.hour16::before {
+	content: '16:00';
+}
+
+popup authenticate day hour.hour17::before {
+	content: '17:00';
 }
 
 search {
@@ -1498,6 +1575,7 @@ chatMoreButton {
 	font-size: 1.5em;
 	background-color: rgba(220, 220, 220, 0.3);
 	white-space: nowrap;
+	transition: all .4s ease-out;
 }
 
 alert {

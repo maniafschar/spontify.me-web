@@ -65,7 +65,7 @@ class pageChat {
 	}
 	static aiHint() {
 		if (ui.q('chatInput input:checked'))
-			intro.openHint({ desc: 'chatAi', pos: '10%,-10.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-0.5em' });
+			intro.openHint({ desc: 'chatAi', pos: '5%,-10.5em', size: '90%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-0.5em' });
 		else
 			intro.closeHint();
 	}
@@ -552,10 +552,8 @@ class pageChat {
 				ui.css(e2, 'display', 'none');
 			}
 			e2 = ui.q('chatMoreButton');
-			if (e2.style.display != 'none')
-				ui.navigation.animation(e2, 'homeSlideOut', function () {
-					ui.css(e2, 'display', 'none');
-				});
+			if (!e2.style.marginRight)
+				e2.style.marginRight = '-100%';
 		}
 	}
 	static sendChat(id, msg, event) {
@@ -663,6 +661,7 @@ class pageChat {
 	static showScrollButton() {
 		var e = ui.q('chatMoreButton');
 		ui.css(e, 'display', 'block');
+		ui.css(e, 'marginRight', null);
 		ui.navigation.animation(e, 'homeSlideIn');
 		ui.on('chatConversation', 'scroll', function () {
 			ui.navigation.animation(e, 'homeSlideOut', function () {

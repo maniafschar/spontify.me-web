@@ -7,6 +7,7 @@ import { initialisation } from './initialisation';
 import { intro } from './intro';
 import { Contact } from './model';
 import { pageChat } from './pageChat';
+import { pageEvent } from './pageEvent';
 import { pageHome } from './pageHome';
 import { pageLocation } from './pageLocation';
 import { formFunc, ui } from './ui';
@@ -412,6 +413,22 @@ class pageLogin {
 	static passwordDialog() {
 		if (!ui.navigation.openPopup(ui.l('login.changePassword'), '<span>' + ui.l('login.changePasswordBody') + '</span><field><label>' + ui.l('login.password') + '</label><value><input type="password" name="passwd" maxlength="30"></value></field><dialogButtons><buttontext class="bgColor" onclick="pageLogin.savePassword()">' + ui.l('login.changePassword') + '</buttontext></dialogButtons><popupHint></popupHint>', 'pageLogin.warningRegNotComplete()', true))
 			setTimeout(pageLogin.passwordDialog, 500);
+	}
+	static paypal(id) {
+		communication.ajax({
+			url: global.server + 'action/paypalKey?id=' + id + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
+			webCall: 'pageLogin.paypal(id)',
+			responseType: 'json',
+			success(r) {
+				pageEvent.paypal.fee = r.fee;
+				pageEvent.paypal.currency = r.currency;
+				var script = document.createElement('script');
+				r.merchant = Encryption.jsEncrypt.decrypt(r.merchant);
+				script.onload = function () { pageEvent.openPaypalPopup(Encryption.jsEncrypt.decrypt(r.email), r.merchant); };
+				script.src = 'https://www.paypal.com/sdk/js?&client-id=' + r.key;
+				document.head.appendChild(script);
+			}
+		});
 	}
 	static profileCompletePrompt() {
 		if (!user.contact.image && !user.contact.birthday && !user.contact.gender
