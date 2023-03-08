@@ -321,7 +321,7 @@ class pageEvent {
 			d = global.date.getDateFields(global.date.server2Local(v.startDate));
 			v.startDate = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute;
 		}
-		if (!id)
+		if (!id || v.price > 0 && ui.q('detail card:last-child participantCount').innerText.length)
 			v.hideDelete = ' noDisp';
 		d = new Date();
 		v.today = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
