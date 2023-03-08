@@ -420,12 +420,10 @@ class pageLogin {
 			webCall: 'pageLogin.paypal(id)',
 			responseType: 'json',
 			success(r) {
-				pageEvent.paypal.fee = r.fee;
 				pageEvent.paypal.currency = r.currency;
 				var script = document.createElement('script');
-				r.merchant = Encryption.jsEncrypt.decrypt(r.merchant);
-				script.onload = function () { pageEvent.openPaypalPopup(Encryption.jsEncrypt.decrypt(r.email), r.merchant); };
-				script.src = 'https://www.paypal.com/sdk/js?&client-id=' + r.key;
+				script.onload = function () { pageEvent.openPaypalPopup(Encryption.jsEncrypt.decrypt(r.email)); };
+				script.src = 'https://www.paypal.com/sdk/js?&client-id=' + r.key + '&currency=' + r.currency;
 				document.head.appendChild(script);
 			}
 		});

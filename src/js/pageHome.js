@@ -18,8 +18,10 @@ class pageHome {
 	static template = v =>
 		global.template`<homeHeader${v.logoSmall}>
 	<img onclick="geoData.openLocationPicker(event)" source="logo"/>
-	${v.imgProfile}
-	<text>${v.name}</text>
+	<text onclick="pageHome.goToSettings(event)">
+		${v.imgProfile}<br/>
+		${v.name}
+	</text>
 	<buttonIcon class="language${v.langButton}" onclick="pageHome.openLanguage(event)">
 		<span>${v.lang}</span>
 	</buttonIcon>
@@ -67,9 +69,9 @@ class pageHome {
 			var v = {};
 			if (user.contact) {
 				if (user.contact.imageList)
-					v.imgProfile = '<img src="' + global.serverImg + user.contact.imageList + '" onclick="pageHome.goToSettings(event)"/>';
+					v.imgProfile = '<img src="' + global.serverImg + user.contact.imageList + '"/>';
 				else
-					v.imgProfile = '<img src="images/contact.svg" style="box-shadow:none;" onclick="pageHome.goToSettings(event)"/>';
+					v.imgProfile = '<img src="images/contact.svg" style="box-shadow:none;"/>';
 				v.logoSmall = ' class="logoSmall"';
 				v.name = user.contact.pseudonym;
 				v.infoButton = ' noDisp';

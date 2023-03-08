@@ -721,12 +721,8 @@ class pageEvent {
 				setTimeout(function () { ui.adjustTextarea(ui.q('popup [name="hashtagsDisp"]')); }, 500);
 		});
 	}
-	static openPaypal() {
-		pageLogin.paypal();
-	}
-	static openPaypalPopup(email, merchant) {
+	static openPaypalPopup(email) {
 		intro.openHint({ desc: '<br/><div id="paypal-button-container"></div>', pos: '15%,20vh', size: '70%,auto' });
-		var amount = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).event.price;
 		paypal.Buttons({
 			createOrder: function (data, actions) {
 				return actions.order.create({
@@ -735,22 +731,11 @@ class pageEvent {
 						{
 							amount: {
 								currency_code: pageEvent.paypal.currency,
-								value: '' + ((100 - pageEvent.paypal.fee) / 100 * amount)
+								value: '' + JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).event.price
 							},
 							payee: {
-								email_address: 'merchant.germany@jq-consulting.de'
-							},
-							reference_id: "1"
-						},
-						{
-							amount: {
-								currency_code: pageEvent.paypal.currency,
-								value: '' + (pageEvent.paypal.fee / 100 * amount)
-							},
-							payee: {
-								email_address: 'mani.afschar-merchant@jq-consulting.de'
-							},
-							reference_id: "2"
+								email_address: email
+							}
 						}
 					]
 				});
@@ -830,8 +815,10 @@ class pageEvent {
 					e2.innerHTML = e2.innerHTML && parseInt(e2.innerHTML) > 1 ? (parseInt(e2.innerHTML) - 1) + ' ' : '';
 				}
 				ui.navigation.closePopup();
-				if (order)
+				if (order) {
 					intro.closeHint();
+					ui.q('detail .eventParticipationButtons buttontext.participation').outerHTML = '';
+				}
 				e = ui.q('detail card:last-child[i="' + e.event.id + '_' + eventDate + '"] [name="participants"]');
 				var f = function () {
 					e.innerHTML = '';

@@ -333,22 +333,26 @@ homeHeader {
 	text-align: center;
 	display: block;
 	color: white;
-	padding-top: 5vh;
 	height: 40%;
 }
 
 homeHeader>svg {
-	margin-top: 5vh;
+	margin-top: 10vh;
 	height: auto;
 	width: 60%;
 	max-height: 15vh;
 	cursor: pointer;
 }
 
-homeHeader img {
-	height: 50%;
-	border-radius: 50%;
+homeHeader>text {
+	padding-top: 2em;
+	display: inline-block;
 	cursor: pointer;
+}
+
+homeHeader img {
+	height: 8em;
+	border-radius: 50%;
 	margin-bottom: 0.5em;
 	box-shadow: 0 0 1em rgba(0, 0, 0, 0.6);
 }

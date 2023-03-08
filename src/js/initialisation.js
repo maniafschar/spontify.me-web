@@ -286,7 +286,7 @@ class initialisation {
 		ui.emInPX = parseFloat(ui.cssValue(document.body, 'font-size'));
 		if (window.innerWidth / w > 1.8) {
 			ui.css('add', 'width', ((window.innerWidth - w) / 2) + 'px');
-			ui.css('add', 'display', 'block');
+			ui.css('add#addRight', 'display', 'block');
 		} else
 			ui.css('add', 'display', '');
 	}
@@ -367,24 +367,9 @@ class initialisation {
 		pageHome.init();
 		var p = global.getParam();
 		if (p) {
-			if (p.indexOf('merchantIdInPayPal') > -1) {
-				communication.ajax({
-					url: global.server + 'action/paypalRegister',
-					method: 'PUT',
-					webCall: 'initialisation.showStartDialogs()',
-					body: p,
-					responseType: 'json',
-					success(r) {
-						if (r) {
-							user.init(r);
-							pageEvent.edit();
-						}
-					}
-				});
-			} else
-				setTimeout(function () {
-					ui.navigation.autoOpen(p);
-				}, 100);
+			setTimeout(function () {
+				ui.navigation.autoOpen(p);
+			}, 100);
 		}
 		if (global.isBrowser())
 			history.pushState(null, null, window.location.origin);

@@ -310,7 +310,7 @@
 			"price": "Entrance in &euro;",
 			"priceDisp": "Entrance {0} &euro;",
 			"priceDisp0": "Entrance free of charge!",
-			"qrcodeButton": "QR Code",
+			"qrcodeButton": "Ticket",
 			"qrcodeCanceled": "canceled the participation!",
 			"qrcodeConfirmation": "{0} participates!",
 			"qrcodeDate": "Event on {0} o'clock",
