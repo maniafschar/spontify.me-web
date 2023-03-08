@@ -94,7 +94,6 @@ class Contact extends BaseEntity {
 	storage;
 	urls;
 	verified;
-	videoCall;
 	visitPage;
 
 	block = new Block();

@@ -16,7 +16,7 @@ class pageHome {
 	static badge = -1;
 	static map;
 	static template = v =>
-		global.template`<homeHeader onclick="${v.clickHeader}"${v.logoSmall}>
+		global.template`<homeHeader${v.logoSmall}>
 	<img onclick="geoData.openLocationPicker(event)" source="logo"/>
 	${v.imgProfile}
 	<text>${v.name}</text>
@@ -67,18 +67,15 @@ class pageHome {
 			var v = {};
 			if (user.contact) {
 				if (user.contact.imageList)
-					v.imgProfile = '<img src="' + global.serverImg + user.contact.imageList + '"/>';
+					v.imgProfile = '<img src="' + global.serverImg + user.contact.imageList + '" onclick="pageHome.goToSettings(event)"/>';
 				else
-					v.imgProfile = '<img src="images/contact.svg" style="box-shadow:none;"/>';
+					v.imgProfile = '<img src="images/contact.svg" style="box-shadow:none;" onclick="pageHome.goToSettings(event)"/>';
 				v.logoSmall = ' class="logoSmall"';
 				v.name = user.contact.pseudonym;
 				v.infoButton = ' noDisp';
 				v.langButton = ' noDisp';
-				v.clickHeader = 'pageHome.goToSettings(event)';
-			} else {
+			} else
 				v.lang = global.language;
-				v.clickHeader = 'pageHome.openHintDescription()';
-			}
 			e.innerHTML = pageHome.template(v);
 			initialisation.reposition();
 			communication.ajax({
@@ -172,7 +169,6 @@ class pageHome {
 			ui.q('badgeNotifications').innerText = Math.max(pageHome.badge, 0);
 	}
 	static openHintDescription() {
-		intro.openHint({ desc: 'description', pos: '10%,10em', size: '80%,auto', hinkyClass: 'top', hinky: 'left:50%;margin-left:0.5em;' });
 	}
 	static openLanguage(event) {
 		event.stopPropagation();

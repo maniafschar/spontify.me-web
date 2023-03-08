@@ -332,7 +332,6 @@ homeHeader {
 	position: relative;
 	text-align: center;
 	display: block;
-	cursor: pointer;
 	color: white;
 	padding-top: 5vh;
 	height: 40%;
@@ -343,11 +342,13 @@ homeHeader>svg {
 	height: auto;
 	width: 60%;
 	max-height: 15vh;
+	cursor: pointer;
 }
 
 homeHeader img {
 	height: 50%;
 	border-radius: 50%;
+	cursor: pointer;
 	margin-bottom: 0.5em;
 	box-shadow: 0 0 1em rgba(0, 0, 0, 0.6);
 }
@@ -2156,10 +2157,12 @@ row.favorite imagelist svg {
 	display: inline;
 }
 
+row badge.authenticated,
 row.participate badge {
 	background: green;
 }
 
+row badge.authenticated::after,
 row.participate badge::after {
 	content: '✓';
 }
@@ -2180,6 +2183,7 @@ row compass {
 	margin-top: -0.25em;
 }
 
+detail .authenticated title::after,
 detail .participate .date::after,
 detail .canceled .date::after {
 	margin-left: 1em;
@@ -2191,9 +2195,14 @@ detail .canceled .date::after {
 	color: white;
 }
 
+detail .authenticated title::after,
 detail .participate .date::after {
 	content: '✓';
 	background: green;
+}
+
+detail .authenticated title::after {
+	font-size: 0.77em;
 }
 
 detail .canceled .date::after {

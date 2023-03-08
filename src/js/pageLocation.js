@@ -28,9 +28,7 @@ class pageLocation {
 	static reopenEvent;
 	static templateList = v =>
 		global.template`<row onclick="${v.oc}" i="${v.id}" class="location${v.classFavorite}">
-	<badge class="${v.badgeDisp}">
-		${v.badge}
-	</badge>
+	<badge class="${v.badgeDisp}"></badge>
 	<div>
 		<text>
 			<title>${v.name}</title>
@@ -255,6 +253,7 @@ ${v.rating}
 		if (!v.id)
 			v.name = v.contact.pseudonym + (v.contact.age ? ' (' + v.contact.age + ')' : '');
 		v.id = id;
+		v.hideMePotentialParticipants = ' noDisp';
 		v.data = encodeURIComponent(JSON.stringify(v));
 		v.distance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 ? 0 : 1).replace('.', ',') : '';
 		v.classBGImg = '';

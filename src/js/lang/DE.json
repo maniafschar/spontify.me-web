@@ -338,6 +338,7 @@
 			"url": "Link zum promopten",
 			"urlOnlineEvent": "Link zum teilnehmen",
 			"videoCallDate": "Dein Termin am {0} wurde soeben per Chat bestätigt. Nähere Informationen hierzu sowie den Login Link findest Du in unserem Support Chat.",
+			"videoCallDateHint": "Dein Videoauthentifizierungstermin ist am {0}. Nähere Informationen hierzu sowie den Login Link findest Du in unserem Support Chat.",
 			"yesterday": "Gestern, {0}"
 		},
 		"home": {
@@ -387,6 +388,7 @@
 			"chatEmpty": "Du hast noch keine Chats mit anderen Buddies angefangen. Klicke im Profil eines Buddies auf <b>Chat</b>.",
 			"contactFavorite": "Hier kannst Du anderen Buddies Freundschaftsanfragen senden oder blockieren.",
 			"contacts": "<title>Buddies</title><br/>Deine Freunde sowie <emphasis>Profilbesucher</emphasis> findest Du nach dem Einloggen in diesem Bereich.",
+			"description": "Was magst Du, mountainbiken? Exotisch kochen? Über das Leben philosophieren? Bei einem Gläschen Wein Dein Französisch vertiefen? Karten spielen? Konzerte besuchen? Jeder hat <emphasis>Vorlieben</emphasis>, viele möchten sie <emphasis>vertiefen</emphasis>, manche möchten sie anderen beibringen. In <emphasis>skillvents</emphasis> findest Du nicht nur passende Events, Du kannst selbst auch <emphasis>Suchanfragen</emphasis> einstellen, um spontan Gleichgesinnte zu finden.",
 			"detail": "Die Datailseite enthält<ul><li>Kontaktdaten</li><li>Beschreibung der Location</li><li>Erreichbarkeit der Location</li><li>Kartenansicht</li><li>diverse Schaltflächen um z.B. Locations zu Deinen Favoriten hinzuzufügen</li></ul>",
 			"eventNew": "<ul><li>Wähle eine Location aus (obere Liste)</li><li>Location nicht vorhanden? Klick <b>Location anlegen</b></li><li>In der Location klick <b>Events</b> ganz unten</li><li>Klick <b>Neues Event</b></li></ul>",
 			"events": "<title>skillvents</title><br/>skillvents an denen Du <emphasis>teilnimmst</emphasis> oder die Du <emphasis>erstellt</emphasis> hast findest Du nach dem Einloggen hier.",
@@ -400,7 +402,6 @@
 			"notification": "<title>Benachrichtigungen</title><br/>Hier siehst Du Deine Benachrichtigungen, z.B. <emphasis>Zusagen</emphasis> zu Deinen Events.",
 			"notificationEmpty": "Du hast noch keine Benachrichtigungen.",
 			"open": "Intro starten...",
-			"position": "Was magst Du, mountainbiken? Exotisch kochen? Über das Leben philosophieren? Bei einem Gläschen Wein Dein Französisch vertiefen? Karten spielen? Konzerte besuchen? Jeder hat <emphasis>Vorlieben</emphasis>, viele möchten sie <emphasis>vertiefen</emphasis>, manche möchten sie anderen beibringen. In <emphasis>skillvents</emphasis> findest Du nicht nur passende Events, Du kannst selbst auch <emphasis>Suchanfragen</emphasis> einstellen, um spontan Gleichgesinnte zu finden.",
 			"register": "Nach der Registrierung zeigen wir Dir, wie Du Dein Profil individualisieren kannst. Lieben Dank dass Du Dir die Zeit für die Intro genommen hast.",
 			"settings": "<title>Einstellungen</title><br/>Hier beschreibst Du Dich und was <emphasis>Du magst</emphasis>. Basierend auf diesen Angaben matchen wir:<ul><li>Locations</li><li>Events</li><li>und Buddies</li></ul>",
 			"settingsLoggedIn": "<ul><li>Ändere hier Dein Profilbild und gib weitere, allgemeine Infos an</li><li>Ein Wisch nach links und Du kannst Dich über diverse Attribute selbst beschreiben und angeben, was Du an anderen Buddies magst</li></ul>",

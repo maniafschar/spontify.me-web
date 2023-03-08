@@ -338,6 +338,7 @@
 			"url": "Promoption link",
 			"urlOnlineEvent": "Participation link",
 			"videoCallDate": "Your appointment on {0} has just been confirmed via chat. You can find more information about this and the login link in our support chat.",
+			"videoCallDateHint": "Your video authentication date is on {0}. You can find more information on this as well as the login link in our support chat.",
 			"yesterday": "Yesterday, {0}"
 		},
 		"home": {
@@ -387,6 +388,7 @@
 			"chatEmpty": "You don't have started any chats with other Buddies yet. Click on <b>Chat</b> in a Buddies's profile.",
 			"contactFavorite": "Here you can send friend requests or block other Buddies.",
 			"contacts": "<title>Buddies</title><br/>You can find your friends as well as <emphasis>profile visitors</emphasis> in this area after logging in.",
+			"description": "What do you like, mountain biking? Exotic cooking? Philosophy about life? Deepen your French with a glass of wine? Play cards? Go to a concert? Everyone has <emphasis>preferences</emphasis>, many want to <emphasis>deepen</emphasis> them, some would like to teach others. In <emphasis>skillvents</emphasis> you will not only find suitable events, you can also add <emphasis>search queries</emphasis> to spontaneously find like-minded people.",
 			"detail": "The detail page contains<ul><li>contact data</li><li>describtion of the location</li><li>reachability of the location</li><li>map</li><li>various buttons to e.g. add locations to your favorites.</li></ul>",
 			"eventNew": "<ul><li>Choose a location (list above)</li><li>Location doesn't exist? Click <b>enter Location</b></li><li>In the Location click <b>Events</b> at the bottom</li><li>Click <b>Add new Event</b></li></ul>",
 			"events": "<title>skillvents</title><br/>skillvents in which you <emphasis>participate</emphasis> or which you have <emphasis>created</emphasis> can be found here after logging in.",
@@ -400,7 +402,6 @@
 			"notification": "<title>Notifications</title><br/>Here you will see your notifications, e.g. <emphasis>confirmations</emphasis> to your events.",
 			"notificationEmpty": "You do not have any notifications, yet.",
 			"open": "Start Intro...",
-			"position": "What do you like, mountain biking? Exotic cooking? Philosophy about life? Deepen your French with a glass of wine? Play cards? Go to a concert? Everyone has <emphasis>preferences</emphasis>, many want to <emphasis>deepen</emphasis> them, some would like to teach others. In <emphasis>skillvents</emphasis> you will not only find suitable events, you can also add <emphasis>search queries</emphasis> to spontaneously find like-minded people.",
 			"register": "After registration, we will show you how you can individualize your profile. Thank you for taking the time for this intro.",
 			"settings": "<title>Settings</title><br/>Here you describe yourself and what <emphasis>you like</emphasis>. Based on this information we match:<ul><li>Locations</li><li>Events</li><li>and Buddies</li></ul>",
 			"settingsLoggedIn": "<ul><li>Change your profile image and enter general information here</li><li>Swipe left to enter attributes that describe you and that you like about other Buddies</li><li>provide yourself as a guide for Buddies fitting your settings</li></ul>",

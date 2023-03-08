@@ -90,7 +90,7 @@ class pageEvent {
 			<explain>${v.payplaSignUpHint}</explain>
 			<authenticate>
 				<explain>${ui.l('events.paypalSignUpHintMeet')}</explain>
-				<day class="day1" d="${v.authenticateDay1Raw}">
+				<day d="${v.authenticateDay1Raw}">
 					${v.authenticateDay1}
 					<hour class="hour09"></hour>
 					<hour class="hour10"></hour>
@@ -102,7 +102,7 @@ class pageEvent {
 					<hour class="hour16"></hour>
 					<hour class="hour17"></hour>
 				</day>
-				<day class="day2" d="${v.authenticateDay2Raw}">
+				<day d="${v.authenticateDay2Raw}">
 					${v.authenticateDay2}
 					<hour class="hour09"></hour>
 					<hour class="hour10"></hour>
@@ -114,7 +114,7 @@ class pageEvent {
 					<hour class="hour16"></hour>
 					<hour class="hour17"></hour>
 				</day>
-				<day class="day3" d="${v.authenticateDay3Raw}">
+				<day d="${v.authenticateDay3Raw}">
 					${v.authenticateDay3}
 					<hour class="hour09"></hour>
 					<hour class="hour10"></hour>
@@ -128,7 +128,7 @@ class pageEvent {
 				</day>
 			</authenticate>
 			<dialogButtons>
-				<buttontext class="bgColor" onclick="pageEvent.videoCall()">${ui.l('events.paypalSignUpButton')}</buttontext>
+				<buttontext class="bgColor${v.hideVideoCallButton}" onclick="pageEvent.videoCall()">${ui.l('events.paypalSignUpButton')}</buttontext>
 			</dialogButtons>
 		</div>
 	</value>
@@ -193,7 +193,6 @@ class pageEvent {
 	static detail(v) {
 		v.eventParticipate = new EventParticipate();
 		v.copyLinkHint = ui.l('copyLinkHint.event');
-		v.hideMePotentialParticipants = ' noDisp';
 		if (v.event.type != 'o') {
 			var s = global.date.formatDate(v.event.endDate);
 			v.endDate = ' (' + ui.l('events.type_' + v.event.type) + ' ' + ui.l('to') + s.substring(s.indexOf(' ')) + ')';
@@ -281,6 +280,26 @@ class pageEvent {
 				}
 			});
 			return;
+		}
+		if (!user.contact.authenticate) {
+			var d = global.date.getToday();
+			d.setDate(d.getDate() + 1);
+			communication.ajax({
+				url: global.server + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contact.videoCall>\'' + global.date.local2server(d) + '\''),
+				webCall: 'pageEvent.edit(locationID,id)',
+				responseType: 'json',
+				success(r) {
+					for (var i = 1; i < r.length; i++) {
+						var d = global.date.getDateFields(global.date.server2Local(r[i][0]));
+						ui.classAdd('popup authenticate day[d="' + d.year + '-' + d.month + '-' + d.day + '"] .hour' + d.hour, 'closed');
+						if (r[i][1] == user.contact.id) {
+							ui.q('popup .paypal explain').innerHTML = ui.q('popup .paypal explain').innerHTML + '<br/><br/>' + ui.l('events.videoCallDateHint').replace('{0}', global.date.formatDate(r[i][0]));
+							ui.q('popup .paypal authenticate').outerHTML = '';
+							ui.q('popup .paypal dialogButtons').outerHTML = '';
+						}
+					}
+				}
+			});
 		}
 		ui.navigation.hideMenu();
 		if (id)

@@ -14,9 +14,7 @@ class pageContact {
 	static filter = null;
 	static templateList = v =>
 		global.template`<row onclick="${v.oc}" i="${v.id}" class="contact${v.classFavorite}">
-	<badge class="highlightBackground" style="display:${v._badgeDisp};" action="${v.badgeAction}">
-		${v._badge}
-	</badge>
+	<badge class="${v.badgeDisp}"></badge>
 	<div>
 		<text>
 			<title>${v.pseudonym}${v.birth}</title>
@@ -191,9 +189,6 @@ ${v.matchIndicatorHintDescription}
 			body: { classname: 'ContactLink', id: linkId, values: { status: status } },
 			success() {
 				ui.toggleHeight(ui.q('detail card:last-child [name="friend"]'));
-				var e = ui.qa(ui.q('detail').getAttribute('from') + ' row[i="' + id + '"] badge');
-				ui.html(e, '');
-				ui.css(e, 'display', 'none');
 				if (status == 'Friends') {
 					ui.classAdd('main>buttonIcon.bottom.right', 'highlight');
 					ui.classRemove('detail card:last-child[i="' + id + '"] [name="buttonGroups"]', 'noDisp');
@@ -240,6 +235,8 @@ ${v.matchIndicatorHintDescription}
 			v.link += '<buttontext class="bgColor" onclick="pageContact.sendRequestForFriendship(' + v.id + ')">' + ui.l('contacts.requestFriendship') + '</buttontext>';
 		if (v.contactLink.status == 'Friends')
 			v.favorite = 'favorite';
+		if (v.authenticate)
+			v.favorite = (v.favorite ? ' ' : '') + 'authenticated';
 		var skills = ui.getSkills(v, 'detail');
 		v.skills = skills.text();
 		if (v.skills) {
@@ -367,11 +364,10 @@ ${v.matchIndicatorHintDescription}
 			v._message = v._message1 ? v._message1 + '<br/>' : '';
 			v._message += v._message2 ? v._message2 : '';
 			v.dist = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
-			if (!v._badgeDisp) {
-				v._badgeDisp = birth.present ? 'block' : 'none';
-				v._badge = birth.present ? birth.present : 0;
-			}
-			v.badgeAction = birth.present ? '' : 'remove';
+			if (v.authenticate)
+				v.badgeDisp = 'authenticated';
+			else
+				v.badgeDisp = 'noDisp';
 			if (activeID == 'detail')
 				v.oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)';
 			else if (activeID == 'settings')
