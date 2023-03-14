@@ -292,7 +292,7 @@ class pageEvent {
 					for (var i = 1; i < r.length; i++) {
 						var d = global.date.getDateFields(global.date.server2Local(r[i][0]));
 						ui.classAdd('popup authenticate day[d="' + d.year + '-' + d.month + '-' + d.day + '"] .hour' + d.hour, 'closed');
-						if (r[i][1] == user.contact.id) {
+						if (r[i][2] == user.contact.id) {
 							ui.q('popup .paypal explain').innerHTML = ui.q('popup .paypal explain').innerHTML + '<br/><br/>' + ui.l('events.videoCallDateHint').replace('{0}', global.date.formatDate(r[i][0]));
 							ui.q('popup .paypal authenticate').outerHTML = '';
 							ui.q('popup .paypal dialogButtons').outerHTML = '';
