@@ -9,6 +9,7 @@ class user {
 	static email;
 	static password = null;
 	static scale = 1;
+	static video;
 
 	static get(id) {
 		if (user.contact)
@@ -55,7 +56,7 @@ class user {
 				values: data.values ? data.values : data
 			}
 			communication.ajax({
-				url: global.server + 'db/one',
+				url: global.serverApi + 'db/one',
 				method: 'PUT',
 				progressBar: success ? true : false,
 				body: v,

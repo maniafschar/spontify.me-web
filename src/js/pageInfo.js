@@ -46,7 +46,7 @@ ${ui.l('home.DescLink')}
 		var e = ui.q('info');
 		if (!e.innerHTML) {
 			communication.ajax({
-				url: global.server + 'action/paypalKey',
+				url: global.serverApi + 'action/paypalKey',
 				webCall: 'pageInfo.init()',
 				responseType: 'json',
 				success(r) {
@@ -72,12 +72,12 @@ ${ui.l('home.DescLink')}
 	static socialShare() {
 		var msg = ui.l('info.socialShareText').replace('{0}', user.contact.idDisplay).replace('{1}', user.contact.gender == 1 ? '🙋‍♂️' : '🙋‍♀️');
 		if (global.isBrowser())
-			ui.navigation.openPopup(ui.l('info.sendSocialShare'), ui.l('info.socialShareBrowser') + '<infoblock class="selectable" style="margin-top:1em;">' + msg.replace(/\n/g, '<br/>') + '<br/><br/>' + global.server.substring(0, global.server.lastIndexOf('/', global.server.length - 2)) + '</infoblock>');
+			ui.navigation.openPopup(ui.l('info.sendSocialShare'), ui.l('info.socialShareBrowser') + '<infoblock class="selectable" style="margin-top:1em;">' + msg.replace(/\n/g, '<br/>') + '<br/><br/>' + global.server + '</infoblock>');
 		else {
 			window.plugins.socialsharing.shareWithOptions({
 				message: msg,
 				subject: global.appTitle + global.separator + ui.l('appSubTitle'),
-				url: global.server.substring(0, global.server.indexOf('/', 10))
+				url: global.server
 			}, initialisation.statusBar, initialisation.statusBar);
 		}
 	}

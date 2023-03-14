@@ -117,7 +117,7 @@ class geoData {
 	static mapReposition() {
 		if (ui.q('popup input').value) {
 			communication.ajax({
-				url: global.server + 'action/google?param=' + encodeURIComponent('town=' + ui.q('popup input').value.trim()),
+				url: global.serverApi + 'action/google?param=' + encodeURIComponent('town=' + ui.q('popup input').value.trim()),
 				responseType: 'json',
 				webCall: 'geoData.mapReposition()',
 				success(r) {
@@ -192,7 +192,7 @@ class geoData {
 		if (user.contact && user.contact.id && new Date().getTime() - geoData.lastSave > 5000 &&
 			(!geoData.localized || d > 0.05 && !geoData.manual || position.manual)) {
 			communication.ajax({
-				url: global.server + 'action/position',
+				url: global.serverApi + 'action/position',
 				progressBar: false,
 				method: 'POST',
 				webCall: 'geoData.save(position,exec)',

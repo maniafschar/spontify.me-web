@@ -493,7 +493,7 @@ class ui {
 		},
 		contactVisits() {
 			communication.ajax({
-				url: global.server + 'db/one',
+				url: global.serverApi + 'db/one',
 				webCall: 'ui.query.contactVisits()',
 				method: 'PUT',
 				body: { classname: 'Contact', id: user.contact.id, values: { visitPage: global.date.local2server(new Date()) } }

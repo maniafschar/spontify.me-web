@@ -39,7 +39,7 @@ class pageHome {
 </homeBody>`;
 	static clickNotification(id, action) {
 		communication.ajax({
-			url: global.server + 'db/one',
+			url: global.serverApi + 'db/one',
 			webCall: 'pageHome.clickNotification(id,action)',
 			method: 'PUT',
 			body: {
@@ -81,7 +81,7 @@ class pageHome {
 			e.innerHTML = pageHome.template(v);
 			initialisation.reposition();
 			communication.ajax({
-				url: global.server + 'action/teaser/contacts',
+				url: global.serverApi + 'action/teaser/contacts',
 				webCall: 'pageHome.init(force)',
 				responseType: 'json',
 				error() { },
@@ -96,7 +96,7 @@ class pageHome {
 				}
 			});
 			communication.ajax({
-				url: global.server + 'action/teaser/events',
+				url: global.serverApi + 'action/teaser/events',
 				webCall: 'pageHome.init(force)',
 				responseType: 'json',
 				error(e) {

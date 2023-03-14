@@ -48,7 +48,7 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 		delete data.webCall;
 		ui.qa('menu a').forEach(function (e, i) { if (e.matches(':hover')) menuIndex = i; });
 		communication.ajax({
-			url: global.server + 'db/list?' + Object.keys(data).map(key => key + '=' + data[key]).join('&'),
+			url: global.serverApi + 'db/list?' + Object.keys(data).map(key => key + '=' + data[key]).join('&'),
 			responseType: 'json',
 			webCall: wc,
 			success(r) {

@@ -207,7 +207,7 @@ class pageEvent {
 			if (v.event.contactId == user.contact.id && d >= global.date.getToday())
 				v.hideMePotentialParticipants = '';
 			communication.ajax({
-				url: global.server + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + v.event.id + ' and eventParticipate.eventDate=\'' + v.id.split('_')[1] + '\''),
+				url: global.serverApi + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + v.event.id + ' and eventParticipate.eventDate=\'' + v.id.split('_')[1] + '\''),
 				webCall: 'pageEvent.detail(v)',
 				responseType: 'json',
 				success(r) {
@@ -268,7 +268,7 @@ class pageEvent {
 		}
 		if (!pageEvent.paypal.fee) {
 			communication.ajax({
-				url: global.server + 'action/paypalKey',
+				url: global.serverApi + 'action/paypalKey',
 				webCall: 'pageEvent.edit(locationID,id)',
 				responseType: 'json',
 				success(r) {
@@ -285,7 +285,7 @@ class pageEvent {
 			var d = global.date.getToday();
 			d.setDate(d.getDate() + 1);
 			communication.ajax({
-				url: global.server + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contact.videoCall>\'' + global.date.local2server(d) + '\''),
+				url: global.serverApi + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contact.videoCall>\'' + global.date.local2server(d) + '\''),
 				webCall: 'pageEvent.edit(locationID,id)',
 				responseType: 'json',
 				success(r) {
@@ -668,7 +668,7 @@ class pageEvent {
 		if (s.length > 3)
 			pageEvent.nearByExec = setTimeout(function () {
 				communication.ajax({
-					url: global.server + 'action/searchLocation?search=' + encodeURIComponent(s),
+					url: global.serverApi + 'action/searchLocation?search=' + encodeURIComponent(s),
 					webCall: 'pageEvent.locations()',
 					responseType: 'json',
 					success(r) {
@@ -684,7 +684,7 @@ class pageEvent {
 	}
 	static locationsOfPastEvents() {
 		communication.ajax({
-			url: global.server + 'db/list?query=event_list&search=' + encodeURIComponent('event.locationId>0 and event.contactId=' + user.contact.id),
+			url: global.serverApi + 'db/list?query=event_list&search=' + encodeURIComponent('event.locationId>0 and event.contactId=' + user.contact.id),
 			webCall: 'pageEvent.locationsOfPastEvents()',
 			responseType: 'json',
 			success(r) {
@@ -779,7 +779,7 @@ class pageEvent {
 			d.values.payment = order;
 		}
 		communication.ajax({
-			url: global.server + 'db/one',
+			url: global.serverApi + 'db/one',
 			webCall: 'pageEvent.participate(order)',
 			method: e.eventParticipate.id ? 'PUT' : 'POST',
 			body: d,
@@ -837,7 +837,7 @@ class pageEvent {
 		new QRCodeStyling({
 			width: 600,
 			height: 600,
-			data: global.server.substring(0, global.server.lastIndexOf('/', global.server.length - 2)) + '?' + global.encParam('q=' + id + (location ? '' : '|' + user.contact.id)),
+			data: global.server + '?' + global.encParam('q=' + id + (location ? '' : '|' + user.contact.id)),
 			dotsOptions: {
 				color: 'rgb(255, 220, 70)',
 				type: 'square'
@@ -997,7 +997,7 @@ class pageEvent {
 		if (id)
 			v.id = id;
 		communication.ajax({
-			url: global.server + 'db/one',
+			url: global.serverApi + 'db/one',
 			method: id ? 'PUT' : 'POST',
 			webCall: 'pageEvent.save()',
 			body: v,
@@ -1042,7 +1042,7 @@ class pageEvent {
 			if (!d.innerHTML) {
 				var field = ui.q('detail card:last-child').getAttribute('type');
 				communication.ajax({
-					url: global.server + 'db/list?query=event_list&search=' + encodeURIComponent('event.' + field + 'Id=' + id),
+					url: global.serverApi + 'db/list?query=event_list&search=' + encodeURIComponent('event.' + field + 'Id=' + id),
 					webCall: 'pageEvent.toggle(id)',
 					responseType: 'json',
 					success(r) {
@@ -1133,7 +1133,7 @@ class pageEvent {
 			u = u[1];
 		}
 		communication.ajax({
-			url: global.server + 'db/list?query=event_listParticipate&search=' + encodeURIComponent('eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\' and eventParticipate.contactId=' + u + ' and eventParticipate.contactId=contact.id'),
+			url: global.serverApi + 'db/list?query=event_listParticipate&search=' + encodeURIComponent('eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\' and eventParticipate.contactId=' + u + ' and eventParticipate.contactId=contact.id'),
 			webCall: 'pageEvent.verifyParticipation(id)',
 			responseType: 'json',
 			success(r) {
@@ -1157,14 +1157,15 @@ class pageEvent {
 			if (e) {
 				e = global.date.local2server(ui.parents(e, 'day').getAttribute('d') + ' ' + e.getAttribute('class').replace(/[a-z ]/gi, '') + ':00:00');
 				communication.ajax({
-					url: global.server + 'action/videoCall/' + e,
+					url: global.serverApi + 'action/videoCall/' + e,
 					webCall: 'pageEvent.videoCall()',
 					method: 'POST',
 					responseType: 'json',
 					success(r) {
 						user.contact.videoCall = e;
 						ui.q('popup div.paypal dialogButtons').outerHTML = '';
-						ui.q('popup div.paypal authenticate').innerHTML = ui.l('events.videoCallDate').replace('{0}', global.date.formatDate(e));
+						ui.q('popup div.paypal authenticate').outerHTML = '';
+						ui.q('popup div.paypal explain').innerHTML = ui.l('events.videoCallDate').replace('{0}', global.date.formatDate(e));
 					}
 				});
 			}

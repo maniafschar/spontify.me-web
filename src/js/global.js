@@ -13,8 +13,9 @@ class global {
 	static language = null;
 	static minLocations = 5;
 	static paused = false;
-	static server = 'https://skillvents.com/rest/';
-	static serverImg = '';
+	static server = 'https://skillvents.com/';
+	static serverApi = global.server + 'rest/';
+	static serverImg = global.server + 'med/';
 	static separator = ' · ';
 	static separatorTech = '\u0015';
 	static url = '';
@@ -349,7 +350,7 @@ class Strings {
 					var imgId = l2.replace(/\./g, '').replace(',', '');
 					s = s.substring(0, p + 1) + '<span class="chatLinks" onclick="ui.navigation.openHTML(&quot;https://maps.google.com/maps?saddr=' + geoData.current.lat + ',' + geoData.current.lon + '&daddr=' + l2 + '&quot;);"><img l="' + imgId + '" /><p>' + ui.l('hereAmI') + '</p></span>' + s.substring(p2 + 2);
 					communication.ajax({
-						url: global.server + 'action/map?destination=' + l2,
+						url: global.serverApi + 'action/map?destination=' + l2,
 						progressBar: false,
 						webCall: 'global.replaceInternalLinks(s)',
 						success(r) {

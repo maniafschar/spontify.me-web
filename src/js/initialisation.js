@@ -34,7 +34,6 @@ class initialisation {
 				setTimeout(f, 200);
 		};
 		setTimeout(f, 2000);
-		global.serverImg = global.server.substring(0, global.server.lastIndexOf('/', global.server.length - 2)) + '/med/';
 		window.onerror = function (message, url, line, column, error) {
 			if (url && (url.lastIndexOf('fmg.js') + 6 == url.length || url.lastIndexOf('lang') + 6 == url.lastIndexOf('.js'))) {
 				var last = Object.values(communication.currentCalls)[0];
@@ -79,8 +78,9 @@ class initialisation {
 		initialisation.statusBar();
 		universalLinks.subscribe(null, function (e) {
 			if (e.path) {
-				if (e.url.indexOf(global.server.substring(0, global.server.indexOf('/', 9))) == 0) {
-					var s = e.url.substring(global.server.indexOf('/', 9));
+				var s = global.server.substring(0, global.server.lastIndexOf('/'));
+				if (e.url.indexOf(s) == 0) {
+					s = e.url.substring(s.length);
 					if (s.length < 2)
 						return;
 					global.url = s;

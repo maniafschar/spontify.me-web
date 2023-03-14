@@ -345,7 +345,7 @@ homeHeader>svg {
 }
 
 homeHeader>text {
-	padding-top: 2em;
+	padding: 2em 1em 0 1em;
 	display: inline-block;
 	cursor: pointer;
 }
@@ -812,6 +812,7 @@ popup authenticate day hour {
 	background: rgba(0, 0, 0, 0.1);
 	border-radius: 0.5em;
 	line-height: 2;
+	cursor: pointer;
 }
 
 popup authenticate day hour.closed {
@@ -2571,6 +2572,16 @@ progressbar {
 	right: 1em;
 	z-index: 5;
 	height: 0.75em;
+}
+
+div#video {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	display: none;
+	z-index: 6;
 }
 
 .highlightBackground {

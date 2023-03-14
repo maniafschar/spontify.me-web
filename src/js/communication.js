@@ -37,7 +37,7 @@ class communication {
 						communication.onError(xmlhttp);
 				};
 				if (xmlhttp.status >= 200 && xmlhttp.status < 300) {
-					if (communication.pingExec == null && xmlhttp.responseURL != global.server + '/ping' && xmlhttp.responseURL.indexOf(global.server) == 0)
+					if (communication.pingExec == null && xmlhttp.responseURL != global.serverApi + '/ping' && xmlhttp.responseURL.indexOf(global.serverApi) == 0)
 						communication.ping();
 					if (param.success) {
 						var response = xmlhttp.responseText;
@@ -60,7 +60,7 @@ class communication {
 			}
 		};
 		xmlhttp.open(param.method ? param.method : 'GET', param.url, true);
-		if (param.url.indexOf(global.server.substring(0, global.server.lastIndexOf('/', global.server.length - 2))) == 0) {
+		if (param.url.indexOf(global.serverApi.substring(0, global.serverApi.lastIndexOf('/', global.serverApi.length - 2))) == 0) {
 			var d = new Date();
 			param.id = d.getTime();
 			communication.currentCalls.push(param);
@@ -109,7 +109,7 @@ class communication {
 		} else {
 			communication.mapScriptAdded = true;
 			communication.ajax({
-				url: global.server + 'action/google?param=js',
+				url: global.serverApi + 'action/google?param=js',
 				responseType: 'text',
 				webCall: 'communication.loadMap(callback)',
 				success(r) {
@@ -222,7 +222,7 @@ class communication {
 			return;
 		communication.pingExec = -1;
 		communication.ajax({
-			url: global.server + 'action/ping',
+			url: global.serverApi + 'action/ping',
 			progressBar: false,
 			webCall: 'communication.ping()',
 			responseType: 'json',
@@ -264,7 +264,7 @@ class communication {
 				}
 				if (r.notification != pageHome.badge) {
 					communication.ajax({
-						url: global.server + 'db/list?query=contact_listNotification',
+						url: global.serverApi + 'db/list?query=contact_listNotification',
 						responseType: 'json',
 						webCall: 'communication.ping()',
 						success(r2) {
@@ -311,7 +311,7 @@ class communication {
 		body += '\n\nLOCALIZED\n\t' + geoData.localized;
 		body += '\n\nLANG\n\t' + global.language;
 		communication.ajax({
-			url: global.server + 'action/notify',
+			url: global.serverApi + 'action/notify',
 			method: 'POST',
 			webCall: 'communication.sendError(text)',
 			body: 'text=' + encodeURIComponent(body),
@@ -577,7 +577,7 @@ class FB {
 			window.SafariViewController.show(
 				{
 					url: FB.FB_LOGIN_URL + '?client_id=' + FB.fbAppId +
-						'&redirect_uri=' + global.server.substring(0, global.server.lastIndexOf('/', global.server.length - 2)) + '/oauthcallback.html' +
+						'&redirect_uri=' + global.serverApi.substring(0, global.serverApi.lastIndexOf('/', global.serverApi.length - 2)) + '/oauthcallback.html' +
 						'&response_type=token&scope=' + scope,
 					hidden: false, // default false. You can use this to load cookies etc in the background (see issue #1 for details).
 					animated: false, // default true, note that 'hide' will reuse this preference (the 'Done' button will always animate though)

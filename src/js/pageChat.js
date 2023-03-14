@@ -244,7 +244,7 @@ class pageChat {
 	static initActiveChats() {
 		if (!pageChat.admin.image) {
 			communication.ajax({
-				url: global.server + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=3'),
+				url: global.serverApi + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=3'),
 				responseType: 'json',
 				webCall: 'pageChat.initActiveChats()',
 				success(r) {
@@ -254,7 +254,7 @@ class pageChat {
 			});
 		}
 		communication.ajax({
-			url: global.server + 'db/list?query=contact_listChat&limit=0',
+			url: global.serverApi + 'db/list?query=contact_listChat&limit=0',
 			responseType: 'json',
 			progressBar: false,
 			webCall: 'pageChat.initActiveChats()',
@@ -269,7 +269,7 @@ class pageChat {
 			event.preventDefault();
 		} catch (e) { }
 		communication.ajax({
-			url: global.server + 'action/quotation',
+			url: global.serverApi + 'action/quotation',
 			webCall: 'pageChat.insertQuote(event)',
 			success(r) {
 				var e = ui.q('#chatText');
@@ -355,7 +355,7 @@ class pageChat {
 			}
 		}
 		communication.ajax({
-			url: global.server + 'action/chat/' + id + '/true',
+			url: global.serverApi + 'action/chat/' + id + '/true',
 			responseType: 'json',
 			webCall: 'pageChat.open(id)',
 			success(r) {
@@ -371,7 +371,7 @@ class pageChat {
 					}));
 					formFunc.initFields('chatInput');
 					communication.ajax({
-						url: global.server + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + id),
+						url: global.serverApi + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + id),
 						responseType: 'json',
 						webCall: 'pageChat.open(id)',
 						success(r2) {
@@ -436,6 +436,68 @@ class pageChat {
 		} else
 			ui.navigation.openPopup(ui.l('chat.groupTitle'), lists.getListNoResults(ui.navigation.getActiveID(), 'noGroups'));
 	}
+	static connectVideo() {
+		if (ui.q('#video').innerHTML) {
+			ui.classRemove('#video #call', 'hidden');
+			ui.classAdd('#video #videochat', 'hidden');
+			ui.q('#video').style.display = 'block';
+			window.videoLogin();
+		} else
+			communication.ajax({
+				url: global.server + 'video.html',
+				success(page) {
+					communication.ajax({
+						url: global.serverApi + 'action/videoCallInit',
+						responseType: 'json',
+						webCall: 'pageChat.connectVideo()',
+						success(userdata) {
+							var e = document.createElement('div');
+							e.innerHTML = page;
+							var e2 = e.querySelectorAll('script'), i2 = 0, appended = false;
+							var callVideo = function () {
+								userdata.openUI = user.contact.id != 3;
+								if (userdata.openUI)
+									e.style.display = 'block';
+								window.videoLogin(userdata);
+								ui.swipe('#videochat-streams', function (dir) {
+									ui.q('#videochat-streams').style.left = dir == 'left' ? '-100%' : '';
+								});
+							};
+							for (var i = 0; i < e2.length; i++) {
+								if (e2[i].getAttribute('src') && !ui.q('head script[src="' + e2[i].getAttribute('src') + '"]')) {
+									var script = document.createElement('script');
+									script.src = global.server + e2[i].getAttribute('src');
+									script.onload = function () {
+										i2--;
+										if (i2 == 0) {
+											e = ui.q('#video');
+											e.innerHTML = page.substring(page.indexOf('<body>') + 6, page.indexOf('</body>')).replaceAll(' src="', ' src="' + global.server).replaceAll(' href="', ' href="' + global.server);
+											if (global.getOS() == 'android') {
+												const { permissions } = cordova.plugins;
+												permissions.requestPermissions([permissions.CAMERA, permissions.RECORD_AUDIO, permissions.MODIFY_AUDIO_SETTINGS]);
+											} else if (global.getOS() == 'ios') {
+												const { iosrtc } = cordova.plugins;
+												iosrtc.registerGlobals();
+												iosrtc.selectAudioOutput('speaker');
+												iosrtc.requestPermission(true, true, function (permissionApproved) {
+													console.log('requestPermission status: ', permissionApproved ? 'Approved' : 'Rejected');
+												});
+											}
+											callVideo.call();
+										}
+									};
+									i2++;
+									appended = true;
+									document.head.appendChild(script);
+								}
+							}
+							if (!appended)
+								callVideo.call();
+						}
+					});
+				}
+			});
+	}
 	static postSendChatImage(r) {
 		if (ui.q('chat').getAttribute('i') == r.contactId) {
 			ui.q('[name="image"]').value = '';
@@ -443,7 +505,7 @@ class pageChat {
 			setTimeout(function () {
 				if (ui.q('chat[i="' + r.contactId + '"] chatConversation')) {
 					communication.ajax({
-						url: global.server + 'db/one?query=contact_chat&search=' + encodeURIComponent('contactChat.id=' + r.chatId),
+						url: global.serverApi + 'db/one?query=contact_chat&search=' + encodeURIComponent('contactChat.id=' + r.chatId),
 						responseType: 'json',
 						webCall: 'pageChat.postSendChatImage(r)',
 						success(r2) {
@@ -463,7 +525,7 @@ class pageChat {
 		if (e) {
 			var id = e.getAttribute('i');
 			communication.ajax({
-				url: global.server + 'action/chat/' + id + '/false',
+				url: global.serverApi + 'action/chat/' + id + '/false',
 				responseType: 'json',
 				webCall: 'pageChat.refresh()',
 				success(r) {
@@ -575,7 +637,7 @@ class pageChat {
 			if (ui.q('chatInput input:checked'))
 				v.textId = 'engagement_ai';
 			communication.ajax({
-				url: global.server + 'db/one',
+				url: global.serverApi + 'db/one',
 				method: 'POST',
 				webCall: 'pageChat.sendChat(id,msg,event)',
 				body: {
@@ -622,7 +684,7 @@ class pageChat {
 			s += ',' + e[i].value;
 		if (s && ui.val('#groupChatText')) {
 			communication.ajax({
-				url: global.server + 'action/chatGroups',
+				url: global.serverApi + 'action/chatGroups',
 				method: 'POST',
 				webCall: 'pageChat.sendChatGroup()',
 				body: 'groups=' + s.substring(1) + '&text=' + encodeURIComponent(ui.val('#groupChatText')),
@@ -641,7 +703,7 @@ class pageChat {
 			var v = formFunc.getForm('popup form');
 			v.classname = 'ContactChat';
 			communication.ajax({
-				url: global.server + 'db/one',
+				url: global.serverApi + 'db/one',
 				method: 'POST',
 				webCall: 'pageChat.sendChatImage()',
 				body: v,

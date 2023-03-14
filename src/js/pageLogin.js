@@ -150,7 +150,7 @@ class pageLogin {
 		var token = window.localStorage && window.localStorage.getItem('autoLogin');
 		if (token) {
 			communication.ajax({
-				url: global.server + 'authentication/loginAuto?token=' + encodeURIComponent(Encryption.encPUB(token)) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
+				url: global.serverApi + 'authentication/loginAuto?token=' + encodeURIComponent(Encryption.encPUB(token)) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
 				webCall: 'pageLogin.autoLogin(exec)',
 				error(e) {
 					if (e.status >= 500)
@@ -177,7 +177,7 @@ class pageLogin {
 		if (!f.value || formFunc.validation.email(f) > -1)
 			return;
 		communication.ajax({
-			url: global.server + 'action/unique?email=' + encodeURIComponent(pageLogin.getRealPseudonym(f.value)),
+			url: global.serverApi + 'action/unique?email=' + encodeURIComponent(pageLogin.getRealPseudonym(f.value)),
 			webCall: 'pageLogin.checkUnique(f,exec)',
 			responseType: 'json',
 			success(r) {
@@ -249,7 +249,7 @@ class pageLogin {
 		user.contact.id = 0;
 		user.password = p;
 		communication.ajax({
-			url: global.server + 'authentication/login?os=' + global.getOS() + '&device=' + global.getDevice() + '&version=' + global.appVersion + '&timezone=' + encodeURIComponent(Intl.DateTimeFormat().resolvedOptions().timeZone) + '&email=' + encodeURIComponent(Encryption.encPUB(u)) + (autoLogin ? '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()) : ''),
+			url: global.serverApi + 'authentication/login?os=' + global.getOS() + '&device=' + global.getDevice() + '&version=' + global.appVersion + '&timezone=' + encodeURIComponent(Intl.DateTimeFormat().resolvedOptions().timeZone) + '&email=' + encodeURIComponent(Encryption.encPUB(u)) + (autoLogin ? '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()) : ''),
 			webCall: 'pageLogin.login(u,p,autoLogin,exec)',
 			responseType: 'json',
 			success(v) {
@@ -266,7 +266,7 @@ class pageLogin {
 						var d = new Date();
 						if (d.getMonth() == user.contact.birthday.substring(5, 7) - 1 && d.getDate() == user.contact.birthday.substring(8, 10)) {
 							communication.ajax({
-								url: global.server + 'action/birthday',
+								url: global.serverApi + 'action/birthday',
 								webCall: 'pageLogin.login(u,p,autoLogin,exec)',
 								responseType: 'json',
 								success(r) {
@@ -303,6 +303,8 @@ class pageLogin {
 						setTimeout(exec, 1500);
 					else
 						pageLogin.profileCompletePrompt();
+					if (v.login_video_call)
+						pageChat.connectVideo();
 				} else {
 					user.reset();
 					pageLogin.removeCredentials();
@@ -331,7 +333,7 @@ class pageLogin {
 		else
 			u.email = null;
 		communication.ajax({
-			url: global.server + 'authentication/loginExternal',
+			url: global.serverApi + 'authentication/loginExternal',
 			webCall: 'pageLogin.loginToServer(os,u,exec)',
 			method: 'PUT',
 			body: {
@@ -359,7 +361,7 @@ class pageLogin {
 		var token = window.localStorage && window.localStorage.getItem('autoLogin');
 		token = token ? '?token=' + encodeURIComponent(Encryption.encPUB(token)) : '';
 		communication.ajax({
-			url: global.server + 'authentication/logoff' + token,
+			url: global.serverApi + 'authentication/logoff' + token,
 			webCall: 'pageLogin.logoff()',
 			error() {
 				pageLogin.resetAfterLogoff();
@@ -416,7 +418,7 @@ class pageLogin {
 	}
 	static paypal(id) {
 		communication.ajax({
-			url: global.server + 'action/paypalKey?id=' + id + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
+			url: global.serverApi + 'action/paypalKey?id=' + id + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
 			webCall: 'pageLogin.paypal(id)',
 			responseType: 'json',
 			success(r) {
@@ -474,7 +476,7 @@ class pageLogin {
 			ui.q('input[name="os"]').value = global.getOS();
 			ui.q('input[name="timezone"]').value = Intl.DateTimeFormat().resolvedOptions().timeZone;
 			communication.ajax({
-				url: global.server + 'authentication/register',
+				url: global.serverApi + 'authentication/register',
 				webCall: 'pageLogin.register()',
 				body: formFunc.getForm('form[name=loginRegister]').values,
 				method: 'POST',
@@ -584,7 +586,7 @@ class pageLogin {
 			b = formFunc.setError(email, 'settings.noEmail');
 		if (b == -1 && formFunc.validation.email(email) == -1)
 			communication.ajax({
-				url: global.server + 'authentication/recoverSendEmail?email=' + encodeURIComponent(Encryption.encPUB(email.value)),
+				url: global.serverApi + 'authentication/recoverSendEmail?email=' + encodeURIComponent(Encryption.encPUB(email.value)),
 				webCall: 'pageLogin.sendVerificationEmail()',
 				success(r) {
 					if (r.indexOf('nok:') == 0)
@@ -667,7 +669,7 @@ class pageLogin {
 		var s2 = '' + x;
 		s2 += e.substring(1, 11 - s2.length);
 		communication.ajax({
-			url: global.server + 'authentication/recoverVerifyEmail?token=' + encodeURIComponent(Encryption.encPUB(e.substring(0, 10) + s2 + e.substring(10))) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
+			url: global.serverApi + 'authentication/recoverVerifyEmail?token=' + encodeURIComponent(Encryption.encPUB(e.substring(0, 10) + s2 + e.substring(10))) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
 			webCall: 'pageLogin.verifyEmail(e,email)',
 			success(r) {
 				if (r) {

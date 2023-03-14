@@ -167,7 +167,7 @@ ${v.matchIndicatorHintDescription}
 			v.values.note = n.value;
 		}
 		communication.ajax({
-			url: global.server + 'db/one',
+			url: global.serverApi + 'db/one',
 			method: v.id ? 'PUT' : 'POST',
 			webCall: 'pageContact.block()',
 			body: v,
@@ -183,7 +183,7 @@ ${v.matchIndicatorHintDescription}
 	}
 	static confirmFriendship(linkId, status, id) {
 		communication.ajax({
-			url: global.server + 'db/one',
+			url: global.serverApi + 'db/one',
 			webCall: 'pageContact.confirmFriendship(linkId,status,id)',
 			method: 'PUT',
 			body: { classname: 'ContactLink', id: linkId, values: { status: status } },
@@ -384,7 +384,7 @@ ${v.matchIndicatorHintDescription}
 	}
 	static sendRequestForFriendship(id) {
 		communication.ajax({
-			url: global.server + 'db/one',
+			url: global.serverApi + 'db/one',
 			webCall: 'pageContact.sendRequestForFriendship(id)',
 			method: 'POST',
 			body: { classname: 'ContactLink', values: { contactId2: id } },
@@ -414,7 +414,7 @@ ${v.matchIndicatorHintDescription}
 		var e = ui.q(divID);
 		if (!e.getAttribute('blockID')) {
 			communication.ajax({
-				url: global.server + 'db/one?query=misc_block&search=' + encodeURIComponent('block.contactId=' + user.contact.id + ' and block.contactId2=' + id),
+				url: global.serverApi + 'db/one?query=misc_block&search=' + encodeURIComponent('block.contactId=' + user.contact.id + ' and block.contactId2=' + id),
 				webCall: 'pageContact.toggleBlockUser(id)',
 				success(r) {
 					if (r) {
@@ -479,7 +479,7 @@ class groups {
 			d.id = e.getAttribute('gllID');
 		if (d) {
 			communication.ajax({
-				url: global.server + 'db/one',
+				url: global.serverApi + 'db/one',
 				body: d,
 				webCall: 'pageContact.addToGroup(event,id)',
 				method: d.id ? 'DELETE' : 'POST',
@@ -501,7 +501,7 @@ class groups {
 		if (ui.q('input[name="groupdialog"]:checked'))
 			return;
 		communication.ajax({
-			url: global.server + 'db/one',
+			url: global.serverApi + 'db/one',
 			method: 'DELETE',
 			webCall: 'pageContact.delete()',
 			body: { classname: 'ContactGroup', id: ui.q('input[name="groupdialog"]:checked').getAttribute('value') },
@@ -520,7 +520,7 @@ class groups {
 	}
 	static getGroups(exec) {
 		communication.ajax({
-			url: global.server + 'db/list?query=contact_listGroup&search=' + encodeURIComponent('contactGroup.contactId=' + user.contact.id),
+			url: global.serverApi + 'db/list?query=contact_listGroup&search=' + encodeURIComponent('contactGroup.contactId=' + user.contact.id),
 			webCall: 'pageContact.getGroups(exec)',
 			responseType: 'json',
 			success(r) {
@@ -585,7 +585,7 @@ class groups {
 		s = s.replace(/</g, '&lt;');
 		ui.q('#groupsRename').children[0].value = s;
 		communication.ajax({
-			url: global.server + 'db/one',
+			url: global.serverApi + 'db/one',
 			responseType: 'json',
 			webCall: 'pageContact.rename()',
 			method: 'PUT',
@@ -605,7 +605,7 @@ class groups {
 		if (!e.value)
 			return;
 		communication.ajax({
-			url: global.server + 'db/one',
+			url: global.serverApi + 'db/one',
 			method: 'POST',
 			webCall: 'pageContact.saveGroup(id)',
 			body: { classname: 'ContactGroup', values: { name: e.value.replace(/</g, '&lt;') } },
@@ -667,7 +667,7 @@ class groups {
 			e.innerHTML = user.contact.groups.replace(/<input/g, '<input onclick="groups.addToGroup(event,' + id + ')"') + e.innerHTML;
 			formFunc.initFields(path);
 			communication.ajax({
-				url: global.server + 'db/list?query=contact_listGroupLink&search=' + encodeURIComponent('contactGroupLink.contactId2=' + id),
+				url: global.serverApi + 'db/list?query=contact_listGroupLink&search=' + encodeURIComponent('contactGroupLink.contactId2=' + id),
 				webCall: 'pageContact.toggleGroups(id,friendship)',
 				responseType: 'json',
 				success(r) {

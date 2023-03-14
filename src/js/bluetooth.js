@@ -96,7 +96,7 @@ class bluetooth {
 					var id = bluetooth.decode(json.value);
 					if (id)
 						communication.ajax({
-							url: global.server + 'db/one',
+							url: global.serverApi + 'db/one',
 							method: 'POST',
 							webCall: 'bluetooth.scanStart()',
 							body: {

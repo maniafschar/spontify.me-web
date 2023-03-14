@@ -43,7 +43,7 @@ class details {
 		data.latitude = geoData.current.lat;
 		data.longitude = geoData.current.lon;
 		communication.ajax({
-			url: global.server + 'action/one?' + Object.keys(data).map(key => key + '=' + data[key]).join('&'),
+			url: global.serverApi + 'action/one?' + Object.keys(data).map(key => key + '=' + data[key]).join('&'),
 			responseType: 'json',
 			webCall: wc,
 			success(r) {

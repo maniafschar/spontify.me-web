@@ -230,7 +230,7 @@ ${v.info}`;
 		for (var i = 0; i < reasons.length; i++)
 			s = reasons[i].getAttribute('label') + '\n' + s;
 		communication.ajax({
-			url: global.server + 'db/one',
+			url: global.serverApi + 'db/one',
 			webCall: 'pageSettings.deleteProfile()',
 			method: 'POST',
 			body: {
@@ -243,7 +243,7 @@ ${v.info}`;
 			},
 			success() {
 				communication.ajax({
-					url: global.server + 'authentication/one',
+					url: global.serverApi + 'authentication/one',
 					webCall: 'pageSettings.deleteProfile()',
 					method: 'DELETE',
 					success(r) {
@@ -298,7 +298,7 @@ ${v.info}`;
 		ui.classRemove('navigation item', 'active');
 		if (!ui.q('settings').innerHTML) {
 			communication.ajax({
-				url: global.server + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id),
+				url: global.serverApi + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id),
 				webCall: 'pageSettings.init(exec)',
 				responseType: 'json',
 				success(v) {
@@ -351,7 +351,7 @@ ${v.info}`;
 					v.settings3 = pageSettings.templateSettings3(v);
 					ui.q('settings').innerHTML = pageSettings.template(v);
 					communication.ajax({
-						url: global.server + 'action/paypalKey',
+						url: global.serverApi + 'action/paypalKey',
 						webCall: 'pageSettings.init(exec)',
 						responseType: 'json',
 						success(r) {
@@ -376,7 +376,7 @@ ${v.info}`;
 					new QRCodeStyling({
 						width: x,
 						height: x,
-						data: global.server.substring(0, global.server.lastIndexOf('/', global.server.length - 2)) + '?' + global.encParam('f=' + user.contact.id),
+						data: global.server + '?' + global.encParam('f=' + user.contact.id),
 						dotsOptions: {
 							color: 'rgb(255, 220, 70)',
 							type: 'square'
@@ -451,7 +451,7 @@ ${v.info}`;
 		user.contact.age = user.contact.birthday ? pageContact.getBirthday(user.contact.birthday).age : null;
 		if (ui.q('[name="image_disp"] img')) {
 			communication.ajax({
-				url: global.server + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id),
+				url: global.serverApi + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id),
 				webCall: 'pageSettings.postSave(goToID)',
 				responseType: 'json',
 				success(r) {
@@ -619,7 +619,7 @@ ${v.info}`;
 			return;
 		}
 		communication.ajax({
-			url: global.server + 'db/one',
+			url: global.serverApi + 'db/one',
 			webCall: 'pageSettings.unblock(id,blockId)',
 			method: 'DELETE',
 			body: { classname: 'Block', id: blockId },
