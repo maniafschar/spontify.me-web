@@ -285,7 +285,7 @@ class pageEvent {
 			var d = global.date.getToday();
 			d.setDate(d.getDate() + 1);
 			communication.ajax({
-				url: global.serverApi + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contact.videoCall>\'' + global.date.local2server(d) + '\''),
+				url: global.serverApi + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contactVideoCall.time>\'' + global.date.local2server(d) + '\''),
 				webCall: 'pageEvent.edit(locationID,id)',
 				responseType: 'json',
 				success(r) {
@@ -1162,7 +1162,6 @@ class pageEvent {
 					method: 'POST',
 					responseType: 'json',
 					success(r) {
-						user.contact.videoCall = e;
 						ui.q('popup div.paypal dialogButtons').outerHTML = '';
 						ui.q('popup div.paypal authenticate').outerHTML = '';
 						ui.q('popup div.paypal explain').innerHTML = ui.l('events.videoCallDate').replace('{0}', global.date.formatDate(e));
