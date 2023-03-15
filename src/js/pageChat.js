@@ -442,61 +442,81 @@ class pageChat {
 			ui.classAdd('#video #videochat', 'hidden');
 			ui.q('#video').style.display = 'block';
 			window.videoLogin();
-		} else
+		} else if (user.contact.id == 3)
+			pageChat.connectVideoExec();
+		else {
 			communication.ajax({
-				url: global.server + 'video.html',
-				success(page) {
-					communication.ajax({
-						url: global.serverApi + 'action/videoCallInit',
-						responseType: 'json',
-						webCall: 'pageChat.connectVideo()',
-						success(userdata) {
-							var e = document.createElement('div');
-							e.innerHTML = page;
-							var e2 = e.querySelectorAll('script'), i2 = 0, appended = false;
-							var callVideo = function () {
-								userdata.openUI = user.contact.id != 3;
-								if (userdata.openUI)
-									e.style.display = 'block';
-								window.videoLogin(userdata);
-								ui.swipe('#videochat-streams', function (dir) {
-									ui.q('#videochat-streams').style.left = dir == 'left' ? '-100%' : '';
-								});
-							};
-							for (var i = 0; i < e2.length; i++) {
-								if (e2[i].getAttribute('src') && !ui.q('head script[src="' + e2[i].getAttribute('src') + '"]')) {
-									var script = document.createElement('script');
-									script.src = global.server + e2[i].getAttribute('src');
-									script.onload = function () {
-										i2--;
-										if (i2 == 0) {
-											e = ui.q('#video');
-											e.innerHTML = page.substring(page.indexOf('<body>') + 6, page.indexOf('</body>')).replaceAll(' src="', ' src="' + global.server).replaceAll(' href="', ' href="' + global.server);
-											if (global.getOS() == 'android') {
-												const { permissions } = cordova.plugins;
-												permissions.requestPermissions([permissions.CAMERA, permissions.RECORD_AUDIO, permissions.MODIFY_AUDIO_SETTINGS]);
-											} else if (global.getOS() == 'ios') {
-												const { iosrtc } = cordova.plugins;
-												iosrtc.registerGlobals();
-												iosrtc.selectAudioOutput('speaker');
-												iosrtc.requestPermission(true, true, function (permissionApproved) {
-													console.log('requestPermission status: ', permissionApproved ? 'Approved' : 'Rejected');
-												});
-											}
-											callVideo.call();
-										}
-									};
-									i2++;
-									appended = true;
-									document.head.appendChild(script);
-								}
-							}
-							if (!appended)
-								callVideo.call();
-						}
-					});
+				url: global.serverApi + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contactVideoCall.contactId=' + user.contact.id),
+				webCall: 'pageChat.connectVideo()',
+				responseType: 'json',
+				success(r) {
+					if (r.length > 1) {
+						var d = global.date.server2Local(r[1][0]).getTime(), n = new Date().getTime();
+						if (d > n - 600000 && d < n + 3600000)
+							pageChat.connectVideoExec();
+						else
+							ui.navigation.openPopup(ui.l('attention'), ui.l('events.videoCallDateHint').replace('{0}', global.date.formatDate(r[1][0])));
+					} else
+						ui.navigation.openPopup(ui.l('attention'), ui.l('events.videoCallDateNoDate') + user.getAppointmentTemplate());
 				}
 			});
+		}
+	}
+	static connectVideoExec() {
+		communication.ajax({
+			url: global.server + 'video.html',
+			success(page) {
+				communication.ajax({
+					url: global.serverApi + 'action/videoCallInit',
+					responseType: 'json',
+					webCall: 'pageChat.connectVideoExec()',
+					success(userdata) {
+						var e = document.createElement('div');
+						e.innerHTML = page;
+						var e2 = e.querySelectorAll('script'), i2 = 0, appended = false;
+						var callVideo = function () {
+							userdata.openUI = user.contact.id != 3;
+							if (userdata.openUI)
+								e.style.display = 'block';
+							window.videoLogin(userdata);
+							ui.swipe('#videochat-streams', function (dir) {
+								ui.q('#videochat-streams').style.left = dir == 'left' ? '-100%' : '';
+							});
+						};
+						for (var i = 0; i < e2.length; i++) {
+							if (e2[i].getAttribute('src') && !ui.q('head script[src="' + e2[i].getAttribute('src') + '"]')) {
+								var script = document.createElement('script');
+								script.src = global.server + e2[i].getAttribute('src');
+								script.onload = function () {
+									i2--;
+									if (i2 == 0) {
+										e = ui.q('#video');
+										e.innerHTML = page.substring(page.indexOf('<body>') + 6, page.indexOf('</body>')).replaceAll(' src="', ' src="' + global.server).replaceAll(' href="', ' href="' + global.server);
+										if (global.getOS() == 'android') {
+											const { permissions } = cordova.plugins;
+											permissions.requestPermissions([permissions.CAMERA, permissions.RECORD_AUDIO, permissions.MODIFY_AUDIO_SETTINGS]);
+										} else if (global.getOS() == 'ios') {
+											const { iosrtc } = cordova.plugins;
+											iosrtc.registerGlobals();
+											iosrtc.selectAudioOutput('speaker');
+											iosrtc.requestPermission(true, true, function (permissionApproved) {
+												console.log('requestPermission status: ', permissionApproved ? 'Approved' : 'Rejected');
+											});
+										}
+										callVideo.call();
+									}
+								};
+								i2++;
+								appended = true;
+								document.head.appendChild(script);
+							}
+						}
+						if (!appended)
+							callVideo.call();
+					}
+				});
+			}
+		});
 	}
 	static postSendChatImage(r) {
 		if (ui.q('chat').getAttribute('i') == r.contactId) {

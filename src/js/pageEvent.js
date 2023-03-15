@@ -9,7 +9,6 @@ import { lists } from "./lists";
 import { Contact, EventParticipate, Location, model } from "./model";
 import { pageContact } from "./pageContact";
 import { pageLocation } from "./pageLocation";
-import { pageLogin } from "./pageLogin";
 import { formFunc, ui } from "./ui";
 import { user } from "./user";
 
@@ -88,48 +87,7 @@ class pageEvent {
 		<input type="number" step="any" name="price" value="${v.price}" onkeyup="pageEvent.checkPrice()" onmousewheel="return false;" />
 		<div class="paypal" style="display:none;">
 			<explain>${v.payplaSignUpHint}</explain>
-			<authenticate>
-				<explain>${ui.l('events.paypalSignUpHintMeet')}</explain>
-				<day d="${v.authenticateDay1Raw}">
-					${v.authenticateDay1}
-					<hour class="hour09"></hour>
-					<hour class="hour10"></hour>
-					<hour class="hour11"></hour>
-					<hour class="hour12"></hour>
-					<hour class="hour13"></hour>
-					<hour class="hour14"></hour>
-					<hour class="hour15"></hour>
-					<hour class="hour16"></hour>
-					<hour class="hour17"></hour>
-				</day>
-				<day d="${v.authenticateDay2Raw}">
-					${v.authenticateDay2}
-					<hour class="hour09"></hour>
-					<hour class="hour10"></hour>
-					<hour class="hour11"></hour>
-					<hour class="hour12"></hour>
-					<hour class="hour13"></hour>
-					<hour class="hour14"></hour>
-					<hour class="hour15"></hour>
-					<hour class="hour16"></hour>
-					<hour class="hour17"></hour>
-				</day>
-				<day d="${v.authenticateDay3Raw}">
-					${v.authenticateDay3}
-					<hour class="hour09"></hour>
-					<hour class="hour10"></hour>
-					<hour class="hour11"></hour>
-					<hour class="hour12"></hour>
-					<hour class="hour13"></hour>
-					<hour class="hour14"></hour>
-					<hour class="hour15"></hour>
-					<hour class="hour16"></hour>
-					<hour class="hour17"></hour>
-				</day>
-			</authenticate>
-			<dialogButtons>
-				<buttontext class="bgColor${v.hideVideoCallButton}" onclick="pageEvent.videoCall()">${ui.l('events.paypalSignUpButton')}</buttontext>
-			</dialogButtons>
+			${v.appointment}
 		</div>
 	</value>
 </field>
@@ -291,10 +249,10 @@ class pageEvent {
 				success(r) {
 					for (var i = 1; i < r.length; i++) {
 						var d = global.date.getDateFields(global.date.server2Local(r[i][0]));
-						ui.classAdd('popup authenticate day[d="' + d.year + '-' + d.month + '-' + d.day + '"] .hour' + d.hour, 'closed');
+						ui.classAdd('popup videoCall day[d="' + d.year + '-' + d.month + '-' + d.day + '"] .hour' + d.hour, 'closed');
 						if (r[i][2] == user.contact.id) {
 							ui.q('popup .paypal explain').innerHTML = ui.q('popup .paypal explain').innerHTML + '<br/><br/>' + ui.l('events.videoCallDateHint').replace('{0}', global.date.formatDate(r[i][0]));
-							ui.q('popup .paypal authenticate').outerHTML = '';
+							ui.q('popup .paypal videoCall').outerHTML = '';
 							ui.q('popup .paypal dialogButtons').outerHTML = '';
 						}
 					}
@@ -364,26 +322,8 @@ class pageEvent {
 			: pageEvent.paypal.fee);
 		v.hashtagSelection = hashtags.display();
 		v.hashtagsDisp = hashtags.ids2Text(v.skills) + (v.skillsText ? ' ' + v.skillsText : '').trim();
-		var next = function (d) {
-			d.setDate(d.getDate() + 1);
-			if (d.getDay() == 0)
-				d.setDate(d.getDate() + 1);
-			return d;
-		}
-		d = next(new Date());
-		v.authenticateDay1 = global.date.formatDate(d);
-		v.authenticateDay1 = v.authenticateDay1.substring(0, v.authenticateDay1.lastIndexOf(' '));
-		v.authenticateDay1Raw = global.date.local2server(d).substring(0, 10);
-		d = next(d);
-		v.authenticateDay2 = global.date.formatDate(d);
-		v.authenticateDay2 = v.authenticateDay2.substring(0, v.authenticateDay2.lastIndexOf(' '));
-		v.authenticateDay2Raw = global.date.local2server(d).substring(0, 10);
-		d = next(d);
-		v.authenticateDay3 = global.date.formatDate(d);
-		v.authenticateDay3 = v.authenticateDay3.substring(0, v.authenticateDay3.lastIndexOf(' '));
-		v.authenticateDay3Raw = global.date.local2server(d).substring(0, 10);
+		v.appointment = user.getAppointmentTemplate('authenticate');
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
-		ui.attr('popup hour', 'onclick', 'pageEvent.selectVideoCall(this)');
 		if (id)
 			pageEvent.setForm();
 	}
@@ -1148,26 +1088,5 @@ class pageEvent {
 					intro.openHint({ desc: '<title>' + ui.l('events.qrcodeButton') + '</title><br/>' + ui.l('events.qrcodeError'), pos: '5%,1em', size: '90%,auto' });
 			}
 		});
-	}
-	static videoCall() {
-		if (ui.cssValue('popup authenticate', 'display') == 'none')
-			ui.toggleHeight('popup authenticate');
-		else {
-			var e = ui.q('popup authenticate hour.selected');
-			if (e) {
-				e = global.date.local2server(ui.parents(e, 'day').getAttribute('d') + ' ' + e.getAttribute('class').replace(/[a-z ]/gi, '') + ':00:00');
-				communication.ajax({
-					url: global.serverApi + 'action/videoCall/' + e,
-					webCall: 'pageEvent.videoCall()',
-					method: 'POST',
-					responseType: 'json',
-					success(r) {
-						ui.q('popup div.paypal dialogButtons').outerHTML = '';
-						ui.q('popup div.paypal authenticate').outerHTML = '';
-						ui.q('popup div.paypal explain').innerHTML = ui.l('events.videoCallDate').replace('{0}', global.date.formatDate(e));
-					}
-				});
-			}
-		}
 	}
 }

@@ -304,7 +304,6 @@
 			"participationNoImage": "You can only participate in paid events with a profile picture. Would you like to upload a profile picture?",
 			"paypalSignUpButton": "Fix the video call",
 			"paypalSignUpHint": "Payable events are paid in advance and directly to your PayPal account by the participants. After the start of the event you will receive the fee invoice of {0}.<br/>You may use this function only as an authenticated member.",
-			"paypalSignUpHintMeet": "Select a slot for video authentication:",
 			"paypalSignUpHintFee": "{0}% until {1}, thereafter {2}",
 			"potentialParticipants": "suitable Buddies",
 			"price": "Entrance in &euro;",
@@ -339,6 +338,7 @@
 			"urlOnlineEvent": "Participation link",
 			"videoCallDate": "Your appointment on {0} has just been confirmed via chat. You can find more information about this and the login link in our support chat.",
 			"videoCallDateHint": "Your video authentication date is on {0}. You can find more information on this as well as the login link in our support chat.",
+			"videoCallDateNoDate": "You do not have an appointment. Do you want to arrange one?",
 			"yesterday": "Yesterday, {0}"
 		},
 		"home": {
@@ -651,7 +651,8 @@
 			"teaserLabel": "shown to not logged in buddies on the home page",
 			"urls": "Links to LinkedIn, Instagram...",
 			"urlsHint": "one links per row",
-			"urlsFormat": "One link per row in that format: https://linkedin.com/xyz/"
+			"urlsFormat": "One link per row in that format: https://linkedin.com/xyz/",
+			"videoCall": "Select a slot for video authentication:"
 		},
 		"all": "Nearby",
 		"appSubTitle": "neue Leute hier und heute",

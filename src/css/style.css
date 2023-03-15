@@ -787,13 +787,13 @@ popup .paypal {
 	padding: 0.25em 0.5em 0 0.5em;
 }
 
-popup authenticate {
+popup videoCall {
 	display: none;
 	margin-top: 1em;
 	position: relative;
 }
 
-popup authenticate day {
+popup videoCall day {
 	position: relative;
 	width: 33%;
 	overflow: hidden;
@@ -802,7 +802,7 @@ popup authenticate day {
 	padding: 0.5em;
 }
 
-popup authenticate day hour {
+popup videoCall day hour {
 	position: relative;
 	height: 2em;
 	width: 100%;
@@ -815,17 +815,17 @@ popup authenticate day hour {
 	cursor: pointer;
 }
 
-popup authenticate day hour.closed {
+popup videoCall day hour.closed {
 	background-color: red;
 	text-decoration: line-through;
 	opacity: 0.25;
 }
 
-popup authenticate day hour.selected {
+popup videoCall day hour.selected {
 	background-color: rgba(0, 255, 0, 0.9);
 }
 
-popup authenticate day hour.selected::after {
+popup videoCall day hour.selected::after {
 	content: '✓';
 	position: absolute;
 	opacity: 0.2;
@@ -834,39 +834,39 @@ popup authenticate day hour.selected::after {
 	line-height: 1;
 }
 
-popup authenticate day hour.hour09::before {
+popup videoCall day hour.hour09::before {
 	content: '9:00';
 }
 
-popup authenticate day hour.hour10::before {
+popup videoCall day hour.hour10::before {
 	content: '10:00';
 }
 
-popup authenticate day hour.hour11::before {
+popup videoCall day hour.hour11::before {
 	content: '11:00';
 }
 
-popup authenticate day hour.hour12::before {
+popup videoCall day hour.hour12::before {
 	content: '12:00';
 }
 
-popup authenticate day hour.hour13::before {
+popup videoCall day hour.hour13::before {
 	content: '13:00';
 }
 
-popup authenticate day hour.hour14::before {
+popup videoCall day hour.hour14::before {
 	content: '14:00';
 }
 
-popup authenticate day hour.hour15::before {
+popup videoCall day hour.hour15::before {
 	content: '15:00';
 }
 
-popup authenticate day hour.hour16::before {
+popup videoCall day hour.hour16::before {
 	content: '16:00';
 }
 
-popup authenticate day hour.hour17::before {
+popup videoCall day hour.hour17::before {
 	content: '17:00';
 }
 
@@ -2162,12 +2162,12 @@ row.favorite imagelist svg {
 	display: inline;
 }
 
-row badge.authenticated,
+row badge.videoCalld,
 row.participate badge {
 	background: green;
 }
 
-row badge.authenticated::after,
+row badge.videoCalld::after,
 row.participate badge::after {
 	content: '✓';
 }
@@ -2188,7 +2188,7 @@ row compass {
 	margin-top: -0.25em;
 }
 
-detail .authenticated title::after,
+detail .videoCalld title::after,
 detail .participate .date::after,
 detail .canceled .date::after {
 	margin-left: 1em;
@@ -2200,13 +2200,13 @@ detail .canceled .date::after {
 	color: white;
 }
 
-detail .authenticated title::after,
+detail .videoCalld title::after,
 detail .participate .date::after {
 	content: '✓';
 	background: green;
 }
 
-detail .authenticated title::after {
+detail .videoCalld title::after {
 	font-size: 0.77em;
 }
 

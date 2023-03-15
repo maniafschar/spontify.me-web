@@ -103,6 +103,12 @@ class global {
 			d = d.toISOString();
 			return d.substring(0, d.indexOf('.'));
 		},
+		nextWorkday(d) {
+			d.setDate(d.getDate() + 1);
+			if (d.getDay() == 0)
+				d.setDate(d.getDate() + 1);
+			return d;
+		},
 		server2Local(d) {
 			if (!d)
 				return d;

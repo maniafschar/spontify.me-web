@@ -304,7 +304,6 @@
 			"participationNoImage": "An kostenpflichtigen Events kann man nur mit einem Profilbild teilnehmen. Möchtest Du ein Profilbild hochladen?",
 			"paypalSignUpButton": "Termin vereinbaren",
 			"paypalSignUpHint": "Kostenpflichtige Events werden Vorab per Paypal von den Teilnehmern direkt auf Deinen Paypal Konto bezahlt. Die Gebührenrechnung von {0}% erhältst Du nach Beginn des Events.<br/>Diese Funktion kannst Du nur als authentifiziertes Mitglied nutzen.",
-			"paypalSignUpHintMeet": "Wähle einen Termin zur Videoauthentifizierung:",
 			"paypalSignUpHintFee": "{0}% bis {1}, danach {2}",
 			"potentialParticipants": "passende Buddies",
 			"price": "Eintritt in &euro;",
@@ -339,6 +338,7 @@
 			"urlOnlineEvent": "Link zum teilnehmen",
 			"videoCallDate": "Dein Termin am {0} wurde soeben per Chat bestätigt. Nähere Informationen hierzu sowie den Login Link findest Du in unserem Support Chat.",
 			"videoCallDateHint": "Dein Videoauthentifizierungstermin ist am {0}. Nähere Informationen hierzu sowie den Login Link findest Du in unserem Support Chat.",
+			"videoCallDateNoDate": "Du hast noch keinen Termin. Möchtest Du einen vereinbaren?",
 			"yesterday": "Gestern, {0}"
 		},
 		"home": {
@@ -651,7 +651,8 @@
 			"teaserLabel": "auf der Startseite nichteingeloggten Buddies angezeigt werden",
 			"urls": "Links zu LinkedIn, Instagram, etc.",
 			"urlsHint": "ein Link pro Zeile",
-			"urlsFormat": "Ein Link pro Zeile in der Form https://linkedin.com/xyz/"
+			"urlsFormat": "Ein Link pro Zeile in der Form https://linkedin.com/xyz/",
+			"videoCall": "Wähle einen Termin:"
 		},
 		"all": "in der Nähe",
 		"appSubTitle": "neue Leute hier und heute",
