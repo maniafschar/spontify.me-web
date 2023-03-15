@@ -779,7 +779,7 @@ class pageEvent {
 			height: 600,
 			data: global.server + '?' + global.encParam('q=' + id + (location ? '' : '|' + user.contact.id)),
 			dotsOptions: {
-				color: 'rgb(255, 220, 70)',
+				color: ui.cssValue(':root', '--bg2stop'),
 				type: 'square'
 			},
 			backgroundOptions: {
@@ -791,8 +791,8 @@ class pageEvent {
 			canvas.width = 888;
 			var context = canvas.getContext('2d');
 			var grd = context.createLinearGradient(0, 0, canvas.width, canvas.height);
-			grd.addColorStop(0, 'rgb(70, 138, 180)');
-			grd.addColorStop(1, 'rgb(25, 50, 100)');
+			grd.addColorStop(0, ui.cssValue(':root', '--bg1stop'));
+			grd.addColorStop(1, ui.cssValue(':root', '--bg1start'));
 			context.fillStyle = grd;
 			context.fillRect(0, 0, canvas.width, canvas.height);
 			context.fillStyle = 'white';

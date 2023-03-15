@@ -452,7 +452,7 @@ class pageChat {
 				success(r) {
 					if (r.length > 1) {
 						var d = global.date.server2Local(r[1][0]).getTime(), n = new Date().getTime();
-						if (d > n - 600000 && d < n + 3600000)
+						if (d - 600000 < n && d + 3600000 > n)
 							pageChat.connectVideoExec();
 						else
 							ui.navigation.openPopup(ui.l('attention'), ui.l('events.videoCallDateHint').replace('{0}', global.date.formatDate(r[1][0])));
@@ -492,16 +492,18 @@ class pageChat {
 									if (i2 == 0) {
 										e = ui.q('#video');
 										e.innerHTML = page.substring(page.indexOf('<body>') + 6, page.indexOf('</body>')).replaceAll(' src="', ' src="' + global.server).replaceAll(' href="', ' href="' + global.server);
-										if (global.getOS() == 'android') {
-											const { permissions } = cordova.plugins;
-											permissions.requestPermissions([permissions.CAMERA, permissions.RECORD_AUDIO, permissions.MODIFY_AUDIO_SETTINGS]);
-										} else if (global.getOS() == 'ios') {
-											const { iosrtc } = cordova.plugins;
-											iosrtc.registerGlobals();
-											iosrtc.selectAudioOutput('speaker');
-											iosrtc.requestPermission(true, true, function (permissionApproved) {
-												console.log('requestPermission status: ', permissionApproved ? 'Approved' : 'Rejected');
-											});
+										if (!global.isBrowser()) {
+											if (global.getOS() == 'android') {
+												const { permissions } = cordova.plugins;
+												permissions.requestPermissions([permissions.CAMERA, permissions.RECORD_AUDIO, permissions.MODIFY_AUDIO_SETTINGS]);
+											} else if (global.getOS() == 'ios') {
+												const { iosrtc } = cordova.plugins;
+												iosrtc.registerGlobals();
+												iosrtc.selectAudioOutput('speaker');
+												iosrtc.requestPermission(true, true, function (permissionApproved) {
+													console.log('requestPermission status: ', permissionApproved ? 'Approved' : 'Rejected');
+												});
+											}
 										}
 										callVideo.call();
 									}

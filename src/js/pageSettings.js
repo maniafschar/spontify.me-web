@@ -378,7 +378,7 @@ ${v.info}`;
 						height: x,
 						data: global.server + '?' + global.encParam('f=' + user.contact.id),
 						dotsOptions: {
-							color: 'rgb(255, 220, 70)',
+							color: ui.cssValue(':root', '--bg2stop'),
 							type: 'square'
 						},
 						backgroundOptions: {

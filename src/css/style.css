@@ -1,3 +1,10 @@
+:root {
+	--bg1start: rgb(25, 50, 100);
+	--bg1stop: rgb(70, 138, 180);
+	--bg2start: rgb(210, 140, 20);
+	--bg2stop: rgb(255, 220, 70);
+}
+
 * {
 	-webkit-overflow-scrolling: touch;
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -96,12 +103,12 @@ body.app>main progressbar {
 }
 
 a {
-	color: rgb(255, 220, 70);
+	color: var(--bg2stop);
 	cursor: pointer;
 }
 
 chat a {
-	color: rgb(25, 50, 100);
+	color: var(--bg1start);
 }
 
 navigation {
@@ -324,7 +331,7 @@ subCatTitle {
 }
 
 .mainBG {
-	background: linear-gradient(120deg, rgb(70, 138, 180) 0%, rgb(25, 50, 100) 100%);
+	background: linear-gradient(120deg, var(--bg1stop) 0%, var(--bg1start) 100%);
 	background-size: 100% 100%;
 }
 
@@ -437,12 +444,12 @@ home {
 }
 
 .bgColor {
-	background: linear-gradient(rgb(255, 220, 70) 0%, rgb(210, 140, 20) 100%) center center / 100% no-repeat;
+	background: linear-gradient(var(--bg2stop) 0%, var(--bg2start) 100%) center center / 100% no-repeat;
 }
 
 a.bgColor:hover,
 buttontext.bgColor:hover {
-	background: rgb(255, 220, 70);
+	background: var(--bg2stop);
 }
 
 .bgWeb {
@@ -680,7 +687,7 @@ input:checked+label:before {
 }
 
 popup input:checked+label {
-	background: rgb(255, 220, 70) !important;
+	background: var(--bg2stop) !important;
 	color: black;
 }
 
@@ -1460,7 +1467,7 @@ ratingSelection full {
 	left: 0;
 	overflow: hidden;
 	top: 0;
-	color: rgb(255, 220, 70);
+	color: var(--bg2stop);
 }
 
 ratingSelection span {
@@ -1555,7 +1562,7 @@ badge span {
 	font-weight: bold;
 	height: 100%;
 	line-height: 2.5em;
-	color: rgb(255, 220, 70);
+	color: var(--bg2stop);
 }
 
 chatDateTitle {
@@ -2019,12 +2026,12 @@ buttonIcon svg {
 }
 
 buttonIcon.highlight {
-	color: rgb(255, 220, 70);
+	color: var(--bg2stop);
 }
 
 buttonIcon.highlight svg {
-	fill: rgb(255, 220, 70);
-	stroke: rgb(255, 220, 70);
+	fill: var(--bg2stop);
+	stroke: var(--bg2stop);
 }
 
 buttonIcon.left {
@@ -2249,7 +2256,7 @@ chat.location chatButtons {
 }
 
 .highlightColor {
-	color: rgb(255, 220, 70);
+	color: var(--bg2stop);
 }
 
 .eventMargin {
@@ -2484,7 +2491,7 @@ detail detailHeader matchIndicator svg .circle {
 	stroke-width: 2.8;
 	stroke-linecap: round;
 	animation: progress 1s ease-out forwards;
-	stroke: rgb(255, 220, 70);
+	stroke: var(--bg2stop);
 }
 
 detail detailHeader matchIndicator svg .percentage {
@@ -2525,7 +2532,7 @@ detail text.list {
 }
 
 detail urls label {
-	color: rgb(25, 50, 100) !important;
+	color: var(--bg1start) !important;
 }
 
 tabHeader {
@@ -2538,7 +2545,7 @@ tabHeader {
 
 .tabActive {
 	opacity: 1 !important;
-	color: rgb(255, 220, 70);
+	color: var(--bg2stop);
 	font-weight: bold;
 }
 
@@ -2585,7 +2592,7 @@ div#video {
 }
 
 .highlightBackground {
-	background: rgb(255, 220, 70) !important;
+	background: var(--bg2stop) !important;
 }
 
 .highlightMap::before {
@@ -2596,7 +2603,7 @@ div#video {
 	top: 0.7em;
 	opacity: 0.25;
 	font-size: 5em;
-	color: rgb(255, 220, 70);
+	color: var(--bg2stop);
 }
 
 info {

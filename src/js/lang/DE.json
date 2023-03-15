@@ -337,7 +337,7 @@
 			"url": "Link zum promopten",
 			"urlOnlineEvent": "Link zum teilnehmen",
 			"videoCallDate": "Dein Termin am {0} wurde soeben per Chat bestätigt. Nähere Informationen hierzu sowie den Login Link findest Du in unserem Support Chat.",
-			"videoCallDateHint": "Dein Videoauthentifizierungstermin ist am {0}. Nähere Informationen hierzu sowie den Login Link findest Du in unserem Support Chat.",
+			"videoCallDateHint": "Dein Termin ist am {0}. Nähere Informationen hierzu sowie den Login Link findest Du in unserem Support Chat.",
 			"videoCallDateNoDate": "Du hast noch keinen Termin. Möchtest Du einen vereinbaren?",
 			"yesterday": "Gestern, {0}"
 		},

@@ -337,7 +337,7 @@
 			"url": "Promoption link",
 			"urlOnlineEvent": "Participation link",
 			"videoCallDate": "Your appointment on {0} has just been confirmed via chat. You can find more information about this and the login link in our support chat.",
-			"videoCallDateHint": "Your video authentication date is on {0}. You can find more information on this as well as the login link in our support chat.",
+			"videoCallDateHint": "Your appointment is on {0}. You can find more information on this as well as the login link in our support chat.",
 			"videoCallDateNoDate": "You do not have an appointment. Do you want to arrange one?",
 			"yesterday": "Yesterday, {0}"
 		},

@@ -18,7 +18,7 @@ class pageHome {
 	static template = v =>
 		global.template`<homeHeader${v.logoSmall}>
 	<img onclick="geoData.openLocationPicker(event)" source="logo"/>
-	<text onclick="pageHome.goToSettings(event)">
+	<text onclick="pageHome.goToSettings(event)" ${v.dispProfile}>
 		${v.imgProfile}<br/>
 		${v.name}
 	</text>
@@ -76,8 +76,10 @@ class pageHome {
 				v.name = user.contact.pseudonym;
 				v.infoButton = ' noDisp';
 				v.langButton = ' noDisp';
-			} else
+			} else {
+				v.dispProfile = 'class="noDisp"';
 				v.lang = global.language;
+			}
 			e.innerHTML = pageHome.template(v);
 			initialisation.reposition();
 			communication.ajax({

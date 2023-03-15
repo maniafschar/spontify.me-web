@@ -542,7 +542,9 @@ ${v.rating}
 			success(r) {
 				ui.navigation.closePopup();
 				user.remove('location');
-				details.open(id ? id : r, { webCall: 'pageLocation.save()', query: 'location_list', search: encodeURIComponent('location.id=' + r) }, id ? function (l, id) {
+				if (!r)
+					r = id;
+				details.open(r, { webCall: 'pageLocation.save()', query: 'location_list', search: encodeURIComponent('location.id=' + r) }, id ? function (l, id) {
 					ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id);
 				} : pageLocation.detailLocationEvent);
 				if (!id && pageLocation.reopenEvent)
