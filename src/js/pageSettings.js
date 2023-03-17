@@ -464,7 +464,7 @@ ${v.info}`;
 				}
 			});
 		}
-		formFunc.image.remove('image');
+		formFunc.image.remove();
 		pageSettings.currentSettings = pageSettings.getCurrentSettings();
 		bluetooth.reset();
 		if (goToID) {
@@ -477,7 +477,7 @@ ${v.info}`;
 		if (l != global.language)
 			initialisation.setLanguage(l);
 		ui.css('settings save', 'display', '');
-		ui.q('homeHeader>text').innerText = user.contact.pseudonym;
+		ui.q('homeHeader name').innerText = user.contact.pseudonym;
 	}
 	static reset() {
 		formFunc.resetError(ui.q('input[name="pseudonym"]'));

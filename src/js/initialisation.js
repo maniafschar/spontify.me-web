@@ -3,7 +3,6 @@ import { details } from './details';
 import { geoData } from './geoData';
 import { global } from './global';
 import { pageChat } from './pageChat';
-import { pageEvent } from './pageEvent';
 import { pageHome } from './pageHome';
 import { pageLogin } from './pageLogin';
 import { pageSearch } from './pageSearch';

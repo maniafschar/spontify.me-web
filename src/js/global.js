@@ -8,7 +8,7 @@ import { user } from './user';
 export { global, Strings };
 
 class global {
-	static appTitle = 'skillvents';
+	static appTitle = '{placeholderAppTitle}';
 	static appVersion = '0.4.1';
 	static language = null;
 	static minLocations = 5;

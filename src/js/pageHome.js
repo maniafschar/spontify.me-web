@@ -20,7 +20,7 @@ class pageHome {
 	<img onclick="geoData.openLocationPicker(event)" source="logo"/>
 	<text onclick="pageHome.goToSettings(event)" ${v.dispProfile}>
 		${v.imgProfile}<br/>
-		${v.name}
+		<name>${v.name}</name>
 	</text>
 	<buttonIcon class="language${v.langButton}" onclick="pageHome.openLanguage(event)">
 		<span>${v.lang}</span>
