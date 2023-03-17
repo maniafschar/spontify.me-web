@@ -51,7 +51,7 @@
 			}
 
 			g.image>g {
-				display: none;
+				display: none !important;
 			}
 
 			.name {

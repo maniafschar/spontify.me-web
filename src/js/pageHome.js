@@ -128,8 +128,10 @@ class pageHome {
 		if (user.contact)
 			ui.html('home item.bluetooth text', ui.l(bluetooth.state == 'on' && user.contact.bluetooth ? 'bluetooth.activated' : 'bluetooth.deactivated'));
 		formFunc.image.replaceSVGs();
-		if (user.contact)
+		if (user.contact) {
 			ui.classAdd('home homeHeader svg>g', 'loggedIn');
+			ui.q('home homeHeader svg>g image').setAttribute('x', 600);
+		}
 		pageHome.updateLocalisation();
 		ui.css('navigation item.search', 'display', user.contact ? '' : 'none');
 		ui.css('navigation item.info', 'display', user.contact ? 'none' : '');

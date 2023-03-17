@@ -1,5 +1,5 @@
 {
-	"css": ":root{--bg1start:rgb(25,50,100);--bg1stop:rgb(70,138,180);--bg2start:rgb(210,140,20);--bg2stop:rgb(255,220,70);}",
+	"css": ":root{\n\t--bg1start:rgb(0,77,153);\n\t--bg1stop:rgb(80,133,243);\n\t--bg2start:rgb(227,6,19);\n\t--bg2stop:rgb(255,100,130);\n}",
 	"name": "SpVgg Unterhaching",
 	"logo": "SpVggUnterhaching.png"
 }
