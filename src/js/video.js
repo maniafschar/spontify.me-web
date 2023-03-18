@@ -1,5 +1,6 @@
 import { global } from './global';
 import { ui } from './ui';
+import { user } from './user';
 
 class Video {
 	$calling;
@@ -23,6 +24,10 @@ class Video {
 		},
 	};
 	users;
+	localStream;
+	static connection;
+	static connectedUser;
+	static rtcPeerConnection;
 
 	static template = v =>
 		global.template`
@@ -42,7 +47,48 @@ class Video {
 	</div>
 </section>
 <section id="videochat" class="hidden">
-	<div id="videochat-streams"></div>
+	<div id="videochat-streams">
+		<div id="videochat-stream-container-opponent" class="videochat-stream-container">
+			<div id="videochat-stream-loader-opponent" class="videochat-stream-loader">
+				<div class="videochat-stream-loader-text"></div>
+				<div class="videochat-stream-loader-spinner">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						xmlns:xlink="http://www.w3.org/1999/xlink"
+						style="margin: auto; background: none; display: block; shape-rendering: auto;"
+						width="20px"
+						height="20px"
+						viewBox="0 0 100 100"
+						preserveAspectRatio="xMidYMid"
+					>
+					<circle
+						r="36"
+						cx="50"
+						cy="50"
+						fill="none"
+						stroke="#1198d4"
+						stroke-width="10"
+						stroke-dasharray="169.64600329384882 58.548667764616276"
+						transform="rotate(113.674 50 50)"
+					>
+						<animateTransform
+							attributeName="transform"
+							type="rotate"
+							repeatCount="indefinite"
+							dur="1s"
+							values="0 50 50;360 50 50"
+							keyTimes="0;1"
+						></animateTransform>
+					</circle>
+					</svg>
+				</div>
+			</div>
+			<video playsinline id="remoteStream-opponent" class="videochat-stream" data-id="opponent"></video>
+		</div>
+		<div id="videochat-local-stream-container" class="videochat-stream-container">
+			<video playsinline id="localStream" class="videochat-stream"></video>
+		</div>
+	</div>
 	<div id="videochat-buttons-container">
 	<button id="videochat-mute-unmute" class="videochat-button" disabled></button>
 	<button id="videochat-stop-call" class="videochat-button"></button>
@@ -59,48 +105,6 @@ class Video {
 <audio id="signal-in" loop preload="auto">
 	<source src="audio/calling.mp3" type="audio/mp3" />
 </audio>`;
-	static templateCall = v =>
-		global.template`
-<div id="videochat-stream-container-${v.id}" class="videochat-stream-container">
-	<div id="videochat-stream-loader-${v.id}" class="videochat-stream-loader">
-		<div class="videochat-stream-loader-text">${v.name}</div>
-		<div class="videochat-stream-loader-spinner">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				xmlns:xlink="http://www.w3.org/1999/xlink"
-				style="margin: auto; background: none; display: block; shape-rendering: auto;"
-				width="20px"
-				height="20px"
-				viewBox="0 0 100 100"
-				preserveAspectRatio="xMidYMid"
-			>
-			<circle
-				r="36"
-				cx="50"
-				cy="50"
-				fill="none"
-				stroke="#1198d4"
-				stroke-width="10"
-				stroke-dasharray="169.64600329384882 58.548667764616276"
-				transform="rotate(113.674 50 50)"
-			>
-				<animateTransform
-					attributeName="transform"
-					type="rotate"
-					repeatCount="indefinite"
-					dur="1s"
-					values="0 50 50;360 50 50"
-					keyTimes="0;1"
-				></animateTransform>
-			</circle>
-			</svg>
-		</div>
-	</div>
-	<video playsinline id="remoteStream-${v.id}" class="videochat-stream" data-id="${v.id}"></video>
-</div>
-<div id="videochat-local-stream-container" class="videochat-stream-container">
-	<video playsinline id="localStream" class="videochat-stream"></video>
-</div>`;
 
 	init() {
 		if (!ui.q('videoCall').innerHTML) {
@@ -111,28 +115,76 @@ class Video {
 			this.$modal = ui.q('#call-modal-icoming');
 			this.$muteUnmuteButton = ui.q('#videochat-mute-unmute');
 			this.$switchCameraButton = ui.q('#videochat-switch-camera');
-			ConnectyCube.videochat.onCallListener = this.onCallListener.bind(this);
-			ConnectyCube.videochat.onAcceptCallListener = this.onAcceptCallListener.bind(this);
-			ConnectyCube.videochat.onRejectCallListener = this.onRejectCallListener.bind(this);
-			ConnectyCube.videochat.onStopCallListener = this.onStopCallListener.bind(this);
-			ConnectyCube.videochat.onUserNotAnswerListener = this.onUserNotAnswerListener.bind(this);
-			ConnectyCube.videochat.onRemoteStreamListener = this.onRemoteStreamListener.bind(this);
-			ConnectyCube.videochat.onDevicesChangeListener = this.onDevicesChangeListener.bind(this);
+			// ConnectyCube.videochat.onCallListener = this.onCallListener.bind(this);
+			// ConnectyCube.videochat.onAcceptCallListener = this.onAcceptCallListener.bind(this);
+			// ConnectyCube.videochat.onRejectCallListener = this.onRejectCallListener.bind(this);
+			// ConnectyCube.videochat.onStopCallListener = this.onStopCallListener.bind(this);
+			// ConnectyCube.videochat.onUserNotAnswerListener = this.onUserNotAnswerListener.bind(this);
+			// ConnectyCube.videochat.onRemoteStreamListener = this.onRemoteStreamListener.bind(this);
+			// ConnectyCube.videochat.onDevicesChangeListener = this.onDevicesChangeListener.bind(this);
 			ui.q('#call-modal-reject').addEventListener('click', () => this.rejectCall());
 			ui.q('#call-modal-accept').addEventListener('click', () => this.acceptCall());
 			ui.swipe('#videochat-streams', function (dir) {
 				ui.q('#videochat-streams').style.left = dir == 'left' ? '-100%' : '';
 			});
+			Video.connection = new WebSocket('wss' + global.server.substring(global.server.indexOf(':')));
+			Video.connection.onopen = function () {
+				console.log('Connected');
+			};
+			Video.connection.onerror = function (err) {
+				console.log('Got error', err);
+			};
+			Video.rtcPeerConnection = new RTCPeerConnection({
+				iceServers: [{ urls: 'stun:stun.1.google.com:19302' }]
+			});
+			Video.rtcPeerConnection.onicecandidate = function (event) {
+				if (event.candidate) {
+					Video.connection.send(JSON.stringify({
+						type: 'candidate',
+						name: user.contact.pseudonym,
+						candidate: event.candidate
+					}));
+				}
+			};
+			Video.connection.onmessage = (message) => {
+				console.log('Got message', message.data);
+				var data = JSON.parse(message.data);
+				switch (data.type) {
+					case 'offer':
+						this.onOffer(data.offer, data.name);
+						break;
+					case 'answer':
+						this.onAnswer(data.answer);
+						break;
+					case 'candidate':
+						this.onCandidate(data.candidate);
+						break;
+					default:
+						break;
+				}
+			}
 		}
 	}
-
-	addStreamElements(opponents) {
-		const $videochatStreams = ui.q('#videochat-streams');
-		ui.q('#call').classList.add('hidden');
-		ui.q('#videochat').classList.remove('hidden');
-		$videochatStreams.innerHTML = Video.templateCall({ opponents });
+	onAnswer(answer) {
+		Video.rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(answer));
 	}
+	onCandidate(candidate) {
+		Video.rtcPeerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+	}
+	onOffer(offer, name) {
+		this.connectedUser = name;
+		Video.rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+		Video.rtcPeerConnection.createAnswer(function (answer) {
+			Video.rtcPeerConnection.setLocalDescription(answer);
+			Video.connection.send(JSON.stringify({
+				type: 'answer',
+				answer: answer
+			}));
 
+		}, function (error) {
+			alert('oops...error: ' + error);
+		});
+	}
 	onCallListener(session) {
 		if (session.initiatorID === session.currentUserID)
 			return false;
@@ -215,8 +267,8 @@ class Video {
 
 	acceptCall() {
 		const extension = {};
-		const { callType } = this._session;
-		this.addStreamElements([this.users.callee]);
+		ui.classAdd('#call', 'hidden');
+		ui.classRemove('#videochat', 'hidden');
 		this.hideIncomingCallModal();
 
 		const mediaOptions = { ...this.mediaParams };
@@ -249,42 +301,27 @@ class Video {
 		e.style.background = 'transparent';
 		ui.q('body>main').style.display = 'none';
 		this.$dialing.play();
-		this.addStreamElements([this.users.callee]);
-		this._session = ConnectyCube.videochat.createNewSession([this.users.callee.id], 1, {});
-
-		const mediaOptions = { ...this.mediaParams };
-
-		this._session.getUserMedia(mediaOptions).then((stream) => {
-			this._session.call({});
+		navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+			this.localStream = stream;
+			ui.q('videoCall #localStream').srcObject = stream;
+			Video.rtcPeerConnection.createOffer(function (offer) {
+				Video.connection.send(JSON.stringify({
+					type: 'offer',
+					name: user.contact.pseudonym,
+					offer: offer
+				}));
+				Video.rtcPeerConnection.setLocalDescription(offer);
+			}, function (error) {
+				alert('An error has occurred: ' + error);
+			});
 			this.setActiveDeviceId(stream);
 			this._prepareVideoElement('localStream');
+		}).catch((err) => {
+			console.log(err);
 		});
-
-		// send push notification when calling
-		const currentUserName = this.users.callee.name;
-		const params = {
-			message: `Incoming call from ${currentUserName}`,
-			ios_voip: 1,
-			initiatorId: this._session.initiatorID,
-			opponentsIds: this.users.callee.id,
-			handle: currentUserName,
-			uuid: this._session.ID,
-			callType: 'video'
-		};
-
-		const payload = JSON.stringify(params);
-		const pushParameters = {
-			notification_type: 'push',
-			user: { ids: this.users.callee.id },
-			message: ConnectyCube.pushnotifications.base64Encode(payload),
-		};
-
-		ConnectyCube.pushnotifications.events.create(pushParameters)
-			.then(result => {
-				console.log('[sendPushNotification] Ok');
-			}).catch(error => {
-				console.warn('[sendPushNotification] Error', error);
-			});
+		ui.classAdd('#call', 'hidden');
+		ui.classRemove('#videochat', 'hidden');
+		// TODO send push notification
 	};
 
 	stopCall(userId) {
@@ -310,7 +347,7 @@ class Video {
 			for (const track of video.srcObject.getTracks())
 				track.stop();
 			this._session.stop({});
-			ConnectyCube.videochat.clearSession(this._session.ID);
+			this.localStream.close();
 			this.$dialing.pause();
 			this.$calling.pause();
 			this.$endCall.play();
@@ -448,9 +485,7 @@ class Video {
 
 	_prepareVideoElement(videoElement) {
 		const $video = ui.q('#' + videoElement);
-
 		$video.style.visibility = 'visible';
-
 		if (!global.isBrowser() && global.getOS() == 'ios') {
 			$video.style.backgroundColor = '';
 			$video.style.zIndex = '-1';

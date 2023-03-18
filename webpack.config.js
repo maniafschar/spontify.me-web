@@ -18,7 +18,10 @@ module.exports = (env) => {
 				directory: path.join(__dirname, 'dist')
 			},
 			compress: false,
-			port: 9000
+			port: 9000,
+			devMiddleware: {
+				writeToDisk: true
+			}
 		},
 		plugins: [
 			{
@@ -39,6 +42,8 @@ module.exports = (env) => {
 							return s2.replace(/ /g, '');
 						}
 						var fs = require('fs'), dir = 'src/js/';
+						if (fs.existsSync('dist'))
+							fs.rmSync('dist', { recursive: true });
 						var files = fs.readdirSync(dir);
 						for (var i = 0; i < files.length; i++) {
 							if (files[i].indexOf('.js') > 0) {
@@ -56,8 +61,10 @@ module.exports = (env) => {
 			{
 				apply: compiler => {
 					compiler.hooks.done.tap('custom', () => {
-						var fs = require('fs'), file = '/css/style.css', client = env && env.client && env.client.indexOf('client') == 0 ? env.client.substring(6) : 1;
-						var props = JSON.parse(fs.readFileSync('clients/client' + client + '.json', 'utf8'));
+						var fs = require('fs'), file = '/css/style.css', client = env && env.client && env.client.indexOf('client') == 0 ? env.client.substring(6) : '1';
+						for (var i = client.length; i < 6; i++)
+							client = '0' + client;
+						var props = JSON.parse(fs.readFileSync('clients/' + client + '/props.json', 'utf8'));
 						fs.mkdirSync('dist/css');
 						fs.mkdirSync('dist/js/lang');
 						fs.mkdirSync('dist/font');
@@ -72,8 +79,8 @@ module.exports = (env) => {
 						fs.writeFileSync('dist' + file, props.css + '\n\n' + fs.readFileSync('src' + file, 'utf8'));
 						file = 'dist/js/fmg.js';
 						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('{placeholderAppTitle}', props.name).replace('{client}', client));
-						if (props.logo) {
-							fs.writeFileSync('dist/images/logo.png', fs.readFileSync('clients/images/' + props.logo));
+						if (fs.existsSync('clients/' + client + '/images/logo.png')) {
+							fs.writeFileSync('dist/images/logo.png', fs.readFileSync('clients/' + client + '/images/logo.png'));
 							file = 'dist/images/logo.svg';
 							fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('<g>', '<g class="image">').replace('<image', '<image href="images/logo.png"'));
 						}

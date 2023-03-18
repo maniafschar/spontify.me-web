@@ -223,7 +223,7 @@ class global {
 	}
 	static getRegEx(field, value) {
 		if (value)
-			return 'REGEXP_LIKE(' + field + ',\'' + value + '\')=1';
+			return 'REGEXP_LIKE(' + field + ',\'' + value + '\')=true';
 		return '1=0';
 	}
 	static hash(s) {
