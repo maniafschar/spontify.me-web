@@ -2589,6 +2589,183 @@ videoCall {
 	z-index: 6;
 }
 
+videoCall #snackbar {
+	visibility: hidden;
+	min-width: 250px;
+	background-color: #333;
+	color: #fff;
+	text-align: center;
+	border-radius: 10px;
+	padding: 16px;
+	position: fixed;
+	z-index: 1;
+	left: 50%;
+	top: 40px;
+	transform: translate(-50%);
+}
+
+videoCall #call-modal-icoming {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	visibility: hidden;
+	height: 100px;
+	width: 240px;
+	background-color: #fff;
+	border-radius: 10px;
+	padding: 15px;
+	position: fixed;
+	z-index: 1;
+	left: 50%;
+	top: 40px;
+	transform: translate(-50%);
+}
+
+videoCall #call-modal-icoming .call-modal-header {
+	color: black;
+	font-size: 20px;
+	padding: 10px 0;
+}
+
+videoCall #call-modal-icoming .call-modal-footer {
+	width: 100%;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+videoCall #call-modal-icoming .call-modal-button {
+	height: 40px;
+	width: 100px;
+	border-radius: 20px;
+	color: #fff;
+	font-size: 18px;
+	cursor: pointer;
+}
+
+videoCall #call-modal-icoming #call-modal-reject {
+	background-color: red;
+}
+
+videoCall #call-modal-icoming #call-modal-accept {
+	background-color: green;
+}
+
+videoCall #snackbar.show {
+	visibility: visible;
+}
+
+videoCall #call-modal-icoming.show {
+	visibility: visible;
+}
+
+videoCall .hidden {
+	display: none !important;
+}
+
+videoCall #call,
+videoCall #videochat {
+	height: 100%;
+	width: 100%;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+}
+
+videoCall #call,
+videoCall #videochat {
+	background-color: #000000;
+}
+
+
+videoCall #call-buttons-container,
+videoCall #videochat-buttons-container {
+	width: 320px;
+	height: 50px;
+	position: fixed;
+	bottom: 25px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-around;
+	z-index: 200;
+}
+
+videoCall #call-buttons-container .call-button,
+videoCall .videochat-button {
+	width: 50px;
+	height: 50px;
+	border-radius: 25px;
+}
+
+videoCall #select-header {
+	color: #1198d4;
+	font-size: 20px;
+	padding: 20px;
+	border: none;
+}
+
+videoCall .videochat-stream-container {
+	height: 100%;
+	width: 50%;
+	position: relative;
+	overflow: hidden;
+	float: left;
+}
+
+videoCall .videochat-stream-loader {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+videoCall .videochat-stream {
+	height: 100%;
+	width: 100%;
+	object-fit: cover;
+	visibility: hidden;
+}
+
+videoCall #call-start-audio,
+videoCall #call-modal-accept {
+	background: forestgreen url("../images/call.svg") no-repeat center;
+}
+
+videoCall #call-start-video {
+	background: forestgreen url("../images/video-call.svg") no-repeat center;
+}
+
+videoCall #videochat-mute-unmute {
+	background: #0000ff url("../images/mic.svg") no-repeat center;
+}
+
+videoCall #videochat-mute-unmute.muted {
+	background: #0000ff url("../images/mic_off.svg") no-repeat center;
+}
+
+videoCall #videochat-leave,
+videoCall #videochat-stop-call,
+videoCall #call-modal-reject {
+	background: #ff0000 url("../images/call_end.svg") no-repeat center;
+}
+
+videoCall #videochat-switch-camera {
+	background: #ffa500 url("../images/switch_video.svg") no-repeat center;
+}
+
+videoCall #videochat-streams {
+	height: 100%;
+	width: 200%;
+	left: 0;
+	position: absolute;
+	display: block;
+	transition: all .4s ease-out;
+}
+
 .highlightBackground {
 	background: var(--bg2stop) !important;
 }
