@@ -2579,7 +2579,7 @@ progressbar {
 	height: 0.75em;
 }
 
-div#video {
+videoCall {
 	position: absolute;
 	top: 0;
 	bottom: 0;

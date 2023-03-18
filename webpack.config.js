@@ -56,8 +56,8 @@ module.exports = (env) => {
 			{
 				apply: compiler => {
 					compiler.hooks.done.tap('custom', () => {
-						var fs = require('fs'), file = '/css/style.css';
-						var props = JSON.parse(fs.readFileSync('clients/' + (env && env.client && env.client.indexOf('client') == 0 ? env.client : 'client1') + '.json', 'utf8'));
+						var fs = require('fs'), file = '/css/style.css', client = env && env.client && env.client.indexOf('client') == 0 ? env.client.substring(6) : 1;
+						var props = JSON.parse(fs.readFileSync('clients/client' + client + '.json', 'utf8'));
 						fs.mkdirSync('dist/css');
 						fs.mkdirSync('dist/js/lang');
 						fs.mkdirSync('dist/font');
@@ -71,7 +71,7 @@ module.exports = (env) => {
 						fs.cpSync('src/favicon.ico', 'dist/favicon.ico');
 						fs.writeFileSync('dist' + file, props.css + '\n\n' + fs.readFileSync('src' + file, 'utf8'));
 						file = 'dist/js/fmg.js';
-						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('{placeholderAppTitle}', props.name));
+						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('{placeholderAppTitle}', props.name).replace('{client}', client));
 						if (props.logo) {
 							fs.writeFileSync('dist/images/logo.png', fs.readFileSync('clients/images/' + props.logo));
 							file = 'dist/images/logo.svg';
