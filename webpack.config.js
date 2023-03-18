@@ -23,6 +23,9 @@ module.exports = (env) => {
 				writeToDisk: true
 			}
 		},
+		watchOptions: {
+			poll: 999999999
+		},
 		plugins: [
 			{
 				apply: compiler => {
@@ -60,7 +63,7 @@ module.exports = (env) => {
 			},
 			{
 				apply: compiler => {
-					compiler.hooks.done.tap('custom', () => {
+					compiler.hooks.afterEmit.tap('custom', () => {
 						var fs = require('fs'), file = '/css/style.css', client = env && env.client && env.client.indexOf('client') == 0 ? env.client.substring(6) : '1';
 						for (var i = client.length; i < 6; i++)
 							client = '0' + client;
@@ -78,7 +81,7 @@ module.exports = (env) => {
 						fs.cpSync('src/favicon.ico', 'dist/favicon.ico');
 						fs.writeFileSync('dist' + file, props.css + '\n\n' + fs.readFileSync('src' + file, 'utf8'));
 						file = 'dist/js/fmg.js';
-						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('{placeholderAppTitle}', props.name).replace('{client}', client));
+						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('{placeholderAppTitle}', props.name).replace('{placeholderClient}', client));
 						if (fs.existsSync('clients/' + client + '/images/logo.png')) {
 							fs.writeFileSync('dist/images/logo.png', fs.readFileSync('clients/' + client + '/images/logo.png'));
 							file = 'dist/images/logo.svg';
