@@ -64,7 +64,7 @@ module.exports = (env) => {
 			{
 				apply: compiler => {
 					compiler.hooks.afterEmit.tap('custom', () => {
-						var fs = require('fs'), file = '/css/style.css', client = env && env.client && env.client.indexOf('client') == 0 ? env.client.substring(6) : '1';
+						var fs = require('fs'), file = '/css/style.css', client = env && env.client && env.client.indexOf('0') == 0 ? env.client : '000001';
 						for (var i = client.length; i < 6; i++)
 							client = '0' + client;
 						var props = JSON.parse(fs.readFileSync('clients/' + client + '/props.json', 'utf8'));

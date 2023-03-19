@@ -1,6 +1,5 @@
 {
 	"css": ":root{\n\t--bg1start:rgb(25,50,100);\n\t--bg1stop:rgb(70,138,180);\n\t--bg2start:rgb(210,140,20);\n\t--bg2stop:rgb(255,220,70);\n}",
 	"name": "skillvents",
-	"appId": "com.jq.spontifyme",
-	"android-versionCode": "34"
+	"appId": "com.jq.spontifyme"
 }
