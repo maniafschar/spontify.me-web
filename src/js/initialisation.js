@@ -252,16 +252,17 @@ class initialisation {
 		if (!ui.q('body div'))
 			return;
 		var wOrg = global.getDevice() == 'computer' ?
-			Math.min(window.innerWidth, window.innerHeight) :
-			Math.min(screen.availWidth, screen.availHeight), w = wOrg;
-		var f = 16;
+			Math.max(window.innerWidth, window.innerHeight) :
+			Math.max(screen.availWidth, screen.availHeight), w = wOrg;
+		var f = global.getDevice() == 'phone' && screen.availWidth < screen.availHeight ? 14 : 16;
 		if (w < 600)
 			f = w / 600 * f;
-		else if (w < 1200)
-			w = 600;
 		else {
-			f = f + (w - 1200) / 1800 * f;
-			w = w * 0.5;
+			if (w < 1200)
+				w = 600;
+			else
+				w = w / 2;
+			f += (w - 600) / 25;
 		}
 		if (global.getDevice() == 'computer') {
 			ui.css('.bgWeb', 'display', 'block');
@@ -271,10 +272,6 @@ class initialisation {
 			ui.attr('#imgStoreApple', 'src', 'images/storeApple.png');
 			ui.attr('#imgStoreGoogle', 'src', 'images/storeGoogle.png');
 		} else {
-			if (global.getDevice() == 'phone' && screen.availWidth < screen.availHeight)
-				f = 14;
-			if (w > 600)
-				f = f + w / 600;
 			if (global.getDevice() == 'phone')
 				f *= 1.1;
 			ui.css('main', 'margin-left', 0);
