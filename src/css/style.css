@@ -334,7 +334,7 @@ homeHeader {
 	text-align: center;
 	display: block;
 	color: white;
-	height: 40%;
+	height: 35%;
 	padding-top: 10vh;
 }
 
@@ -374,7 +374,7 @@ homeBody {
 	position: relative;
 	width: 100%;
 	display: block;
-	height: 60%;
+	height: 65%;
 }
 
 homeBody teaser {
@@ -392,7 +392,7 @@ homeBody teaser div {
 }
 
 homeBody teaser.contacts {
-	bottom: 2.5em;
+	bottom: 3em;
 }
 
 homeBody teaser.events {
@@ -410,7 +410,7 @@ homeBody teaser card {
 }
 
 homeBody teaser card img {
-	height: 13vh;
+	height: 15vh;
 }
 
 homeBody teaser card text {

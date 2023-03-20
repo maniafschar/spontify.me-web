@@ -263,7 +263,7 @@ class initialisation {
 		if (xMin < 600)
 			font = xMin / 600 * font;
 		else
-			font += Math.min((xMin - 600) / 25, 26);
+			font += Math.min((xMin - 600) / (global.getDevice() == 'computer' ? 200 : 25), 26);
 		if (global.getDevice() == 'computer') {
 			ui.css('.bgWeb', 'display', 'block');
 			ui.css('main', 'margin-left', (-xWidth / 2) + 'px');
