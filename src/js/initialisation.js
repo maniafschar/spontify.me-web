@@ -251,37 +251,37 @@ class initialisation {
 	static reposition() {
 		if (!ui.q('body div'))
 			return;
-		var wOrg = global.getDevice() == 'computer' ?
-			Math.max(window.innerWidth, window.innerHeight) :
-			Math.max(screen.availWidth, screen.availHeight), w = wOrg;
-		var f = global.getDevice() == 'phone' && screen.availWidth < screen.availHeight ? 14 : 16;
-		if (w < 600)
-			f = w / 600 * f;
-		else {
-			if (w < 1200)
-				w = 600;
-			else
-				w = w / 2;
-			f += (w - 600) / 25;
-		}
+		var xWidth = global.getDevice() == 'computer' ? window.innerWidth : screen.availWidth,
+			xFont = global.getDevice() == 'computer' ?
+				Math.max(window.innerWidth, window.innerHeight) :
+				Math.max(screen.availWidth, screen.availHeight);
+		var font = global.getDevice() == 'phone' && screen.availWidth < screen.availHeight ? 14 : 16;
+		if (xWidth < 1200)
+			xWidth = Math.min(600, xWidth);
+		else
+			xWidth /= 2;
+		if (xWidth < 600)
+			font = xWidth / 600 * font;
+		else if (xFont > 1200)
+			font += (xFont / 2 - 600) / 25;
 		if (global.getDevice() == 'computer') {
 			ui.css('.bgWeb', 'display', 'block');
-			ui.css('main', 'margin-left', (-w / 2) + 'px');
-			ui.css('main', 'width', w + 'px');
+			ui.css('main', 'margin-left', (-xWidth / 2) + 'px');
+			ui.css('main', 'width', xWidth + 'px');
 			ui.classRemove('body', 'app');
 			ui.attr('#imgStoreApple', 'src', 'images/storeApple.png');
 			ui.attr('#imgStoreGoogle', 'src', 'images/storeGoogle.png');
 		} else {
 			if (global.getDevice() == 'phone')
-				f *= 1.1;
+				font *= 1.1;
 			ui.css('main', 'margin-left', 0);
 			ui.css('main', 'width', '');
 			ui.classAdd('body', 'app');
 		}
-		ui.css('body', 'font-size', f + 'px');
+		ui.css('body', 'font-size', font + 'px');
 		ui.emInPX = parseFloat(ui.cssValue(document.body, 'font-size'));
-		if (window.innerWidth / w > 1.8) {
-			ui.css('add', 'width', ((window.innerWidth - w) / 2) + 'px');
+		if (window.innerWidth / xWidth > 1.8) {
+			ui.css('add', 'width', ((window.innerWidth - xWidth) / 2) + 'px');
 			ui.css('add#addRight', 'display', 'block');
 		} else
 			ui.css('add', 'display', '');
