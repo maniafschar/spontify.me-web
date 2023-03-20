@@ -77,7 +77,7 @@ module.exports = (env) => {
 						fs.cpSync('src/logoutcallback.html', 'dist/logoutcallback.html');
 						fs.cpSync('src/oauthcallback.html', 'dist/oauthcallback.html');
 						fs.cpSync('src/favicon.ico', 'dist/favicon.ico');
-						fs.writeFileSync('dist' + file, props.css + '\n\n' + fs.readFileSync('src' + file, 'utf8'));
+						fs.writeFileSync('dist' + file, fs.readFileSync('clients/' + client + '/style.css', 'utf8') + '\n\n' + fs.readFileSync('src' + file, 'utf8'));
 						file = 'dist/js/fmg.js';
 						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('{placeholderAppTitle}', props.name).replace('{placeholderClient}', client));
 						if (fs.existsSync('clients/' + client + '/images/logo.png')) {
