@@ -251,19 +251,19 @@ class initialisation {
 	static reposition() {
 		if (!ui.q('body div'))
 			return;
-		var xWidth = global.getDevice() == 'computer' ? window.innerWidth : screen.availWidth,
-			xFont = global.getDevice() == 'computer' ?
-				Math.max(window.innerWidth, window.innerHeight) :
-				Math.max(screen.availWidth, screen.availHeight);
-		var font = global.getDevice() == 'phone' && screen.availWidth < screen.availHeight ? 14 : 16;
+		var xWidth = global.getDevice() == 'computer' ? window.innerWidth : screen.availWidth;
+		var xMin = global.getDevice() == 'computer' ?
+			Math.min(window.innerWidth, window.innerHeight) :
+			Math.min(screen.availWidth, screen.availHeight)
+		var font = 16;
 		if (xWidth < 1200)
 			xWidth = Math.min(600, xWidth);
 		else
 			xWidth /= 2;
-		if (xWidth < 600)
-			font = xWidth / 600 * font;
-		else if (xFont > 1200)
-			font += (xFont / 2 - 600) / 25;
+		if (xMin < 600)
+			font = xMin / 600 * font;
+		else
+			font += Math.min((xMin - 600) / 25, 26);
 		if (global.getDevice() == 'computer') {
 			ui.css('.bgWeb', 'display', 'block');
 			ui.css('main', 'margin-left', (-xWidth / 2) + 'px');
@@ -272,8 +272,6 @@ class initialisation {
 			ui.attr('#imgStoreApple', 'src', 'images/storeApple.png');
 			ui.attr('#imgStoreGoogle', 'src', 'images/storeGoogle.png');
 		} else {
-			if (global.getDevice() == 'phone')
-				font *= 1.1;
 			ui.css('main', 'margin-left', 0);
 			ui.css('main', 'width', '');
 			ui.classAdd('body', 'app');
