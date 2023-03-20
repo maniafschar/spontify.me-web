@@ -1949,7 +1949,7 @@ buttontext {
 	vertical-align: middle;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	color: black;
+	color: var(--buttonText);
 	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
 }
 
@@ -2543,8 +2543,7 @@ tabHeader {
 
 .tabActive {
 	opacity: 1 !important;
-	color: var(--bg2stop);
-	font-weight: bold;
+	color: black;
 }
 
 tab {

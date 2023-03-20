@@ -63,10 +63,8 @@ module.exports = (env) => {
 			},
 			{
 				apply: compiler => {
-					compiler.hooks.afterEmit.tap('custom', () => {
-						var fs = require('fs'), file = '/css/style.css', client = env && env.client && env.client.indexOf('0') == 0 ? env.client : '000001';
-						for (var i = client.length; i < 6; i++)
-							client = '0' + client;
+					compiler.hooks.afterEmit.tap('client', () => {
+						var fs = require('fs'), file = '/css/style.css', client = env && env.client && !isNaN(env.client) ? env.client : '1';
 						var props = JSON.parse(fs.readFileSync('clients/' + client + '/props.json', 'utf8'));
 						fs.mkdirSync('dist/css');
 						fs.mkdirSync('dist/js/lang');
