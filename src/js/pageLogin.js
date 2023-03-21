@@ -317,7 +317,7 @@ class pageLogin {
 			error(r) {
 				user.reset();
 				var s;
-				if (r.status >= 200 && r.status < 502) {
+				if (r.status >= 200 && r.status < 502 && r.status != 400) {
 					s = 'login.failedData';
 					pageLogin.removeCredentials();
 				} else
@@ -599,18 +599,18 @@ class pageLogin {
 						else
 							ui.html('login form[name="loginRecover"] errorHint', ui.l('login.recoverPasswordBody'));
 					}
+				},
+				error(e) {
+					formFunc.setError(ui.q('login form[name="loginRecover"] input[name="email"]'), 'error.noNetworkConnection');
 				}
 			});
 	}
 	static setError(s, resetPW) {
-		if (ui.navigation.getActiveID() == 'home')
-			ui.navigation.goTo('home');
 		if (ui.q('input[name="email"]')) {
 			var e = ui.q('input[name="password"]');
 			formFunc.setError(e, s);
 			if (resetPW)
 				e.value = '';
-			formFunc.setError(ui.q('input[name="email"]'));
 		} else
 			ui.navigation.openPopup(ui.l('attention'), ui.l(s));
 	}

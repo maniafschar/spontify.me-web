@@ -141,7 +141,7 @@ class geoData {
 				var e = ui.q('locationPicker');
 				e.innerHTML = s;
 				e.removeAttribute('h');
-				e.style.top = ui.navigation.getActiveID() == 'home' ? ui.q('homeHeader svg').clientHeight + 'px' : '';
+				e.style.top = ui.navigation.getActiveID() == 'home' ? (ui.q('homeHeader svg').clientHeight + ui.emInPX) + 'px' : '';
 			}
 			ui.toggleHeight('locationPicker');
 		} else if (user.contact)

@@ -80,6 +80,8 @@ module.exports = (env) => {
 						fs.writeFileSync('dist' + file, fs.readFileSync('clients/' + client + '/style.css', 'utf8') + '\n\n' + fs.readFileSync('src' + file, 'utf8'));
 						file = 'dist/js/fmg.js';
 						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('{placeholderAppTitle}', props.name).replace('{placeholderClient}', client).replace('{placeholderServer}', props.server));
+						file = '../appClient/config.xml';
+						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/(<widget id=")([^"]+)/, '$1com.jq.fanclub.client' + client).replace(/(<description\>)([^<]+)/, '$1' + props.name));
 						if (fs.existsSync('clients/' + client + '/images/logo.png')) {
 							fs.writeFileSync('dist/images/logo.png', fs.readFileSync('clients/' + client + '/images/logo.png'));
 							file = 'dist/images/logo.svg';

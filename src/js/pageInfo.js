@@ -4,7 +4,7 @@ import { global } from './global';
 import { initialisation } from './initialisation';
 import { intro } from './intro';
 import { pageLogin } from './pageLogin';
-import { ui, formFunc } from './ui';
+import { ui } from './ui';
 import { user } from './user';
 
 export { pageInfo };
@@ -45,13 +45,19 @@ ${ui.l('home.DescLink')}
 	static init() {
 		var e = ui.q('info');
 		if (!e.innerHTML) {
+			var render = function (v) {
+				e.innerHTML = pageInfo.templateDesc(v) + pageInfo.template() + pageInfo.templateCopyright();
+				pageInfo.init();
+			}
 			communication.ajax({
 				url: global.serverApi + 'action/paypalKey',
 				webCall: 'pageInfo.init()',
 				responseType: 'json',
 				success(r) {
-					e.innerHTML = pageInfo.templateDesc(r) + pageInfo.template() + pageInfo.templateCopyright();
-					pageInfo.init();
+					render(r);
+				},
+				error() {
+					render({ fee: 20 });
 				}
 			});
 		} else if (pageInfo.openSection > -1) {
