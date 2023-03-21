@@ -779,7 +779,7 @@ class pageEvent {
 			height: 600,
 			data: global.server + '?' + global.encParam('q=' + id + (location ? '' : '|' + user.contact.id)),
 			dotsOptions: {
-				color: ui.cssValue(':root', '--bg2stop'),
+				color: ui.cssValue(':root', '--bg2start'),
 				type: 'square'
 			},
 			backgroundOptions: {
