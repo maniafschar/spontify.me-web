@@ -79,7 +79,7 @@ module.exports = (env) => {
 						fs.cpSync('src/favicon.ico', 'dist/favicon.ico');
 						fs.writeFileSync('dist' + file, fs.readFileSync('clients/' + client + '/style.css', 'utf8') + '\n\n' + fs.readFileSync('src' + file, 'utf8'));
 						file = 'dist/js/fmg.js';
-						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('{placeholderAppTitle}', props.name).replace('{placeholderClient}', client));
+						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('{placeholderAppTitle}', props.name).replace('{placeholderClient}', client).replace('{placeholderServer}', props.server));
 						if (fs.existsSync('clients/' + client + '/images/logo.png')) {
 							fs.writeFileSync('dist/images/logo.png', fs.readFileSync('clients/' + client + '/images/logo.png'));
 							file = 'dist/images/logo.svg';

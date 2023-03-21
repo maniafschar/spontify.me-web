@@ -334,8 +334,8 @@ homeHeader {
 	text-align: center;
 	display: block;
 	color: white;
-	height: 37%;
-	padding-top: 10vh;
+	height: 40%;
+	padding-top: 8%;
 }
 
 homeHeader.logoSmall {
@@ -344,8 +344,7 @@ homeHeader.logoSmall {
 
 homeHeader>svg {
 	height: auto;
-	width: 60%;
-	max-height: 15vh;
+	max-height: 80%;
 	cursor: pointer;
 }
 
@@ -374,7 +373,7 @@ homeBody {
 	position: relative;
 	width: 100%;
 	display: block;
-	height: 63%;
+	height: 60%;
 }
 
 homeBody teaser {
@@ -410,7 +409,7 @@ homeBody teaser card {
 }
 
 homeBody teaser card img {
-	height: 15vh;
+	height: 13vh;
 }
 
 homeBody teaser card text {

@@ -13,7 +13,7 @@ class global {
 	static language = null;
 	static minLocations = 5;
 	static paused = false;
-	static server = 'https://skillvents.com/';
+	static server = 'https://{placeholderServer}/';
 	static serverApi = global.server + 'rest/';
 	static serverImg = global.server + 'med/';
 	static separator = ' · ';

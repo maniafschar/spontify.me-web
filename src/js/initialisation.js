@@ -252,18 +252,18 @@ class initialisation {
 		if (!ui.q('body div'))
 			return;
 		var xWidth = global.getDevice() == 'computer' ? window.innerWidth : screen.availWidth;
-		var xMin = global.getDevice() == 'computer' ?
-			Math.min(window.innerWidth, window.innerHeight) :
-			Math.min(screen.availWidth, screen.availHeight)
-		var font = 16;
 		if (xWidth < 1200)
 			xWidth = Math.min(600, xWidth);
 		else
 			xWidth /= 2;
-		if (xMin < 600)
-			font = xMin / 600 * font;
+		var xDiagonal = global.getDevice() == 'computer' ?
+			Math.sqrt(Math.pow(xWidth, 2) + Math.pow(window.innerHeight, 2)) :
+			Math.sqrt(Math.pow(screen.availWidth, 2) + Math.pow(screen.availHeight, 2))
+		var font = 14;
+		if (xDiagonal < 800)
+			font = xDiagonal / 800 * font;
 		else
-			font += Math.min((xMin - 600) / (global.getDevice() == 'computer' ? 200 : 25), 26);
+			font += Math.min((xDiagonal - 800) / (global.getDevice() == 'computer' ? 400 : 75), 26);
 		if (global.getDevice() == 'computer') {
 			ui.css('.bgWeb', 'display', 'block');
 			ui.css('main', 'margin-left', (-xWidth / 2) + 'px');
