@@ -38,8 +38,8 @@
 	</defs>
 	<g class="home">
 		<g class="home">
-			<text x="48%" y="60%" font-size="220" font-family="Adelina" text-anchor="middle" class="name"><tspan>skill</tspan>vents</text>
-			<text x="50%" y="90%" font-size="90" font-family="Adelina" text-anchor="middle" class="position"></text>
+			<text x="48%" y="58%" font-size="150" font-family="Adelina" text-anchor="middle" class="name"><tspan>skill</tspan>vents</text>
+			<text x="50%" y="80%" font-size="60" font-family="Adelina" text-anchor="middle" class="position"></text>
 		</g>
 		<g class="loggedIn">
 			<text x="98%" y="42%" font-size="180" font-family="Adelina" text-anchor="end" class="name"><tspan>skill</tspan>vents</text>

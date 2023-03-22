@@ -129,7 +129,7 @@ class pageHome {
 			ui.html('home item.bluetooth text', ui.l(bluetooth.state == 'on' && user.contact.bluetooth ? 'bluetooth.activated' : 'bluetooth.deactivated'));
 		formFunc.image.replaceSVGs();
 		if (user.contact) {
-			if (user.client) {
+			if (user.client > 1) {
 				ui.q('home homeHeader svg>g.client>g.client image').setAttribute('x', 680);
 				ui.q('home homeHeader svg>g.client>g.client image').setAttribute('width', 320);
 				ui.q('home homeHeader svg>g.client>g.client text').setAttribute('x', 840);

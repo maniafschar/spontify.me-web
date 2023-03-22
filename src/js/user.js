@@ -6,7 +6,7 @@ import { ui } from './ui';
 export { user };
 
 class user {
-	static client = '{placeholderClient}';
+	static client = parseInt('{placeholderClient}');
 	static contact;
 	static email;
 	static password = null;

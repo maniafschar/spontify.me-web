@@ -8,5 +8,5 @@
 		"buddies": "Buddies"
 	},
 	"name": "skillvents",
-	"server": "https://skillvents.com"
+	"server": "http://localhost:9001"
 }
