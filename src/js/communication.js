@@ -67,7 +67,7 @@ class communication {
 			if (param.progressBar != false)
 				ui.css('progressbar', 'display', '');
 			xmlhttp.setRequestHeader('webCall', param.webCall);
-			xmlhttp.setRequestHeader('client', '{placeholderClient}');
+			xmlhttp.setRequestHeader('client', user.client);
 			if (user.contact) {
 				var salt = ('' + (d.getTime() + d.getTimezoneOffset() * 60 * 1000) + Math.random()).replace(/[01]\./, '.');
 				xmlhttp.setRequestHeader('user', user.contact.id);

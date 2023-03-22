@@ -80,12 +80,16 @@ module.exports = (env) => {
 						fs.writeFileSync('dist' + file, fs.readFileSync('clients/' + client + '/style.css', 'utf8') + '\n\n' + fs.readFileSync('src' + file, 'utf8'));
 						file = 'dist/js/fmg.js';
 						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('{placeholderAppTitle}', props.name).replace('{placeholderClient}', client).replace('{placeholderServer}', props.server));
+						file = 'dist/js/lang/DE.json';
+						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/\${buddy}/g, props.de.buddy).replace(/\${buddies}/g, props.de.buddies));
+						file = 'dist/js/lang/EN.json';
+						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/\${buddy}/g, props.en.buddy).replace(/\${buddies}/g, props.en.buddies));
 						file = '../appClient/config.xml';
 						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/(<widget id=")([^"]+)/, '$1com.jq.fanclub.client' + client).replace(/(<description\>)([^<]+)/, '$1' + props.name));
 						if (fs.existsSync('clients/' + client + '/images/logo.png')) {
 							fs.writeFileSync('dist/images/logo.png', fs.readFileSync('clients/' + client + '/images/logo.png'));
 							file = 'dist/images/logo.svg';
-							fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('<g>', '<g class="image">').replace('<image', '<image href="images/logo.png"'));
+							fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('<g class="home">', '<g class="client">').replace('<image', '<image href="images/logo.png"'));
 						}
 					})
 				}

@@ -1,4 +1,12 @@
 {
+	"de": {
+		"buddy": "Footy",
+		"buddies": "Footies"
+	},
+	"en": {
+		"buddy": "Footy",
+		"buddies": "Footies"
+	},
 	"name": "FC Bayern München · Fanclub",
 	"server": "skillvents.com"
 }

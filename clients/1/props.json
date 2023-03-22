@@ -1,4 +1,12 @@
 {
+	"de": {
+		"buddy": "Buddy",
+		"buddies": "Buddies"
+	},
+	"en": {
+		"buddy": "Buddy",
+		"buddies": "Buddies"
+	},
 	"name": "skillvents",
 	"server": "skillvents.com"
 }

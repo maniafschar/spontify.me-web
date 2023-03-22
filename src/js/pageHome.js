@@ -129,8 +129,12 @@ class pageHome {
 			ui.html('home item.bluetooth text', ui.l(bluetooth.state == 'on' && user.contact.bluetooth ? 'bluetooth.activated' : 'bluetooth.deactivated'));
 		formFunc.image.replaceSVGs();
 		if (user.contact) {
-			ui.classAdd('home homeHeader svg>g', 'loggedIn');
-			ui.q('home homeHeader svg>g image').setAttribute('x', 600);
+			if (user.client) {
+				ui.q('home homeHeader svg>g.client>g.client image').setAttribute('x', 680);
+				ui.q('home homeHeader svg>g.client>g.client image').setAttribute('width', 320);
+				ui.q('home homeHeader svg>g.client>g.client text').setAttribute('x', 840);
+			} else
+				ui.classAdd('home homeHeader svg>g', 'loggedIn');
 		}
 		pageHome.updateLocalisation();
 		ui.css('navigation item.search', 'display', user.contact ? '' : 'none');

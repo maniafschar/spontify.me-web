@@ -259,7 +259,7 @@ class initialisation {
 		var xDiagonal = global.getDevice() == 'computer' ?
 			Math.sqrt(Math.pow(xWidth, 2) + Math.pow(window.innerHeight, 2)) :
 			Math.sqrt(Math.pow(screen.availWidth, 2) + Math.pow(screen.availHeight, 2))
-		var font = 14;
+		var font = 16;
 		if (xDiagonal < 800)
 			font = xDiagonal / 800 * font;
 		else
