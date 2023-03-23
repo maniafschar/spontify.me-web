@@ -159,13 +159,12 @@ class Video {
 			});
 			this.rtcPeerConnection.onicecandidate = event => {
 				if (event.candidate) {
-					this.stompClient.send('/ws/video', {}, JSON.stringify({
-						type: 'candidate',
-						name: user.contact.pseudonym,
-						id: user.contact.id,
-						id2: this.connectedId,
-						candidate: event.candidate
-					}));
+					var e = communication.generateCredentials();
+					e.type = 'candidate';
+					e.name = user.contact.pseudonym;
+					e.id = this.connectedId;
+					e.candidate = event.candidate;
+					this.stompClient.send('/ws/video', {}, JSON.stringify(e));
 				}
 			};
 			this.connection.onmessage = message => {
@@ -199,12 +198,11 @@ class Video {
 		this.rtcPeerConnection.setRemoteDescription(new RTCSessionDescription({ sdp: data.offer, type: 'offer' }));
 		this.rtcPeerConnection.createAnswer(answer => {
 			this.rtcPeerConnection.setLocalDescription(answer);
-			this.stompClient.send('/ws/video', {}, JSON.stringify({
-				type: 'answer',
-				id: user.contact.id,
-				id2: this.connectedId,
-				answer: answer
-			}));
+			var e = communication.generateCredentials();
+			e.type = 'answer';
+			e.id2 = this.connectedId;
+			e.answer = answer;
+			this.stompClient.send('/ws/video', {}, JSON.stringify(e));
 		}, error => {
 			alert('error: ' + error);
 		});
@@ -332,13 +330,12 @@ class Video {
 			ui.q('videoCall #localStream').srcObject = stream;
 			stream.getTracks().forEach(track => this.rtcPeerConnection.addTrack(track, stream));
 			this.rtcPeerConnection.createOffer(offer => {
-				this.stompClient.send('/ws/video', {}, JSON.stringify({
-					type: 'offer',
-					name: user.contact.pseudonym,
-					id: user.contact.id,
-					id2: this.connectedId,
-					offer: offer.sdp
-				}));
+				var e = communication.generateCredentials();
+				e.type = 'offer';
+				e.name = user.contact.pseudonym;
+				e.id = this.connectedId;
+				e.offer = offer.sdp;
+				this.stompClient.send('/ws/video', {}, JSON.stringify(e));
 				this.rtcPeerConnection.setLocalDescription(offer);
 			}, error => {
 				alert('An error has occurred: ' + error);
