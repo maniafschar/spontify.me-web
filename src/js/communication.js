@@ -61,18 +61,17 @@ class communication {
 		};
 		xmlhttp.open(param.method ? param.method : 'GET', param.url, true);
 		if (param.url.indexOf(global.serverApi.substring(0, global.serverApi.lastIndexOf('/', global.serverApi.length - 2))) == 0) {
-			var d = new Date();
-			param.id = d.getTime();
+			param.id = new Date().getTime();
 			communication.currentCalls.push(param);
 			if (param.progressBar != false)
 				ui.css('progressbar', 'display', '');
 			xmlhttp.setRequestHeader('webCall', param.webCall);
-			xmlhttp.setRequestHeader('client', user.client);
+			xmlhttp.setRequestHeader('client', '' + user.client);
 			if (user.contact) {
-				var salt = ('' + (d.getTime() + d.getTimezoneOffset() * 60 * 1000) + Math.random()).replace(/[01]\./, '.');
-				xmlhttp.setRequestHeader('user', user.contact.id);
-				xmlhttp.setRequestHeader('salt', salt);
-				xmlhttp.setRequestHeader('password', Encryption.hash(user.password + salt + user.contact.id));
+				var c = communication.generateCredentials();
+				xmlhttp.setRequestHeader('user', c.user);
+				xmlhttp.setRequestHeader('salt', c.salt);
+				xmlhttp.setRequestHeader('password', c.password);
 			}
 		}
 		var data = param.body;
@@ -86,6 +85,15 @@ class communication {
 
 		}
 		xmlhttp.send(data);
+	}
+	static generateCredentials() {
+		var d = new Date();
+		var salt = ('' + (d.getTime() + d.getTimezoneOffset() * 60 * 1000) + Math.random()).replace(/[01]\./, '.');
+		return {
+			user: user.contact.id,
+			salt: salt,
+			password: Encryption.hash(user.password + salt + user.contact.id)
+		}
 	}
 	static hideProgressBar(param) {
 		var hideProgessBar = true;

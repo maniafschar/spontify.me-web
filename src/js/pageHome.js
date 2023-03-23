@@ -133,8 +133,10 @@ class pageHome {
 				ui.q('home homeHeader svg>g.client>g.client image').setAttribute('x', 680);
 				ui.q('home homeHeader svg>g.client>g.client image').setAttribute('width', 320);
 				ui.q('home homeHeader svg>g.client>g.client text').setAttribute('x', 840);
-			} else
+			} else {
 				ui.classAdd('home homeHeader svg>g', 'loggedIn');
+				ui.classRemove('home homeHeader svg>g', 'home');
+			}
 		}
 		pageHome.updateLocalisation();
 		ui.css('navigation item.search', 'display', user.contact ? '' : 'none');

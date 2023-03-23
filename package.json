@@ -50,8 +50,11 @@
 		"webpack-dev-server": "^4.10.0"
 	},
 	"dependencies": {
+		"@stomp/stompjs": "^7.0.0",
 		"crypto-js": "^4.1.1",
 		"jsencrypt": "^3.2.1",
-		"qr-code-styling": "^1.6.0-rc.1"
+		"qr-code-styling": "^1.6.0-rc.1",
+		"sockjs-client": "^1.6.1",
+		"ws": "^8.13.0"
 	}
 }

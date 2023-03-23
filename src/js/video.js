@@ -1,19 +1,15 @@
 import { global } from './global';
 import { ui } from './ui';
 import { user } from './user';
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
+import { communication, Encryption } from './communication';
 
 class Video {
-	$calling;
-	$dialing;
-	$endCall;
-	$modal;
-	$muteUnmuteButton;
-	$switchCameraButton;
 	_session = null;
 	mediaDevicesIds = [];
 	activeDeviceId = null;
 	isAudioMuted = false;
-	startEventSharinScreen = null;
 	mediaParams = {
 		audio: true,
 		video: true,
@@ -23,11 +19,12 @@ class Video {
 			mirror: true,
 		},
 	};
-	users;
 	localStream;
-	static connection;
-	static connectedUser;
-	static rtcPeerConnection;
+	connection;
+	connectedId = 3;
+	connectedUser;
+	stompClient;
+	rtcPeerConnection;
 
 	static template = v =>
 		global.template`
@@ -83,10 +80,10 @@ class Video {
 					</svg>
 				</div>
 			</div>
-			<video playsinline id="remoteStream-opponent" class="videochat-stream" data-id="opponent"></video>
+			<video playsinline autoplay="autoplay" id="remoteStream-opponent" class="videochat-stream" data-id="opponent"></video>
 		</div>
 		<div id="videochat-local-stream-container" class="videochat-stream-container">
-			<video playsinline id="localStream" class="videochat-stream"></video>
+			<video playsinline autoplay="autoplay" id="localStream" class="videochat-stream"></video>
 		</div>
 	</div>
 	<div id="videochat-buttons-container">
@@ -109,12 +106,6 @@ class Video {
 	init() {
 		if (!ui.q('videoCall').innerHTML) {
 			ui.q('videoCall').innerHTML = Video.template();
-			this.$calling = ui.q('#signal-in');
-			this.$dialing = ui.q('#signal-out');
-			this.$endCall = ui.q('#signal-end');
-			this.$modal = ui.q('#call-modal-icoming');
-			this.$muteUnmuteButton = ui.q('#videochat-mute-unmute');
-			this.$switchCameraButton = ui.q('#videochat-switch-camera');
 			// ConnectyCube.videochat.onCallListener = this.onCallListener.bind(this);
 			// ConnectyCube.videochat.onAcceptCallListener = this.onAcceptCallListener.bind(this);
 			// ConnectyCube.videochat.onRejectCallListener = this.onRejectCallListener.bind(this);
@@ -124,30 +115,56 @@ class Video {
 			// ConnectyCube.videochat.onDevicesChangeListener = this.onDevicesChangeListener.bind(this);
 			ui.q('#call-modal-reject').addEventListener('click', () => this.rejectCall());
 			ui.q('#call-modal-accept').addEventListener('click', () => this.acceptCall());
-			ui.swipe('#videochat-streams', function (dir) {
+			ui.swipe('#videochat-streams', dir => {
 				ui.q('#videochat-streams').style.left = dir == 'left' ? '-100%' : '';
 			});
-			Video.connection = new WebSocket('wss' + global.server.substring(global.server.indexOf(':')));
-			Video.connection.onopen = function () {
-				console.log('Connected');
+			this.connection = new SockJS(global.serverApi + 'ws/init');
+			this.stompClient = Stomp.over(this.connection);
+			this.stompClient.connect(communication.generateCredentials(), frame => {
+				console.log('Connected: ' + frame);
+				this.stompClient.subscribe(
+					"/user/" + user.contact.id + "/video",
+					message => {
+						console.log('Got stomp message', message.data);
+						var data = JSON.parse(message.data);
+						switch (data.type) {
+							case 'offer':
+								this.onOffer(data);
+								break;
+							case 'answer':
+								this.onAnswer(data.answer);
+								break;
+							case 'candidate':
+								this.onCandidate(data.candidate);
+								break;
+							default:
+								break;
+						}
+					}
+				);
+			});
+			this.connection.onopen = () => {
+				console.log('open');
 			};
-			Video.connection.onerror = function (err) {
-				console.log('Got error', err);
+			this.connection.onclose = () => {
+				console.log('close');
 			};
-			Video.rtcPeerConnection = new RTCPeerConnection({
+			this.rtcPeerConnection = new RTCPeerConnection({
 				iceServers: [{ urls: 'stun:stun.1.google.com:19302' }]
 			});
-			Video.rtcPeerConnection.onicecandidate = function (event) {
+			this.rtcPeerConnection.onicecandidate = event => {
 				if (event.candidate) {
-					Video.connection.send(JSON.stringify({
+					this.stompClient.send('/ws/video', {}, JSON.stringify({
 						type: 'candidate',
 						name: user.contact.pseudonym,
+						id: user.contact.id,
+						id2: this.connectedId,
 						candidate: event.candidate
 					}));
 				}
 			};
-			Video.connection.onmessage = (message) => {
-				console.log('Got message', message.data);
+			this.connection.onmessage = message => {
+				console.log('Got connection message', message.data);
 				var data = JSON.parse(message.data);
 				switch (data.type) {
 					case 'offer':
@@ -166,23 +183,25 @@ class Video {
 		}
 	}
 	onAnswer(answer) {
-		Video.rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+		this.rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(answer));
 	}
 	onCandidate(candidate) {
-		Video.rtcPeerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+		this.rtcPeerConnection.addIceCandidate(new RTCIceCandidate(candidate));
 	}
-	onOffer(offer, name) {
-		this.connectedUser = name;
-		Video.rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-		Video.rtcPeerConnection.createAnswer(function (answer) {
-			Video.rtcPeerConnection.setLocalDescription(answer);
-			Video.connection.send(JSON.stringify({
+	onOffer(data) {
+		this.connectedUser = data.name;
+		this.connectedId = data.id;
+		this.rtcPeerConnection.setRemoteDescription(new RTCSessionDescription({ sdp: data.offer, type: 'offer' }));
+		this.rtcPeerConnection.createAnswer(answer => {
+			this.rtcPeerConnection.setLocalDescription(answer);
+			this.stompClient.send('/ws/video', {}, JSON.stringify({
 				type: 'answer',
+				id: user.contact.id,
+				id2: this.connectedId,
 				answer: answer
 			}));
-
-		}, function (error) {
-			alert('oops...error: ' + error);
+		}, error => {
+			alert('error: ' + error);
 		});
 	}
 	onCallListener(session) {
@@ -198,25 +217,24 @@ class Video {
 
 	onAcceptCallListener(session, userId) {
 		if (userId === session.currentUserID) {
-			if (this.$modal.classList.contains('show')) {
+			if (ui.classContains('#call-modal-icoming', 'show')) {
 				this._session = null;
 				this.hideIncomingCallModal();
 			}
 			return false;
 		}
-		this.$dialing.pause();
+		ui.q('#signal-out').pause();
 	}
 
 	onRejectCallListener(session, userId, extension = {}) {
 		if (userId === session.currentUserID) {
-			if (this.$modal.classList.contains('show')) {
+			if (ui.classContains('#call-modal-icoming', 'show')) {
 				this._session = null;
 				this.hideIncomingCallModal();
 			}
-
 			return false;
 		} else {
-			const userName = this.users.callee.name;
+			const userName = 'xyz';
 			const infoText = extension.busy
 				? `${userName} is busy`
 				: `${userName} rejected the call request`;
@@ -231,7 +249,7 @@ class Video {
 			return false;
 		const isStoppedByInitiator = session.initiatorID === userId;
 		if (isStoppedByInitiator) {
-			if (this.$modal.classList.contains('show')) {
+			if (ui.classContains('#call-modal-icoming', 'show')) {
 				this.hideIncomingCallModal();
 			}
 			this.stopCall();
@@ -243,7 +261,7 @@ class Video {
 		if (!this._session)
 			return false;
 
-		const userName = this.users.callee.name;
+		const userName = 'xyz';
 		const infoText = `${userName} did not answer`;
 
 		this.showSnackbar(infoText);
@@ -259,8 +277,8 @@ class Video {
 		ui.q(`#videochat-stream-loader-${userId}`).remove();
 		this._session.attachMediaStream(remoteStreamSelector, stream);
 
-		this.$muteUnmuteButton.disabled = false;
-		this.$switchCameraButton.disabled = false;
+		ui.q('#videochat-mute-unmute').disabled = false;
+		ui.q('#videochat-switch-camera').disabled = false;
 		this.onDevicesChangeListener();
 		this._prepareVideoElement(remoteStreamSelector);
 	};
@@ -279,7 +297,8 @@ class Video {
 			var e = ui.q('#videochat');
 			e.classList.remove('hidden');
 			e.style.background = 'transparent';
-			document.querySelector('body>main').style.display = 'none';
+			ui.css('body>main', 'display', 'none');
+			ui.css('body>videoCall', 'display', 'block');
 		});
 	}
 
@@ -295,23 +314,28 @@ class Video {
 	}
 
 	startVideoCall() {
+		this.connectedId = 4;
 		this.init();
 		var e = ui.q('#videochat');
 		e.classList.remove('hidden');
 		e.style.background = 'transparent';
-		ui.q('body>main').style.display = 'none';
-		this.$dialing.play();
-		navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+		ui.css('body>main', 'display', 'none');
+		ui.css('videoCall', 'display', 'block');
+		ui.q('#signal-out').play();
+		navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
 			this.localStream = stream;
 			ui.q('videoCall #localStream').srcObject = stream;
-			Video.rtcPeerConnection.createOffer(function (offer) {
-				Video.connection.send(JSON.stringify({
+			stream.getTracks().forEach(track => this.rtcPeerConnection.addTrack(track, stream));
+			this.rtcPeerConnection.createOffer(offer => {
+				this.stompClient.send('/ws/video', {}, JSON.stringify({
 					type: 'offer',
 					name: user.contact.pseudonym,
-					offer: offer
+					id: user.contact.id,
+					id2: this.connectedId,
+					offer: offer.sdp
 				}));
-				Video.rtcPeerConnection.setLocalDescription(offer);
-			}, function (error) {
+				this.rtcPeerConnection.setLocalDescription(offer);
+			}, error => {
 				alert('An error has occurred: ' + error);
 			});
 			this.setActiveDeviceId(stream);
@@ -325,22 +349,12 @@ class Video {
 	};
 
 	stopCall(userId) {
-		const $callScreen = ui.q('#call');
-		const $videochatScreen = ui.q('#videochat');
-		const $muteButton = ui.q('#videochat-mute-unmute');
-		const $videochatStreams = ui.q('#videochat-streams');
-		$videochatScreen.style.background = '';
+		ui.q('#videochat').style.background = '';
 		ui.q('body>main').style.display = '';
 
 		if (userId) {
 			ui.q(`#videochat-stream-container-${userId}`).remove();
-			const $streamContainers = ui.qa('.videochat-stream-container');
-			if ($streamContainers.length < 2)
-				this.stopCall();
-			else if ($streamContainers.length === 2)
-				$videochatStreams.classList.value = '';
-			else if ($streamContainers.length === 3)
-				$videochatStreams.classList.value = 'grid-2-1';
+			this.stopCall();
 		} else if (this._session) {
 			// stop tracks
 			const video = ui.q('#localStream');
@@ -348,23 +362,24 @@ class Video {
 				track.stop();
 			this._session.stop({});
 			this.localStream.close();
-			this.$dialing.pause();
-			this.$calling.pause();
-			this.$endCall.play();
-			this.$muteUnmuteButton.disabled = true;
-			this.$switchCameraButton.disabled = true;
+			ui.q('#signal-out').pause();
+			ui.q('#signal-in').pause();
+			ui.q('#signal-end').play();
+			ui.q('#videochat-mute-unmute').disabled = true;
+			ui.q('#videochat-switch-camera').disabled = true;
 			this._session = null;
 			this.mediaDevicesIds = [];
 			this.activeDeviceId = null;
 			this.isAudioMuted = false;
-			$videochatStreams.innerHTML = '';
-			$videochatStreams.classList.value = '';
-			$callScreen.classList.remove('hidden');
-			$videochatScreen.classList.add('hidden');
-			$muteButton.classList.remove('muted');
+			var e = ui.q('#videochat-streams');
+			e.innerHTML = '';
+			e.classList.value = '';
+			ui.classRemove('#call', 'hidden');
+			ui.classAdd('#videochat', 'hidden');
+			ui.classRemove('#videochat-mute-unmute', 'muted');
 
 			if (!global.isBrowser() && global.getOS() == 'ios')
-				$videochatScreen.style.background = '#000000';
+				ui.q('#videochat').style.background = '#000000';
 		}
 		this.leave();
 	}
@@ -378,23 +393,19 @@ class Video {
 		if (!global.isBrowser() && global.getOS() == 'ios')
 			return;
 
-		ConnectyCube.videochat
-			.getMediaDevices('videoinput')
-			.then((mediaDevices) => {
-				this.mediaDevicesIds = mediaDevices?.map(({ deviceId }) => deviceId);
+		navigator.mediaDevices.getUserMedia({
+			audio: true,
+			video: true,
+		}).then((mediaDevices) => {
+			this.mediaDevicesIds.push(mediaDevices.id);
 
-				if (this.mediaDevicesIds.length < 2) {
-					this.$switchCameraButton.disabled = true;
-
-					if (this.activeDeviceId &&
-						this.mediaDevicesIds?.[0] !== this.activeDeviceId
-					) {
-						this.switchCamera();
-					}
-				} else {
-					this.$switchCameraButton.disabled = false;
-				}
-			});
+			if (this.mediaDevicesIds.length < 2) {
+				ui.q('#videochat-switch-camera').disabled = true;
+				if (this.activeDeviceId && this.mediaDevicesIds?.[0] !== this.activeDeviceId)
+					this.switchCamera();
+			} else
+				ui.q('#videochat-switch-camera').disabled = false;
+		});
 	}
 
 	setActiveDeviceId(stream) {
@@ -407,16 +418,14 @@ class Video {
 	}
 
 	setAudioMute() {
-		const $muteButton = ui.q('#videochat-mute-unmute');
-
 		if (this.isAudioMuted) {
 			this._session.unmute('audio');
 			this.isAudioMuted = false;
-			$muteButton.classList.remove('muted');
+			ui.classRemove('#videochat-mute-unmute', 'muted');
 		} else {
 			this._session.mute('audio');
 			this.isAudioMuted = true;
-			$muteButton.classList.add('muted');
+			ui.classAdd('#videochat-mute-unmute', 'muted');
 		}
 	};
 
@@ -452,7 +461,7 @@ class Video {
 		$snackbar.innerHTML = infoText;
 		$snackbar.classList.add('show');
 
-		setTimeout(function () {
+		setTimeout(() => {
 			$snackbar.innerHTML = '';
 			$snackbar.classList.remove('show');
 		}, 3000);
@@ -467,61 +476,44 @@ class Video {
 	hideIncomingCallModal() { this._incomingCallModal('hide'); }
 
 	_incomingCallModal(className) {
-		const $initiator = ui.q('#call-modal-initiator');
-
 		if (className === 'hide') {
-			$initiator.innerHTML = '';
-			this.$modal.classList.remove('show');
-			this.$calling.pause();
+			ui.q('#call-modal-initiator').innerHTML = '';
+			ui.classRemove('#call-modal-icoming', 'show');
+			ui.q('#signal-in').pause();
 		} else {
 			ui.q('videoCall #call').classList.remove('hidden');
 			ui.q('videoCall #videochat').classList.add('hidden');
 			ui.q('videoCall').style.display = 'block';
-			$initiator.innerHTML = this.users.callee.name;
-			this.$modal.classList.add('show');
-			this.$calling.play();
+			ui.q('#call-modal-initiator').innerHTML = 'xyz';
+			ui.classAdd('#call-modal-icoming', 'show');
+			ui.q('#signal-in').play();
 		}
 	}
 
 	_prepareVideoElement(videoElement) {
-		const $video = ui.q('#' + videoElement);
-		$video.style.visibility = 'visible';
+		var e = ui.q('#' + videoElement);
+		e.style.visibility = 'visible';
 		if (!global.isBrowser() && global.getOS() == 'ios') {
-			$video.style.backgroundColor = '';
-			$video.style.zIndex = '-1';
+			e.style.backgroundColor = '';
+			e.style.zIndex = '-1';
 		}
 	}
 
-	initCall(data) {
-		if (data) {
-			this.users = {
-				isAdmin: data.isAdmin,
-				timeslot: data.timeslot,
-				caller: {
-					name: data.callerName
-				},
-				callee: {
-					name: data.calleeName
-				}
-			};
-			this.init();
-			this.$callScreen = ui.q('#call');
-			ui.q('#call-start-video').addEventListener('click', () => this.startVideoCall());
-			ui.q('#videochat-stop-call').addEventListener('click', () => this.stopCall());
-			ui.q('#videochat-leave').addEventListener('click', () => this.rejectCall());
-			ui.q('#videochat-mute-unmute').addEventListener('click', () => this.setAudioMute());
-			ui.q('#videochat-switch-camera').addEventListener('click', () => this.switchVideo());
-			if (data.openUI)
-				this.startVideoCall();
-		} else
-			this.startVideoCall();
+	initCall() {
+		this.init();
+		ui.q('#call-start-video').addEventListener('click', () => this.startVideoCall());
+		ui.q('#videochat-stop-call').addEventListener('click', () => this.stopCall());
+		ui.q('#videochat-leave').addEventListener('click', () => this.rejectCall());
+		ui.q('#videochat-mute-unmute').addEventListener('click', () => this.setAudioMute());
+		ui.q('#videochat-switch-camera').addEventListener('click', () => this.switchVideo());
+		this.startVideoCall();
 	}
 	disconnect() {
-		ConnectyCube.chat.disconnect();
-		ConnectyCube.destroySession();
+		this.stompClient.disconnect();
+		this.connection.disconnect();
 	}
 	logout() {
-		this.$callScreen.classList.add('hidden');
+		ui.q('#call').classList.add('hidden');
 	}
 }
 

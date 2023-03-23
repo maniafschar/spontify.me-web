@@ -66,13 +66,15 @@ module.exports = (env) => {
 					compiler.hooks.afterEmit.tap('client', () => {
 						var fs = require('fs'), file = '/css/style.css', client = env && env.client && !isNaN(env.client) ? env.client : '1';
 						var props = JSON.parse(fs.readFileSync('clients/' + client + '/props.json', 'utf8'));
+						fs.mkdirSync('dist/audio');
 						fs.mkdirSync('dist/css');
-						fs.mkdirSync('dist/js/lang');
 						fs.mkdirSync('dist/font');
 						fs.mkdirSync('dist/images');
-						fs.cpSync('src/js/lang/', 'dist/js/lang', { recursive: true });
+						fs.mkdirSync('dist/js/lang');
+						fs.cpSync('src/audio/', 'dist/audio', { recursive: true });
 						fs.cpSync('src/font/', 'dist/font', { recursive: true });
 						fs.cpSync('src/images/', 'dist/images', { recursive: true });
+						fs.cpSync('src/js/lang/', 'dist/js/lang', { recursive: true });
 						fs.cpSync('src/index.html', 'dist/index.html');
 						fs.cpSync('src/logoutcallback.html', 'dist/logoutcallback.html');
 						fs.cpSync('src/oauthcallback.html', 'dist/oauthcallback.html');
