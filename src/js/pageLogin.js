@@ -303,8 +303,6 @@ class pageLogin {
 						setTimeout(exec, 1500);
 					else
 						pageLogin.profileCompletePrompt();
-					if (v.login_video_call)
-						pageChat.connectVideo();
 				} else {
 					user.reset();
 					pageLogin.removeCredentials();

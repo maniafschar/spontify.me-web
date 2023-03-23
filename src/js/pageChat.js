@@ -464,30 +464,21 @@ class pageChat {
 		}
 	}
 	static connectVideoExec() {
-		communication.ajax({
-			url: global.serverApi + 'action/videoCallInit',
-			responseType: 'json',
-			webCall: 'pageChat.connectVideoExec()',
-			success(userdata) {
-				userdata.openUI = user.contact.id != 3;
-				if (userdata.openUI)
-					ui.q('videoCall').style.display = 'block';
-				video.initCall(userdata);
-				if (!global.isBrowser()) {
-					if (global.getOS() == 'android') {
-						const { permissions } = cordova.plugins;
-						permissions.requestPermissions([permissions.CAMERA, permissions.RECORD_AUDIO, permissions.MODIFY_AUDIO_SETTINGS]);
-					} else if (global.getOS() == 'ios') {
-						const { iosrtc } = cordova.plugins;
-						iosrtc.registerGlobals();
-						iosrtc.selectAudioOutput('speaker');
-						iosrtc.requestPermission(true, true, function (permissionApproved) {
-							console.log('requestPermission status: ', permissionApproved ? 'Approved' : 'Rejected');
-						});
-					}
-				}
+		ui.q('videoCall').style.display = 'block';
+		video.initCall();
+		if (!global.isBrowser()) {
+			if (global.getOS() == 'android') {
+				const { permissions } = cordova.plugins;
+				permissions.requestPermissions([permissions.CAMERA, permissions.RECORD_AUDIO, permissions.MODIFY_AUDIO_SETTINGS]);
+			} else if (global.getOS() == 'ios') {
+				const { iosrtc } = cordova.plugins;
+				iosrtc.registerGlobals();
+				iosrtc.selectAudioOutput('speaker');
+				iosrtc.requestPermission(true, true, function (permissionApproved) {
+					console.log('requestPermission status: ', permissionApproved ? 'Approved' : 'Rejected');
+				});
 			}
-		});
+		}
 	}
 	static postSendChatImage(r) {
 		if (ui.q('chat').getAttribute('i') == r.contactId) {

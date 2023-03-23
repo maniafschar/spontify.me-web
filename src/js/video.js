@@ -106,6 +106,11 @@ class Video {
 	init() {
 		if (!ui.q('videoCall').innerHTML) {
 			ui.q('videoCall').innerHTML = Video.template();
+			ui.q('#call-start-video').addEventListener('click', () => this.startVideoCall());
+			ui.q('#videochat-stop-call').addEventListener('click', () => this.stopCall());
+			ui.q('#videochat-leave').addEventListener('click', () => this.rejectCall());
+			ui.q('#videochat-mute-unmute').addEventListener('click', () => this.setAudioMute());
+			ui.q('#videochat-switch-camera').addEventListener('click', () => this.switchVideo());
 			// ConnectyCube.videochat.onCallListener = this.onCallListener.bind(this);
 			// ConnectyCube.videochat.onAcceptCallListener = this.onAcceptCallListener.bind(this);
 			// ConnectyCube.videochat.onRejectCallListener = this.onRejectCallListener.bind(this);
@@ -499,15 +504,6 @@ class Video {
 		}
 	}
 
-	initCall() {
-		this.init();
-		ui.q('#call-start-video').addEventListener('click', () => this.startVideoCall());
-		ui.q('#videochat-stop-call').addEventListener('click', () => this.stopCall());
-		ui.q('#videochat-leave').addEventListener('click', () => this.rejectCall());
-		ui.q('#videochat-mute-unmute').addEventListener('click', () => this.setAudioMute());
-		ui.q('#videochat-switch-camera').addEventListener('click', () => this.switchVideo());
-		this.startVideoCall();
-	}
 	disconnect() {
 		this.stompClient.disconnect();
 		this.connection.disconnect();
