@@ -119,7 +119,7 @@ navigation>item {
 	height: 100%;
 	float: left;
 	text-align: center;
-	padding-top: 1em;
+	padding-top: 1.1em;
 	cursor: pointer;
 	transition: all 0.4s ease-out;
 }
@@ -139,7 +139,7 @@ navigation>item.active svg {
 
 navigation>item.active,
 navigation>item:hover {
-	background: rgba(0, 0, 0, 0.05);
+	background: var(--bg2stop);
 }
 
 add {
@@ -1704,7 +1704,7 @@ chatMessage note {
 	padding: 0.75em 1em;
 	border-radius: 0 1.5em 1.5em 0;
 	position: relative;
-	max-width: 90%;
+	max-width: 80%;
 	float: left;
 	box-sizing: initial;
 	overflow: hidden;
@@ -2587,6 +2587,11 @@ videoCall {
 	z-index: 6;
 }
 
+videoCall buttonIcon {
+	background: darkgoldenrod;
+	position: relative;
+}
+
 videoCall #snackbar {
 	visibility: hidden;
 	min-width: 250px;
@@ -2658,10 +2663,6 @@ videoCall #call-modal-icoming.show {
 	visibility: visible;
 }
 
-videoCall .hidden {
-	display: none !important;
-}
-
 videoCall #call,
 videoCall #videochat {
 	height: 100%;
@@ -2671,11 +2672,6 @@ videoCall #videochat {
 	flex-direction: column;
 	align-items: center;
 	justify-content: space-between;
-}
-
-videoCall #call,
-videoCall #videochat {
-	background-color: #000000;
 }
 
 
@@ -2726,33 +2722,6 @@ videoCall .videochat-stream {
 	width: 100%;
 	object-fit: cover;
 	visibility: hidden;
-}
-
-videoCall #call-start-audio,
-videoCall #call-modal-accept {
-	background: forestgreen url("../images/call.svg") no-repeat center;
-}
-
-videoCall #call-start-video {
-	background: forestgreen url("../images/video-call.svg") no-repeat center;
-}
-
-videoCall #videochat-mute-unmute {
-	background: #0000ff url("../images/mic.svg") no-repeat center;
-}
-
-videoCall #videochat-mute-unmute.muted {
-	background: #0000ff url("../images/mic_off.svg") no-repeat center;
-}
-
-videoCall #videochat-leave,
-videoCall #videochat-stop-call,
-videoCall #call-modal-reject {
-	background: #ff0000 url("../images/call_end.svg") no-repeat center;
-}
-
-videoCall #videochat-switch-camera {
-	background: #ffa500 url("../images/switch_video.svg") no-repeat center;
 }
 
 videoCall #videochat-streams {

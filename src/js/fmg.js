@@ -20,7 +20,7 @@ import { bluetooth } from './bluetooth';
 import { pageEvent } from './pageEvent';
 import { pageSearch } from './pageSearch';
 import { hashtags } from './hashtags';
-import video from './video';
+import { Video } from './video';
 
 window.model = model;
 window.global = global;
@@ -48,4 +48,4 @@ window.bluetooth = bluetooth;
 window.hashtags = hashtags;
 window.Strings = Strings;
 window.groups = groups;
-window.video = video;
+window.Video = Video;

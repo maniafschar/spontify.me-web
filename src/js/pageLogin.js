@@ -293,7 +293,7 @@ class pageLogin {
 						ui.navigation.goTo('home');
 					}
 					pageHome.init(true);
-					communication.ping();
+					communication.afterLogin();
 					setTimeout(communication.notification.register, 100);
 					pageChat.initActiveChats();
 					geoData.init();

@@ -12,7 +12,7 @@ import { pageInfo } from './pageInfo';
 import { pageSettings } from './pageSettings';
 import { ui, formFunc } from './ui';
 import { user } from './user';
-import video from './video';
+import video, { Video } from './video';
 
 export { pageChat };
 
@@ -40,7 +40,8 @@ class pageChat {
 		</chatButtons>
 		<textarea id="chatText" style="height:1.6em;" class="me" placeholder="${ui.l('chat.textHint')}"
 			onkeyup="pageChat.adjustTextarea(this)">${v.draft}</textarea>
-		<buttontext class="bgColor sendButton" ${v.action}="pageChat.sendChat(${v.id},null,event);">${ui.l('send')}</buttontext>
+		<buttontext class="bgColor videoButton" ${v.action}="pageChat.sendChatVideoPermissionButton();">${ui.l('chat.videoPermissionButton')}</buttontext>
+		<buttontext class="bgColor sendButton" ${v.action}="pageChat.sendChat(${v.id},null,event);">${ui.l('chat.send')}</buttontext>
 		<div style="display:none;text-align:center;"></div>
 		<input type="checkbox" onclick="pageChat.aiHint()" label="ai"${v.ai}></input>
 	</chatInput>
@@ -76,7 +77,7 @@ class pageChat {
 		if (geoData.localized) {
 			var s = Strings.replaceInternalLinks(' :openPos(' + geoData.current.lat + ',' + geoData.current.lon + '): ');
 			s = s.replace(/onclick="ui.navigation.autoOpen/g, 'onclick="pageChat.doNothing');
-			ui.navigation.openPopup(ui.l('chat.askInsertCurrentLocationLink'), '<div style="text-align:center;margin-bottom:1em;"><div style="float:none;text-align:center;margin:1em 0;">' + s + '</div><buttontext class="bgColor" onclick="pageChat.insertLink()">' + ui.l('send') + '</buttontext></div>');
+			ui.navigation.openPopup(ui.l('chat.askInsertCurrentLocationLink'), '<div style="text-align:center;margin-bottom:1em;"><div style="float:none;text-align:center;margin:1em 0;">' + s + '</div><buttontext class="bgColor" onclick="pageChat.insertLink()">' + ui.l('chat.send') + '</buttontext></div>');
 		} else
 			ui.navigation.openPopup(ui.l('attention'), ui.l('chat.serviceSendError'));
 	}
@@ -97,7 +98,7 @@ class pageChat {
 				s2 = s2.replace(/onclick="ui.navigation.autoOpen/g, 'onclick="pageChat.toggleInsertCopyLinkEntry');
 			else
 				s2 = s2.replace(/onclick="ui.navigation.autoOpen/g, 'onclick="pageChat.doNothing');
-			ui.navigation.openPopup(ui.l('chat.askInsertCopyLink' + (c > 1 ? 's' : '')), '<div style="text-align:center;margin:1em 0;">' + (c > 1 ? '<div id="askInsertCopyLinkHint">' + ui.l('chat.askInsertCopyLinksBody') + '</div>' : '') + '<div style="text-align:center;margin:1em 0;">' + s2 + '</div><buttontext class="bgColor" onclick="pageChat.insertLink(&quot;pressed&quot;)">' + ui.l('send') + '</buttontext></div>');
+			ui.navigation.openPopup(ui.l('chat.askInsertCopyLink' + (c > 1 ? 's' : '')), '<div style="text-align:center;margin:1em 0;">' + (c > 1 ? '<div id="askInsertCopyLinkHint">' + ui.l('chat.askInsertCopyLinksBody') + '</div>' : '') + '<div style="text-align:center;margin:1em 0;">' + s2 + '</div><buttontext class="bgColor" onclick="pageChat.insertLink(&quot;pressed&quot;)">' + ui.l('chat.send') + '</buttontext></div>');
 			ui.classAdd('popup .chatLinks', 'pressed');
 		} else
 			ui.navigation.openPopup(ui.l('attention'), ui.l('link.sendError').replace('{0}', '<br/><buttontext class="bgColor" style="margin:1em;">' + ui.l('chat.share') + '</buttontext><br/>'));
@@ -106,7 +107,7 @@ class pageChat {
 		if (document.activeElement)
 			document.activeElement.blur();
 		var popupVisible = ui.q('popupContent');
-		ui.navigation.openPopup(ui.l('chat.sendImg'), '<form style="padding:0 2em;"><input type="hidden" name="contactId2" value="' + ui.q('chat').getAttribute('i') + '"><div style="margin:1em;"><input name="image" type="file"/></div></form><div style="text-align:center;margin-bottom:1em;"><buttontext onclick="pageChat.sendChatImage()" class="bgColor" id="popupSendImage" style="display:none;">' + ui.l('send') + '</buttontext></div>');
+		ui.navigation.openPopup(ui.l('chat.sendImg'), '<form style="padding:0 2em;"><input type="hidden" name="contactId2" value="' + ui.q('chat').getAttribute('i') + '"><div style="margin:1em;"><input name="image" type="file"/></div></form><div style="text-align:center;margin-bottom:1em;"><buttontext onclick="pageChat.sendChatImage()" class="bgColor" id="popupSendImage" style="display:none;">' + ui.l('chat.send') + '</buttontext></div>');
 		if (!popupVisible && global.isBrowser()) {
 			var e = ui.q('[name="image"]');
 			if (e)
@@ -206,8 +207,25 @@ class pageChat {
 		s = Strings.replaceLinks(s);
 		s = s.replace(/\n/g, '<br/>');
 		s = Strings.replaceEmoji(s);
-		if (v.action)
-			s = '<a onclick="' + v.action + '">' + s + '</a>';
+		if (v.action) {
+			var isVideoCall = v.action.indexOf('Video.startVideoCall(') == 0, addAction = true;
+			if (isVideoCall) {
+				var isOponent = v.action.indexOf('Video.startVideoCall(' + user.contact.id + ')') != 0;
+				console.log('opponent:' + isOponent);
+				if (isOponent) {
+					var date = global.date.server2Local(v.createdAt);
+					date.setHours(date.getHours() + 1);
+					if (date < new Date())
+						addAction = false;
+					console.log('date:' + date);
+					console.log('date:' + (date > new Date()));
+				} else
+					addAction = false;
+			}
+			console.log('action:' + addAction);
+			if (addAction)
+				s = '<a onclick="' + v.action + '">' + s + '</a>';
+		}
 		return s;
 	}
 	static getSelectionBoundary(el, start) {
@@ -420,7 +438,7 @@ class pageChat {
 		}
 		if (user.contact.groups) {
 			ui.navigation.hideMenu();
-			var s = '<div class="smilyBox" style="margin-bottom:1em;"><buttontext onclick="pageChat.insertLinkInGroup()" class="bgColor" style="margin:1em;">' + ui.l('chat.share') + '</buttontext><buttontext class="bgColor" onclick="pageChat.sendChatGroup()">' + ui.l('send') + '</buttontext></div>';
+			var s = '<div class="smilyBox" style="margin-bottom:1em;"><buttontext onclick="pageChat.insertLinkInGroup()" class="bgColor" style="margin:1em;">' + ui.l('chat.share') + '</buttontext><buttontext class="bgColor" onclick="pageChat.sendChatGroup()">' + ui.l('chat.send') + '</buttontext></div>';
 			var v = user.contact.chatTextGroups;
 			if (!v) {
 				v = ui.q('[name="groupdialog"]:checked');
@@ -436,49 +454,6 @@ class pageChat {
 			ui.navigation.openPopup(ui.l('chat.groupTitle'), '<div style="text-align:center;padding:1em 2em;">' + g + '<br/><textarea placeholder="' + ui.l('chat.textHint') + '" style="height:20em;" id="groupChatText">' + v[0] + '</textarea>' + s + '<popupHint></popupHint></div>', 'pageChat.saveGroupText()');
 		} else
 			ui.navigation.openPopup(ui.l('chat.groupTitle'), lists.getListNoResults(ui.navigation.getActiveID(), 'noGroups'));
-	}
-	static connectVideo() {
-		if (ui.q('videoCall').innerHTML) {
-			ui.classRemove('videoCall #call', 'hidden');
-			ui.classAdd('videoCall #videochat', 'hidden');
-			ui.q('videoCall').style.display = 'block';
-			video.initCall();
-		} else if (user.contact.id == 3)
-			pageChat.connectVideoExec();
-		else {
-			communication.ajax({
-				url: global.serverApi + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contactVideoCall.contactId=' + user.contact.id),
-				webCall: 'pageChat.connectVideo()',
-				responseType: 'json',
-				success(r) {
-					if (r.length > 1) {
-						var d = global.date.server2Local(r[1][0]).getTime(), n = new Date().getTime();
-						if (d - 600000 < n && d + 3600000 > n)
-							pageChat.connectVideoExec();
-						else
-							ui.navigation.openPopup(ui.l('attention'), ui.l('events.videoCallDateHint').replace('{0}', global.date.formatDate(r[1][0])));
-					} else
-						ui.navigation.openPopup(ui.l('attention'), ui.l('events.videoCallDateNoDate') + user.getAppointmentTemplate());
-				}
-			});
-		}
-	}
-	static connectVideoExec() {
-		ui.q('videoCall').style.display = 'block';
-		video.initCall();
-		if (!global.isBrowser()) {
-			if (global.getOS() == 'android') {
-				const { permissions } = cordova.plugins;
-				permissions.requestPermissions([permissions.CAMERA, permissions.RECORD_AUDIO, permissions.MODIFY_AUDIO_SETTINGS]);
-			} else if (global.getOS() == 'ios') {
-				const { iosrtc } = cordova.plugins;
-				iosrtc.registerGlobals();
-				iosrtc.selectAudioOutput('speaker');
-				iosrtc.requestPermission(true, true, function (permissionApproved) {
-					console.log('requestPermission status: ', permissionApproved ? 'Approved' : 'Rejected');
-				});
-			}
-		}
 	}
 	static postSendChatImage(r) {
 		if (ui.q('chat').getAttribute('i') == r.contactId) {
@@ -701,6 +676,45 @@ class pageChat {
 			});
 		} else
 			ui.navigation.closePopup();
+	}
+	static sendChatVideoPermission() {
+		var id = ui.q('chat').getAttribute('i'), v = {
+			note: ui.l('chat.videoPermission'),
+			action: 'Video.startVideoCall(' + user.contact.id + ')',
+			contactId2: id
+		};
+		communication.ajax({
+			url: global.serverApi + 'db/one',
+			method: 'POST',
+			webCall: 'pageChat.sendChatVideoPermission()',
+			body: {
+				classname: 'ContactChat',
+				values: v
+			},
+			error(r) {
+				r = JSON.parse(r.response);
+				if (r.class == 'IllegalArgumentException' && r.msg == 'duplicate chat') {
+					ui.q('#chatText').value = '';
+					pageChat.adjustTextarea(ui.q('#chatText'));
+				} else
+					communication.onError(r);
+			},
+			success(r) {
+				if (ui.q('chat[i="' + id + '"] chatConversation')) {
+					v.createdAt = new Date();
+					v.id = r;
+					v.contactId = user.contact.id;
+					var e = ui.q('chat[i="' + id + '"] chatConversation');
+					e.innerHTML = e.innerHTML + pageChat.renderMsg(v);
+					pageChat.scrollToBottom();
+				}
+				pageChat.initActiveChats();
+			}
+		});
+
+	}
+	static sendChatVideoPermissionButton() {
+		intro.openHint({ desc: ui.l('chat.videoPermissionHint') + '<br/><br/><buttontext class="bgColor" onclick="pageChat.sendChatVideoPermission()">' + ui.l('chat.videoPermissionSendButton') + '</buttontext>', pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-3em;' });
 	}
 	static showScrollButton() {
 		var e = ui.q('chatMoreButton');

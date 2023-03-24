@@ -7,6 +7,9 @@ import { ui } from './ui';
 import { user } from './user';
 import { pageHome } from './pageHome';
 import { pageInfo } from './pageInfo';
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
+import { Video } from './video';
 
 export { communication, FB, Encryption };
 
@@ -16,6 +19,10 @@ class communication {
 	static pingExec = null;
 	static sentErrors = [];
 
+	static afterLogin() {
+		communication.ping();
+		WebSocket.init();
+	}
 	static ajax(param) {
 		for (var i = 0; i < communication.currentCalls.length; i++) {
 			if (communication.currentCalls[i].url == param.url &&
@@ -292,6 +299,7 @@ class communication {
 		});
 	}
 	static reset() {
+		WebSocket.stompClient.disconnect();
 		communication.setApplicationIconBadgeNumber(0);
 		pageLogin.removeCredentials();
 		ui.attr('content > *', 'menuIndex', null);
@@ -334,6 +342,9 @@ class communication {
 		if (communication.notification.push && !isNaN(total))
 			communication.notification.push.setApplicationIconBadgeNumber(function () { }, communication.notification.onError, total);
 	}
+	static wsSend(destination, body) {
+		WebSocket.stompClient.send(destination, {}, JSON.stringify(body));
+	}
 };
 
 class Encryption {
@@ -350,7 +361,6 @@ class Encryption {
 			"mode": CryptoJS.mode.CBC
 		}).toString(CryptoJS.enc.Utf8);
 	}
-
 	static encAES(msg, pass) {
 		var salt = CryptoJS.lib.WordArray.random(128 / 8);
 		var key = CryptoJS.PBKDF2(pass, salt, {
@@ -364,13 +374,11 @@ class Encryption {
 			"mode": CryptoJS.mode.CBC
 		}).toString();
 	}
-
 	static encPUB(s) {
 		var enc = new JSEncrypt();
 		enc.setPublicKey('MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAih4+Co9A7+3Hm6aUAHAG0LMjHgQ9ZxT+twg6aNtpg5fJvIApYAufImV5i/Tbv57M/Bmwj4kloONv4WaeUlbx4Vy0SVdPl2fpwTY/DhaS5DIiq3VYWQqjT/MHtMNBqX7tRHHZTBJzKEvKHig0sn2rdEMrZLcBErwbWPZpLz7RWFTbjkmAzxEbTKKGBSpqGO/l4xjZIVSrjKdBOtEdB8+Tw3lwNs2eGrx13rJCPY9VLocErw5CEgqdpgYXWmGOTsfqZjTODmavopTpupI7FMG3UG0Re8YE3Eju9aSsvTyjoBGoe9Gel/dTsZJeckTt5gTPiLr7khzFlZ7MVO75n4PnT4Gsc4YCBMQPlcJ4lv5JdfjwK+JTM/ZnSAezez3TzBz9SuSPck5vpEi6ug1LkUVOmjIXJBkwuGb7eYbRUG/1cj/7boCIZa8cNg2Ired2LKn2DVfurC1LH1U4p/oZGkGP3hd0aA6GD+2PJGZL9qhOSf1Bwuj+QFnHNhil2BV5Zou73KJ1ebCBmG77jkqtk02EMxFM6zPP4ViYmoMcxrSpG12fBWMJDdXaM9aEP0nkd62X7VOi3pHHEOaNnYe1AKV2u/IPApUyWnnrQJXzVag5wHcR1kDDd4G9nzccH1QyxBTJEuEoMYbsGQUyTYsOoSL0SvvOQAf/ukBCRAh90WgTkjsCAwEAAQ==');
 		return enc.encrypt(s);
 	}
-
 	static hash(s) {
 		return sha256.rstr2hex(sha256.rstr_sha256(sha256.str2rstr_utf8(s)))
 	}
@@ -437,10 +445,8 @@ class sha256 {
 		var W = new Array(64);
 		var a, b, c, d, e, f, g, h;
 		var i, j, T1, T2;
-
 		m[l >> 5] |= 0x80 << (24 - l % 32);
 		m[((l + 64 >> 9) << 4) + 15] = l;
-
 		for (i = 0; i < m.length; i += 16) {
 			a = HASH[0];
 			b = HASH[1];
@@ -450,7 +456,6 @@ class sha256 {
 			f = HASH[5];
 			g = HASH[6];
 			h = HASH[7];
-
 			for (j = 0; j < 64; j++) {
 				if (j < 16)
 					W[j] = m[j + i];
@@ -467,7 +472,6 @@ class sha256 {
 				b = a;
 				a = sha256.safe_add(T1, T2);
 			}
-
 			HASH[0] = sha256.safe_add(a, HASH[0]);
 			HASH[1] = sha256.safe_add(b, HASH[1]);
 			HASH[2] = sha256.safe_add(c, HASH[2]);
@@ -487,7 +491,6 @@ class sha256 {
 	static sha256_Maj(x, y, z) { return ((x & y) ^ (x & z) ^ (y & z)); }
 	static sha256_Sigma0256(x) { return (sha256.sha256_S(x, 2) ^ sha256.sha256_S(x, 13) ^ sha256.sha256_S(x, 22)); }
 	static sha256_Sigma1256(x) { return (sha256.sha256_S(x, 6) ^ sha256.sha256_S(x, 11) ^ sha256.sha256_S(x, 25)); }
-
 	static sha256_K = new Array(
 		1116352408, 1899447441, -1245643825, -373957723, 961987163, 1508970993,
 		-1841331548, -1424204075, -670586216, 310598401, 607225278, 1426881987,
@@ -667,5 +670,36 @@ class FB {
 				parts.push(i + "=" + encodeURIComponent(obj[i]));
 		}
 		return parts.join("&");
+	}
+}
+class WebSocket {
+	static stompClient;
+	static init() {
+		WebSocket.stompClient = Stomp.over(function () {
+			return new SockJS(global.serverApi + 'ws/init')
+		});
+		WebSocket.stompClient.connect(communication.generateCredentials(), frame => {
+			console.log('Connected: ' + frame);
+			WebSocket.stompClient.subscribe(
+				"/user/" + user.contact.id + "/video",
+				message => {
+					console.log('Got stomp message', message);
+					var data = JSON.parse(message.body);
+					switch (data.type) {
+						case 'offer':
+							Video.onOffer(data);
+							break;
+						case 'answer':
+							Video.onAnswer(data.answer);
+							break;
+						case 'candidate':
+							Video.onCandidate(data.candidate);
+							break;
+						default:
+							break;
+					}
+				}
+			);
+		});
 	}
 }

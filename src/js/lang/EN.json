@@ -201,10 +201,15 @@
 			"empty": "Have you been to this location? Write something about it, e.g. why you like to go there...",
 			"groupNoInput": "Please select the group and write your message.",
 			"groupTitle": "Group chat",
+			"send": "Send",
 			"serviceLocation": "Location",
 			"serviceSendError": "Your site could not be determined, ${appTitle} can not send your position.",
 			"share": "Share",
-			"title": "Chat"
+			"title": "Chat",
+			"videoPermission": "Click me within the next hour to start a video call with me.",
+			"videoPermissionButton": "Video",
+			"videoPermissionHint": "You hereby allow the ${buddy} to video call you in the next hour.",
+			"videoPermissionSendButton": "Giving permission"
 		},
 		"contacts": {
 			"age": "{0} years old",
@@ -737,7 +742,6 @@
 		"rename": "Rename",
 		"save": "Save",
 		"saved": "Saved",
-		"send": "Send",
 		"show": "Show",
 		"slider.from": "from",
 		"slider.until": "to",

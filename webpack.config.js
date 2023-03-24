@@ -82,6 +82,10 @@ module.exports = (env) => {
 						fs.writeFileSync('dist' + file, fs.readFileSync('clients/' + client + '/style.css', 'utf8') + '\n\n' + fs.readFileSync('src' + file, 'utf8'));
 						file = 'dist/js/fmg.js';
 						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('{placeholderAppTitle}', props.name).replace('{placeholderClient}', client).replace('{placeholderServer}', props.server));
+						file = 'dist/js/lang/DE.html';
+						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/{placeholderAppTitle}/g, props.name));
+						file = 'dist/js/lang/EN.html';
+						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/{placeholderAppTitle}/g, props.name));
 						file = 'dist/js/lang/DE.json';
 						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/\${buddy}/g, props.de.buddy).replace(/\${buddies}/g, props.de.buddies));
 						file = 'dist/js/lang/EN.json';

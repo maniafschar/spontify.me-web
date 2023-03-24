@@ -201,10 +201,15 @@
 			"empty": "Warst Du schonmal hier? Schreib etwas über die Location, z.B. warum Du gerne dahin gehst...",
 			"groupNoInput": "Bitte wähle die Gruppen aus und schreibe Deine Nachricht.",
 			"groupTitle": "Gruppenchat",
+			"send": "Senden",
 			"serviceLocation": "Standort",
 			"serviceSendError": "Dein Standort konnte nicht ermittelt werden, ${appTitle} kann Deine Position nicht senden.",
 			"share": "Teilen",
-			"title": "Chat"
+			"title": "Chat",
+			"videoPermission": "Klick mich innerhalb der nächsten Stunde, um einen Videoanruf mit mir zu starten.",
+			"videoPermissionButton": "Video",
+			"videoPermissionHint": "Du erlaubst hiermit dem ${buddy} Dich in der nächsten Stunde per Video Call anzurufen.",
+			"videoPermissionSendButton": "Erlaubnis erteilen"
 		},
 		"contacts": {
 			"age": "{0} Jahre jung",
@@ -737,7 +742,6 @@
 		"rename": "Umbenennen",
 		"save": "Speichern",
 		"saved": "Gespeichert",
-		"send": "Senden",
 		"show": "Anzeigen",
 		"slider.from": "von",
 		"slider.until": "bis",
