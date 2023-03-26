@@ -679,7 +679,7 @@ class WebSocket {
 	static stompClient;
 	static init() {
 		WebSocket.stompClient = Stomp.over(function () {
-			return new SockJS(global.server + 'ws/init')
+			return new SockJS(global.serverApi + 'ws/init')
 		});
 		WebSocket.stompClient.reconnectDelay = 5000;
 		WebSocket.stompClient.connect(communication.generateCredentials(), frame => {
