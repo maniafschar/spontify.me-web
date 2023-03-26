@@ -209,6 +209,7 @@
 			"videoPermission": "Klick mich innerhalb der nächsten Stunde, um einen Videoanruf mit mir zu starten.",
 			"videoPermissionButton": "Video",
 			"videoPermissionHint": "Du erlaubst hiermit dem ${buddy} Dich in der nächsten Stunde per Video Call anzurufen.",
+			"videoPermissionNoChatHint": "<ul><li>mit Freunden kannst Du sofort den Video Call starten</li><li>andere ${buddies} kannst Du die Erlaubnis erteilen, Dich anzurufen. Hierzu müsst Ihr vorher aber schon gechattet haben.</li></ul>",
 			"videoPermissionSendButton": "Erlaubnis erteilen"
 		},
 		"contacts": {

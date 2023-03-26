@@ -8,7 +8,6 @@ export { Video };
 class Video {
 	static mediaDevicesIds = [];
 	static activeDeviceId = null;
-	static localStream;
 	static connectedId;
 	static connectedUser;
 	static rtcPeerConnection;
@@ -58,12 +57,32 @@ class Video {
 	static getRtcPeerConnection() {
 		if (!Video.rtcPeerConnection) {
 			Video.rtcPeerConnection = new RTCPeerConnection({
-				iceServers: [{ urls: 'stun:stun.1.google.com:19302' }]
+				iceServers: [{
+					urls: [
+						'stun:stun.1.google.com:19302',
+						'stun:stun.l.google.com:19302',
+						'stun:stun1.l.google.com:19302',
+						'stun:stun2.l.google.com:19302'
+					]
+				}, {
+					urls: 'turn:numb.viagenie.ca',
+					credential: 'muazkh',
+					username: 'webrtc@live.com'
+				},
+				{
+					urls: 'turn:turn.bistri.com:80',
+					credential: 'homeo',
+					username: 'homeo'
+				},
+				{
+					urls: 'turn:turn.anyfirewall.com:443?transport=tcp',
+					credential: 'webrtc',
+					username: 'webrtc'
+				}]
 			});
 			Video.rtcPeerConnection.onicecandidate = event => {
 				if (event.candidate) {
 					var e = communication.generateCredentials();
-					e.type = 'candidate';
 					e.name = user.contact.pseudonym;
 					e.id = Video.connectedId;
 					e.candidate = event.candidate;
@@ -72,7 +91,7 @@ class Video {
 			};
 			Video.rtcPeerConnection.ontrack = event => {
 				ui.q('#remoteStream').srcObject = event.streams[0];
-				Video.onDevicesChangeListener();
+				// Video.onDevicesChangeListener();
 				Video._prepareVideoElement('remoteStream');
 			};
 		}
@@ -163,7 +182,6 @@ class Video {
 		ui.classRemove('#videochat', 'noDisp');
 		Video.hideIncomingCallModal();
 		navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
-			Video.localStream = stream;
 			ui.q('videoCall #localStream').srcObject = stream;
 			stream.getTracks().forEach(track => Video.getRtcPeerConnection().addTrack(track, stream));
 			Video.setActiveDeviceId(stream);
@@ -175,12 +193,11 @@ class Video {
 			ui.q('#signal-in').pause();
 			ui.q('#videochat-mute-unmute').disabled = false;
 			ui.q('#videochat-switch-camera').disabled = false;
-			Video.onDevicesChangeListener();
+			// Video.onDevicesChangeListener();
 			Video._prepareVideoElement('remoteStream');
 			Video.getRtcPeerConnection().createAnswer(answer => {
 				Video.getRtcPeerConnection().setLocalDescription(answer);
 				var e = communication.generateCredentials();
-				e.type = 'answer';
 				e.id = Video.connectedId;
 				e.answer = answer;
 				communication.wsSend('/ws/video', e);
@@ -207,12 +224,10 @@ class Video {
 		ui.css('videoCall', 'display', 'block');
 		ui.q('#signal-out').play();
 		navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
-			Video.localStream = stream;
 			ui.q('videoCall #localStream').srcObject = stream;
 			stream.getTracks().forEach(track => Video.getRtcPeerConnection().addTrack(track, stream));
 			Video.getRtcPeerConnection().createOffer(offer => {
 				var e = communication.generateCredentials();
-				e.type = 'offer';
 				e.name = user.contact.pseudonym;
 				e.id = Video.connectedId;
 				e.offer = offer;
@@ -233,12 +248,19 @@ class Video {
 
 	static stopCall() {
 		ui.q('#videochat').style.background = '';
-		if (Video.localStream) {
-			for (var i = 0; i < Video.localStream.getTracks().length; i++)
-				Video.localStream.getTracks()[i].stop();
+		var close = stream => {
+			if (stream.srcObject) {
+				stream.srcObject.getTracks().forEach(track => track.stop());
+			}
+			stream.removeAttribute('src');
+			stream.removeAttribute('srcObject');
+		};
+		close(ui.q('videoCall #localStream'));
+		close(ui.q('videoCall #remoteStream'));
+		if (Video.rtcPeerConnection) {
+			Video.rtcPeerConnection.close();
+			Video.rtcPeerConnection = null;
 		}
-		Video.getRtcPeerConnection().close();
-		Video.rtcPeerConnection = null;
 		ui.q('#signal-out').pause();
 		ui.q('#signal-in').pause();
 		ui.q('#signal-end').play();
@@ -292,10 +314,10 @@ class Video {
 
 	static setAudioMute() {
 		if (ui.classContains('#videochat-mute-unmute', 'muted')) {
-			Video.localStream.getAudioTracks()[0].enabled = true;
+			ui.q('videoCall #localStream').srcObject.getAudioTracks()[0].enabled = true;
 			ui.classRemove('#videochat-mute-unmute', 'muted');
 		} else {
-			Video.localStream.getAudioTracks()[0].enabled = false;
+			ui.q('videoCall #localStream').srcObject.getAudioTracks()[0].enabled = false;
 			ui.classAdd('#videochat-mute-unmute', 'muted');
 		}
 	};
@@ -305,13 +327,12 @@ class Video {
 			(deviceId) => deviceId !== Video.activeDeviceId
 		);
 		navigator.mediaDevices.getUserMedia({ video: mediaDevicesId }).then(stream => {
-			Video.localStream.getTracks().forEach(track => { if (track.kind == 'video') track.stop(); });
+			ui.q('videoCall #localStream').srcObject.getTracks().forEach(track => { if (track.kind == 'video') track.stop(); });
 			Video.activeDeviceId = mediaDevicesId;
-			Video.localStream = stream;
 			ui.q('videoCall #localStream').srcObject = stream;
 			stream.getTracks().forEach(track => Video.getRtcPeerConnection().addTrack(track, stream));
 			if (ui.classContains('#videochat-mute-unmute', 'muted'))
-				Video.localStream.getAudioTracks()[0].enabled = false;
+				ui.q('videoCall #localStream').srcObject.getAudioTracks()[0].enabled = false;
 		});
 	};
 

@@ -685,19 +685,12 @@ class WebSocket {
 				message => {
 					console.log('Got stomp message', message);
 					var data = JSON.parse(message.body);
-					switch (data.type) {
-						case 'offer':
-							Video.onOffer(data);
-							break;
-						case 'answer':
-							Video.onAnswer(data.answer);
-							break;
-						case 'candidate':
-							Video.onCandidate(data.candidate);
-							break;
-						default:
-							break;
-					}
+					if (data.offer)
+						Video.onOffer(data);
+					else if (data.answer)
+						Video.onAnswer(data.answer);
+					else if (data.candidate)
+						Video.onCandidate(data.candidate);
 				}
 			);
 		});

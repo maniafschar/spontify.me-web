@@ -394,10 +394,13 @@ class pageChat {
 						responseType: 'json',
 						webCall: 'pageChat.open(id)',
 						success(r2) {
+							var c = model.convert(new Contact(), r2, 1);
 							ui.attr('chat[i="' + id + '"] listHeader chatName', 'onclick', 'ui.navigation.autoOpen("' + global.encParam('p=' + id) + '",event)');
-							ui.html('chat[i="' + id + '"] listHeader chatName span', r2['contact.pseudonym']);
-							if (r2['contact.imageList'])
-								ui.attr('chat[i="' + id + '"] listHeader img', 'src', global.serverImg + r2['contact.imageList']);
+							ui.html('chat[i="' + id + '"] listHeader chatName span', c.pseudonym);
+							if (c.contactLink.status == 'Friends')
+								ui.q('chat').setAttribute('status', 'Friends');
+							if (c.imageList)
+								ui.attr('chat[i="' + id + '"] listHeader img', 'src', global.serverImg + c.imageList);
 							else {
 								var e2 = ui.q('chat[i="' + id + '"] listHeader img');
 								ui.attr(e2, 'src', 'images/contact.svg');
@@ -714,7 +717,12 @@ class pageChat {
 
 	}
 	static sendChatVideoPermissionButton() {
-		intro.openHint({ desc: ui.l('chat.videoPermissionHint') + '<br/><br/><buttontext class="bgColor" onclick="pageChat.sendChatVideoPermission()">' + ui.l('chat.videoPermissionSendButton') + '</buttontext>', pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-3em;' });
+		if (ui.q('chat').getAttribute('status') == 'Friends')
+			Video.startVideoCall(user.contact.id);
+		else if (ui.q('chat chatConversation chatMessage:not(.me)'))
+			intro.openHint({ desc: ui.l('chat.videoPermissionHint') + '<br/><br/><buttontext class="bgColor" onclick="pageChat.sendChatVideoPermission()">' + ui.l('chat.videoPermissionSendButton') + '</buttontext>', pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-3em;' });
+		else
+			intro.openHint({ desc: ui.l('chat.videoPermissionNoChatHint'), pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-3em;' });
 	}
 	static showScrollButton() {
 		var e = ui.q('chatMoreButton');
