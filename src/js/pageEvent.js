@@ -249,10 +249,10 @@ class pageEvent {
 				success(r) {
 					for (var i = 1; i < r.length; i++) {
 						var d = global.date.getDateFields(global.date.server2Local(r[i][0]));
-						ui.classAdd('popup videoCall day[d="' + d.year + '-' + d.month + '-' + d.day + '"] .hour' + d.hour, 'closed');
+						ui.classAdd('popup appointment day[d="' + d.year + '-' + d.month + '-' + d.day + '"] .hour' + d.hour, 'closed');
 						if (r[i][2] == user.contact.id) {
 							ui.q('popup .paypal explain').innerHTML = ui.q('popup .paypal explain').innerHTML + '<br/><br/>' + ui.l('events.videoCallDateHint').replace('{0}', global.date.formatDate(r[i][0]));
-							ui.q('popup .paypal videoCall').outerHTML = '';
+							ui.q('popup .paypal appointment').outerHTML = '';
 							ui.q('popup .paypal dialogButtons').outerHTML = '';
 						}
 					}
@@ -681,10 +681,7 @@ class pageEvent {
 				});
 			},
 			onApprove: function (data, actions) {
-				console.log('data', data);
-				console.log('actions', actions);
 				actions.order.capture().then(function (orderData) {
-					console.log('order', orderData);
 					if (orderData.status == 'COMPLETED')
 						pageEvent.participate(JSON.stringify(orderData));
 				});

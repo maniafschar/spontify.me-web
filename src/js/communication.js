@@ -679,11 +679,9 @@ class WebSocket {
 			return new SockJS(global.serverApi + 'ws/init')
 		});
 		WebSocket.stompClient.connect(communication.generateCredentials(), frame => {
-			console.log('Connected: ' + frame);
 			WebSocket.stompClient.subscribe(
 				"/user/" + user.contact.id + "/video",
 				message => {
-					console.log('Got stomp message', message);
 					var data = JSON.parse(message.body);
 					if (data.offer)
 						Video.onOffer(data);

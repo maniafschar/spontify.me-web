@@ -211,18 +211,14 @@ class pageChat {
 			var isVideoCall = v.action.indexOf('Video.startVideoCall(') == 0, addAction = true;
 			if (isVideoCall) {
 				var isOponent = v.action.indexOf('Video.startVideoCall(' + user.contact.id + ')') != 0;
-				console.log('opponent:' + isOponent);
 				if (isOponent) {
 					var date = global.date.server2Local(v.createdAt);
 					date.setHours(date.getHours() + 1);
 					if (date < new Date())
 						addAction = false;
-					console.log('date:' + date);
-					console.log('date:' + (date > new Date()));
 				} else
 					addAction = false;
 			}
-			console.log('action:' + addAction);
 			if (addAction)
 				s = '<a onclick="' + v.action + '">' + s + '</a>';
 		}

@@ -791,13 +791,13 @@ popup .paypal {
 	padding: 0.25em 0.5em 0 0.5em;
 }
 
-popup videoCall {
+popup appointment {
 	display: none;
 	margin-top: 1em;
 	position: relative;
 }
 
-popup videoCall day {
+popup appointment day {
 	position: relative;
 	width: 33%;
 	overflow: hidden;
@@ -806,7 +806,7 @@ popup videoCall day {
 	padding: 0.5em;
 }
 
-popup videoCall day hour {
+popup appointment day hour {
 	position: relative;
 	height: 2em;
 	width: 100%;
@@ -819,17 +819,17 @@ popup videoCall day hour {
 	cursor: pointer;
 }
 
-popup videoCall day hour.closed {
+popup appointment day hour.closed {
 	background-color: red;
 	text-decoration: line-through;
 	opacity: 0.25;
 }
 
-popup videoCall day hour.selected {
+popup appointment day hour.selected {
 	background-color: rgba(0, 255, 0, 0.9);
 }
 
-popup videoCall day hour.selected::after {
+popup appointment day hour.selected::after {
 	content: '✓';
 	position: absolute;
 	opacity: 0.2;
@@ -838,39 +838,39 @@ popup videoCall day hour.selected::after {
 	line-height: 1;
 }
 
-popup videoCall day hour.hour09::before {
+popup appointment day hour.hour09::before {
 	content: '9:00';
 }
 
-popup videoCall day hour.hour10::before {
+popup appointment day hour.hour10::before {
 	content: '10:00';
 }
 
-popup videoCall day hour.hour11::before {
+popup appointment day hour.hour11::before {
 	content: '11:00';
 }
 
-popup videoCall day hour.hour12::before {
+popup appointment day hour.hour12::before {
 	content: '12:00';
 }
 
-popup videoCall day hour.hour13::before {
+popup appointment day hour.hour13::before {
 	content: '13:00';
 }
 
-popup videoCall day hour.hour14::before {
+popup appointment day hour.hour14::before {
 	content: '14:00';
 }
 
-popup videoCall day hour.hour15::before {
+popup appointment day hour.hour15::before {
 	content: '15:00';
 }
 
-popup videoCall day hour.hour16::before {
+popup appointment day hour.hour16::before {
 	content: '16:00';
 }
 
-popup videoCall day hour.hour17::before {
+popup appointment day hour.hour17::before {
 	content: '17:00';
 }
 
@@ -2166,12 +2166,12 @@ row.favorite imagelist svg {
 	display: inline;
 }
 
-row badge.videoCalld,
+row badge.authenticated,
 row.participate badge {
 	background: green;
 }
 
-row badge.videoCalld::after,
+row badge.authenticated::after,
 row.participate badge::after {
 	content: '✓';
 }
@@ -2192,7 +2192,7 @@ row compass {
 	margin-top: -0.25em;
 }
 
-detail .videoCalld title::after,
+detail .authenticated title::after,
 detail .participate .date::after,
 detail .canceled .date::after {
 	margin-left: 1em;
@@ -2204,13 +2204,13 @@ detail .canceled .date::after {
 	color: white;
 }
 
-detail .videoCalld title::after,
+detail .authenticated title::after,
 detail .participate .date::after {
 	content: '✓';
 	background: green;
 }
 
-detail .videoCalld title::after {
+detail .authenticated title::after {
 	font-size: 0.77em;
 }
 

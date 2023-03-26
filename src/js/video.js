@@ -385,4 +385,21 @@ class Video {
 			e.style.zIndex = '-1';
 		}
 	}
+	static startAdminCall() {
+		communication.ajax({
+			url: global.serverApi + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contactVideoCall.time>' + global.date.local2server(global.date.getToday()) + ' and contactVideoCall.contactId=' + user.contact.id),
+			webCall: 'video.startAdminCall()',
+			responseType: 'json',
+			success(r) {
+				if (r.length > 1) {
+					var d = global.date.server2Local(r[1][0]).getTime(), n = new Date().getTime();
+					if (d - 600000 < n && d + 3600000 > n)
+						Video.startVideoCall(ui.q('chat').getAttribute('i'));
+					else
+						ui.navigation.openPopup(ui.l('attention'), ui.l('events.videoCallDateHint').replace('{0}', global.date.formatDate(r[1][0])));
+				} else
+					ui.navigation.openPopup(ui.l('attention'), ui.l('events.videoCallDateNoDate') + user.getAppointmentTemplate());
+			}
+		});
+	}
 }
