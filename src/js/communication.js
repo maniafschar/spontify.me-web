@@ -247,56 +247,59 @@ class communication {
 			success(r) {
 				if (ui.q('popup').getAttribute('error'))
 					ui.navigation.closePopup();
-				var e = ui.q('head title');
-				e.innerHTML = global.appTitle;
-				if (!user.contact || r.userId != user.contact.id)
-					return;
-				var total = 0;
-				var chat = 0;
-				if (r.chat.new) {
-					for (var i in r.chat.new) {
-						chat++;
-						if (ui.q('chat[i="' + i + '"]'))
-							pageChat.refresh();
-						else
-							ui.classAdd('chatList [i="' + i + '"]', 'highlightBackground');
-					}
-				}
-				var chatHash = r.chat.firstId + '|' + chat + '|' + Object.keys(r.chat.unseen).length;
-				if (chatHash != ui.q('chatList').getAttribute('hash')) {
-					pageChat.initActiveChats();
-					ui.q('chatList').setAttribute('hash', chatHash);
-				}
-				total += chat;
-				e = ui.q('badgeChats');
-				if (chat) {
-					ui.classAdd(e.parentNode, 'pulse highlight');
-					ui.html(e, chat);
-				} else {
-					ui.classRemove(e.parentNode, 'pulse highlight');
-					ui.html(e, '');
-				}
-				if (r.notification != pageHome.badge) {
-					communication.ajax({
-						url: global.serverApi + 'db/list?query=contact_listNotification',
-						responseType: 'json',
-						webCall: 'communication.ping()',
-						success(r2) {
-							pageHome.initNotification(r2);
-						}
-					});
-				}
-				total += r.notification;
-				pageChat.refreshActiveChat(r.chat.unseen);
-				if (r.recommend)
-					pageInfo.socialShareDialog();
-				if (total > 0)
-					ui.q('head title').innerHTML = total + global.separator + global.appTitle;
-				communication.setApplicationIconBadgeNumber(total);
+				communication.refresh(r);
 				clearTimeout(communication.pingExec);
 				communication.pingExec = setTimeout(communication.ping, ui.q('chat chatConversation') ? 3000 : 15000);
 			}
 		});
+	}
+	static refresh(r) {
+		var e = ui.q('head title');
+		e.innerHTML = global.appTitle;
+		if (!user.contact || r.userId != user.contact.id)
+			return;
+		var total = 0;
+		var chat = 0;
+		if (r.chat.new) {
+			for (var i in r.chat.new) {
+				chat++;
+				if (ui.q('chat[i="' + i + '"]'))
+					pageChat.refresh();
+				else
+					ui.classAdd('chatList [i="' + i + '"]', 'highlightBackground');
+			}
+		}
+		var chatHash = r.chat.firstId + '|' + chat + '|' + Object.keys(r.chat.unseen).length;
+		if (chatHash != ui.q('chatList').getAttribute('hash')) {
+			pageChat.initActiveChats();
+			ui.q('chatList').setAttribute('hash', chatHash);
+		}
+		total += chat;
+		e = ui.q('badgeChats');
+		if (chat) {
+			ui.classAdd(e.parentNode, 'pulse highlight');
+			ui.html(e, chat);
+		} else {
+			ui.classRemove(e.parentNode, 'pulse highlight');
+			ui.html(e, '');
+		}
+		if (r.notification != pageHome.badge) {
+			communication.ajax({
+				url: global.serverApi + 'db/list?query=contact_listNotification',
+				responseType: 'json',
+				webCall: 'communication.refresh(r)',
+				success(r2) {
+					pageHome.initNotification(r2);
+				}
+			});
+		}
+		total += r.notification;
+		pageChat.refreshActiveChat(r.chat.unseen);
+		if (r.recommend)
+			pageInfo.socialShareDialog();
+		if (total > 0)
+			ui.q('head title').innerHTML = total + global.separator + global.appTitle;
+		communication.setApplicationIconBadgeNumber(total);
 	}
 	static reset() {
 		WebSocket.stompClient.disconnect();
@@ -676,8 +679,9 @@ class WebSocket {
 	static stompClient;
 	static init() {
 		WebSocket.stompClient = Stomp.over(function () {
-			return new SockJS(global.serverApi + 'ws/init')
+			return new SockJS(global.server + 'ws/init')
 		});
+		WebSocket.stompClient.reconnectDelay = 5000;
 		WebSocket.stompClient.connect(communication.generateCredentials(), frame => {
 			WebSocket.stompClient.subscribe(
 				"/user/" + user.contact.id + "/video",
@@ -690,6 +694,10 @@ class WebSocket {
 					else if (data.candidate)
 						Video.onCandidate(data.candidate);
 				}
+			);
+			WebSocket.stompClient.subscribe(
+				"/user/" + user.contact.id + "/refresh",
+				r => communication.refresh(JSON.parse(r.body))
 			);
 		});
 	}

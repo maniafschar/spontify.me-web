@@ -2022,15 +2022,6 @@ buttonIcon svg {
 	line-height: 2.2;
 }
 
-buttonIcon.highlight {
-	color: var(--bg2stop);
-}
-
-buttonIcon.highlight svg {
-	fill: var(--bg2stop);
-	stroke: var(--bg2stop);
-}
-
 buttonIcon.left {
 	top: 0.5em;
 	left: 0.5em;
@@ -2541,8 +2532,7 @@ tabHeader {
 }
 
 .tabActive {
-	opacity: 1 !important;
-	color: black;
+	opacity: 1;
 }
 
 tab {
