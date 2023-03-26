@@ -15,10 +15,6 @@ class Video {
 	static template = v =>
 		global.template`
 <section id="call">
-	<div id="call-buttons-container">
-		<buttonIcon onclick="Video.rejectCall()" class="call-button"><img source="call_end" /></buttonIcon>
-	</div>
-	<div id="call-icoming"></div>
 	<div id="call-modal-icoming" tabindex="-1">
 		<div class="call-modal-header"><span id="call-modal-initiator"></span></div>
 		<div class="call-modal-footer">

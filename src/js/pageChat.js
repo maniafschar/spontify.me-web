@@ -390,13 +390,12 @@ class pageChat {
 						responseType: 'json',
 						webCall: 'pageChat.open(id)',
 						success(r2) {
-							var c = model.convert(new Contact(), r2, 1);
 							ui.attr('chat[i="' + id + '"] listHeader chatName', 'onclick', 'ui.navigation.autoOpen("' + global.encParam('p=' + id) + '",event)');
-							ui.html('chat[i="' + id + '"] listHeader chatName span', c.pseudonym);
-							if (c.contactLink.status == 'Friends')
+							ui.html('chat[i="' + id + '"] listHeader chatName span', r2['contact.pseudonym']);
+							if (r2['contactLink.status'] == 'Friends')
 								ui.q('chat').setAttribute('status', 'Friends');
-							if (c.imageList)
-								ui.attr('chat[i="' + id + '"] listHeader img', 'src', global.serverImg + c.imageList);
+							if (r2['contact.imageList'])
+								ui.attr('chat[i="' + id + '"] listHeader img', 'src', global.serverImg + r2['contact.imageList']);
 							else {
 								var e2 = ui.q('chat[i="' + id + '"] listHeader img');
 								ui.attr(e2, 'src', 'images/contact.svg');
