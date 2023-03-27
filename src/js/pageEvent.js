@@ -120,7 +120,7 @@ class pageEvent {
 		global.template`<text class="description event" ${v.oc}>
 <div><span class="chatLinks" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;),event)"><img src="${v.imageEventOwner}"><br>${v.contact.pseudonym}</span></div>
 <div class="date eventMargin">${v.date}${v.endDate}</div>
-<div class="eventMargin">${v.text}</div>
+<div class="eventMargin">${v.description}</div>
 <div class="eventMargin">${v.eventMustBeConfirmed}</div>
 <div class="eventMargin">${v.maxParticipants}</div>
 <div class="price eventMargin">${v.eventPrice}</div>
@@ -182,7 +182,7 @@ class pageEvent {
 						ui.q('detail card[i="' + v.id + '"] .eventParticipationButtons').innerHTML = pageEvent.getParticipateButton(v, count);
 						if (v.eventParticipate.state == 1) {
 							ui.classAdd('detail card[i="' + v.id + '"] text.description.event', 'participate');
-							ui.classRemove('detail  card[i="' + v.id + '"] div.ratingButton', 'noDisp');
+							ui.classRemove('detail  card[i="' + v.id + '"] div.ratingButton', 'hidden');
 						} else if (v.eventParticipate.state == -1) {
 							ui.classAdd('detail card[i="' + v.id + '"] text.description.event', 'canceled');
 							ui.q('detail card[i="' + v.id + '"] .reason').innerHTML = ui.l('events.canceled') + (v.eventParticipate.reason ? ':<br/>' + v.eventParticipate.reason : '');
@@ -204,9 +204,9 @@ class pageEvent {
 		else
 			v.imageEventOwner = 'images/contact.svg" style="padding:1em;';
 		v.text = Strings.replaceLinks(v.event.description).replace(/\n/g, '<br/>');
-		v.hideMeFavorite = ' noDisp';
-		v.hideMeEvents = ' noDisp';
-		v.hideMeMarketing = ' noDisp';
+		v.hideMeFavorite = ' hidden';
+		v.hideMeEvents = ' hidden';
+		v.hideMeMarketing = ' hidden';
 		if (v.event.url) {
 			var h = new URL(v.event.url).hostname;
 			while (h.indexOf('.') != h.lastIndexOf('.'))
@@ -216,7 +216,7 @@ class pageEvent {
 		if (user.contact && user.contact.id == v.event.contactId)
 			v.editAction = 'pageEvent.edit(' + v.locID + ',' + v.event.id + ')';
 		else
-			v.hideMeEdit = ' noDisp';
+			v.hideMeEdit = ' hidden';
 		return pageEvent.templateDetail(v);
 	}
 	static edit(locationID, id) {
@@ -280,7 +280,7 @@ class pageEvent {
 			v.startDate = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute;
 		}
 		if (!id || v.price > 0 && ui.q('detail card:last-child participantCount').innerText.length)
-			v.hideDelete = ' noDisp';
+			v.hideDelete = ' hidden';
 		d = new Date();
 		v.today = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
 		v.id = id;
@@ -308,7 +308,7 @@ class pageEvent {
 			v.endDate = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
 		}
 		if (id || locationID > 0) {
-			v.classLocation = ' noDisp';
+			v.classLocation = ' hidden';
 			if (locationID > 0) {
 				var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')))
 				v.locationName = e.name + '<br/>' + e.address.replace(/\n/g, global.separator);
@@ -329,7 +329,7 @@ class pageEvent {
 	}
 	static getCalendarList(data) {
 		if (!data || data.length < 2)
-			return '';
+			return [];
 		var list = [];
 		for (var i = 1; i < data.length; i++)
 			list.push(model.convert(new Location(), data, i));
@@ -493,7 +493,7 @@ class pageEvent {
 				if (global.date.local2server(v.event.startDate).indexOf(v.eventParticipate.eventDate) == 0)
 					v.classFavorite = v.eventParticipate.state == -1 ? ' canceled' : ' participate';
 				else
-					v.badgeDisp = 'noDisp';
+					v.badgeDisp = 'hidden';
 				v.classBGImg = v.imageList ? '' : bg;
 				if (v.event.imageList)
 					v.image = global.serverImg + v.event.imageList;
@@ -732,7 +732,7 @@ class pageEvent {
 				if (e.eventParticipate.state == '1') {
 					ui.classRemove('detail card:last-child .event', 'canceled');
 					ui.classRemove('row[i="' + e.event.id + '_' + eventDate + '"]', 'canceled');
-					ui.classRemove('row[i="' + e.event.id + '_' + eventDate + '"] badge', 'noDisp');
+					ui.classRemove('row[i="' + e.event.id + '_' + eventDate + '"] badge', 'hidden');
 					ui.classAdd('detail card:last-child .event', 'participate');
 					ui.classAdd('row[i="' + e.event.id + '_' + eventDate + '"]', 'participate');
 					ui.q('detail card:last-child .event .reason').innerHTML = '';

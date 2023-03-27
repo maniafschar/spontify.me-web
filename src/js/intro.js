@@ -65,8 +65,6 @@ class intro {
 			ui.css(e, 'bottom', 0);
 			e = ui.q('hint > div');
 		}
-		ui.css(e, 'width', data.size.split(',')[0]);
-		ui.css(e, 'height', data.size.split(',')[1]);
 		if (data.pos.split(',')[0].indexOf('-') == 0) {
 			ui.css(e, 'left', '');
 			ui.css(e, 'right', data.pos.split(',')[0].substring(1));
@@ -81,6 +79,11 @@ class intro {
 			ui.css(e, 'bottom', '');
 			ui.css(e, 'top', data.pos.split(',')[1]);
 		}
+		if (data.size.split(',')[0].indexOf('-') == 0)
+			ui.css(e, 'right', data.size.split(',')[0].substring(1));
+		else
+			ui.css(e, 'width', data.size.split(',')[0]);
+		ui.css(e, 'height', data.size.split(',')[1]);
 		ui.attr(e, 'onclick', data.onclick ? data.onclick : 'intro.closeHint()');
 		ui.attr(e, 'i', global.hash(data.desc));
 		ui.attr(e, 'timestamp', new Date().getTime());

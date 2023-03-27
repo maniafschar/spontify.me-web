@@ -381,7 +381,7 @@ class pageChat {
 					ui.html('chat', pageChat.template({
 						id: id,
 						draft: user.get('chat' + id),
-						ai: pageChat.aiEnabled(id, r) ? '' : ' class="noDisp"',
+						ai: pageChat.aiEnabled(id, r) ? '' : ' class="hidden"',
 						action: global.getDevice() == 'computer' ? 'onclick' : 'onmousedown'
 					}));
 					formFunc.initFields('chatInput');
@@ -623,7 +623,7 @@ class pageChat {
 							if (v.textId) {
 								pageChat.admin.ai += 2;
 								if (pageChat.admin.ai > 40)
-									ui.classAdd('chatInput input', 'noDisp');
+									ui.classAdd('chatInput input', 'hidden');
 							}
 						}
 					}

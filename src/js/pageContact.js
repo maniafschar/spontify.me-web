@@ -191,10 +191,10 @@ ${v.matchIndicatorHintDescription}
 				ui.toggleHeight(ui.q('detail card:last-child [name="friend"]'));
 				if (status == 'Friends') {
 					ui.classAdd('main>buttonIcon.bottom.right', 'highlight');
-					ui.classRemove('detail card:last-child[i="' + id + '"] [name="buttonGroups"]', 'noDisp');
+					ui.classRemove('detail card:last-child[i="' + id + '"] [name="buttonGroups"]', 'hidden');
 				} else {
 					ui.classRemove('main>buttonIcon.bottom.right', 'highlight');
-					ui.classAdd('detail card:last-child[i="' + id + '"] [name="buttonGroups"]', 'noDisp');
+					ui.classAdd('detail card:last-child[i="' + id + '"] [name="buttonGroups"]', 'hidden');
 				}
 			}
 		});
@@ -205,7 +205,7 @@ ${v.matchIndicatorHintDescription}
 		v.distance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
 		v.birthday = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
 		if (user.contact)
-			v.loggedIn = ' noDisp';
+			v.loggedIn = ' hidden';
 		if (v.birthday.age) {
 			if (v.age)
 				v.ageDisplay = ' (' + v.age + ')';
@@ -269,11 +269,11 @@ ${v.matchIndicatorHintDescription}
 		if (preview && !v.image)
 			v.matchIndicatorClass = ' class="fade"';
 		if (!user.contact || ui.navigation.getActiveID() == 'settings')
-			v.blocked = ' noDisp';
+			v.blocked = ' hidden';
 		else if (user.contact.id == v.id)
-			v.hideMe = ' noDisp';
+			v.hideMe = ' hidden';
 		if (!user.contact)
-			v.hideNotLoggedIn = ' noDisp';
+			v.hideNotLoggedIn = ' hidden';
 		if (v.image)
 			v.image = '<img src="' + global.serverImg + v.image + '" />';
 		else {
@@ -367,7 +367,7 @@ ${v.matchIndicatorHintDescription}
 			if (v.authenticate)
 				v.badgeDisp = 'authenticated';
 			else
-				v.badgeDisp = 'noDisp';
+				v.badgeDisp = 'hidden';
 			if (activeID == 'detail')
 				v.oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)';
 			else if (activeID == 'settings')

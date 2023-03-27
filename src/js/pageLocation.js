@@ -253,7 +253,7 @@ ${v.rating}
 		if (!v.id)
 			v.name = v.contact.pseudonym + (v.contact.age ? ' (' + v.contact.age + ')' : '');
 		v.id = id;
-		v.hideMePotentialParticipants = ' noDisp';
+		v.hideMePotentialParticipants = ' hidden';
 		v.data = encodeURIComponent(JSON.stringify(v));
 		v.distance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 ? 0 : 1).replace('.', ',') : '';
 		v.classBGImg = '';
@@ -286,7 +286,7 @@ ${v.rating}
 			else
 				v.copyLinkHint = ui.l('copyLinkHint.locationSocial');
 			v.editAction = 'pageLocation.edit(' + v.id + ')';
-			v.hideMeMatchIndicator = ' class="noDisp"';
+			v.hideMeMatchIndicator = ' class="hidden"';
 		}
 		if (v.image)
 			v.image = global.serverImg + v.image;
@@ -301,7 +301,7 @@ ${v.rating}
 		if (r > 0)
 			v.rating = '<detailRating onclick="ratings.open(' + v.event.id + ',&quot;' + (v.event.id ? 'event.id=' + v.event.id : eventWithLocation ? 'event.locationId=' + v.locID : 'event.contactId=' + v.contact.id) + '&quot;)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + r) + '%;">★★★★★</full></ratingSelection></detailRating>';
 		else if (v.event.id && v.event.locationId >= -1 && user.contact && v.event.contactId != user.contact.id)
-			v.rating = '<div style="margin:1em 0;" class="ratingButton noDisp"><buttontext class="bgColor" onclick="ratings.open(' + v.event.id + ')">' + ui.l('rating.save') + '</buttontext></div>';
+			v.rating = '<div style="margin:1em 0;" class="ratingButton hidden"><buttontext class="bgColor" onclick="ratings.open(' + v.event.id + ')">' + ui.l('rating.save') + '</buttontext></div>';
 		if (eventWithLocation)
 			v.distanceDisplay = ' style="display:none;"';
 		else {
@@ -317,10 +317,10 @@ ${v.rating}
 			v.bonus = '<text style="margin:1em 0;" class="highlightBackground">' + ui.l('locations.bonus') + v.bonus + '<br/>' + ui.l('locations.bonusHint') + '</text>';
 		if (user.contact) {
 			if (v.event.contactId == user.contact.id || v.contactId == user.contact.id)
-				v.hideMeBlock = ' noDisp';
-			v.loggedIn = ' noDisp';
+				v.hideMeBlock = ' hidden';
+			v.loggedIn = ' hidden';
 		} else
-			v.notLoggedIn = ' noDisp';
+			v.notLoggedIn = ' hidden';
 		if (v.locationFavorite.favorite)
 			v.favorite = ' favorite';
 		if (global.isBrowser())
@@ -344,7 +344,7 @@ ${v.rating}
 				}
 			});
 		else
-			v.hideMeGoogle = ' noDisp';
+			v.hideMeGoogle = ' hidden';
 		return pageLocation.templateDetail(v);
 	}
 	static edit(id) {
@@ -426,7 +426,7 @@ ${v.rating}
 		var s = '', v;
 		for (var i = 1; i < l.length; i++) {
 			v = model.convert(new Location(), l, i);
-			v.badgeDisp = 'noDisp';
+			v.badgeDisp = 'hidden';
 			v._angle = geoData.getAngel(geoData.current, { lat: v.latitude, lon: v.longitude });
 			l[i].push(v._angle);
 			v.locID = v.id;

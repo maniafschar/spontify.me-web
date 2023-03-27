@@ -1,6 +1,6 @@
 import { communication } from './communication';
 
-export { model, Contact, ContactLink, Location, ContactNotification, EventParticipate, LocationFavorite, Event, EventRating, Block, ContactChat, ContactVisit, ContactGroup, ContactGroupLink };
+export { model, Contact, ContactLink, Location, ContactNews, ContactNotification, EventParticipate, LocationFavorite, Event, EventRating, Block, ContactChat, ContactVisit, ContactGroup, ContactGroupLink };
 
 class model {
 	static reportedErrors = {};
@@ -106,6 +106,16 @@ class Contact extends BaseEntity {
 	eventRating = new EventRating();
 }
 
+class ContactChat extends BaseEntity {
+	action;
+	contactId;
+	contactId2;
+	image;
+	note;
+	seen;
+	textId;
+}
+
 class ContactGroup extends BaseEntity {
 	contactId;
 	name;
@@ -122,6 +132,13 @@ class ContactLink extends BaseEntity {
 	status;
 }
 
+class ContactNews extends BaseEntity {
+	description;
+	image;
+	publish;
+	url;
+}
+
 class ContactNotification extends BaseEntity {
 	action;
 	contactId;
@@ -134,20 +151,11 @@ class ContactVisit extends BaseEntity {
 	count;
 }
 
-class ContactChat extends BaseEntity {
-	action;
-	contactId;
-	contactId2;
-	image;
-	note;
-	seen;
-	textId;
-}
-
 class Event extends BaseEntity {
 	category;
 	confirm;
 	contactId;
+	description;
 	endDate;
 	image;
 	imageList;
@@ -159,7 +167,6 @@ class Event extends BaseEntity {
 	startDate;
 	skills;
 	skillsText;
-	text;
 	type;
 	url;
 }

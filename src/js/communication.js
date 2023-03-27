@@ -73,7 +73,7 @@ class communication {
 			if (param.progressBar != false)
 				ui.css('progressbar', 'display', '');
 			xmlhttp.setRequestHeader('webCall', param.webCall);
-			xmlhttp.setRequestHeader('client', '' + user.client);
+			xmlhttp.setRequestHeader('clientId', '' + user.clientId);
 			if (user.contact) {
 				var c = communication.generateCredentials();
 				xmlhttp.setRequestHeader('user', c.user);
@@ -249,7 +249,7 @@ class communication {
 					ui.navigation.closePopup();
 				communication.refresh(r);
 				clearTimeout(communication.pingExec);
-				communication.pingExec = setTimeout(communication.ping, ui.q('chat chatConversation') ? 3000 : 15000);
+				communication.pingExec = setTimeout(communication.ping, 60000);
 			}
 		});
 	}

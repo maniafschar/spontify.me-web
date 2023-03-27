@@ -354,6 +354,7 @@
 			"locationPickerInput": "search location here or on the map",
 			"locationPickerReset": "Reset",
 			"locationPickerTitle": "Choose location",
+			"news": "News",
 			"saveEvent": "Let's go!"
 		},
 		"info": {
@@ -450,7 +451,6 @@
 			"clickForMoreDetails": "More...",
 			"desc": "Location description",
 			"editHint": "You entered {0} Locations until now. Enter at least 5 locations, then you may edit other locations, too.",
-			"hint": "${buddies}, the best rated Locations have created, are mentioned in the newsletter.",
 			"loginAction": "as soon as you are logged in, you may use this functionality.",
 			"my": "The following locations I entered",
 			"myNone": "I have not yet entered Locations.",

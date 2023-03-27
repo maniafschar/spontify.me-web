@@ -321,7 +321,7 @@ class Strings {
 						img = v.event.imageList;
 					if (img)
 						img = global.serverImg + img;
-					s = t == 'contact' ? v.pseudonym : t == 'location' ? v.name : v.text;
+					s = t == 'contact' ? v.pseudonym : t == 'location' ? v.name : v.description;
 					e = ui.qa('[name="autoOpen' + (t == 'contact' ? 'p' : t == 'event' ? 'e' : 'l') + '_' + v.id + '"] > img');
 					processed[v.id] = 1;
 					if (img) {

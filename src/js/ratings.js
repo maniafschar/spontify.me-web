@@ -43,7 +43,7 @@ class ratings {
 		v.participateId = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).eventParticipate.id;
 		v.bg = 'bgColor';
 		if (draft)
-			v.draft = draft.values.text;
+			v.draft = draft.values.description;
 		return ratings.templateForm(v);
 	}
 	static open(id, search) {
@@ -63,15 +63,15 @@ class ratings {
 				else
 					form = ratings.getForm(id);
 				ui.html('detail card:last-child [name="favLoc"]', '');
-				var s = '', date, pseudonym, text, img, rate;
+				var s = '', date, pseudonym, description, img, rate;
 				for (var i = 1; i < list.length; i++) {
 					var v = model.convert(new Contact(), list, i);
 					date = global.date.formatDate(v.eventRating.createdAt);
 					pseudonym = v.id == user.contact.id ? ui.l('you') : v.pseudonym;
-					text = v.eventRating.description ? v.eventRating.description + global.separator : '';
+					description = v.eventRating.description ? v.eventRating.description + global.separator : '';
 					img = v.eventRating.image ? '<br/><img src="' + global.serverImg + v.eventRating.image + '"/>' : '';
 					rate = '<rating><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.eventRating.rating) + '%;">★★★★★</full></rating>';
-					s += '<ratingItem><span onclick="ui.navigation.autoOpen(&quot;' + global.encParam('e=' + pageEvent.getId(v)) + '&quot;,event)">' + rate + date + ' ' + text + '</span><span onclick="ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)">' + pseudonym + '</span>' + img + '</ratingItem>';
+					s += '<ratingItem><span onclick="ui.navigation.autoOpen(&quot;' + global.encParam('e=' + pageEvent.getId(v)) + '&quot;,event)">' + rate + date + ' ' + description + '</span><span onclick="ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)">' + pseudonym + '</span>' + img + '</ratingItem>';
 				}
 				if (s)
 					s = '<ratingHistory>' + s + '</ratingHistory>';
@@ -127,6 +127,6 @@ class ratings {
 	}
 	static saveDraft() {
 		var f = formFunc.getForm('popup form');
-		user.set('rating', f.values.text ? f : null);
+		user.set('rating', f.values.description ? f : null);
 	}
 }

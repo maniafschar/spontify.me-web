@@ -6,7 +6,7 @@ import { ui } from './ui';
 export { user };
 
 class user {
-	static client = parseInt('{placeholderClient}');
+	static clientId = parseInt('{placeholderClientId}');
 	static contact;
 	static email;
 	static password = null;
@@ -87,7 +87,7 @@ class user {
 	static getAppointmentTemplate(type) {
 		var v = {}, d = global.date.nextWorkday(new Date());
 		if (type == 'authenticate')
-			v.inputDisp = 'class="noDisp"';
+			v.inputDisp = 'class="hidden"';
 		v.appointmentDay1 = global.date.formatDate(d);
 		v.appointmentDay1 = v.appointmentDay1.substring(0, v.appointmentDay1.lastIndexOf(' '));
 		v.appointmentDay1Raw = global.date.local2server(d).substring(0, 10);

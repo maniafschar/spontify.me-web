@@ -23,7 +23,7 @@ class Video {
 		</div>
 	</div>
 </section>
-<section id="videochat" class="noDisp">
+<section id="videochat" class="hidden">
 	<div id="videochat-streams"></div>
 	<div id="videochat-buttons-container">
 		<buttonIcon id="videochat-mute-unmute" onclick="Video.setAudioMute()" class="videochat-button" disabled><img source="mic_off" /></buttonIcon>
@@ -174,8 +174,8 @@ class Video {
 	}
 
 	static acceptCall() {
-		ui.classAdd('#call', 'noDisp');
-		ui.classRemove('#videochat', 'noDisp');
+		ui.classAdd('#call', 'hidden');
+		ui.classRemove('#videochat', 'hidden');
 		Video.hideIncomingCallModal();
 		navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
 			ui.q('videoCall #localStream').srcObject = stream;
@@ -183,7 +183,7 @@ class Video {
 			Video.setActiveDeviceId(stream);
 			Video._prepareVideoElement('localStream');
 			var e = ui.q('#videochat');
-			ui.classRemove(e, 'noDisp');
+			ui.classRemove(e, 'hidden');
 			e.style.background = 'transparent';
 			ui.q('#signal-out').pause();
 			ui.q('#signal-in').pause();
@@ -215,7 +215,7 @@ class Video {
 		Video.connectedId = id;
 		Video.init();
 		var e = ui.q('#videochat');
-		e.classList.remove('noDisp');
+		e.classList.remove('hidden');
 		e.style.background = 'transparent';
 		ui.css('videoCall', 'display', 'block');
 		ui.q('#signal-out').play();
@@ -237,8 +237,8 @@ class Video {
 		}).catch((err) => {
 			ui.navigation.openPopup(ui.l('attention'), err);
 		});
-		ui.classAdd('#call', 'noDisp');
-		ui.classRemove('#videochat', 'noDisp');
+		ui.classAdd('#call', 'hidden');
+		ui.classRemove('#videochat', 'hidden');
 		// TODO send push notification
 	};
 
@@ -268,8 +268,8 @@ class Video {
 		var e = ui.q('#videochat-streams');
 		e.innerHTML = Video.templateStreams();
 		e.classList.value = '';
-		ui.classRemove('#call', 'noDisp');
-		ui.classAdd('#videochat', 'noDisp');
+		ui.classRemove('#call', 'hidden');
+		ui.classAdd('#videochat', 'hidden');
 		ui.classRemove('#videochat-mute-unmute', 'muted');
 
 		if (!global.isBrowser() && global.getOS() == 'ios')
@@ -279,7 +279,7 @@ class Video {
 
 	static leave() {
 		ui.q('videoCall').style.display = 'none';
-		ui.q('#call').classList.add('noDisp');
+		ui.q('#call').classList.add('hidden');
 	};
 
 	static onDevicesChangeListener() {
@@ -364,8 +364,8 @@ class Video {
 			ui.q('#signal-in').pause();
 		} else {
 			Video.init();
-			ui.classRemove('videoCall #call', 'noDisp');
-			ui.classAdd('videoCall #videochat', 'noDisp');
+			ui.classRemove('videoCall #call', 'hidden');
+			ui.classAdd('videoCall #videochat', 'hidden');
 			ui.q('videoCall').style.display = 'block';
 			ui.q('#call-modal-initiator').innerHTML = Video.connectedUser;
 			ui.classAdd('#call-modal-icoming', 'show');
@@ -383,7 +383,7 @@ class Video {
 	}
 	static startAdminCall() {
 		communication.ajax({
-			url: global.serverApi + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contactVideoCall.time>' + global.date.local2server(global.date.getToday()) + ' and contactVideoCall.contactId=' + user.contact.id),
+			url: global.serverApi + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contactVideoCall.time>\'' + global.date.local2server(global.date.getToday()) + '\' and contactVideoCall.contactId=' + user.contact.id),
 			webCall: 'video.startAdminCall()',
 			responseType: 'json',
 			success(r) {

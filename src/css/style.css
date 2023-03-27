@@ -440,6 +440,36 @@ home {
 	z-index: 1;
 }
 
+news {
+	position: relative;
+	display: block;
+	overflow: hidden;
+}
+
+news tab {
+	width: 50%;
+}
+
+news tabBody {
+	width: 200%;
+	transition: all 0.4s ease-out;
+}
+
+news tabBody div {
+	width: 50%;
+	display: block;
+	float: left;
+	position: relative;
+}
+
+news buttonIcon {
+	right: -0.5em;
+	box-shadow: none;
+	color: black;
+	font-size: 3.2em;
+	top: -0.7em;
+}
+
 .bgColor {
 	background: linear-gradient(var(--bg2stop) 0%, var(--bg2start) 100%) center center / 100% no-repeat;
 }
@@ -1003,7 +1033,7 @@ qrCheck.negative {
 	margin-bottom: 1em;
 }
 
-.noDisp {
+.hidden {
 	display: none !important;
 }
 

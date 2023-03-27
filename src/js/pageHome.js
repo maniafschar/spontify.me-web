@@ -4,7 +4,7 @@ import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './initialisation';
 import { intro } from './intro';
-import { Contact, Location, model } from './model';
+import { Contact, ContactNews, Location, model } from './model';
 import { pageChat } from './pageChat';
 import { pageEvent } from './pageEvent';
 import { formFunc, ui } from './ui';
@@ -14,10 +14,11 @@ export { pageHome };
 
 class pageHome {
 	static badge = -1;
-	static map;
+	static events;
+	static news;
 	static template = v =>
 		global.template`<homeHeader${v.logoSmall}>
-	<img onclick="geoData.openLocationPicker(event)" source="logo"/>
+	<img onclick="${v.actionLogo}" source="logo"/>
 	<text onclick="pageHome.goToSettings(event)" ${v.dispProfile}>
 		${v.imgProfile}<br/>
 		<name>${v.name}</name>
@@ -37,6 +38,46 @@ class pageHome {
 	<div></div>
 </teaser>
 </homeBody>`;
+	static templateNews = v =>
+		global.template`<news><tabHeader>
+<tab onclick="pageHome.selectTab('news')" i="news" class="tabActive">
+${ui.l('home.news')}
+</tab>
+<tab onclick="pageHome.selectTab('events')" i="events">
+${ui.l('events.title')}
+</tab>
+</tabHeader>
+<tabBody>
+<div class="news"><buttonIcon onclick="pageHome.editNews()"${v.hideEdit}>+</buttonIcon>${v.news}</div>
+<div class="events"><buttonIcon onclick="pageEvent.edit()"${v.hideEdit}>+</buttonIcon>${v.events}</div>
+</tabBody></news>`;
+	static templateNewsEdit = v =>
+		global.template`<form name="editElement" onsubmit="return false">
+<input type="hidden" name="id" value="${v.id}"/>
+<field>
+	<label style="padding-top:0;">${ui.l('events.location')}</label>
+	<value>
+		<textarea name="description"></textarea>
+	</value>
+</field>
+<field>
+	<label style="padding-top:0;">${ui.l('events.location')}</label>
+	<value>
+		<input name="image" type="file" />
+	</value>
+</field>
+<field>
+	<label style="padding-top:0;">${ui.l('events.location')}</label>
+	<value>
+		<input name="url" />
+	</value>
+</field>
+<field>
+	<label style="padding-top:0;">${ui.l('events.location')}</label>
+	<value>
+		<input name="publish" type="datetime-local" placeholder="TT.MM.JJJJ HH:MM" value="${v.publish}" step="900" min="${v.today}T00:00:00" />
+	</value>
+</field>`;
 	static clickNotification(id, action) {
 		communication.ajax({
 			url: global.serverApi + 'db/one',
@@ -59,6 +100,12 @@ class pageHome {
 		if (ui.cssValue(e, 'display') != 'none')
 			ui.toggleHeight(e);
 	}
+	static editNews(id) {
+		var v = {};
+		if (user.contact.type != 'adminClient')
+			v.hideEdit = ' class="hidden"';
+		ui.navigation.openPopup(ui.l(''), pageHome.templateNewsEdit(v));
+	}
 	static goToSettings(event) {
 		if (!ui.parents(event.target, 'hint'))
 			ui.navigation.goTo('settings');
@@ -66,7 +113,9 @@ class pageHome {
 	static init(force) {
 		var e = ui.q('home');
 		if (force || !ui.q('home teaser.events>div card')) {
-			var v = {};
+			var v = {
+				actionLogo: 'geoData.openLocationPicker(event)'
+			};
 			if (user.contact) {
 				if (user.contact.imageList)
 					v.imgProfile = '<img src="' + global.serverImg + user.contact.imageList + '"/>';
@@ -74,10 +123,12 @@ class pageHome {
 					v.imgProfile = '<img src="images/contact.svg" style="box-shadow:none;"/>';
 				v.logoSmall = ' class="logoSmall"';
 				v.name = user.contact.pseudonym;
-				v.infoButton = ' noDisp';
-				v.langButton = ' noDisp';
+				v.infoButton = ' hidden';
+				v.langButton = ' hidden';
+				if (user.clientId > 1)
+					v.actionLogo = 'pageHome.openNews()';
 			} else {
-				v.dispProfile = 'class="noDisp"';
+				v.dispProfile = 'class="hidden"';
 				v.lang = global.language;
 			}
 			e.innerHTML = pageHome.template(v);
@@ -129,7 +180,7 @@ class pageHome {
 			ui.html('home item.bluetooth text', ui.l(bluetooth.state == 'on' && user.contact.bluetooth ? 'bluetooth.activated' : 'bluetooth.deactivated'));
 		formFunc.image.replaceSVGs();
 		if (user.contact) {
-			if (user.client > 1) {
+			if (user.clientId > 1) {
 				ui.q('home homeHeader svg>g.client>g.client image').setAttribute('x', 680);
 				ui.q('home homeHeader svg>g.client>g.client image').setAttribute('width', 320);
 				ui.q('home homeHeader svg>g.client>g.client text').setAttribute('x', 840);
@@ -180,13 +231,58 @@ class pageHome {
 		if (ui.q('badgeNotifications'))
 			ui.q('badgeNotifications').innerText = Math.max(pageHome.badge, 0);
 	}
-	static openHintDescription() {
-	}
 	static openLanguage(event) {
 		event.stopPropagation();
 		ui.navigation.openPopup(ui.l('langSelect'),
 			'<div style="padding:1em 0;"><buttontext class="bgColor' + (global.language == 'DE' ? ' favorite' : '') + '" onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE">Deutsch</buttontext>' +
 			'<buttontext class="bgColor' + (global.language == 'EN' ? ' favorite' : '') + '" onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</buttontext></div>');
+	}
+	static openNews() {
+		var render = function () {
+			if (!pageHome.news || !pageHome.events)
+				return;
+			var v = {}, s = '';
+			for (var i = 1; i < pageHome.news.length; i++) {
+				var e = model.convert(new ContactNews(), pageHome.news, i);
+				s += e.url ? '<news onclick="ui.navigation.openHTML(&quot;' + e.url + '&quot;)">' : '<news>';
+				s += global.date.formatDate(e.publish);
+				if (e.image)
+					s += '<img src="' + global.serverImg + e.image + '"/>';
+				s += e.description;
+				s += '</news>'
+			}
+			v.news = s ? s : 'keine news';
+			s = '';
+			for (var i = 0; i < pageHome.events.length; i++) {
+				var e = pageHome.events[i];
+			}
+			v.events = s ? s : 'keine events';
+			intro.openHint({ desc: pageHome.templateNews(v), pos: '1em,1em', size: '-1em,auto', onclick: 'return false' });
+		}
+		if (!pageHome.news)
+			communication.ajax({
+				url: global.serverApi + 'db/list?query=contact_listNews&limit=25&search=' + encodeURIComponent('contactNews.publish<\'' + global.date.local2server(new Date()) + '\''),
+				webCall: 'pageHome.openNews()',
+				responseType: 'json',
+				success(l) {
+					pageHome.news = l;
+					render();
+				}
+			});
+		if (!pageHome.events) {
+			var d = new Date();
+			d.setDate(new Date().getDate() + 14);
+			communication.ajax({
+				url: global.serverApi + 'db/list?query=event_list&search=' + encodeURIComponent('contact.type=\'clientAdmin\' and event.startDate<=\'' + global.date.local2server(d).substring(0, 10) + '\' and event.endDate>=\'' + global.date.local2server(new Date()).substring(0, 10) + '\''),
+				webCall: 'pageHome.openNews()',
+				responseType: 'json',
+				success(l) {
+					pageHome.events = pageEvent.getCalendarList(l);
+					render();
+				}
+			});
+		}
+		render();
 	}
 	static reset() {
 		pageHome.badge = -1;
@@ -196,6 +292,11 @@ class pageHome {
 		ui.classRemove('navigation buttonIcon', 'pulse highlight');
 		ui.q('navigation buttonIcon.chats badgeChats').innerHTML = '';
 		ui.q('navigation buttonIcon.notifications badgeNotifications').innerHTML = 0;
+	}
+	static selectTab(id) {
+		ui.q('hint tabBody').style.marginLeft = (id == 'news' ? 0 : '-100%');
+		ui.classRemove('hint tab', 'tabActive');
+		ui.classAdd('hint tab[i="' + id + '"]', 'tabActive');
 	}
 	static toggleNotification() {
 		if (!user.contact)

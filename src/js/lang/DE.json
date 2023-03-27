@@ -354,6 +354,7 @@
 			"locationPickerInput": "Ort hier eingeben oder auf der Karte suchen",
 			"locationPickerReset": "Zurücksetzen",
 			"locationPickerTitle": "Standort wählen",
+			"news": "News",
 			"saveEvent": "Los geht's!"
 		},
 		"info": {
@@ -450,7 +451,6 @@
 			"clickForMoreDetails": "Mehr...",
 			"desc": "Beschreibung der Location",
 			"editHint": "Du hast erst {0} Locations angelegt. Lege mindestens ${minLocations} Locations an, dann kannst Du andere Locations auch ändern.",
-			"hint": "${buddies}, die die bestbewerteten Locations angelegt haben, werden im Newsletter erwähnt.",
 			"loginAction": "Sobald Du eingeloggt bist, kannst Du diese Funktionalität benutzen.",
 			"my": "Folgende Locations habe ich eingegeben",
 			"myNone": "Ich habe noch keine Locations eingegeben.",

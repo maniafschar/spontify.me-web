@@ -19,6 +19,7 @@ class geoData {
 	static localizationAsked = false;
 	static localized = false;
 	static manual = false;
+	static map;
 	static rad = 0.017453292519943295;
 
 	static deviceOrientationHandler(event) {
@@ -121,7 +122,7 @@ class geoData {
 				responseType: 'json',
 				webCall: 'geoData.mapReposition()',
 				success(r) {
-					pageHome.map.setCenter({ lat: r.latitude, lng: r.longitude });
+					geoData.map.setCenter({ lat: r.latitude, lng: r.longitude });
 				}
 			});
 		}
@@ -158,7 +159,7 @@ class geoData {
 				setTimeout(function () {
 					if (ui.q('locationPicker').style.display != 'none')
 						ui.toggleHeight('locationPicker');
-					pageHome.map = new google.maps.Map(ui.q('mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 12, center: new google.maps.LatLng(geoData.current.lat, geoData.current.lon), zoom: 9 });
+					geoData.map = new google.maps.Map(ui.q('mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 12, center: new google.maps.LatLng(geoData.current.lat, geoData.current.lon), zoom: 9 });
 				}, 500);
 			});
 	}
@@ -238,7 +239,7 @@ class geoData {
 		geoData.updateCompass();
 	}
 	static saveLocationPicker(e) {
-		geoData.save({ latitude: e ? e.lat : pageHome.map.getCenter().lat(), longitude: e ? e.lon : pageHome.map.getCenter().lng(), manual: true }, function () { pageHome.init(true); });
+		geoData.save({ latitude: e ? e.lat : geoData.map.getCenter().lat(), longitude: e ? e.lon : geoData.map.getCenter().lng(), manual: true }, function () { pageHome.init(true); });
 	}
 	static updateCompass(angle) {
 		if (!angle)
