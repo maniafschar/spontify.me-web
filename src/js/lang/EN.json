@@ -355,7 +355,10 @@
 			"locationPickerReset": "Reset",
 			"locationPickerTitle": "Choose location",
 			"news": "News",
-			"saveEvent": "Let's go!"
+			"noNews": "No {0} yet from your club.",
+			"publish": "publish on",
+			"saveEvent": "Let's go!",
+			"url": "Link for further information"
 		},
 		"info": {
 			"adsFinish": "Thank you for your feedback!",

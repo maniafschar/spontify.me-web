@@ -281,8 +281,8 @@ class pageEvent {
 		}
 		if (!id || v.price > 0 && ui.q('detail card:last-child participantCount').innerText.length)
 			v.hideDelete = ' hidden';
-		d = new Date();
-		v.today = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+		d = global.date.getDateFields(new Date());
+		v.today = d.year + '-' + d.month + '-' + d.day;
 		v.id = id;
 		v.locationID = locationID;
 		if (!v.type || v.type == 'o')
@@ -300,12 +300,14 @@ class pageEvent {
 		if (!v.startDate) {
 			d = new Date();
 			d.setDate(d.getDate() + 1);
-			v.startDate = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2) + 'T' + ('0' + d.getHours()).slice(-2) + ':00';
+			d = global.date.getDateFields(d);
+			v.startDate = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':00';
 		}
 		if (!v.endDate) {
 			d = new Date();
 			d.setMonth(d.getMonth() + 6);
-			v.endDate = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+			d = global.date.getDateFields(d);
+			v.endDate = d.year + '-' + d.month + '-' + d.day;
 		}
 		if (id || locationID > 0) {
 			v.classLocation = ' hidden';
@@ -922,7 +924,7 @@ class pageEvent {
 		ui.q('popup input[name="skillsText"]').value = v.hashtags;
 		v = formFunc.getForm('popup form');
 		if (!v.values.price)
-			v.values.price;
+			v.values.price = 0;
 		if (ui.q('popup errorHint')) {
 			ui.q('popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });;
 			return;

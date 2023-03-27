@@ -460,6 +460,28 @@ news tabBody div {
 	display: block;
 	float: left;
 	position: relative;
+	padding-top: 0.5em;
+}
+
+news tabBody card {
+	text-align: left;
+	background: rgba(0, 0, 0, 0.1);
+	position: relative;
+	display: block;
+	padding: 0.5em;
+	border-radius: 1em;
+}
+
+news tabBody card date {
+	font-size: 0.7em;
+	position: absolute;
+	left: 0.77em;
+}
+
+news tabBody card description {
+	display: block;
+	margin-top: 1em;
+	position: relative;
 }
 
 news buttonIcon {
@@ -467,7 +489,7 @@ news buttonIcon {
 	box-shadow: none;
 	color: black;
 	font-size: 3.2em;
-	top: -0.7em;
+	bottom: -1.1em;
 }
 
 .bgColor {
@@ -791,7 +813,7 @@ settings save {
 	right: 0;
 	bottom: 0.1em;
 	display: none;
-	filter: drop-shadow(0 0 0.1em rgba(0, 0, 0, 0.3));
+	filter: drop-shadow(0 0 0.1em rgba(0, 0, 0, 0.4));
 	z-index: 1;
 	height: 1em;
 	width: 1em;
@@ -1398,7 +1420,7 @@ popup {
 	left: 0;
 	padding: 1em 1em 2em 1em;
 	text-align: center;
-	filter: drop-shadow(0 0 2em rgba(0, 0, 0, 0.3));
+	filter: drop-shadow(0 0 2em rgba(0, 0, 0, 0.4));
 }
 
 popupTitle {
@@ -2607,11 +2629,6 @@ videoCall {
 	z-index: 6;
 }
 
-videoCall buttonIcon {
-	background: darkgoldenrod;
-	position: relative;
-}
-
 videoCall #snackbar {
 	visibility: hidden;
 	min-width: 250px;
@@ -2633,22 +2650,23 @@ videoCall #call-modal-icoming {
 	justify-content: space-between;
 	align-items: center;
 	visibility: hidden;
-	height: 100px;
-	width: 240px;
-	background-color: #fff;
-	border-radius: 10px;
-	padding: 15px;
+	height: 6em;
+	width: 18em;
+	background: rgba(255, 255, 255, 0.95);
+	border-radius: 1em;
+	padding: 1em;
 	position: fixed;
 	z-index: 1;
 	left: 50%;
-	top: 40px;
+	top: 4em;
 	transform: translate(-50%);
+	filter: drop-shadow(0 0 0.5em rgba(0, 0, 0, 0.4));
 }
 
 videoCall #call-modal-icoming .call-modal-header {
 	color: black;
-	font-size: 20px;
-	padding: 10px 0;
+	font-size: 1.3em;
+	padding: 0.25em 0 1em 0;
 }
 
 videoCall #call-modal-icoming .call-modal-footer {
@@ -2658,13 +2676,10 @@ videoCall #call-modal-icoming .call-modal-footer {
 	align-items: center;
 }
 
-videoCall #call-modal-icoming .call-modal-button {
-	height: 40px;
-	width: 100px;
-	border-radius: 20px;
-	color: #fff;
-	font-size: 18px;
-	cursor: pointer;
+videoCall buttonIcon {
+	background: darkgoldenrod;
+	position: relative;
+	scale: 1.5;
 }
 
 videoCall #call-modal-icoming #call-modal-reject {
@@ -2697,22 +2712,11 @@ videoCall #videochat {
 
 videoCall #call-buttons-container,
 videoCall #videochat-buttons-container {
-	width: 320px;
-	height: 50px;
+	width: 25em;
 	position: fixed;
-	bottom: 25px;
+	bottom: 2em;
 	display: flex;
-	flex-direction: row;
-	align-items: center;
 	justify-content: space-around;
-	z-index: 200;
-}
-
-videoCall #call-buttons-container .call-button,
-videoCall .videochat-button {
-	width: 50px;
-	height: 50px;
-	border-radius: 25px;
 }
 
 videoCall #select-header {

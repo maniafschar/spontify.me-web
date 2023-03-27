@@ -355,7 +355,10 @@
 			"locationPickerReset": "Zurücksetzen",
 			"locationPickerTitle": "Standort wählen",
 			"news": "News",
-			"saveEvent": "Los geht's!"
+			"noNews": "Noch gibt es keine {0} von Deinem Verein.",
+			"publish": "veröffentlichen am",
+			"saveEvent": "Los geht's!",
+			"url": "Link zum weiterlesen"
 		},
 		"info": {
 			"adsFinish": "Lieben Dank für Dein Feedback!",

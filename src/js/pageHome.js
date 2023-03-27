@@ -39,7 +39,9 @@ class pageHome {
 </teaser>
 </homeBody>`;
 	static templateNews = v =>
-		global.template`<news><tabHeader>
+		global.template`<news>
+<buttonIcon onclick="pageHome.edit()"${v.hideEdit}>+</buttonIcon>
+<tabHeader>
 <tab onclick="pageHome.selectTab('news')" i="news" class="tabActive">
 ${ui.l('home.news')}
 </tab>
@@ -48,36 +50,41 @@ ${ui.l('events.title')}
 </tab>
 </tabHeader>
 <tabBody>
-<div class="news"><buttonIcon onclick="pageHome.editNews()"${v.hideEdit}>+</buttonIcon>${v.news}</div>
-<div class="events"><buttonIcon onclick="pageEvent.edit()"${v.hideEdit}>+</buttonIcon>${v.events}</div>
+<div class="news">${v.news}</div>
+<div class="events">${v.events}</div>
 </tabBody></news>`;
 	static templateNewsEdit = v =>
-		global.template`<form name="editElement" onsubmit="return false">
+		global.template`
 <input type="hidden" name="id" value="${v.id}"/>
 <field>
-	<label style="padding-top:0;">${ui.l('events.location')}</label>
+	<label style="padding-top:0;">${ui.l('home.news')}</label>
 	<value>
 		<textarea name="description"></textarea>
 	</value>
 </field>
 <field>
-	<label style="padding-top:0;">${ui.l('events.location')}</label>
+	<label>${ui.l('picture')}</label>
 	<value>
-		<input name="image" type="file" />
+		<input name="image" type="file" accept=".gif, .png, .jpg" />
 	</value>
 </field>
 <field>
-	<label style="padding-top:0;">${ui.l('events.location')}</label>
+	<label>${ui.l('home.url')}</label>
 	<value>
 		<input name="url" />
 	</value>
 </field>
 <field>
-	<label style="padding-top:0;">${ui.l('events.location')}</label>
+	<label>${ui.l('home.publish')}</label>
 	<value>
-		<input name="publish" type="datetime-local" placeholder="TT.MM.JJJJ HH:MM" value="${v.publish}" step="900" min="${v.today}T00:00:00" />
+		<input name="publish" type="datetime-local" placeholder="TT.MM.JJJJ HH:MM" value="${v.publish}" step="900" min="${v.today}" />
 	</value>
-</field>`;
+</field>
+<dialogButtons style="margin-bottom:0;">
+	<buttontext onclick="pageHome.saveNews()" class="bgColor">${ui.l('save')}</buttontext>
+	<buttontext onclick="pageHome.deleteNews(${v.id})" class="bgColor${v.hideDelete}" id="deleteElement">${ui.l('delete')}</buttontext>
+	<popupHint></popupHint>
+</dialogButtons>`;
 	static clickNotification(id, action) {
 		communication.ajax({
 			url: global.serverApi + 'db/one',
@@ -100,11 +107,21 @@ ${ui.l('events.title')}
 		if (ui.cssValue(e, 'display') != 'none')
 			ui.toggleHeight(e);
 	}
+	static edit() {
+		if (ui.q('hint tab.tabActive[i="news"]'))
+			pageHome.editNews();
+		else
+			pageEvent.edit();
+	}
 	static editNews(id) {
 		var v = {};
-		if (user.contact.type != 'adminClient')
-			v.hideEdit = ' class="hidden"';
-		ui.navigation.openPopup(ui.l(''), pageHome.templateNewsEdit(v));
+		v.id = id;
+		if (!id)
+			v.hideDelete = ' hidden';
+		var d = global.date.getDateFields(new Date());
+		v.publish = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute;
+		v.today = v.publish + ':00';
+		ui.navigation.openPopup(ui.l('home.news'), pageHome.templateNewsEdit(v));
 	}
 	static goToSettings(event) {
 		if (!ui.parents(event.target, 'hint'))
@@ -244,24 +261,26 @@ ${ui.l('events.title')}
 			var v = {}, s = '';
 			for (var i = 1; i < pageHome.news.length; i++) {
 				var e = model.convert(new ContactNews(), pageHome.news, i);
-				s += e.url ? '<news onclick="ui.navigation.openHTML(&quot;' + e.url + '&quot;)">' : '<news>';
-				s += global.date.formatDate(e.publish);
+				s += e.url ? '<card onclick="ui.navigation.openHTML(&quot;' + e.url + '&quot;)" style="cursor:pointer;">' : '<card>';
+				s += '<date>' + global.date.formatDate(e.publish) + '</date>';
 				if (e.image)
 					s += '<img src="' + global.serverImg + e.image + '"/>';
-				s += e.description;
-				s += '</news>'
+				s += '<description>' + e.description + '</description>';
+				s += '</card>'
 			}
-			v.news = s ? s : 'keine news';
+			v.news = s ? s : '<card style="text-align:center;">' + ui.l('home.noNews').replace('{0}', ui.l('home.news')) + '</card>';
 			s = '';
 			for (var i = 0; i < pageHome.events.length; i++) {
 				var e = pageHome.events[i];
 			}
-			v.events = s ? s : 'keine events';
+			v.events = s ? s : '<card style="text-align:center;">' + ui.l('home.noNews').replace('{0}', ui.l('events.title')) + '</card>';
+			if (user.contact.type != 'adminContent')
+				v.hideEdit = ' class="hidden"';
 			intro.openHint({ desc: pageHome.templateNews(v), pos: '1em,1em', size: '-1em,auto', onclick: 'return false' });
 		}
 		if (!pageHome.news)
 			communication.ajax({
-				url: global.serverApi + 'db/list?query=contact_listNews&limit=25&search=' + encodeURIComponent('contactNews.publish<\'' + global.date.local2server(new Date()) + '\''),
+				url: global.serverApi + 'db/list?query=contact_listNews&limit=25' + (user.contact.type == 'adminContent' ? '' : '&search=' + encodeURIComponent('contactNews.publish<\'' + global.date.local2server(new Date()) + '\'')),
 				webCall: 'pageHome.openNews()',
 				responseType: 'json',
 				success(l) {
@@ -292,6 +311,28 @@ ${ui.l('events.title')}
 		ui.classRemove('navigation buttonIcon', 'pulse highlight');
 		ui.q('navigation buttonIcon.chats badgeChats').innerHTML = '';
 		ui.q('navigation buttonIcon.notifications badgeNotifications').innerHTML = 0;
+	}
+	static saveNews() {
+		var v = formFunc.getForm('popup');
+		if (ui.q('popup errorHint')) {
+			ui.q('popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });;
+			return;
+		}
+		v.classname = 'ContactNews';
+		if (ui.q('popup input[name="id"]').value)
+			v.id = ui.q('popup input[name="id"]').value;
+		communication.ajax({
+			url: global.serverApi + 'db/one',
+			method: v.id ? 'PUT' : 'POST',
+			webCall: 'pageHome.saveNews()',
+			body: v,
+			success(r) {
+				ui.navigation.closePopup();
+				user.remove('news');
+				pageHome.news = null;
+			}
+		});
+
 	}
 	static selectTab(id) {
 		ui.q('hint tabBody').style.marginLeft = (id == 'news' ? 0 : '-100%');
