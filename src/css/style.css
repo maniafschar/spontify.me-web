@@ -2724,8 +2724,8 @@ videoCall #videochat {
 
 videoCall #call-buttons-container,
 videoCall #videochat-buttons-container {
-	width: 25em;
-	position: fixed;
+	width: 100%;
+	position: absolute;
 	bottom: 2em;
 	display: flex;
 	justify-content: space-around;

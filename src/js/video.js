@@ -2,6 +2,7 @@ import { global } from './global';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 import { communication } from './communication';
+import { off } from 'process';
 
 export { Video };
 
@@ -11,6 +12,7 @@ class Video {
 	static connectedId;
 	static connectedUser;
 	static rtcPeerConnection;
+	static offer;
 
 	static template = v =>
 		global.template`
@@ -89,26 +91,22 @@ class Video {
 				Video.prepareVideoElement('remoteStream');
 			};
 			Video.rtcPeerConnection.oniceconnectionstatechange = event => {
-				console.log(event);
 				if (Video.rtcPeerConnection.iceConnectionState == 'disconnected' ||
 					Video.rtcPeerConnection.iceConnectionState == 'failed' ||
 					Video.rtcPeerConnection.iceConnectionState == 'closed')
 					Video.stopCall();
 			};
 			Video.rtcPeerConnection.onconnectionstatechange = event => {
-				console.log(event);
 				if (Video.rtcPeerConnection.connectionState == 'disconnected' ||
 					Video.rtcPeerConnection.connectionState == 'failed' ||
 					Video.rtcPeerConnection.connectionState == 'closed')
 					Video.stopCall();
 			};
 			Video.rtcPeerConnection.onsignalingstatechange = event => {
-				console.log(event);
 				if (Video.rtcPeerConnection.signalingState == 'closed')
 					Video.stopCall();
 			};
 			Video.rtcPeerConnection.onicegatheringstatechange = event => {
-				console.log(event);
 				if (Video.rtcPeerConnection.iceGatheringState == 'closed')
 					Video.stopCall();
 			};
@@ -140,9 +138,20 @@ class Video {
 		}
 	}
 	static onAnswer(answer) {
-		Video.getRtcPeerConnection().setRemoteDescription(new RTCSessionDescription(answer));
-		ui.q('#signal-out').pause();
-		ui.q('#signal-in').pause();
+		if (answer.userState) {
+			if (answer.userState == 'offline' && Video.offer)
+				setTimeout(function () {
+					var e = communication.generateCredentials();
+					e.name = user.contact.pseudonym;
+					e.id = Video.connectedId;
+					e.offer = Video.offer;
+					communication.wsSend('/ws/video', e);
+				}, 2000);
+		} else {
+			Video.getRtcPeerConnection().setRemoteDescription(new RTCSessionDescription(answer));
+			ui.q('#signal-out').pause();
+			ui.q('#signal-in').pause();
+		}
 	}
 	static onCandidate(candidate) {
 		Video.getRtcPeerConnection().addIceCandidate(new RTCIceCandidate(candidate));
@@ -210,6 +219,7 @@ class Video {
 				e.id = Video.connectedId;
 				e.offer = offer;
 				communication.wsSend('/ws/video', e);
+				Video.offer = offer;
 				Video.getRtcPeerConnection().setLocalDescription(offer);
 			}, error => {
 				alert('An error has occurred: ' + error);
@@ -221,10 +231,14 @@ class Video {
 		});
 		ui.classAdd('#call', 'hidden');
 		ui.classRemove('#videochat', 'hidden');
-		// TODO send push notification
+		communication.ajax({
+			url: global.serverApi + 'action/videocall/' + id,
+			method: 'POST'
+		})
 	};
 
 	static stopCall() {
+		Video.offer = null;
 		if (Video.rtcPeerConnection) {
 			if (!Video.getRtcPeerConnection().remoteDescription) {
 				var e = communication.generateCredentials();
@@ -256,7 +270,7 @@ class Video {
 		Video.mediaDevicesIds = [];
 		Video.activeDeviceId = null;
 		ui.classRemove('#videochat-mute-unmute', 'muted');
-		var e = ui.q('#videochat-streams');
+		e = ui.q('#videochat-streams');
 		e.innerHTML = Video.templateStreams();
 		e.classList.value = '';
 		ui.classRemove('#call', 'hidden');
