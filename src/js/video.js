@@ -31,7 +31,6 @@ class Video {
 		<buttonIcon id="videochat-switch-camera" onclick="Video.switchVideo()" class="videochat-button" disabled><img source="switch_video" /></buttonIcon>
 	</div>
 </section>
-<div id="snackbar"></div>
 <audio id="signal-end" preload="auto">
 	<source src="audio/end_call.mp3" type="audio/mp3" />
 </audio>  
@@ -87,8 +86,31 @@ class Video {
 			};
 			Video.rtcPeerConnection.ontrack = event => {
 				ui.q('#remoteStream').srcObject = event.streams[0];
-				// Video.onDevicesChangeListener();
-				Video._prepareVideoElement('remoteStream');
+				Video.prepareVideoElement('remoteStream');
+			};
+			Video.rtcPeerConnection.oniceconnectionstatechange = event => {
+				console.log(event);
+				if (Video.rtcPeerConnection.iceConnectionState == 'disconnected' ||
+					Video.rtcPeerConnection.iceConnectionState == 'failed' ||
+					Video.rtcPeerConnection.iceConnectionState == 'closed')
+					Video.stopCall();
+			};
+			Video.rtcPeerConnection.onconnectionstatechange = event => {
+				console.log(event);
+				if (Video.rtcPeerConnection.connectionState == 'disconnected' ||
+					Video.rtcPeerConnection.connectionState == 'failed' ||
+					Video.rtcPeerConnection.connectionState == 'closed')
+					Video.stopCall();
+			};
+			Video.rtcPeerConnection.onsignalingstatechange = event => {
+				console.log(event);
+				if (Video.rtcPeerConnection.signalingState == 'closed')
+					Video.stopCall();
+			};
+			Video.rtcPeerConnection.onicegatheringstatechange = event => {
+				console.log(event);
+				if (Video.rtcPeerConnection.iceGatheringState == 'closed')
+					Video.stopCall();
 			};
 		}
 		return Video.rtcPeerConnection;
@@ -131,48 +153,6 @@ class Video {
 		Video.getRtcPeerConnection().setRemoteDescription(new RTCSessionDescription(data.offer));
 		Video.incomingCallModal('show');
 	}
-	// onAcceptCallListener
-	// onRejectCallListener
-	// onStopCallListener
-	// onUserNotAnswerListener
-	// onDevicesChangeListener
-	static onAcceptCallListener(session, userId) {
-		if (userId === session.currentUserID) {
-			if (ui.classContains('#call-modal-icoming', 'show'))
-				Video.hideIncomingCallModal();
-			return false;
-		}
-		ui.q('#signal-out').pause();
-	}
-
-	static onRejectCallListener(session, userId) {
-		if (userId === session.currentUserID) {
-			if (ui.classContains('#call-modal-icoming', 'show'))
-				Video.hideIncomingCallModal();
-			return false;
-		} else {
-			const userName = Video.connectedUser;
-			const infoText = `${userName} rejected the call request`;
-
-			Video.stopCall();
-			Video.showSnackbar(infoText);
-		}
-	}
-
-	static onStopCallListener(session, userId) {
-		if (session.initiatorID === userId && ui.classContains('#call-modal-icoming', 'show'))
-			Video.hideIncomingCallModal();
-		Video.stopCall();
-	}
-
-	static onUserNotAnswerListener(session, userId) {
-		const userName = Video.connectedUser;
-		const infoText = `${userName} did not answer`;
-
-		Video.showSnackbar(infoText);
-		Video.stopCall();
-	}
-
 	static acceptCall() {
 		ui.classAdd('#call', 'hidden');
 		ui.classRemove('#videochat', 'hidden');
@@ -181,7 +161,7 @@ class Video {
 			ui.q('videoCall #localStream').srcObject = stream;
 			stream.getTracks().forEach(track => Video.getRtcPeerConnection().addTrack(track, stream));
 			Video.setActiveDeviceId(stream);
-			Video._prepareVideoElement('localStream');
+			Video.prepareVideoElement('localStream');
 			var e = ui.q('#videochat');
 			ui.classRemove(e, 'hidden');
 			e.style.background = 'transparent';
@@ -189,8 +169,7 @@ class Video {
 			ui.q('#signal-in').pause();
 			ui.q('#videochat-mute-unmute').disabled = false;
 			ui.q('#videochat-switch-camera').disabled = false;
-			// Video.onDevicesChangeListener();
-			Video._prepareVideoElement('remoteStream');
+			Video.prepareVideoElement('remoteStream');
 			Video.getRtcPeerConnection().createAnswer(answer => {
 				Video.getRtcPeerConnection().setLocalDescription(answer);
 				var e = communication.generateCredentials();
@@ -207,6 +186,9 @@ class Video {
 		if (Video.rtcPeerConnection) {
 			Video.stopCall();
 			Video.hideIncomingCallModal();
+			var e = communication.generateCredentials();
+			e.id = Video.connectedId;
+			communication.wsSend('/ws/video', e);
 		}
 		Video.leave();
 	}
@@ -233,7 +215,7 @@ class Video {
 				alert('An error has occurred: ' + error);
 			});
 			Video.setActiveDeviceId(stream);
-			Video._prepareVideoElement('localStream');
+			Video.prepareVideoElement('localStream');
 		}).catch((err) => {
 			ui.navigation.openPopup(ui.l('attention'), err);
 		});
@@ -243,7 +225,19 @@ class Video {
 	};
 
 	static stopCall() {
-		ui.q('#videochat').style.background = '';
+		if (Video.rtcPeerConnection) {
+			if (!Video.getRtcPeerConnection().remoteDescription) {
+				var e = communication.generateCredentials();
+				e.id = Video.connectedId;
+				communication.wsSend('/ws/video', e);
+			}
+			Video.rtcPeerConnection.getTransceivers().forEach(e => {
+				Video.rtcPeerConnection.removeTrack(e.sender);
+				e.stop();
+			});
+			Video.rtcPeerConnection.close();
+			Video.rtcPeerConnection = null;
+		}
 		var close = stream => {
 			if (stream.srcObject) {
 				stream.srcObject.getTracks().forEach(track => track.stop());
@@ -253,10 +247,7 @@ class Video {
 		};
 		close(ui.q('videoCall #localStream'));
 		close(ui.q('videoCall #remoteStream'));
-		if (Video.rtcPeerConnection) {
-			Video.rtcPeerConnection.close();
-			Video.rtcPeerConnection = null;
-		}
+		ui.q('#videochat').style.background = '';
 		ui.q('#signal-out').pause();
 		ui.q('#signal-in').pause();
 		ui.q('#signal-end').play();
@@ -276,29 +267,10 @@ class Video {
 			ui.q('#videochat').style.background = '#000000';
 		Video.leave();
 	}
-
 	static leave() {
 		ui.q('videoCall').style.display = 'none';
 		ui.q('#call').classList.add('hidden');
 	};
-
-	static onDevicesChangeListener() {
-		if (!global.isBrowser() && global.getOS() == 'ios')
-			return;
-		navigator.mediaDevices.getUserMedia({
-			audio: true,
-			video: true,
-		}).then(mediaDevices => {
-			Video.mediaDevicesIds.push(mediaDevices.id);
-			if (Video.mediaDevicesIds.length < 2) {
-				ui.q('#videochat-switch-camera').disabled = true;
-				if (Video.activeDeviceId && Video.mediaDevicesIds?.[0] !== Video.activeDeviceId)
-					Video.switchCamera();
-			} else
-				ui.q('#videochat-switch-camera').disabled = false;
-		});
-	}
-
 	static setActiveDeviceId(stream) {
 		if (stream && (global.isBrowser() || global.getOS() != 'ios')) {
 			const videoTracks = stream.getVideoTracks();
@@ -341,21 +313,8 @@ class Video {
 
 	static updateStream(stream) {
 		Video.setActiveDeviceId(stream);
-		Video._prepareVideoElement('localStream');
+		Video.prepareVideoElement('localStream');
 	}
-
-	static showSnackbar(infoText) {
-		const $snackbar = ui.q('#snackbar');
-
-		$snackbar.innerHTML = infoText;
-		$snackbar.classList.add('show');
-
-		setTimeout(() => {
-			$snackbar.innerHTML = '';
-			$snackbar.classList.remove('show');
-		}, 3000);
-	};
-
 	static hideIncomingCallModal() { Video.incomingCallModal('hide'); }
 
 	static incomingCallModal(className) {
@@ -373,7 +332,7 @@ class Video {
 		}
 	}
 
-	static _prepareVideoElement(videoElement) {
+	static prepareVideoElement(videoElement) {
 		var e = ui.q('#' + videoElement);
 		e.style.visibility = 'visible';
 		if (!global.isBrowser() && global.getOS() == 'ios') {

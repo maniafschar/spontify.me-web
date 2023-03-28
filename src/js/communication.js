@@ -693,6 +693,8 @@ class WebSocket {
 						Video.onAnswer(data.answer);
 					else if (data.candidate)
 						Video.onCandidate(data.candidate);
+					else
+						Video.stopCall();
 				}
 			);
 			WebSocket.stompClient.subscribe(
