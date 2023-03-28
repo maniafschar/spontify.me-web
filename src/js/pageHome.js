@@ -59,19 +59,19 @@ ${ui.l('events.title')}
 <field>
 	<label style="padding-top:0;">${ui.l('home.news')}</label>
 	<value>
-		<textarea name="description"></textarea>
+		<textarea name="description">${v.description}</textarea>
 	</value>
 </field>
 <field>
 	<label>${ui.l('picture')}</label>
 	<value>
-		<input name="image" type="file" accept=".gif, .png, .jpg" />
+		<input name="image" type="file" accept=".gif, .png, .jpg" src="${v.image}" />
 	</value>
 </field>
 <field>
 	<label>${ui.l('home.url')}</label>
 	<value>
-		<input name="url" />
+		<input name="url" value="${v.url}"/>
 	</value>
 </field>
 <field>
@@ -82,7 +82,7 @@ ${ui.l('events.title')}
 </field>
 <dialogButtons style="margin-bottom:0;">
 	<buttontext onclick="pageHome.saveNews()" class="bgColor">${ui.l('save')}</buttontext>
-	<buttontext onclick="pageHome.deleteNews(${v.id})" class="bgColor${v.hideDelete}" id="deleteElement">${ui.l('delete')}</buttontext>
+	<buttontext onclick="pageHome.deleteNews(${v.id})" class="bgColor deleteButton${v.hideDelete}">${ui.l('delete')}</buttontext>
 	<popupHint></popupHint>
 </dialogButtons>`;
 	static clickNotification(id, action) {
@@ -107,6 +107,24 @@ ${ui.l('events.title')}
 		if (ui.cssValue(e, 'display') != 'none')
 			ui.toggleHeight(e);
 	}
+	static deleteNews(id) {
+		if (ui.q('popup buttontext.deleteButton').innerText != ui.l('confirmDelete'))
+			ui.q('popup buttontext.deleteButton').innerText = ui.l('confirmDelete');
+		else
+			communication.ajax({
+				url: global.serverApi + 'db/one',
+				body: {
+					classname: 'ContactNews',
+					id: id
+				},
+				webCall: 'pageHome.deleteNews(id)',
+				method: 'DELETE',
+				success(r) {
+					ui.navigation.closePopup();
+					pageHome.news = null;
+				}
+			});
+	}
 	static edit() {
 		if (ui.q('hint tab.tabActive[i="news"]'))
 			pageHome.editNews();
@@ -114,14 +132,29 @@ ${ui.l('events.title')}
 			pageEvent.edit();
 	}
 	static editNews(id) {
-		var v = {};
-		v.id = id;
-		if (!id)
-			v.hideDelete = ' hidden';
-		var d = global.date.getDateFields(new Date());
-		v.publish = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute;
-		v.today = v.publish + ':00';
-		ui.navigation.openPopup(ui.l('home.news'), pageHome.templateNewsEdit(v));
+		var render = function (v) {
+			if (!v.id)
+				v.hideDelete = ' hidden';
+			var d = global.date.getDateFields(new Date());
+			v.today = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute + ':00';
+			if (!v.publish)
+				v.publish = v.today;
+			v.publish = v.publish.substring(0, 16);
+			if (v.image)
+				v.image = global.serverImg + v.image;
+			ui.navigation.openPopup(ui.l('home.news'), pageHome.templateNewsEdit(v));
+		};
+		if (id)
+			communication.ajax({
+				url: global.serverApi + 'db/one?query=contact_listNews&search=' + encodeURIComponent('contactNews.id=' + id),
+				webCall: 'pageHome.editNews(id)',
+				responseType: 'json',
+				success(l) {
+					render(model.convert(new ContactNews(), l));
+				}
+			});
+		else
+			render({ id: id });
 	}
 	static goToSettings(event) {
 		if (!ui.parents(event.target, 'hint'))
@@ -261,19 +294,25 @@ ${ui.l('events.title')}
 			var v = {}, s = '';
 			for (var i = 1; i < pageHome.news.length; i++) {
 				var e = model.convert(new ContactNews(), pageHome.news, i);
-				s += e.url ? '<card onclick="ui.navigation.openHTML(&quot;' + e.url + '&quot;)" style="cursor:pointer;">' : '<card>';
-				s += '<date>' + global.date.formatDate(e.publish) + '</date>';
+				var oc = user.contact.type == 'adminContent' ?
+					'onclick="pageHome.editNews(' + e.id + ')"' :
+					e.url ? 'onclick="ui.navigation.openHTML(&quot;' + e.url + '&quot;)"' : '';
+				s += e.url ? '<card ' + oc + ' style="cursor:pointer;">' : '<card>';
+				if (global.date.server2Local(e.publish) > new Date())
+					s += '<p><date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
+				else
+					s += '<p><date>' + global.date.formatDate(e.publish) + '</date>';
 				if (e.image)
 					s += '<img src="' + global.serverImg + e.image + '"/>';
-				s += '<description>' + e.description + '</description>';
-				s += '</card>'
+				s += e.description;
+				s += '</p></card>'
 			}
-			v.news = s ? s : '<card style="text-align:center;">' + ui.l('home.noNews').replace('{0}', ui.l('home.news')) + '</card>';
+			v.news = s ? s : '<card style="text-align:center;padding:0.5em;"><p>' + ui.l('home.noNews').replace('{0}', ui.l('home.news')) + '</p></card>';
 			s = '';
 			for (var i = 0; i < pageHome.events.length; i++) {
 				var e = pageHome.events[i];
 			}
-			v.events = s ? s : '<card style="text-align:center;">' + ui.l('home.noNews').replace('{0}', ui.l('events.title')) + '</card>';
+			v.events = s ? s : '<card style="text-align:center;padding:0.5em;"><p>' + ui.l('home.noNews').replace('{0}', ui.l('events.title')) + '</p></card>';
 			if (user.contact.type != 'adminContent')
 				v.hideEdit = ' class="hidden"';
 			intro.openHint({ desc: pageHome.templateNews(v), pos: '1em,1em', size: '-1em,auto', onclick: 'return false' });
@@ -292,7 +331,7 @@ ${ui.l('events.title')}
 			var d = new Date();
 			d.setDate(new Date().getDate() + 14);
 			communication.ajax({
-				url: global.serverApi + 'db/list?query=event_list&search=' + encodeURIComponent('contact.type=\'clientAdmin\' and event.startDate<=\'' + global.date.local2server(d).substring(0, 10) + '\' and event.endDate>=\'' + global.date.local2server(new Date()).substring(0, 10) + '\''),
+				url: global.serverApi + 'db/list?query=event_list&search=' + encodeURIComponent('contact.type=\'adminContent\' and event.startDate<=\'' + global.date.local2server(d).substring(0, 10) + '\' and event.endDate>=\'' + global.date.local2server(new Date()).substring(0, 10) + '\''),
 				webCall: 'pageHome.openNews()',
 				responseType: 'json',
 				success(l) {
@@ -313,7 +352,12 @@ ${ui.l('events.title')}
 		ui.q('navigation buttonIcon.notifications badgeNotifications').innerHTML = 0;
 	}
 	static saveNews() {
+		formFunc.resetError(ui.q('popup textarea'));
 		var v = formFunc.getForm('popup');
+		if (!ui.q('popup textarea').value)
+			formFunc.setError(ui.q('popup textarea'), 'error.description');
+		else
+			formFunc.validation.filterWords(ui.q('popup textarea'));
 		if (ui.q('popup errorHint')) {
 			ui.q('popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });;
 			return;

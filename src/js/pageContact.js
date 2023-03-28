@@ -141,8 +141,7 @@ ${v.matchIndicatorHintDescription}
     <input type="text" style="width:40%;margin-right:0.5em;float:none;" />
     <buttontext onclick="groups.rename()" class="bgColor">${ui.l('save')}</buttontext>
 </div>
-<buttontext onclick="groups.delete()" id="groupsDelete" style="display:none;margin-top:2em;"
-    class="bgColor">
+<buttontext onclick="groups.delete()" id="groupsDelete" style="display:none;margin-top:2em;" class="bgColor">
     ${ui.l('confirmDelete')}
 </buttontext>`;
 	static block() {

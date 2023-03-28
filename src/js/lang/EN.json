@@ -356,6 +356,7 @@
 			"locationPickerTitle": "Choose location",
 			"news": "News",
 			"noNews": "No {0} yet from your club.",
+			"notYetPublished": "not yet published",
 			"publish": "publish on",
 			"saveEvent": "Let's go!",
 			"url": "Link for further information"

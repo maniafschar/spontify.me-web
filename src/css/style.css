@@ -355,7 +355,7 @@ homeHeader>text {
 }
 
 homeHeader img {
-	height: 10em;
+	height: 8em;
 	max-height: 22vh;
 	border-radius: 50%;
 	margin-bottom: 0.5em;
@@ -392,7 +392,7 @@ homeBody teaser div {
 }
 
 homeBody teaser.contacts {
-	bottom: 3em;
+	bottom: 2.2em;
 }
 
 homeBody teaser.events {
@@ -453,6 +453,8 @@ news tab {
 news tabBody {
 	width: 200%;
 	transition: all 0.4s ease-out;
+	max-height: 80vh;
+	overflow: auto;
 }
 
 news tabBody div {
@@ -460,28 +462,38 @@ news tabBody div {
 	display: block;
 	float: left;
 	position: relative;
-	padding-top: 0.5em;
 }
 
 news tabBody card {
 	text-align: left;
-	background: rgba(0, 0, 0, 0.1);
 	position: relative;
 	display: block;
+	margin-top: 1em;
+}
+
+news tabBody card::after {
+	content: ' ';
+	display: block;
+	clear: both;
+}
+
+news tabBody card p {
+	background: rgba(0, 0, 0, 0.05);
 	padding: 0.5em;
 	border-radius: 1em;
 }
 
 news tabBody card date {
 	font-size: 0.7em;
-	position: absolute;
-	left: 0.77em;
+	display: block;
 }
 
-news tabBody card description {
-	display: block;
-	margin-top: 1em;
+news tabBody card img {
+	max-width: 50%;
+	float: right;
 	position: relative;
+	margin-left: 0.75em;
+	border-radius: 0.5em;
 }
 
 news buttonIcon {
@@ -2604,7 +2616,7 @@ tab {
 }
 
 tabBody {
-	min-height: 5em;
+	min-height: 3em;
 	position: relative;
 	width: 100%;
 	display: block;

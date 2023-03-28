@@ -30,7 +30,7 @@ class pageEvent {
 		<input transient="true" name="location" onkeyup="pageEvent.locations()" />
 		<eventLocationInputHelper><explain>${ui.l('events.locationInputHint')}</explain>
 			<li onclick="pageEvent.locationSelected(-1)" class="highlightColor">${ui.l('events.newOnlineEvent')}</li>
-			<li onclick="pageEvent.locationSelected(-2)" class="highlightColor">${ui.l('events.newWithoutLocation')}</li>
+			<li onclick="pageEvent.locationSelected(-2)" class="highlightColor${v.hideWithoutLocation}">${ui.l('events.newWithoutLocation')}</li>
 			<ul></ul>
 			<explain style="margin-bottom:0.5em;">${ui.l('events.locationInputHintCreateNew')}</explain>
 			<buttontext onclick="pageLocation.edit()" class="bgColor">${ui.l('locations.new')}</buttontext>
@@ -319,6 +319,8 @@ class pageEvent {
 			v.styleEvent = ' style="display:none;"';
 			pageEvent.locationsOfPastEvents();
 		}
+		if (user.contact.type && user.contact.type.indexOf('admin') > -1)
+			v.hideWithoutLocation = ' hidden';
 		v.payplaSignUpHint = ui.l('events.paypalSignUpHint').replace('{0}', pageEvent.paypal.feeDate ?
 			ui.l('events.paypalSignUpHintFee').replace('{0}', pageEvent.paypal.fee).replace('{1}', global.date.formatDate(pageEvent.paypal.feeDate)).replace('{2}', pageEvent.paypal.feeAfter)
 			: pageEvent.paypal.fee);
