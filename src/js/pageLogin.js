@@ -155,6 +155,8 @@ class pageLogin {
 				error(e) {
 					if (e.status >= 500)
 						pageLogin.removeCredentials();
+					if (exec)
+						exec.call();
 				},
 				success(r) {
 					r = Encryption.jsEncrypt.decrypt(r);

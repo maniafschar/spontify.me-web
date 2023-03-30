@@ -11,7 +11,7 @@ import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 import { Video } from './video';
 
-export { communication, FB, Encryption };
+export { communication, FB, Encryption, WebSocket };
 
 class communication {
 	static currentCalls = [];
@@ -21,7 +21,7 @@ class communication {
 
 	static afterLogin() {
 		communication.ping();
-		WebSocket.init();
+		WebSocket.connect();
 	}
 	static ajax(param) {
 		for (var i = 0; i < communication.currentCalls.length; i++) {
@@ -302,7 +302,7 @@ class communication {
 		communication.setApplicationIconBadgeNumber(total);
 	}
 	static reset() {
-		WebSocket.stompClient.disconnect();
+		WebSocket.disconnect();
 		communication.setApplicationIconBadgeNumber(0);
 		pageLogin.removeCredentials();
 		ui.attr('content > *', 'menuIndex', null);
@@ -677,7 +677,7 @@ class FB {
 }
 class WebSocket {
 	static stompClient;
-	static init() {
+	static connect() {
 		WebSocket.stompClient = Stomp.over(function () {
 			return new SockJS(global.serverApi + 'ws/init')
 		});
@@ -702,5 +702,8 @@ class WebSocket {
 				r => communication.refresh(JSON.parse(r.body))
 			);
 		});
+	}
+	static disconnect() {
+		WebSocket.stompClient.disconnect();
 	}
 }

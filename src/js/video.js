@@ -13,6 +13,7 @@ class Video {
 	static connectedUser;
 	static rtcPeerConnection;
 	static offer;
+	static permission;
 
 	static template = v =>
 		global.template`
@@ -35,7 +36,7 @@ class Video {
 </section>
 <audio id="signal-end" preload="auto">
 	<source src="audio/end_call.mp3" type="audio/mp3" />
-</audio>  
+</audio>
 <audio id="signal-out" loop preload="auto">
 	<source src="audio/dialing.mp3" type="audio/mp3" />
 </audio>
@@ -91,23 +92,25 @@ class Video {
 				Video.prepareVideoElement('remoteStream');
 			};
 			Video.rtcPeerConnection.oniceconnectionstatechange = event => {
-				if (Video.rtcPeerConnection.iceConnectionState == 'disconnected' ||
-					Video.rtcPeerConnection.iceConnectionState == 'failed' ||
-					Video.rtcPeerConnection.iceConnectionState == 'closed')
+				if (Video.rtcPeerConnection &&
+					(Video.rtcPeerConnection.iceConnectionState == 'disconnected' ||
+						Video.rtcPeerConnection.iceConnectionState == 'failed' ||
+						Video.rtcPeerConnection.iceConnectionState == 'closed'))
 					Video.stopCall();
 			};
 			Video.rtcPeerConnection.onconnectionstatechange = event => {
-				if (Video.rtcPeerConnection.connectionState == 'disconnected' ||
-					Video.rtcPeerConnection.connectionState == 'failed' ||
-					Video.rtcPeerConnection.connectionState == 'closed')
+				if (Video.rtcPeerConnection &&
+					(Video.rtcPeerConnection.connectionState == 'disconnected' ||
+						Video.rtcPeerConnection.connectionState == 'failed' ||
+						Video.rtcPeerConnection.connectionState == 'closed'))
 					Video.stopCall();
 			};
 			Video.rtcPeerConnection.onsignalingstatechange = event => {
-				if (Video.rtcPeerConnection.signalingState == 'closed')
+				if (Video.rtcPeerConnection && Video.rtcPeerConnection.signalingState == 'closed')
 					Video.stopCall();
 			};
 			Video.rtcPeerConnection.onicegatheringstatechange = event => {
-				if (Video.rtcPeerConnection.iceGatheringState == 'closed')
+				if (Video.rtcPeerConnection && Video.rtcPeerConnection.iceGatheringState == 'closed')
 					Video.stopCall();
 			};
 		}
@@ -123,9 +126,8 @@ class Video {
 					const { iosrtc } = window.cordova.plugins;
 					iosrtc.registerGlobals();
 					iosrtc.selectAudioOutput('speaker');
-					iosrtc.requestPermission(true, true, function (permissionApproved) {
-						if (permissionApproved != 'Approved')
-							ui.navigation.openPopup(ui.l('attention'), 'no permission');
+					iosrtc.requestPermission(true, true, function (result) {
+						Video.permission = result;
 					});
 				}
 			}
@@ -149,6 +151,9 @@ class Video {
 				}, 2000);
 		} else {
 			Video.getRtcPeerConnection().setRemoteDescription(new RTCSessionDescription(answer));
+			ui.css('main', 'background', 'transparent');
+			ui.css('content', 'visibility', 'hidden');
+			ui.css('navigation', 'visibility', 'hidden');
 			ui.q('#signal-out').pause();
 			ui.q('#signal-in').pause();
 		}
@@ -157,10 +162,16 @@ class Video {
 		Video.getRtcPeerConnection().addIceCandidate(new RTCIceCandidate(candidate));
 	}
 	static onOffer(data) {
-		Video.connectedUser = data.name;
-		Video.connectedId = data.user;
-		Video.getRtcPeerConnection().setRemoteDescription(new RTCSessionDescription(data.offer));
-		Video.incomingCallModal('show');
+		if (Video.permission) {
+			Video.connectedUser = data.name;
+			Video.connectedId = data.user;
+			Video.getRtcPeerConnection().setRemoteDescription(new RTCSessionDescription(data.offer));
+			Video.incomingCallModal('show');
+		} else {
+			var e = communication.generateCredentials();
+			e.id = Video.connectedId;
+			communication.wsSend('/ws/video', e);
+		}
 	}
 	static acceptCall() {
 		ui.classAdd('#call', 'hidden');
@@ -185,6 +196,9 @@ class Video {
 				e.id = Video.connectedId;
 				e.answer = answer;
 				communication.wsSend('/ws/video', e);
+				ui.css('main', 'background', 'transparent');
+				ui.css('content', 'visibility', 'hidden');
+				ui.css('navigation', 'visibility', 'hidden');
 			}, error => {
 				alert('error: ' + error);
 			});
@@ -203,8 +217,11 @@ class Video {
 	}
 
 	static startVideoCall(id) {
+		if (!Video.permission) {
+			ui.navigation.openPopup(ui.l('attention'), ui.l('chat.videoPermissionDenied'));
+			return;
+		}
 		Video.connectedId = id;
-		Video.init();
 		var e = ui.q('#videochat');
 		e.classList.remove('hidden');
 		e.style.background = 'transparent';
@@ -239,6 +256,15 @@ class Video {
 
 	static stopCall() {
 		Video.offer = null;
+		ui.classRemove('#call', 'hidden');
+		ui.classAdd('#videochat', 'hidden');
+		ui.classRemove('#videochat-mute-unmute', 'muted');
+		ui.css('main', 'background', null);
+		ui.css('content', 'visibility', null);
+		ui.css('navigation', 'visibility', null);
+		ui.q('#signal-out').pause();
+		ui.q('#signal-in').pause();
+		ui.q('#signal-end').play();
 		if (Video.rtcPeerConnection) {
 			if (!Video.getRtcPeerConnection().remoteDescription) {
 				var e = communication.generateCredentials();
@@ -251,6 +277,9 @@ class Video {
 			});
 			Video.rtcPeerConnection.close();
 			Video.rtcPeerConnection = null;
+			e = communication.generateCredentials();
+			e.id = Video.connectedId;
+			communication.wsSend('/ws/video', e);
 		}
 		var close = stream => {
 			if (stream.srcObject) {
@@ -262,9 +291,6 @@ class Video {
 		close(ui.q('videoCall #localStream'));
 		close(ui.q('videoCall #remoteStream'));
 		ui.q('#videochat').style.background = '';
-		ui.q('#signal-out').pause();
-		ui.q('#signal-in').pause();
-		ui.q('#signal-end').play();
 		ui.q('#videochat-mute-unmute').disabled = true;
 		ui.q('#videochat-switch-camera').disabled = true;
 		Video.mediaDevicesIds = [];
@@ -273,9 +299,6 @@ class Video {
 		e = ui.q('#videochat-streams');
 		e.innerHTML = Video.templateStreams();
 		e.classList.value = '';
-		ui.classRemove('#call', 'hidden');
-		ui.classAdd('#videochat', 'hidden');
-		ui.classRemove('#videochat-mute-unmute', 'muted');
 
 		if (!global.isBrowser() && global.getOS() == 'ios')
 			ui.q('#videochat').style.background = '#000000';
@@ -289,7 +312,6 @@ class Video {
 		if (stream && (global.isBrowser() || global.getOS() != 'ios')) {
 			const videoTracks = stream.getVideoTracks();
 			const videoTrackSettings = videoTracks[0]?.getSettings();
-
 			Video.activeDeviceId = videoTrackSettings?.deviceId;
 		}
 	}
@@ -336,7 +358,6 @@ class Video {
 			ui.classRemove('#call-modal-icoming', 'show');
 			ui.q('#signal-in').pause();
 		} else {
-			Video.init();
 			ui.classRemove('videoCall #call', 'hidden');
 			ui.classAdd('videoCall #videochat', 'hidden');
 			ui.q('videoCall').style.display = 'block';

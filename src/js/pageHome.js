@@ -137,7 +137,10 @@ ${ui.l('events.title')}
 				v.hideDelete = ' hidden';
 			var d = global.date.getDateFields(new Date());
 			v.today = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute + ':00';
-			if (!v.publish)
+			if (v.publish) {
+				d = global.date.getDateFields(global.date.server2Local(v.publish));
+				v.publish = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute;
+			} else
 				v.publish = v.today;
 			v.publish = v.publish.substring(0, 16);
 			if (v.image)
@@ -154,7 +157,7 @@ ${ui.l('events.title')}
 				}
 			});
 		else
-			render({ id: id });
+			render({});
 	}
 	static goToSettings(event) {
 		if (!ui.parents(event.target, 'hint'))
@@ -216,10 +219,12 @@ ${ui.l('events.title')}
 						for (var i = 1; i < l.length; i++)
 							e.push(model.convert(new Location(), l, i));
 					}
-					for (var i = 0; i < e.length; i++)
-						s += '<card onclick="details.open(&quot;' + pageEvent.getId(e[i]) + '&quot;,' + JSON.stringify({
-							webCall: 'pageHome.init(force)', query: 'event_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('event.id=' + e[i].event.id)
-						}).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)"><img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList ? e[i].imageList : e[i].contact.imageList) + '"/><text>' + e[i].event.description + '</text></card>';
+					for (var i = 0; i < e.length; i++) {
+						if ('outdated' != e[i])
+							s += '<card onclick="details.open(&quot;' + pageEvent.getId(e[i]) + '&quot;,' + JSON.stringify({
+								webCall: 'pageHome.init(force)', query: 'event_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('event.id=' + e[i].event.id)
+							}).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)"><img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList ? e[i].imageList : e[i].contact.imageList) + '"/><text>' + e[i].event.description + '</text></card>';
+					}
 					ui.q('home teaser.events>div').innerHTML = s;
 					ui.css('home teaser.events', 'opacity', 1);
 				}
@@ -297,7 +302,7 @@ ${ui.l('events.title')}
 				var oc = user.contact.type == 'adminContent' ?
 					'onclick="pageHome.editNews(' + e.id + ')"' :
 					e.url ? 'onclick="ui.navigation.openHTML(&quot;' + e.url + '&quot;)"' : '';
-				s += e.url ? '<card ' + oc + ' style="cursor:pointer;">' : '<card>';
+				s += oc ? '<card ' + oc + ' style="cursor:pointer;">' : '<card>';
 				if (global.date.server2Local(e.publish) > new Date())
 					s += '<p><date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
 				else
@@ -311,6 +316,12 @@ ${ui.l('events.title')}
 			s = '';
 			for (var i = 0; i < pageHome.events.length; i++) {
 				var e = pageHome.events[i];
+				s += '<card onclick="details.open(&quot;' + pageEvent.getId(e) + '&quot;,' + JSON.stringify({ webCall: 'pageHome.openNews()', query: 'event_list', search: encodeURIComponent('event.id=' + e.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)" style="cursor:pointer;">';
+				s += '<p><date>' + global.date.formatDate(e.event.startDate) + '</date>';
+				if (e.event.image || e.image)
+					s += '<img src="' + global.serverImg + (e.event.image || e.image) + '"/>';
+				s += e.event.description;
+				s += '</p></card>'
 			}
 			v.events = s ? s : '<card style="text-align:center;padding:0.5em;"><p>' + ui.l('home.noNews').replace('{0}', ui.l('events.title')) + '</p></card>';
 			if (user.contact.type != 'adminContent')
@@ -331,11 +342,16 @@ ${ui.l('events.title')}
 			var d = new Date();
 			d.setDate(new Date().getDate() + 14);
 			communication.ajax({
-				url: global.serverApi + 'db/list?query=event_list&search=' + encodeURIComponent('contact.type=\'adminContent\' and event.startDate<=\'' + global.date.local2server(d).substring(0, 10) + '\' and event.endDate>=\'' + global.date.local2server(new Date()).substring(0, 10) + '\''),
+				url: global.serverApi + 'db/list?query=event_list&search=' + encodeURIComponent('contact.type=\'adminContent\' and event.endDate>=\'' + global.date.local2server(new Date()).substring(0, 10) + '\''),
 				webCall: 'pageHome.openNews()',
 				responseType: 'json',
 				success(l) {
-					pageHome.events = pageEvent.getCalendarList(l);
+					var e = pageEvent.getCalendarList(l);
+					pageHome.events = [];
+					for (var i = 0; i < e.length; i++) {
+						if ('outdated' != e[i])
+							pageHome.events.push(e[i]);
+					}
 					render();
 				}
 			});

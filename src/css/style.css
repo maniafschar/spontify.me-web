@@ -2638,22 +2638,7 @@ videoCall {
 	left: 0;
 	right: 0;
 	display: none;
-	z-index: 6;
-}
-
-videoCall #snackbar {
-	visibility: hidden;
-	min-width: 250px;
-	background-color: #333;
-	color: #fff;
-	text-align: center;
-	border-radius: 10px;
-	padding: 16px;
-	position: fixed;
-	z-index: 1;
-	left: 50%;
-	top: 40px;
-	transform: translate(-50%);
+	z-index: 3;
 }
 
 videoCall #call-modal-icoming {
@@ -2700,10 +2685,6 @@ videoCall #call-modal-icoming #call-modal-reject {
 
 videoCall #call-modal-icoming #call-modal-accept {
 	background-color: green;
-}
-
-videoCall #snackbar.show {
-	visibility: visible;
 }
 
 videoCall #call-modal-icoming.show {

@@ -8,6 +8,7 @@ import { Location, model } from './model';
 import { pageChat } from './pageChat';
 import { ui, formFunc } from './ui';
 import { user } from './user';
+import { pageHome } from './pageHome';
 
 export { pageLocation };
 
@@ -234,6 +235,8 @@ ${v.rating}
 				success(r) {
 					ui.navigation.closePopup();
 					ui.navigation.goTo('home');
+					if (classname == 'Event')
+						pageHome.events = null;
 					setTimeout(function () {
 						if (classname == 'Location')
 							lists.removeListEntry(id, 'locations');
@@ -505,18 +508,24 @@ ${v.rating}
 	}
 	static save() {
 		ui.html('popupHint', '');
-		formFunc.resetError(ui.q('[name="name"]'));
-		formFunc.resetError(ui.q('[name="address"]'));
-		if (!ui.val('[name="name"]'))
-			formFunc.setError(ui.q('[name="name"]'), 'locations.errorName');
+		var name = ui.q('popup [name="name"]');
+		var address = ui.q('[name="address"]');
+		formFunc.resetError(name);
+		formFunc.resetError(address);
+		if (!name.value)
+			formFunc.setError(name, 'locations.errorName');
 		else
-			formFunc.validation.filterWords(ui.q('[name="name"]'));
+			formFunc.validation.filterWords(name);
 		if (!ui.val('[name="description"]'))
 			formFunc.validation.filterWords(ui.q('[name="description"]'));
 		if (!ui.val('[name="address"]'))
-			formFunc.setError(ui.q('[name="address"]'), 'locations.errorAddress');
-		else if (ui.val('[name="address"]').indexOf('\n') < 0)
-			formFunc.setError(ui.q('[name="address"]'), 'locations.errorAddressFormat');
+			formFunc.setError(address, 'locations.errorAddress');
+		else if (address.value.indexOf('\n') < 0) {
+			if (address.value.indexOf(',') < 0)
+				formFunc.setError(address, 'locations.errorAddressFormat');
+			else
+				address.value = address.value.replace(/,/g, '\n');
+		}
 		if (ui.q('popup errorHint')) {
 			ui.scrollTo('popupContent', 0);
 			return;

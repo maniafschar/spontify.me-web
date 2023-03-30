@@ -1,4 +1,4 @@
-import { communication, FB } from './communication';
+import { communication, FB, WebSocket } from './communication';
 import { details } from './details';
 import { geoData } from './geoData';
 import { global } from './global';
@@ -9,6 +9,7 @@ import { pageSearch } from './pageSearch';
 import { pageSettings } from './pageSettings';
 import { ui, formFunc } from './ui';
 import { user } from './user';
+import { Video } from './video';
 
 export { initialisation, DragObject };
 
@@ -117,6 +118,7 @@ class initialisation {
 		}
 		ui.on(document, 'pause', function () {
 			global.paused = true;
+			WebSocket.disconnect();
 			geoData.pause();
 			if (!user.contact)
 				communication.setApplicationIconBadgeNumber(0);
@@ -124,6 +126,7 @@ class initialisation {
 		});
 		ui.on(document, 'resume', function () {
 			global.paused = false;
+			WebSocket.connect();
 			geoData.init();
 			user.save({ webCall: 'initialisation.initApp()', active: true });
 			if (global.getParam('r'))
@@ -134,6 +137,7 @@ class initialisation {
 		ui.css('main', 'display', '');
 		if (!global.isBrowser())
 			initialisation.initApp();
+		Video.init();
 		ui.html('head title', global.appTitle);
 		if (global.getParam('r')) {
 			pageLogin.removeCredentials();

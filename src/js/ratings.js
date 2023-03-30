@@ -80,7 +80,7 @@ class ratings {
 		};
 		if (id) {
 			communication.ajax({
-				url: global.serverApi + 'db/list?query=misc_rating&search=' + encodeURIComponent('event.id=' + id + ' and eventParticipate.contactId=' + user.contact.id),
+				url: global.serverApi + 'db/list?query=event_rating&search=' + encodeURIComponent('event.id=' + id + ' and eventParticipate.contactId=' + user.contact.id),
 				webCall: 'ratings.open(id,search)',
 				responseType: 'json',
 				success(r) {
@@ -92,7 +92,7 @@ class ratings {
 			lastRating = {};
 		if (search) {
 			communication.ajax({
-				url: global.serverApi + 'db/list?query=misc_rating&search=' + encodeURIComponent(search),
+				url: global.serverApi + 'db/list?query=event_rating&search=' + encodeURIComponent(search),
 				webCall: 'ratings.open(id,search)',
 				responseType: 'json',
 				success(r) {

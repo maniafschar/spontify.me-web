@@ -8,6 +8,7 @@ import { intro } from "./intro";
 import { lists } from "./lists";
 import { Contact, EventParticipate, Location, model } from "./model";
 import { pageContact } from "./pageContact";
+import { pageHome } from "./pageHome";
 import { pageLocation } from "./pageLocation";
 import { formFunc, ui } from "./ui";
 import { user } from "./user";
@@ -29,8 +30,8 @@ class pageEvent {
 	<value style="text-align:center;">
 		<input transient="true" name="location" onkeyup="pageEvent.locations()" />
 		<eventLocationInputHelper><explain>${ui.l('events.locationInputHint')}</explain>
-			<li onclick="pageEvent.locationSelected(-1)" class="highlightColor">${ui.l('events.newOnlineEvent')}</li>
-			<li onclick="pageEvent.locationSelected(-2)" class="highlightColor${v.hideWithoutLocation}">${ui.l('events.newWithoutLocation')}</li>
+			<li onclick="pageEvent.locationSelected(-1)" style="color:white;">${ui.l('events.newOnlineEvent')}</li>
+			<li onclick="pageEvent.locationSelected(-2)" style="color:white;" class="${v.hideWithoutLocation}">${ui.l('events.newWithoutLocation')}</li>
 			<ul></ul>
 			<explain style="margin-bottom:0.5em;">${ui.l('events.locationInputHintCreateNew')}</explain>
 			<buttontext onclick="pageLocation.edit()" class="bgColor">${ui.l('locations.new')}</buttontext>
@@ -948,6 +949,7 @@ class pageEvent {
 				details.open(id ? ui.q('detail card:last-child').getAttribute('i') : r + '_' + global.date.local2server(v.values.startDate).substring(0, 10), { webCall: 'pageEvent.save()', query: 'event_list', search: encodeURIComponent('event.id=' + (id ? id : r)) },
 					id ? function (l, id) { ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id); } : pageLocation.detailLocationEvent);
 				pageEvent.refreshToggle();
+				pageHome.events = null;
 			}
 		});
 	}

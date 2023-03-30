@@ -208,6 +208,7 @@
 			"title": "Chat",
 			"videoPermission": "Click me within the next hour to start a video call with me.",
 			"videoPermissionButton": "Video",
+			"videoPermissionDenied": "You denied permission for the microphone and camera. You cannot make a video call without it.",
 			"videoPermissionHint": "You hereby allow the ${buddy} to video call you in the next hour.",
 			"videoPermissionNoChatHint": "<ul><li>you can start the video call immediately with friends</li><li>you can give other ${buddies} permission to call you. You must have chatted beforehand for this.</li></ul>",
 			"videoPermissionSendButton": "Giving permission"

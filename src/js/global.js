@@ -31,7 +31,7 @@ class global {
 			return d2;
 		},
 		getDateFields(d) {
-			if (d instanceof Date) {
+			if (d instanceof Date)
 				return {
 					year: d.getFullYear(),
 					month: ('0' + (d.getMonth() + 1)).slice(-2),
@@ -41,7 +41,6 @@ class global {
 					second: ('0' + d.getSeconds()).slice(-2),
 					time: true
 				};
-			}
 			if (d.year && d.day)
 				return d;
 			if (d.indexOf('-') < 0 && d.length == 8)
