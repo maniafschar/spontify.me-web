@@ -240,6 +240,7 @@ class Video {
 		ui.classRemove('videochat', 'hidden');
 		communication.ajax({
 			url: global.serverApi + 'action/videocall/' + id,
+			webCall: 'video.startVideoCall(id)',
 			method: 'POST'
 		})
 	}
