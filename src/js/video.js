@@ -2,7 +2,6 @@ import { global } from './global';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 import { communication } from './communication';
-import { off } from 'process';
 
 export { Video };
 
@@ -13,45 +12,38 @@ class Video {
 	static connectedUser;
 	static rtcPeerConnection;
 	static offer;
-	static permission;
+	static permission = true;
 
 	static template = v =>
 		global.template`
-<section id="call">
-	<div id="call-modal-icoming" tabindex="-1">
-		<div class="call-modal-header"><span id="call-modal-initiator"></span></div>
-		<div class="call-modal-footer">
-			<buttonIcon onclick="Video.rejectCall()" class="videochat-button" type="button"><img source="call_end" /></buttonIcon>
-			<buttonIcon onclick="Video.acceptCall()" class="videochat-button" type="button"><img source="call" /></buttonIcon>
-		</div>
-	</div>
-</section>
-<section id="videochat" class="hidden">
-	<div id="videochat-streams"></div>
-	<div id="videochat-buttons-container">
-		<buttonIcon id="videochat-mute-unmute" onclick="Video.setAudioMute()" class="videochat-button" disabled><img source="mic_off" /></buttonIcon>
-		<buttonIcon onclick="Video.stopCall()" class="videochat-button"><img source="call_end" /></buttonIcon>
-		<buttonIcon id="videochat-switch-camera" onclick="Video.switchVideo()" class="videochat-button" disabled><img source="switch_video" /></buttonIcon>
-	</div>
-</section>
-<audio id="signal-end" preload="auto">
+<call>
+	<initiator></initiator>
+	<footer>
+		<buttonIcon onclick="Video.rejectCall()" type="button"><img source="videoEnd"/></buttonIcon>
+		<buttonIcon onclick="Video.acceptCall()" type="button"><img source="videoCall"/></buttonIcon>
+	</footer>
+</call>
+<videochat class="hidden">
+	<streams></streams>
+	<buttons>
+		<buttonIcon onclick="Video.setAudioMute()" class="mute" disabled><img source="videoMic"/></buttonIcon>
+		<buttonIcon onclick="Video.stopCall()"><img source="videoEnd"/></buttonIcon>
+		<buttonIcon onclick="Video.switchVideo()" class="camera" disabled><img source="videoSwitch"/></buttonIcon>
+	</buttons>
+</videochat>
+<audio class="end" preload="auto">
 	<source src="audio/end_call.mp3" type="audio/mp3" />
 </audio>
-<audio id="signal-out" loop preload="auto">
+<audio class="out" loop preload="auto">
 	<source src="audio/dialing.mp3" type="audio/mp3" />
 </audio>
-<audio id="signal-in" loop preload="auto">
+<audio class="in" loop preload="auto">
 	<source src="audio/calling.mp3" type="audio/mp3" />
 </audio>`;
 	static templateStreams = v =>
 		global.template`
-<div id="videochat-stream-container-opponent" class="videochat-stream-container">
-	<div id="videochat-stream-loader-opponent" class="videochat-stream-loader"></div>
-	<video playsinline autoplay="autoplay" id="remoteStream" class="videochat-stream"></video>
-</div>
-<div id="videochat-local-stream-container" class="videochat-stream-container">
-	<video playsinline autoplay="autoplay" id="localStream" class="videochat-stream"></video>
-</div>`;
+<video playsinline autoplay="autoplay" id="remoteStream"></video>
+<video playsinline autoplay="autoplay" id="localStream"></video>`;
 	static getRtcPeerConnection() {
 		if (!Video.rtcPeerConnection) {
 			Video.rtcPeerConnection = new RTCPeerConnection({
@@ -132,10 +124,10 @@ class Video {
 				}
 			}
 			ui.q('videoCall').innerHTML = Video.template();
-			ui.q('#videochat-streams').innerHTML = Video.templateStreams();
+			ui.q('videoCall streams').innerHTML = Video.templateStreams();
 			formFunc.image.replaceSVGs();
-			ui.swipe('#videochat-streams', dir => {
-				ui.q('#videochat-streams').style.left = dir == 'left' ? '-100%' : '';
+			ui.swipe('videoCall streams', dir => {
+				ui.q('videoCall streams').style.left = dir == 'left' ? '-100%' : '';
 			});
 		}
 	}
@@ -154,8 +146,8 @@ class Video {
 			ui.css('main', 'background', 'transparent');
 			ui.css('content', 'visibility', 'hidden');
 			ui.css('navigation', 'visibility', 'hidden');
-			ui.q('#signal-out').pause();
-			ui.q('#signal-in').pause();
+			ui.q('videoCall audio.out').pause();
+			ui.q('videoCall audio.in').pause();
 		}
 	}
 	static onCandidate(candidate) {
@@ -174,21 +166,21 @@ class Video {
 		}
 	}
 	static acceptCall() {
-		ui.classAdd('#call', 'hidden');
-		ui.classRemove('#videochat', 'hidden');
-		Video.hideIncomingCallModal();
+		ui.classAdd('call', 'hidden');
+		ui.classRemove('videochat', 'hidden');
+		Video.incomingCallModal('hide');
 		navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
 			ui.q('videoCall #localStream').srcObject = stream;
 			stream.getTracks().forEach(track => Video.getRtcPeerConnection().addTrack(track, stream));
 			Video.setActiveDeviceId(stream);
 			Video.prepareVideoElement('localStream');
-			var e = ui.q('#videochat');
+			var e = ui.q('videochat');
 			ui.classRemove(e, 'hidden');
 			e.style.background = 'transparent';
-			ui.q('#signal-out').pause();
-			ui.q('#signal-in').pause();
-			ui.q('#videochat-mute-unmute').disabled = false;
-			ui.q('#videochat-switch-camera').disabled = false;
+			ui.q('videoCall audio.out').pause();
+			ui.q('videoCall audio.in').pause();
+			ui.q('videoCall videochat buttonIcon.mute').disabled = false;
+			ui.q('videoCall videochat buttonIcon.camera').disabled = false;
 			Video.prepareVideoElement('remoteStream');
 			Video.getRtcPeerConnection().createAnswer(answer => {
 				Video.getRtcPeerConnection().setLocalDescription(answer);
@@ -204,29 +196,27 @@ class Video {
 			});
 		});
 	}
-
 	static rejectCall() {
 		if (Video.rtcPeerConnection) {
 			Video.stopCall();
-			Video.hideIncomingCallModal();
+			Video.incomingCallModal('hide');
 			var e = communication.generateCredentials();
 			e.id = Video.connectedId;
 			communication.wsSend('/ws/video', e);
 		}
 		Video.leave();
 	}
-
 	static startVideoCall(id) {
 		if (!Video.permission) {
 			ui.navigation.openPopup(ui.l('attention'), ui.l('chat.videoPermissionDenied'));
 			return;
 		}
 		Video.connectedId = id;
-		var e = ui.q('#videochat');
+		var e = ui.q('videochat');
 		e.classList.remove('hidden');
 		e.style.background = 'transparent';
 		ui.css('videoCall', 'display', 'block');
-		ui.q('#signal-out').play();
+		ui.q('videoCall audio.out').play();
 		navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
 			ui.q('videoCall #localStream').srcObject = stream;
 			stream.getTracks().forEach(track => Video.getRtcPeerConnection().addTrack(track, stream));
@@ -246,25 +236,24 @@ class Video {
 		}).catch((err) => {
 			ui.navigation.openPopup(ui.l('attention'), err);
 		});
-		ui.classAdd('#call', 'hidden');
-		ui.classRemove('#videochat', 'hidden');
+		ui.classAdd('call', 'hidden');
+		ui.classRemove('videochat', 'hidden');
 		communication.ajax({
 			url: global.serverApi + 'action/videocall/' + id,
 			method: 'POST'
 		})
-	};
-
+	}
 	static stopCall() {
 		Video.offer = null;
-		ui.classRemove('#call', 'hidden');
-		ui.classAdd('#videochat', 'hidden');
-		ui.classRemove('#videochat-mute-unmute', 'muted');
+		ui.classRemove('call', 'hidden');
+		ui.classAdd('videochat', 'hidden');
+		ui.classRemove('videoCall videochat buttonIcon.mute', 'muted');
 		ui.css('main', 'background', null);
 		ui.css('content', 'visibility', null);
 		ui.css('navigation', 'visibility', null);
-		ui.q('#signal-out').pause();
-		ui.q('#signal-in').pause();
-		ui.q('#signal-end').play();
+		ui.q('videoCall audio.out').pause();
+		ui.q('videoCall audio.in').pause();
+		ui.q('videoCall audio.end').play();
 		if (Video.rtcPeerConnection) {
 			if (!Video.getRtcPeerConnection().remoteDescription) {
 				var e = communication.generateCredentials();
@@ -290,23 +279,23 @@ class Video {
 		};
 		close(ui.q('videoCall #localStream'));
 		close(ui.q('videoCall #remoteStream'));
-		ui.q('#videochat').style.background = '';
-		ui.q('#videochat-mute-unmute').disabled = true;
-		ui.q('#videochat-switch-camera').disabled = true;
+		ui.q('videochat').style.background = '';
+		ui.q('videoCall videochat buttonIcon.mute').disabled = true;
+		ui.q('videoCall videochat buttonIcon.camera').disabled = true;
 		Video.mediaDevicesIds = [];
 		Video.activeDeviceId = null;
-		ui.classRemove('#videochat-mute-unmute', 'muted');
-		e = ui.q('#videochat-streams');
+		ui.classRemove('videoCall videochat buttonIcon.mute', 'muted');
+		e = ui.q('videoCall streams');
 		e.innerHTML = Video.templateStreams();
 		e.classList.value = '';
 
 		if (!global.isBrowser() && global.getOS() == 'ios')
-			ui.q('#videochat').style.background = '#000000';
+			ui.q('videochat').style.background = '#000000';
 		Video.leave();
 	}
 	static leave() {
 		ui.q('videoCall').style.display = 'none';
-		ui.q('#call').classList.add('hidden');
+		ui.q('call').classList.add('hidden');
 	};
 	static setActiveDeviceId(stream) {
 		if (stream && (global.isBrowser() || global.getOS() != 'ios')) {
@@ -315,58 +304,44 @@ class Video {
 			Video.activeDeviceId = videoTrackSettings?.deviceId;
 		}
 	}
-
 	static setAudioMute() {
-		if (ui.classContains('#videochat-mute-unmute', 'muted')) {
+		if (ui.classContains('videoCall videochat buttonIcon.mute', 'muted')) {
 			ui.q('videoCall #localStream').srcObject.getAudioTracks()[0].enabled = true;
-			ui.classRemove('#videochat-mute-unmute', 'muted');
+			ui.classRemove('videoCall videochat buttonIcon.mute', 'muted');
 		} else {
 			ui.q('videoCall #localStream').srcObject.getAudioTracks()[0].enabled = false;
-			ui.classAdd('#videochat-mute-unmute', 'muted');
+			ui.classAdd('videoCall videochat buttonIcon.mute', 'muted');
 		}
-	};
-
-	static switchCamera() {
-		const mediaDevicesId = Video.mediaDevicesIds.find(
-			(deviceId) => deviceId !== Video.activeDeviceId
-		);
-		navigator.mediaDevices.getUserMedia({ video: mediaDevicesId }).then(stream => {
-			ui.q('videoCall #localStream').srcObject.getTracks().forEach(track => { if (track.kind == 'video') track.stop(); });
-			Video.activeDeviceId = mediaDevicesId;
-			ui.q('videoCall #localStream').srcObject = stream;
-			stream.getTracks().forEach(track => Video.getRtcPeerConnection().addTrack(track, stream));
-			if (ui.classContains('#videochat-mute-unmute', 'muted'))
-				ui.q('videoCall #localStream').srcObject.getAudioTracks()[0].enabled = false;
-		});
-	};
-
+	}
 	static switchVideo() {
-		var e = ui.q('#videochat-streams').style;
-		e.left = e.left.indexOf('%') > 0 ? '' : '-100%';
+		var e = ui.q('videoCall streams').style;
+		if (e.left.indexOf('%') > 0) {
+			e.left = '';
+			ui.q('videoCall videochat buttonIcon.camera svg').style.transform = '';
+		} else {
+			e.left = '-100%';
+			ui.q('videoCall videochat buttonIcon.camera svg').style.transform = 'rotate(180deg)';
+		}
 		if (!global.isBrowser() && window.cordova.plugins && window.cordova.plugins.iosrtc)
 			window.cordova.plugins.iosrtc.refreshVideos()
-	};
-
+	}
 	static updateStream(stream) {
 		Video.setActiveDeviceId(stream);
 		Video.prepareVideoElement('localStream');
 	}
-	static hideIncomingCallModal() { Video.incomingCallModal('hide'); }
-
 	static incomingCallModal(className) {
 		if (className === 'hide') {
-			ui.classRemove('#call-modal-icoming', 'show');
-			ui.q('#signal-in').pause();
+			ui.classRemove('call', 'show');
+			ui.q('videoCall audio.in').pause();
 		} else {
-			ui.classRemove('videoCall #call', 'hidden');
-			ui.classAdd('videoCall #videochat', 'hidden');
+			ui.classRemove('videoCall call', 'hidden');
+			ui.classAdd('videoCall videochat', 'hidden');
 			ui.q('videoCall').style.display = 'block';
-			ui.q('#call-modal-initiator').innerHTML = Video.connectedUser;
-			ui.classAdd('#call-modal-icoming', 'show');
-			ui.q('#signal-in').play();
+			ui.q('videoCall call initiator').innerHTML = Video.connectedUser;
+			ui.classAdd('call', 'show');
+			ui.q('videoCall audio.in').play();
 		}
 	}
-
 	static prepareVideoElement(videoElement) {
 		var e = ui.q('#' + videoElement);
 		e.style.visibility = 'visible';

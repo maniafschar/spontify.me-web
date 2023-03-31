@@ -2641,7 +2641,7 @@ videoCall {
 	z-index: 3;
 }
 
-videoCall #call-modal-icoming {
+videoCall call {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
@@ -2660,17 +2660,18 @@ videoCall #call-modal-icoming {
 	filter: drop-shadow(0 0 0.5em rgba(0, 0, 0, 0.4));
 }
 
-videoCall #call-modal-icoming .call-modal-header {
+videoCall call initiator {
+	display: block;
 	color: black;
-	font-size: 1.3em;
-	padding: 0.25em 0 1em 0;
+	position: relative;
 }
 
-videoCall #call-modal-icoming .call-modal-footer {
+videoCall call footer {
 	width: 100%;
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
+	margin-top: 1.5em;
 }
 
 videoCall buttonIcon {
@@ -2679,20 +2680,11 @@ videoCall buttonIcon {
 	scale: 1.5;
 }
 
-videoCall #call-modal-icoming #call-modal-reject {
-	background-color: red;
+videoCall buttonIcon.muted svg path.mute {
+	display: none;
 }
 
-videoCall #call-modal-icoming #call-modal-accept {
-	background-color: green;
-}
-
-videoCall #call-modal-icoming.show {
-	visibility: visible;
-}
-
-videoCall #call,
-videoCall #videochat {
+videoCall videochat {
 	height: 100%;
 	width: 100%;
 	position: relative;
@@ -2703,8 +2695,7 @@ videoCall #videochat {
 }
 
 
-videoCall #call-buttons-container,
-videoCall #videochat-buttons-container {
+videoCall videochat buttons {
 	width: 100%;
 	position: absolute;
 	bottom: 2em;
@@ -2712,36 +2703,16 @@ videoCall #videochat-buttons-container {
 	justify-content: space-around;
 }
 
-videoCall #select-header {
-	color: #1198d4;
-	font-size: 20px;
-	padding: 20px;
-	border: none;
-}
-
-videoCall .videochat-stream-container {
+videoCall video {
 	height: 100%;
 	width: 50%;
+	object-fit: cover;
+	visibility: hidden;
 	position: relative;
-	overflow: hidden;
 	float: left;
 }
 
-videoCall .videochat-stream-loader {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
-}
-
-videoCall .videochat-stream {
-	height: 100%;
-	width: 100%;
-	object-fit: cover;
-	visibility: hidden;
-}
-
-videoCall #videochat-streams {
+videoCall streams {
 	height: 100%;
 	width: 200%;
 	left: 0;
