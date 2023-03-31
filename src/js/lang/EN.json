@@ -395,7 +395,7 @@
 			"bluetoothDescriptionLoggedOff": "<title>Bluetooth Matching</title><br/>Log in to find ${buddies} with similar interests in your immediate vicinity via Bluetooth matching.",
 			"bluetoothDescriptionOff": "<title>Bluetooth Matching</title><br/>Your Bluetooth is turned off. Activate it to start Bluetooth matching.",
 			"bluetoothOn": "Bluetooth Matching activated",
-			"chatAi": "Artificial intelligence supports you in finding out your strengths and how you can develop them. Ask questions about this, but be careful, your contingent is limited. The more precise your question, the better the answer. For example:<ul><li>How can I build a community around painting, dancing, cooking, hiking, etc.?</li><li>Which philosopher is suitable for thinking about life?</li></ul>",
+			"chatAi": "Artificial intelligence supports you in finding out your strengths and how you can develop them. Ask questions about this, the more precise, the better the answer. For example:<ul><li>How can I build a community around painting, dancing, cooking, hiking, etc.?</li><li>Which philosopher is suitable for thinking about life?</li></ul>",
 			"chatDescription": "<title>Chats</title><br/>After logging in, you will see the list of ${buddies} with whom you have already <emphasis>chatted</emphasis>.",
 			"chatEmpty": "You don't have started any chats with other ${buddies} yet. Click on <b>Chat</b> in a ${buddies}'s profile.",
 			"contactFavorite": "Here you can send friend requests or block other ${buddies}.",
