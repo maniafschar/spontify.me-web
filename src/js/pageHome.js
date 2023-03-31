@@ -18,6 +18,9 @@ class pageHome {
 	static news;
 	static template = v =>
 		global.template`<homeHeader${v.logoSmall}>
+	<buttonIcon class="statistics${v.statsButton}" onclick="ui.navigation.openHTML(&quot;stats.html&quot;)">
+		<img source="statistics"/>
+	</buttonIcon>
 	<img onclick="${v.actionLogo}" source="logo"/>
 	<text onclick="pageHome.goToSettings(event)" ${v.dispProfile}>
 		${v.imgProfile}<br/>
@@ -169,6 +172,7 @@ ${ui.l('events.title')}
 			var v = {
 				actionLogo: 'geoData.openLocationPicker(event)'
 			};
+			v.statsButton = ' hidden';
 			if (user.contact) {
 				if (user.contact.imageList)
 					v.imgProfile = '<img src="' + global.serverImg + user.contact.imageList + '"/>';
@@ -178,8 +182,11 @@ ${ui.l('events.title')}
 				v.name = user.contact.pseudonym;
 				v.infoButton = ' hidden';
 				v.langButton = ' hidden';
-				if (user.clientId > 1)
+				if (user.clientId > 1) {
 					v.actionLogo = 'pageHome.openNews()';
+					if (user.contact.type == 'adminContent')
+						v.statsButton = '';
+				}
 			} else {
 				v.dispProfile = 'class="hidden"';
 				v.lang = global.language;

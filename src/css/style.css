@@ -2050,13 +2050,20 @@ buttonIcon.notifications {
 	right: 0;
 }
 
+buttonIcon.statistics {
+	top: 1em;
+	left: 1em;
+	background: rgba(0, 0, 0, 0.3);
+	font-size: 0.77em;
+	padding: 1em;
+}
+
 buttonIcon.language {
 	top: 0;
 	right: 0;
 	box-shadow: none;
 	font-size: 1.4em;
 	padding: 0.5em;
-	position: absolute;
 }
 
 buttonIcon.language span {
