@@ -18,7 +18,7 @@ class pageHome {
 	static news;
 	static template = v =>
 		global.template`<homeHeader${v.logoSmall}>
-	<buttonIcon class="statistics${v.statsButton}" onclick="ui.navigation.openHTML(&quot;stats.html&quot;)">
+	<buttonIcon class="statistics${v.statsButton}" onclick="ui.navigation.openHTML(&quot;stats.html&quot;,&quot;stats&quot;)">
 		<img source="statistics"/>
 	</buttonIcon>
 	<img onclick="${v.actionLogo}" source="logo"/>
