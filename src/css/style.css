@@ -2307,10 +2307,6 @@ chat.location chatButtons {
 	display: none;
 }
 
-.highlightColor {
-	color: var(--bg2start);
-}
-
 .eventMargin {
 	margin: 0.5em 0;
 }

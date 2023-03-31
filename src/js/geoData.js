@@ -147,8 +147,14 @@ class geoData {
 			ui.toggleHeight('locationPicker');
 		} else if (user.contact)
 			communication.loadMap('geoData.openLocationPickerDialog');
-		else
-			intro.openHint({ desc: 'description', pos: '5%,10.5em', size: '90%,auto', hinkyClass: 'top', hinky: 'left:50%;margin-left:-0.5em;' });
+		else {
+			var desc;
+			if (user.clientId > 1) {
+				desc = ui.l('intro.descriptionFanclub').replace(/\{0}/g, global.appTitle.substring(0, global.appTitle.indexOf(global.separator)));
+			} else
+				desc = ui.l('intro.description');
+			intro.openHint({ desc: desc, pos: '5%,10.5em', size: '90%,auto', hinkyClass: 'top', hinky: 'left:50%;margin-left:-0.5em;' });
+		}
 	}
 	static openLocationPickerDialog() {
 		ui.navigation.openPopup(ui.l('home.locationPickerTitle'),

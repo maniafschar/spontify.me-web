@@ -36,7 +36,7 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 		else if (errorID == 'search' &&
 			ui.val('search div.' + ui.q('search tabHeader tab.tabActive').getAttribute('i') + ' [name="keywords"]'))
 			s += '<br/><br/>' + ui.l('noResults.searchWithoutKeywords') + '<br/><br/><buttontext onclick="pageSearch.repeatSearch()" class="bgColor">' + ui.l('noResults.repeat') + '</buttontext>';
-		return '<noResult>' + s.replace(/\{0\}/g, ui.l(activeID + '.title')).replace('{1}', '') + '</noResult>';
+		return '<noResult>' + s.replace(/\{0}/g, ui.l(activeID + '.title')).replace('{1}', '') + '</noResult>';
 	}
 	static load(data, callback, divID, errorID) {
 		if (divID == 'contacts' && errorID != 'groups' && ui.q('groups') && ui.cssValue('groups', 'display') != 'none')

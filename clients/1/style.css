@@ -5,3 +5,7 @@
 	--bg2stop: rgb(255, 220, 70);
 	--buttonText: black;
 }
+
+.highlightColor {
+	color: var(--bg2start);
+}

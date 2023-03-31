@@ -39,13 +39,14 @@ ${ui.l('home.DescLink')}
 </buttontext><br/>
 <infoblock id="info4" style="display:none;">
 <div>
-	${ui.l('info.description').replace('{0}', v.fee)}
+	${v.description}
 </div>
 </infoblock>`;
 	static init() {
 		var e = ui.q('info');
 		if (!e.innerHTML) {
 			var render = function (v) {
+				v.description = ui.l('info.description' + (user.clientId > 1 ? 'Fanclub' : '')).replace('{0}', v.fee).replace(/\{1}/g, global.appTitle.substring(0, global.appTitle.indexOf(global.separator)));
 				e.innerHTML = pageInfo.templateDesc(v) + pageInfo.template() + pageInfo.templateCopyright();
 				pageInfo.init();
 			}
