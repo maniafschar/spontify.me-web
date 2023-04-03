@@ -704,6 +704,7 @@ class WebSocket {
 		});
 	}
 	static disconnect() {
-		WebSocket.stompClient.disconnect();
+		if (WebSocket.stompClient)
+			WebSocket.stompClient.disconnect();
 	}
 }

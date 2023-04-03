@@ -713,7 +713,7 @@ class pageChat {
 	}
 	static sendChatVideoPermissionButton() {
 		if (ui.q('chat').getAttribute('status') == 'Friends')
-			Video.startVideoCall(user.contact.id);
+			Video.startVideoCall(ui.q('chat').getAttribute('i'));
 		else if (ui.q('chat chatConversation chatMessage:not(.me)'))
 			intro.openHint({ desc: ui.l('chat.videoPermissionHint') + '<br/><br/><buttontext class="bgColor" onclick="pageChat.sendChatVideoPermission()">' + ui.l('chat.videoPermissionSendButton') + '</buttontext>', pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-3em;' });
 		else

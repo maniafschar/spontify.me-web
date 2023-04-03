@@ -462,6 +462,7 @@ news tabBody div {
 	display: block;
 	float: left;
 	position: relative;
+	padding-bottom: 2em;
 }
 
 news tabBody card {
@@ -2641,7 +2642,6 @@ videoCall call {
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
-	visibility: hidden;
 	height: 6em;
 	width: 18em;
 	background: rgba(255, 255, 255, 0.95);

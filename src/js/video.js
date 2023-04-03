@@ -158,7 +158,7 @@ class Video {
 			Video.connectedUser = data.name;
 			Video.connectedId = data.user;
 			Video.getRtcPeerConnection().setRemoteDescription(new RTCSessionDescription(data.offer));
-			Video.incomingCallModal('show');
+			Video.incomingCallModal(true);
 		} else {
 			var e = communication.generateCredentials();
 			e.id = Video.connectedId;
@@ -168,7 +168,7 @@ class Video {
 	static acceptCall() {
 		ui.classAdd('call', 'hidden');
 		ui.classRemove('videochat', 'hidden');
-		Video.incomingCallModal('hide');
+		Video.incomingCallModal();
 		navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
 			ui.q('videoCall #localStream').srcObject = stream;
 			stream.getTracks().forEach(track => Video.getRtcPeerConnection().addTrack(track, stream));
@@ -199,7 +199,7 @@ class Video {
 	static rejectCall() {
 		if (Video.rtcPeerConnection) {
 			Video.stopCall();
-			Video.incomingCallModal('hide');
+			Video.incomingCallModal();
 			var e = communication.generateCredentials();
 			e.id = Video.connectedId;
 			communication.wsSend('/ws/video', e);
@@ -213,7 +213,7 @@ class Video {
 		}
 		Video.connectedId = id;
 		var e = ui.q('videochat');
-		e.classList.remove('hidden');
+		ui.classRemove(e, 'hidden');
 		e.style.background = 'transparent';
 		ui.css('videoCall', 'display', 'block');
 		ui.q('videoCall audio.out').play();
@@ -296,7 +296,7 @@ class Video {
 	}
 	static leave() {
 		ui.q('videoCall').style.display = 'none';
-		ui.q('call').classList.add('hidden');
+		ui.classAdd('call', 'hidden');
 	};
 	static setActiveDeviceId(stream) {
 		if (stream && (global.isBrowser() || global.getOS() != 'ios')) {
@@ -330,17 +330,17 @@ class Video {
 		Video.setActiveDeviceId(stream);
 		Video.prepareVideoElement('localStream');
 	}
-	static incomingCallModal(className) {
-		if (className === 'hide') {
-			ui.classRemove('call', 'show');
-			ui.q('videoCall audio.in').pause();
-		} else {
+	static incomingCallModal(show) {
+		if (show) {
 			ui.classRemove('videoCall call', 'hidden');
 			ui.classAdd('videoCall videochat', 'hidden');
 			ui.q('videoCall').style.display = 'block';
 			ui.q('videoCall call initiator').innerHTML = Video.connectedUser;
-			ui.classAdd('call', 'show');
+			ui.classRemove('call', 'hidden');
 			ui.q('videoCall audio.in').play();
+		} else {
+			ui.classAdd('call', 'hidden');
+			ui.q('videoCall audio.in').pause();
 		}
 	}
 	static prepareVideoElement(videoElement) {
