@@ -253,7 +253,7 @@ class initialisation {
 				'<input name="zoom" type="radio" label="' + ui.l('settings.scale3') + '" onclick="initialisation.zoom()" value="1.4"' + (user.scale == 1.4 ? ' checked' : '') + '/>');
 	}
 	static reposition() {
-		if (!ui.q('body div'))
+		if (!ui.q('body content'))
 			return;
 		var xWidth = global.getDevice() == 'computer' ? window.innerWidth : screen.availWidth;
 		if (xWidth < 1200)
@@ -262,14 +262,13 @@ class initialisation {
 			xWidth /= 2;
 		var xDiagonal = global.getDevice() == 'computer' ?
 			Math.sqrt(Math.pow(xWidth, 2) + Math.pow(window.innerHeight, 2)) :
-			Math.sqrt(Math.pow(screen.availWidth, 2) + Math.pow(screen.availHeight, 2))
+			Math.sqrt(Math.pow(screen.availWidth, 2) + Math.pow(screen.availHeight, 2));
 		var font = 16;
 		if (xDiagonal < 800)
 			font = xDiagonal / 800 * font;
 		else
 			font += Math.min((xDiagonal - 800) / (global.getDevice() == 'computer' ? 400 : 75), 26);
 		if (global.getDevice() == 'computer') {
-			ui.css('.bgWeb', 'display', 'block');
 			ui.css('main', 'margin-left', (-xWidth / 2) + 'px');
 			ui.css('main', 'width', xWidth + 'px');
 			ui.classRemove('body', 'app');
