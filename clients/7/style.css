@@ -1,0 +1,11 @@
+:root {
+	--bg1start: rgb(0, 70, 110);
+	--bg1stop: rgb(90, 170, 221);
+	--bg2start: rgb(0, 0, 0);
+	--bg2stop: rgb(60, 60, 110);
+	--buttonText: white;
+}
+
+.highlightColor {
+	color: var(--bg2start);
+}

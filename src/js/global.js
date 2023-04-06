@@ -31,6 +31,8 @@ class global {
 			return d2;
 		},
 		getDateFields(d) {
+			if (typeof d == 'number')
+				d = new Date(d);
 			if (d instanceof Date)
 				return {
 					year: d.getFullYear(),

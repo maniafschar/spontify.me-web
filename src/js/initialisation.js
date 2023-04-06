@@ -253,7 +253,7 @@ class initialisation {
 				'<input name="zoom" type="radio" label="' + ui.l('settings.scale3') + '" onclick="initialisation.zoom()" value="1.4"' + (user.scale == 1.4 ? ' checked' : '') + '/>');
 	}
 	static reposition() {
-		if (!ui.q('body content'))
+		if (!ui.q('body main'))
 			return;
 		var xWidth = global.getDevice() == 'computer' ? window.innerWidth : screen.availWidth;
 		if (xWidth < 1200)
