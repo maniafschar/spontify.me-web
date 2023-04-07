@@ -111,15 +111,16 @@ class Video {
 	static init() {
 		if (!ui.q('videoCall').innerHTML) {
 			if (!global.isBrowser()) {
-				if (global.getOS() == 'android') {
-					const { permissions } = window.cordova.plugins;
-					permissions.requestPermissions([permissions.CAMERA, permissions.RECORD_AUDIO, permissions.MODIFY_AUDIO_SETTINGS]);
-				} else if (global.getOS() == 'ios') {
-					const { iosrtc } = window.cordova.plugins;
-					iosrtc.registerGlobals();
-					iosrtc.selectAudioOutput('speaker');
-					iosrtc.requestPermission(true, true, function (result) {
-						Video.permission = result;
+				if (global.getOS() == 'android')
+					cordova.plugins.permissions.requestPermissions([cordova.plugins.permissions.CAMERA, cordova.plugins.permissions.RECORD_AUDIO, cordova.plugins.permissions.MODIFY_AUDIO_SETTINGS]);
+				else if (global.getOS() == 'ios') {
+					cordova.plugins.iosrtc.registerGlobals();
+					cordova.plugins.iosrtc.selectAudioOutput('speaker');
+					cordova.plugins.iosrtc.requestPermission(true, true, function () { });
+					cordova.plugins.diagnostic.requestLocationAuthorization(function (result) {
+						Video.permission = result == cordova.plugins.diagnostic.permissionStatus.GRANTED;
+					}, function () {
+						Video.permission = false;
 					});
 				}
 			}
@@ -135,11 +136,13 @@ class Video {
 		if (answer.userState) {
 			if (answer.userState == 'offline' && Video.offer)
 				setTimeout(function () {
-					var e = communication.generateCredentials();
-					e.name = user.contact.pseudonym;
-					e.id = Video.connectedId;
-					e.offer = Video.offer;
-					communication.wsSend('/ws/video', e);
+					if (Video.offer) {
+						var e = communication.generateCredentials();
+						e.name = user.contact.pseudonym;
+						e.id = Video.connectedId;
+						e.offer = Video.offer;
+						communication.wsSend('/ws/video', e);
+					}
 				}, 2000);
 		} else {
 			Video.getRtcPeerConnection().setRemoteDescription(new RTCSessionDescription(answer));
@@ -161,7 +164,7 @@ class Video {
 			Video.incomingCallModal(true);
 		} else {
 			var e = communication.generateCredentials();
-			e.id = Video.connectedId;
+			e.id = data.user;
 			communication.wsSend('/ws/video', e);
 		}
 	}
@@ -200,6 +203,8 @@ class Video {
 		if (Video.rtcPeerConnection) {
 			Video.stopCall();
 			Video.incomingCallModal();
+		}
+		if (Video.connectedId) {
 			var e = communication.generateCredentials();
 			e.id = Video.connectedId;
 			communication.wsSend('/ws/video', e);

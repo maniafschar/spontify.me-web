@@ -363,7 +363,7 @@ homeHeader img {
 }
 
 homeHeader.logoSmall>svg {
-	width: 40%;
+	height: 6em;
 	position: absolute;
 	right: 0.5em;
 	top: 0.5em;
