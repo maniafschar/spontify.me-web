@@ -138,11 +138,10 @@ class geoData {
 					if (e[i].town != geoData.current.town)
 						s += '<label onclick="geoData.saveLocationPicker(' + JSON.stringify(e[i]).replace(/"/g, '\'') + ')">' + e[i].town + '</label>';
 				}
-				s += '<label class="bgColor" onclick="geoData.openLocationPicker(event,true)">' + ui.l('home.locationPickerTitle') + '</label>';
+				s += '<label class="bgColor" onclick="geoData.openLocationPicker(event,true)" style="color:var(--buttonText);">' + ui.l('home.locationPickerTitle') + '</label>';
 				var e = ui.q('locationPicker');
 				e.innerHTML = s;
 				e.removeAttribute('h');
-				e.style.top = ui.navigation.getActiveID() == 'home' ? ui.q('homeHeader svg').clientHeight + 'px' : '';
 			}
 			ui.toggleHeight('locationPicker');
 		} else if (user.contact)

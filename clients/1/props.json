@@ -8,5 +8,6 @@
 		"buddies": "Buddies"
 	},
 	"name": "skillvents",
-	"server": "https://skills.community"
+	"server": "https://skills.community",
+	"url": "https://skillvents.com"
 }

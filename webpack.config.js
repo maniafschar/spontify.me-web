@@ -75,10 +75,10 @@ module.exports = (env) => {
 						fs.cpSync('src/font/', 'dist/font', { recursive: true });
 						fs.cpSync('src/images/', 'dist/images', { recursive: true });
 						fs.cpSync('src/js/lang/', 'dist/js/lang', { recursive: true });
-						fs.cpSync('src/index.html', 'dist/index.html');
 						fs.cpSync('src/logoutcallback.html', 'dist/logoutcallback.html');
 						fs.cpSync('src/oauthcallback.html', 'dist/oauthcallback.html');
 						fs.cpSync('src/favicon.ico', 'dist/favicon.ico');
+						fs.writeFileSync('dist/index.html', fs.readFileSync('src/index.html', 'utf8').replace(/\{placeholderUrl}/g, props.url));
 						fs.writeFileSync('dist' + file, fs.readFileSync('clients/' + client + '/style.css', 'utf8') + '\n\n' + fs.readFileSync('src' + file, 'utf8'));
 						file = 'dist/js/fmg.js';
 						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('{placeholderAppTitle}', props.name).replace('{placeholderClientId}', '' + Math.max(parseInt(client), 1)).replace('{placeholderServer}', props.server));

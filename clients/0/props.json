@@ -8,5 +8,6 @@
 		"buddies": "Buddies"
 	},
 	"name": "test",
-	"server": "http://localhost:9001"
+	"server": "http://localhost:9001",
+	"url": "http://localhost:9000"
 }
