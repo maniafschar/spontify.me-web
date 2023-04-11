@@ -2247,7 +2247,7 @@ row compass {
 	margin-top: -0.25em;
 }
 
-detail .authenticated title::after,
+detail .authenticated detailImg::after,
 detail .participate .date::after,
 detail .canceled .date::after {
 	margin-left: 1em;
@@ -2259,14 +2259,15 @@ detail .canceled .date::after {
 	color: white;
 }
 
-detail .authenticated title::after,
+detail .authenticated detailImg::after,
 detail .participate .date::after {
 	content: '✓';
 	background: green;
 }
 
-detail .authenticated title::after {
-	font-size: 0.77em;
+detail .authenticated detailImg::after {
+	right: 0.25em;
+	bottom: 2.5em;
 }
 
 detail .canceled .date::after {

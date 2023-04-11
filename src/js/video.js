@@ -110,6 +110,12 @@ class Video {
 	}
 	static init() {
 		if (!ui.q('videoCall').innerHTML) {
+			ui.q('videoCall').innerHTML = Video.template();
+			ui.q('videoCall streams').innerHTML = Video.templateStreams();
+			formFunc.image.replaceSVGs();
+			ui.swipe('videoCall streams', dir => {
+				ui.q('videoCall streams').style.left = dir == 'left' ? '-100%' : '';
+			});
 			if (!global.isBrowser()) {
 				if (global.getOS() == 'android')
 					cordova.plugins.permissions.requestPermissions([cordova.plugins.permissions.CAMERA, cordova.plugins.permissions.RECORD_AUDIO, cordova.plugins.permissions.MODIFY_AUDIO_SETTINGS]);
@@ -117,19 +123,8 @@ class Video {
 					cordova.plugins.iosrtc.registerGlobals();
 					cordova.plugins.iosrtc.selectAudioOutput('speaker');
 					cordova.plugins.iosrtc.requestPermission(true, true, function () { });
-					cordova.plugins.diagnostic.requestLocationAuthorization(function (result) {
-						Video.permission = result == cordova.plugins.diagnostic.permissionStatus.GRANTED;
-					}, function () {
-						Video.permission = false;
-					});
 				}
 			}
-			ui.q('videoCall').innerHTML = Video.template();
-			ui.q('videoCall streams').innerHTML = Video.templateStreams();
-			formFunc.image.replaceSVGs();
-			ui.swipe('videoCall streams', dir => {
-				ui.q('videoCall streams').style.left = dir == 'left' ? '-100%' : '';
-			});
 		}
 	}
 	static onAnswer(answer) {
