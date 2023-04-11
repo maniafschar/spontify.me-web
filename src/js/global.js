@@ -9,7 +9,7 @@ export { global, Strings };
 
 class global {
 	static appTitle = '{placeholderAppTitle}';
-	static appVersion = '0.4.1';
+	static appVersion = '0.1.1';
 	static language = null;
 	static minLocations = 5;
 	static paused = false;
@@ -237,8 +237,8 @@ class global {
 		if (!os)
 			os = user.contact.os;
 		ui.navigation.openHTML(os == 'android' ?
-			'https://play.google.com/store/apps/details?id=com.jq.spontifyme' :
-			'https://itunes.apple.com/app/id1630967898');
+			'https://play.google.com/store/apps/details?id={placeholderBundleID}' :
+			'https://itunes.apple.com/app/id{placeholderAppleID}');
 	}
 	static template(parts) {
 		var res = parts[0];

@@ -64,7 +64,7 @@ module.exports = (env) => {
 			{
 				apply: compiler => {
 					compiler.hooks.afterEmit.tap('client', () => {
-						var fs = require('fs'), file = '/css/style.css', client = env && env.client && !isNaN(env.client) ? env.client : '1';
+						var fs = require('fs'), file, client = env && env.client && !isNaN(env.client) ? env.client : '1';
 						var props = JSON.parse(fs.readFileSync('clients/' + client + '/props.json', 'utf8'));
 						fs.mkdirSync('dist/audio');
 						fs.mkdirSync('dist/css');
@@ -78,20 +78,38 @@ module.exports = (env) => {
 						fs.cpSync('src/logoutcallback.html', 'dist/logoutcallback.html');
 						fs.cpSync('src/oauthcallback.html', 'dist/oauthcallback.html');
 						fs.cpSync('src/favicon.ico', 'dist/favicon.ico');
-						fs.writeFileSync('dist/index.html', fs.readFileSync('src/index.html', 'utf8').replace(/\{placeholderUrl}/g, props.url));
+						file = '/css/style.css';
 						fs.writeFileSync('dist' + file, fs.readFileSync('clients/' + client + '/style.css', 'utf8') + '\n\n' + fs.readFileSync('src' + file, 'utf8'));
+						fs.writeFileSync('dist/index.html', fs.readFileSync('src/index.html', 'utf8')
+							.replace(/\{placeholderUrl}/g, props.url)
+							.replace(/\{placeholderBundleID}/g, 'com.jq.fanclub.client' + client)
+							.replace(/\{placeholderHost}/g, props.url.substring(8))
+							.replace(/\{placeholderSchema}/g, props.url.substring(8, props.url.lastIndexOf('.'))));
 						file = 'dist/js/fmg.js';
-						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('{placeholderAppTitle}', props.name).replace('{placeholderClientId}', '' + Math.max(parseInt(client), 1)).replace('{placeholderServer}', props.server));
+						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
+							.replace('{placeholderAppTitle}', props.name)
+							.replace('{placeholderClientId}', '' + Math.max(parseInt(client), 1))
+							.replace('{placeholderServer}', props.server)
+							.replace(/\{placeholderBundleID}/g, 'com.jq.fanclub.client' + client)
+							.replace(/\{placeholderAppleID}/g, props.appleId));
 						file = 'dist/js/lang/DE.html';
-						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/\{placeholderAppTitle}/g, props.name));
+						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
+							.replace(/\{placeholderAppTitle}/g, props.name));
 						file = 'dist/js/lang/EN.html';
-						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/\{placeholderAppTitle}/g, props.name));
+						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
+							.replace(/\{placeholderAppTitle}/g, props.name));
 						file = 'dist/js/lang/DE.json';
-						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/\${buddy}/g, props.de.buddy).replace(/\${buddies}/g, props.de.buddies));
+						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
+							.replace(/\${buddy}/g, props.de.buddy).replace(/\${buddies}/g, props.de.buddies));
 						file = 'dist/js/lang/EN.json';
-						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/\${buddy}/g, props.en.buddy).replace(/\${buddies}/g, props.en.buddies));
+						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
+							.replace(/\${buddy}/g, props.en.buddy).replace(/\${buddies}/g, props.en.buddies));
 						file = '../appClient/config.xml';
-						fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/(<widget id=")([^"]+)/, '$1com.jq.fanclub.client' + client).replace(/(<description\>)([^<]+)/, '$1' + props.name));
+						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
+							.replace(/(<widget id=")([^"]+)/, '$1com.jq.fanclub.client' + client)
+							.replace(/(<description\>)([^<]+)/, '$1' + props.name)
+							.replace(/(<host scheme="https" name=")([^"]+)/g, '$1' + props.url.substring(8))
+							.replace(/(<host name="" event="fb" scheme=")([^"]+)/g, '$1' + props.url.substring(8, props.url.lastIndexOf('.'))));
 						if (fs.existsSync('clients/' + client + '/images/logo.png')) {
 							fs.writeFileSync('dist/images/logo.png', fs.readFileSync('clients/' + client + '/images/logo.png'));
 							file = 'dist/images/logo.svg';
