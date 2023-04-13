@@ -611,7 +611,7 @@ ${v.info}`;
 	}
 	static unblock(id, blockId) {
 		if (!ui.q('popup [i="' + id + '"]')) {
-			ui.navigation.openPopup(ui.l('attention'), ui.l('contacts.unblock').replace('{0}', ui.q('#blocked row[i="' + id + '"] title').innerText) + '<br /><br /><buttontext class="bgColor" i="' + id + '" onclick="pageSettings.unblock(' + id + ',' + blockId + ')">' + ui.l('Yes') + '</buttontext>');
+			ui.navigation.openPopup(ui.l('attention'), ui.l('contacts.unblock').replace('{0}', ui.q('#blocked row[i="' + id + '"] title').innerText) + '<br /><br /><buttontext class="bgColor" i="' + id + '" onclick="pageSettings.unblock(&quot;' + id + '&quot;,' + blockId + ')">' + ui.l('Yes') + '</buttontext>');
 			return;
 		}
 		communication.ajax({

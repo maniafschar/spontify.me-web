@@ -514,8 +514,9 @@ class pageEvent {
 				v._geolocationDistance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 ? 0 : 1).replace('.', ',') : '';
 				v.type = 'Event';
 				if (ui.navigation.getActiveID() == 'settings')
-					v.oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';
-				v.oc = 'details.open(&quot;' + v.id + '&quot;,' + JSON.stringify({ webCall: 'pageEvent.listEvents(as)', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)';
+					v.oc = 'pageSettings.unblock(&quot;' + v.id + '&quot;,' + v.block.id + ')';
+				else
+					v.oc = 'details.open(&quot;' + v.id + '&quot;,' + JSON.stringify({ webCall: 'pageEvent.listEvents(as)', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)';
 				s += pageLocation.templateList(v);
 			}
 		}
