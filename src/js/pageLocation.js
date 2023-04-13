@@ -191,7 +191,9 @@ ${v.rating}
 		v.values.reason = ui.val(path + ' [name="reason"]:checked');
 		v.values.note = n.value;
 		var id = ui.q('detail card:last-child').getAttribute('i');
-		if (id.indexOf && id.indexOf('_') > 0)
+		if (ui.q(path + ' input[name="type"]:checked'))
+			v.values.contactId2 = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).contact.id;
+		else if (id.indexOf && id.indexOf('_') > 0)
 			v.values.eventId = id.substring(0, id.indexOf('_'));
 		else
 			v.values.locationId = id;

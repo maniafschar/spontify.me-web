@@ -2,7 +2,7 @@ import { bluetooth } from './bluetooth';
 import { communication } from './communication';
 import { global } from './global';
 import { initialisation } from './initialisation';
-import { Contact, Location, model } from './model';
+import { Contact, Event, Location, model } from './model';
 import { pageContact } from './pageContact';
 import { ui, formFunc } from './ui';
 import { user } from './user';
@@ -14,6 +14,7 @@ import QRCodeStyling from 'qr-code-styling';
 import { pageLogin } from './pageLogin';
 import { lists } from './lists';
 import { pageHome } from './pageHome';
+import { pageEvent } from './pageEvent';
 
 export { pageSettings };
 
@@ -406,7 +407,7 @@ ${v.info}`;
 		if (ui.cssValue(e, 'display') == 'none' && e.getAttribute('contact') && e.getAttribute('location') && e.getAttribute('event'))
 			ui.toggleHeight(e);
 	}
-	static listContactsBlocked(l) {
+	static list(l, list, type) {
 		l[0].push('_message1');
 		l[0].push('_message2');
 		var v;
@@ -415,18 +416,13 @@ ${v.info}`;
 			l[i].push(v.block.reason ? ui.l('contacts.blockReason' + v.block.reason) : '&nbsp;');
 			l[i].push(v.block.note ? v.block.note : '&nbsp;');
 		}
-		pageSettings.listBlocked('contact', pageContact.listContacts(l));
-	}
-	static listLocationsBlocked(l) {
-		l[0].push('_message1');
-		l[0].push('_message2');
-		var v;
-		for (var i = 1; i < l.length; i++) {
-			v = model.convert(new Location(), l, i);
-			l[i].push(v.block.reason ? ui.l('locations.blockReason' + v.block.reason) : '&nbsp;');
-			l[i].push(v.block.note ? v.block.note : '&nbsp;');
+		if (type == 'event') {
+			var l2 = [];
+			for (var i = 1; i < l.length; i++)
+				l2.push(model.convert(new Location(), l, i));
+			l = l2;
 		}
-		pageSettings.listBlocked(l[0].includes('event.id') ? 'event' : 'location', pageLocation.listLocation(l));
+		pageSettings.listBlocked(type, list(l));
 	}
 	static preview() {
 		if (pageSettings.currentSettings == pageSettings.getCurrentSettings())
@@ -597,17 +593,17 @@ ${v.info}`;
 				webCall: 'pageSettings.toggleBlocked()',
 				query: 'contact_listBlocked',
 				limit: 0
-			}, pageSettings.listContactsBlocked);
+			}, function (l) { pageSettings.list(l, pageContact.listContacts, 'contact'); });
 			lists.load({
 				webCall: 'pageSettings.toggleBlocked()',
 				query: 'location_listBlocked',
 				limit: 0
-			}, pageSettings.listLocationsBlocked);
+			}, function (l) { pageSettings.list(l, pageLocation.listLocation, 'location'); });
 			lists.load({
 				webCall: 'pageSettings.toggleBlocked()',
 				query: 'event_listBlocked',
 				limit: 0
-			}, pageSettings.listLocationsBlocked);
+			}, function (l) { pageSettings.list(l, pageEvent.listEvents, 'event'); });
 		}
 	}
 	static toggleGenderSlider(e) {
