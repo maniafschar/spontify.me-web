@@ -94,19 +94,14 @@ ${v.matchIndicatorHintDescription}
 </text>
 <text name="block" class="collapsed">
 	<div style="padding:1em 0;">
-		<input type="radio" name="type" value="1" label="${ui.l('contacts.blockAction')}"
-			onclick="pageContact.showBlockText()" checked="true" />
-		<input type="radio" name="type" value="2" label="${ui.l('contacts.blockAndReportAction')}"
-			onclick="pageContact.showBlockText()" />
-		<br />
-		<div style="display:none;margin-top:0.5em;">
-			<input type="radio" name="reason" value="1" label="${ui.l('contacts.blockReason1')}" />
-			<input type="radio" name="reason" value="2" label="${ui.l('contacts.blockReason2')}" />
-			<input type="radio" name="reason" value="3" label="${ui.l('contacts.blockReason3')}" />
-			<input type="radio" name="reason" value="4" label="${ui.l('contacts.blockReason4')}" />
-			<input type="radio" name="reason" value="100" label="${ui.l('contacts.blockReason100')}" checked />
+		<div style="margin-top:0.5em;">
+			<input type="radio" name="reason" value="1" deselect="true" label="${ui.l('contacts.blockReason1')}" />
+			<input type="radio" name="reason" value="2" deselect="true" label="${ui.l('contacts.blockReason2')}" />
+			<input type="radio" name="reason" value="3" deselect="true" label="${ui.l('contacts.blockReason3')}" />
+			<input type="radio" name="reason" value="4" deselect="true" label="${ui.l('contacts.blockReason4')}" />
+			<input type="radio" name="reason" value="100" deselect="true" label="${ui.l('contacts.blockReason100')}" />
 		</div>
-		<textarea placeholder="${ui.l('contacts.blockDescHint')}" name="note" maxlength="250" style="display:none;"></textarea>
+		<textarea placeholder="${ui.l('contacts.blockDescHint')}" name="note" maxlength="250"></textarea>
 		<buttontext onclick="pageContact.block()" style="margin-top:0.5em;"
 			class="bgColor">${ui.l('save')}</buttontext>
 	</div>
@@ -156,15 +151,13 @@ ${v.matchIndicatorHintDescription}
 		};
 		if (ui.q(path).getAttribute('blockID') > 0)
 			v.id = ui.q(path).getAttribute('blockID');
-		if (!ui.q(path + ' [name="type"]').checked) {
-			var n = ui.q(path + ' [name="note"]');
-			if (!n.value && ui.q(path + ' [name="reason"][value="100"]:checked')) {
-				formFunc.setError(n, 'contacts.blockActionHint');
-				return;
-			}
-			v.values.reason = ui.val(path + ' [name="reason"]:checked');
-			v.values.note = n.value;
+		var n = ui.q(path + ' [name="note"]');
+		if (!n.value && ui.q(path + ' [name="reason"][value="100"]:checked')) {
+			formFunc.setError(n, 'contacts.blockActionHint');
+			return;
 		}
+		v.values.reason = ui.val(path + ' [name="reason"]:checked');
+		v.values.note = n.value;
 		communication.ajax({
 			url: global.serverApi + 'db/one',
 			method: v.id ? 'PUT' : 'POST',
@@ -176,7 +169,7 @@ ${v.matchIndicatorHintDescription}
 					e.outerHTML = '';
 					lists.setListHint('contacts');
 				}
-				ui.navigation.goTo('contacts');
+				ui.navigation.goTo(ui.q('detail').getAttribute('from'));
 			}
 		});
 	}
@@ -400,11 +393,6 @@ ${v.matchIndicatorHintDescription}
 			}
 		});
 	}
-	static showBlockText() {
-		var s = ui.q('detail card:last-child [name="block"] [name="type"]:checked').value == 2 ? 'block' : 'none';
-		ui.css(ui.q('detail card:last-child [name="block"] [name="reason"]').parentNode, 'display', s);
-		ui.css('detail card:last-child [name="block"] [name="note"]', 'display', s);
-	}
 	static toggleFriend(id) {
 		details.togglePanel(ui.q('detail card:last-child[i="' + id + '"] [name="friend"]'));
 	}
@@ -423,7 +411,6 @@ ${v.matchIndicatorHintDescription}
 						if (v.block.reason != 0)
 							ui.q(divID + ' [name="reason"][value="' + v.block.reason + '"]').checked = true;
 						ui.q(divID + ' textarea').value = v.reason;
-						pageContact.showBlockText();
 					} else
 						ui.attr(e, 'blockID', 0);
 				}

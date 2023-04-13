@@ -121,7 +121,7 @@ class pageEvent {
 		global.template`<text class="description event" ${v.oc}>
 <div><span class="chatLinks" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;),event)"><img src="${v.imageEventOwner}"><br>${v.contact.pseudonym}</span></div>
 <div class="date eventMargin">${v.date}${v.endDate}</div>
-<div class="eventMargin">${v.description}</div>
+<div class="eventMargin">${v.text}</div>
 <div class="eventMargin">${v.eventMustBeConfirmed}</div>
 <div class="eventMargin">${v.maxParticipants}</div>
 <div class="price eventMargin">${v.eventPrice}</div>

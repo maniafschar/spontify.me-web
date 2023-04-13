@@ -104,19 +104,15 @@ ${v.rating}
 </text>
 <text name="block" class="collapsed">
 	<div style="padding:1em 0;">
-		<input type="radio" name="type" value="1" label="${ui.l('contacts.blockAction')}"
-			onclick="pageLocation.showBlockText()" checked="true" />
-		<input type="radio" name="type" value="2" label="${ui.l('contacts.blockAndReportAction')}"
-			onclick="pageLocation.showBlockText()" />
+		<input type="checkbox" name="type" value="1" label="${v.blockUser}" />
 		<br />
-		<div style="display:none;margin-top:0.5em;">
-			<input type="radio" name="reason" value="1" label="${ui.l('locations.blockReason1')}" />
-			<input type="radio" name="reason" value="2" label="${ui.l('locations.blockReason2')}" ${v.hideBlockReason2}/>
-			<input type="radio" name="reason" value="100" label="${ui.l('locations.blockReason100')}" checked />
+		<div style=";margin-top:0.5em;">
+			<input type="radio" name="reason" value="1" deselect="true" label="${ui.l('locations.blockReason1')}" />
+			<input type="radio" name="reason" value="2" deselect="true" label="${ui.l('locations.blockReason2')}" ${v.hideBlockReason2}/>
+			<input type="radio" name="reason" value="100" deselect="true" label="${ui.l('locations.blockReason100')}" />
 		</div>
-		<textarea placeholder="${ui.l('contacts.blockDescHint')}" name="note" maxlength="250" style="display:none;"></textarea>
-		<buttontext onclick="pageLocation.block()" style="margin-top:0.5em;"
-			class="bgColor">${ui.l('save')}</buttontext>
+		<textarea placeholder="${ui.l('contacts.blockDescHint')}" name="note" maxlength="250"></textarea>
+		<buttontext onclick="pageLocation.block()" style="margin-top:0.5em;" class="bgColor">${ui.l('save')}</buttontext>
 	</div>
 </text>
 <text name="copy" class="collapsed">
@@ -187,15 +183,13 @@ ${v.rating}
 		};
 		if (ui.q(path).getAttribute('blockID') > 0)
 			v.id = ui.q(path).getAttribute('blockID');
-		if (!ui.q(path + ' [name="type"]').checked) {
-			var n = ui.q(path + ' [name="note"]');
-			if (!n.value && ui.q(path + ' [name="reason"][value="100"]:checked')) {
-				formFunc.setError(n, 'contacts.blockActionHint');
-				return;
-			}
-			v.values.reason = ui.val(path + ' [name="reason"]:checked');
-			v.values.note = n.value;
+		var n = ui.q(path + ' [name="note"]');
+		if (!n.value && ui.q(path + ' [name="reason"][value="100"]:checked')) {
+			formFunc.setError(n, 'contacts.blockActionHint');
+			return;
 		}
+		v.values.reason = ui.val(path + ' [name="reason"]:checked');
+		v.values.note = n.value;
 		var id = ui.q('detail card:last-child').getAttribute('i');
 		if (id.indexOf && id.indexOf('_') > 0)
 			v.values.eventId = id.substring(0, id.indexOf('_'));
@@ -212,7 +206,7 @@ ${v.rating}
 					e.outerHTML = '';
 					lists.setListHint('locations');
 				}
-				ui.navigation.goTo('locations');
+				ui.navigation.goTo(ui.q('detail').getAttribute('from'));
 			}
 		});
 	}
@@ -265,6 +259,7 @@ ${v.rating}
 		v.locID = v.event.id ? v.event.locationId : v.id;
 		v.angle = geoData.getAngel(geoData.current, { lat: v.latitude, lon: v.longitude });
 		v.image = v.event.image ? v.event.image : v.image ? v.image : v.contact.image;
+		v.blockUser = ui.l('locations.blockUser').replace('{0}', v.contact.pseudonym);
 		var eventWithLocation = v.address ? true : false;
 		if (v.event.id) {
 			v.eventDetails = pageEvent.detail(v);
@@ -649,11 +644,6 @@ ${v.rating}
 		}
 		pageLocation.closeLocationInputHelper();
 	}
-	static showBlockText() {
-		var s = ui.q('detail card:last-child [name="block"] [name="type"]:checked').value == 2 ? 'block' : 'none';
-		ui.css(ui.q('detail card:last-child [name="block"] [name="reason"]').parentNode, 'display', s);
-		ui.css('detail card:last-child [name="block"] [name="note"]', 'display', s);
-	}
 	static showLocationInputHelper(event) {
 		var e = ui.q('locationNameInputHelper');
 		if (e.innerHTML && ui.cssValue(e, 'display') == 'none' && (!event || !ui.q('form input[name="name"]').value))
@@ -674,7 +664,6 @@ ${v.rating}
 						if (v.block.reason != 0)
 							ui.q(divID + ' [name="reason"][value="' + v.block.reason + '"]').checked = true;
 						ui.q(divID + ' textarea').value = v.reason;
-						pageLocation.showBlockText();
 					} else
 						ui.attr(e, 'blockID', 0);
 				}
