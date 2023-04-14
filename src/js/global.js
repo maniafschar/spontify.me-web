@@ -9,7 +9,7 @@ export { global, Strings };
 
 class global {
 	static appTitle = '{placeholderAppTitle}';
-	static appVersion = '0.1.1';
+	static appVersion = '0.4.9';
 	static language = null;
 	static minLocations = 5;
 	static paused = false;
