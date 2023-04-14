@@ -75,10 +75,8 @@ ${v.skills}
 ${v.matchIndicatorHintDescription}
 ${v.description}
 ${v.rating}
-<text>
-	${v.telOpenTag}${v.address}<br/>${v.tel}${v.telCloseTag}
-</text>
-<img class="map"
+<text>${v.address}</text>
+<img class="map${v.hideMeGoogle}"
 	onclick="ui.navigation.openHTML(&quot;https://maps.google.com/maps/dir/${geoData.current.lat},${geoData.current.lon}/${v.latitude},${v.longitude}&quot;)" />
 <detailButtons>
 	<buttontext class="bgColor${v.loggedIn}"
@@ -104,11 +102,10 @@ ${v.rating}
 </text>
 <text name="block" class="collapsed">
 	<div style="padding:1em 0;">
-		<input type="checkbox" name="type" value="1" label="${v.blockUser}" />
-		<br />
-		<div style=";margin-top:0.5em;">
-			<input type="radio" name="reason" value="1" deselect="true" label="${ui.l('locations.blockReason1')}" />
-			<input type="radio" name="reason" value="2" deselect="true" label="${ui.l('locations.blockReason2')}" ${v.hideBlockReason2}/>
+		<input type="checkbox" name="type" value="1" label="${v.blockUser}" ${v.hideBlockUser}/>
+		<div style=";margin-top:1.5em;">
+			<input type="radio" name="reason" value="51" deselect="true" label="${ui.l('locations.blockReason1')}" />
+			<input type="radio" name="reason" value="52" deselect="true" label="${ui.l('locations.blockReason2')}" ${v.hideBlockReason2}/>
 			<input type="radio" name="reason" value="100" deselect="true" label="${ui.l('locations.blockReason100')}" />
 		</div>
 		<textarea placeholder="${ui.l('contacts.blockDescHint')}" name="note" maxlength="250"></textarea>
@@ -281,6 +278,7 @@ ${v.rating}
 				}
 			}
 		} else {
+			v.hideBlockUser = ' style="display:none;"';
 			if (global.isBrowser())
 				v.copyLinkHint = ui.l('copyLinkHint.location');
 			else
@@ -292,11 +290,6 @@ ${v.rating}
 			v.image = global.serverImg + v.image;
 		else
 			v.image = (v.event.id ? 'images/event.svg' : 'images/location.svg') + '" class="mainBG" style="padding:8em;';
-		v.tel = v.telephone ? v.telephone.trim() : '';
-		if (v.tel) {
-			v.telOpenTag = '<a href="tel:' + v.tel.replace(/[^+\d]*/g, '') + '" style="color:black;">';
-			v.telCloseTag = '</a>';
-		}
 		var r = v.event.rating || (eventWithLocation ? v.rating : v.contact.rating);
 		if (r > 0)
 			v.rating = '<detailRating onclick="ratings.open(' + v.event.id + ',&quot;' + (v.event.id ? 'event.id=' + v.event.id : eventWithLocation ? 'event.locationId=' + v.locID : 'event.contactId=' + v.contact.id) + '&quot;)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + r) + '%;">★★★★★</full></ratingSelection></detailRating>';
@@ -309,8 +302,12 @@ ${v.rating}
 			if (v.contact.gender)
 				v.gender = '<img src="images/gender' + v.contact.gender + '.svg" />';
 		}
-		if (eventWithLocation)
+		if (eventWithLocation) {
 			v.address = v.address.replace(/\n/g, '<br />');
+			if (v.telephone)
+				v.address = '<a href="tel:' + v.telephone.replace(/[^+\d]*/g, '') + '" style="color:black;">' + v.address + '<br/>' + v.telephone + '</a>';
+
+		}
 		if (v.description)
 			v.description = '<text class="description">' + Strings.replaceLinks(v.description.replace(/\n/g, '<br/>')) + '</text>';
 		if (v.bonus)

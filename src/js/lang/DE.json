@@ -547,7 +547,7 @@
 			"login": "Sobald Du eingeloggt bist, kannst Du Locations und ${buddies} bewerten und andere Bewertungen sehen.",
 			"negativeRateValidation": "Bitte beschreibe Deine negative Bewertung.",
 			"notParticipated": "Du hast an diesem Event nicht teilgenommen. Du kannst nur Events bewerten an denen Du teilgenommen hast.",
-			"notStarted": "Das Event hat noch nihct angefangen. Du kannst es bewerten, nachdem es angefangen hat und Du teilnimmst.",
+			"notStarted": "Das Event hat noch nicht angefangen. Du kannst es bewerten, nachdem es angefangen hat und Du teilnimmst.",
 			"notYourself": "Du kannst Dich selbst nicht bewerten.",
 			"onlyFriends": "Du kannst diesen ${buddy} nicht bewerten, da Ihr keine Freunde seid.",
 			"publish": "auch an meine Facebook Wand posten",
