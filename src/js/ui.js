@@ -1044,8 +1044,6 @@ class formFunc {
 							e.innerHTML = formFunc.image.svg[id];
 							e.firstChild.onclick = imgs[i].onclick;
 							imgs[i].parentNode.replaceChild(e.firstChild, imgs[i]);
-							if (global.language != 'DE' && id == 'logo')
-								ui.classAdd('homeHeader svg>g', 'en');
 						}
 					} else
 						formFunc.image.fetchSVG(id);

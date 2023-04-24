@@ -77,7 +77,7 @@ module.exports = (env) => {
 						fs.cpSync('src/js/lang/', 'dist/js/lang', { recursive: true });
 						fs.cpSync('src/logoutcallback.html', 'dist/logoutcallback.html');
 						fs.cpSync('src/oauthcallback.html', 'dist/oauthcallback.html');
-						fs.cpSync('src/favicon.ico', 'dist/favicon.ico');
+						fs.cpSync('clients/' + client + '/images/favicon.ico', 'dist/favicon.ico');
 						file = '/css/style.css';
 						fs.writeFileSync('dist' + file, fs.readFileSync('clients/' + client + '/style.css', 'utf8') + '\n\n' + fs.readFileSync('src' + file, 'utf8'));
 						fs.writeFileSync('dist/index.html', fs.readFileSync('src/index.html', 'utf8')
@@ -113,7 +113,12 @@ module.exports = (env) => {
 						if (fs.existsSync('clients/' + client + '/images/logo.png')) {
 							fs.writeFileSync('dist/images/logo.png', fs.readFileSync('clients/' + client + '/images/logo.png'));
 							file = 'dist/images/logo.svg';
-							fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('<g class="home">', '<g class="client">').replace('<image', '<image href="images/logo.png"'));
+							var s = fs.readFileSync(file, 'utf8')
+								.replace('<g class="home">', '<g class="client">')
+								.replace('<image', '<image href="images/logo.png"');
+							if (props.name.indexOf(' · ') < 0)
+								s = s.replace('Fanclub', props.name);
+							fs.writeFileSync(file, s);
 						}
 					})
 				}

@@ -242,14 +242,11 @@ ${ui.l('events.title')}
 			ui.html('home item.bluetooth text', ui.l(bluetooth.state == 'on' && user.contact.bluetooth ? 'bluetooth.activated' : 'bluetooth.deactivated'));
 		formFunc.image.replaceSVGs();
 		if (user.contact) {
-			if (user.clientId > 1) {
-				ui.q('home homeHeader svg>g.client>g.client image').setAttribute('x', 680);
-				ui.q('home homeHeader svg>g.client>g.client image').setAttribute('width', 320);
-				ui.q('home homeHeader svg>g.client>g.client text').setAttribute('x', 840);
-			} else {
-				ui.classAdd('home homeHeader svg>g', 'loggedIn');
-				ui.classRemove('home homeHeader svg>g', 'home');
-			}
+			ui.q('home homeHeader svg image').setAttribute('x', 770);
+			ui.q('home homeHeader svg image').setAttribute('width', 230);
+			ui.q('home homeHeader svg text').setAttribute('x', 1000);
+			ui.q('home homeHeader svg text').setAttribute('y', 350);
+			ui.q('home homeHeader svg text').setAttribute('text-anchor', 'end');
 		}
 		pageHome.updateLocalisation();
 		ui.css('navigation item.search', 'display', user.contact ? '' : 'none');
@@ -418,6 +415,7 @@ ${ui.l('events.title')}
 		}
 	}
 	static updateLocalisation() {
-		ui.html('home svg text.position', geoData.current.town);
+		if (user.contact && user.clientId == 1)
+			ui.html('home svg text', geoData.current.town);
 	}
 }
