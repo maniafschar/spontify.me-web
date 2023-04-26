@@ -77,12 +77,17 @@ module.exports = (env) => {
 						fs.cpSync('src/js/lang/', 'dist/js/lang', { recursive: true });
 						fs.cpSync('src/logoutcallback.html', 'dist/logoutcallback.html');
 						fs.cpSync('src/oauthcallback.html', 'dist/oauthcallback.html');
-						fs.cpSync('clients/' + client + '/images/favicon.ico', 'dist/favicon.ico');
+						if (fs.existsSync('clients/' + client + '/images/favicon.ico'))
+							fs.cpSync('clients/' + client + '/images/favicon.ico', 'dist/favicon.ico');
 						file = '/css/style.css';
+						var bundleId = client == 1 ? 'com.jq.spontifyme' : 'com.jq.fanclub.client' + client;
 						fs.writeFileSync('dist' + file, fs.readFileSync('clients/' + client + '/style.css', 'utf8') + '\n\n' + fs.readFileSync('src' + file, 'utf8'));
 						fs.writeFileSync('dist/index.html', fs.readFileSync('src/index.html', 'utf8')
+							.replace(/\{placeholderAppleId}/g, props.appleId)
+							.replace(/\{placeholderEmail}/g, props.email)
+							.replace(/\{placeholderName}/g, props.name)
 							.replace(/\{placeholderUrl}/g, props.url)
-							.replace(/\{placeholderBundleID}/g, 'com.jq.fanclub.client' + client)
+							.replace(/\{placeholderBundleID}/g, bundleId)
 							.replace(/\{placeholderHost}/g, props.url.substring(8))
 							.replace(/\{placeholderSchema}/g, props.url.substring(8, props.url.lastIndexOf('.'))));
 						file = 'dist/js/fmg.js';
@@ -90,7 +95,7 @@ module.exports = (env) => {
 							.replace('{placeholderAppTitle}', props.name)
 							.replace('{placeholderClientId}', '' + Math.max(parseInt(client), 1))
 							.replace('{placeholderServer}', props.server)
-							.replace(/\{placeholderBundleID}/g, 'com.jq.fanclub.client' + client)
+							.replace(/\{placeholderBundleID}/g, bundleId)
 							.replace(/\{placeholderAppleID}/g, props.appleId));
 						file = 'dist/js/lang/DE.html';
 						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')

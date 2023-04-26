@@ -182,11 +182,10 @@ ${ui.l('events.title')}
 				v.name = user.contact.pseudonym;
 				v.infoButton = ' hidden';
 				v.langButton = ' hidden';
-				if (user.clientId > 1) {
+				if (user.clientId > 1)
 					v.actionLogo = 'pageHome.openNews()';
-					if (user.contact.type == 'adminContent')
-						v.statsButton = '';
-				}
+				if (user.contact.type == 'adminContent')
+					v.statsButton = '';
 			} else {
 				v.dispProfile = 'class="hidden"';
 				v.lang = global.language;
