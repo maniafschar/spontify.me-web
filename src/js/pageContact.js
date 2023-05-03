@@ -311,7 +311,7 @@ ${v.matchIndicatorHintDescription}
 	static getBirthday(b, bd) {
 		var r = { birthday: null, present: null, age: null };
 		if (b) {
-			var d1 = global.date.server2Local(b), d2 = new Date();
+			var d1 = global.date.server2local(b), d2 = new Date();
 			r.age = d2.getYear() - d1.getYear();
 			if (d2.getMonth() < d1.getMonth() || d2.getMonth() == d1.getMonth() && d2.getDate() < d1.getDate())
 				r.age--;

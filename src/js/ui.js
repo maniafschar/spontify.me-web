@@ -1293,13 +1293,13 @@ class formFunc {
 		var v = parseInt(0.5 + min + x * (max - min) / 100);
 		if (s && s.indexOf(',') > -1) {
 			s = s.split(',');
-			s = t.id.indexOf('_right') > 0 ? s[0] + ',' + v : v + ',' + s[1];
-		} else if (t.getAttribute('slider') == 'range')
-			s = t.id.indexOf('_right') > 0 ? min + ',' + v : v + ',' + max;
+			s = e.id.indexOf('_right') > 0 ? s[0] + ',' + v : v + ',' + s[1];
+		} else if (t.previousElementSibling.getAttribute('slider') == 'range')
+			s = e.id.indexOf('_right') > 0 ? min + ',' + v : v + ',' + max;
 		else
 			s = v;
 		e.querySelector('val').innerText = v;
-		t.value = s;
+		t.previousElementSibling.value = s;
 		if (t.getAttribute('callback'))
 			eval(t.getAttribute('callback'));
 		return x;

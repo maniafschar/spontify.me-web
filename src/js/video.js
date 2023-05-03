@@ -358,7 +358,7 @@ class Video {
 			responseType: 'json',
 			success(r) {
 				if (r.length > 1) {
-					var d = global.date.server2Local(r[1][0]).getTime(), n = new Date().getTime();
+					var d = global.date.server2local(r[1][0]).getTime(), n = new Date().getTime();
 					if (d - 600000 < n && d + 3600000 > n)
 						Video.startVideoCall(ui.q('chat').getAttribute('i'));
 					else

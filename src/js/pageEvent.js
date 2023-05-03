@@ -249,7 +249,7 @@ class pageEvent {
 				responseType: 'json',
 				success(r) {
 					for (var i = 1; i < r.length; i++) {
-						var d = global.date.getDateFields(global.date.server2Local(r[i][0]));
+						var d = global.date.getDateFields(global.date.server2local(r[i][0]));
 						ui.classAdd('popup appointment day[d="' + d.year + '-' + d.month + '-' + d.day + '"] .hour' + d.hour, 'closed');
 						if (r[i][2] == user.contact.id) {
 							ui.q('popup .paypal explain').innerHTML = ui.q('popup .paypal explain').innerHTML + '<br/><br/>' + ui.l('events.videoCallDateHint').replace('{0}', global.date.formatDate(r[i][0]));
@@ -270,14 +270,14 @@ class pageEvent {
 		if (!id && (locationID && user.get('event' + locationID) || !locationID && user.get('event'))) {
 			v = user.get('event' + (locationID ? locationID : '')).values;
 			if (v.startDate &&
-				global.date.server2Local(v.startDate).getTime() < new Date().getTime())
+				global.date.server2local(v.startDate).getTime() < new Date().getTime())
 				v.startDate = null;
 		}
 		if (!v)
 			v = {};
 		var d;
 		if (v.startDate) {
-			d = global.date.getDateFields(global.date.server2Local(v.startDate));
+			d = global.date.getDateFields(global.date.server2local(v.startDate));
 			v.startDate = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute;
 		}
 		if (!id || v.price > 0 && ui.q('detail card:last-child participantCount').innerText.length)
@@ -348,8 +348,8 @@ class pageEvent {
 		todayPlus14.setSeconds(59);
 		for (var i = 0; i < list.length; i++) {
 			var v = list[i];
-			var d1 = global.date.server2Local(v.event.startDate);
-			var d2 = global.date.server2Local(v.event.endDate);
+			var d1 = global.date.server2local(v.event.startDate);
+			var d2 = global.date.server2local(v.event.endDate);
 			var added = false;
 			if (d1 < todayPlus14 && d2 > today) {
 				if (v.event.type == 'w1') {
@@ -385,7 +385,7 @@ class pageEvent {
 				} while (v.event.type != 'o' && d1 < todayPlus14);
 			}
 			if (!added && user.contact.id == v.event.contactId) {
-				v.event.startDate = global.date.server2Local(v.event.startDate);
+				v.event.startDate = global.date.server2local(v.event.startDate);
 				otherEvents.push(v);
 			}
 		}
@@ -398,7 +398,7 @@ class pageEvent {
 		return actualEvents;
 	}
 	static getDate(v) {
-		var startDate = global.date.server2Local(v.event.startDate);
+		var startDate = global.date.server2local(v.event.startDate);
 		if (!v.id.indexOf || v.id.indexOf('_') < 0)
 			return startDate;
 		var d = v.id.split('_')[1].split('-');
@@ -471,7 +471,7 @@ class pageEvent {
 				s += '<listSeparator class="highlightColor strong">' + ui.l('events.outdated') + '</listSeparator>';
 			else {
 				v = as[i];
-				var startDate = global.date.server2Local(v.event.startDate);
+				var startDate = global.date.server2local(v.event.startDate);
 				var s2 = global.date.formatDate(startDate, 'weekdayLong');
 				var s3 = s2.substring(0, s2.lastIndexOf(' '));
 				if (s3 != current) {
@@ -526,7 +526,7 @@ class pageEvent {
 		var as = [], ap = [], today = global.date.getToday();
 		for (var i = 1; i < r.length; i++) {
 			var e = model.convert(new Location(), r, i);
-			e.event.startDate = global.date.server2Local(e.eventParticipate.eventDate + e.event.startDate.substring(10));
+			e.event.startDate = global.date.server2local(e.eventParticipate.eventDate + e.event.startDate.substring(10));
 			if (e.event.startDate >= today)
 				as.push(e);
 			else

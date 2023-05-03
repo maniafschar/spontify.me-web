@@ -437,7 +437,7 @@ class pageLogin {
 			|| !user.contact.skills && !user.contact.skillsText) {
 			var today = global.date.getToday();
 			today.setDate(today.getDate() - 7);
-			if (global.date.server2Local(user.get('profileCompletePrompt')) < today) {
+			if (global.date.server2local(user.get('profileCompletePrompt')) < today) {
 				var page1 = '', page2 = '';
 				if (!user.contact.image)
 					page1 += '<field><label>' + ui.l('picture') + '</label><value style="text-align:center;"><input type="file" name="image" hint="' + ui.l('settings.imageHint') + '" accept=".gif, .png, .jpg"/></value></field>';

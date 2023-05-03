@@ -141,7 +141,7 @@ ${ui.l('events.title')}
 			var d = global.date.getDateFields(new Date());
 			v.today = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute + ':00';
 			if (v.publish) {
-				d = global.date.getDateFields(global.date.server2Local(v.publish));
+				d = global.date.getDateFields(global.date.server2local(v.publish));
 				v.publish = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute;
 			} else
 				v.publish = v.today;
@@ -306,7 +306,7 @@ ${ui.l('events.title')}
 					'onclick="pageHome.editNews(' + e.id + ')"' :
 					e.url ? 'onclick="ui.navigation.openHTML(&quot;' + e.url + '&quot;)"' : '';
 				s += oc ? '<card ' + oc + ' style="cursor:pointer;">' : '<card>';
-				if (global.date.server2Local(e.publish) > new Date())
+				if (global.date.server2local(e.publish) > new Date())
 					s += '<p><date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
 				else
 					s += '<p><date>' + global.date.formatDate(e.publish) + '</date>';

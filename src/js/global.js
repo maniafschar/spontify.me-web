@@ -24,7 +24,7 @@ class global {
 		formatDate(d, type) {
 			if (!d)
 				return '';
-			var d2 = global.date.server2Local(d);
+			var d2 = global.date.server2local(d);
 			if (d2 instanceof Date)
 				return ui.l('weekday' + (type ? 'Long' : '') + d2.getDay()) + ' ' + d2.getDate() + '.' + (d2.getMonth() + 1) + '.' + ('' + d2.getFullYear()).slice(-2)
 					+ (typeof d != 'string' || d.length > 10 ? ' ' + d2.getHours() + ':' + ('0' + d2.getMinutes()).slice(-2) : '');
@@ -110,7 +110,7 @@ class global {
 				d.setDate(d.getDate() + 1);
 			return d;
 		},
-		server2Local(d) {
+		server2local(d) {
 			if (!d)
 				return d;
 			if (d instanceof Date)

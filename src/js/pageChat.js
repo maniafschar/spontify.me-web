@@ -212,7 +212,7 @@ class pageChat {
 			if (isVideoCall) {
 				var isOponent = v.action.indexOf('Video.startVideoCall(' + user.contact.id + ')') != 0;
 				if (isOponent) {
-					var date = global.date.server2Local(v.createdAt);
+					var date = global.date.server2local(v.createdAt);
 					date.setHours(date.getHours() + 1);
 					if (date < new Date())
 						addAction = false;

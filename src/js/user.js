@@ -105,7 +105,7 @@ class user {
 			responseType: 'json',
 			success(r) {
 				for (var i = 1; i < r.length; i++) {
-					var d = global.date.getDateFields(global.date.server2Local(r[i][0]));
+					var d = global.date.getDateFields(global.date.server2local(r[i][0]));
 					ui.classAdd('popup appointment day[d="' + d.year + '-' + d.month + '-' + d.day + '"] .hour' + d.hour, 'closed');
 				}
 				ui.attr('popup hour', 'onclick', 'pageEvent.selectVideoCall(this)');
