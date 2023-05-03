@@ -244,7 +244,7 @@ class pageLogin {
 			if (global.getOS() != 'ios')
 				v.hideApple = 'display:none;';
 			ui.q('login').innerHTML = pageLogin.template(v);
-			formFunc.initFields('login');
+			formFunc.initFields(ui.q('login'));
 		}
 	}
 	static login(u, p, autoLogin, exec) {

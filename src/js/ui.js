@@ -444,7 +444,7 @@ class ui {
 			var e = ui.q('popup');
 			ui.css(e, 'display', 'none');
 			ui.html(e, s);
-			formFunc.initFields('popup');
+			formFunc.initFields(ui.q('popup'));
 			if (closeAction)
 				e.setAttribute('close', closeAction);
 			else
@@ -910,12 +910,6 @@ class formFunc {
 			formFunc.image.fieldId.name = e.getAttribute('name');
 			formFunc.image.preview2(e.files && e.files.length > 0 ? e.files[0] : null);
 		},
-		previewVideo(e, id) {
-			formFunc.image.fieldId.id = id;
-			formFunc.image.fieldId.name = e.getAttribute('name');
-			if (e.files && e.files.length > 0)
-				formFunc.image.fieldId.get('_disp').querySelector('span').innerText = e.files[0].name;
-		},
 		preview2(file) {
 			formFunc.image.fieldId.get().setAttribute('rotateImage', '0');
 			if (file) {
@@ -1143,12 +1137,12 @@ class formFunc {
 			}
 		}
 	}
-	static initFields(id) {
+	static initFields(element) {
 		var f = function () { document.body.scrollTop = 0; };
-		var e = ui.qa(id + ' textarea'), e2;
+		var e = element.querySelectorAll('textarea'), e2;
 		for (var i = 0; i < e.length; i++)
 			e[i].onfocus = f;
-		e = ui.qa(id + ' input');
+		e = element.querySelectorAll('input');
 		for (var i = 0; i < e.length; i++) {
 			e[i].onfocus = function () { document.body.scrollTop = 0; }
 			ui.on(e, 'keypress', formFunc.pressDefaultButton);
@@ -1182,28 +1176,17 @@ class formFunc {
 				e2.innerHTML = s;
 				e[i].parentNode.insertBefore(e2, e[i].nextSibling);
 				e[i].style.display = 'none';
-				formFunc.initSliderDrag(ui.q('#' + idSlider + '_left'));
-				formFunc.initSliderDrag(ui.q('#' + idSlider + '_right'));
-			} else if (e[i].name == 'authenticate') {
-				if (!e[i].parentElement.querySelector('[name="' + s2 + '_disp"]')) {
-					if (!e[i].getAttribute('onchange'))
-						e[i].setAttribute('onchange', 'formFunc.image.previewVideo(this,"' + id + '")');
-					var s = '', s2 = e[i].getAttribute('name');
-					if (!global.isBrowser()) {
-						e[i].style.display = 'none';
-						s = '<buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + id + '&quot;,&quot;' + s2 + '&quot;)">' + ui.l('camera.select') + '</buttontext>';
-					}
-					e[i].outerHTML = s + '<inputFile name="' + s2 + '_disp" ' + (e[i].getAttribute('class') ? 'class="' + e[i].getAttribute('class') + '" ' : '') + (global.isBrowser() ? '' : ' style="display:none;"') + '><span>' + ui.l('fileUpload.video') + '</span></inputFile>' + e[i].outerHTML;
-				}
+				formFunc.initSliderDrag(e[i].parentNode.querySelector('#' + idSlider + '_left'));
+				formFunc.initSliderDrag(e[i].parentNode.querySelector('#' + idSlider + '_right'));
 			} else if (e[i].type == 'file') {
 				if (!e[i].previousElementSibling) {
 					if (!e[i].getAttribute('onchange'))
-						e[i].setAttribute('onchange', 'formFunc.image.preview(this,"' + id + '")');
+						e[i].setAttribute('onchange', 'formFunc.image.preview(this,"' + element.nodeName + '")');
 					var s = '', s2 = e[i].getAttribute('name');
 					if (!global.isBrowser()) {
 						e[i].style.display = 'none';
-						s = '<div name="' + s2 + '_appInput" class="appInput"><buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + id + '&quot;,&quot;' + s2 + '&quot;,true)" style="border-radius:0.5em 0 0 0.5em;border-right:solid 1px rgba(255,255,255,0.1);">' + ui.l('camera.shoot') + '</buttontext>' +
-							'<buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + id + '&quot;,&quot;' + s2 + '&quot;)" style="border-radius:0 0.5em 0.5em 0;">' + ui.l('camera.select') + '</buttontext></div>';
+						s = '<div name="' + s2 + '_appInput" class="appInput"><buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + element.nodeName + '&quot;,&quot;' + s2 + '&quot;,true)" style="border-radius:0.5em 0 0 0.5em;border-right:solid 1px rgba(255,255,255,0.1);">' + ui.l('camera.shoot') + '</buttontext>' +
+							'<buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + element.nodeName + '&quot;,&quot;' + s2 + '&quot;)" style="border-radius:0 0.5em 0.5em 0;">' + ui.l('camera.select') + '</buttontext></div>';
 					}
 					e[i].outerHTML = s + '<inputFile name="' + s2 + '_disp" ' + (e[i].getAttribute('class') ? 'class="' + e[i].getAttribute('class') + '" ' : '') + (global.isBrowser() ? '' : ' style="display:none;"') + '><span>' + (e[i].getAttribute('hint') ? e[i].getAttribute('hint') : ui.l('fileUpload.select')) + '</span></inputFile>' + e[i].outerHTML + '<img name="' + s2 + '_icon" src="' + (e[i].getAttribute('src') ? e[i].getAttribute('src') : '') + '"/>';
 				}
@@ -1213,12 +1196,11 @@ class formFunc {
 	static initSliderDrag(o) {
 		if (o) {
 			var tmp = new DragObject(o);
-			formFunc.updateSlider(o.id);
+			formFunc.updateSlider(o);
 			tmp.ondrag = function (e) {
-				var id = '#' + this.obj.id.substring(0, this.obj.id.lastIndexOf('_'));
-				var slider = ui.q(id).nextElementSibling;
-				var thumbLeft = ui.q(id + '_left');
-				var thumbRight = ui.q(id + '_right');
+				var slider = ui.parents(o, 'slider');
+				var thumbLeft = slider.querySelector('thumb');
+				var thumbRight = slider.querySelectorAll('thumb')[1];
 				var x = ui.getEvtPos(e, true) - slider.getBoundingClientRect().x;
 				if (thumbLeft.id == this.obj.id) {
 					if (x > thumbRight.offsetLeft)
@@ -1231,11 +1213,11 @@ class formFunc {
 					x = 0;
 				if (x != this.getPos().x) {
 					this.obj.style.left = (x / slider.offsetWidth * 100) + '%';
-					formFunc.updateSlider(this.obj.id);
+					formFunc.updateSlider(this.obj);
 				}
 			};
 			tmp.ondrop = function (e) {
-				this.obj.style.left = formFunc.updateSlider(this.obj.id) + '%';
+				this.obj.style.left = formFunc.updateSlider(this.obj) + '%';
 			};
 		}
 	}
@@ -1302,19 +1284,21 @@ class formFunc {
 		if (resetType)
 			ui.attr(e, 'type', 'radio');
 	}
-	static updateSlider(id) {
-		var t = ui.q('#' + id.substring(0, id.lastIndexOf('_')));
-		var s = t.value;
-		var x = parseInt(0.5 + parseFloat(ui.q('#' + id).style.left));
-		var v = parseInt(0.5 + parseFloat(t.getAttribute('min')) + x * (parseFloat(t.getAttribute('max')) - parseFloat(t.getAttribute('min'))) / 100);
+	static updateSlider(e) {
+		var t = ui.parents(e, 'slider');
+		var s = t.previousElementSibling.value;
+		var min = parseFloat(t.previousElementSibling.getAttribute('min'));
+		var max = parseFloat(t.previousElementSibling.getAttribute('max'));
+		var x = parseInt(0.5 + parseFloat(e.style.left));
+		var v = parseInt(0.5 + min + x * (max - min) / 100);
 		if (s && s.indexOf(',') > -1) {
 			s = s.split(',');
-			s = id.indexOf('_right') > 0 ? s[0] + ',' + v : v + ',' + s[1];
+			s = t.id.indexOf('_right') > 0 ? s[0] + ',' + v : v + ',' + s[1];
 		} else if (t.getAttribute('slider') == 'range')
-			s = id.indexOf('_right') > 0 ? t.getAttribute('min') + ',' + v : v + ',' + t.getAttribute('max');
+			s = t.id.indexOf('_right') > 0 ? min + ',' + v : v + ',' + max;
 		else
 			s = v;
-		ui.q('#' + id + ' val').innerText = v;
+		e.querySelector('val').innerText = v;
 		t.value = s;
 		if (t.getAttribute('callback'))
 			eval(t.getAttribute('callback'));

@@ -125,7 +125,8 @@ class initialisation {
 		});
 		ui.on(document, 'resume', function () {
 			global.paused = false;
-			WebSocket.connect();
+			if (user.contact)
+				WebSocket.connect();
 			geoData.init();
 			user.save({ webCall: 'initialisation.initApp()', active: true });
 			if (global.getParam('r'))
@@ -397,24 +398,24 @@ class DragObject {
 		this.startPos = null;
 		this.obj.style.cursor = 'move';
 		var md = function (e) {
-			document.drag = o.drag;
+			o.ownerDocument.drag = o.drag;
 			o.drag.start(e);
 			var mu = function (e) {
-				document.onmouseup = document.onmousemove = document.ontouchmove = document.ontouchend = null;
-				document.drag.end(e);
+				o.ownerDocument.onmouseup = o.ownerDocument.onmousemove = o.ownerDocument.ontouchmove = o.ownerDocument.ontouchend = null;
+				o.ownerDocument.drag.end(e);
 				return false;
 			};
 			var mm = function (e) {
 				if ((!e.changedTouches || e.changedTouches.length < 2)
 					&& (!e.targetTouches || e.targetTouches.length < 2)
 					&& (!e.touches || e.touches.length < 2))
-					document.drag.move(e);
+					o.ownerDocument.drag.move(e);
 				return false;
 			};
-			document.onmousemove = mm;
-			document.ontouchmove = mm;
-			document.onmouseup = mu;
-			document.ontouchend = mu;
+			o.ownerDocument.onmousemove = mm;
+			o.ownerDocument.ontouchmove = mm;
+			o.ownerDocument.onmouseup = mu;
+			o.ownerDocument.ontouchend = mu;
 			if (e && e.stopPropagation)
 				e.stopPropagation();
 			return false;

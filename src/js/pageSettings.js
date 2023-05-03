@@ -361,7 +361,7 @@ ${v.info}`;
 								: r.fee);
 						}
 					});
-					formFunc.initFields('settings');
+					formFunc.initFields(ui.q('settings'));
 					if (!v['contact.ageFemale'])
 						ui.css(ui.q('#settingsInterest2').nextElementSibling, 'display', 'none');
 					if (!v['contact.ageMale'])

@@ -384,7 +384,7 @@ class pageChat {
 						ai: pageChat.aiEnabled(id, r) ? '' : ' class="hidden"',
 						action: global.getDevice() == 'computer' ? 'onclick' : 'onmousedown'
 					}));
-					formFunc.initFields('chatInput');
+					formFunc.initFields(ui.q('chatInput'));
 					communication.ajax({
 						url: global.serverApi + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + id),
 						responseType: 'json',

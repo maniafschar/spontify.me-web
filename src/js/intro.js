@@ -88,7 +88,7 @@ class intro {
 		ui.attr(e, 'i', global.hash(data.desc));
 		ui.attr(e, 'timestamp', new Date().getTime());
 		ui.css(e, 'display', 'block');
-		formFunc.initFields('hint');
+		formFunc.initFields(ui.q('hint'));
 		setTimeout(function () { ui.css(e, 'opacity', 1) }, 10);
 	}
 }

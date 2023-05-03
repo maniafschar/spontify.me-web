@@ -497,7 +497,7 @@ class groups {
 					if (s.indexOf('<input') > -1)
 						s = s.replace('<input', '<input checked="true"');
 					ui.html('groups', '<div>' + s + '</div>');
-					formFunc.initFields('groups');
+					formFunc.initFields(ui.q('groups'));
 					ui.css('#groupsDelete', 'display', 'none');
 					ui.html('contacts listResults', '');
 				});
@@ -552,7 +552,7 @@ class groups {
 			e = ui.q('groups');
 			if (!e.innerHTML) {
 				ui.html(e, pageContact.templateGroups({ groups: s }));
-				formFunc.initFields(activeID + ' groups');
+				formFunc.initFields(ui.q(activeID + ' groups'));
 			}
 			ui.q('[name="groupdialog"]').checked = false;
 			ui.css(e, 'display', '');
@@ -601,7 +601,7 @@ class groups {
 					var e2 = ui.qa('[name="groups"] detailTogglePanel input:checked'), e3 = ui.q('[i="' + id + '"] [name="groups"] detailTogglePanel');
 					var s = e3.innerHTML;
 					e3.innerHTML = user.contact.groups.replace(/<input/g, '<input onclick="groups.addToGroup(event,' + id + ');"') + s.substring(s.indexOf('<br>'));
-					formFunc.initFields('[i="' + id + '"] [name="groups"]');
+					formFunc.initFields(ui.q('[i="' + id + '"] [name="groups"]'));
 					for (var i = 0; i < e2.length; i++)
 						ui.attr('[i="' + id + '"] [name="groups"] input[value="' + e2[i].value + '"]', 'checked', 'checked');
 					e3 = ui.q('groups > div');
@@ -609,7 +609,7 @@ class groups {
 						s = user.contact.groups.replace(/type="checkbox"/g, 'type="radio"').replace(/<input /g, '<input onclick="groups.loadListGroups()"');
 						var c = ui.val('groups input:checked');
 						e3.innerHTML = s.replace('value="' + c + '"', 'value="' + c + '" checked="true"');
-						formFunc.initFields('groups');
+						formFunc.initFields(ui.q('groups'));
 					}
 				});
 			}
@@ -651,7 +651,7 @@ class groups {
 				return;
 			}
 			e.innerHTML = user.contact.groups.replace(/<input/g, '<input onclick="groups.addToGroup(event,' + id + ')"') + e.innerHTML;
-			formFunc.initFields(path);
+			formFunc.initFields(ui.q(path));
 			communication.ajax({
 				url: global.serverApi + 'db/list?query=contact_listGroupLink&search=' + encodeURIComponent('contactGroupLink.contactId2=' + id),
 				webCall: 'pageContact.toggleGroups(id,friendship)',

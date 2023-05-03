@@ -75,7 +75,7 @@ class details {
 						ui.html(d, '<div>' + s + '</div>');
 						ui.navigation.goTo('detail', false);
 					}
-					formFunc.initFields('detail');
+					formFunc.initFields(ui.q('detail'));
 					formFunc.image.replaceSVGs();
 					d.scrollTop = 0;
 					ui.css(d, 'opacity', 1);
