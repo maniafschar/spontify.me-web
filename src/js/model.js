@@ -1,6 +1,6 @@
 import { communication } from './communication';
 
-export { model, Contact, ContactLink, Location, ContactNews, ContactNotification, EventParticipate, LocationFavorite, Event, EventRating, Block, ContactChat, ContactVisit, ContactGroup, ContactGroupLink };
+export { model, ClientMarketing, Contact, ContactLink, Location, ContactNews, ContactNotification, EventParticipate, LocationFavorite, Event, EventRating, Block, ContactChat, ContactVisit, ContactGroup, ContactGroupLink };
 
 class model {
 	static reportedErrors = {};
@@ -59,6 +59,17 @@ class BaseEntity {
 class Block extends BaseEntity {
 	note;
 	reason;
+}
+
+class ClientMarketing extends BaseEntity {
+	clientId;
+	startDate;
+	endDate;
+	age;
+	gender;
+	language;
+	region;
+	storage;
 }
 
 class Contact extends BaseEntity {

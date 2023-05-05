@@ -21,6 +21,7 @@ import { pageEvent } from './pageEvent';
 import { pageSearch } from './pageSearch';
 import { hashtags } from './hashtags';
 import { Video } from './video';
+import { marketing } from './marketing';
 
 window.model = model;
 window.global = global;
@@ -49,3 +50,4 @@ window.hashtags = hashtags;
 window.Strings = Strings;
 window.groups = groups;
 window.Video = Video;
+window.marketing = marketing;

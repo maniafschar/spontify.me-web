@@ -5,6 +5,7 @@ import { global } from './global';
 import { hashtags } from './hashtags';
 import { initialisation } from './initialisation';
 import { intro } from './intro';
+import { marketing } from './marketing';
 import { Contact } from './model';
 import { pageChat } from './pageChat';
 import { pageEvent } from './pageEvent';
@@ -303,6 +304,7 @@ class pageLogin {
 					geoData.init();
 					bluetooth.init();
 					pageLocation.locationsAdded = v.location_added;
+					marketing.init();
 					if (exec)
 						setTimeout(exec, 1500);
 					else

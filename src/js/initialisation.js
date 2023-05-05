@@ -2,6 +2,7 @@ import { communication, FB, WebSocket } from './communication';
 import { details } from './details';
 import { geoData } from './geoData';
 import { global } from './global';
+import { intro } from './intro';
 import { pageChat } from './pageChat';
 import { pageHome } from './pageHome';
 import { pageLogin } from './pageLogin';
