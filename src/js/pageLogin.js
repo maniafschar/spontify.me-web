@@ -569,9 +569,9 @@ class pageLogin {
 		if (e.values.image)
 			d.image = e.values.image;
 		if (Object.keys(d).length)
-			user.save({ webCall: 'pageLogin.saveProfile()', ...d }, intro.closeHint);
+			user.save({ webCall: 'pageLogin.saveProfile()', ...d }, intro.close);
 		else
-			intro.closeHint();
+			intro.close();
 	}
 	static selectTab(id) {
 		if (id != ui.q('hint tabHeader tab.tabActive').getAttribute('i')) {

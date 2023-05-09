@@ -18,7 +18,7 @@ class pageHome {
 	static news;
 	static template = v =>
 		global.template`<homeHeader${v.logoSmall}>
-	<buttonIcon class="statistics${v.statsButton}" onclick="ui.navigation.openHTML(&quot;stats.html&quot;,&quot;stats&quot;)">
+	<buttonIcon class="statistics${v.statsButton}" onclick="pageHome.openStatistics()">
 		<img source="statistics"/>
 	</buttonIcon>
 	<img onclick="${v.actionLogo}" source="logo"/>
@@ -360,6 +360,23 @@ ${ui.l('events.title')}
 			});
 		}
 		render();
+	}
+	static openStatistics() {
+		communication.ajax({
+			url: (window.location && window.location.href && window.location.href.indexOf(global.server) == 0 ? '/' : '') + 'stats.html',
+			webCall: 'pageHome.openStatistics()',
+			success(r) {
+				var e = document.createElement('script');
+				e.src = 'js/stats.js';
+				document.head.appendChild(e);
+				e = document.createElement('div');
+				e.innerHTML = r;
+				ui.q('body').appendChild(e.children[0]);
+				ui.q('body>main').style.display = 'none';
+				formFunc.image.replaceSVGs();
+				initialisation.reposition();
+			}
+		});
 	}
 	static reset() {
 		pageHome.badge = -1;

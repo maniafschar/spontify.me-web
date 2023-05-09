@@ -51,7 +51,7 @@ class pageChat {
 
 	static adjustTextarea(e) {
 		ui.adjustTextarea(e);
-		intro.closeHint();
+		intro.close();
 		ui.css('chatConversation', 'bottom', (ui.q('chatInput').clientHeight + ui.emInPX / 2) + 'px');
 	}
 	static aiEnabled(id, l) {
@@ -69,7 +69,7 @@ class pageChat {
 		if (ui.q('chatInput input:checked'))
 			intro.openHint({ desc: 'chatAi', pos: '5%,-10.5em', size: '90%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-0.5em' });
 		else
-			intro.closeHint();
+			intro.close();
 	}
 	static askLocation() {
 		if (document.activeElement)
@@ -126,7 +126,7 @@ class pageChat {
 			if (event.target.onclick || event.target.onmousedown || s == 'TEXTAREA' || s == 'IMG' || s == 'NOTE' || s == 'INPUT')
 				return;
 		}
-		intro.closeHint();
+		intro.close();
 		ui.navigation.closePopup();
 		var e = ui.q('chat');
 		if (ui.cssValue(e, 'display') == 'none')
@@ -392,8 +392,7 @@ class pageChat {
 						success(r2) {
 							ui.attr('chat[i="' + id + '"] listHeader chatName', 'onclick', 'ui.navigation.autoOpen("' + global.encParam('p=' + id) + '",event)');
 							ui.html('chat[i="' + id + '"] listHeader chatName span', r2['contact.pseudonym']);
-							if (r2['contactLink.status'] == 'Friends')
-								ui.q('chat').setAttribute('status', 'Friends');
+							ui.q('chat').setAttribute('status', r2['contactLink.status']);
 							if (r2['contact.imageList'])
 								ui.attr('chat[i="' + id + '"] listHeader img', 'src', global.serverImg + r2['contact.imageList']);
 							else {

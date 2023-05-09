@@ -759,7 +759,7 @@ class pageEvent {
 				}
 				ui.navigation.closePopup();
 				if (order) {
-					intro.closeHint();
+					intro.close();
 					ui.q('detail .eventParticipationButtons buttontext.participation').outerHTML = '';
 				}
 				e = ui.q('detail card:last-child[i="' + e.event.id + '_' + eventDate + '"] [name="participants"]');

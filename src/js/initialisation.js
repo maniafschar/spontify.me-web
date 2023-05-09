@@ -237,6 +237,8 @@ class initialisation {
 			if (dir == 'right')
 				ui.navigation.goTo(ui.q('info').getAttribute('from'));
 		}, 'textarea');
+		if (user.clientId == 7)
+			setTimeout(intro.openIntro, 3000);
 	}
 	static onLoad() {
 		if (global.isBrowser())

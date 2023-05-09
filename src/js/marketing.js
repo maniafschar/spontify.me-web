@@ -47,7 +47,7 @@ class marketing {
 					method: 'POST'
 				});
 			}
-			ui.q('hint>div').innerHTML = marketing.data.storage.epilog + '<br/><br/><buttontext class="bgColor" onclick="intro.closeHint()">Schließen</buttontext>';
+			ui.q('hint>div').innerHTML = marketing.data.storage.epilog + '<br/><br/><buttontext class="bgColor" onclick="intro.close()">Schließen</buttontext>';
 			return;
 		}
 		var s = q.question + '<br/>';

@@ -175,7 +175,7 @@ hint {
 hint .body,
 hint.body {
 	position: absolute;
-	background: rgba(255, 255, 255, 0.95);
+	background: rgb(120, 255, 255);
 	padding: 1em;
 	border-radius: 0.5em;
 	text-align: center;
@@ -298,12 +298,12 @@ hinky {
 
 hinky.top {
 	top: -0.5em;
-	border-bottom: solid 0.5em rgba(255, 255, 255, 0.95);
+	border-bottom: solid 0.5em rgb(120, 255, 255);
 }
 
 hinky.bottom {
 	bottom: -0.5em;
-	border-top: solid 0.5em rgba(255, 255, 255, 0.95);
+	border-top: solid 0.5em rgb(120, 255, 255);
 }
 
 ul li,

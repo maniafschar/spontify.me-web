@@ -283,8 +283,8 @@ class ui {
 			geoData.headingClear();
 			if (document.activeElement)
 				document.activeElement.blur();
-			if (!intro.introMode)
-				intro.closeHint();
+			if (intro.currentStep < 0)
+				intro.close();
 			if (currentID == 'settings' && !pageSettings.save(id))
 				return;
 			if (!user.contact && currentID == 'login')
@@ -377,7 +377,8 @@ class ui {
 		hideMenu(exec) {
 			if (ui.cssValue('menu', 'transform').indexOf('1') > 0)
 				ui.navigation.toggleMenu();
-			intro.closeHint();
+			if (intro.currentStep < 0)
+				intro.close();
 			if (exec)
 				exec.call();
 		},
@@ -418,7 +419,7 @@ class ui {
 					if (exec)
 						exec.call();
 				};
-				intro.closeHint();
+				intro.close();
 				pageChat.closeList();
 				communication.notification.close();
 				if (!visible)

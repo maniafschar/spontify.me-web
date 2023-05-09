@@ -131,7 +131,7 @@ class bluetooth {
 			} catch (e) { }
 			bluetooth.closePopup();
 			if (ui.q('hint[i="bluetoothOn"]'))
-				intro.closeHint();
+				intro.close();
 		}
 		ui.html('home item.bluetooth text', ui.l('bluetooth.deactivated'));
 		window.localStorage.removeItem('bluetoothIDs');
