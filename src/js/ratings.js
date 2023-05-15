@@ -32,11 +32,11 @@ class ratings {
     </form>
 </div>`;
 	static click(x) {
-		var e = ui.qa('popup ratingSelection > full span');
+		var e = ui.qa('ratingSelection > full span');
 		ui.css(e, 'display', 'none');
 		for (var i = 0; i < x; i++)
 			ui.css(e[i], 'display', '');
-		ui.q('popup [name="rating"]').value = x * 20;
+		ui.q('[name="rating"]').value = x * 20;
 	}
 	static getForm(id) {
 		var v = {}, draft = user.get('rating' + id);
@@ -106,7 +106,7 @@ class ratings {
 	static save() {
 		var e = ui.q('popup [name="description"]');
 		ui.classRemove(e, 'dialogFieldError');
-		if (ui.val('popup [name="rating"]') < 25 && !e.value)
+		if (ui.val('[name="rating"]') < 25 && !e.value)
 			formFunc.setError(e, 'rating.negativeRateValidation');
 		formFunc.validation.filterWords(e);
 		if (ui.q('popup  errorHint'))

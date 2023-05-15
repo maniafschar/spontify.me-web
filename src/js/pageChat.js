@@ -67,7 +67,7 @@ class pageChat {
 	}
 	static aiHint() {
 		if (ui.q('chatInput input:checked'))
-			intro.openHint({ desc: 'chatAi', pos: '5%,-10.5em', size: '90%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-0.5em' });
+			intro.openHint({ desc: 'chatAi', pos: '5%,-10.5em', size: '90%,auto', hinkyClass: 'bottom', hinky: 'left:50%;' });
 		else
 			intro.close();
 	}
@@ -714,9 +714,9 @@ class pageChat {
 		if (ui.q('chat').getAttribute('status') == 'Friends')
 			Video.startVideoCall(ui.q('chat').getAttribute('i'));
 		else if (ui.q('chat chatConversation chatMessage:not(.me)'))
-			intro.openHint({ desc: ui.l('chat.videoPermissionHint') + '<br/><br/><buttontext class="bgColor" onclick="pageChat.sendChatVideoPermission()">' + ui.l('chat.videoPermissionSendButton') + '</buttontext>', pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-3em;' });
+			intro.openHint({ desc: ui.l('chat.videoPermissionHint') + '<br/><br/><buttontext class="bgColor" onclick="pageChat.sendChatVideoPermission()">' + ui.l('chat.videoPermissionSendButton') + '</buttontext>', pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;' });
 		else
-			intro.openHint({ desc: ui.l('chat.videoPermissionNoChatHint'), pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-3em;' });
+			intro.openHint({ desc: ui.l('chat.videoPermissionNoChatHint'), pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-1em;' });
 	}
 	static showScrollButton() {
 		var e = ui.q('chatMoreButton');

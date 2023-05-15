@@ -152,7 +152,7 @@ class geoData {
 				desc = ui.l('intro.descriptionFanclub').replace(/\{0}/g, global.appTitle.substring(0, global.appTitle.indexOf(global.separator)));
 			} else
 				desc = ui.l('intro.description');
-			intro.openHint({ desc: desc, pos: '5%,10.5em', size: '90%,auto', hinkyClass: 'top', hinky: 'left:50%;margin-left:-0.5em;' });
+			intro.openHint({ desc: desc, pos: '5%,10.5em', size: '90%,auto', hinkyClass: 'top', hinky: 'left:50%;' });
 		}
 	}
 	static openLocationPickerDialog() {

@@ -1,5 +1,5 @@
+import { communication } from './communication';
 import { global } from './global';
-import { pageHome } from './pageHome';
 import { pageLogin } from './pageLogin';
 import { formFunc, ui } from './ui';
 import { user } from './user';
@@ -11,9 +11,6 @@ class intro {
 	static lastHint = 0;
 	static steps = [];
 
-	static actionDetail() {
-		ui.q('search .contacts row[i="3"]').click();
-	}
 	static actionGoToSearch() {
 		ui.navigation.goTo("search");
 	}
@@ -23,33 +20,53 @@ class intro {
 	static actionSearch() {
 		ui.q('search .defaultButton').click();
 	}
+	static actionZommMap() {
+		ui2.close();
+		setTimeout(function () {
+			ui.q('body home mapcanvas').scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+			setTimeout(function () {
+				ui.q('[aria-label=\"Vergrößern\"]').click();
+				ui.q('[aria-label=\"Vergrößern\"]').click();
+				ui.q('[aria-label=\"Vergrößern\"]').click();
+			}, 500);
+			setTimeout(function () { ui.q('[aria-label=\"Stadtplan anzeigen\"]').click() }, 1500);
+		}, 500);
+	}
 	static close() {
 		intro.currentStep = -1;
-		var e = ui.q('hint');
+		var e = ui.q('main:last-child hint');
 		if (ui.cssValue(e, 'display') != 'block')
 			return;
 		ui.on(e, 'transitionend', function () {
-			e.removeAttribute('style');
-			e.removeAttribute('i');
-			ui.html(e, '');
+			ui.attr('hint', 'style');
+			ui.attr('hint', 'i');
+			ui.html('hint', '');
 		}, true);
 		ui.css(e, 'opacity', 0);
 	}
 	static openHint(data) {
 		if (new Date().getTime() / 60000 - intro.lastHint < 4)
 			return;
-		if (data && data.action)
+		if (data && data.action) {
 			eval(data.action);
-		var e = ui.q('hint'), body = (data.desc.indexOf(' ') > -1 ? data.desc : ui.l('intro.' + data.desc))
+			if (data.action.indexOf('pageHome.openStatistics') > -1)
+				return;
+		}
+		var e = ui.q('main:last-child hint'), body = (data.desc.indexOf(' ') > -1 ? data.desc : ui.l('intro.' + data.desc))
 			+ (user.contact || intro.currentStep > -1 || location.pathname.length > 1 ? '' : '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;login&quot;)">' + ui.l('login.action') + '</buttontext>')
 			+ (data.hinky ? '<hinky style="' + data.hinky + '" class="' + data.hinkyClass + '"></hinky>' : '')
 			+ (data.desc == 'home' ? '' : '<close onclick="intro.close()">x</close>');
+		if (e != ui.q('hint'))
+			ui.q('hint').style.display = '';
 		if (global.hash(data.desc) == e.getAttribute('i')) {
 			intro.close();
 			return;
 		}
 		ui.css(e, 'display', 'block');
-		ui.attr(e, 'onclick', data.onclick ? data.onclick : intro.currentStep > -1 ? 'intro.openIntro(event)' : 'intro.close()');
+		if (body.indexOf('</input>') < 0)
+			ui.attr(e, 'onclick', data.onclick ? data.onclick : intro.currentStep > -1 ? 'intro.openIntro(event)' : 'intro.close()');
+		else
+			e.removeAttribute('onclick');
 		if (intro.currentStep < 0 || intro.currentStep == intro.steps.length - 1) {
 			if (e.getAttribute('i')) {
 				intro.close();
@@ -70,7 +87,7 @@ class intro {
 			ui.css(e, 'right', 0);
 			ui.css(e, 'top', 0);
 			ui.css(e, 'bottom', 0);
-			e = ui.q('hint > div');
+			e = e.children[0];
 		}
 		if (data.pos.split(',')[0].indexOf('-') == 0) {
 			ui.css(e, 'left', '');
@@ -94,18 +111,22 @@ class intro {
 		ui.attr(e, 'i', global.hash(data.desc));
 		ui.attr(e, 'timestamp', new Date().getTime());
 		formFunc.initFields(e);
-		setTimeout(function () { ui.css('hint', 'opacity', 1) }, 10);
+		setTimeout(function () { ui.css('main:last-child hint', 'opacity', 1) }, 10);
 	}
 	static openIntro(event) {
 		if (intro.steps.length == 0) {
 			intro.steps.push({ desc: 'home', pos: '5%,5em', size: '90%,auto' });
 			intro.steps.push({ desc: 'home2', pos: '5%,7.5em', size: '90%,auto', action: 'intro.actionLogin()' });
-			intro.steps.push({ desc: 'home3', pos: '5%,-55vh', size: '90%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-0.5em;' });
+			intro.steps.push({ desc: 'home3', pos: '5%,-55vh', size: '90%,auto', hinkyClass: 'bottom', hinky: 'left:50%;' });
 			intro.steps.push({ desc: 'home4', pos: '5%,-5em', size: '90%,auto', hinkyClass: 'bottom', hinky: 'left:35%;' });
-			intro.steps.push({ desc: 'searchExplained', pos: '10%,4em', size: '80%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'top', action: 'intro.actionGoToSearch()' });
+			intro.steps.push({ desc: 'searchExplained', pos: '10%,4em', size: '80%,auto', hinky: 'left:50%;', hinkyClass: 'top', action: 'intro.actionGoToSearch()' });
 			intro.steps.push({ desc: 'search', pos: '5%,-5em', size: '90%,auto', action: 'intro.actionSearch()' });
-			intro.steps.push({ desc: 'marketingStart', pos: '5%,5em', size: '80%,auto', hinky: 'left:0.5em;', hinkyClass: 'top', action: 'ui.navigation.goTo("home")' });
-			intro.steps.push({ desc: ' ', pos: '-200%,-200%', size: '0,0', action: 'pageHome.openStatistics()' });
+			intro.steps.push({ desc: 'marketingStart', pos: '0.8em,5em', size: '80%,auto', hinky: 'left:1.6em;', hinkyClass: 'top', action: 'ui.navigation.goTo("home")' });
+			intro.steps.push({ desc: 'statisticsCharts', pos: '10%,15em', size: '80%,auto', action: 'pageHome.openStatistics(true)' });
+			intro.steps.push({ desc: 'statisticsCharts2', pos: '10%,26em', size: '80%,auto', hinky: 'left:50%;', hinkyClass: 'top', action: 'ui2.open(1)' });
+			intro.steps.push({ desc: 'statisticsMap', pos: '10%,2em', size: '80%,auto', hinky: 'left:50%;', hinkyClass: 'bottom', action: 'intro.actionZommMap()' });
+			intro.steps.push({ desc: 'marketingQuestions', pos: '10%,12em', size: '80%,auto', action: 'ui2.goTo(2)' });
+			intro.steps.push({ desc: 'epilog', pos: '10%,8em', size: '80%,auto' });
 		}
 		if (event && event.target.nodeName == 'CLOSE')
 			return;
@@ -113,19 +134,29 @@ class intro {
 			intro.close();
 			return;
 		}
-		if (ui.cssValue('hint', 'transform').indexOf('1') > -1) {
-			var e = ui.q('hint');
+		var e = ui.q('main:last-child hint');
+		if (ui.cssValue(e, 'transform').indexOf('1') > -1) {
 			if (e)
 				e.click();
 		}
 		if (ui.cssValue('home', 'display') == 'none' && intro.currentStep < 0)
 			ui.navigation.goTo('home');
-		var e = ui.q('hint');
 		ui.css(e, 'opacity', 0);
 		intro.currentStep++;
 		if (ui.cssValue(e, 'display') == 'block')
 			setTimeout(function () { intro.openHint(intro.steps[intro.currentStep]) }, 400);
 		else
 			intro.openHint(intro.steps[intro.currentStep]);
+	}
+	static save() {
+		communication.ajax({
+			url: global.serverApi + 'action/notify',
+			webCall: 'intro.save()',
+			method: 'POST',
+			body: 'text=' + encodeURIComponent(JSON.stringify(formFunc.getForm('main:last-child hint'))),
+			success(r) {
+				intro.openHint({ desc: 'Lieben Dank für Dein Feedback!', pos: '20%,12em', size: '60%,auto' });
+			}
+		});
 	}
 }

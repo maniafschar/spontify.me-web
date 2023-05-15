@@ -4,6 +4,7 @@
 	--bg2start: rgb(150, 160, 0);
 	--bg2stop: rgb(210, 225, 20);
 	--buttonText: black;
+	--bgHint: rgb(255, 190, 40);
 }
 
 .highlightColor {

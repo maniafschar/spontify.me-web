@@ -175,7 +175,7 @@ hint {
 hint .body,
 hint.body {
 	position: absolute;
-	background: rgb(120, 255, 255);
+	background: var(--bgHint);
 	padding: 1em;
 	border-radius: 0.5em;
 	text-align: center;
@@ -257,7 +257,7 @@ hint>b {
 
 hint emphasis {
 	font-weight: bold;
-	color: rgb(209, 130, 60);
+	color: var(--bg2stop);
 }
 
 hint title {
@@ -291,19 +291,20 @@ hintDelete::after {
 
 hinky {
 	position: absolute;
-	border-right: solid 0.5em transparent;
-	border-left: solid 0.5em transparent;
+	border-right: solid 1.5em transparent;
+	border-left: solid 1.5em transparent;
+	margin-left: -1.5em;
 	z-index: 0;
 }
 
 hinky.top {
-	top: -0.5em;
-	border-bottom: solid 0.5em rgb(120, 255, 255);
+	top: -1em;
+	border-bottom: solid 1.5em var(--bgHint);
 }
 
 hinky.bottom {
-	bottom: -0.5em;
-	border-top: solid 0.5em rgb(120, 255, 255);
+	bottom: -1em;
+	border-top: solid 1.5em var(--bgHint);
 }
 
 ul li,
@@ -374,6 +375,10 @@ homeHeader.logoSmall>svg {
 	margin-top: 0;
 }
 
+homeHeader name {
+	font-size: 1.3em;
+}
+
 homeBody {
 	position: relative;
 	width: 100%;
@@ -430,7 +435,6 @@ homeBody teaser card text {
 homeBody teaser title {
 	margin-bottom: 0.25em;
 	font-size: 1.3em;
-	text-transform: lowercase;
 }
 
 homeBody teaser buttonIcon {
@@ -540,6 +544,28 @@ content {
 groups {
 	padding: 0 1em 1em 1em;
 	display: block;
+}
+
+.collapsible {
+	padding-left: 1em;
+	cursor: pointer;
+	display: block;
+	font-weight: bold;
+	position: relative;
+}
+
+.collapsible::before {
+	content: 'v';
+	display: inline-block;
+	position: absolute;
+	left: 0;
+	top: -0.1em;
+	font-size: 0.7em;
+	transition: all .4s ease-out;
+}
+
+.collapsible.closed::before {
+	transform: rotate(-90deg);
 }
 
 filters {
@@ -745,7 +771,7 @@ input:checked+label:before {
 }
 
 popup input:checked+label {
-	background: var(--bg2stop) !important;
+	background: var(--bg1stop) !important;
 	color: black;
 }
 
@@ -2798,7 +2824,7 @@ info subject {
 menu {
 	border-radius: 1em 0 0 1em;
 	box-shadow: 0 0 3em rgba(0, 0, 0, 0.3);
-	background: rgba(255, 255, 255, 0.95);
+	background: var(--bgHint);
 	position: absolute;
 	top: 3.7em;
 	z-index: 4;

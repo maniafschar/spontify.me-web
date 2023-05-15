@@ -456,7 +456,7 @@ class pageLogin {
 					}
 					setTimeout(function () {
 						if (ui.navigation.getActiveID() == 'home') {
-							intro.openHint({ desc: '<div style="margin-bottom:0.5em;">' + ui.l('settings.completeProfile') + '</div>' + page1 + page2 + '<buttontext class="bgColor" style="margin-top:0.5em;" onclick="pageLogin.saveProfile()">' + ui.l('save') + '</buttontext>', pos: '5%,20vh', size: '90%,auto', hinky: 'left:50%;margin-left:-0.5em;', hinkyClass: 'top', onclick: 'return' });
+							intro.openHint({ desc: '<div style="margin-bottom:0.5em;">' + ui.l('settings.completeProfile') + '</div>' + page1 + page2 + '<buttontext class="bgColor" style="margin-top:0.5em;" onclick="pageLogin.saveProfile()">' + ui.l('save') + '</buttontext>', pos: '5%,20vh', size: '90%,auto', hinky: 'left:50%;', hinkyClass: 'top', onclick: 'return' });
 							user.set('profileCompletePrompt', global.date.local2server(global.date.getToday()));
 						}
 					}, 2000);

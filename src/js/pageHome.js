@@ -361,20 +361,25 @@ ${ui.l('events.title')}
 		}
 		render();
 	}
-	static openStatistics() {
+	static openStatistics(openIntro) {
 		communication.ajax({
-			url: (window.location && window.location.href && window.location.href.indexOf(global.server) == 0 ? '/' : '') + 'stats.html',
-			webCall: 'pageHome.openStatistics()',
+			url: global.server + 'stats.html',
+			webCall: 'pageHome.openStatistics(openIntro)',
 			success(r) {
-				var e = document.createElement('script');
-				e.src = 'js/stats.js';
-				document.head.appendChild(e);
-				e = document.createElement('div');
+				var script = document.createElement('script');
+				script.src = global.server + 'js/stats.js';
+				document.head.appendChild(script);
+				var link = document.createElement('link');
+				link.href = global.server + 'css/stats.css';
+				link.rel = 'stylesheet';
+				document.head.appendChild(link);
+				var e = document.createElement('div');
 				e.innerHTML = r;
 				ui.q('body').appendChild(e.children[0]);
-				ui.q('body>main').style.display = 'none';
 				formFunc.image.replaceSVGs();
 				initialisation.reposition();
+				if (openIntro)
+					intro.openHint({ desc: 'statisticsCharts', pos: '10%,15em', size: '80%,auto', hinky: 'left:50%;', hinkyClass: 'top' })
 			}
 		});
 	}

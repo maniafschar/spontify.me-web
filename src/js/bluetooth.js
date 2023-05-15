@@ -138,9 +138,9 @@ class bluetooth {
 	}
 	static toggle() {
 		if (global.isBrowser())
-			intro.openHint({ desc: 'bluetoothDescriptionBrowser', pos: '10%,-14em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-0.5em' });
+			intro.openHint({ desc: 'bluetoothDescriptionBrowser', pos: '10%,-14em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;' });
 		else if (!user.contact)
-			intro.openHint({ desc: 'bluetoothDescriptionLoggedOff', pos: '10%,-14em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-0.5em' });
+			intro.openHint({ desc: 'bluetoothDescriptionLoggedOff', pos: '10%,-14em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;' });
 		else if (window.localStorage.getItem('bluetoothIDs'))
 			user.save({ webCall: 'bluetooth.toggle()', bluetooth: false }, bluetooth.stop);
 		else {
