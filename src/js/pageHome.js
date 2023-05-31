@@ -426,9 +426,9 @@ ${ui.l('events.title')}
 	}
 	static toggleNotification() {
 		if (!user.contact)
-			intro.openHint({ desc: 'notification', pos: '-0.5em,-7em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
+			intro.openHint({ desc: 'notification', pos: '-0.5em,-7.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1.5em;' });
 		else if (!ui.q('notificationList>div'))
-			intro.openHint({ desc: 'notificationEmpty', pos: '-0.5em,-7em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1em;' });
+			intro.openHint({ desc: 'notificationEmpty', pos: '-0.5em,-7.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1.5em;' });
 		else {
 			if (ui.q('notificationList').style.display == 'none')
 				pageChat.closeList();

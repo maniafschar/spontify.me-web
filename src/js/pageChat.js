@@ -742,8 +742,8 @@ class pageChat {
 				pageHome.closeList();
 			ui.toggleHeight('chatList');
 		} else if (user.contact)
-			intro.openHint({ desc: 'chatEmpty', pos: '0.5em,-7em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1em;' });
+			intro.openHint({ desc: 'chatEmpty', pos: '0.5em,-7.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1.5em;' });
 		else
-			intro.openHint({ desc: 'chatDescription', pos: '0.5em,-7em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1em;' });
+			intro.openHint({ desc: 'chatDescription', pos: '0.5em,-7.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1.5em;' });
 	}
 };

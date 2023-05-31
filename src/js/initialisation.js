@@ -11,7 +11,7 @@ import { pageSettings } from './pageSettings';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 
-export { initialisation, DragObject };
+export { initialisation };
 
 class initialisation {
 	static execLocation = null;
@@ -214,13 +214,13 @@ class initialisation {
 				pageSettings.swipeRight();
 			else if (dir == 'left')
 				pageSettings.swipeLeft();
-		}, 'input,textarea,img,slider,thumb,val');
+		}, 'input,textarea,img,x-slider,thumb,val');
 		ui.swipe('search', function (dir) {
 			if (dir == 'left')
 				pageSearch.swipeLeft();
 			else if (dir == 'right')
 				pageSearch.swipeRight();
-		}, 'input,textarea,slider,thumb,val');
+		}, 'input,textarea,x-slider,thumb,val');
 		ui.swipe('login', function (dir) {
 			if (dir == 'left')
 				pageLogin.swipeLeft();
@@ -391,59 +391,5 @@ class initialisation {
 	static zoom() {
 		user.scale = parseFloat(ui.val('[name="zoom"]:checked'));
 		initialisation.reposition();
-	}
-}
-
-class DragObject {
-	constructor(o) {
-		o.drag = this;
-		this.obj = o;
-		this.startPos = null;
-		this.obj.style.cursor = 'move';
-		var md = function (e) {
-			o.ownerDocument.drag = o.drag;
-			o.drag.start(e);
-			var mu = function (e) {
-				o.ownerDocument.onmouseup = o.ownerDocument.onmousemove = o.ownerDocument.ontouchmove = o.ownerDocument.ontouchend = null;
-				o.ownerDocument.drag.end(e);
-				return false;
-			};
-			var mm = function (e) {
-				if ((!e.changedTouches || e.changedTouches.length < 2)
-					&& (!e.targetTouches || e.targetTouches.length < 2)
-					&& (!e.touches || e.touches.length < 2))
-					o.ownerDocument.drag.move(e);
-				return false;
-			};
-			o.ownerDocument.onmousemove = mm;
-			o.ownerDocument.ontouchmove = mm;
-			o.ownerDocument.onmouseup = mu;
-			o.ownerDocument.ontouchend = mu;
-			if (e && e.stopPropagation)
-				e.stopPropagation();
-			return false;
-		};
-		this.obj.onmousedown = md;
-		this.obj.ontouchstart = md;
-	}
-	ondrop() {
-		return true;
-	}
-	getPos() {
-		return { x: this.obj.offsetLeft, y: this.obj.offsetTop };
-	}
-	getStartPos() {
-		return this.startPos;
-	}
-	start(e) {
-		this.startPos = { x: -ui.getEvtPos(e, true), y: -ui.getEvtPos(e) };
-	}
-	move(e) {
-		this.ondrag(e, { x: ui.getEvtPos(e, true) + this.startPos.x, y: ui.getEvtPos(e) + this.startPos.y });
-		this.start(e);
-	}
-	end(e) {
-		this.ondrop(e);
-		document.drag = null;
 	}
 }

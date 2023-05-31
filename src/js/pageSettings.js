@@ -125,19 +125,16 @@ class pageSettings {
 	<label>${ui.l('settings.genderInterest')}</label>
 	<value>
 		<input type="checkbox" name="genderInterest2" label="${ui.l('settings.genderInterestFemale')}"
-			onclick="pageSettings.toggleGenderSlider(2)" ${v.genderInterest2} transient="true" />
-		<input type="text" id="settingsInterest2" slider="range" min="18" max="99" value="${v['contact.ageFemale']}"
-			name="ageFemale" />
+			onclick="pageSettings.toggleGenderSlider(this)" ${v.genderInterest2} transient="true" />
+		<x-slider type="range" min="18" max="99" value="${v['contact.ageFemale']}" name="ageFemale"></x-slider>
 		<br />
 		<input type="checkbox" name="genderInterest1" label="${ui.l('settings.genderInterestMale')}"
-			onclick="pageSettings.toggleGenderSlider(1)" ${v.genderInterest1} transient="true" />
-		<input type="text" id="settingsInterest1" slider="range" min="18" max="99" value="${v['contact.ageMale']}"
-			name="ageMale" />
+			onclick="pageSettings.toggleGenderSlider(this)" ${v.genderInterest1} transient="true" />
+		<x-slider type="range" min="18" max="99" value="${v['contact.ageMale']}" name="ageMale"></x-slider>
 		<br />
 		<input type="checkbox" name="genderInterest3" label="${ui.l('settings.genderInterestDivers')}"
-			onclick="pageSettings.toggleGenderSlider(3)" ${v.genderInterest3} transient="true" />
-		<input type="text" id="settingsInterest3" slider="range" min="18" max="99" value="${v['contact.ageDivers']}"
-			name="ageDivers" />
+			onclick="pageSettings.toggleGenderSlider(this)" ${v.genderInterest3} transient="true" />
+		<x-slider type="range" min="18" max="99" value="${v['contact.ageDivers']}" name="ageDivers"></x-slider>
 	</value>
 </field>
 <paypalFees></paypalFees>
@@ -607,7 +604,7 @@ ${v.info}`;
 		}
 	}
 	static toggleGenderSlider(e) {
-		ui.css(ui.q('#settingsInterest' + e).nextElementSibling, 'display', ui.q('input[name="genderInterest' + e + '"]').checked ? 'block' : 'none');
+		ui.css(e.nextElementSibling, 'display', e.checked ? 'block' : 'none');
 	}
 	static unblock(id, blockId) {
 		if (!ui.q('popup [i="' + id + '"]')) {

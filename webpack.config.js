@@ -1,4 +1,5 @@
 const path = require('path');
+const express = require('express');
 
 module.exports = (env) => {
 	return {
@@ -17,9 +18,19 @@ module.exports = (env) => {
 			static: {
 				directory: path.join(__dirname, 'dist')
 			},
-			compress: false,
+			client: {
+				overlay: false,
+			},
+			compress: true,
 			port: 9000,
+			webSocketServer: 'ws',
+			liveReload: true,
+			setupMiddlewares: (middlewares, devServer) => {
+				devServer.app.use('/', express.static(path.resolve(__dirname, 'dist')));
+				return middlewares;
+			},
 			devMiddleware: {
+
 				writeToDisk: true
 			}
 		},

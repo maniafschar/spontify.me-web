@@ -264,7 +264,7 @@ class pageLogin {
 					if (v['geo_location'])
 						geoData.initManual(JSON.parse(v['geo_location']));
 					ui.css('progressbar', 'display', 'none');
-					if (global.language != user.contact.language)
+					if (global.language != user.contact.language && user.contact.id != 1)
 						initialisation.setLanguage(user.contact.language);
 					if (user.contact.birthday && user.contact.birthday.trim().length > 8 && !exec) {
 						var d = new Date();

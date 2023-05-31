@@ -2,7 +2,6 @@ import { communication } from './communication';
 import { details } from './details';
 import { geoData } from './geoData';
 import { global } from './global';
-import { DragObject } from './initialisation';
 import { intro } from './intro';
 import { pageChat } from './pageChat';
 import { pageInfo } from './pageInfo';
@@ -849,6 +848,9 @@ class formFunc {
 		}
 		for (var k in cb)
 			d.values[k] = cb[k].length > 0 ? cb[k].substring(1) : '';
+		e = ui.qa(id + ' x-slider:not([transient="true"])');
+		for (var i = 0; i < e.length; i++)
+			d.values[e[i].name] = e[i].getAttribute('value');
 		return d;
 	}
 	static image = {
@@ -888,7 +890,7 @@ class formFunc {
 			if (!formFunc.image.svg[id]) {
 				formFunc.image.svg[id] = 1;
 				communication.ajax({
-					url: '/images/' + id + '.svg',
+					url: global.server + 'images/' + id + '.svg',
 					webCall: 'ui.image.fetchSVG(id)',
 					success(r) {
 						var parser = new DOMParser();
@@ -1149,37 +1151,7 @@ class formFunc {
 			ui.on(e, 'keypress', formFunc.pressDefaultButton);
 			if ((e[i].type === 'checkbox' || e[i].type === 'radio') && (!e[i].nextSibling || e[i].nextSibling.nodeName.toLowerCase() !== 'label'))
 				e[i].outerHTML = e[i].outerHTML + '<label onclick="formFunc.toggleCheckbox(event)"' + (e[i].attributes['style'] ? ' style="' + e[i].attributes['style'].value + '"' : '') + (e[i].attributes['class'] ? ' class="' + e[i].attributes['class'].value + '"' : '') + '>' + e[i].attributes['label'].value + '</label>';
-			else if (e[i].type == 'text' && e[i].getAttribute('slider') && !ui.q('#' + e[i].id + '_left')) {
-				var idSlider = e[i].id;
-				var s = '';
-				var max = e[i].getAttribute('max'), min = e[i].getAttribute('min');
-				var v1 = e[i].value, v2 = 100;
-				if (v1) {
-					var delta = 100.0 / (max - min);
-					v1 = v1.split(',');
-					v2 = Number(v1[1]);
-					v1 = Number(v1[0]);
-					if (!v2 || v2 >= max || v2 <= v1 || v2 <= min)
-						v2 = 100;
-					else
-						v2 = (v2 - min) * delta;
-					if (!v1 || v1 >= max || v1 >= v2 && e[i].getAttribute('slider') == 'range' || v1 <= min)
-						v1 = 0;
-					else
-						v1 = (v1 - min) * delta;
-				} else
-					v1 = 0;
-				if (e[i].getAttribute('slider') == 'range')
-					s += '<thumb style="left:' + v1 + '%;" id="' + idSlider + '_left"><span style="right:0;"><val></val>' + ui.l('slider.from') + '</span></thumb><thumb style="left:' + v2 + '%;margin-left:-1.35em;" id="' + idSlider + '_right"><span style="left:0;"><val></val>' + ui.l('slider.until') + '</span></thumb>';
-				else
-					s += '<thumb style="left:' + v1 + '%;" id="' + idSlider + '_left"><span style="right:0;"><val></val>' + (ui.l(e[i].getAttribute('label')) ? ui.l(e[i].getAttribute('label')) : e[i].getAttribute('label')) + '</span></thumb>';
-				e2 = document.createElement('slider');
-				e2.innerHTML = s;
-				e[i].parentNode.insertBefore(e2, e[i].nextSibling);
-				e[i].style.display = 'none';
-				formFunc.initSliderDrag(e[i].parentNode.querySelector('#' + idSlider + '_left'));
-				formFunc.initSliderDrag(e[i].parentNode.querySelector('#' + idSlider + '_right'));
-			} else if (e[i].type == 'file') {
+			else if (e[i].type == 'file') {
 				if (!e[i].previousElementSibling) {
 					if (!e[i].getAttribute('onchange'))
 						e[i].setAttribute('onchange', 'formFunc.image.preview(this,"' + element.nodeName + '")');
@@ -1192,34 +1164,6 @@ class formFunc {
 					e[i].outerHTML = s + '<inputFile name="' + s2 + '_disp" ' + (e[i].getAttribute('class') ? 'class="' + e[i].getAttribute('class') + '" ' : '') + (global.isBrowser() ? '' : ' style="display:none;"') + '><span>' + (e[i].getAttribute('hint') ? e[i].getAttribute('hint') : ui.l('fileUpload.select')) + '</span></inputFile>' + e[i].outerHTML + '<img name="' + s2 + '_icon" src="' + (e[i].getAttribute('src') ? e[i].getAttribute('src') : '') + '"/>';
 				}
 			}
-		}
-	}
-	static initSliderDrag(o) {
-		if (o) {
-			var tmp = new DragObject(o);
-			formFunc.updateSlider(o);
-			tmp.ondrag = function (e) {
-				var slider = ui.parents(o, 'slider');
-				var thumbLeft = slider.querySelector('thumb');
-				var thumbRight = slider.querySelectorAll('thumb')[1];
-				var x = ui.getEvtPos(e, true) - slider.getBoundingClientRect().x;
-				if (thumbLeft.id == this.obj.id) {
-					if (x > thumbRight.offsetLeft)
-						x = thumbRight.offsetLeft;
-				} else if (x < thumbLeft.offsetLeft + thumbLeft.offsetWidth)
-					x = thumbLeft.offsetLeft + thumbLeft.offsetWidth;
-				if (x > slider.offsetWidth)
-					x = slider.offsetWidth;
-				else if (x < 0)
-					x = 0;
-				if (x != this.getPos().x) {
-					this.obj.style.left = (x / slider.offsetWidth * 100) + '%';
-					formFunc.updateSlider(this.obj);
-				}
-			};
-			tmp.ondrop = function (e) {
-				this.obj.style.left = formFunc.updateSlider(this.obj) + '%';
-			};
 		}
 	}
 	static pressDefaultButton(event) {
@@ -1284,26 +1228,6 @@ class formFunc {
 		e.click();
 		if (resetType)
 			ui.attr(e, 'type', 'radio');
-	}
-	static updateSlider(e) {
-		var t = ui.parents(e, 'slider');
-		var s = t.previousElementSibling.value;
-		var min = parseFloat(t.previousElementSibling.getAttribute('min'));
-		var max = parseFloat(t.previousElementSibling.getAttribute('max'));
-		var x = parseInt(0.5 + parseFloat(e.style.left));
-		var v = parseInt(0.5 + min + x * (max - min) / 100);
-		if (s && s.indexOf(',') > -1) {
-			s = s.split(',');
-			s = e.id.indexOf('_right') > 0 ? s[0] + ',' + v : v + ',' + s[1];
-		} else if (t.previousElementSibling.getAttribute('slider') == 'range')
-			s = e.id.indexOf('_right') > 0 ? min + ',' + v : v + ',' + max;
-		else
-			s = v;
-		e.querySelector('val').innerText = v;
-		t.previousElementSibling.value = s;
-		if (t.getAttribute('callback'))
-			eval(t.getAttribute('callback'));
-		return x;
 	}
 	static validation = {
 		badWords: [],
@@ -1393,5 +1317,176 @@ class formFunc {
 			else
 				formFunc.resetError(s);
 		}
+	}
+}
+
+class Slider extends HTMLElement {
+	constructor() {
+		super();
+		const shadow = this.attachShadow({ mode: 'closed' });
+		const style = document.createElement('style');
+		style.textContent = `
+* {
+	transform: translate3d(0, 0, 0);
+}
+thumb {
+	position: absolute;
+	top: 0;
+	height: 3.7em;
+	width: 5em;
+	margin-left: -3.65em;
+	line-height: 1.8;
+	display: inline-block;
+}
+thumb.right{
+	margin-left: -1.35em;
+}
+thumb span {
+	position: absolute;
+	top: 0;
+	height: 100%;
+	width: 2.5em;
+	color: black;
+	text-align: center;
+	border-radius: 0.75em;
+	background: rgba(255, 255, 255, 0.85);
+	cursor: ew-resize;
+}
+thumb val {
+	display: block;
+}`;
+		shadow.appendChild(style);
+		var v = this.getAttribute('value')?.split(',');
+		if (!v)
+			v = ['0', '100'];
+		var min = parseFloat(this.getAttribute('min')), max = parseFloat(this.getAttribute('max'));
+		var delta = 100.0 / (max - min);
+		if (!v[1] || parseFloat(v[1]) >= max || v[1] <= v[0] || parseFloat(v[1]) <= min)
+			v[1] = '100';
+		else
+			v[1] = '' + ((parseFloat(v[1]) - min) * delta);
+		if (!v[0] || parseFloat(v[0]) >= max || v[0] >= v[1] && this.getAttribute('type') == 'range' || parseFloat(v[0]) <= min)
+			v[0] = '0';
+		else
+			v[0] = '' + ((parseFloat(v[0]) - min) * delta);
+		var contend = document.createElement('thumb');
+		contend.style.left = v[0] + '%';
+		if (this.getAttribute('type') == 'range') {
+			contend.innerHTML = `<span style="right:0;"><val></val>${ui.l('slider.from')}</span>`;
+			shadow.appendChild(contend);
+			contend = document.createElement('thumb');
+			contend.style.left = v[1] + '%';
+			contend.classList.add('right');
+			contend.innerHTML = `<span style="left:0;"><val></val>${ui.l('slider.until')}</span>`;
+		} else
+			contend.innerHTML = `<span style="right:0;"><val></val>${ui.l(this.getAttribute('label')) ? ui.l(this.getAttribute('label')) : this.getAttribute('label')}</span>`;
+		shadow.appendChild(contend);
+		this.initSliderDrag(shadow.querySelectorAll('thumb'));
+	}
+	initSliderDrag(o) {
+		var thumbLeft = o[0];
+		var thumbRight = o[1];
+		var update = this.updateSlider;
+		var init = function (e) {
+			var tmp = new DragObject(e);
+			update(e);
+			tmp.ondrag = function (event) {
+				var slider = event.target;
+				var x = ui.getEvtPos(event, true) - slider.getBoundingClientRect().x;
+				if (!this.obj.classList.contains('right')) {
+					if (x > thumbRight.offsetLeft)
+						x = thumbRight.offsetLeft;
+				} else if (x < thumbLeft.offsetLeft + thumbLeft.offsetWidth)
+					x = thumbLeft.offsetLeft + thumbLeft.offsetWidth;
+				if (x > slider.offsetWidth)
+					x = slider.offsetWidth;
+				else if (x < 0)
+					x = 0;
+				if (x != this.getPos().x) {
+					this.obj.style.left = (x / slider.offsetWidth * 100) + '%';
+					update(this.obj);
+				}
+			};
+			tmp.ondrop = function () {
+				this.obj.style.left = update(this.obj) + '%';
+			};
+		}
+		init(thumbLeft);
+		if (thumbRight)
+			init(thumbRight);
+	}
+	updateSlider(e) {
+		var h = e.getRootNode().host;
+		var min = parseFloat(h.getAttribute('min'));
+		var max = parseFloat(h.getAttribute('max'));
+		var x = parseInt('' + (0.5 + parseFloat(e.style.left)));
+		var v = parseInt('' + (0.5 + min + x * (max - min) / 100));
+		var s = h.getAttribute('value')?.split(',');
+		if (!s && h.getAttribute('type') == 'range')
+			s = ['', ''];
+		if (e.getAttribute('class')?.indexOf('right') > -1)
+			s[1] = '' + v;
+		else
+			s[0] = '' + v;
+		e.querySelector('val').innerText = v;
+		h.setAttribute('value', s.join(','));
+		if (h.getAttribute('callback'))
+			eval(h.getAttribute('callback'));
+		return x;
+	}
+}
+
+customElements.define('x-slider', Slider);
+
+class DragObject {
+	constructor(o) {
+		o.drag = this;
+		this.obj = o;
+		this.startPos = null;
+		var md = function (e) {
+			o.ownerDocument.drag = o.drag;
+			o.drag.start(e);
+			var mu = function (e) {
+				o.ownerDocument.onmouseup = o.ownerDocument.onmousemove = o.ownerDocument.ontouchmove = o.ownerDocument.ontouchend = null;
+				o.ownerDocument.drag.end(e);
+				return false;
+			};
+			var mm = function (e) {
+				if ((!e.changedTouches || e.changedTouches.length < 2)
+					&& (!e.targetTouches || e.targetTouches.length < 2)
+					&& (!e.touches || e.touches.length < 2))
+					o.ownerDocument.drag.move(e);
+				return false;
+			};
+			o.ownerDocument.onmousemove = mm;
+			o.ownerDocument.ontouchmove = mm;
+			o.ownerDocument.onmouseup = mu;
+			o.ownerDocument.ontouchend = mu;
+			if (e && e.stopPropagation)
+				e.stopPropagation();
+			return false;
+		};
+		this.obj.onmousedown = md;
+		this.obj.ontouchstart = md;
+	}
+	ondrop() {
+		return true;
+	}
+	getPos() {
+		return { x: this.obj.offsetLeft, y: this.obj.offsetTop };
+	}
+	getStartPos() {
+		return this.startPos;
+	}
+	start(e) {
+		this.startPos = { x: -ui.getEvtPos(e, true), y: -ui.getEvtPos(e) };
+	}
+	move(e) {
+		this.ondrag(e, { x: ui.getEvtPos(e, true) + this.startPos.x, y: ui.getEvtPos(e) + this.startPos.y });
+		this.start(e);
+	}
+	end(e) {
+		this.ondrop(e);
+		document.drag = null;
 	}
 }

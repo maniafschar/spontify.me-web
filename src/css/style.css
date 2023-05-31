@@ -257,7 +257,7 @@ hint>b {
 
 hint emphasis {
 	font-weight: bold;
-	color: var(--bg2stop);
+	color: var(--bg1start);
 }
 
 hint title {
@@ -354,7 +354,8 @@ homeHeader>svg {
 }
 
 homeHeader>text {
-	padding: 2.5em 1em 0 1em;
+	margin: 1.5em 1em 0 1em;
+	padding-top: 1em;
 	display: inline-block;
 	cursor: pointer;
 }
@@ -1220,40 +1221,11 @@ dialogButtons {
 	color: rgba(0, 0, 0, 0.3);
 }
 
-slider {
+x-slider {
 	position: relative;
 	height: 1.85em;
 	margin: 0 1.25em 1.85em 1.25em;
 	border-bottom: solid 1px rgba(255, 255, 255, 0.3);
-	display: block;
-}
-
-slider>* {
-	transform: translate3d(0, 0, 0);
-}
-
-slider thumb {
-	position: absolute;
-	top: 0;
-	height: 3.7em;
-	width: 5em;
-	margin-left: -3.65em;
-	line-height: 1.8;
-	display: inline-block;
-}
-
-slider thumb span {
-	position: absolute;
-	top: 0;
-	height: 100%;
-	width: 2.5em;
-	color: black;
-	text-align: center;
-	border-radius: 0.75em;
-	background: rgba(255, 255, 255, 0.85);
-}
-
-slider thumb val {
 	display: block;
 }
 
@@ -2515,8 +2487,8 @@ detail matchIndicatorHint label {
 	margin: 0 !important;
 }
 
-popup buttontext.favorite::before,
-detail buttontext.favorite::before {
+buttontext.favorite::before,
+buttontext.favorite::before {
 	content: '✓';
 	position: absolute;
 	font-size: 2em;

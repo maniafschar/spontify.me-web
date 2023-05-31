@@ -1,5 +1,6 @@
 import { communication } from './communication';
 import { global } from './global';
+import { initialisation } from './initialisation';
 import { pageLogin } from './pageLogin';
 import { formFunc, ui } from './ui';
 import { user } from './user';
@@ -15,7 +16,7 @@ class intro {
 		ui.navigation.goTo("search");
 	}
 	static actionLogin() {
-		setTimeout(function () { pageLogin.login("alpenherz@fan-club.online", "test1234"); }, 2000);
+		setTimeout(function () { pageLogin.login("alpenherz@fan-club.online", "test1234",); }, 2000);
 	}
 	static actionSearch() {
 		ui.q('search .defaultButton').click();
@@ -44,6 +45,10 @@ class intro {
 		}, true);
 		ui.css(e, 'opacity', 0);
 	}
+	static language(lang) {
+		intro.currentStep--;
+		initialisation.setLanguage(lang);
+	}
 	static openHint(data) {
 		if (new Date().getTime() / 60000 - intro.lastHint < 4)
 			return;
@@ -53,9 +58,11 @@ class intro {
 				return;
 		}
 		var e = ui.q('main:last-child hint'), body = (data.desc.indexOf(' ') > -1 ? data.desc : ui.l('intro.' + data.desc))
-			+ (user.contact || intro.currentStep > -1 || location.pathname.length > 1 ? '' : '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;login&quot;)">' + ui.l('login.action') + '</buttontext>')
+			+ (user.contact || intro.currentStep > -1 || location.pathname.length > 1 && location.pathname.indexOf('index.html') < 0 ? '' : '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;login&quot;)">' + ui.l('login.action') + '</buttontext>')
 			+ (data.hinky ? '<hinky style="' + data.hinky + '" class="' + data.hinkyClass + '"></hinky>' : '')
 			+ (data.desc == 'home' ? '' : '<close onclick="intro.close()">x</close>');
+		body = body.replace('<rating/>', '<br/><br/><ratingSelection><empty><span>☆</span><span onclick=\"ratings.click(2)\">☆</span><span onclick=\"ratings.click(3)\">☆</span><span onclick=\"ratings.click(4)\">☆</span><span onclick=\"ratings.click(5)\">☆</span></empty><full><span onclick=\"ratings.click(1)\">★</span><span onclick=\"ratings.click(2)\">★</span><span onclick=\"ratings.click(3)\">★</span><span onclick=\"ratings.click(4)\">★</span><span onclick=\"ratings.click(5)\" style=\"display:none;\">★</span></full></ratingSelection><input type=\"hidden\" name=\"rating\" value=\"80\"></input><br/><br/><input type=\"email\" name=\"email\" placeholder=\"Email\"></input><br/><br/><textarea name=\"feedback\" maxlength=\"1000\"></textarea><br/><br/><buttontext onclick=\"intro.save()\" name=\"feedback\" class=\"bgColor\">✓</buttontext>');
+		body = body.replace('<language/>', '<br/><br/><buttontext class="bgColor' + (global.language == 'DE' ? ' favorite' : '') + '" onclick="intro.language(&quot;DE&quot;)" l="DE">Deutsch</buttontext><buttontext class="bgColor' + (global.language == 'EN' ? ' favorite' : '') + '" onclick="intro.language(&quot;EN&quot;)" l="EN">English</buttontext>');
 		if (e != ui.q('hint'))
 			ui.q('hint').style.display = '';
 		if (global.hash(data.desc) == e.getAttribute('i')) {
@@ -149,14 +156,15 @@ class intro {
 			intro.openHint(intro.steps[intro.currentStep]);
 	}
 	static save() {
-		communication.ajax({
-			url: global.serverApi + 'action/notify',
-			webCall: 'intro.save()',
-			method: 'POST',
-			body: 'text=' + encodeURIComponent(JSON.stringify(formFunc.getForm('main:last-child hint'))),
-			success(r) {
-				intro.openHint({ desc: 'Lieben Dank für Dein Feedback!', pos: '20%,12em', size: '60%,auto' });
-			}
-		});
+		if (formFunc.validation.email(ui.q('main:last-child hint input[name="email"]')) < 0)
+			communication.ajax({
+				url: global.serverApi + 'action/notify',
+				webCall: 'intro.save()',
+				method: 'POST',
+				body: 'text=' + encodeURIComponent(JSON.stringify(formFunc.getForm('main:last-child hint'))),
+				success(r) {
+					intro.openHint({ desc: 'Lieben Dank für Dein Feedback!', pos: '20%,12em', size: '60%,auto' });
+				}
+			});
 	}
 }
