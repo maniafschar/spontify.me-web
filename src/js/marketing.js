@@ -25,7 +25,7 @@ class marketing {
 	}
 	static next() {
 		var index = parseInt(ui.q('hint index').innerText);
-		var answers = ui.qa('hint input:checked');
+		var answers = ui.qa('hint x-checkbox[checked="true"]');
 		for (var i = 0; i < answers.length; i++) {
 			if (!marketing.answers['q' + index])
 				marketing.answers['q' + index] = { choice: [] };
@@ -33,8 +33,8 @@ class marketing {
 		}
 		if (ui.q('hint textarea') && ui.q('hint textarea').value)
 			marketing.answers['q' + index].text = ui.q('hint textarea').value;
-		if (ui.q('hint input[type="radio"]:checked'))
-			index = parseInt(ui.q('hint input[type="radio"]:checked').getAttribute('next'));
+		if (ui.q('hint x-checkbox[type="radio"][checked="true"]'))
+			index = parseInt(ui.q('hint x-checkbox[type="radio"][checked="true"]').getAttribute('next'));
 		else
 			index++;
 		var q = marketing.data.storage.questions[index];

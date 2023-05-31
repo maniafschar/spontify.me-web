@@ -43,7 +43,7 @@ class pageChat {
 		<buttontext class="bgColor videoButton" ${v.action}="pageChat.sendChatVideoPermissionButton();">${ui.l('chat.videoPermissionButton')}</buttontext>
 		<buttontext class="bgColor sendButton" ${v.action}="pageChat.sendChat(${v.id},null,event);">${ui.l('chat.send')}</buttontext>
 		<div style="display:none;text-align:center;"></div>
-		<input type="checkbox" onclick="pageChat.aiHint()" label="ai"${v.ai}></input>
+		<x-checkbox onclick="pageChat.aiHint()" label="ai"${v.ai}></x-checkbox>
 	</chatInput>
 </div>`;
 	static templateMessage = v =>
@@ -66,7 +66,7 @@ class pageChat {
 		}
 	}
 	static aiHint() {
-		if (ui.q('chatInput input:checked'))
+		if (ui.q('chatInput x-checkbox[checked="true"]'))
 			intro.openHint({ desc: 'chatAi', pos: '5%,-10.5em', size: '90%,auto', hinkyClass: 'bottom', hinky: 'left:50%;' });
 		else
 			intro.close();
@@ -438,7 +438,7 @@ class pageChat {
 			var s = '<div class="smilyBox" style="margin-bottom:1em;"><buttontext onclick="pageChat.insertLinkInGroup()" class="bgColor" style="margin:1em;">' + ui.l('chat.share') + '</buttontext><buttontext class="bgColor" onclick="pageChat.sendChatGroup()">' + ui.l('chat.send') + '</buttontext></div>';
 			var v = user.contact.chatTextGroups;
 			if (!v) {
-				v = ui.q('[name="groupdialog"]:checked');
+				v = ui.q('x-checkbox[name="groupdialog"][checked="true"]');
 				if (v)
 					v = global.separatorTech + v.value;
 				else
@@ -447,7 +447,7 @@ class pageChat {
 			v = v.split(global.separatorTech);
 			var g = user.contact.groups;
 			for (var i = 1; i < v.length; i++)
-				g = g.replace('value="' + v[i] + '"', 'value="' + v[i] + '" checked="checked"');
+				g = g.replace('value="' + v[i] + '"', 'value="' + v[i] + '" checked="true"');
 			ui.navigation.openPopup(ui.l('chat.groupTitle'), '<div style="text-align:center;padding:1em 2em;">' + g + '<br/><textarea placeholder="' + ui.l('chat.textHint') + '" style="height:20em;" id="groupChatText">' + v[0] + '</textarea>' + s + '<popupHint></popupHint></div>', 'pageChat.saveGroupText()');
 		} else
 			ui.navigation.openPopup(ui.l('chat.groupTitle'), lists.getListNoResults(ui.navigation.getActiveID(), 'noGroups'));
@@ -553,7 +553,7 @@ class pageChat {
 	}
 	static saveGroupText() {
 		user.contact.chatTextGroups = ui.val('#groupChatText');
-		var e = ui.qa('input[name="groupdialog"]:checked');
+		var e = ui.qa('x-checkbox[name="groupdialog"][checked="true"]');
 		for (var i = 0; i < e.length; i++)
 			user.contact.chatTextGroups += global.separatorTech + e[i].value;
 	}
@@ -588,7 +588,7 @@ class pageChat {
 				note: msg.replace(/</g, '&lt;'),
 				contactId2: id
 			};
-			if (ui.q('chatInput input:checked'))
+			if (ui.q('chatInput x-checkbox[checked="true"]'))
 				v.textId = 'engagement_ai';
 			communication.ajax({
 				url: global.serverApi + 'db/one',
@@ -632,7 +632,7 @@ class pageChat {
 		}
 	}
 	static sendChatGroup() {
-		var e = ui.qa('popup input[name="groupdialog"]:checked');
+		var e = ui.qa('popup x-checkbox[name="groupdialog"][checked="true"]');
 		var s = '';
 		for (var i = 0; i < e.length; i++)
 			s += ',' + e[i].value;

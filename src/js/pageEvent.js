@@ -51,11 +51,11 @@ class pageEvent {
 <field class="noWTDField">
 	<label>${ui.l('type')}</label>
 	<value>
-		<input type="radio" name="type" value="o" label="${ui.l('events.type_o')}" onclick="pageEvent.setForm()" ${v.type_o}/>
-		<input type="radio" name="type" value="w1" label="${ui.l('events.type_w1')}" onclick="pageEvent.setForm()" ${v.type_w1}/>
-		<input type="radio" name="type" value="w2" label="${ui.l('events.type_w2')}" onclick="pageEvent.setForm()" ${v.type_w2}/>
-		<input type="radio" name="type" value="m" label="${ui.l('events.type_m')}" onclick="pageEvent.setForm()" ${v.type_m}/>
-		<input type="radio" name="type" value="y" label="${ui.l('events.type_y')}" onclick="pageEvent.setForm()" ${v.type_y}/>
+		<x-checkbox type="radio" name="type" value="o" label="${ui.l('events.type_o')}" onclick="pageEvent.setForm()" ${v.type_o}></x-checkbox>
+		<x-checkbox type="radio" name="type" value="w1" label="${ui.l('events.type_w1')}" onclick="pageEvent.setForm()" ${v.type_w1}></x-checkbox>
+		<x-checkbox type="radio" name="type" value="w2" label="${ui.l('events.type_w2')}" onclick="pageEvent.setForm()" ${v.type_w2}></x-checkbox>
+		<x-checkbox type="radio" name="type" value="m" label="${ui.l('events.type_m')}" onclick="pageEvent.setForm()" ${v.type_m}></x-checkbox>
+		<x-checkbox type="radio" name="type" value="y" label="${ui.l('events.type_y')}" onclick="pageEvent.setForm()" ${v.type_y}></x-checkbox>
 	</value>
 </field>
 <field>
@@ -107,7 +107,7 @@ class pageEvent {
 <field class="unpaid noWTDField">
 	<label>${ui.l('events.confirmLabel')}</label>
 	<value>
-		<input type="checkbox" name="eventconfirm" transient="true" label="${ui.l('events.confirm')}" value="1" ${v.confirm}/>
+		<x-checkbox name="eventconfirm" transient="true" label="${ui.l('events.confirm')}" value="1" ${v.confirm}></x-checkbox>
 	</value>
 </field>
 <dialogButtons style="margin-bottom:0;">
@@ -638,7 +638,7 @@ class pageEvent {
 				for (var i = 1; i < r.length; i++) {
 					var l = model.convert(new Location(), r, i);
 					if (!processed[l.id]) {
-						s += '<li i="' + l.id + '" onclick="pageEvent.locationSelected(this)">' + l.name + '<br/>' + l.address.replace(/\n/g, global.separator) + '</li>';
+						s += '<li i="' + l.id + '" onclick="pageEvent.locationSelected(this)">' + l.name + '<br/>' + l.address?.replace(/\n/g, global.separator) + '</li>';
 						processed[l.id] = 1;
 					}
 				}
@@ -910,7 +910,7 @@ class pageEvent {
 		}
 		if (ui.q('popup [name="price"]').value > 0 && !user.contact.authenticate)
 			formFunc.setError(ui.q('popup [name="price"]'), 'events.errorAuthenticate');
-		if (!ui.q('popup [name="type"]').checked) {
+		if (ui.q('popup [name="type"]').getAttribute('checked') != 'true') {
 			if (!end.value)
 				formFunc.setError(end, 'events.errorDateNoEnd');
 			else {
@@ -933,9 +933,9 @@ class pageEvent {
 			ui.q('popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });;
 			return;
 		}
-		if (ui.q('popup [name="type"]').checked)
+		if (ui.q('popup [name="type"]').getAttribute('checked') == 'true')
 			end.value = start.value.substring(0, start.value.lastIndexOf('T'));
-		ui.q('popup [name="confirm"]').value = ui.q('popup [name="eventconfirm"]:checked') ? 1 : 0;
+		ui.q('popup [name="confirm"]').value = ui.q('popup [name="eventconfirm"][checked="true"]') ? 1 : 0;
 		v.classname = 'Event';
 		if (id)
 			v.id = id;
@@ -966,7 +966,7 @@ class pageEvent {
 			ui.classAdd(e, 'selected');
 	}
 	static setForm() {
-		var b = ui.q('popup [name="type"]').checked;
+		var b = ui.q('popup [name="type"]').getAttribute('checked');
 		ui.q('popup label[name="startDate"]').innerText = ui.l('events.' + (b ? 'date' : 'start'));
 		ui.css('popup field[name="endDate"]', 'display', b ? 'none' : '');
 		b = ui.q('popup input[name="locationId"]').value;

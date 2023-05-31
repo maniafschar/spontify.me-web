@@ -72,38 +72,38 @@ class pageSettings {
 	<label>${ui.l('birthday')}</label>
 	<value class="checkbox">
 		<input type="date" placeholder="TT.MM.JJJJ" name="birthday" maxlength="10" id="bd"
-			value="${v.birthday}" />
-		<input type="radio" name="birthdayDisplay" value="2" label="${ui.l('settings.showBirthday')}"
-			${v.birthdayDisplay2} style="margin-top:0.5em;" />
-		<input type="radio" name="birthdayDisplay" value="1" label="${ui.l('settings.showAge')}"
-			${v.birthdayDisplay1} />
+			value="${v.birthday}" style="margin-bottom:0.5em;" />
+		<x-checkbox type="radio" name="birthdayDisplay" value="2" label="${ui.l('settings.showBirthday')}"
+			${v.birthdayDisplay2} style="margin-top:0.5em;"></x-checkbox>
+		<x-checkbox type="radio" name="birthdayDisplay" value="1" label="${ui.l('settings.showAge')}"
+			${v.birthdayDisplay1}></x-checkbox>
 	</value>
 </field>
 <field>
 	<label>${ui.l('gender')}</label>
 	<value class="checkbox">
-		<input type="radio" name="gender" value="2" label="${ui.l('female')}" ${v.gender2} />
-		<input type="radio" name="gender" value="1" label="${ui.l('male')}" ${v.gender1} />
-		<input type="radio" name="gender" value="3" label="${ui.l('divers')}" ${v.gender3} />
+		<x-checkbox type="radio" name="gender" value="2" label="${ui.l('female')}" ${v.gender2}></x-checkbox>
+		<x-checkbox type="radio" name="gender" value="1" label="${ui.l('male')}" ${v.gender1}></x-checkbox>
+		<x-checkbox type="radio" name="gender" value="3" label="${ui.l('divers')}" ${v.gender3}></x-checkbox>
 	</value>
 </field>
 <field>
 	<label>${ui.l('settings.lang')}</label>
 	<value class="checkbox">
-		<input type="radio" name="language" value="DE" label="Deutsch" ${v.langDE} />
-		<input type="radio" name="language" value="EN" label="English" ${v.langEN} />
+		<x-checkbox type="radio" name="language" value="DE" label="Deutsch" ${v.langDE}></x-checkbox>
+		<x-checkbox type="radio" name="language" value="EN" label="English" ${v.langEN}></x-checkbox>
 	</value>
 </field>
 <field>
 	<label>${ui.l('settings.teaser')}</label>
 	<value class="checkbox">
-		<input type="checkbox" name="teaser" value="true" label="${ui.l('settings.teaserLabel')}" ${v.teaser} />
+		<x-checkbox name="teaser" value="true" label="${ui.l('settings.teaserLabel')}" ${v.teaser}></x-checkbox>
 	</value>
 </field>
 <field>
 	<label>${ui.l('settings.search')}</label>
 	<value class="checkbox">
-		<input type="checkbox" name="search" value="true" label="${ui.l('settings.searchPseudonym')}" ${v.search} />
+		<x-checkbox name="search" value="true" label="${ui.l('settings.searchPseudonym')}" ${v.search}></x-checkbox>
 		<explain>${ui.l('settings.searchPseudonymHint')}</explain>
 	</value>
 </field>
@@ -124,16 +124,16 @@ class pageSettings {
 <field>
 	<label>${ui.l('settings.genderInterest')}</label>
 	<value>
-		<input type="checkbox" name="genderInterest2" label="${ui.l('settings.genderInterestFemale')}"
-			onclick="pageSettings.toggleGenderSlider(this)" ${v.genderInterest2} transient="true" />
+		<x-checkbox name="genderInterest2" label="${ui.l('settings.genderInterestFemale')}"
+			onclick="pageSettings.toggleGenderSlider(this)" ${v.genderInterest2} transient="true"></x-checkbox>
 		<x-slider type="range" min="18" max="99" value="${v['contact.ageFemale']}" name="ageFemale"></x-slider>
 		<br />
-		<input type="checkbox" name="genderInterest1" label="${ui.l('settings.genderInterestMale')}"
-			onclick="pageSettings.toggleGenderSlider(this)" ${v.genderInterest1} transient="true" />
+		<x-checkbox name="genderInterest1" label="${ui.l('settings.genderInterestMale')}"
+			onclick="pageSettings.toggleGenderSlider(this)" ${v.genderInterest1} transient="true"></x-checkbox>
 		<x-slider type="range" min="18" max="99" value="${v['contact.ageMale']}" name="ageMale"></x-slider>
 		<br />
-		<input type="checkbox" name="genderInterest3" label="${ui.l('settings.genderInterestDivers')}"
-			onclick="pageSettings.toggleGenderSlider(this)" ${v.genderInterest3} transient="true" />
+		<x-checkbox name="genderInterest3" label="${ui.l('settings.genderInterestDivers')}"
+			onclick="pageSettings.toggleGenderSlider(this)" ${v.genderInterest3} transient="true"></x-checkbox>
 		<x-slider type="range" min="18" max="99" value="${v['contact.ageDivers']}" name="ageDivers"></x-slider>
 	</value>
 </field>
@@ -145,19 +145,19 @@ class pageSettings {
 	static templateSettings3 = v =>
 		global.template`<buttontext class="bgColor settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;settings tabBody .notification&quot;)">${ui.l('settings.myNotifications')}</buttontext><br/>
 <div class="notification" class="notifications" style="display:none;padding:0.5em 1em 1em 1em;">
-	<input type="checkbox" value="true" name="notificationChat" label="${ui.l('notification.chat')}" ${v['contact.notificationChat']} />
+	<x-checkbox value="true" name="notificationChat" label="${ui.l('notification.chat')}" ${v['contact.notificationChat']}></x-checkbox>
 	<br />
-	<input type="checkbox" value="true" name="notificationFriendRequest" label="${ui.l('notification.friendRequest')}" ${v['contact.notificationFriendRequest']} />
+	<x-checkbox value="true" name="notificationFriendRequest" label="${ui.l('notification.friendRequest')}" ${v['contact.notificationFriendRequest']}></x-checkbox>
 	<br />
-	<input type="checkbox" value="true" name="notificationBirthday" label="${ui.l('notification.birthday')}" ${v['contact.notificationBirthday']} />
+	<x-checkbox value="true" name="notificationBirthday" label="${ui.l('notification.birthday')}" ${v['contact.notificationBirthday']}></x-checkbox>
 	<br />
-	<input type="checkbox" value="true" name="notificationEngagement" label="${ui.l('notification.engagement')}" ${v['contact.notificationMarkEvent']} />
+	<x-checkbox value="true" name="notificationEngagement" label="${ui.l('notification.engagement')}" ${v['contact.notificationMarkEvent']}></x-checkbox>
 	<br />
-	<input type="checkbox" value="true" name="notificationVisitProfile" label="${ui.l('notification.visitProfile')}" ${v['contact.notificationVisitProfile']} />
+	<x-checkbox value="true" name="notificationVisitProfile" label="${ui.l('notification.visitProfile')}" ${v['contact.notificationVisitProfile']}></x-checkbox>
 	<br />
-	<input type="checkbox" value="true" name="notificationVisitLocation" label="${ui.l('notification.visitLocation')}" ${v['contact.notificationVisitLocation']} />
+	<x-checkbox value="true" name="notificationVisitLocation" label="${ui.l('notification.visitLocation')}" ${v['contact.notificationVisitLocation']}></x-checkbox>
 	<br />
-	<input type="checkbox" value="true" name="notificationMarkEvent" label="${ui.l('notification.markEvent')}" ${v['contact.notificationMarkEvent']} />
+	<x-checkbox value="true" name="notificationMarkEvent" label="${ui.l('notification.markEvent')}" ${v['contact.notificationMarkEvent']}></x-checkbox>
 </div>
 <buttontext class="bgColor settingsButton" onclick="pageSettings.toggleBlocked()">${ui.l('contacts.blocked')}</buttontext><br/>
 <div id="blocked" style="display:none;"></div>
@@ -165,31 +165,31 @@ class pageSettings {
 <div id="delete" style="display:none;margin:0 1em 1em 1em;">
 <div style="margin:0.25em 0 0.5em 0.5em;">${ui.l('settings.deleteProfileHint')}</div>
 <div>
-<input type="checkbox" name="deletionReason" label="${ui.l('settings.deleteReason1')}" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint1&quot;)" />
+<x-checkbox name="deletionReason" label="${ui.l('settings.deleteReason1')}" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint1&quot;)"></x-checkbox>
 <hintDelete class="hint1" style="display:none;">${ui.l('settings.hintDeleteReason1')}</hintDelete>
 </div>
 <div>
-<input type="checkbox" name="deletionReason" label="${ui.l('settings.deleteReason2')}" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint2&quot;)" />
+<x-checkbox name="deletionReason" label="${ui.l('settings.deleteReason2')}" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint2&quot;)"></x-checkbox>
 <hintDelete class="hint2" style="display:none;">${ui.l('settings.hintDeleteReason2')}</hintDelete>
 </div>
 <div>
-<input type="checkbox" name="deletionReason" label="${ui.l('settings.deleteReason3')}" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint3&quot;)" />
+<x-checkbox name="deletionReason" label="${ui.l('settings.deleteReason3')}" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint3&quot;)"></x-checkbox>
 <hintDelete class="hint3" style="display:none;">${ui.l('settings.hintDeleteReason3')}</hintDelete>
 </div>
 <div>
-<input type="checkbox" name="deletionReason" label="${ui.l('settings.deleteReason4')}" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint4&quot;)" />
+<x-checkbox name="deletionReason" label="${ui.l('settings.deleteReason4')}" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint4&quot;)"></x-checkbox>
 <hintDelete class="hint4" style="display:none;">${ui.l('settings.hintDeleteReason4')}</hintDelete>
 </div>
 <div>
-<input type="checkbox" name="deletionReason" label="${ui.l('settings.deleteReason5')}" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint5&quot;)" />
+<x-checkbox name="deletionReason" label="${ui.l('settings.deleteReason5')}" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint5&quot;)"></x-checkbox>
 <hintDelete class="hint5" style="display:none;">${ui.l('settings.hintDeleteReason5')}</hintDelete>
 </div>
 <div>
-<input type="checkbox" name="deletionReason" label="${ui.l('settings.deleteReason6')}" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint6&quot;)" />
+<x-checkbox name="deletionReason" label="${ui.l('settings.deleteReason6')}" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint6&quot;)"></x-checkbox>
 <hintDelete class="hint6" style="display:none;">${ui.l('settings.hintDeleteReason6')}</hintDelete>
 </div>
 <div>
-<input type="checkbox" name="deletionReason" label="${ui.l('settings.deleteReason7')}" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint7&quot;)" />
+<x-checkbox name="deletionReason" label="${ui.l('settings.deleteReason7')}" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint7&quot;)"></x-checkbox>
 <hintDelete class="hint7" style="display:none;">${ui.l('settings.hintDeleteReason7')}</hintDelete>
 </div>
 <errorHint class="checkbox"></errorHint>
@@ -209,7 +209,7 @@ ${v.info}`;
 	}
 	static deleteProfile() {
 		ui.html('errorHint', '');
-		var reasons = ui.qa('input[name="deletionReason"]:checked');
+		var reasons = ui.qa('x-checkbox[name="deletionReason"][checked="true]');
 		if (!reasons.length) {
 			ui.q('errorHint.checkbox').innerHTML = ui.l('settings.deleteChooseReason');
 			return;
@@ -224,7 +224,7 @@ ${v.info}`;
 		s = '\n' + ui.val('#deleteAccountFeedback').trim();
 		while (s.indexOf('  ') > -1)
 			s = s.replace(/  /g, ' ');
-		var reasons = ui.qa('input[name="deletionReason"]:checked');
+		var reasons = ui.qa('x-checkbox[name="deletionReason"][checked="true"]');
 		for (var i = 0; i < reasons.length; i++)
 			s = reasons[i].getAttribute('label') + '\n' + s;
 		communication.ajax({
@@ -257,28 +257,28 @@ ${v.info}`;
 		s += global.separatorTech + ui.val('settings textarea[name="description"]');
 		s += global.separatorTech + ui.val('settings textarea[name="urls"]');
 		s += global.separatorTech + ui.val('settings input[name="birthday"]');
-		s += global.separatorTech + ui.val('settings input[name="birthdayDisplay"]:checked');
-		s += global.separatorTech + ui.val('settings input[name="gender"]:checked');
+		s += global.separatorTech + ui.val('settings x-checkbox[name="birthdayDisplay"][checked="true"]');
+		s += global.separatorTech + ui.val('settings x-checkbox[name="gender"][checked="true"]');
 		s += global.separatorTech + ui.val('settings input[name="ageFemale"]');
 		s += global.separatorTech + ui.val('settings input[name="ageMale"]');
 		s += global.separatorTech + ui.val('settings input[name="ageDivers"]');
-		s += global.separatorTech + (ui.q('settings input[name="genderInterest1"]:checked') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings input[name="genderInterest2"]:checked') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings input[name="genderInterest3"]:checked') ? 1 : 0);
-		s += global.separatorTech + ui.val('settings input[name="language"]:checked');
-		s += global.separatorTech + (ui.q('settings input[name="teaser"]:checked') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings input[name="search"]:checked') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings x-checkbox[name="genderInterest1"][checked="true"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings x-checkbox[name="genderInterest2"][checked="true"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings x-checkbox[name="genderInterest3"][checked="true"]') ? 1 : 0);
+		s += global.separatorTech + ui.val('settings x-checkbox[name="language"][checked="true"]');
+		s += global.separatorTech + (ui.q('settings x-checkbox[name="teaser"][checked="true"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings x-checkbox[name="search"][checked="true"]') ? 1 : 0);
 		s += global.separatorTech + ui.val('settings input[name="pseudonym"]');
-		s += global.separatorTech + (ui.q('settings input[name="genderInterest1"]:checked') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings input[name="genderInterest2"]:checked') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings input[name="genderInterest3"]:checked') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings [name="notificationChat"]:checked') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings [name="notificationEngagement"]:checked') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings [name="notificationFriendRequest"]:checked') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings [name="notificationBirthday"]:checked') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings [name="notificationVisitProfile"]:checked') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings [name="notificationVisitLocation"]:checked') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings [name="notificationMarkEvent"]:checked') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings x-checkbox[name="genderInterest1"][checked="true"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings x-checkbox[name="genderInterest2"][checked="true"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings x-checkbox[name="genderInterest3"][checked="true"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings x-checkbox[name="notificationChat"][checked="true"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings x-checkbox[name="notificationEngagement"][checked="true"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings x-checkbox[name="notificationFriendRequest"][checked="true"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings x-checkbox[name="notificationBirthday"][checked="true"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings x-checkbox[name="notificationVisitProfile"][checked="true"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings x-checkbox[name="notificationVisitLocation"][checked="true"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings x-checkbox[name="notificationMarkEvent"][checked="true"]') ? 1 : 0);
 		s += global.separatorTech + ui.val('settings textarea[name="hashtagsDisp"]');
 		return s;
 	}
@@ -311,36 +311,36 @@ ${v.info}`;
 					if (v['contact.imageList'])
 						user.contact.imageList = v['contact.imageList'];
 					v.birthday = d;
-					v.birthdayDisplay2 = v['contact.birthdayDisplay'] == 2 ? ' checked' : '';
-					v.birthdayDisplay1 = v['contact.birthdayDisplay'] == 1 ? ' checked' : '';
-					v.birthdayDisplay0 = v['contact.birthdayDisplay'] == 0 ? ' checked' : '';
-					v['contact.notificationChat'] = v['contact.notificationChat'] == 1 ? ' checked' : '';
-					v['contact.notificationEngagement'] = v['contact.notificationEngagement'] == 1 ? ' checked' : '';
-					v['contact.notificationFriendRequest'] = v['contact.notificationFriendRequest'] == 1 ? ' checked' : '';
-					v['contact.notificationBirthday'] = v['contact.notificationBirthday'] == 1 ? ' checked' : '';
-					v['contact.notificationVisitProfile'] = v['contact.notificationVisitProfile'] == 1 ? ' checked' : '';
-					v['contact.notificationVisitLocation'] = v['contact.notificationVisitLocation'] == 1 ? ' checked' : '';
-					v['contact.notificationMarkEvent'] = v['contact.notificationMarkEvent'] == 1 ? ' checked' : '';
-					v.langDE = v['contact.language'] == 'DE' ? ' checked' : '';
-					v.langEN = v['contact.language'] == 'EN' ? ' checked' : '';
-					v.gender1 = v['contact.gender'] == 1 ? ' checked' : '';
-					v.gender2 = v['contact.gender'] == 2 ? ' checked' : '';
-					v.gender3 = v['contact.gender'] == 3 ? ' checked' : '';
-					v.search = v['contact.search'] ? ' checked' : '';
-					v.teaser = v['contact.teaser'] ? ' checked' : '';
+					v.birthdayDisplay2 = v['contact.birthdayDisplay'] == 2 ? ' checked="true"' : '';
+					v.birthdayDisplay1 = v['contact.birthdayDisplay'] == 1 ? ' checked="true"' : '';
+					v.birthdayDisplay0 = v['contact.birthdayDisplay'] == 0 ? ' checked="true"' : '';
+					v['contact.notificationChat'] = v['contact.notificationChat'] == 1 ? ' checked="true"' : '';
+					v['contact.notificationEngagement'] = v['contact.notificationEngagement'] == 1 ? ' checked="true"' : '';
+					v['contact.notificationFriendRequest'] = v['contact.notificationFriendRequest'] == 1 ? ' checked="true"' : '';
+					v['contact.notificationBirthday'] = v['contact.notificationBirthday'] == 1 ? ' checked="true"' : '';
+					v['contact.notificationVisitProfile'] = v['contact.notificationVisitProfile'] == 1 ? ' checked="true"' : '';
+					v['contact.notificationVisitLocation'] = v['contact.notificationVisitLocation'] == 1 ? ' checked="true"' : '';
+					v['contact.notificationMarkEvent'] = v['contact.notificationMarkEvent'] == 1 ? ' checked="true"' : '';
+					v.langDE = v['contact.language'] == 'DE' ? ' checked="true"' : '';
+					v.langEN = v['contact.language'] == 'EN' ? ' checked="true"' : '';
+					v.gender1 = v['contact.gender'] == 1 ? ' checked="true"' : '';
+					v.gender2 = v['contact.gender'] == 2 ? ' checked="true"' : '';
+					v.gender3 = v['contact.gender'] == 3 ? ' checked="true"' : '';
+					v.search = v['contact.search'] ? ' checked="true"' : '';
+					v.teaser = v['contact.teaser'] ? ' checked="true"' : '';
 					v.hashtagsDisp = (hashtags.ids2Text(v['contact.skills']) + ' ' + (v['contact.skillsText'] || '')).trim();
 					if (v['contact.search'] == 1)
-						v['search'] = ' checked';
+						v.search = ' checked="true"';
 					if (user.contact.imageList)
 						v.image = 'src="' + global.serverImg + user.contact.imageList + '"';
 					v.settings1 = pageSettings.templateSettings1(v);
 					v.hashtagSelection = hashtags.display();
 					if (user.contact.ageMale)
-						v.genderInterest1 = 'checked';
+						v.genderInterest1 = 'checked="true"';
 					if (user.contact.ageFemale)
-						v.genderInterest2 = 'checked';
+						v.genderInterest2 = 'checked="true"';
 					if (user.contact.ageDivers)
-						v.genderInterest3 = 'checked';
+						v.genderInterest3 = 'checked="true"';
 					v.settings2 = pageSettings.templateSettings2(v);
 					v.info = pageInfo.template()
 						+ '<buttontext class="bgColor settingsButtonRight" onclick="pageLogin.logoff()">' + ui.l('logoff.title') + '</buttontext>'
@@ -436,7 +436,7 @@ ${v.info}`;
 		user.contact.ageMale = ui.val('settings input[name="ageMale"]');
 		user.contact.ageDivers = ui.val('settings input[name="ageDivers"]');
 		user.contact.pseudonym = ui.val('settings input[name="pseudonym"]');
-		user.contact.gender = ui.val('settings input[name="gender"]:checked');
+		user.contact.gender = ui.val('settings x-checkbox[name="gender"][checked="true"]');
 		user.contact.birthday = ui.val('settings input[name="birthday"]');
 		user.contact.skills = hashtags.convert(ui.val('settings textarea[name="hashtagsDisp"]'));
 		user.contact.skillsText = user.contact.skills.hashtags;
@@ -466,7 +466,7 @@ ${v.info}`;
 			else
 				ui.navigation.goTo(goToID, true);
 		}
-		var l = ui.val('[name="language"]:checked');
+		var l = ui.val('x-checkbox[name="language"][checked="true"]');
 		if (l != global.language)
 			initialisation.setLanguage(l);
 		ui.css('settings save', 'display', '');
@@ -494,18 +494,18 @@ ${v.info}`;
 		pageSettings.reset();
 		if (!user.contact || pageSettings.currentSettings == pageSettings.getCurrentSettings())
 			return true;
-		if (ui.q('settings input[name="genderInterest1"]:checked') ||
-			ui.q('settings input[name="genderInterest2"]:checked') ||
-			ui.q('settings input[name="genderInterest3"]:checked')) {
+		if (ui.q('settings x-checkbox[name="genderInterest1"][checked="true"]') ||
+			ui.q('settings x-checkbox[name="genderInterest2"][checked="true"]') ||
+			ui.q('settings x-checkbox[name="genderInterest3"][checked="true"]')) {
 			var e = ui.q('settings [name="birthday"]');
 			if (!e.value)
 				formFunc.setError(e, 'settings.bdayUsingInterrestedIn');
-			if (!ui.q('settings [name="gender"]:checked'))
+			if (!ui.q('settings x-checkbox[name="gender"][checked="true"]'))
 				formFunc.setError(ui.q('settings [name="gender"]'), 'settings.genderUsingInterrestedIn');
 		}
 		if (ui.q('settings [name="birthday"]').parentNode.lastChild.tagName != 'ERRORHINT')
 			formFunc.validation.birthday(ui.q('input[name="birthday"]'));
-		if (ui.q('input[name="guide"]:checked') && !ui.val('textarea[name="description"]'))
+		if (ui.q('x-checkbox[name="guide"][checked="true"]') && !ui.val('textarea[name="description"]'))
 			formFunc.setError(ui.q('textarea[name="description"]'), 'settings.descriptionEmpty');
 		else if (ui.val('textarea[name="description"]'))
 			formFunc.validation.filterWords(ui.q('textarea[name="description"]'));
@@ -541,11 +541,11 @@ ${v.info}`;
 				return false;
 			}
 		}
-		if (!ui.q('input[name="genderInterest1"]:checked'))
+		if (!ui.q('x-checkbox[name="genderInterest1"][checked="true"]'))
 			ui.q('#settingsInterest1').value = '';
-		if (!ui.q('input[name="genderInterest2"]:checked'))
+		if (!ui.q('x-checkbox[name="genderInterest2"][checked="true"]'))
 			ui.q('#settingsInterest2').value = '';
-		if (!ui.q('input[name="genderInterest3"]:checked'))
+		if (!ui.q('x-checkbox[name="genderInterest3"][checked="true"]'))
 			ui.q('#settingsInterest3').value = '';
 		ui.q('textarea[name="description"]').value = ui.val('textarea[name="description"]').replace(/</g, '&lt;');
 		ui.q('input[name="email"]').value = ui.val('input[name="email"]').trim().toLowerCase();
@@ -604,7 +604,7 @@ ${v.info}`;
 		}
 	}
 	static toggleGenderSlider(e) {
-		ui.css(e.nextElementSibling, 'display', e.checked ? 'block' : 'none');
+		ui.css(e.nextElementSibling, 'display', e.getAttribute('checked') == 'true' ? 'block' : 'none');
 	}
 	static unblock(id, blockId) {
 		if (!ui.q('popup [i="' + id + '"]')) {

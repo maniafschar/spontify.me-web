@@ -831,20 +831,24 @@ class formFunc {
 					// b = data:image/jpeg;base64,/9j/4AAQS...
 					d.values[e[i].name] = '.' + b.substring(b.indexOf('/') + 1, b.indexOf(';')) + global.separatorTech + b.substring(b.indexOf(',') + 1);
 				}
-			} else if (e[i].type == 'radio') {
-				if (e[i].checked)
-					d.values[e[i].name] = e[i].value;
-			} else if (e[i].type == 'checkbox') {
-				if (!cb[e[i].name])
-					cb[e[i].name] = '';
-				if (e[i].checked)
-					cb[e[i].name] += global.separatorTech + e[i].value;
-				else if (e[i].value == 'true')
-					cb[e[i].name] += global.separatorTech + false;
 			} else if (e[i].type == 'datetime-local')
 				d.values[e[i].name] = global.date.local2server(e[i].value);
 			else if (e[i].name)
 				d.values[e[i].name] = e[i].value.replace(/\"/g, '&quot;').replace(/</g, '&lt;');
+		}
+		e = ui.qa(id + ' x-checkbox:not([transient="true"])');
+		for (var i = 0; i < e.length; i++) {
+			if (e[i].getAttribute('type') == 'radio') {
+				if (e[i].getAttribute('checked') == 'true')
+					d.values[e[i].name] = e[i].value;
+			} else {
+				if (!cb[e[i].name])
+					cb[e[i].name] = '';
+				if (e[i].getAttribute('checked') == 'true')
+					cb[e[i].name] += global.separatorTech + e[i].value;
+				else if (e[i].value == 'true')
+					cb[e[i].name] += global.separatorTech + false;
+			}
 		}
 		for (var k in cb)
 			d.values[k] = cb[k].length > 0 ? cb[k].substring(1) : '';
@@ -1149,9 +1153,7 @@ class formFunc {
 		for (var i = 0; i < e.length; i++) {
 			e[i].onfocus = function () { document.body.scrollTop = 0; }
 			ui.on(e, 'keypress', formFunc.pressDefaultButton);
-			if ((e[i].type === 'checkbox' || e[i].type === 'radio') && (!e[i].nextSibling || e[i].nextSibling.nodeName.toLowerCase() !== 'label'))
-				e[i].outerHTML = e[i].outerHTML + '<label onclick="formFunc.toggleCheckbox(event)"' + (e[i].attributes['style'] ? ' style="' + e[i].attributes['style'].value + '"' : '') + (e[i].attributes['class'] ? ' class="' + e[i].attributes['class'].value + '"' : '') + '>' + e[i].attributes['label'].value + '</label>';
-			else if (e[i].type == 'file') {
+			if (e[i].type == 'file') {
 				if (!e[i].previousElementSibling) {
 					if (!e[i].getAttribute('onchange'))
 						e[i].setAttribute('onchange', 'formFunc.image.preview(this,"' + element.nodeName + '")');
@@ -1214,20 +1216,6 @@ class formFunc {
 			return 0;
 		}
 		return -1;
-	}
-	static toggleCheckbox(event) {
-		var e = ui.parents(event.target, 'label');
-		e = e.previousElementSibling;
-		var resetType = false;
-		if (e.getAttribute('type') == 'radio' && e.checked == true) {
-			if (e.getAttribute('deselect') != 'true')
-				return;
-			resetType = true;
-			ui.attr(e, 'type', 'checkbox');
-		}
-		e.click();
-		if (resetType)
-			ui.attr(e, 'type', 'radio');
 	}
 	static validation = {
 		badWords: [],
@@ -1320,6 +1308,65 @@ class formFunc {
 	}
 }
 
+class Checkbox extends HTMLElement {
+	constructor() {
+		super();
+		const shadow = this.attachShadow({ mode: 'closed' });
+		const style = document.createElement('style');
+		style.textContent = `
+label {
+	cursor: pointer;
+	display: inline-block;
+	position: relative;
+	text-align: left;
+	width: auto;
+	padding: 0.34em 1.25em;
+	margin-left: 0.25em;
+	margin-right: 0.25em;
+	margin-bottom: 0.5em;
+	left: -0.25em;
+	color: black;
+	background: rgba(255, 255, 255, 0.85);
+	border-radius: 0.5em;
+	transition: all .4s;
+}
+label>img {
+	height: 3em;
+	margin: -1em;
+}
+label:hover {
+	color: black;
+}
+:host([checked="true"]) label {
+	padding-left: 1.75em;
+	padding-right: 0.75em;
+	color: black;
+}
+:host([checked="true"]) label:before {
+	position: absolute;
+	content: '\\2713';
+	left: 0.5em;
+	opacity: 0.8;
+}`;
+		shadow.appendChild(style);
+		this.setAttribute('onclick', 'this.toggleCheckbox(event)' + (this.getAttribute('onclick') ? ';' + this.getAttribute('onclick') : ''));
+		var contend = document.createElement('label');
+		contend.textContent = this.getAttribute('label');
+		shadow.appendChild(contend);
+	}
+	toggleCheckbox(event) {
+		var e = event.target;
+		if (e.getAttribute('type') == 'radio') {
+			if (e.getAttribute('checked') == 'true' && e.getAttribute('deselect') != 'true')
+				return;
+			ui.attr('x-checkbox[name="' + e.getAttribute('name') + '"][type="radio"]', 'checked', 'false');
+		}
+		e.setAttribute('checked', e.getAttribute('checked') == 'true' ? 'false' : 'true');
+	}
+}
+
+customElements.define('x-checkbox', Checkbox);
+
 class Slider extends HTMLElement {
 	constructor() {
 		super();
@@ -1392,19 +1439,21 @@ thumb val {
 			update(e);
 			tmp.ondrag = function (event) {
 				var slider = event.target;
-				var x = ui.getEvtPos(event, true) - slider.getBoundingClientRect().x;
-				if (!this.obj.classList.contains('right')) {
-					if (x > thumbRight.offsetLeft)
-						x = thumbRight.offsetLeft;
-				} else if (x < thumbLeft.offsetLeft + thumbLeft.offsetWidth)
-					x = thumbLeft.offsetLeft + thumbLeft.offsetWidth;
-				if (x > slider.offsetWidth)
-					x = slider.offsetWidth;
-				else if (x < 0)
-					x = 0;
-				if (x != this.getPos().x) {
-					this.obj.style.left = (x / slider.offsetWidth * 100) + '%';
-					update(this.obj);
+				if (slider.nodeName == 'X-SLIDER') {
+					var x = ui.getEvtPos(event, true) - slider.getBoundingClientRect().x;
+					if (!this.obj.classList.contains('right')) {
+						if (x > thumbRight.offsetLeft)
+							x = thumbRight.offsetLeft;
+					} else if (x < thumbLeft.offsetLeft + thumbLeft.offsetWidth)
+						x = thumbLeft.offsetLeft + thumbLeft.offsetWidth;
+					if (x > slider.offsetWidth)
+						x = slider.offsetWidth;
+					else if (x < 0)
+						x = 0;
+					if (x != this.getPos().x) {
+						this.obj.style.left = (x / slider.offsetWidth * 100) + '%';
+						update(this.obj);
+					}
 				}
 			};
 			tmp.ondrop = function () {
@@ -1446,9 +1495,9 @@ class DragObject {
 		var md = function (e) {
 			o.ownerDocument.drag = o.drag;
 			o.drag.start(e);
-			var mu = function (e) {
+			var mu = function () {
 				o.ownerDocument.onmouseup = o.ownerDocument.onmousemove = o.ownerDocument.ontouchmove = o.ownerDocument.ontouchend = null;
-				o.ownerDocument.drag.end(e);
+				o.ownerDocument.drag.ondrop();
 				return false;
 			};
 			var mm = function (e) {
@@ -1469,9 +1518,8 @@ class DragObject {
 		this.obj.onmousedown = md;
 		this.obj.ontouchstart = md;
 	}
-	ondrop() {
-		return true;
-	}
+	ondrop() { }
+	ondrag(event, delta) { }
 	getPos() {
 		return { x: this.obj.offsetLeft, y: this.obj.offsetTop };
 	}
@@ -1484,9 +1532,5 @@ class DragObject {
 	move(e) {
 		this.ondrag(e, { x: ui.getEvtPos(e, true) + this.startPos.x, y: ui.getEvtPos(e) + this.startPos.y });
 		this.start(e);
-	}
-	end(e) {
-		this.ondrop(e);
-		document.drag = null;
 	}
 }

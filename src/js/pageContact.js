@@ -95,11 +95,11 @@ ${v.matchIndicatorHintDescription}
 <text name="block" class="collapsed">
 	<div style="padding:1em 0;">
 		<div style="margin-top:0.5em;">
-			<input type="radio" name="reason" value="1" deselect="true" label="${ui.l('contacts.blockReason1')}" />
-			<input type="radio" name="reason" value="2" deselect="true" label="${ui.l('contacts.blockReason2')}" />
-			<input type="radio" name="reason" value="3" deselect="true" label="${ui.l('contacts.blockReason3')}" />
-			<input type="radio" name="reason" value="4" deselect="true" label="${ui.l('contacts.blockReason4')}" />
-			<input type="radio" name="reason" value="100" deselect="true" label="${ui.l('contacts.blockReason100')}" />
+			<x-checkbox type="radio" name="reason" value="1" deselect="true" label="${ui.l('contacts.blockReason1')}"></x-checkbox>
+			<x-checkbox type="radio" name="reason" value="2" deselect="true" label="${ui.l('contacts.blockReason2')}"></x-checkbox>
+			<x-checkbox type="radio" name="reason" value="3" deselect="true" label="${ui.l('contacts.blockReason3')}"></x-checkbox>
+			<x-checkbox type="radio" name="reason" value="4" deselect="true" label="${ui.l('contacts.blockReason4')}"></x-checkbox>
+			<x-checkbox type="radio" name="reason" value="100" deselect="true" label="${ui.l('contacts.blockReason100')}"></x-checkbox>
 		</div>
 		<textarea placeholder="${ui.l('contacts.blockDescHint')}" name="note" maxlength="250"></textarea>
 		<buttontext onclick="pageContact.block()" style="margin-top:0.5em;"
@@ -152,11 +152,11 @@ ${v.matchIndicatorHintDescription}
 		if (ui.q(path).getAttribute('blockID') > 0)
 			v.id = ui.q(path).getAttribute('blockID');
 		var n = ui.q(path + ' [name="note"]');
-		if (!n.value && ui.q(path + ' [name="reason"][value="100"]:checked')) {
+		if (!n.value && ui.q(path + ' [name="reason"][value="100"][checked="true"]')) {
 			formFunc.setError(n, 'contacts.blockActionHint');
 			return;
 		}
-		v.values.reason = ui.val(path + ' [name="reason"]:checked');
+		v.values.reason = ui.val(path + ' [name="reason"][checked="true"]');
 		v.values.note = n.value;
 		communication.ajax({
 			url: global.serverApi + 'db/one',
@@ -407,9 +407,9 @@ ${v.matchIndicatorHintDescription}
 					if (r) {
 						var v = JSON.parse(r);
 						ui.attr(e, 'blockID', v.block.id);
-						ui.qa(divID + ' input')[v.block.note ? 1 : 0].checked = true;
+						ui.qa(divID + ' input')[v.block.note ? 1 : 0].setAttribute('checked', 'true');
 						if (v.block.reason != 0)
-							ui.q(divID + ' [name="reason"][value="' + v.block.reason + '"]').checked = true;
+							ui.q(divID + ' [name="reason"][value="' + v.block.reason + '"]').setAttribute('checked', 'true');
 						ui.q(divID + ' textarea').value = v.reason;
 					} else
 						ui.attr(e, 'blockID', 0);
@@ -457,11 +457,11 @@ class groups {
 	}
 	static addToGroup(event, id) {
 		var d = { classname: 'ContactGroupLink' }, e = event.target;
-		if (e.checked && !e.getAttribute('gllID')) {
+		if (e.getAttribute('checked') == 'true' && !e.getAttribute('gllID')) {
 			d.values = {};
 			d.values.contactId2 = id;
 			d.values.contactGroupId = e.getAttribute('value');
-		} else if (!e.checked && e.getAttribute('gllID'))
+		} else if (e.getAttribute('checked') != 'true' && e.getAttribute('gllID'))
 			d.id = e.getAttribute('gllID');
 		if (d) {
 			communication.ajax({
@@ -484,18 +484,18 @@ class groups {
 		}
 	}
 	static delete() {
-		if (ui.q('input[name="groupdialog"]:checked'))
+		if (ui.q('x-checkbox[name="groupdialog"][checked="true"]'))
 			return;
 		communication.ajax({
 			url: global.serverApi + 'db/one',
 			method: 'DELETE',
 			webCall: 'pageContact.delete()',
-			body: { classname: 'ContactGroup', id: ui.q('input[name="groupdialog"]:checked').getAttribute('value') },
+			body: { classname: 'ContactGroup', id: ui.q('x-checkbox[name="groupdialog"][checked="true"]').getAttribute('value') },
 			success() {
 				groups.getGroups(function () {
 					var s = user.contact.groups.replace(/type="checkbox"/g, 'type="radio"').replace(/<input /g, '<input onclick="groups.loadListGroups()"');
-					if (s.indexOf('<input') > -1)
-						s = s.replace('<input', '<input checked="true"');
+					if (s.indexOf('<x-checkbox') > -1)
+						s = s.replace('<x-checkbox', '<x-checkbox checked="true"');
 					ui.html('groups', '<div>' + s + '</div>');
 					formFunc.initFields(ui.q('groups'));
 					ui.css('#groupsDelete', 'display', 'none');
@@ -517,7 +517,7 @@ class groups {
 		});
 	}
 	static loadListGroups() {
-		var v = ui.q('input[name="groupdialog"]:checked').getAttribute('value');
+		var v = ui.q('x-checkbox[name="groupdialog"][checked="true"]').getAttribute('value');
 		if (!v)
 			return;
 		lists.load({
@@ -554,7 +554,7 @@ class groups {
 				ui.html(e, pageContact.templateGroups({ groups: s }));
 				formFunc.initFields(ui.q(activeID + ' groups'));
 			}
-			ui.q('[name="groupdialog"]').checked = false;
+			ui.q('[name="groupdialog"]').setAttribute('checked', 'false');
 			ui.css(e, 'display', '');
 			ui.navigation.hideMenu();
 		} else {
@@ -563,7 +563,7 @@ class groups {
 		}
 	}
 	static rename() {
-		if (ui.q('input[name="groupdialog"]:checked'))
+		if (ui.q('x-checkbox[name="groupdialog"][checked="true"]'))
 			return;
 		var s = ui.q('#groupsRename').children[0].value;
 		if (s.trim().length == 0)
@@ -575,11 +575,11 @@ class groups {
 			responseType: 'json',
 			webCall: 'pageContact.rename()',
 			method: 'PUT',
-			body: { classname: 'ContactGroup', id: ui.q('input[name="groupdialog"]:checked').getAttribute('value'), values: { name: s } },
+			body: { classname: 'ContactGroup', id: ui.q('x-checkbox[name="groupdialog"][checked="true"]').getAttribute('value'), values: { name: s } },
 			success(r) {
 				groups.getGroups();
 				var s = ui.q('#groupsRename').children[0].value;
-				var e = ui.q('input[name="groupdialog"]:checked');
+				var e = ui.q('x-checkbox[name="groupdialog"][checked="true"]');
 				ui.attr(e, 'label', s);
 				e.nextSibling.innerHTML = s;
 				ui.css('#groupsRename', 'display', 'none');
@@ -598,16 +598,16 @@ class groups {
 			success() {
 				ui.navigation.closePopup();
 				groups.getGroups(function () {
-					var e2 = ui.qa('[name="groups"] detailTogglePanel input:checked'), e3 = ui.q('[i="' + id + '"] [name="groups"] detailTogglePanel');
+					var e2 = ui.qa('[name="groups"] detailTogglePanel x-checkbox[checked="true"]'), e3 = ui.q('[i="' + id + '"] [name="groups"] detailTogglePanel');
 					var s = e3.innerHTML;
 					e3.innerHTML = user.contact.groups.replace(/<input/g, '<input onclick="groups.addToGroup(event,' + id + ');"') + s.substring(s.indexOf('<br>'));
 					formFunc.initFields(ui.q('[i="' + id + '"] [name="groups"]'));
 					for (var i = 0; i < e2.length; i++)
-						ui.attr('[i="' + id + '"] [name="groups"] input[value="' + e2[i].value + '"]', 'checked', 'checked');
+						ui.attr('[i="' + id + '"] [name="groups"] input[value="' + e2[i].value + '"]', 'checked', 'true');
 					e3 = ui.q('groups > div');
 					if (e2 && e3.innerHTML) {
 						s = user.contact.groups.replace(/type="checkbox"/g, 'type="radio"').replace(/<input /g, '<input onclick="groups.loadListGroups()"');
-						var c = ui.val('groups input:checked');
+						var c = ui.val('groups x-checkbox[checked="true"]');
 						e3.innerHTML = s.replace('value="' + c + '"', 'value="' + c + '" checked="true"');
 						formFunc.initFields(ui.q('groups'));
 					}
@@ -619,7 +619,7 @@ class groups {
 		var s = '';
 		for (var i = 1; i < r.length; i++) {
 			var v = model.convert(new ContactGroup(), r, i);
-			s += '<input type="checkbox" name="groupdialog" value="' + v.id + '" label="' + v.name + '"/>';
+			s += '<x-checkbox name="groupdialog" value="' + v.id + '" label="' + v.name + '"></x-checkbox>';
 		}
 		user.contact.groups = s;
 	}
@@ -627,7 +627,7 @@ class groups {
 		ui.css('#groupsDelete', 'display', 'none');
 		var e = ui.q('#groupsRename');
 		e.style.display = e.style.display == 'block' ? 'none' : 'block';
-		e.children[0].value = ui.q('input[name="groupdialog"]:checked').getAttribute('label');
+		e.children[0].value = ui.q('x-checkbox[name="groupdialog"][checked="true"]').getAttribute('label');
 	}
 	static toggleGroups(id, friendship) {
 		if (user.contact.groups == null) {

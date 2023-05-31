@@ -136,7 +136,7 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 				var s2 = s.substring(0, s.indexOf('>') + 1);
 				s = s.substring(s.indexOf('>') + 1) + s2;
 			} else if (id == 'search')
-				s = ui.q('[name="searchType"]:checked').getAttribute('label');
+				s = ui.q('x-checkbox[name="searchType"][checked="true"]').getAttribute('label');
 			else
 				s = '';
 			for (var i = 0; i < rows.length; i++) {

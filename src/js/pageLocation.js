@@ -102,11 +102,11 @@ ${v.rating}
 </text>
 <text name="block" class="collapsed">
 	<div style="padding:1em 0;">
-		<input type="checkbox" name="type" value="1" label="${v.blockUser}" ${v.hideBlockUser}/>
+		<x-checkbox name="type" value="1" label="${v.blockUser}" ${v.hideBlockUser}></x-checkbox>
 		<div style=";margin-top:1.5em;">
-			<input type="radio" name="reason" value="51" deselect="true" label="${ui.l('locations.blockReason1')}" />
-			<input type="radio" name="reason" value="52" deselect="true" label="${ui.l('locations.blockReason2')}" ${v.hideBlockReason2}/>
-			<input type="radio" name="reason" value="100" deselect="true" label="${ui.l('locations.blockReason100')}" />
+			<x-checkbox type="radio" name="reason" value="51" deselect="true" label="${ui.l('locations.blockReason1')}"></x-checkbox>
+			<x-checkbox type="radio" name="reason" value="52" deselect="true" label="${ui.l('locations.blockReason2')}" ${v.hideBlockReason2}></x-checkbox>
+			<x-checkbox type="radio" name="reason" value="100" deselect="true" label="${ui.l('locations.blockReason100')}"></x-checkbox>
 		</div>
 		<textarea placeholder="${ui.l('contacts.blockDescHint')}" name="note" maxlength="250"></textarea>
 		<buttontext onclick="pageLocation.block()" style="margin-top:0.5em;" class="bgColor">${ui.l('save')}</buttontext>
@@ -181,14 +181,14 @@ ${v.rating}
 		if (ui.q(path).getAttribute('blockID') > 0)
 			v.id = ui.q(path).getAttribute('blockID');
 		var n = ui.q(path + ' [name="note"]');
-		if (!n.value && ui.q(path + ' [name="reason"][value="100"]:checked')) {
+		if (!n.value && ui.q(path + ' [name="reason"][value="100"][checked="true"]')) {
 			formFunc.setError(n, 'contacts.blockActionHint');
 			return;
 		}
-		v.values.reason = ui.val(path + ' [name="reason"]:checked');
+		v.values.reason = ui.val(path + ' [name="reason"][checked="true"]');
 		v.values.note = n.value;
 		var id = ui.q('detail card:last-child').getAttribute('i');
-		if (ui.q(path + ' input[name="type"]:checked'))
+		if (ui.q(path + ' x-checkbox[name="type"][checked="true"]'))
 			v.values.contactId2 = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).contact.id;
 		else if (id.indexOf && id.indexOf('_') > 0)
 			v.values.eventId = id.substring(0, id.indexOf('_'));
@@ -659,9 +659,9 @@ ${v.rating}
 					if (r) {
 						var v = JSON.parse(r);
 						ui.attr(e, 'blockID', v.block.id);
-						ui.qa(divID + ' input')[v.block.note ? 1 : 0].checked = true;
+						ui.qa(divID + ' input')[v.block.note ? 1 : 0].setAttribute('checked', 'true');
 						if (v.block.reason != 0)
-							ui.q(divID + ' [name="reason"][value="' + v.block.reason + '"]').checked = true;
+							ui.q(divID + ' [name="reason"][value="' + v.block.reason + '"]').setAttribute('checked', 'true');
 						ui.q(divID + ' textarea').value = v.reason;
 					} else
 						ui.attr(e, 'blockID', 0);

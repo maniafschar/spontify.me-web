@@ -50,7 +50,7 @@ class pageLogin {
 	<field>
 		<label></label>
 		<value style="text-align:center;">
-			<input type="checkbox" name="autoLogin" value="1" label="${ui.l('login.keepmeloggedon')}" ${v['keepLoggedIn']} />
+			<x-checkbox name="autoLogin" value="1" label="${ui.l('login.keepmeloggedon')}" ${v['keepLoggedIn']}></x-checkbox>
 		</value>
 	</field>
 	<dialogButtons>
@@ -119,16 +119,16 @@ class pageLogin {
     <field>
         <label>${ui.l('gender')}</label>
         <value>
-            <input type="radio" name="gender" ${v.gender1} value="1" deselect="true" label="${ui.l('male')}" style="margin-bottom:0;"/>
-            <input type="radio" name="gender" ${v.gender2} value="2" deselect="true" label="${ui.l('female')}" style="margin-bottom:0;"/>
-            <input type="radio" name="gender" ${v.gender3} value="3" deselect="true" label="${ui.l('divers')}" style="margin-bottom:0;"/>
+            <x-checkbox type="radio" name="gender" ${v.gender1} value="1" deselect="true" label="${ui.l('male')}" style="margin-bottom:0;"></x-checkbox>
+            <x-checkbox type="radio" name="gender" ${v.gender2} value="2" deselect="true" label="${ui.l('female')}" style="margin-bottom:0;"></x-checkbox>
+            <x-checkbox type="radio" name="gender" ${v.gender3} value="3" deselect="true" label="${ui.l('divers')}" style="margin-bottom:0;"></x-checkbox>
         </value>
     </field>
     <field>
         <label>${ui.l('info.legalTitle')}</label>
         <value>
-            <input type="checkbox" value="true" ${v.agb} name="agb" label="${ui.l('login.legal')}"
-				onclick="pageLogin.validateAGB()" />
+            <x-checkbox value="true" ${v.agb} name="agb" label="${ui.l('login.legal')}"
+				onclick="pageLogin.validateAGB()"></x-checkbox>
         </value>
     </field>
     <dialogButtons>
@@ -207,7 +207,7 @@ class pageLogin {
 		if (ui.q('login form:first-child .dialogFieldError'))
 			p.value = '';
 		else
-			pageLogin.login(u.value, p.value, ui.q('[name="autoLogin"]:checked'));
+			pageLogin.login(u.value, p.value, ui.q('[name="autoLogin"][checked="true"]'));
 	}
 	static getDraft() {
 		var v = window.localStorage && window.localStorage.getItem('login');
@@ -241,7 +241,7 @@ class pageLogin {
 		if (!ui.q('login').innerHTML) {
 			var v = pageLogin.getDraft();
 			if (!global.isBrowser())
-				v.keepLoggedIn = ' checked';
+				v.keepLoggedIn = ' checked="true"';
 			if (global.getOS() != 'ios')
 				v.hideApple = 'display:none;';
 			ui.q('login').innerHTML = pageLogin.template(v);
@@ -354,7 +354,7 @@ class pageLogin {
 				if (r) {
 					r = Encryption.jsEncrypt.decrypt(r).split(global.separatorTech);
 					if (r.length == 2)
-						pageLogin.login(r[0], r[1], ui.q('[name="autoLogin"]:checked'), exec);
+						pageLogin.login(r[0], r[1], ui.q('[name="autoLogin"][checked="true"]'), exec);
 				}
 			}
 		});
@@ -446,7 +446,7 @@ class pageLogin {
 				if (!user.contact.birthday)
 					page1 += '<field><label>' + ui.l('birthday') + '</label><value><input type="date" placeholder="TT.MM.JJJJ" name="birthday" maxlength="10"/></value></field>';
 				if (!user.contact.gender)
-					page1 += '<field><label>' + ui.l('gender') + '</label><value><input type="radio" name="gender" value="2" label="' + ui.l('female') + '"/><input type="radio" name="gender" value="1" label="' + ui.l('male') + '"/><input type="radio" name="gender" value="3" label="' + ui.l('divers') + '"/></value></field>';
+					page1 += '<field><label>' + ui.l('gender') + '</label><value><x-checkbox type="radio" name="gender" value="2" label="' + ui.l('female') + '"></x-checkbox><x-checkbox type="radio" name="gender" value="1" label="' + ui.l('male') + '"></x-checkbox><x-checkbox type="radio" name="gender" value="3" label="' + ui.l('divers') + '"></x-checkbox></value></field>';
 				if (!user.contact.skills && !user.contact.skillsText)
 					page2 = '<field><label>' + ui.l('settings.skillDialog') + '</label><value><textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;"></textarea><hashtags>' + hashtags.display() + '</hashtags></value></field>';
 				if (page1 || page2) {
@@ -558,8 +558,8 @@ class pageLogin {
 			pageLogin.selectTab('skills');
 			return;
 		}
-		if (ui.q('hint input[name="gender"]:checked'))
-			d.gender = ui.q('hint input[name="gender"]:checked').value;
+		if (ui.q('hint x-checkbox[name="gender"][checked="true"]'))
+			d.gender = ui.q('hint x-checkbox[name="gender"][checked="true"]').value;
 		e = hashtags.convert(ui.q('hint textarea[name="hashtagsDisp"]').value);
 		if (e.category)
 			d.skills = e.category;
@@ -688,8 +688,8 @@ class pageLogin {
 		});
 	}
 	static validateAGB() {
-		var e = ui.q('input[name="agb"]');
-		if (e.checked)
+		var e = ui.q('x-checkbox[name="agb"]');
+		if (e.getAttribute('checked') == 'true')
 			formFunc.resetError(e);
 		else
 			formFunc.setError(e, 'settings.noAGB');

@@ -32,7 +32,7 @@ class pageSearch {
 		fieldValues: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
-<input type="checkbox" label="${ui.l('search.matches')}" name="matches" ${v.matches}/>
+<x-checkbox label="${ui.l('search.matches')}" name="matches" ${v.matches}></x-checkbox>
 <label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
 <hashtagButton onclick="ui.toggleHeight(&quot;search div.contacts hashtags&quot;)"></hashtagButton>
 <input type="text" name="keywords" maxlength="50" onkeyup="hashtags.synchonizeTags(this)" placeholder="${ui.l('keywords')}" ${v.keywords}/>
@@ -80,7 +80,7 @@ class pageSearch {
 		},
 		getSearch() {
 			var s = '', s2 = '';
-			if (ui.q('search tabBody div.contacts [name="matches"]:checked'))
+			if (ui.q('search tabBody div.contacts [name="matches"][checked="true"]'))
 				s = ' and ' + pageSearch.contacts.getMatches();
 			var v = ui.val('search tabBody div.contacts [name="keywords"]').trim();
 			if (v) {
@@ -117,7 +117,7 @@ class pageSearch {
 		fieldValues: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
-<input type="checkbox" label="${ui.l('search.matchesEvent')}" name="matches" ${v.matches}/>
+<x-checkbox label="${ui.l('search.matchesEvent')}" name="matches" ${v.matches}></x-checkbox>
 <label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
 <hashtagButton onclick="ui.toggleHeight(&quot;search div.events hashtags&quot;)"></hashtagButton>
 <input type="text" name="keywords" maxlength="50" onkeyup="hashtags.synchonizeTags(this)" placeholder="${ui.l('keywords')}" ${v.keywords}/>
@@ -183,7 +183,7 @@ class pageSearch {
 				if (s)
 					s = '(' + s.substring(0, s.length - 4) + ')';
 			}
-			if (ui.q('search tabBody div.events [name="matches"]:checked'))
+			if (ui.q('search tabBody div.events [name="matches"][checked="true"]'))
 				s += (s ? ' and ' : '') + pageSearch.events.getMatches();
 			var d = new Date();
 			d.setDate(new Date().getDate() + 14);
@@ -236,7 +236,7 @@ class pageSearch {
 		fieldValues: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
-<input type="checkbox" label="${ui.l('search.favorites')}" name="favorites" ${v.favorites}/>
+<x-checkbox label="${ui.l('search.favorites')}" name="favorites" ${v.favorites}></x-checkbox>
 <label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
 <input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
@@ -268,13 +268,13 @@ class pageSearch {
 				if (s)
 					s = '(' + s.substring(0, s.length - 4) + ')';
 			}
-			if (ui.val('search tabBody div.locations [name="favorites"]:checked'))
+			if (ui.val('search tabBody div.locations [name="favorites"][checked="true"]'))
 				s += (s ? ' and ' : '') + 'locationFavorite.favorite=true';
 			return s;
 		},
 		getSearch1(bounds) {
 			var s = '';
-			if (ui.q('locations filters [name="matches"]:checked'))
+			if (ui.q('locations filters [name="matches"][checked="true"]'))
 				s = pageSearch.events.getMatches();
 			var c = '', d = '';
 			if (bounds) {
