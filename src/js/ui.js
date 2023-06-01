@@ -1640,7 +1640,7 @@ thumb val {
 			update(e);
 			tmp.ondrag = function (event) {
 				var slider = event.target;
-				if (slider.nodeName == 'X-SLIDER') {
+				if (slider.nodeName == 'INPUT-SLIDER') {
 					var x = ui.getEvtPos(event, true) - slider.getBoundingClientRect().x;
 					if (!this.obj.classList.contains('right')) {
 						if (x > thumbRight.offsetLeft)
