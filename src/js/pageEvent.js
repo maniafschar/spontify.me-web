@@ -3,7 +3,6 @@ import { communication } from "./communication";
 import { details } from "./details";
 import { geoData } from "./geoData";
 import { global, Strings } from "./global";
-import { hashtags } from "./hashtags";
 import { intro } from "./intro";
 import { lists } from "./lists";
 import { Contact, EventParticipate, Location, model } from "./model";
@@ -43,9 +42,7 @@ class pageEvent {
 <field>
 	<label style="padding-top:0;">${ui.l('events.hashtags')}</label>
 	<value>
-		<hashtagButton onclick="ui.toggleHeight(&quot;popup hashtags&quot;)"></hashtagButton>
-		<textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="hashtags.synchonizeTags(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
-		<hashtags style="display:none;">${v.hashtagSelection}</hashtags>
+		<x-hashtags ids="${v.skills}" text="${v.skillsText}"></x-hashtags>
 	</value>
 </field>
 <field class="noWTDField">
@@ -325,8 +322,6 @@ class pageEvent {
 		v.payplaSignUpHint = ui.l('events.paypalSignUpHint').replace('{0}', pageEvent.paypal.feeDate ?
 			ui.l('events.paypalSignUpHintFee').replace('{0}', pageEvent.paypal.fee).replace('{1}', global.date.formatDate(pageEvent.paypal.feeDate)).replace('{2}', pageEvent.paypal.feeAfter)
 			: pageEvent.paypal.fee);
-		v.hashtagSelection = hashtags.display();
-		v.hashtagsDisp = hashtags.ids2Text(v.skills) + (v.skillsText ? ' ' + v.skillsText : '').trim();
 		v.appointment = user.getAppointmentTemplate('authenticate');
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
 		if (id)
@@ -486,7 +481,7 @@ class pageEvent {
 					v.name = t + ' ' + v.name;
 				else {
 					v.name = t + ' ' + v.contact.pseudonym + (v.contact.age ? ' (' + v.contact.age + ')' : '');
-					v._message1 = hashtags.ids2Text(v.event.skills) + (v.event.skillsText ? ' ' + v.event.skillsText : '');
+					v._message1 = ui.getSkills(v.event, 'list').text();
 				}
 				v._message = v.event.description + '<br/>';
 				v.locID = v.id;
@@ -663,8 +658,6 @@ class pageEvent {
 		ui.toggleHeight('popup .location', function () {
 			ui.toggleHeight('popup .event');
 			pageEvent.setForm();
-			if (ui.q('popup [name="hashtagsDisp"]').value)
-				setTimeout(function () { ui.adjustTextarea(ui.q('popup [name="hashtagsDisp"]')); }, 500);
 		});
 	}
 	static openPaypalPopup(email) {
@@ -880,14 +873,14 @@ class pageEvent {
 		var start = ui.q('popup input[name="startDate"]');
 		var end = ui.q('popup input[name="endDate"]');
 		var text = ui.q('popup [name="description"]');
-		var tags = ui.q('popup [name="hashtagsDisp"]');
+		var tags = ui.q('popup x-hashtags');
 		var id = ui.q('popup [name="id"]').value;
 		ui.html('popup popupHint', '');
 		formFunc.resetError(start);
 		formFunc.resetError(end);
 		formFunc.resetError(text);
 		formFunc.resetError(tags);
-		if (!tags.value)
+		if (!tags.getAttribute('ids') && !tags.getAttribute('text'))
 			formFunc.setError(tags, 'error.hashtags');
 		else
 			formFunc.validation.filterWords(tags);
@@ -923,9 +916,8 @@ class pageEvent {
 				}
 			}
 		}
-		var v = hashtags.convert(ui.q('popup [name="hashtagsDisp"]').value);
-		ui.q('popup input[name="skills"]').value = v.category;
-		ui.q('popup input[name="skillsText"]').value = v.hashtags;
+		ui.q('popup input[name="skills"]').value = ui.q('popup x-hashtags').getAttribute('ids');
+		ui.q('popup input[name="skillsText"]').value = ui.q('popup x-hashtags').getAttribute('text');
 		v = formFunc.getForm('popup form');
 		if (!v.values.price)
 			v.values.price = 0;
@@ -955,9 +947,8 @@ class pageEvent {
 		});
 	}
 	static saveDraft() {
-		var v = hashtags.convert(ui.q('popup [name="hashtagsDisp"]').value);
-		ui.q('popup input[name="skills"]').value = v.category;
-		ui.q('popup input[name="skillsText"]').value = v.hashtags;
+		ui.q('popup input[name="skills"]').value = ui.q('popup x-hashtags').getAttribute('ids');
+		ui.q('popup input[name="skillsText"]').value = ui.q('popup x-hashtags').getAttribute('text');
 		user.set('event', formFunc.getForm('popup form'));
 	}
 	static selectVideoCall(e) {

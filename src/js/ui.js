@@ -14,7 +14,6 @@ import { pageHome } from './pageHome';
 import { lists } from './lists';
 import { pageEvent } from './pageEvent';
 import { pageSearch } from './pageSearch';
-import { hashtags } from './hashtags';
 
 export { ui, formFunc };
 
@@ -49,14 +48,14 @@ class ui {
 </container>`;
 	static adjustTextarea(e) {
 		if (e && e.nodeName == 'TEXTAREA') {
-			ui.css(e, 'height', '1px');
+			e.style.setProperty('height', '1px', 'important');
 			var h = e.scrollHeight;
 			if (h > ui.emInPX * 6)
 				h = ui.emInPX * 6;
 			h += 6;
 			if (h < 2 * ui.emInPX)
 				h = 2 * ui.emInPX;
-			ui.css(e, 'height', h + 'px');
+			e.style.setProperty('height', h + 'px', 'important');
 		}
 	}
 	static getSkills(compare, style) {
@@ -99,14 +98,14 @@ class ui {
 		if (compare.skills) {
 			compareSkills = compare.skills.split('|');
 			for (var i = 0; i < compareSkills.length; i++)
-				add2List(hashtags.ids2Text(compareSkills[i]), userSkills.indexOf('|' + compareSkills[i] + '|') > -1, result.skills);
+				add2List(Hashtags.ids2Text(compareSkills[i]), userSkills.indexOf('|' + compareSkills[i] + '|') > -1, result.skills);
 		}
 		if (userSkills) {
 			userSkills = userSkills.split('|');
 			compareSkills = compare.skills ? '|' + compare.skills + '|' : '';
 			for (var i = 0; i < userSkills.length; i++) {
 				if (compareSkills.indexOf('|' + userSkills[i] + '|') < 0)
-					add2List(hashtags.ids2Text(userSkills[i]), 'fade', result.skills);
+					add2List(Hashtags.ids2Text(userSkills[i]), 'fade', result.skills);
 			}
 		}
 		userSkills = user.contact && user.contact.skillsText ? '|' + user.contact.skillsText.toLowerCase() + '|' : '';
@@ -827,7 +826,7 @@ class formFunc {
 					var y = -f.offsetTop * ratio;
 					var w = Math.min(f.parentElement.clientWidth, f.clientWidth) * ratio;
 					var h = Math.min(f.parentElement.clientHeight, f.clientHeight) * ratio;
-					var b = formFunc.image.scale(img, x, y, w, h).data;
+					var b = formFunc.svg.scale(img, x, y, w, h).data;
 					// b = data:image/jpeg;base64,/9j/4AAQS...
 					d.values[e[i].name] = '.' + b.substring(b.indexOf('/') + 1, b.indexOf(';')) + global.separatorTech + b.substring(b.indexOf(',') + 1);
 				}
@@ -857,290 +856,41 @@ class formFunc {
 			d.values[e[i].name] = e[i].getAttribute('value');
 		return d;
 	}
-	static image = {
-		fieldId: { id: null, name: null, get(suffix) { return ui.q(formFunc.image.fieldId.id + ' [name="' + formFunc.image.fieldId.name + (suffix ? suffix : '') + '"]') } },
-		svg: {},
-
-		cameraError(e) {
-			if (!e || e.toLowerCase().indexOf('select') < 0)
-				ui.navigation.openPopup(ui.l('attention'), ui.l('camera.notAvailabe').replace('{0}', e));
-		},
-		cameraPicture(id, name, camera) {
-			formFunc.image.fieldId.id = id;
-			formFunc.image.fieldId.name = name;
-			navigator.camera.getPicture(formFunc.image.cameraSuccess, formFunc.image.cameraError,
-				{ sourceType: camera ? Camera.PictureSourceType.CAMERA : Camera.PictureSourceType.PHOTOLIBRARY, destinationType: Camera.DestinationType.FILE_URI });
-		},
-		cameraSuccess(e) {
-			formFunc.image.fieldId.get('_appInput').style.display = 'none';
-			formFunc.image.fieldId.get('_disp').style.display = 'block';
-			window.resolveLocalFileSystemURL(e,
-				function (fe) {
-					fe.file(function (f) {
-						formFunc.image.preview2(f);
-					}, formFunc.image.cameraError);
-				}, formFunc.image.cameraError);
-		},
-		dataURItoBlob(dataURI) {
-			var arr = dataURI.split(','), mime = arr[0].match(/:(.*?);/)[1];
-			arr[1] = atob(arr[1]);
-			var ab = new ArrayBuffer(arr[1].length);
-			var ia = new Uint8Array(ab);
-			for (var i = 0; i < arr[1].length; i++)
-				ia[i] = arr[1].charCodeAt(i);
-			return new Blob([ab], { type: mime });
-		},
-		fetchSVG(id) {
-			if (!formFunc.image.svg[id]) {
-				formFunc.image.svg[id] = 1;
+	static svg = {
+		data: {},
+		fetch(id) {
+			if (!formFunc.svg.data[id]) {
+				formFunc.svg.data[id] = 1;
 				communication.ajax({
 					url: global.server + 'images/' + id + '.svg',
-					webCall: 'ui.image.fetchSVG(id)',
+					webCall: 'ui.svg.fetch(id)',
 					success(r) {
 						var parser = new DOMParser();
 						var xmlDoc = parser.parseFromString(r, "text/xml");
-						formFunc.image.svg[id] = xmlDoc.getElementsByTagName('svg')[0].outerHTML;
-						formFunc.image.replaceSVGs();
+						formFunc.svg.data[id] = xmlDoc.getElementsByTagName('svg')[0].outerHTML;
+						formFunc.svg.replaceAll();
 					}
 				});
 			}
 		},
-		getSVG(id) {
-			return formFunc.image.svg[id];
+		get(id) {
+			return formFunc.svg.data[id];
 		},
-		hasImage() {
-			var x = formFunc.image.fieldId.get('Preview');
-			return x && x.getAttribute('src') && x.getAttribute('src').length > 100;
-		},
-		preview(e, id) {
-			formFunc.image.fieldId.id = id;
-			formFunc.image.fieldId.name = e.getAttribute('name');
-			formFunc.image.preview2(e.files && e.files.length > 0 ? e.files[0] : null);
-		},
-		preview2(file) {
-			formFunc.image.fieldId.get().setAttribute('rotateImage', '0');
-			if (file) {
-				var ePrev = formFunc.image.fieldId.get('_disp');
-				ui.css(ePrev, 'z-index', 6);
-				formFunc.image.fieldId.get('_icon').style.display = 'none';
-				var p = '<rotate onclick="formFunc.image.rotate(this)">&#8635;</rotate><img name="' + formFunc.image.fieldId.name + 'Preview"/>';
-				ui.html(ePrev, '<close onclick="formFunc.image.remove()">X</close>' + p + '<desc></desc>');
-				formFunc.image.previewInternal(file);
-				ui.css('#popupSendImage', 'display', '');
-			} else
-				formFunc.image.remove();
-		},
-		previewCalculateDistance(event) {
-			var t;
-			if (event.changedTouches && event.changedTouches.length > 0)
-				t = event.changedTouches;
-			else if (event.targetTouches && event.targetTouches.length > 0)
-				t = event.targetTouches;
-			else
-				t = event.touches;
-			if (t && t.length > 1)
-				return Math.hypot(t[0].pageX - t[1].pageX, t[0].pageY - t[1].pageY);
-		},
-		previewInternal(f) {
-			var reader = new FileReader();
-			reader.onload = function (r) {
-				var img = formFunc.image.fieldId.get('Preview');
-				if (img) {
-					var image = new Image();
-					image.onload = function () {
-						var whOrg = image.naturalWidth + ' x ' + image.naturalHeight;
-						formFunc.image.fieldId.get().setAttribute('rotateImage', 0);
-						var scaled = formFunc.image.scale(image);
-						var size = formFunc.image.dataURItoBlob(scaled.data).size, sizeOrg = f.size, s, s2 = '', s0 = '';
-						if (size > 1024 * 1024) {
-							if (size > 5 * 1024 * 1024) {
-								s0 = '<span style="color:red;">';
-								s2 = '</span>';
-							}
-							s = (size / 1024 / 1024).toFixed(1) + ' MB';
-						} else if (size > 1024)
-							s = (size / 1024).toFixed(1) + ' KB';
-						else
-							s = size + ' B';
-						var x;
-						if (sizeOrg > 1024 * 1024)
-							x = (sizeOrg / 1024 / 1024).toFixed(1) + ' MB';
-						else if (sizeOrg > 1024)
-							x = (sizeOrg / 1024).toFixed(1) + ' KB';
-						else
-							x = sizeOrg + ' B';
-						var disp = formFunc.image.fieldId.get('_disp');
-						disp.querySelector('desc').innerHTML = x + global.separator + whOrg + '<br/>' + ui.l('fileUpload.ratio') + ' ' + (100 - size / sizeOrg * 100).toFixed(0) + '%<br/>' + s0 + s + global.separator + s2 + '<span id="imagePreviewSize">' + scaled.width + ' x ' + scaled.height + '</span>';
-						img.src = r.target.result;
-						ui.css(disp, 'height', disp.clientWidth + 'px');
-						if (image.naturalWidth > image.naturalHeight) {
-							ui.css(img, 'max-height', '100%');
-							if (image.naturalWidth > disp.clientWidth)
-								ui.css(img, 'margin-left', -((Math.min(disp.clientHeight / image.naturalHeight, 1) * image.naturalWidth - disp.clientWidth) / 2) + 'px');
-						} else {
-							ui.css(img, 'max-width', '100%');
-							if (image.naturalHeight > disp.clientHeight)
-								ui.css(img, 'margin-top', -((Math.min(disp.clientWidth / image.naturalWidth, 1) * image.naturalHeight - disp.clientHeight) / 2) + 'px');
-						}
-						new DragObject(img).ondrag = function (event, delta) {
-							if (parseInt(delta.y) != 0) {
-								var y = parseInt(ui.cssValue(img, 'margin-top')) + delta.y;
-								if (y < 1 && y > -(img.clientHeight - disp.clientHeight))
-									ui.css(img, 'margin-top', y + 'px');
-							}
-							if (parseInt(delta.x) != 0) {
-								var x = parseInt(ui.cssValue(img, 'margin-left')) + delta.x;
-								if (x < 1 && x > -(img.clientWidth - disp.clientWidth))
-									ui.css(img, 'margin-left', x + 'px');
-							}
-						};
-						ui.on(img, 'touchmove', function (event) {
-							var d = formFunc.image.previewCalculateDistance(event);
-							if (d) {
-								var zoom = Math.sign(formFunc.dist - d) * 5;
-								if (zoom > 0)
-									zoom /= event.scale;
-								else
-									zoom *= event.scale;
-								formFunc.image.zoom(event, zoom);
-								formFunc.dist = d;
-							}
-						});
-						ui.on(img, 'touchstart', function (event) {
-							var d = formFunc.image.previewCalculateDistance(event);
-							if (d)
-								formFunc.dist = d;
-						});
-					};
-					image.src = r.target.result;
-				}
-			};
-			reader.readAsDataURL(f);
-		},
-		remove() {
-			var e = formFunc.image.fieldId.get();
-			if (e) {
-				e.value = '';
-				ui.attr(e, 'rotateImage', 0);
-				var ePrev = formFunc.image.fieldId.get('_disp');
-				ui.html(ePrev, '<span>' + (e.getAttribute('hint') ? e.getAttribute('hint') : ui.l('fileUpload.select')) + '</span>');
-				ePrev.style.zIndex = null;
-				ePrev.style.height = null;
-				formFunc.image.fieldId.get('_icon').style.display = '';
-				ui.css('#popupSendImage', 'display', 'none');
-				if (!global.isBrowser()) {
-					formFunc.image.fieldId.get('_appInput').style.display = 'block';
-					ePrev.style.display = 'none';
-				}
-			}
-		},
-		replaceSVGs() {
+		replaceAll() {
 			var imgs = ui.qa('img[source]');
 			if (imgs) {
 				for (var i = 0; i < imgs.length; i++) {
 					var id = imgs[i].getAttribute('source');
-					if (formFunc.image.svg[id]) {
-						if (formFunc.image.svg[id] != 1) {
+					if (formFunc.svg.data[id]) {
+						if (formFunc.svg.data[id] != 1) {
 							var e = document.createElement('div');
-							e.innerHTML = formFunc.image.svg[id];
+							e.innerHTML = formFunc.svg.data[id];
 							e.firstChild.onclick = imgs[i].onclick;
 							imgs[i].parentNode.replaceChild(e.firstChild, imgs[i]);
 						}
 					} else
-						formFunc.image.fetchSVG(id);
+						formFunc.svg.fetch(id);
 				}
-			}
-		},
-		rotate(img) {
-			if (!img.name)
-				img = img.nextSibling;
-			var canvas = document.createElement('canvas'), w = img.naturalWidth, h = img.naturalHeight;
-			canvas.width = h;
-			canvas.height = w;
-			var ctx = canvas.getContext('2d');
-			var image = new Image();
-			image.src = img.src;
-			image.onload = function () {
-				var wh = ui.q('#imagePreviewSize').innerHTML.split('x');
-				ctx.clearRect(0, 0, w, h);
-				ctx.rotate(0.5 * Math.PI);
-				ctx.translate(0, -h);
-				ctx.drawImage(image, 0, 0, w, h);
-				img.src = canvas.toDataURL('image/jpeg', 1);
-				var e = ui.q('[name="' + img.name.substring(0, img.name.length - 7) + '"]');
-				ui.attr(e, 'rotateImage', (90 + parseInt(e.getAttribute('rotateImage'), 10)) % 360);
-				ui.q('#imagePreviewSize').innerHTML = wh[1].trim() + ' x ' + wh[0].trim();
-			};
-		},
-		scale(image, x, y, w, h) {
-			var canvas = document.createElement('canvas'), scale = 1, wOrg, hOrg;
-			var ctx = canvas.getContext('2d'), max = 800;
-			if (w) {
-				wOrg = w;
-				hOrg = h;
-			} else {
-				x = 0;
-				y = 0;
-				wOrg = image.naturalWidth;
-				hOrg = image.naturalHeight;
-				w = wOrg;
-				h = hOrg;
-			}
-			if (w > h)
-				scale = max / h;
-			else
-				scale = max / w;
-			w = scale * w;
-			h = scale * h;
-			if (w > max) {
-				wOrg = max / scale;
-				w = max;
-			} else if (h > max) {
-				hOrg = max / scale;
-				h = max;
-			}
-			canvas.width = max;
-			canvas.height = max;
-			ctx.fillStyle = 'white';
-			ctx.fillRect(0, 0, canvas.width, canvas.height);
-			ctx.drawImage(image, x, y, wOrg, hOrg, 0, 0, w, h);
-			return { data: canvas.toDataURL('image/jpeg', 0.8), width: parseInt(w + 0.5), height: parseInt(h + 0.5) };
-		},
-		zoom(event, delta) {
-			var e = event.target;
-			if (e.nodeName != 'IMG') {
-				e = e.parentNode;
-				for (var i = 0; i < e.children.length; i++)
-					if (e.children[i].nodeName == 'IMG') {
-						e = e.children[i];
-						break;
-					}
-			}
-			if (e && e.nodeName == 'IMG' && e.getAttribute('name') && e.getAttribute('name').indexOf('Preview') > 0) {
-				var style = ('' + ui.cssValue(e, 'max-width')).indexOf('%') > 0 ? 'max-width' : 'max-height';
-				var windowSize = style == 'max-width' ? e.parentNode.clientWidth : e.parentNode.clientHeight;
-				var imageSize = style == 'max-width' ? e.naturalWidth : e.naturalHeight;
-				var zoom = parseFloat(ui.cssValue(e, style)) - delta;
-				if (zoom < 100)
-					zoom = 100;
-				else if (zoom / 100 * windowSize > imageSize)
-					zoom = imageSize / windowSize * 100;
-				zoom = parseInt(zoom);
-				if (zoom == parseInt(ui.cssValue(e, style)))
-					return;
-				ui.css(e, style, zoom + '%');
-				var x = parseInt(ui.cssValue(e, 'margin-left')) + e.clientWidth * delta / 200;
-				if (x + e.clientWidth < e.parentNode.clientWidth)
-					x = e.parentNode.clientWidth - e.clientWidth;
-				else if (x > 0)
-					x = 0;
-				var y = parseInt(ui.cssValue(e, 'margin-top')) + e.clientHeight * delta / 200;
-				if (y + e.clientHeight < e.parentNode.clientHeight)
-					y = e.parentNode.clientHeight - e.clientHeight;
-				else if (y > 0)
-					y = 0;
-				ui.css(e, 'margin-left', x);
-				ui.css(e, 'margin-top', y);
 			}
 		}
 	}
@@ -1150,23 +900,8 @@ class formFunc {
 		for (var i = 0; i < e.length; i++)
 			e[i].onfocus = f;
 		e = element.querySelectorAll('input');
-		for (var i = 0; i < e.length; i++) {
-			e[i].onfocus = function () { document.body.scrollTop = 0; }
+		for (var i = 0; i < e.length; i++)
 			ui.on(e, 'keypress', formFunc.pressDefaultButton);
-			if (e[i].type == 'file') {
-				if (!e[i].previousElementSibling) {
-					if (!e[i].getAttribute('onchange'))
-						e[i].setAttribute('onchange', 'formFunc.image.preview(this,"' + element.nodeName + '")');
-					var s = '', s2 = e[i].getAttribute('name');
-					if (!global.isBrowser()) {
-						e[i].style.display = 'none';
-						s = '<div name="' + s2 + '_appInput" class="appInput"><buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + element.nodeName + '&quot;,&quot;' + s2 + '&quot;,true)" style="border-radius:0.5em 0 0 0.5em;border-right:solid 1px rgba(255,255,255,0.1);">' + ui.l('camera.shoot') + '</buttontext>' +
-							'<buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + element.nodeName + '&quot;,&quot;' + s2 + '&quot;)" style="border-radius:0 0.5em 0.5em 0;">' + ui.l('camera.select') + '</buttontext></div>';
-					}
-					e[i].outerHTML = s + '<inputFile name="' + s2 + '_disp" ' + (e[i].getAttribute('class') ? 'class="' + e[i].getAttribute('class') + '" ' : '') + (global.isBrowser() ? '' : ' style="display:none;"') + '><span>' + (e[i].getAttribute('hint') ? e[i].getAttribute('hint') : ui.l('fileUpload.select')) + '</span></inputFile>' + e[i].outerHTML + '<img name="' + s2 + '_icon" src="' + (e[i].getAttribute('src') ? e[i].getAttribute('src') : '') + '"/>';
-				}
-			}
-		}
 	}
 	static pressDefaultButton(event) {
 		if (event.keyCode == 13) {
@@ -1308,6 +1043,196 @@ class formFunc {
 	}
 }
 
+class Hashtags extends HTMLElement {
+	constructor() {
+		super();
+		const shadow = this.attachShadow({ mode: 'closed' });
+		const style = document.createElement('style');
+		style.textContent = `
+hashtags {
+	position: relative;
+}
+
+hashtags category {
+	width: 30%;
+	position: absolute;
+	left: 0;
+}
+
+hashtags label {
+	cursor: pointer;
+	display: block;
+	position: relative;
+	padding: 0.25em 0.75em;
+	text-align: left;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+	border-radius: 1em;
+	cursor: pointer;
+}
+
+hashtags>div {
+	margin-left: 30%;
+	display: none;
+	overflow-y: auto;
+	max-height: 17em;
+}
+
+hashtags label.selected {
+	font-weight: bold;
+}
+
+hashtags category label.selected::after {
+	content: '>';
+	position: absolute;
+	right: 0;
+	top: 0.25em;
+}
+
+hashtagButton {
+	font-size: 2em;
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 0.2em;
+	cursor: pointer;
+	z-index: 1;
+	color: black;
+}
+
+hashtagButton::before {
+	content: '+';
+}
+settings field hashtags>div label,
+search hashtags>div label {
+	color: rgba(255, 255, 255, 0.4);
+}
+
+settings field hashtags>div label.selected,
+search hashtags>div label.selected {
+	color: white;
+}`;
+		shadow.appendChild(style);
+		var element = document.createElement('hashtagButton');
+		element.setAttribute('onclick', 'this.getRootNode().host.toggle(event)');
+		shadow.appendChild(element);
+		element = document.createElement('textarea');
+		element.setAttribute('name', 'hashtagsDisp');
+		element.setAttribute('part', 'textarea');
+		element.setAttribute('maxlength', '250');
+		element.setAttribute('transient', 'true');
+		element.setAttribute('onkeyup', 'this.getRootNode().host.synchonizeTags(this.getRootNode())');
+		element.setAttribute('style', 'height:2em;');
+		element.textContent = Hashtags.ids2Text(this.getAttribute('ids')) + (this.getAttribute('text') ? ' ' + this.getAttribute('text') : '').trim();
+		shadow.appendChild(element);
+		element = document.createElement('hashtags');
+		element.setAttribute('style', 'display:none;');
+		element.innerHTML = this.selection();
+		shadow.appendChild(element);
+		this.synchonizeTags(shadow);
+		setTimeout(function () { ui.adjustTextarea(shadow.querySelector('textarea')) }, 1000);
+	}
+	add(root, tag) {
+		var e = root.querySelector('textarea');
+		var s = e.value;
+		if ((' ' + e.value + ' ').indexOf(' ' + tag + ' ') < 0)
+			s += ' ' + tag;
+		else
+			s = s.replace(tag, '');
+		while (s.indexOf('  ') > -1)
+			s = s.replace('  ', ' ');
+		e.value = s.trim();
+		ui.adjustTextarea(e);
+		this.synchonizeTags(root);
+	}
+	convert(hashtags) {
+		var category = '';
+		hashtags = hashtags.replace(/\n|\t|\r/g, ' ');
+		for (var i = 0; i < ui.categories.length; i++) {
+			for (var i2 = 0; i2 < ui.categories[i].values.length; i2++) {
+				var t = ui.categories[i].values[i2].split('|');
+				var i3 = hashtags.toLowerCase().indexOf(t[0].toLowerCase());
+				if (i3 > -1) {
+					category += '|' + i + '.' + t[1];
+					hashtags = hashtags.substring(0, i3) + hashtags.substring(i3 + t[0].length);
+				}
+			}
+		}
+		if (category)
+			category = category.substring(1);
+		while (category.length > 255)
+			category = category.substring(0, category.lastIndexOf('|'));
+		hashtags = hashtags.trim();
+		while (hashtags.indexOf('  ') > -1)
+			hashtags = hashtags.replace('  ', ' ').trim();
+		if (hashtags.length > 255)
+			hashtags = hashtags.substring(0, 255);
+		return { ids: category, text: hashtags.replace(/ /g, '|') };
+	}
+	static ids2Text(ids) {
+		if (!ids)
+			return '';
+		var a = [];
+		ids = ids.split('|');
+		for (var i = 0; i < ids.length; i++) {
+			var id = ids[i].split('\.');
+			for (var i2 = 0; i2 < ui.categories[id[0]].values.length; i2++) {
+				if (ui.categories[id[0]].values[i2].split('|')[1] == id[1]) {
+					a.push(ui.categories[id[0]].values[i2].split('|')[0]);
+					break;
+				}
+			}
+		}
+		a.sort(function (a, b) { return a.toLowerCase() > b.toLowerCase() ? 1 : -1 });
+		return a.join(' ').trim();
+	}
+	selection() {
+		var s = '<category>';
+		for (var i = 0; i < ui.categories.length; i++)
+			s += '<label ' + (i == 0 ? ' class="selected"' : '') + 'onclick="this.getRootNode().host.toggleSubCategories(this,' + i + ')">' + ui.categories[i].label + '</label>';
+		s += '</category>';
+		for (var i = 0; i < ui.categories.length; i++) {
+			s += '<div' + (i == 0 ? ' style="display:block;"' : '') + '>';
+			var subs = ui.categories[i].values.sort(function (a, b) { return a > b ? 1 : -1 });
+			for (var i2 = 0; i2 < subs.length; i2++)
+				s += '<label onclick="this.getRootNode().host.add(event.target.getRootNode(),&quot;' + subs[i2].split('|')[0] + '&quot;)">' + subs[i2].split('|')[0] + '</label>';
+			s += '</div>';
+		}
+		return s;
+	}
+	synchonizeTags(root) {
+		var textarea = root.querySelector('textarea');
+		var tags = root.querySelector('hashtags').querySelectorAll('div>label');
+		var s = textarea.value.toLowerCase();
+		for (var i = 0; i < tags.length; i++)
+			s.indexOf(tags[i].innerHTML.trim().toLowerCase()) < 0 ? ui.classRemove(tags[i], 'selected') : ui.classAdd(tags[i], 'selected');
+		ui.adjustTextarea(textarea);
+		var hts = this.convert(textarea.value);
+		root.host.setAttribute('ids', hts.ids);
+		root.host.setAttribute('text', hts.text);
+	}
+	toggle(event) {
+		ui.toggleHeight(event.target.getRootNode().querySelector('hashtags'));
+	}
+	toggleSubCategories(e, i) {
+		e = e.getRootNode().querySelector('hashtags');
+		if (ui.classContains(e.querySelectorAll('category label')[i], 'selected'))
+			return;
+		var visibleBlock = e.querySelector('div[style*="block"]');
+		ui.classRemove(e.querySelectorAll('category label.selected'), 'selected');
+		ui.classAdd(e.querySelectorAll('category label')[i], 'selected');
+		var a = e.querySelectorAll('div')[i];
+		e.style.minHeight = '12em';
+		var f = function () { ui.toggleHeight(a, function () { e.style.minHeight = null; }); };
+		if (visibleBlock && visibleBlock != a)
+			ui.toggleHeight(visibleBlock, f);
+		else
+			f.call();
+	}
+}
+
+customElements.define('x-hashtags', Hashtags);
+
 class Checkbox extends HTMLElement {
 	constructor() {
 		super();
@@ -1350,9 +1275,9 @@ label:hover {
 }`;
 		shadow.appendChild(style);
 		this.setAttribute('onclick', 'this.toggleCheckbox(event)' + (this.getAttribute('onclick') ? ';' + this.getAttribute('onclick') : ''));
-		var contend = document.createElement('label');
-		contend.textContent = this.getAttribute('label');
-		shadow.appendChild(contend);
+		var element = document.createElement('label');
+		element.textContent = this.getAttribute('label');
+		shadow.appendChild(element);
 	}
 	toggleCheckbox(event) {
 		var e = event.target;
@@ -1366,6 +1291,282 @@ label:hover {
 }
 
 customElements.define('x-checkbox', Checkbox);
+
+class Image extends HTMLElement {
+	constructor() {
+		super();
+		const shadow = this.attachShadow({ mode: 'closed' });
+		const style = document.createElement('style');
+		style.textContent = ``;
+		shadow.appendChild(style);
+		var element = document.createElement('div');
+		if (!this.getAttribute('onchange'))
+			this.setAttribute('onchange', 'this.preview("' + element.nodeName + '")');
+		var s = '', s2 = this.getAttribute('name');
+		if (!global.isBrowser()) {
+			this.style.display = 'none';
+			s = '<div name="' + s2 + '_appInput" class="appInput"><buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + element.nodeName + '&quot;,&quot;' + s2 + '&quot;,true)" style="border-radius:0.5em 0 0 0.5em;border-right:solid 1px rgba(255,255,255,0.1);">' + ui.l('camera.shoot') + '</buttontext>' +
+				'<buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + element.nodeName + '&quot;,&quot;' + s2 + '&quot;)" style="border-radius:0 0.5em 0.5em 0;">' + ui.l('camera.select') + '</buttontext></div>';
+		}
+		element.outerHTML = s + '<inputFile name="' + s2 + '_disp" ' + (e[i].getAttribute('class') ? 'class="' + e[i].getAttribute('class') + '" ' : '') + (global.isBrowser() ? '' : ' style="display:none;"') + '><span>' + (e[i].getAttribute('hint') ? e[i].getAttribute('hint') : ui.l('fileUpload.select')) + '</span></inputFile>' + e[i].outerHTML + '<img name="' + s2 + '_icon" src="' + (e[i].getAttribute('src') ? e[i].getAttribute('src') : '') + '"/>';
+		shadow.appendChild(element);
+		ui.on(window, 'wheel', function (event) {
+			if (event.ctrlKey)
+				this.zoom(event, event.deltaY);
+		});
+	}
+	fieldId = { id: null, name: null, get(suffix) { return ui.q(formFunc.svg.fieldId.id + ' [name="' + formFunc.svg.fieldId.name + (suffix ? suffix : '') + '"]') } };
+
+	cameraError(e) {
+		if (!e || e.toLowerCase().indexOf('select') < 0)
+			ui.navigation.openPopup(ui.l('attention'), ui.l('camera.notAvailabe').replace('{0}', e));
+	}
+	cameraPicture(id, name, camera) {
+		formFunc.svg.fieldId.id = id;
+		formFunc.svg.fieldId.name = name;
+		navigator.camera.getPicture(formFunc.svg.cameraSuccess, formFunc.svg.cameraError,
+			{ sourceType: camera ? Camera.PictureSourceType.CAMERA : Camera.PictureSourceType.PHOTOLIBRARY, destinationType: Camera.DestinationType.FILE_URI });
+	}
+	cameraSuccess(e) {
+		formFunc.svg.fieldId.get('_appInput').style.display = 'none';
+		formFunc.svg.fieldId.get('_disp').style.display = 'block';
+		window.resolveLocalFileSystemURL(e,
+			function (fe) {
+				fe.file(function (f) {
+					formFunc.svg.preview2(f);
+				}, formFunc.svg.cameraError);
+			}, formFunc.svg.cameraError);
+	}
+	dataURItoBlob(dataURI) {
+		var arr = dataURI.split(','), mime = arr[0].match(/:(.*?);/)[1];
+		arr[1] = atob(arr[1]);
+		var ab = new ArrayBuffer(arr[1].length);
+		var ia = new Uint8Array(ab);
+		for (var i = 0; i < arr[1].length; i++)
+			ia[i] = arr[1].charCodeAt(i);
+		return new Blob([ab], { type: mime });
+	}
+	hasImage() {
+		var x = formFunc.svg.fieldId.get('Preview');
+		return x && x.getAttribute('src') && x.getAttribute('src').length > 100;
+	}
+	preview(e, id) {
+		formFunc.svg.fieldId.id = id;
+		formFunc.svg.fieldId.name = e.getAttribute('name');
+		formFunc.svg.preview2(e.files && e.files.length > 0 ? e.files[0] : null);
+	}
+	preview2(file) {
+		formFunc.svg.fieldId.get().setAttribute('rotateImage', '0');
+		if (file) {
+			var ePrev = formFunc.svg.fieldId.get('_disp');
+			ui.css(ePrev, 'z-index', 6);
+			formFunc.svg.fieldId.get('_icon').style.display = 'none';
+			var p = '<rotate onclick="formFunc.image.rotate(this)">&#8635;</rotate><img name="' + formFunc.svg.fieldId.name + 'Preview"/>';
+			ui.html(ePrev, '<close onclick="formFunc.image.remove()">X</close>' + p + '<desc></desc>');
+			formFunc.svg.previewInternal(file);
+			ui.css('#popupSendImage', 'display', '');
+		} else
+			formFunc.svg.remove();
+	}
+	previewCalculateDistance(event) {
+		var t;
+		if (event.changedTouches && event.changedTouches.length > 0)
+			t = event.changedTouches;
+		else if (event.targetTouches && event.targetTouches.length > 0)
+			t = event.targetTouches;
+		else
+			t = event.touches;
+		if (t && t.length > 1)
+			return Math.hypot(t[0].pageX - t[1].pageX, t[0].pageY - t[1].pageY);
+	}
+	previewInternal(f) {
+		var reader = new FileReader();
+		reader.onload = function (r) {
+			var img = formFunc.svg.fieldId.get('Preview');
+			if (img) {
+				var image = new Image();
+				image.onload = function () {
+					var whOrg = image.naturalWidth + ' x ' + image.naturalHeight;
+					formFunc.svg.fieldId.get().setAttribute('rotateImage', 0);
+					var scaled = formFunc.svg.scale(image);
+					var size = formFunc.svg.dataURItoBlob(scaled.data).size, sizeOrg = f.size, s, s2 = '', s0 = '';
+					if (size > 1024 * 1024) {
+						if (size > 5 * 1024 * 1024) {
+							s0 = '<span style="color:red;">';
+							s2 = '</span>';
+						}
+						s = (size / 1024 / 1024).toFixed(1) + ' MB';
+					} else if (size > 1024)
+						s = (size / 1024).toFixed(1) + ' KB';
+					else
+						s = size + ' B';
+					var x;
+					if (sizeOrg > 1024 * 1024)
+						x = (sizeOrg / 1024 / 1024).toFixed(1) + ' MB';
+					else if (sizeOrg > 1024)
+						x = (sizeOrg / 1024).toFixed(1) + ' KB';
+					else
+						x = sizeOrg + ' B';
+					var disp = formFunc.svg.fieldId.get('_disp');
+					disp.querySelector('desc').innerHTML = x + global.separator + whOrg + '<br/>' + ui.l('fileUpload.ratio') + ' ' + (100 - size / sizeOrg * 100).toFixed(0) + '%<br/>' + s0 + s + global.separator + s2 + '<span id="imagePreviewSize">' + scaled.width + ' x ' + scaled.height + '</span>';
+					img.src = r.target.result;
+					ui.css(disp, 'height', disp.clientWidth + 'px');
+					if (image.naturalWidth > image.naturalHeight) {
+						ui.css(img, 'max-height', '100%');
+						if (image.naturalWidth > disp.clientWidth)
+							ui.css(img, 'margin-left', -((Math.min(disp.clientHeight / image.naturalHeight, 1) * image.naturalWidth - disp.clientWidth) / 2) + 'px');
+					} else {
+						ui.css(img, 'max-width', '100%');
+						if (image.naturalHeight > disp.clientHeight)
+							ui.css(img, 'margin-top', -((Math.min(disp.clientWidth / image.naturalWidth, 1) * image.naturalHeight - disp.clientHeight) / 2) + 'px');
+					}
+					new DragObject(img).ondrag = function (event, delta) {
+						if (parseInt(delta.y) != 0) {
+							var y = parseInt(ui.cssValue(img, 'margin-top')) + delta.y;
+							if (y < 1 && y > -(img.clientHeight - disp.clientHeight))
+								ui.css(img, 'margin-top', y + 'px');
+						}
+						if (parseInt(delta.x) != 0) {
+							var x = parseInt(ui.cssValue(img, 'margin-left')) + delta.x;
+							if (x < 1 && x > -(img.clientWidth - disp.clientWidth))
+								ui.css(img, 'margin-left', x + 'px');
+						}
+					};
+					ui.on(img, 'touchmove', function (event) {
+						var d = formFunc.svg.previewCalculateDistance(event);
+						if (d) {
+							var zoom = Math.sign(formFunc.dist - d) * 5;
+							if (zoom > 0)
+								zoom /= event.scale;
+							else
+								zoom *= event.scale;
+							formFunc.svg.zoom(event, zoom);
+							formFunc.dist = d;
+						}
+					});
+					ui.on(img, 'touchstart', function (event) {
+						var d = formFunc.svg.previewCalculateDistance(event);
+						if (d)
+							formFunc.dist = d;
+					});
+				};
+				image.src = r.target.result;
+			}
+		};
+		reader.readAsDataURL(f);
+	}
+	remove() {
+		var e = formFunc.svg.fieldId.get();
+		if (e) {
+			e.value = '';
+			ui.attr(e, 'rotateImage', 0);
+			var ePrev = formFunc.svg.fieldId.get('_disp');
+			ui.html(ePrev, '<span>' + (e.getAttribute('hint') ? e.getAttribute('hint') : ui.l('fileUpload.select')) + '</span>');
+			ePrev.style.zIndex = null;
+			ePrev.style.height = null;
+			formFunc.svg.fieldId.get('_icon').style.display = '';
+			ui.css('#popupSendImage', 'display', 'none');
+			if (!global.isBrowser()) {
+				formFunc.svg.fieldId.get('_appInput').style.display = 'block';
+				ePrev.style.display = 'none';
+			}
+		}
+	}
+	rotate(img) {
+		if (!img.name)
+			img = img.nextSibling;
+		var canvas = document.createElement('canvas'), w = img.naturalWidth, h = img.naturalHeight;
+		canvas.width = h;
+		canvas.height = w;
+		var ctx = canvas.getContext('2d');
+		var image = new Image();
+		image.src = img.src;
+		image.onload = function () {
+			var wh = ui.q('#imagePreviewSize').innerHTML.split('x');
+			ctx.clearRect(0, 0, w, h);
+			ctx.rotate(0.5 * Math.PI);
+			ctx.translate(0, -h);
+			ctx.drawImage(image, 0, 0, w, h);
+			img.src = canvas.toDataURL('image/jpeg', 1);
+			var e = ui.q('[name="' + img.name.substring(0, img.name.length - 7) + '"]');
+			ui.attr(e, 'rotateImage', (90 + parseInt(e.getAttribute('rotateImage'), 10)) % 360);
+			ui.q('#imagePreviewSize').innerHTML = wh[1].trim() + ' x ' + wh[0].trim();
+		};
+	}
+	scale(image, x, y, w, h) {
+		var canvas = document.createElement('canvas'), scale = 1, wOrg, hOrg;
+		var ctx = canvas.getContext('2d'), max = 800;
+		if (w) {
+			wOrg = w;
+			hOrg = h;
+		} else {
+			x = 0;
+			y = 0;
+			wOrg = image.naturalWidth;
+			hOrg = image.naturalHeight;
+			w = wOrg;
+			h = hOrg;
+		}
+		if (w > h)
+			scale = max / h;
+		else
+			scale = max / w;
+		w = scale * w;
+		h = scale * h;
+		if (w > max) {
+			wOrg = max / scale;
+			w = max;
+		} else if (h > max) {
+			hOrg = max / scale;
+			h = max;
+		}
+		canvas.width = max;
+		canvas.height = max;
+		ctx.fillStyle = 'white';
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		ctx.drawImage(image, x, y, wOrg, hOrg, 0, 0, w, h);
+		return { data: canvas.toDataURL('image/jpeg', 0.8), width: parseInt(w + 0.5), height: parseInt(h + 0.5) };
+	}
+	zoom(event, delta) {
+		var e = event.target;
+		if (e.nodeName != 'IMG') {
+			e = e.parentNode;
+			for (var i = 0; i < e.children.length; i++)
+				if (e.children[i].nodeName == 'IMG') {
+					e = e.children[i];
+					break;
+				}
+		}
+		if (e && e.nodeName == 'IMG' && e.getAttribute('name') && e.getAttribute('name').indexOf('Preview') > 0) {
+			var style = ('' + ui.cssValue(e, 'max-width')).indexOf('%') > 0 ? 'max-width' : 'max-height';
+			var windowSize = style == 'max-width' ? e.parentNode.clientWidth : e.parentNode.clientHeight;
+			var imageSize = style == 'max-width' ? e.naturalWidth : e.naturalHeight;
+			var zoom = parseFloat(ui.cssValue(e, style)) - delta;
+			if (zoom < 100)
+				zoom = 100;
+			else if (zoom / 100 * windowSize > imageSize)
+				zoom = imageSize / windowSize * 100;
+			zoom = parseInt(zoom);
+			if (zoom == parseInt(ui.cssValue(e, style)))
+				return;
+			ui.css(e, style, zoom + '%');
+			var x = parseInt(ui.cssValue(e, 'margin-left')) + e.clientWidth * delta / 200;
+			if (x + e.clientWidth < e.parentNode.clientWidth)
+				x = e.parentNode.clientWidth - e.clientWidth;
+			else if (x > 0)
+				x = 0;
+			var y = parseInt(ui.cssValue(e, 'margin-top')) + e.clientHeight * delta / 200;
+			if (y + e.clientHeight < e.parentNode.clientHeight)
+				y = e.parentNode.clientHeight - e.clientHeight;
+			else if (y > 0)
+				y = 0;
+			ui.css(e, 'margin-left', x);
+			ui.css(e, 'margin-top', y);
+		}
+	}
+}
+
+customElements.define('x-image', Image);
 
 class Slider extends HTMLElement {
 	constructor() {
@@ -1416,18 +1617,18 @@ thumb val {
 			v[0] = '0';
 		else
 			v[0] = '' + ((parseFloat(v[0]) - min) * delta);
-		var contend = document.createElement('thumb');
-		contend.style.left = v[0] + '%';
+		var element = document.createElement('thumb');
+		element.style.left = v[0] + '%';
 		if (this.getAttribute('type') == 'range') {
-			contend.innerHTML = `<span style="right:0;"><val></val>${ui.l('slider.from')}</span>`;
-			shadow.appendChild(contend);
-			contend = document.createElement('thumb');
-			contend.style.left = v[1] + '%';
-			contend.classList.add('right');
-			contend.innerHTML = `<span style="left:0;"><val></val>${ui.l('slider.until')}</span>`;
+			element.innerHTML = `<span style="right:0;"><val></val>${ui.l('slider.from')}</span>`;
+			shadow.appendChild(element);
+			element = document.createElement('thumb');
+			element.style.left = v[1] + '%';
+			element.classList.add('right');
+			element.innerHTML = `<span style="left:0;"><val></val>${ui.l('slider.until')}</span>`;
 		} else
-			contend.innerHTML = `<span style="right:0;"><val></val>${ui.l(this.getAttribute('label')) ? ui.l(this.getAttribute('label')) : this.getAttribute('label')}</span>`;
-		shadow.appendChild(contend);
+			element.innerHTML = `<span style="right:0;"><val></val>${ui.l(this.getAttribute('label')) ? ui.l(this.getAttribute('label')) : this.getAttribute('label')}</span>`;
+		shadow.appendChild(element);
 		this.initSliderDrag(shadow.querySelectorAll('thumb'));
 	}
 	initSliderDrag(o) {

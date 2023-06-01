@@ -239,7 +239,7 @@ ${ui.l('events.title')}
 		pageHome.initNotificationButton();
 		if (user.contact)
 			ui.html('home item.bluetooth text', ui.l(bluetooth.state == 'on' && user.contact.bluetooth ? 'bluetooth.activated' : 'bluetooth.deactivated'));
-		formFunc.image.replaceSVGs();
+		formFunc.svg.replaceAll();
 		if (user.contact) {
 			ui.q('home homeHeader svg image').setAttribute('x', 770);
 			ui.q('home homeHeader svg image').setAttribute('width', 230);
@@ -376,7 +376,7 @@ ${ui.l('events.title')}
 				var e = document.createElement('div');
 				e.innerHTML = r;
 				ui.q('body').appendChild(e.children[0]);
-				formFunc.image.replaceSVGs();
+				formFunc.svg.replaceAll();
 				initialisation.reposition();
 				if (openIntro)
 					intro.openHint({ desc: 'statisticsCharts', pos: '10%,15em', size: '80%,auto', hinky: 'left:50%;', hinkyClass: 'top' })

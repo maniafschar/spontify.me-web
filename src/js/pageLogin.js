@@ -2,7 +2,6 @@ import { bluetooth } from './bluetooth';
 import { communication, Encryption, FB } from './communication';
 import { geoData } from './geoData';
 import { global } from './global';
-import { hashtags } from './hashtags';
 import { initialisation } from './initialisation';
 import { intro } from './intro';
 import { marketing } from './marketing';
@@ -448,7 +447,7 @@ class pageLogin {
 				if (!user.contact.gender)
 					page1 += '<field><label>' + ui.l('gender') + '</label><value><x-checkbox type="radio" name="gender" value="2" label="' + ui.l('female') + '"></x-checkbox><x-checkbox type="radio" name="gender" value="1" label="' + ui.l('male') + '"></x-checkbox><x-checkbox type="radio" name="gender" value="3" label="' + ui.l('divers') + '"></x-checkbox></value></field>';
 				if (!user.contact.skills && !user.contact.skillsText)
-					page2 = '<field><label>' + ui.l('settings.skillDialog') + '</label><value><textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="ui.adjustTextarea(this)" style="height:2em;"></textarea><hashtags>' + hashtags.display() + '</hashtags></value></field>';
+					page2 = '<field><label>' + ui.l('settings.skillDialog') + '</label><value><x-hashtags></x-hashtags></value></field>';
 				if (page1 || page2) {
 					if (page1 && page2) {
 						page1 = '<tabHeader><tab style="width:50%;" class="tabActive" i="profile" onclick="pageLogin.selectTab(&quot;profile&quot;)">' + ui.l('settings.tabProfile') + '</tab><tab style="width:50%;" onclick="pageLogin.selectTab(&quot;skills&quot;)" i="skills">' + ui.l('settings.tabSkills') + '</tab></tabHeader><tabBody><div><div>' + page1;
@@ -554,17 +553,16 @@ class pageLogin {
 			}
 			d.birthday = e.value;
 		}
-		if (ui.q('hint tabBody') && !ui.q('hint textarea[name="hashtagsDisp"]').value && (!ui.q('hint tabBody').marginLeft || ui.q('hint tabBody').marginLeft.indexOf('-') < 0)) {
+		if (ui.q('hint tabBody') && !ui.q('hint x-hashtags').getAttribute('ids') && (!ui.q('hint tabBody').marginLeft || ui.q('hint tabBody').marginLeft.indexOf('-') < 0)) {
 			pageLogin.selectTab('skills');
 			return;
 		}
 		if (ui.q('hint x-checkbox[name="gender"][checked="true"]'))
 			d.gender = ui.q('hint x-checkbox[name="gender"][checked="true"]').value;
-		e = hashtags.convert(ui.q('hint textarea[name="hashtagsDisp"]').value);
-		if (e.category)
-			d.skills = e.category;
-		if (e.hashtags)
-			d.skillsText = e.hashtags;
+		if (ui.q('hint x-hashtags').getAttribute('ids'))
+			d.skills = ui.q('hint x-hashtags').getAttribute('ids');
+		if (ui.q('hint x-hashtags').getAttribute('text'))
+			d.skillsText = ui.q('hint x-hashtags').getAttribute('text');
 		e = formFunc.getForm('hint');
 		if (e.values.image)
 			d.image = e.values.image;

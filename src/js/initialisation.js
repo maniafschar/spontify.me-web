@@ -18,7 +18,7 @@ class initialisation {
 	static hideStatusBar = true;
 	static recoverInvoked = false;
 	static init() {
-		formFunc.image.replaceSVGs();
+		formFunc.svg.replaceAll();
 		var f = function () {
 			if (ui.cssValue('content > *', 'display')) {
 				ui.css('preloader', 'opacity', 0);
@@ -153,10 +153,6 @@ class initialisation {
 				return;
 			if (!ui.classContains(e, 'sendButton') && !ui.classContains(e, 'quote') && !ui.parents(e, 'chatConversation'))
 				document.activeElement.blur();
-		});
-		ui.on(window, 'wheel', function (event) {
-			if (event.ctrlKey)
-				formFunc.image.zoom(event, event.deltaY);
 		});
 		ui.on(window, 'touchmove', function (event) {
 			if (event.touches.length > 1)

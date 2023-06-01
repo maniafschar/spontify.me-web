@@ -68,7 +68,7 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 						e.scrollTop = 0;
 					lists.setListHint(divID);
 				}
-				formFunc.image.replaceSVGs();
+				formFunc.svg.replaceAll();
 				geoData.updateCompass();
 			}
 		});
@@ -106,7 +106,7 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 				v.map = '<map style="display:none;"></map><buttontext class="bgColor map" onclick="pageLocation.searchFromMap()">' + ui.l('search.map') + '</buttontext>';
 			v.title = ui.l(id + '.title').toLowerCase();
 			e.innerHTML = lists.template(v);
-			formFunc.image.replaceSVGs();
+			formFunc.svg.replaceAll();
 			if (id == 'contacts')
 				ui.swipe('contacts>listBody', function (dir) {
 					if (dir == 'left')

@@ -76,7 +76,7 @@ class details {
 						ui.navigation.goTo('detail', false);
 					}
 					formFunc.initFields(ui.q('detail'));
-					formFunc.image.replaceSVGs();
+					formFunc.svg.replaceAll();
 					d.scrollTop = 0;
 					ui.css(d, 'opacity', 1);
 					geoData.headingWatch();

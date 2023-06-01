@@ -696,8 +696,9 @@ inputFile rotate {
 
 select,
 textarea,
-input {
-	-webkit-appearance: none;
+input,
+x-hashtags::part(textarea) {
+	appearance: none;
 	position: relative;
 	font-size: 1em;
 	font-weight: normal;
@@ -745,7 +746,8 @@ popup .multiple {
 	color: rgba(0, 0, 0, 0.5);
 }
 
-textarea {
+textarea,
+x-hashtags::part(textarea) {
 	height: 5em;
 	padding-top: 0.5em;
 	overflow-y: auto;
@@ -979,14 +981,25 @@ settings qrcode {
 	position: relative;
 }
 
-settings field hashtags>div label,
-search hashtags>div label {
-	color: rgba(255, 255, 255, 0.4);
+x-hashtags {
+	position: relative;
+	display: block;
 }
 
-settings field hashtags>div label.selected,
-search hashtags>div label.selected {
-	color: white;
+mapButton {
+	font-size: 2em;
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 0.2em;
+	cursor: pointer;
+	z-index: 1;
+	color: black;
+}
+
+search hashtagButton {
+	top: 1.6em;
+	right: 0.5em;
 }
 
 locationPicker {
@@ -1069,87 +1082,10 @@ field.category value {
 	text-align: center;
 }
 
-hashtags {
-	position: relative;
-	display: block;
-	text-align: center;
-	margin-top: 0.25em;
-	height: 17em;
-}
-
-hashtags buttontext {
-	padding-top: 0.5em;
-}
-
-hashtags category {
-	width: 30%;
-	position: absolute;
-	left: 0;
-}
-
-hashtags label {
-	cursor: pointer;
-	display: block;
-	position: relative;
-	padding: 0.25em 0.75em;
-	text-align: left;
-	overflow-x: hidden;
-	text-overflow: ellipsis;
-	border-radius: 1em;
-	cursor: pointer;
-}
-
-hashtags>div {
-	margin-left: 30%;
-	display: none;
-	overflow-y: auto;
-	max-height: 17em;
-}
-
-hashtags>div label {
-	color: rgba(0, 0, 0, 0.4);
-}
-
-hashtags>div label.selected {
-	color: black;
-}
-
-hashtags category label.selected {
-	font-weight: bold;
-}
-
-hashtags category label.selected::after {
-	content: '>';
-	position: absolute;
-	right: 0;
-	top: 0.25em;
-}
-
-mapButton,
-hashtagButton {
-	font-size: 2em;
-	position: absolute;
-	right: 0;
-	top: 0;
-	padding: 0.2em;
-	cursor: pointer;
-	z-index: 1;
-	color: black;
-}
-
-search hashtagButton {
-	top: 1.6em;
-	right: 0.5em;
-}
-
 mapButton {
 	position: relative;
 	float: right;
 	margin-top: -1.05em;
-}
-
-hashtagButton::before {
-	content: '+';
 }
 
 dialogButtons {

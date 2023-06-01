@@ -6,7 +6,6 @@ import { user } from "./user";
 import { lists } from "./lists";
 import { pageEvent } from "./pageEvent";
 import { pageLocation } from "./pageLocation";
-import { hashtags } from "./hashtags";
 
 export { pageSearch };
 
@@ -34,9 +33,7 @@ class pageSearch {
 			global.template`<form onsubmit="return false">
 <x-checkbox label="${ui.l('search.matches')}" name="matches" ${v.matches}></x-checkbox>
 <label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
-<hashtagButton onclick="ui.toggleHeight(&quot;search div.contacts hashtags&quot;)"></hashtagButton>
-<input type="text" name="keywords" maxlength="50" onkeyup="hashtags.synchonizeTags(this)" placeholder="${ui.l('keywords')}" ${v.keywords}/>
-<hashtags style="display:none;">${v.hashtagSelection}</hashtags>
+<x-hashtags text="${v.keywords}"></x-hashtags>
 <explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
 <errorHint></errorHint>
 <dialogButtons>
@@ -46,10 +43,9 @@ class pageSearch {
 		getFields() {
 			var v = {};
 			if (pageSearch.contacts.fieldValues.keywords)
-				v.keywords = ' value="' + pageSearch.contacts.fieldValues.keywords + '"';
+				v.keywords = pageSearch.contacts.fieldValues.keywords;
 			if (pageSearch.contacts.fieldValues.matches == 'on')
 				v.matches = ' checked="true"';
-			v.hashtagSelection = hashtags.display();
 			return pageSearch.contacts.template(v);
 		},
 		getMatches() {
@@ -82,10 +78,9 @@ class pageSearch {
 			var s = '', s2 = '';
 			if (ui.q('search tabBody div.contacts [name="matches"][checked="true"]'))
 				s = ' and ' + pageSearch.contacts.getMatches();
-			var v = ui.val('search tabBody div.contacts [name="keywords"]').trim();
+			var v = ui.val('search tabBody div.contacts x-hashtags').getAttribute('text');
 			if (v) {
-				var t = hashtags.convert(v);
-				v = v.replace(/'/g, '\'\'').split(' ');
+				v = v.replace(/'/g, '\'\'').split('|');
 				s += ' and (';
 				for (var i = 0; i < v.length; i++) {
 					if (v[i]) {
@@ -94,10 +89,11 @@ class pageSearch {
 					}
 				}
 				s = s.substring(0, s.length - 4);
-				if (t.category)
-					s += (s ? ' or ' : '') + global.getRegEx('contact.skills', t.category);
-				s += ')';
 			}
+			v = ui.val('search tabBody div.contacts x-hashtags').getAttribute('ids');
+			if (v)
+				s += (s ? ' or ' : '') + global.getRegEx('contact.skills', v);
+			s += ')';
 			return 'contact.id<>' + user.contact.id + s;
 		},
 		search() {
@@ -119,9 +115,7 @@ class pageSearch {
 			global.template`<form onsubmit="return false">
 <x-checkbox label="${ui.l('search.matchesEvent')}" name="matches" ${v.matches}></x-checkbox>
 <label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
-<hashtagButton onclick="ui.toggleHeight(&quot;search div.events hashtags&quot;)"></hashtagButton>
-<input type="text" name="keywords" maxlength="50" onkeyup="hashtags.synchonizeTags(this)" placeholder="${ui.l('keywords')}" ${v.keywords}/>
-<hashtags style="display:none;">${v.hashtagSelection}</hashtags>
+<x-hashtags text="${v.keywords}"></x-hashtags>
 <explain class="searchKeywordHint">${ui.l('search.hintEvent')}</explain>
 <errorHint></errorHint>
 <dialogButtons>
@@ -131,10 +125,9 @@ class pageSearch {
 		getFields() {
 			var v = {};
 			if (pageSearch.events.fieldValues.keywords)
-				v.keywords = ' value="' + pageSearch.events.fieldValues.keywords + '"';
+				v.keywords = pageSearch.events.fieldValues.keywords;
 			if (pageSearch.events.fieldValues.matches == 'on')
 				v.matches = ' checked="true"';
-			v.hashtagSelection = hashtags.display();
 			return pageSearch.events.template(v);
 		},
 		getMatches() {
@@ -164,12 +157,12 @@ class pageSearch {
 			return search;
 		},
 		getSearch() {
-			var v = ui.val('search tabBody div.events [name="keywords"]').trim(), s = '';
+			var v = ui.val('search tabBody div.contacts x-hashtags').getAttribute('text'), s = '';
 			if (v) {
-				var t = hashtags.convert(v);
-				v = v.replace(/'/g, '\'\'').split(' ');
+				v = v.replace(/'/g, '\'\'').split('|');
+				s += ' and (';
 				for (var i = 0; i < v.length; i++) {
-					if (v[i].trim()) {
+					if (v[i]) {
 						v[i] = v[i].trim().toLowerCase();
 						var l = ') like \'%' + v[i].trim().toLowerCase() + '%\' or LOWER(';
 						s += '((contact.search=true or event.price>0) and (LOWER(contact.pseudonym' + l + 'contact.description' + l;
@@ -178,11 +171,13 @@ class pageSearch {
 						s = s.substring(0, s.lastIndexOf(' or LOWER')) + ') or ';
 					}
 				}
-				if (t.category)
-					s = (s ? s.substring(0, s.length - 4) + ' or ' : '') + global.getRegEx('event.skills', t.category) + ' or ';
-				if (s)
-					s = '(' + s.substring(0, s.length - 4) + ')';
+				s = s.substring(0, s.length - 4);
 			}
+			v = ui.val('search tabBody div.contacts x-hashtags').getAttribute('ids');
+			if (v)
+				s += (s ? ' or ' : '') + global.getRegEx('event.skills', v);
+			if (s)
+				s = '(' + s.substring(0, s.length - 4) + ')';
 			if (ui.q('search tabBody div.events [name="matches"][checked="true"]'))
 				s += (s ? ' and ' : '') + pageSearch.events.getMatches();
 			var d = new Date();
@@ -250,7 +245,7 @@ class pageSearch {
 			if (pageSearch.locations.fieldValues.favorites)
 				v.favorites = ' checked="checked"';
 			if (pageSearch.locations.fieldValues.keywords)
-				v.keywords = ' value="' + pageSearch.locations.fieldValues.keywords + '"';
+				v.keywords = pageSearch.locations.fieldValues.keywords;
 			return pageSearch.locations.template(v);
 		},
 		getSearch() {
@@ -332,8 +327,6 @@ class pageSearch {
 			ui.q('search tabBody div.locations').innerHTML = pageSearch.locations.getFields() + '<listResults></listResults>';
 			formFunc.initFields(ui.q('search'));
 			pageSearch.selectTab('contacts');
-			hashtags.synchonizeTags(ui.q('search div.contacts input[name="keywords"]'));
-			hashtags.synchonizeTags(ui.q('search div.events input[name="keywords"]'));
 		}
 	}
 	static repeatSearch() {

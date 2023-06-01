@@ -351,7 +351,7 @@ class pageChat {
 				e.innerHTML = s;
 				if (ui.cssValue(e, 'display') == 'none')
 					e.removeAttribute('h');
-				formFunc.image.replaceSVGs();
+				formFunc.svg.replaceAll();
 			}
 		};
 		f.call();
@@ -652,7 +652,7 @@ class pageChat {
 			ui.html('popupHint', ui.l('chat.groupNoInput'));
 	}
 	static sendChatImage() {
-		if (formFunc.image.hasImage()) {
+		if (formFunc.svg.hasImage()) {
 			var id = ui.q('chat').getAttribute('i');
 			var v = formFunc.getForm('popup form');
 			v.classname = 'ContactChat';

@@ -19,7 +19,6 @@ import { geoData } from './geoData';
 import { bluetooth } from './bluetooth';
 import { pageEvent } from './pageEvent';
 import { pageSearch } from './pageSearch';
-import { hashtags } from './hashtags';
 import { Video } from './video';
 import { marketing } from './marketing';
 
@@ -46,7 +45,6 @@ window.FB = FB;
 window.ratings = ratings;
 window.geoData = geoData;
 window.bluetooth = bluetooth;
-window.hashtags = hashtags;
 window.Strings = Strings;
 window.groups = groups;
 window.Video = Video;

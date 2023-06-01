@@ -2,14 +2,13 @@ import { bluetooth } from './bluetooth';
 import { communication } from './communication';
 import { global } from './global';
 import { initialisation } from './initialisation';
-import { Contact, Event, Location, model } from './model';
+import { Contact, Location, model } from './model';
 import { pageContact } from './pageContact';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 import { details } from './details';
 import { pageLocation } from './pageLocation';
 import { pageInfo } from './pageInfo';
-import { hashtags } from './hashtags';
 import QRCodeStyling from 'qr-code-styling';
 import { pageLogin } from './pageLogin';
 import { lists } from './lists';
@@ -116,9 +115,7 @@ class pageSettings {
 		global.template`<field>
 	<label>${ui.l('settings.skills')}</label>
 	<value>
-		<hashtagButton onclick="ui.toggleHeight(&quot;settings hashtags&quot;)"></hashtagButton>
-		<textarea name="hashtagsDisp" maxlength="250" transient="true" onkeyup="hashtags.synchonizeTags(this)" style="height:2em;">${v.hashtagsDisp}</textarea>
-		<hashtags style="display:none;">${v.hashtagSelection}</hashtags>
+		<x-hashtags ids="${v.skills}" text="${v.skillsText}"></x-hashtags>
 	</value>
 </field>
 <field>
@@ -279,7 +276,8 @@ ${v.info}`;
 		s += global.separatorTech + (ui.q('settings x-checkbox[name="notificationVisitProfile"][checked="true"]') ? 1 : 0);
 		s += global.separatorTech + (ui.q('settings x-checkbox[name="notificationVisitLocation"][checked="true"]') ? 1 : 0);
 		s += global.separatorTech + (ui.q('settings x-checkbox[name="notificationMarkEvent"][checked="true"]') ? 1 : 0);
-		s += global.separatorTech + ui.val('settings textarea[name="hashtagsDisp"]');
+		s += global.separatorTech + ui.attr('settings x-hashtags', 'ids');
+		s += global.separatorTech + ui.attr('settings x-hashtags', 'text');
 		return s;
 	}
 	static getMultiplePopupValues(id) {
@@ -328,13 +326,13 @@ ${v.info}`;
 					v.gender3 = v['contact.gender'] == 3 ? ' checked="true"' : '';
 					v.search = v['contact.search'] ? ' checked="true"' : '';
 					v.teaser = v['contact.teaser'] ? ' checked="true"' : '';
-					v.hashtagsDisp = (hashtags.ids2Text(v['contact.skills']) + ' ' + (v['contact.skillsText'] || '')).trim();
+					v.skills = v['contact.skills'];
+					v.skillsText = v['contact.skillsText'];
 					if (v['contact.search'] == 1)
 						v.search = ' checked="true"';
 					if (user.contact.imageList)
 						v.image = 'src="' + global.serverImg + user.contact.imageList + '"';
 					v.settings1 = pageSettings.templateSettings1(v);
-					v.hashtagSelection = hashtags.display();
 					if (user.contact.ageMale)
 						v.genderInterest1 = 'checked="true"';
 					if (user.contact.ageFemale)
@@ -365,8 +363,6 @@ ${v.info}`;
 						ui.css(ui.q('#settingsInterest1').nextElementSibling, 'display', 'none');
 					if (!v['contact.ageDivers'])
 						ui.css(ui.q('#settingsInterest3').nextElementSibling, 'display', 'none');
-					if (v.hashtagsDisp)
-						setTimeout(function () { hashtags.synchonizeTags(ui.q('settings textarea[name="hashtagsDisp"]')); }, 500);
 					pageSettings.currentSettings = pageSettings.getCurrentSettings();
 					if (exec)
 						exec.call()
@@ -438,8 +434,8 @@ ${v.info}`;
 		user.contact.pseudonym = ui.val('settings input[name="pseudonym"]');
 		user.contact.gender = ui.val('settings x-checkbox[name="gender"][checked="true"]');
 		user.contact.birthday = ui.val('settings input[name="birthday"]');
-		user.contact.skills = hashtags.convert(ui.val('settings textarea[name="hashtagsDisp"]'));
-		user.contact.skillsText = user.contact.skills.hashtags;
+		user.contact.skills = ui.attr('settings x-hashtags', 'ids');
+		user.contact.skillsText = ui.attr('settings x-hashtags', 'text');
 		user.contact.skills = user.contact.skills.category;
 		user.contact.age = user.contact.birthday ? pageContact.getBirthday(user.contact.birthday).age : null;
 		if (ui.q('[name="image_disp"] img')) {
@@ -451,13 +447,13 @@ ${v.info}`;
 					user.contact.image = r['contact.image'];
 					user.contact.imageList = r['contact.imageList'];
 					pageHome.init(true);
-					var e = formFunc.image.fieldId.get('_icon');
+					var e = formFunc.svg.fieldId.get('_icon');
 					if (e)
 						e.setAttribute('src', global.serverImg + user.contact.imageList);
 				}
 			});
 		}
-		formFunc.image.remove();
+		formFunc.svg.remove();
 		pageSettings.currentSettings = pageSettings.getCurrentSettings();
 		bluetooth.reset();
 		if (goToID) {
@@ -549,9 +545,8 @@ ${v.info}`;
 			ui.q('#settingsInterest3').value = '';
 		ui.q('textarea[name="description"]').value = ui.val('textarea[name="description"]').replace(/</g, '&lt;');
 		ui.q('input[name="email"]').value = ui.val('input[name="email"]').trim().toLowerCase();
-		var t = hashtags.convert(ui.q('settings textarea[name="hashtagsDisp"]').value);
-		ui.q('settings input[name="skills"]').value = t.category;
-		ui.q('settings input[name="skillsText"]').value = t.hashtags;
+		ui.q('settings input[name="skills"]').value = ui.attr('settings x-hashtags', 'ids');
+		ui.q('settings input[name="skillsText"]').value = ui.attr('settings x-hashtags', 'text');
 		user.save({ webCall: 'pageSettings.save(goToID,saveNewEmail)', ...formFunc.getForm('settings tabBody') }, () => pageSettings.postSave(goToID));
 	}
 	static selectTab(i) {

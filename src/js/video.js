@@ -112,7 +112,7 @@ class Video {
 		if (!ui.q('videoCall').innerHTML) {
 			ui.q('videoCall').innerHTML = Video.template();
 			ui.q('videoCall streams').innerHTML = Video.templateStreams();
-			formFunc.image.replaceSVGs();
+			formFunc.svg.replaceAll();
 			ui.swipe('videoCall streams', dir => {
 				ui.q('videoCall streams').style.left = dir == 'left' ? '-100%' : '';
 			});
