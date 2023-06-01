@@ -697,7 +697,7 @@ inputFile rotate {
 select,
 textarea,
 input,
-x-hashtags::part(textarea) {
+input-hashtags::part(textarea) {
 	appearance: none;
 	position: relative;
 	font-size: 1em;
@@ -747,7 +747,7 @@ popup .multiple {
 }
 
 textarea,
-x-hashtags::part(textarea) {
+input-hashtags::part(textarea) {
 	height: 5em;
 	padding-top: 0.5em;
 	overflow-y: auto;
@@ -981,7 +981,7 @@ settings qrcode {
 	position: relative;
 }
 
-x-hashtags {
+input-hashtags {
 	position: relative;
 	display: block;
 }
@@ -1109,7 +1109,7 @@ dialogButtons {
 	color: rgba(0, 0, 0, 0.3);
 }
 
-x-slider {
+input-slider {
 	position: relative;
 	height: 1.85em;
 	margin: 0 1.25em 1.85em 1.25em;

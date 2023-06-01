@@ -42,17 +42,17 @@ class pageEvent {
 <field>
 	<label style="padding-top:0;">${ui.l('events.hashtags')}</label>
 	<value>
-		<x-hashtags ids="${v.skills}" text="${v.skillsText}"></x-hashtags>
+		<input-hashtags ids="${v.skills}" text="${v.skillsText}"></input-hashtags>
 	</value>
 </field>
 <field class="noWTDField">
 	<label>${ui.l('type')}</label>
 	<value>
-		<x-checkbox type="radio" name="type" value="o" label="${ui.l('events.type_o')}" onclick="pageEvent.setForm()" ${v.type_o}></x-checkbox>
-		<x-checkbox type="radio" name="type" value="w1" label="${ui.l('events.type_w1')}" onclick="pageEvent.setForm()" ${v.type_w1}></x-checkbox>
-		<x-checkbox type="radio" name="type" value="w2" label="${ui.l('events.type_w2')}" onclick="pageEvent.setForm()" ${v.type_w2}></x-checkbox>
-		<x-checkbox type="radio" name="type" value="m" label="${ui.l('events.type_m')}" onclick="pageEvent.setForm()" ${v.type_m}></x-checkbox>
-		<x-checkbox type="radio" name="type" value="y" label="${ui.l('events.type_y')}" onclick="pageEvent.setForm()" ${v.type_y}></x-checkbox>
+		<input-checkbox type="radio" name="type" value="o" label="${ui.l('events.type_o')}" onclick="pageEvent.setForm()" ${v.type_o}></input-checkbox>
+		<input-checkbox type="radio" name="type" value="w1" label="${ui.l('events.type_w1')}" onclick="pageEvent.setForm()" ${v.type_w1}></input-checkbox>
+		<input-checkbox type="radio" name="type" value="w2" label="${ui.l('events.type_w2')}" onclick="pageEvent.setForm()" ${v.type_w2}></input-checkbox>
+		<input-checkbox type="radio" name="type" value="m" label="${ui.l('events.type_m')}" onclick="pageEvent.setForm()" ${v.type_m}></input-checkbox>
+		<input-checkbox type="radio" name="type" value="y" label="${ui.l('events.type_y')}" onclick="pageEvent.setForm()" ${v.type_y}></input-checkbox>
 	</value>
 </field>
 <field>
@@ -104,7 +104,7 @@ class pageEvent {
 <field class="unpaid noWTDField">
 	<label>${ui.l('events.confirmLabel')}</label>
 	<value>
-		<x-checkbox name="eventconfirm" transient="true" label="${ui.l('events.confirm')}" value="1" ${v.confirm}></x-checkbox>
+		<input-checkbox name="eventconfirm" transient="true" label="${ui.l('events.confirm')}" value="1" ${v.confirm}></input-checkbox>
 	</value>
 </field>
 <dialogButtons style="margin-bottom:0;">
@@ -873,7 +873,7 @@ class pageEvent {
 		var start = ui.q('popup input[name="startDate"]');
 		var end = ui.q('popup input[name="endDate"]');
 		var text = ui.q('popup [name="description"]');
-		var tags = ui.q('popup x-hashtags');
+		var tags = ui.q('popup input-hashtags');
 		var id = ui.q('popup [name="id"]').value;
 		ui.html('popup popupHint', '');
 		formFunc.resetError(start);
@@ -916,8 +916,8 @@ class pageEvent {
 				}
 			}
 		}
-		ui.q('popup input[name="skills"]').value = ui.q('popup x-hashtags').getAttribute('ids');
-		ui.q('popup input[name="skillsText"]').value = ui.q('popup x-hashtags').getAttribute('text');
+		ui.q('popup input[name="skills"]').value = ui.q('popup input-hashtags').getAttribute('ids');
+		ui.q('popup input[name="skillsText"]').value = ui.q('popup input-hashtags').getAttribute('text');
 		v = formFunc.getForm('popup form');
 		if (!v.values.price)
 			v.values.price = 0;
@@ -947,8 +947,8 @@ class pageEvent {
 		});
 	}
 	static saveDraft() {
-		ui.q('popup input[name="skills"]').value = ui.q('popup x-hashtags').getAttribute('ids');
-		ui.q('popup input[name="skillsText"]').value = ui.q('popup x-hashtags').getAttribute('text');
+		ui.q('popup input[name="skills"]').value = ui.q('popup input-hashtags').getAttribute('ids');
+		ui.q('popup input[name="skillsText"]').value = ui.q('popup input-hashtags').getAttribute('text');
 		user.set('event', formFunc.getForm('popup form'));
 	}
 	static selectVideoCall(e) {

@@ -31,9 +31,9 @@ class pageSearch {
 		fieldValues: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
-<x-checkbox label="${ui.l('search.matches')}" name="matches" ${v.matches}></x-checkbox>
+<input-checkbox label="${ui.l('search.matches')}" name="matches" ${v.matches}></input-checkbox>
 <label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
-<x-hashtags text="${v.keywords}"></x-hashtags>
+<input-hashtags text="${v.keywords}"></input-hashtags>
 <explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
 <errorHint></errorHint>
 <dialogButtons>
@@ -78,7 +78,7 @@ class pageSearch {
 			var s = '', s2 = '';
 			if (ui.q('search tabBody div.contacts [name="matches"][checked="true"]'))
 				s = ' and ' + pageSearch.contacts.getMatches();
-			var v = ui.val('search tabBody div.contacts x-hashtags').getAttribute('text');
+			var v = ui.q('search tabBody div.contacts input-hashtags').getAttribute('text');
 			if (v) {
 				v = v.replace(/'/g, '\'\'').split('|');
 				s += ' and (';
@@ -90,7 +90,7 @@ class pageSearch {
 				}
 				s = s.substring(0, s.length - 4);
 			}
-			v = ui.val('search tabBody div.contacts x-hashtags').getAttribute('ids');
+			v = ui.q('search tabBody div.contacts input-hashtags').getAttribute('ids');
 			if (v)
 				s += (s ? ' or ' : '') + global.getRegEx('contact.skills', v);
 			s += ')';
@@ -113,9 +113,9 @@ class pageSearch {
 		fieldValues: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
-<x-checkbox label="${ui.l('search.matchesEvent')}" name="matches" ${v.matches}></x-checkbox>
+<input-checkbox label="${ui.l('search.matchesEvent')}" name="matches" ${v.matches}></input-checkbox>
 <label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
-<x-hashtags text="${v.keywords}"></x-hashtags>
+<input-hashtags text="${v.keywords}"></input-hashtags>
 <explain class="searchKeywordHint">${ui.l('search.hintEvent')}</explain>
 <errorHint></errorHint>
 <dialogButtons>
@@ -157,7 +157,7 @@ class pageSearch {
 			return search;
 		},
 		getSearch() {
-			var v = ui.val('search tabBody div.contacts x-hashtags').getAttribute('text'), s = '';
+			var v = ui.q('search tabBody div.contacts input-hashtags').getAttribute('text'), s = '';
 			if (v) {
 				v = v.replace(/'/g, '\'\'').split('|');
 				s += ' and (';
@@ -173,7 +173,7 @@ class pageSearch {
 				}
 				s = s.substring(0, s.length - 4);
 			}
-			v = ui.val('search tabBody div.contacts x-hashtags').getAttribute('ids');
+			v = ui.q('search tabBody div.contacts input-hashtags').getAttribute('ids');
 			if (v)
 				s += (s ? ' or ' : '') + global.getRegEx('event.skills', v);
 			if (s)
@@ -231,7 +231,7 @@ class pageSearch {
 		fieldValues: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
-<x-checkbox label="${ui.l('search.favorites')}" name="favorites" ${v.favorites}></x-checkbox>
+<input-checkbox label="${ui.l('search.favorites')}" name="favorites" ${v.favorites}></input-checkbox>
 <label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
 <input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
@@ -263,7 +263,7 @@ class pageSearch {
 				if (s)
 					s = '(' + s.substring(0, s.length - 4) + ')';
 			}
-			if (ui.val('search tabBody div.locations [name="favorites"][checked="true"]'))
+			if (ui.q('search tabBody div.locations [name="favorites"][checked="true"]'))
 				s += (s ? ' and ' : '') + 'locationFavorite.favorite=true';
 			return s;
 		},

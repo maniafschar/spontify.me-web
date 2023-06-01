@@ -98,14 +98,14 @@ class ui {
 		if (compare.skills) {
 			compareSkills = compare.skills.split('|');
 			for (var i = 0; i < compareSkills.length; i++)
-				add2List(UiHashtags.ids2Text(compareSkills[i]), userSkills.indexOf('|' + compareSkills[i] + '|') > -1, result.skills);
+				add2List(InputHashtags.ids2Text(compareSkills[i]), userSkills.indexOf('|' + compareSkills[i] + '|') > -1, result.skills);
 		}
 		if (userSkills) {
 			userSkills = userSkills.split('|');
 			compareSkills = compare.skills ? '|' + compare.skills + '|' : '';
 			for (var i = 0; i < userSkills.length; i++) {
 				if (compareSkills.indexOf('|' + userSkills[i] + '|') < 0)
-					add2List(UiHashtags.ids2Text(userSkills[i]), 'fade', result.skills);
+					add2List(InputHashtags.ids2Text(userSkills[i]), 'fade', result.skills);
 			}
 		}
 		userSkills = user.contact && user.contact.skillsText ? '|' + user.contact.skillsText.toLowerCase() + '|' : '';
@@ -835,7 +835,7 @@ class formFunc {
 			else if (e[i].name)
 				d.values[e[i].name] = e[i].value.replace(/\"/g, '&quot;').replace(/</g, '&lt;');
 		}
-		e = ui.qa(id + ' x-checkbox:not([transient="true"])');
+		e = ui.qa(id + ' input-checkbox:not([transient="true"])');
 		for (var i = 0; i < e.length; i++) {
 			if (e[i].getAttribute('type') == 'radio') {
 				if (e[i].getAttribute('checked') == 'true')
@@ -851,7 +851,7 @@ class formFunc {
 		}
 		for (var k in cb)
 			d.values[k] = cb[k].length > 0 ? cb[k].substring(1) : '';
-		e = ui.qa(id + ' x-slider:not([transient="true"])');
+		e = ui.qa(id + ' input-slider:not([transient="true"])');
 		for (var i = 0; i < e.length; i++)
 			d.values[e[i].name] = e[i].getAttribute('value');
 		return d;
@@ -1043,7 +1043,7 @@ class formFunc {
 	}
 }
 
-class UiHashtags extends HTMLElement {
+class InputHashtags extends HTMLElement {
 	constructor() {
 		super();
 		const shadow = this.attachShadow({ mode: 'closed' });
@@ -1123,7 +1123,7 @@ search hashtags>div label.selected {
 		element.setAttribute('transient', 'true');
 		element.setAttribute('onkeyup', 'this.getRootNode().host.synchonizeTags(this.getRootNode())');
 		element.setAttribute('style', 'height:2em;');
-		element.textContent = UiHashtags.ids2Text(this.getAttribute('ids')) + (this.getAttribute('text') ? ' ' + this.getAttribute('text') : '').trim();
+		element.textContent = InputHashtags.ids2Text(this.getAttribute('ids')) + (this.getAttribute('text') ? ' ' + this.getAttribute('text') : '').trim();
 		shadow.appendChild(element);
 		element = document.createElement('hashtags');
 		element.setAttribute('style', 'display:none;');
@@ -1231,9 +1231,9 @@ search hashtags>div label.selected {
 	}
 }
 
-customElements.define('x-hashtags', UiHashtags);
+customElements.define('input-hashtags', InputHashtags);
 
-class UiCheckbox extends HTMLElement {
+class InputCheckbox extends HTMLElement {
 	constructor() {
 		super();
 		const shadow = this.attachShadow({ mode: 'closed' });
@@ -1284,15 +1284,15 @@ label:hover {
 		if (e.getAttribute('type') == 'radio') {
 			if (e.getAttribute('checked') == 'true' && e.getAttribute('deselect') != 'true')
 				return;
-			ui.attr('x-checkbox[name="' + e.getAttribute('name') + '"][type="radio"]', 'checked', 'false');
+			ui.attr('input-checkbox[name="' + e.getAttribute('name') + '"][type="radio"]', 'checked', 'false');
 		}
 		e.setAttribute('checked', e.getAttribute('checked') == 'true' ? 'false' : 'true');
 	}
 }
 
-customElements.define('x-checkbox', UiCheckbox);
+customElements.define('input-checkbox', InputCheckbox);
 
-class UiImage extends HTMLElement {
+class InputImage extends HTMLElement {
 	constructor() {
 		super();
 		const shadow = this.attachShadow({ mode: 'closed' });
@@ -1566,9 +1566,9 @@ class UiImage extends HTMLElement {
 	}
 }
 
-customElements.define('x-image', UiImage);
+customElements.define('input-image', InputImage);
 
-class UiSlider extends HTMLElement {
+class InputSlider extends HTMLElement {
 	constructor() {
 		super();
 		const shadow = this.attachShadow({ mode: 'closed' });
@@ -1686,7 +1686,7 @@ thumb val {
 	}
 }
 
-customElements.define('x-slider', UiSlider);
+customElements.define('input-slider', InputSlider);
 
 class DragObject {
 	constructor(o) {

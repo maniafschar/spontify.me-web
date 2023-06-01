@@ -102,11 +102,11 @@ ${v.rating}
 </text>
 <text name="block" class="collapsed">
 	<div style="padding:1em 0;">
-		<x-checkbox name="type" value="1" label="${v.blockUser}" ${v.hideBlockUser}></x-checkbox>
+		<input-checkbox name="type" value="1" label="${v.blockUser}" ${v.hideBlockUser}></input-checkbox>
 		<div style=";margin-top:1.5em;">
-			<x-checkbox type="radio" name="reason" value="51" deselect="true" label="${ui.l('locations.blockReason1')}"></x-checkbox>
-			<x-checkbox type="radio" name="reason" value="52" deselect="true" label="${ui.l('locations.blockReason2')}" ${v.hideBlockReason2}></x-checkbox>
-			<x-checkbox type="radio" name="reason" value="100" deselect="true" label="${ui.l('locations.blockReason100')}"></x-checkbox>
+			<input-checkbox type="radio" name="reason" value="51" deselect="true" label="${ui.l('locations.blockReason1')}"></input-checkbox>
+			<input-checkbox type="radio" name="reason" value="52" deselect="true" label="${ui.l('locations.blockReason2')}" ${v.hideBlockReason2}></input-checkbox>
+			<input-checkbox type="radio" name="reason" value="100" deselect="true" label="${ui.l('locations.blockReason100')}"></input-checkbox>
 		</div>
 		<textarea placeholder="${ui.l('contacts.blockDescHint')}" name="note" maxlength="250"></textarea>
 		<buttontext onclick="pageLocation.block()" style="margin-top:0.5em;" class="bgColor">${ui.l('save')}</buttontext>
@@ -188,7 +188,7 @@ ${v.rating}
 		v.values.reason = ui.val(path + ' [name="reason"][checked="true"]');
 		v.values.note = n.value;
 		var id = ui.q('detail card:last-child').getAttribute('i');
-		if (ui.q(path + ' x-checkbox[name="type"][checked="true"]'))
+		if (ui.q(path + ' input-checkbox[name="type"][checked="true"]'))
 			v.values.contactId2 = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).contact.id;
 		else if (id.indexOf && id.indexOf('_') > 0)
 			v.values.eventId = id.substring(0, id.indexOf('_'));

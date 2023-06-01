@@ -43,7 +43,7 @@ class pageChat {
 		<buttontext class="bgColor videoButton" ${v.action}="pageChat.sendChatVideoPermissionButton();">${ui.l('chat.videoPermissionButton')}</buttontext>
 		<buttontext class="bgColor sendButton" ${v.action}="pageChat.sendChat(${v.id},null,event);">${ui.l('chat.send')}</buttontext>
 		<div style="display:none;text-align:center;"></div>
-		<x-checkbox onclick="pageChat.aiHint()" label="ai"${v.ai}></x-checkbox>
+		<input-checkbox onclick="pageChat.aiHint()" label="ai"${v.ai}></input-checkbox>
 	</chatInput>
 </div>`;
 	static templateMessage = v =>
@@ -66,7 +66,7 @@ class pageChat {
 		}
 	}
 	static aiHint() {
-		if (ui.q('chatInput x-checkbox[checked="true"]'))
+		if (ui.q('chatInput input-checkbox[checked="true"]'))
 			intro.openHint({ desc: 'chatAi', pos: '5%,-10.5em', size: '90%,auto', hinkyClass: 'bottom', hinky: 'left:50%;' });
 		else
 			intro.close();
@@ -438,7 +438,7 @@ class pageChat {
 			var s = '<div class="smilyBox" style="margin-bottom:1em;"><buttontext onclick="pageChat.insertLinkInGroup()" class="bgColor" style="margin:1em;">' + ui.l('chat.share') + '</buttontext><buttontext class="bgColor" onclick="pageChat.sendChatGroup()">' + ui.l('chat.send') + '</buttontext></div>';
 			var v = user.contact.chatTextGroups;
 			if (!v) {
-				v = ui.q('x-checkbox[name="groupdialog"][checked="true"]');
+				v = ui.q('input-checkbox[name="groupdialog"][checked="true"]');
 				if (v)
 					v = global.separatorTech + v.value;
 				else
@@ -553,7 +553,7 @@ class pageChat {
 	}
 	static saveGroupText() {
 		user.contact.chatTextGroups = ui.val('#groupChatText');
-		var e = ui.qa('x-checkbox[name="groupdialog"][checked="true"]');
+		var e = ui.qa('input-checkbox[name="groupdialog"][checked="true"]');
 		for (var i = 0; i < e.length; i++)
 			user.contact.chatTextGroups += global.separatorTech + e[i].value;
 	}
@@ -588,7 +588,7 @@ class pageChat {
 				note: msg.replace(/</g, '&lt;'),
 				contactId2: id
 			};
-			if (ui.q('chatInput x-checkbox[checked="true"]'))
+			if (ui.q('chatInput input-checkbox[checked="true"]'))
 				v.textId = 'engagement_ai';
 			communication.ajax({
 				url: global.serverApi + 'db/one',
@@ -632,7 +632,7 @@ class pageChat {
 		}
 	}
 	static sendChatGroup() {
-		var e = ui.qa('popup x-checkbox[name="groupdialog"][checked="true"]');
+		var e = ui.qa('popup input-checkbox[name="groupdialog"][checked="true"]');
 		var s = '';
 		for (var i = 0; i < e.length; i++)
 			s += ',' + e[i].value;

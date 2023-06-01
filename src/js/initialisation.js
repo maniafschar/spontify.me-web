@@ -210,13 +210,13 @@ class initialisation {
 				pageSettings.swipeRight();
 			else if (dir == 'left')
 				pageSettings.swipeLeft();
-		}, 'input,textarea,img,x-slider,thumb,val');
+		}, 'input,textarea,img,input-slider,thumb,val');
 		ui.swipe('search', function (dir) {
 			if (dir == 'left')
 				pageSearch.swipeLeft();
 			else if (dir == 'right')
 				pageSearch.swipeRight();
-		}, 'input,textarea,x-slider,thumb,val');
+		}, 'input,textarea,input-slider,thumb,val');
 		ui.swipe('login', function (dir) {
 			if (dir == 'left')
 				pageLogin.swipeLeft();
@@ -246,10 +246,10 @@ class initialisation {
 		var name = event.target.parentNode.getAttribute('name');
 		if (!name || name.indexOf('_disp') < 0)
 			ui.navigation.openPopup(ui.l('settings.scale'),
-				'<x-checkbox name="zoom" type="radio" label="' + ui.l('settings.scale0') + '" onclick="initialisation.zoom()" value="0.8"' + (user.scale == 0.8 ? ' checked' : '') + '></x-checkbox>' +
-				'<x-checkbox name="zoom" type="radio" label="' + ui.l('settings.scale1') + '" onclick="initialisation.zoom()" value="1.0"' + (user.scale == 1.0 ? ' checked' : '') + '></x-checkbox>' +
-				'<x-checkbox name="zoom" type="radio" label="' + ui.l('settings.scale2') + '" onclick="initialisation.zoom()" value="1.2"' + (user.scale == 1.2 ? ' checked' : '') + '></x-checkbox>' +
-				'<x-checkbox name="zoom" type="radio" label="' + ui.l('settings.scale3') + '" onclick="initialisation.zoom()" value="1.4"' + (user.scale == 1.4 ? ' checked' : '') + '></x-checkbox>');
+				'<input-checkbox name="zoom" type="radio" label="' + ui.l('settings.scale0') + '" onclick="initialisation.zoom()" value="0.8"' + (user.scale == 0.8 ? ' checked' : '') + '></input-checkbox>' +
+				'<input-checkbox name="zoom" type="radio" label="' + ui.l('settings.scale1') + '" onclick="initialisation.zoom()" value="1.0"' + (user.scale == 1.0 ? ' checked' : '') + '></input-checkbox>' +
+				'<input-checkbox name="zoom" type="radio" label="' + ui.l('settings.scale2') + '" onclick="initialisation.zoom()" value="1.2"' + (user.scale == 1.2 ? ' checked' : '') + '></input-checkbox>' +
+				'<input-checkbox name="zoom" type="radio" label="' + ui.l('settings.scale3') + '" onclick="initialisation.zoom()" value="1.4"' + (user.scale == 1.4 ? ' checked' : '') + '></input-checkbox>');
 	}
 	static reposition() {
 		if (!ui.q('body main'))
@@ -385,7 +385,7 @@ class initialisation {
 		}
 	}
 	static zoom() {
-		user.scale = parseFloat(ui.val('x-checkbox[name="zoom"][checked="true"]'));
+		user.scale = parseFloat(ui.val('input-checkbox[name="zoom"][checked="true"]'));
 		initialisation.reposition();
 	}
 }
