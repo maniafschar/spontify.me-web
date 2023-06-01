@@ -98,14 +98,14 @@ class ui {
 		if (compare.skills) {
 			compareSkills = compare.skills.split('|');
 			for (var i = 0; i < compareSkills.length; i++)
-				add2List(Hashtags.ids2Text(compareSkills[i]), userSkills.indexOf('|' + compareSkills[i] + '|') > -1, result.skills);
+				add2List(UiHashtags.ids2Text(compareSkills[i]), userSkills.indexOf('|' + compareSkills[i] + '|') > -1, result.skills);
 		}
 		if (userSkills) {
 			userSkills = userSkills.split('|');
 			compareSkills = compare.skills ? '|' + compare.skills + '|' : '';
 			for (var i = 0; i < userSkills.length; i++) {
 				if (compareSkills.indexOf('|' + userSkills[i] + '|') < 0)
-					add2List(Hashtags.ids2Text(userSkills[i]), 'fade', result.skills);
+					add2List(UiHashtags.ids2Text(userSkills[i]), 'fade', result.skills);
 			}
 		}
 		userSkills = user.contact && user.contact.skillsText ? '|' + user.contact.skillsText.toLowerCase() + '|' : '';
@@ -896,7 +896,7 @@ class formFunc {
 	}
 	static initFields(element) {
 		var f = function () { document.body.scrollTop = 0; };
-		var e = element.querySelectorAll('textarea'), e2;
+		var e = element.querySelectorAll('textarea');
 		for (var i = 0; i < e.length; i++)
 			e[i].onfocus = f;
 		e = element.querySelectorAll('input');
@@ -1043,7 +1043,7 @@ class formFunc {
 	}
 }
 
-class Hashtags extends HTMLElement {
+class UiHashtags extends HTMLElement {
 	constructor() {
 		super();
 		const shadow = this.attachShadow({ mode: 'closed' });
@@ -1123,7 +1123,7 @@ search hashtags>div label.selected {
 		element.setAttribute('transient', 'true');
 		element.setAttribute('onkeyup', 'this.getRootNode().host.synchonizeTags(this.getRootNode())');
 		element.setAttribute('style', 'height:2em;');
-		element.textContent = Hashtags.ids2Text(this.getAttribute('ids')) + (this.getAttribute('text') ? ' ' + this.getAttribute('text') : '').trim();
+		element.textContent = UiHashtags.ids2Text(this.getAttribute('ids')) + (this.getAttribute('text') ? ' ' + this.getAttribute('text') : '').trim();
 		shadow.appendChild(element);
 		element = document.createElement('hashtags');
 		element.setAttribute('style', 'display:none;');
@@ -1231,9 +1231,9 @@ search hashtags>div label.selected {
 	}
 }
 
-customElements.define('x-hashtags', Hashtags);
+customElements.define('x-hashtags', UiHashtags);
 
-class Checkbox extends HTMLElement {
+class UiCheckbox extends HTMLElement {
 	constructor() {
 		super();
 		const shadow = this.attachShadow({ mode: 'closed' });
@@ -1290,9 +1290,9 @@ label:hover {
 	}
 }
 
-customElements.define('x-checkbox', Checkbox);
+customElements.define('x-checkbox', UiCheckbox);
 
-class Image extends HTMLElement {
+class UiImage extends HTMLElement {
 	constructor() {
 		super();
 		const shadow = this.attachShadow({ mode: 'closed' });
@@ -1566,9 +1566,9 @@ class Image extends HTMLElement {
 	}
 }
 
-customElements.define('x-image', Image);
+customElements.define('x-image', UiImage);
 
-class Slider extends HTMLElement {
+class UiSlider extends HTMLElement {
 	constructor() {
 		super();
 		const shadow = this.attachShadow({ mode: 'closed' });
@@ -1686,7 +1686,7 @@ thumb val {
 	}
 }
 
-customElements.define('x-slider', Slider);
+customElements.define('x-slider', UiSlider);
 
 class DragObject {
 	constructor(o) {
