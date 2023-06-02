@@ -1904,6 +1904,7 @@ compass::after {
 }`;
 		this._root.appendChild(style);
 		var element = document.createElement('badge');
+		element.setAttribute('part', 'badge');
 		element.setAttribute('class', this.getAttribute('badge') ? this.getAttribute('badge') : 'hidden');
 		this._root.appendChild(element);
 		element = document.createElement('div');

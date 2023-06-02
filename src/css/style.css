@@ -1408,7 +1408,8 @@ badgeNotifications {
 	padding-top: 0.1em;
 }
 
-badge {
+badge,
+list-row::part(badge) {
 	border-radius: 0.8em;
 	position: absolute;
 	bottom: 0.5em;
