@@ -1809,15 +1809,21 @@ text title {
     display: block;
 }
 
-extra {
+flag {
 	position: absolute;
-	right: 0.75em;
+	right: 0.5em;
+	width: 3em;
 	top: 1.75em;
 	opacity: 0.6;
 	text-align: center;
 }
 
-extra img {
+flag>* {
+	display: block;
+	width: 100%;
+}
+
+flag img {
 	height: 1em;
 }
 
@@ -1906,7 +1912,11 @@ compass::after {
 	<title>${decodeURIComponent(this.getAttribute('title'))}</title>
 	${decodeURIComponent(this.getAttribute('text'))}
 </text>
-<extra>${decodeURIComponent(this.getAttribute('extra'))}</extra>
+<flag>
+	<km part="km">${this.getAttribute('flag1')}</km>
+	<span>${this.getAttribute('flag2') ? this.getAttribute('flag2') : '&nbsp;'}</span>
+	${decodeURIComponent(this.getAttribute('flag3'))}
+</flag>
 <imagelist>
 	<img src="${this.getAttribute('image')}" class="${!this.getAttribute('image') || this.getAttribute('image').indexOf('.svg') > 0 ? 'default" part="mainBG' : ''}" />
 	<img source="favorite" />
@@ -1914,7 +1924,9 @@ compass::after {
 		this._root.appendChild(element);
 		this.removeAttribute('title');
 		this.removeAttribute('text');
-		this.removeAttribute('extra');
+		this.removeAttribute('flag1');
+		this.removeAttribute('flag2');
+		this.removeAttribute('flag3');
 		this.removeAttribute('image');
 		this.removeAttribute('badge');
 	}

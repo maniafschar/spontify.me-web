@@ -1700,11 +1700,13 @@ chatInput input:checked+label {
 	padding-right: 1em !important;
 }
 
-km {
+km,
+list-row::part(km) {
 	position: relative;
 }
 
-km::after {
+km::after,
+list-row::part(km)::after {
 	content: 'KM';
 	font-size: 0.5em;
 }

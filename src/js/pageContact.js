@@ -318,17 +318,17 @@ ${v.matchIndicatorHintDescription}
 		var s = '', activeID = ui.navigation.getActiveID();
 		for (var i = 1; i < l.length; i++) {
 			var v = model.convert(new Contact(), l, i);
-			var image, text, birth = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
+			var image, text, flag1, flag2, flag3, birth = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
 			if (v.imageList)
 				image = global.serverImg + v.imageList;
 			else
 				image = 'images/contact.svg';
 			var skills = ui.getSkills(v, 'list');
-			var extra = (v._geolocationDistance ? '<km>' + parseFloat(v._geolocationDistance).toFixed(0) + '</km>' : '') + '<br/>';
+			flag1 = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
 			if (skills.total && skills.totalMatch / skills.total > 0)
-				extra += parseInt(skills.totalMatch / skills.total * 100 + 0.5) + '%';
+				flag2 = parseInt(skills.totalMatch / skills.total * 100 + 0.5) + '%';
 			if (v.gender)
-				extra += '<br/><img src="images/gender' + v.gender + '.svg" />';
+				flag3 = '<img src="images/gender' + v.gender + '.svg"/>';
 			if (!v._message1)
 				v._message1 = skills.text();
 			if (!v._message2)
@@ -346,10 +346,12 @@ ${v.matchIndicatorHintDescription}
 				oc = 'details.open(' + v.id + ',' + JSON.stringify({ webCall: 'pageContact.listContacts(l)', query: 'contact_listNotification', search: encodeURIComponent('contactNotification.id=' + v.contactNotification.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)';
 			else
 				oc = 'details.open(' + v.id + ',' + JSON.stringify({ webCall: 'pageContact.listContacts(l)', query: 'contact_list', search: encodeURIComponent('contact.id=' + v.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)';
-			s += global.template`<list-row onclick="${oc}" i="${v.id}" class="location${v.contactLink.status == 'Friends' ? ' favorite' : ''}"
+			s += global.template`<list-row onclick="${oc}" i="${v.id}" class="contact${v.contactLink.status == 'Friends' ? ' favorite' : ''}"
 				title="${encodeURIComponent(v.pseudonym + (birth.age ? ' (' + birth.age + ')' : ''))}"
 				text="${encodeURIComponent(text)}"
-				extra="${encodeURIComponent(extra)}"
+				flag1="${flag1}"
+				flag2="${flag2}"
+				flag3="${encodeURIComponent(flag3)}"
 				image="${image}"
 				badge="${v.authenticate ? 'authenticated' : ''}"></list-row>`;
 		}

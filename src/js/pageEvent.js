@@ -460,12 +460,12 @@ class pageEvent {
 		var today = global.date.getToday();
 		var s = '', v;
 		var current = '';
-		var bg = 'mainBG';
 		for (var i = 0; i < as.length; i++) {
 			if (as[i] == 'outdated')
 				s += '<listSeparator class="highlightColor strong">' + ui.l('events.outdated') + '</listSeparator>';
 			else {
 				v = as[i];
+				var name, text, flag1, flag2, flag3, image, clazz;
 				var startDate = global.date.server2local(v.event.startDate);
 				var s2 = global.date.formatDate(startDate, 'weekdayLong');
 				var s3 = s2.substring(0, s2.lastIndexOf(' '));
@@ -477,42 +477,47 @@ class pageEvent {
 				var t = global.date.formatDate(startDate);
 				if (startDate >= today)
 					t = t.substring(t.lastIndexOf(' ') + 1);
+				var skills = ui.getSkills(v.event.id ? v.event : v.contact, 'list');
+				if (v._geolocationDistance)
+					flag1 = parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 || !v.id ? 0 : 1).replace('.', ',');
+				if (skills.total && skills.totalMatch / skills.total > 0)
+					flag2 = parseInt(skills.totalMatch / skills.total * 100 + 0.5) + '%';
+				if (v._geolocationDistance && v.latitude)
+					flag3 = '<compass style="transform:rotate('
+						+ geoData.getAngel(geoData.current, { lat: v.latitude, lon: v.longitude }) + 'deg);"></compass>';
+				else if (v.contact.gender)
+					flag3 = '<img src="images/gender' + v.contact.gender + '.svg" />';
 				if (v.name)
-					v.name = t + ' ' + v.name;
-				else {
-					v.name = t + ' ' + v.contact.pseudonym + (v.contact.age ? ' (' + v.contact.age + ')' : '');
-					v._message1 = ui.getSkills(v.event, 'list').text();
-				}
-				v._message = v.event.description + '<br/>';
-				v.locID = v.id;
-				pageLocation.listInfos(v);
-				v._message += v._message1 ? v._message1 : v._message2 ? v._message2 : '';
-				v.id = pageEvent.getId(v);
-				v.badgeDisp = '';
-				v.classFavorite = v.locationFavorite.favorite ? ' favorite' : '';
+					name = t + ' ' + v.name;
+				else
+					name = t + ' ' + v.contact.pseudonym + (v.contact.age ? ' (' + v.contact.age + ')' : '');
+				text = v.event.description + '<br/>';
+				text += skills.text();
+				clazz = v.locationFavorite.favorite ? ' favorite' : '';
 				if (global.date.local2server(v.event.startDate).indexOf(v.eventParticipate.eventDate) == 0)
-					v.classFavorite = v.eventParticipate.state == -1 ? ' canceled' : ' participate';
-				else
-					v.badgeDisp = 'hidden';
-				v.classBGImg = v.imageList ? '' : bg;
+					clazz = v.eventParticipate.state == -1 ? ' canceled' : ' participate';
 				if (v.event.imageList)
-					v.image = global.serverImg + v.event.imageList;
+					image = global.serverImg + v.event.imageList;
 				else if (v.imageList)
-					v.image = global.serverImg + v.imageList;
+					image = global.serverImg + v.imageList;
 				else if (v.contact.imageList)
-					v.image = global.serverImg + v.contact.imageList;
+					image = global.serverImg + v.contact.imageList;
 				else if (v.id)
-					v.image = 'images/event.svg" style="padding: 1em;';
+					image = 'images/event.svg';
 				else
-					v.image = 'images/contact.svg" style="padding: 1em;';
-				v.classBg = bg;
-				v._geolocationDistance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 ? 0 : 1).replace('.', ',') : '';
-				v.type = 'Event';
+					image = 'images/contact.svg';
+				var oc;
 				if (ui.navigation.getActiveID() == 'settings')
-					v.oc = 'pageSettings.unblock(&quot;' + v.id + '&quot;,' + v.block.id + ')';
+					oc = 'pageSettings.unblock(&quot;' + v.id + '&quot;,' + v.block.id + ')';
 				else
-					v.oc = 'details.open(&quot;' + v.id + '&quot;,' + JSON.stringify({ webCall: 'pageEvent.listEvents(as)', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)';
-				s += pageLocation.templateList(v);
+					oc = 'details.open(&quot;' + v.id + '&quot;,' + JSON.stringify({ webCall: 'pageEvent.listEvents(as)', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)';
+				s += global.template`<list-row onclick="${oc}" i="${v.id}" class="event${clazz ? ' ' + clazz : ''}"
+					title="${encodeURIComponent(name)}"
+					text="${encodeURIComponent(text)}"
+					flag1="${flag1}"
+					flag2="${flag2}"
+					flag3="${encodeURIComponent(flag3)}"
+					image="${image}"></list-row>`;
 			}
 		}
 		return s;

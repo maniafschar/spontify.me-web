@@ -388,23 +388,16 @@ ${v.rating}
 		var s = '';
 		for (var i = 1; i < l.length; i++) {
 			var v = model.convert(new Location(), l, i);
-			var text, extra, image;
-			var skills = ui.getSkills(v.event.id ? v.event : v.contact, 'list');
-			extra = v._geolocationDistance ?
-				'<km>' + parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 || !v.id ? 0 : 1).replace('.', ',') + '</km><br/>' : '';
-			if (skills.total && skills.totalMatch / skills.total > 0)
-				extra += parseInt(skills.totalMatch / skills.total * 100 + 0.5) + '%';
-			extra += '<br/>';
+			var text, image, flag1, flag2, flag3;
+			if (v._geolocationDistance)
+				flag1 = parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 || !v.id ? 0 : 1).replace('.', ',');
 			if (v._geolocationDistance && v.latitude)
-				extra += '<compass style="transform:rotate('
+				flag3 = '<compass style="transform:rotate('
 					+ geoData.getAngel(geoData.current, { lat: v.latitude, lon: v.longitude }) + 'deg);"></compass>';
-			else if (v.contact.gender)
-				extra += '<img src="images/gender' + v.contact.gender + '.svg" />';
-			text = skills.text();
-			if (text)
-				text += '<br/>';
 			if (v.description)
-				text += v.description;
+				text = v.description + '<br/>';
+			if (v.address)
+				text += v.address;
 			if (v.imageList)
 				image = global.serverImg + v.imageList;
 			else
@@ -419,7 +412,9 @@ ${v.rating}
 			s += global.template`<list-row onclick="${oc}" i="${v.id}" class="location${v.locationFavorite.favorite ? ' favorite' : ''}"
 					title="${encodeURIComponent(v.name)}"
 					text="${encodeURIComponent(text)}"
-					extra="${encodeURIComponent(extra)}"
+					flag1="${flag1}"
+					flag2="${flag2}"
+					flag3="${encodeURIComponent(flag3)}"
 					image="${image}"></list-row>`;
 		}
 		if (ui.q('locations map') && ui.q('locations map').style.display != 'none')
