@@ -27,21 +27,6 @@ class pageLocation {
 		timeout: null
 	};
 	static reopenEvent;
-	static templateList = v =>
-		global.template`<row onclick="${v.oc}" i="${v.id}" class="location${v.classFavorite}">
-	<badge class="${v.badgeDisp}"></badge>
-	<div>
-		<text>
-			<title>${v.name}</title>
-			${v._message}
-		</text>
-		<extra>${v.extra}</extra>
-		<imagelist>
-			<img src="${v.image}" class="${v.classBGImg}" />
-			<img source="favorite" />
-		</imagelist>
-	</div>
-</row>`;
 	static templateDetail = v =>
 		global.template`<detailHeader idFav="${v.locationFavorite.id}" data="${v.data}">
 	<detailImg>
@@ -252,9 +237,7 @@ ${v.rating}
 		v.hideMePotentialParticipants = ' hidden';
 		v.data = encodeURIComponent(JSON.stringify(v));
 		v.distance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 ? 0 : 1).replace('.', ',') : '';
-		v.classBGImg = '';
-		if (v.classBGImg.length < 8)
-			v.classBGImg = 'class="mainBG"';
+		v.classBGImg = 'class="mainBG"';
 		v.locID = v.event.id ? v.event.locationId : v.id;
 		v.angle = geoData.getAngel(geoData.current, { lat: v.latitude, lon: v.longitude });
 		v.image = v.event.image ? v.event.image : v.image ? v.image : v.contact.image;
@@ -399,52 +382,45 @@ ${v.rating}
 		if (compass == 'N' && (angle > 315 || angle <= 45))
 			return 'N';
 	}
-	static listInfos(v) {
-		var skills = ui.getSkills(v.event.id ? v.event : v.contact, 'list');
-		v.extra = v._geolocationDistance ?
-			'<km>' + parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 || !v.id ? 0 : 1).replace('.', ',') + '</km><br/>' : '';
-		if (skills.total && skills.totalMatch / skills.total > 0)
-			v.extra += parseInt(skills.totalMatch / skills.total * 100 + 0.5) + '%';
-		v.extra += '<br/>';
-		if (v._geolocationDistance && v.latitude)
-			v.extra += '<div><compass style="transform:rotate('
-				+ geoData.getAngel(geoData.current, { lat: v.latitude, lon: v.longitude }) + 'deg);"></compass></div>';
-		else if (v.contact.gender)
-			v.extra += '<img src="images/gender' + v.contact.gender + '.svg" />';
-		if (!v._message1)
-			v._message1 = skills.text();
-		if (!v._message2)
-			v._message2 = v.description;
-	}
 	static listLocation(l) {
 		if (ui.q('locations buttontext.map'))
 			ui.q('locations buttontext.map').style.display = null;
-		l[0].push('_angle');
-		var s = '', v;
+		var s = '';
 		for (var i = 1; i < l.length; i++) {
-			v = model.convert(new Location(), l, i);
-			v.badgeDisp = 'hidden';
-			v._angle = geoData.getAngel(geoData.current, { lat: v.latitude, lon: v.longitude });
-			l[i].push(v._angle);
-			v.locID = v.id;
-			v.classBGImg = v.imageList ? '' : 'mainBG';
-			if (v.locationFavorite.favorite)
-				v.classFavorite = ' favorite';
-			pageLocation.listInfos(v);
+			var v = model.convert(new Location(), l, i);
+			var text, extra, image;
+			var skills = ui.getSkills(v.event.id ? v.event : v.contact, 'list');
+			extra = v._geolocationDistance ?
+				'<km>' + parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 || !v.id ? 0 : 1).replace('.', ',') + '</km><br/>' : '';
+			if (skills.total && skills.totalMatch / skills.total > 0)
+				extra += parseInt(skills.totalMatch / skills.total * 100 + 0.5) + '%';
+			extra += '<br/>';
+			if (v._geolocationDistance && v.latitude)
+				extra += '<compass style="transform:rotate('
+					+ geoData.getAngel(geoData.current, { lat: v.latitude, lon: v.longitude }) + 'deg);"></compass>';
+			else if (v.contact.gender)
+				extra += '<img src="images/gender' + v.contact.gender + '.svg" />';
+			text = skills.text();
+			if (text)
+				text += '<br/>';
+			if (v.description)
+				text += v.description;
 			if (v.imageList)
-				v.image = global.serverImg + v.imageList;
+				image = global.serverImg + v.imageList;
 			else
-				v.image = 'images/location.svg" style="padding: 1em; ';
-			v.type = 'Location';
-			v._message = v._message1 ? v._message1 + '<br/>' : '';
-			v._message += v._message2 ? v._message2 : '';
+				image = 'images/location.svg';
+			var oc;
 			if (ui.navigation.getActiveID() == 'settings')
-				v.oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';
+				oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';
 			else
-				v.oc = 'details.open(&quot;' + v.id + '&quot;,' + JSON.stringify({
+				oc = 'details.open(&quot;' + v.id + '&quot;,' + JSON.stringify({
 					webCall: 'pageLocation.listLocation(l)', query: 'location_list', search: encodeURIComponent('location.id=' + v.id)
 				}).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)';
-			s += pageLocation.templateList(v);
+			s += global.template`<list-row onclick="${oc}" i="${v.id}" class="location${v.locationFavorite.favorite ? ' favorite' : ''}"
+					title="${encodeURIComponent(v.name)}"
+					text="${encodeURIComponent(text)}"
+					extra="${encodeURIComponent(extra)}"
+					image="${image}"></list-row>`;
 		}
 		if (ui.q('locations map') && ui.q('locations map').style.display != 'none')
 			setTimeout(pageLocation.scrollMap, 400);
@@ -452,6 +428,7 @@ ${v.rating}
 			pageLocation.map.open = false;
 			pageLocation.toggleMap();
 		}
+		formFunc.svg.replaceAll();
 		return s;
 	}
 	static prefillAddress() {

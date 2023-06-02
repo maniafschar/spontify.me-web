@@ -329,7 +329,8 @@ subCatTitle {
 	display: block;
 }
 
-.mainBG {
+.mainBG,
+list-row::part(mainBG) {
 	background: linear-gradient(120deg, var(--bg1stop) 0%, var(--bg1start) 100%);
 	background-size: 100% 100%;
 }
@@ -1708,22 +1709,6 @@ km::after {
 	font-size: 0.5em;
 }
 
-compass::after {
-	content: '↑';
-}
-
-compass {
-	position: absolute;
-	right: 0.2em;
-	top: 0;
-	line-height: 1.5;
-	opacity: 0.6;
-	width: 1.5em;
-	height: 1.5em;
-	text-align: center;
-	font-size: 1.5em;
-}
-
 detailCompass,
 detailDistance {
 	width: 5em;
@@ -1952,115 +1937,12 @@ homeImage img {
 	height: 100%;
 }
 
-row {
+list-row {
 	position: relative;
 	height: 7.3em;
 	display: block;
 	overflow: hidden;
 	transition: all 0.4s ease-out;
-}
-
-row>div {
-	text-align: left;
-	overflow: hidden;
-	cursor: pointer;
-	background: rgba(0, 0, 0, 0.08);
-	margin: 1em 0 0.5em 0;
-	height: 6em;
-	transition: all 0.4s ease-out;
-}
-
-row text {
-	max-height: 5.5em;
-	overflow: hidden;
-	left: 6em;
-	right: 4em;
-	width: auto;
-	position: absolute;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	display: inline-block;
-	padding: 0.75em 0 0 0.5em;
-}
-
-row text title {
-	padding-right: 1em;
-}
-
-row extra {
-	position: absolute;
-	right: 0.75em;
-	top: 1.75em;
-	text-align: right;
-	opacity: 0.6;
-	text-align: center;
-}
-
-row extra img {
-	height: 1em;
-}
-
-row imagelist {
-	height: 6em;
-	width: 6em;
-	left: 0;
-	top: 0;
-	position: absolute;
-	text-align: center;
-	overflow: hidden;
-	margin: 0.5em 0.5em 0.5em 0;
-	border-radius: 0 3em 3em 0;
-	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
-}
-
-row imagelist img {
-	height: 100%;
-	max-width: 100%;
-}
-
-row imagelist img.present {
-	position: absolute;
-	left: 0;
-	height: 2.5em;
-	border-radius: 0;
-}
-
-row imagelist svg {
-	position: absolute;
-	left: 0.25em;
-	bottom: 0.25em;
-	width: 1.5em;
-	display: none;
-}
-
-row.favorite imagelist svg {
-	display: inline;
-}
-
-row badge.authenticated,
-row.participate badge {
-	background: green;
-}
-
-row badge.authenticated::after,
-row.participate badge::after {
-	content: '✓';
-}
-
-row.canceled badge {
-	background: red;
-}
-
-row.canceled badge::after {
-	content: '✗';
-}
-
-row compass {
-	top: initial;
-	right: initial;
-	width: 100%;
-	display: block;
-	margin-top: -0.25em;
 }
 
 detail .authenticated detailImg::after,

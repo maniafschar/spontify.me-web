@@ -12,21 +12,6 @@ export { pageContact, groups };
 
 class pageContact {
 	static filter = null;
-	static templateList = v =>
-		global.template`<row onclick="${v.oc}" i="${v.id}" class="contact${v.classFavorite}">
-	<badge class="${v.badgeDisp}"></badge>
-	<div>
-		<text>
-			<title>${v.pseudonym}${v.birth}</title>
-			${v._message}
-		</text>
-		<extra>${v.extra}</extra>
-		<imagelist>
-			<img src="${v.image}" class="${v.classBGImg}" />
-			<img source="favorite" />
-		</imagelist>
-	</div>
-	</row>`;
 	static templateDetail = v =>
 		global.template`${v.present}
 <detailHeader class="${v.favorite}">
@@ -333,44 +318,40 @@ ${v.matchIndicatorHintDescription}
 		var s = '', activeID = ui.navigation.getActiveID();
 		for (var i = 1; i < l.length; i++) {
 			var v = model.convert(new Contact(), l, i);
+			var image, text, birth = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
 			if (v.imageList)
-				v.image = global.serverImg + v.imageList;
+				image = global.serverImg + v.imageList;
 			else
-				v.image = 'images/contact.svg" style="padding:1em;';
-			v.classBGImg = v.imageList ? '' : 'mainBG';
-			if (v.contactLink.status == 'Friends')
-				v.classFavorite = ' favorite';
+				image = 'images/contact.svg';
 			var skills = ui.getSkills(v, 'list');
-			v.extra = (v._geolocationDistance ? '<km>' + parseFloat(v._geolocationDistance).toFixed(0) + '</km>' : '') + '<br/>';
+			var extra = (v._geolocationDistance ? '<km>' + parseFloat(v._geolocationDistance).toFixed(0) + '</km>' : '') + '<br/>';
 			if (skills.total && skills.totalMatch / skills.total > 0)
-				v.extra += parseInt(skills.totalMatch / skills.total * 100 + 0.5) + '%';
+				extra += parseInt(skills.totalMatch / skills.total * 100 + 0.5) + '%';
 			if (v.gender)
-				v.extra += '<br/><img src="images/gender' + v.gender + '.svg" />';
+				extra += '<br/><img src="images/gender' + v.gender + '.svg" />';
 			if (!v._message1)
 				v._message1 = skills.text();
-			var birth = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
-			if (birth.age)
-				v.birth = ' (' + birth.age + ')';
 			if (!v._message2)
 				v._message2 = v.description;
-			v._message = v._message1 ? v._message1 + '<br/>' : '';
-			v._message += v._message2 ? v._message2 : '';
-			v.dist = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
-			if (v.authenticate)
-				v.badgeDisp = 'authenticated';
-			else
-				v.badgeDisp = 'hidden';
+			text = v._message1 ? v._message1 + '<br/>' : '';
+			text += v._message2 ? v._message2 : '';
+			var oc;
 			if (activeID == 'detail')
-				v.oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)';
+				oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)';
 			else if (activeID == 'settings')
-				v.oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';
+				oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';
 			else if (activeID == 'info')
-				v.oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)';
+				oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)';
 			else if (v.contactNotification.id)
-				v.oc = 'details.open(' + v.id + ',' + JSON.stringify({ webCall: 'pageContact.listContacts(l)', query: 'contact_listNotification', search: encodeURIComponent('contactNotification.id=' + v.contactNotification.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)';
+				oc = 'details.open(' + v.id + ',' + JSON.stringify({ webCall: 'pageContact.listContacts(l)', query: 'contact_listNotification', search: encodeURIComponent('contactNotification.id=' + v.contactNotification.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)';
 			else
-				v.oc = 'details.open(' + v.id + ',' + JSON.stringify({ webCall: 'pageContact.listContacts(l)', query: 'contact_list', search: encodeURIComponent('contact.id=' + v.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)';
-			s += pageContact.templateList(v);
+				oc = 'details.open(' + v.id + ',' + JSON.stringify({ webCall: 'pageContact.listContacts(l)', query: 'contact_list', search: encodeURIComponent('contact.id=' + v.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)';
+			s += global.template`<list-row onclick="${oc}" i="${v.id}" class="location${v.contactLink.status == 'Friends' ? ' favorite' : ''}"
+				title="${encodeURIComponent(v.pseudonym + (birth.age ? ' (' + birth.age + ')' : ''))}"
+				text="${encodeURIComponent(text)}"
+				extra="${encodeURIComponent(extra)}"
+				image="${image}"
+				badge="${v.authenticate ? 'authenticated' : ''}"></list-row>`;
 		}
 		return s;
 	}

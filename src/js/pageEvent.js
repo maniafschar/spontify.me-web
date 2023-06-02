@@ -1001,17 +1001,16 @@ class pageEvent {
 		for (var i = 0; i < a.length; i++) {
 			v = a[i];
 			if (v.id) {
-				v.bg = bg;
-				var s2 = global.date.formatDate(v.event.startDate, 'weekdayLong');
+				var title = global.date.formatDate(v.event.startDate, 'weekdayLong');
 				var date = global.date.getDateFields(v.event.startDate);
 				date = date.year + '-' + date.month + '-' + date.day;
 				var idIntern = v.event.id + '_' + date;
-				s2 = global.date.getDateHint(v.event.startDate).replace('{0}', s2);
-				var img;
+				title = global.date.getDateHint(v.event.startDate).replace('{0}', title);
+				var image;
 				if (v.event.imageList || v.imageList || v.event.locationId == -2 && v.contact.imageList)
-					img = global.serverImg + (v.event.imageList ? v.event.imageList : v.imageList ? v.imageList : v.contact.imageList);
+					image = global.serverImg + (v.event.imageList ? v.event.imageList : v.imageList ? v.imageList : v.contact.imageList);
 				else
-					img = 'images/event.svg" style="padding:1em;" class="' + bg;
+					image = 'images/event.svg';
 				text = '';
 				if (v.event.price > 0)
 					text += global.separator + ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2).replace('.', ','));
@@ -1024,7 +1023,13 @@ class pageEvent {
 				text += '<br/>' + v.event.description;
 				if (field == 'location')
 					text = '<br/>' + v.name + text;
-				s += '<row' + (v.eventParticipate.state == 1 ? ' class="participate"' : v.eventParticipate.state == -1 ? ' class="canceled"' : '') + ' onclick="details.open(&quot;' + idIntern + '&quot;,' + JSON.stringify({ webCall: 'pageEvent.toggleInternal(r,id,field)', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)"><div><text>' + s2 + text + '</text><imageList><img src="' + img + '"/></imageList></div></row>';
+				s += global.template`<list-row
+					${v.eventParticipate.state == 1 ? ' class="participate"' : v.eventParticipate.state == -1 ? ' class="canceled"' : ''}
+					onclick="details.open(&quot;${idIntern}&quot;,${JSON.stringify({ webCall: 'pageEvent.toggleInternal(r,id,field)', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;')},pageLocation.detailLocationEvent)"
+					title="${encodeURIComponent(title)}"
+					text="${encodeURIComponent(text)}"
+					image="${image}">
+					</list-row>`;
 			}
 		}
 		if (s)
