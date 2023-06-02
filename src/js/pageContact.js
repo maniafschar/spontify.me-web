@@ -311,7 +311,7 @@ ${v.matchIndicatorHintDescription}
 	static init() {
 		if (!ui.q('contacts').innerHTML)
 			lists.setListDivs('contacts');
-		if (!ui.q('contacts listResults row'))
+		if (!ui.q('contacts listResults list-row'))
 			setTimeout(ui.navigation.toggleMenu, 500);
 	}
 	static listContacts(l) {
@@ -415,7 +415,7 @@ ${v.matchIndicatorHintDescription}
 				var s = pageLocation.listLocation(l);
 				if (s) {
 					e.innerHTML = ui.l('locations.my') + '<br/>' + s;
-					var rows = ui.qa('detail card:last-child[i="' + id + '"] [name="location"] row');
+					var rows = ui.qa('detail card:last-child[i="' + id + '"] [name="location"] list-row');
 					for (var i = 0; i < rows.length; i++)
 						rows[i].setAttribute('onclick', 'ui.navigation.autoOpen("' + global.encParam('l=' + rows[i].getAttribute('i')) + '",event)');
 				} else

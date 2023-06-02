@@ -427,7 +427,7 @@ class pageEvent {
 	static init() {
 		if (!ui.q('events').innerHTML)
 			lists.setListDivs('events');
-		if (!ui.q('events listResults row'))
+		if (!ui.q('events listResults list-row'))
 			setTimeout(ui.navigation.toggleMenu, 500);
 		if (!pageLocation.map.svgLocation)
 			communication.ajax({
@@ -492,7 +492,7 @@ class pageEvent {
 				else
 					name = t + ' ' + v.contact.pseudonym + (v.contact.age ? ' (' + v.contact.age + ')' : '');
 				text = v.event.description + '<br/>';
-				text += skills.text();
+				text += v.event.id && v.address ? v.address : skills.text();
 				clazz = v.locationFavorite.favorite ? ' favorite' : '';
 				if (global.date.local2server(v.event.startDate).indexOf(v.eventParticipate.eventDate) == 0)
 					clazz = v.eventParticipate.state == -1 ? ' canceled' : ' participate';

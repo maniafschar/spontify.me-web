@@ -1,7 +1,6 @@
 import { communication } from './communication';
 import { geoData } from './geoData';
 import { global } from './global';
-import { pageLocation } from './pageLocation';
 import { ui, formFunc } from './ui';
 
 export { lists };
@@ -91,7 +90,7 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 				}
 				e.outerHTML = '';
 				lists.setListHint(activeID);
-				if (!ui.q(activeID + ' row'))
+				if (!ui.q(activeID + ' list-row'))
 					ui.navigation.toggleMenu();
 			});
 		}
@@ -128,7 +127,7 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 		if (e) {
 			ui.classRemove('menu a', 'highlightMenu');
 			ui.classAdd(ui.qa('menu a')[parseInt(ui.q(ui.navigation.getActiveID()).getAttribute('menuIndex'))], 'highlightMenu');
-			var rows = ui.qa(id + ' row'), x = 0;
+			var rows = ui.qa(id + ' list-row'), x = 0;
 			var s = ui.q('menu .highlightMenu');
 			if (s)
 				s = s.innerHTML;
@@ -150,7 +149,7 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 			e.innerHTML = ui.l('search.results').replace('{0}', x) + ' ' + s;
 		} else if (id.indexOf('search') == 0) {
 			var s = id.substring(id.lastIndexOf('.') + 1);
-			var i = ui.qa('search tabBody div.' + s + ' listResults row').length;
+			var i = ui.qa('search tabBody div.' + s + ' listResults list-row').length;
 			ui.q('search tabHeader tab[i="' + s + '"]').innerText = ui.l(s + '.title') + (i ? global.separator + i : '');
 		}
 	}

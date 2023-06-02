@@ -429,7 +429,7 @@ class ui {
 			return true;
 		},
 		openSwipeLeftUI(event) {
-			var e = ui.parents(event.target, 'row');
+			var e = ui.parents(event.target, 'list-row');
 			if (e)
 				e.click();
 		},

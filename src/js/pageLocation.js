@@ -541,7 +541,7 @@ ${v.rating}
 			pageLocation.map.timeout = setTimeout(pageLocation.scrollMap, 100);
 			return;
 		}
-		var rows = ui.qa('locations listResults row');
+		var rows = ui.qa('locations listResults list-row');
 		var id = ui.q('locations listBody').scrollTop - ui.emInPX, i = 0;
 		for (; i < rows.length; i++) {
 			if (rows[i].offsetTop > id && rows[i].getAttribute('filtered') != 'true') {
@@ -687,7 +687,7 @@ ${v.rating}
 			pageLocation.map.scrollTop = -1;
 			pageLocation.map.id = -1;
 			setTimeout(function () { ui.classRemove('locations listResults row div.highlightMap', 'highlightMap'); }, 500);
-		} else if (!ui.q('locations row')) {
+		} else if (!ui.q('locations list-row')) {
 			pageLocation.map.open = true;
 			//pageLocation.search();
 		} else {

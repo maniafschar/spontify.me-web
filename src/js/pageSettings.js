@@ -618,7 +618,7 @@ ${v.info}`;
 				ui.navigation.closePopup();
 				e = ui.q('settings #blocked');
 				e.removeAttribute('h');
-				if (!ui.q('settings #blocked row'))
+				if (!ui.q('settings #blocked list-row'))
 					ui.css(e, 'display', 'none');
 			}
 		});
