@@ -52,7 +52,7 @@ class pageSettings {
 <field>
 	<label>${ui.l('picture')}</label>
 	<value style="text-align:center;">
-		<input-image src="${v.image}"></input-image>
+		<input-image src="${v.image}" name="image"></input-image>
 	</value>
 </field>
 <field>
@@ -115,7 +115,7 @@ class pageSettings {
 		global.template`<field>
 	<label>${ui.l('settings.skills')}</label>
 	<value>
-		<input-hashtags ids="${v.skills}" text="${v.skillsText}"></input-hashtags>
+		<input-hashtags ids="${v.skills}" text="${v.skillsText}" transient="true"></input-hashtags>
 	</value>
 </field>
 <field>

@@ -839,13 +839,13 @@ class formFunc {
 		for (var i = 0; i < e.length; i++) {
 			if (e[i].getAttribute('type') == 'radio') {
 				if (e[i].getAttribute('checked') == 'true')
-					d.values[e[i].getAttribute('name')] = true;
+					d.values[e[i].getAttribute('name')] = e[i].getAttribute('value');
 			} else {
 				if (!cb[e[i].getAttribute('name')])
 					cb[e[i].getAttribute('name')] = '';
 				if (e[i].getAttribute('checked') == 'true')
-					cb[e[i].getAttribute('name')] += global.separatorTech + true;
-				else if (e[i].getAttribute('value') == '1')
+					cb[e[i].getAttribute('name')] += global.separatorTech + e[i].getAttribute('value');
+				else if (e[i].getAttribute('value') == 'true')
 					cb[e[i].getAttribute('name')] += global.separatorTech + false;
 			}
 		}
@@ -860,8 +860,10 @@ class formFunc {
 			d.values[e[i].getAttribute('name') + 'Text'] = e[i].getAttribute('text');
 		}
 		e = ui.qa(id + ' input-image:not([transient="true"])');
-		for (var i = 0; i < e.length; i++)
-			d.values[e[i].getAttribute('name')] = e[i].getAttribute('value');
+		for (var i = 0; i < e.length; i++) {
+			if (e[i].getAttribute('value'))
+				d.values[e[i].getAttribute('name')] = e[i].getAttribute('value');
+		}
 		return d;
 	}
 	static svg = {
@@ -1402,9 +1404,10 @@ input+img {
 		if (this.getAttribute('src'))
 			element.setAttribute('src', this.getAttribute('src'));
 		this._root.appendChild(element);
+		const t = this;
 		ui.on(window, 'wheel', function (event) {
 			if (event.ctrlKey)
-				this.zoom(event, event.deltaY);
+				t.zoom(event, event.deltaY);
 		});
 	}
 	cameraError(e) {
@@ -1443,7 +1446,6 @@ input+img {
 		this.preview2(e.files && e.files.length > 0 ? e.files[0] : null);
 	}
 	preview2(file) {
-		this.setAttribute('rotateImage', '0');
 		if (file) {
 			var ePrev = this._root.querySelector('inputFile');
 			ui.css(ePrev, 'z-index', 6);
@@ -1475,7 +1477,6 @@ input+img {
 				var image = new Image();
 				image.onload = function () {
 					var whOrg = image.naturalWidth + ' x ' + image.naturalHeight;
-					t.setAttribute('rotateImage', '0');
 					var scaled = t.scale(image);
 					var size = t.dataURItoBlob(scaled.data).size, sizeOrg = f.size, s, s2 = '', s0 = '';
 					if (size > 1024 * 1024) {
@@ -1496,8 +1497,9 @@ input+img {
 					else
 						x = sizeOrg + ' B';
 					var disp = t._root.querySelector('inputFile');
-					disp.querySelector('desc').innerHTML = x + global.separator + whOrg + '<br/>' + ui.l('fileUpload.ratio') + ' ' + (100 - size / sizeOrg * 100).toFixed(0) + '%<br/>' + s0 + s + global.separator + s2 + '<span id="imagePreviewSize">' + scaled.width + ' x ' + scaled.height + '</span>';
+					disp.querySelector('desc').innerHTML = x + global.separator + whOrg + '<br/>' + ui.l('fileUpload.ratio') + ' ' + (100 - size / sizeOrg * 100).toFixed(0) + '%<br/>' + s0 + s + global.separator + s2 + '<imagePreviewSize>' + scaled.width + ' x ' + scaled.height + '</imagePreviewSize>';
 					img.src = r.target.result;
+					t.update(r.target.result);
 					ui.css(disp, 'height', disp.clientWidth + 'px');
 					if (image.naturalWidth > image.naturalHeight) {
 						ui.css(img, 'max-height', '100%');
@@ -1511,13 +1513,17 @@ input+img {
 					new DragObject(img).ondrag = function (event, delta) {
 						if (parseInt(delta.y) != 0) {
 							var y = parseInt(ui.cssValue(img, 'margin-top')) + delta.y;
-							if (y < 1 && y > -(img.clientHeight - disp.clientHeight))
+							if (y < 1 && y > -(img.clientHeight - disp.clientHeight)) {
 								ui.css(img, 'margin-top', y + 'px');
+								t.update(r.target.result);
+							}
 						}
 						if (parseInt(delta.x) != 0) {
 							var x = parseInt(ui.cssValue(img, 'margin-left')) + delta.x;
-							if (x < 1 && x > -(img.clientWidth - disp.clientWidth))
+							if (x < 1 && x > -(img.clientWidth - disp.clientWidth)) {
 								ui.css(img, 'margin-left', x + 'px');
+								t.update(r.target.result);
+							}
 						}
 					};
 					ui.on(img, 'touchmove', function (event) {
@@ -1547,38 +1553,38 @@ input+img {
 		var e = this._root.querySelector('input');
 		if (e) {
 			e.value = '';
-			ui.attr(e, 'rotateImage', 0);
-			var ePrev = this._root.querySelector('inputFile');
-			ui.html(ePrev, '<span>' + (e.getAttribute('hint') ? e.getAttribute('hint') : ui.l('fileUpload.select')) + '</span>');
-			ePrev.style.zIndex = null;
-			ePrev.style.height = null;
+			var inputFile = this._root.querySelector('inputFile');
+			ui.html(inputFile, '<span>' + (e.getAttribute('hint') ? e.getAttribute('hint') : ui.l('fileUpload.select')) + '</span>');
+			inputFile.style.zIndex = null;
+			inputFile.style.height = null;
 			this._root.querySelector('img.icon').style.display = '';
 			ui.css('#popupSendImage', 'display', 'none');
+			this.removeAttribute('value');
 			if (!global.isBrowser()) {
 				this._root.querySelector('div').style.display = 'block';
-				ePrev.style.display = 'none';
+				inputFile.style.display = 'none';
 			}
 		}
 	}
 	rotate(img) {
-		if (!img.name)
-			img = img.nextSibling;
+		img = img.getRootNode().querySelector('img.preview');
 		var canvas = document.createElement('canvas'), w = img.naturalWidth, h = img.naturalHeight;
 		canvas.width = h;
 		canvas.height = w;
 		var ctx = canvas.getContext('2d');
 		var image = new Image();
 		image.src = img.src;
+		var t = this;
 		image.onload = function () {
-			var wh = ui.q('#imagePreviewSize').innerHTML.split('x');
+			var wh = t._root.querySelector('imagePreviewSize').innerHTML.split('x');
 			ctx.clearRect(0, 0, w, h);
 			ctx.rotate(0.5 * Math.PI);
 			ctx.translate(0, -h);
 			ctx.drawImage(image, 0, 0, w, h);
-			img.src = canvas.toDataURL('image/jpeg', 1);
-			var e = ui.q('[name="' + img.name.substring(0, img.name.length - 7) + '"]');
-			ui.attr(e, 'rotateImage', (90 + parseInt(e.getAttribute('rotateImage'), 10)) % 360);
-			ui.q('#imagePreviewSize').innerHTML = wh[1].trim() + ' x ' + wh[0].trim();
+			var b = canvas.toDataURL('image/jpeg', 1);;
+			img.src = b;
+			t.setAttribute('value', '.' + b.substring(b.indexOf('/') + 1, b.indexOf(';')) + global.separatorTech + b.substring(b.indexOf(',') + 1));
+			t._root.querySelector('imagePreviewSize').innerHTML = wh[1].trim() + ' x ' + wh[0].trim();
 		};
 	}
 	scale(image, x, y, w, h) {
@@ -1614,6 +1620,23 @@ input+img {
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 		ctx.drawImage(image, x, y, wOrg, hOrg, 0, 0, w, h);
 		return { data: canvas.toDataURL('image/jpeg', 0.8), width: parseInt(w + 0.5), height: parseInt(h + 0.5) };
+	}
+	update(src) {
+		var img = new Image();
+		var i = this._root.querySelector('img.preview');
+		img.src = src;
+		var ratio;
+		if (i.clientHeight > i.clientWidth)
+			ratio = i.naturalWidth / i.clientWidth;
+		else
+			ratio = i.naturalHeight / i.clientHeight;
+		var x = -i.offsetLeft * ratio;
+		var y = -i.offsetTop * ratio;
+		var w = Math.min(i.parentElement.clientWidth, i.clientWidth) * ratio;
+		var h = Math.min(i.parentElement.clientHeight, i.clientHeight) * ratio;
+		var b = this.scale(img, x, y, w, h).data;
+		// b = data:image/jpeg;base64,/9j/4AAQS...
+		this.setAttribute('value', '.' + b.substring(b.indexOf('/') + 1, b.indexOf(';')) + global.separatorTech + b.substring(b.indexOf(',') + 1));
 	}
 	zoom(event, delta) {
 		var e = event.target;

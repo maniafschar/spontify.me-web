@@ -388,7 +388,7 @@ ${v.rating}
 		var s = '';
 		for (var i = 1; i < l.length; i++) {
 			var v = model.convert(new Location(), l, i);
-			var text, image, flag1, flag2, flag3;
+			var text = '', image, flag1, flag2, flag3;
 			if (v._geolocationDistance)
 				flag1 = parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 || !v.id ? 0 : 1).replace('.', ',');
 			if (v._geolocationDistance && v.latitude)
