@@ -25,7 +25,7 @@ class ratings {
 			<textarea maxlength="1000" placeholder="${ui.l('locations.shortDesc')}" name="description" ${v.textareaStyle}>${v.draft}</textarea>
         </field>
         <field style="margin:0.5em 0 0 0;">
-            <input type="file" name="image" accept=".gif, .png, .jpg" />
+            <input-image></input-image>
         </field>
         <buttontext onclick="ratings.save()" oId="${v.id}"
             class="${v.bg}" style="margin-top:0.5em;">${ui.l('rating.save')}</buttontext>

@@ -839,21 +839,29 @@ class formFunc {
 		for (var i = 0; i < e.length; i++) {
 			if (e[i].getAttribute('type') == 'radio') {
 				if (e[i].getAttribute('checked') == 'true')
-					d.values[e[i].name] = e[i].value;
+					d.values[e[i].getAttribute('name')] = true;
 			} else {
-				if (!cb[e[i].name])
-					cb[e[i].name] = '';
+				if (!cb[e[i].getAttribute('name')])
+					cb[e[i].getAttribute('name')] = '';
 				if (e[i].getAttribute('checked') == 'true')
-					cb[e[i].name] += global.separatorTech + e[i].value;
-				else if (e[i].value == 'true')
-					cb[e[i].name] += global.separatorTech + false;
+					cb[e[i].getAttribute('name')] += global.separatorTech + true;
+				else if (e[i].getAttribute('value') == '1')
+					cb[e[i].getAttribute('name')] += global.separatorTech + false;
 			}
 		}
 		for (var k in cb)
 			d.values[k] = cb[k].length > 0 ? cb[k].substring(1) : '';
 		e = ui.qa(id + ' input-slider:not([transient="true"])');
 		for (var i = 0; i < e.length; i++)
-			d.values[e[i].name] = e[i].getAttribute('value');
+			d.values[e[i].getAttribute('name')] = e[i].getAttribute('value');
+		e = ui.qa(id + ' input-hashtags:not([transient="true"])');
+		for (var i = 0; i < e.length; i++) {
+			d.values[e[i].getAttribute('name')] = e[i].getAttribute('ids');
+			d.values[e[i].getAttribute('name') + 'Text'] = e[i].getAttribute('text');
+		}
+		e = ui.qa(id + ' input-image:not([transient="true"])');
+		for (var i = 0; i < e.length; i++)
+			d.values[e[i].getAttribute('name')] = e[i].getAttribute('value');
 		return d;
 	}
 	static svg = {
@@ -1046,7 +1054,7 @@ class formFunc {
 class InputHashtags extends HTMLElement {
 	constructor() {
 		super();
-		const shadow = this.attachShadow({ mode: 'closed' });
+		this._root = this.attachShadow({ mode: 'closed' });
 		const style = document.createElement('style');
 		style.textContent = `
 hashtags {
@@ -1112,10 +1120,10 @@ settings field hashtags>div label.selected,
 search hashtags>div label.selected {
 	color: white;
 }`;
-		shadow.appendChild(style);
+		this._root.appendChild(style);
 		var element = document.createElement('hashtagButton');
 		element.setAttribute('onclick', 'this.getRootNode().host.toggle(event)');
-		shadow.appendChild(element);
+		this._root.appendChild(element);
 		element = document.createElement('textarea');
 		element.setAttribute('name', 'hashtagsDisp');
 		element.setAttribute('part', 'textarea');
@@ -1124,13 +1132,14 @@ search hashtags>div label.selected {
 		element.setAttribute('onkeyup', 'this.getRootNode().host.synchonizeTags(this.getRootNode())');
 		element.setAttribute('style', 'height:2em;');
 		element.textContent = InputHashtags.ids2Text(this.getAttribute('ids')) + (this.getAttribute('text') ? ' ' + this.getAttribute('text') : '').trim();
-		shadow.appendChild(element);
+		this._root.appendChild(element);
 		element = document.createElement('hashtags');
 		element.setAttribute('style', 'display:none;');
 		element.innerHTML = this.selection();
-		shadow.appendChild(element);
-		this.synchonizeTags(shadow);
-		setTimeout(function () { ui.adjustTextarea(shadow.querySelector('textarea')) }, 1000);
+		this._root.appendChild(element);
+		this.synchonizeTags(this._root);
+		var r = this._root;
+		setTimeout(function () { ui.adjustTextarea(r.querySelector('textarea')) }, 1000);
 	}
 	add(root, tag) {
 		var e = root.querySelector('textarea');
@@ -1236,7 +1245,7 @@ customElements.define('input-hashtags', InputHashtags);
 class InputCheckbox extends HTMLElement {
 	constructor() {
 		super();
-		const shadow = this.attachShadow({ mode: 'closed' });
+		this._root = this.attachShadow({ mode: 'closed' });
 		const style = document.createElement('style');
 		style.textContent = `
 label {
@@ -1273,11 +1282,11 @@ label:hover {
 	left: 0.5em;
 	opacity: 0.8;
 }`;
-		shadow.appendChild(style);
+		this._root.appendChild(style);
 		this.setAttribute('onclick', 'this.toggleCheckbox(event)' + (this.getAttribute('onclick') ? ';' + this.getAttribute('onclick') : ''));
 		var element = document.createElement('label');
 		element.textContent = this.getAttribute('label');
-		shadow.appendChild(element);
+		this._root.appendChild(element);
 	}
 	toggleCheckbox(event) {
 		var e = event.target;
@@ -1295,47 +1304,129 @@ customElements.define('input-checkbox', InputCheckbox);
 class InputImage extends HTMLElement {
 	constructor() {
 		super();
-		const shadow = this.attachShadow({ mode: 'closed' });
+		this._root = this.attachShadow({ mode: 'closed' });
 		const style = document.createElement('style');
-		style.textContent = ``;
-		shadow.appendChild(style);
-		var element = document.createElement('div');
-		if (!this.getAttribute('onchange'))
-			this.setAttribute('onchange', 'this.preview("' + element.nodeName + '")');
-		var s = '', s2 = this.getAttribute('name');
-		if (!global.isBrowser()) {
-			this.style.display = 'none';
-			s = '<div name="' + s2 + '_appInput" class="appInput"><buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + element.nodeName + '&quot;,&quot;' + s2 + '&quot;,true)" style="border-radius:0.5em 0 0 0.5em;border-right:solid 1px rgba(255,255,255,0.1);">' + ui.l('camera.shoot') + '</buttontext>' +
-				'<buttontext class="bgColor" onclick="formFunc.image.cameraPicture(&quot;' + element.nodeName + '&quot;,&quot;' + s2 + '&quot;)" style="border-radius:0 0.5em 0.5em 0;">' + ui.l('camera.select') + '</buttontext></div>';
+		style.textContent = `
+inputFile {
+	position: relative;
+	min-height: 2em;
+	text-align: left;
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	border-radius: 0.5em;
+	background: rgba(255, 255, 255, 0.85);
+	display: block;
+	color: black;
+}
+
+inputFile>span {
+	padding: 0.36em 0.75em;
+	display: inline-block;
+}
+
+inputFile close {
+	position: absolute;
+	height: 2.5em;
+	top: 0;
+	right: 0;
+	width: 4em;
+	z-index: 2;
+	text-align: right;
+	padding: 0.5em 0.75em;
+	color: white;
+	text-shadow: 0 0 0.15em rgba(0, 0, 0, 0.8);
+}
+
+inputFile desc {
+	position: absolute;
+	color: white;
+	text-align: center;
+	width: 100%;
+	left: 0;
+	bottom: 0;
+	text-shadow: 0 0 0.15em rgba(0, 0, 0, 0.8);
+	pointer-events: none;
+}
+
+inputFile rotate {
+	position: absolute;
+	left: 0;
+	text-align: left;
+	font-size: 2em;
+	width: 1.25em;
+	height: 2em;
+	padding: 0.25em;
+	color: white;
+	top: 0;
+	z-index: 2;
+	filter: drop-shadow(0 0 0.05em rgba(0, 0, 0, 0.8));
+}
+
+input {
+	opacity: 0;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	cursor: pointer;
+}
+
+input+img {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 100%;
+	border-radius: 0 0.5em 0.5em 0;
+}`;
+		this._root.appendChild(style);
+		var s = '', s2 = this.getAttribute('name'), element;
+		if (global.isBrowser()) {
+			element = document.createElement('inputFile');
+			element.innerHTML = '<span>' + (this.getAttribute('hint') ? this.getAttribute('hint') : ui.l('fileUpload.select')) + '</span>';
+			this._root.appendChild(element);
+			element = document.createElement('input');
+			element.setAttribute('type', 'file');
+			element.setAttribute('onchange', 'this.getRootNode().host.preview(this)');
+			element.setAttribute('accept', '.gif, .png, .jpg');
+			this._root.appendChild(element);
+		} else {
+			element = document.createElement('div');
+			element.setAttribute('class', 'appInput');
+			element.innerHTML = '<buttontext class="bgColor" onclick="this.getRootNode().host.cameraPicture(&quot;' + element.nodeName + '&quot;,&quot;' + s2 + '&quot;,true)" style="border-radius:0.5em 0 0 0.5em;border-right:solid 1px rgba(255,255,255,0.1);">' + ui.l('camera.shoot') + '</buttontext>' +
+				'<buttontext class="bgColor" onclick="this.getRootNode().host.cameraPicture(&quot;' + element.nodeName + '&quot;,&quot;' + s2 + '&quot;)" style="border-radius:0 0.5em 0.5em 0;">' + ui.l('camera.select') + '</buttontext>';
+			this._root.appendChild(element);
 		}
-		element.outerHTML = s + '<inputFile name="' + s2 + '_disp" ' + (e[i].getAttribute('class') ? 'class="' + e[i].getAttribute('class') + '" ' : '') + (global.isBrowser() ? '' : ' style="display:none;"') + '><span>' + (e[i].getAttribute('hint') ? e[i].getAttribute('hint') : ui.l('fileUpload.select')) + '</span></inputFile>' + e[i].outerHTML + '<img name="' + s2 + '_icon" src="' + (e[i].getAttribute('src') ? e[i].getAttribute('src') : '') + '"/>';
-		shadow.appendChild(element);
+		element = document.createElement('img');
+		element.setAttribute('class', 'icon');
+		if (this.getAttribute('src'))
+			element.setAttribute('src', this.getAttribute('src'));
+		this._root.appendChild(element);
 		ui.on(window, 'wheel', function (event) {
 			if (event.ctrlKey)
 				this.zoom(event, event.deltaY);
 		});
 	}
-	fieldId = { id: null, name: null, get(suffix) { return ui.q(formFunc.svg.fieldId.id + ' [name="' + formFunc.svg.fieldId.name + (suffix ? suffix : '') + '"]') } };
-
 	cameraError(e) {
 		if (!e || e.toLowerCase().indexOf('select') < 0)
 			ui.navigation.openPopup(ui.l('attention'), ui.l('camera.notAvailabe').replace('{0}', e));
 	}
 	cameraPicture(id, name, camera) {
-		formFunc.svg.fieldId.id = id;
-		formFunc.svg.fieldId.name = name;
-		navigator.camera.getPicture(formFunc.svg.cameraSuccess, formFunc.svg.cameraError,
+		navigator.camera.getPicture(this.cameraSuccess, this.cameraError,
 			{ sourceType: camera ? Camera.PictureSourceType.CAMERA : Camera.PictureSourceType.PHOTOLIBRARY, destinationType: Camera.DestinationType.FILE_URI });
 	}
 	cameraSuccess(e) {
-		formFunc.svg.fieldId.get('_appInput').style.display = 'none';
-		formFunc.svg.fieldId.get('_disp').style.display = 'block';
+		this._root.querySelector('div').style.display = 'none';
+		this._root.querySelector('inputFile').style.display = 'block';
+		var t = this;
 		window.resolveLocalFileSystemURL(e,
 			function (fe) {
 				fe.file(function (f) {
-					formFunc.svg.preview2(f);
-				}, formFunc.svg.cameraError);
-			}, formFunc.svg.cameraError);
+					t.preview2(f);
+				}, t.cameraError);
+			}, t.cameraError);
 	}
 	dataURItoBlob(dataURI) {
 		var arr = dataURI.split(','), mime = arr[0].match(/:(.*?);/)[1];
@@ -1347,26 +1438,24 @@ class InputImage extends HTMLElement {
 		return new Blob([ab], { type: mime });
 	}
 	hasImage() {
-		var x = formFunc.svg.fieldId.get('Preview');
+		var x = this._root.querySelector('img.preview');
 		return x && x.getAttribute('src') && x.getAttribute('src').length > 100;
 	}
-	preview(e, id) {
-		formFunc.svg.fieldId.id = id;
-		formFunc.svg.fieldId.name = e.getAttribute('name');
-		formFunc.svg.preview2(e.files && e.files.length > 0 ? e.files[0] : null);
+	preview(e) {
+		this.preview2(e.files && e.files.length > 0 ? e.files[0] : null);
 	}
 	preview2(file) {
-		formFunc.svg.fieldId.get().setAttribute('rotateImage', '0');
+		this.setAttribute('rotateImage', '0');
 		if (file) {
-			var ePrev = formFunc.svg.fieldId.get('_disp');
+			var ePrev = this._root.querySelector('inputFile');
 			ui.css(ePrev, 'z-index', 6);
-			formFunc.svg.fieldId.get('_icon').style.display = 'none';
-			var p = '<rotate onclick="formFunc.image.rotate(this)">&#8635;</rotate><img name="' + formFunc.svg.fieldId.name + 'Preview"/>';
-			ui.html(ePrev, '<close onclick="formFunc.image.remove()">X</close>' + p + '<desc></desc>');
-			formFunc.svg.previewInternal(file);
+			this._root.querySelector('img.icon').style.display = 'none';
+			var p = '<rotate onclick="this.getRootNode().host.rotate(this)">&#8635;</rotate><img class="preview"/>';
+			ui.html(ePrev, '<close onclick="this.getRootNode().host.remove()">X</close>' + p + '<desc></desc>');
+			this.previewInternal(file);
 			ui.css('#popupSendImage', 'display', '');
 		} else
-			formFunc.svg.remove();
+			this.remove();
 	}
 	previewCalculateDistance(event) {
 		var t;
@@ -1381,15 +1470,16 @@ class InputImage extends HTMLElement {
 	}
 	previewInternal(f) {
 		var reader = new FileReader();
+		var t = this;
 		reader.onload = function (r) {
-			var img = formFunc.svg.fieldId.get('Preview');
+			var img = t._root.querySelector('img.preview');
 			if (img) {
 				var image = new Image();
 				image.onload = function () {
 					var whOrg = image.naturalWidth + ' x ' + image.naturalHeight;
-					formFunc.svg.fieldId.get().setAttribute('rotateImage', 0);
-					var scaled = formFunc.svg.scale(image);
-					var size = formFunc.svg.dataURItoBlob(scaled.data).size, sizeOrg = f.size, s, s2 = '', s0 = '';
+					t.setAttribute('rotateImage', '0');
+					var scaled = t.scale(image);
+					var size = t.dataURItoBlob(scaled.data).size, sizeOrg = f.size, s, s2 = '', s0 = '';
 					if (size > 1024 * 1024) {
 						if (size > 5 * 1024 * 1024) {
 							s0 = '<span style="color:red;">';
@@ -1407,7 +1497,7 @@ class InputImage extends HTMLElement {
 						x = (sizeOrg / 1024).toFixed(1) + ' KB';
 					else
 						x = sizeOrg + ' B';
-					var disp = formFunc.svg.fieldId.get('_disp');
+					var disp = t._root.querySelector('inputFile');
 					disp.querySelector('desc').innerHTML = x + global.separator + whOrg + '<br/>' + ui.l('fileUpload.ratio') + ' ' + (100 - size / sizeOrg * 100).toFixed(0) + '%<br/>' + s0 + s + global.separator + s2 + '<span id="imagePreviewSize">' + scaled.width + ' x ' + scaled.height + '</span>';
 					img.src = r.target.result;
 					ui.css(disp, 'height', disp.clientWidth + 'px');
@@ -1433,19 +1523,19 @@ class InputImage extends HTMLElement {
 						}
 					};
 					ui.on(img, 'touchmove', function (event) {
-						var d = formFunc.svg.previewCalculateDistance(event);
+						var d = t.previewCalculateDistance(event);
 						if (d) {
 							var zoom = Math.sign(formFunc.dist - d) * 5;
 							if (zoom > 0)
 								zoom /= event.scale;
 							else
 								zoom *= event.scale;
-							formFunc.svg.zoom(event, zoom);
+							t.zoom(event, zoom);
 							formFunc.dist = d;
 						}
 					});
 					ui.on(img, 'touchstart', function (event) {
-						var d = formFunc.svg.previewCalculateDistance(event);
+						var d = t.previewCalculateDistance(event);
 						if (d)
 							formFunc.dist = d;
 					});
@@ -1456,18 +1546,18 @@ class InputImage extends HTMLElement {
 		reader.readAsDataURL(f);
 	}
 	remove() {
-		var e = formFunc.svg.fieldId.get();
+		var e = this._root.querySelector('input');
 		if (e) {
 			e.value = '';
 			ui.attr(e, 'rotateImage', 0);
-			var ePrev = formFunc.svg.fieldId.get('_disp');
+			var ePrev = this._root.querySelector('inputFile');
 			ui.html(ePrev, '<span>' + (e.getAttribute('hint') ? e.getAttribute('hint') : ui.l('fileUpload.select')) + '</span>');
 			ePrev.style.zIndex = null;
 			ePrev.style.height = null;
-			formFunc.svg.fieldId.get('_icon').style.display = '';
+			this._root.querySelector('img.icon').style.display = '';
 			ui.css('#popupSendImage', 'display', 'none');
 			if (!global.isBrowser()) {
-				formFunc.svg.fieldId.get('_appInput').style.display = 'block';
+				this._root.querySelector('div').style.display = 'block';
 				ePrev.style.display = 'none';
 			}
 		}
@@ -1571,7 +1661,7 @@ customElements.define('input-image', InputImage);
 class InputSlider extends HTMLElement {
 	constructor() {
 		super();
-		const shadow = this.attachShadow({ mode: 'closed' });
+		this._root = this.attachShadow({ mode: 'closed' });
 		const style = document.createElement('style');
 		style.textContent = `
 * {
@@ -1603,7 +1693,7 @@ thumb span {
 thumb val {
 	display: block;
 }`;
-		shadow.appendChild(style);
+		this._root.appendChild(style);
 		var v = this.getAttribute('value')?.split(',');
 		if (!v)
 			v = ['0', '100'];
@@ -1621,15 +1711,15 @@ thumb val {
 		element.style.left = v[0] + '%';
 		if (this.getAttribute('type') == 'range') {
 			element.innerHTML = `<span style="right:0;"><val></val>${ui.l('slider.from')}</span>`;
-			shadow.appendChild(element);
+			this._root.appendChild(element);
 			element = document.createElement('thumb');
 			element.style.left = v[1] + '%';
 			element.classList.add('right');
 			element.innerHTML = `<span style="left:0;"><val></val>${ui.l('slider.until')}</span>`;
 		} else
 			element.innerHTML = `<span style="right:0;"><val></val>${ui.l(this.getAttribute('label')) ? ui.l(this.getAttribute('label')) : this.getAttribute('label')}</span>`;
-		shadow.appendChild(element);
-		this.initSliderDrag(shadow.querySelectorAll('thumb'));
+		this._root.appendChild(element);
+		this.initSliderDrag(this._root.querySelectorAll('thumb'));
 	}
 	initSliderDrag(o) {
 		var thumbLeft = o[0];

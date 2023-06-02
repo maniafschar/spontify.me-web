@@ -52,7 +52,7 @@ class pageSettings {
 <field>
 	<label>${ui.l('picture')}</label>
 	<value style="text-align:center;">
-		<input type="file" name="image" hint="${ui.l('settings.imageHint')}" accept=".gif, .png, .jpg" ${v.image}/>
+		<input-image src="${v.image}"></input-image>
 	</value>
 </field>
 <field>
@@ -331,7 +331,7 @@ ${v.info}`;
 					if (v['contact.search'] == 1)
 						v.search = ' checked="true"';
 					if (user.contact.imageList)
-						v.image = 'src="' + global.serverImg + user.contact.imageList + '"';
+						v.image = global.serverImg + user.contact.imageList;
 					v.settings1 = pageSettings.templateSettings1(v);
 					if (user.contact.ageMale)
 						v.genderInterest1 = 'checked="true"';

@@ -159,7 +159,7 @@ ${v.rating}
 <field>
 	<label>${ui.l('picture')}</label>
 	<value>
-		<input type="file" name="image" accept=".gif, .png, .jpg" ${v.image} />
+		<input-image src="${v.image}"></input-image>
 	</value>
 </field>
 <dialogButtons>

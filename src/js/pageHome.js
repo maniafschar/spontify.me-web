@@ -68,7 +68,7 @@ ${ui.l('events.title')}
 <field>
 	<label>${ui.l('picture')}</label>
 	<value>
-		<input name="image" type="file" accept=".gif, .png, .jpg" src="${v.image}" />
+		<input-image src="${v.image}"></input-image>
 	</value>
 </field>
 <field>

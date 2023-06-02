@@ -92,7 +92,7 @@ class pageEvent {
 <field class="paid" style="display:none;">
 	<label>${ui.l('picture')}</label>
 	<value>
-		<input type="file" name="image" accept=".gif, .png, .jpg" />
+		<input-image></input-image>
 	</value>
 </field>
 <field class="url" style="display:none;">

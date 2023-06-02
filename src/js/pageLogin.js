@@ -441,7 +441,7 @@ class pageLogin {
 			if (global.date.server2local(user.get('profileCompletePrompt')) < today) {
 				var page1 = '', page2 = '';
 				if (!user.contact.image)
-					page1 += '<field><label>' + ui.l('picture') + '</label><value style="text-align:center;"><input type="file" name="image" hint="' + ui.l('settings.imageHint') + '" accept=".gif, .png, .jpg"/></value></field>';
+					page1 += '<field><label>' + ui.l('picture') + '</label><value style="text-align:center;"><input-image hint="' + ui.l('settings.imageHint') + '"></input-image></value></field>';
 				if (!user.contact.birthday)
 					page1 += '<field><label>' + ui.l('birthday') + '</label><value><input type="date" placeholder="TT.MM.JJJJ" name="birthday" maxlength="10"/></value></field>';
 				if (!user.contact.gender)

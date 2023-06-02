@@ -33,7 +33,7 @@ class pageSearch {
 			global.template`<form onsubmit="return false">
 <input-checkbox label="${ui.l('search.matches')}" name="matches" ${v.matches}></input-checkbox>
 <label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
-<input-hashtags text="${v.keywords}"></input-hashtags>
+<input-hashtags ids="${v.keywords}" text="${v.keywordsText}" name="keywords"></input-hashtags>
 <explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
 <errorHint></errorHint>
 <dialogButtons>
@@ -42,9 +42,9 @@ class pageSearch {
 </form>`,
 		getFields() {
 			var v = {};
-			if (pageSearch.contacts.fieldValues.keywords)
-				v.keywords = pageSearch.contacts.fieldValues.keywords;
-			if (pageSearch.contacts.fieldValues.matches == 'on')
+			v.keywords = pageSearch.contacts.fieldValues.keywords;
+			v.keywordsText = pageSearch.contacts.fieldValues.keywordsText;
+			if (pageSearch.contacts.fieldValues.matches == 'true')
 				v.matches = ' checked="true"';
 			return pageSearch.contacts.template(v);
 		},
@@ -88,12 +88,11 @@ class pageSearch {
 						s += 'contact.idDisplay=\'' + s2 + '\' or (contact.search=true and (LOWER(contact.description) like \'%' + s2 + '%\' or LOWER(contact.pseudonym) like \'%' + s2 + '%\' or LOWER(contact.skillsText) like \'%' + s2 + '%\')) or ';
 					}
 				}
-				s = s.substring(0, s.length - 4);
+				s = s.substring(0, s.length - 4) + ')';
 			}
 			v = ui.q('search tabBody div.contacts input-hashtags').getAttribute('ids');
 			if (v)
 				s += (s ? ' or ' : '') + global.getRegEx('contact.skills', v);
-			s += ')';
 			return 'contact.id<>' + user.contact.id + s;
 		},
 		search() {
@@ -115,7 +114,7 @@ class pageSearch {
 			global.template`<form onsubmit="return false">
 <input-checkbox label="${ui.l('search.matchesEvent')}" name="matches" ${v.matches}></input-checkbox>
 <label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
-<input-hashtags text="${v.keywords}"></input-hashtags>
+<input-hashtags ids="${v.keywords}" text="${v.keywordsText}" name="keywords"></input-hashtags>
 <explain class="searchKeywordHint">${ui.l('search.hintEvent')}</explain>
 <errorHint></errorHint>
 <dialogButtons>
@@ -124,9 +123,9 @@ class pageSearch {
 </form>`,
 		getFields() {
 			var v = {};
-			if (pageSearch.events.fieldValues.keywords)
-				v.keywords = pageSearch.events.fieldValues.keywords;
-			if (pageSearch.events.fieldValues.matches == 'on')
+			v.keywords = pageSearch.events.fieldValues.keywords;
+			v.keywordsText = pageSearch.events.fieldValues.keywordsText;
+			if (pageSearch.events.fieldValues.matches == 'true')
 				v.matches = ' checked="true"';
 			return pageSearch.events.template(v);
 		},
@@ -157,27 +156,25 @@ class pageSearch {
 			return search;
 		},
 		getSearch() {
-			var v = ui.q('search tabBody div.contacts input-hashtags').getAttribute('text'), s = '';
+			var v = ui.q('search tabBody div.events input-hashtags').getAttribute('text'), s = '';
 			if (v) {
 				v = v.replace(/'/g, '\'\'').split('|');
-				s += ' and (';
 				for (var i = 0; i < v.length; i++) {
 					if (v[i]) {
-						v[i] = v[i].trim().toLowerCase();
 						var l = ') like \'%' + v[i].trim().toLowerCase() + '%\' or LOWER(';
-						s += '((contact.search=true or event.price>0) and (LOWER(contact.pseudonym' + l + 'contact.description' + l;
-						s = s.substring(0, s.lastIndexOf(' or LOWER')) + ') or '
+						s += '((contact.search=true or event.price>0) and LOWER(contact.pseudonym' + l + 'contact.description' + l;
+						s = s.substring(0, s.lastIndexOf(' or LOWER(')) + ') or ';
 						s += 'LOWER(location.name' + l + 'location.description' + l + 'location.address' + l + 'location.address2' + l + 'location.telephone' + l + 'event.description' + l + 'event.skillsText' + l;
-						s = s.substring(0, s.lastIndexOf(' or LOWER')) + ') or ';
+						s = s.substring(0, s.lastIndexOf(' or LOWER(')) + ' or ';
 					}
 				}
 				s = s.substring(0, s.length - 4);
 			}
-			v = ui.q('search tabBody div.contacts input-hashtags').getAttribute('ids');
+			v = ui.q('search tabBody div.events input-hashtags').getAttribute('ids');
 			if (v)
 				s += (s ? ' or ' : '') + global.getRegEx('event.skills', v);
 			if (s)
-				s = '(' + s.substring(0, s.length - 4) + ')';
+				s = '(' + s + ')';
 			if (ui.q('search tabBody div.events [name="matches"][checked="true"]'))
 				s += (s ? ' and ' : '') + pageSearch.events.getMatches();
 			var d = new Date();
@@ -233,7 +230,7 @@ class pageSearch {
 			global.template`<form onsubmit="return false">
 <input-checkbox label="${ui.l('search.favorites')}" name="favorites" ${v.favorites}></input-checkbox>
 <label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
-<input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" ${v.keywords}/>
+<input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" value="${v.keywords}"/>
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
 <errorHint></errorHint>
 <dialogButtons>
@@ -243,7 +240,7 @@ class pageSearch {
 		getFields() {
 			var v = {};
 			if (pageSearch.locations.fieldValues.favorites)
-				v.favorites = ' checked="checked"';
+				v.favorites = ' checked="true"';
 			if (pageSearch.locations.fieldValues.keywords)
 				v.keywords = pageSearch.locations.fieldValues.keywords;
 			return pageSearch.locations.template(v);
