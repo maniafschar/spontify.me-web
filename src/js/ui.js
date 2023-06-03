@@ -1410,6 +1410,7 @@ input+img {
 				t.zoom(event, event.deltaY);
 		});
 	}
+	zoomDist = 0;
 	cameraError(e) {
 		if (!e || e.toLowerCase().indexOf('select') < 0)
 			ui.navigation.openPopup(ui.l('attention'), ui.l('camera.notAvailabe').replace('{0}', e));
@@ -1450,8 +1451,47 @@ input+img {
 			var ePrev = this._root.querySelector('inputFile');
 			ui.css(ePrev, 'z-index', 6);
 			this._root.querySelector('img.icon').style.display = 'none';
-			var p = '<rotate onclick="this.getRootNode().host.rotate(this)">&#8635;</rotate><img class="preview"/>';
-			ui.html(ePrev, '<close onclick="this.getRootNode().host.remove()">X</close>' + p + '<desc></desc>');
+
+			ui.html(ePrev, `
+<close onclick="this.getRootNode().host.remove()">X</close>
+<rotate onclick="this.getRootNode().host.rotate(this)">&#8635;</rotate>
+<img class="preview"/>
+<desc></desc>`);
+			var img = this._root.querySelector('img.preview');
+			new DragObject(img).ondrag = function (event, delta) {
+				if (parseInt(delta.y) != 0) {
+					var y = parseInt(ui.cssValue(img, 'margin-top')) + delta.y;
+					if (y < 1 && y > -(img.clientHeight - img.getRootNode().querySelector('inputFile').clientHeight)) {
+						ui.css(img, 'margin-top', y + 'px');
+						img.getRootNode().host.update(img.getAttribute('src'));
+					}
+				}
+				if (parseInt(delta.x) != 0) {
+					var x = parseInt(ui.cssValue(img, 'margin-left')) + delta.x;
+					if (x < 1 && x > -(img.clientWidth - img.getRootNode().querySelector('inputFile').clientWidth)) {
+						ui.css(img, 'margin-left', x + 'px');
+						img.getRootNode().host.update(img.getAttribute('src'));
+					}
+				}
+			};
+			ui.on(img, 'touchmove', function (event) {
+				console.log(event);
+				var d = img.getRootNode().host.previewCalculateDistance(event);
+				if (d) {
+					var zoom = Math.sign(img.zoomDist - d) * 5;
+					if (zoom > 0)
+						zoom /= event.scale;
+					else
+						zoom *= event.scale;
+					img.getRootNode().host.zoom(event, zoom);
+					img.getRootNode().host.zoomDist = d;
+				}
+			});
+			ui.on(img, 'touchstart', function (event) {
+				var d = img.getRootNode().host.previewCalculateDistance(event);
+				if (d)
+					img.getRootNode().host.zoomDist = d;
+			});
 			this.previewInternal(file);
 			ui.css('#popupSendImage', 'display', '');
 		} else
@@ -1510,39 +1550,6 @@ input+img {
 						if (image.naturalHeight > disp.clientHeight)
 							ui.css(img, 'margin-top', -((Math.min(disp.clientWidth / image.naturalWidth, 1) * image.naturalHeight - disp.clientHeight) / 2) + 'px');
 					}
-					new DragObject(img).ondrag = function (event, delta) {
-						if (parseInt(delta.y) != 0) {
-							var y = parseInt(ui.cssValue(img, 'margin-top')) + delta.y;
-							if (y < 1 && y > -(img.clientHeight - disp.clientHeight)) {
-								ui.css(img, 'margin-top', y + 'px');
-								t.update(r.target.result);
-							}
-						}
-						if (parseInt(delta.x) != 0) {
-							var x = parseInt(ui.cssValue(img, 'margin-left')) + delta.x;
-							if (x < 1 && x > -(img.clientWidth - disp.clientWidth)) {
-								ui.css(img, 'margin-left', x + 'px');
-								t.update(r.target.result);
-							}
-						}
-					};
-					ui.on(img, 'touchmove', function (event) {
-						var d = t.previewCalculateDistance(event);
-						if (d) {
-							var zoom = Math.sign(formFunc.dist - d) * 5;
-							if (zoom > 0)
-								zoom /= event.scale;
-							else
-								zoom *= event.scale;
-							t.zoom(event, zoom);
-							formFunc.dist = d;
-						}
-					});
-					ui.on(img, 'touchstart', function (event) {
-						var d = t.previewCalculateDistance(event);
-						if (d)
-							formFunc.dist = d;
-					});
 				};
 				image.src = r.target.result;
 			}
@@ -1639,15 +1646,9 @@ input+img {
 		this.setAttribute('value', '.' + b.substring(b.indexOf('/') + 1, b.indexOf(';')) + global.separatorTech + b.substring(b.indexOf(',') + 1));
 	}
 	zoom(event, delta) {
-		var e = event.target;
-		if (e.nodeName != 'IMG') {
-			e = e.parentNode;
-			for (var i = 0; i < e.children.length; i++)
-				if (e.children[i].nodeName == 'IMG') {
-					e = e.children[i];
-					break;
-				}
-		}
+		var e = this._root.querySelector('img.preview');
+		if (!e)
+			return;
 		if (e && e.nodeName == 'IMG' && e.getAttribute('name') && e.getAttribute('name').indexOf('Preview') > 0) {
 			var style = ('' + ui.cssValue(e, 'max-width')).indexOf('%') > 0 ? 'max-width' : 'max-height';
 			var windowSize = style == 'max-width' ? e.parentNode.clientWidth : e.parentNode.clientHeight;

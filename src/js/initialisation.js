@@ -154,12 +154,6 @@ class initialisation {
 			if (!ui.classContains(e, 'sendButton') && !ui.classContains(e, 'quote') && !ui.parents(e, 'chatConversation'))
 				document.activeElement.blur();
 		});
-		ui.on(window, 'touchmove', function (event) {
-			if (event.touches.length > 1)
-				try {
-					event.preventDefault();
-				} catch (e) { }
-		});
 		ui.on('detail', 'click', function (event) {
 			var e = event.target;
 			if (e.nodeName != 'INPUT' && e.nodeName != 'TEXTAREA') {
@@ -210,7 +204,7 @@ class initialisation {
 				pageSettings.swipeRight();
 			else if (dir == 'left')
 				pageSettings.swipeLeft();
-		}, 'input,textarea,img,input-slider,thumb,val');
+		}, 'input,textarea,input-image,input-slider');
 		ui.swipe('search', function (dir) {
 			if (dir == 'left')
 				pageSearch.swipeLeft();
