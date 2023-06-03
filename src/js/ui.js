@@ -1629,21 +1629,25 @@ input+img {
 		return { data: canvas.toDataURL('image/jpeg', 0.8), width: parseInt(w + 0.5), height: parseInt(h + 0.5) };
 	}
 	update(src) {
-		var img = new Image();
-		var i = this._root.querySelector('img.preview');
-		img.src = src;
-		var ratio;
-		if (i.clientHeight > i.clientWidth)
-			ratio = i.naturalWidth / i.clientWidth;
-		else
-			ratio = i.naturalHeight / i.clientHeight;
-		var x = -i.offsetLeft * ratio;
-		var y = -i.offsetTop * ratio;
-		var w = Math.min(i.parentElement.clientWidth, i.clientWidth) * ratio;
-		var h = Math.min(i.parentElement.clientHeight, i.clientHeight) * ratio;
-		var b = this.scale(img, x, y, w, h).data;
-		// b = data:image/jpeg;base64,/9j/4AAQS...
-		this.setAttribute('value', '.' + b.substring(b.indexOf('/') + 1, b.indexOf(';')) + global.separatorTech + b.substring(b.indexOf(',') + 1));
+		const t = this;
+		clearTimeout(t.lastUpdate);
+		t.lastUpdate = setTimeout(function () {
+			var img = new Image();
+			var i = t._root.querySelector('img.preview');
+			img.src = src;
+			var ratio;
+			if (i.clientHeight > i.clientWidth)
+				ratio = i.naturalWidth / i.clientWidth;
+			else
+				ratio = i.naturalHeight / i.clientHeight;
+			var x = -i.offsetLeft * ratio;
+			var y = -i.offsetTop * ratio;
+			var w = Math.min(i.parentElement.clientWidth, i.clientWidth) * ratio;
+			var h = Math.min(i.parentElement.clientHeight, i.clientHeight) * ratio;
+			var b = t.scale(img, x, y, w, h).data;
+			// b = data:image/jpeg;base64,/9j/4AAQS...
+			t.setAttribute('value', '.' + b.substring(b.indexOf('/') + 1, b.indexOf(';')) + global.separatorTech + b.substring(b.indexOf(',') + 1));
+		}, 500);
 	}
 	zoom(event, delta) {
 		var e = this._root.querySelector('img.preview');
