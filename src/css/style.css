@@ -394,12 +394,18 @@ homeBody teaser {
 	left: 0;
 	opacity: 0;
 	transition: all 0.4s ease-out;
+	height: 40%;
+	display: block;
 }
 
 homeBody teaser div {
 	white-space: nowrap;
 	overflow-x: auto;
 	padding: 0.5em;
+	position: absolute;
+	height: 100%;
+	padding-top: 2em;
+	top: 0;
 }
 
 homeBody teaser.contacts {
@@ -407,7 +413,7 @@ homeBody teaser.contacts {
 }
 
 homeBody teaser.events {
-	top: 0;
+	top: 1em;
 }
 
 homeBody teaser card {
@@ -417,11 +423,12 @@ homeBody teaser card {
 	position: relative;
 	display: inline-block;
 	cursor: pointer;
+	height: 100%;
 	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
 }
 
 homeBody teaser card img {
-	height: 13vh;
+	height: 100%;
 }
 
 homeBody teaser card text {
@@ -440,10 +447,11 @@ homeBody teaser title {
 }
 
 homeBody teaser buttonIcon {
-	right: -0.2em;
-	font-size: 3.2em;
-	bottom: -1.25em;
+	right: 0;
+	font-size: 2.5em;
+	top: 0;
 	box-shadow: none;
+	padding: 0.1em 0.2em 0.3em 0.75em;
 }
 
 home {
