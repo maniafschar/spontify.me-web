@@ -386,6 +386,7 @@ homeBody {
 	width: 100%;
 	display: block;
 	height: 60%;
+	overflow: hidden;
 }
 
 homeBody teaser {
@@ -396,16 +397,17 @@ homeBody teaser {
 	transition: all 0.4s ease-out;
 	height: 40%;
 	display: block;
-	overflow: hidden;
 }
 
 homeBody teaser div {
-	white-space: nowrap;
 	overflow-x: auto;
+	overflow-y: hidden;
+	white-space: nowrap;
 	padding: 0.5em;
 	position: absolute;
 	height: 100%;
 	padding-top: 2em;
+	width: 100%;
 	top: 0;
 }
 
