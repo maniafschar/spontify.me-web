@@ -812,25 +812,7 @@ class formFunc {
 		}
 		e = ui.qa(id + ' input:not([transient="true"])');
 		for (var i = 0; i < e.length; i++) {
-			if (e[i].name && e[i].type == 'file') {
-				var f = ui.q('[name="' + e[i].name + 'Preview"]');
-				if (f && f.getAttribute('src')) {
-					var img = new Image();
-					img.src = f.getAttribute('src');
-					var ratio;
-					if (f.clientHeight > f.clientWidth)
-						ratio = f.naturalWidth / f.clientWidth;
-					else
-						ratio = f.naturalHeight / f.clientHeight;
-					var x = -f.offsetLeft * ratio;
-					var y = -f.offsetTop * ratio;
-					var w = Math.min(f.parentElement.clientWidth, f.clientWidth) * ratio;
-					var h = Math.min(f.parentElement.clientHeight, f.clientHeight) * ratio;
-					var b = formFunc.svg.scale(img, x, y, w, h).data;
-					// b = data:image/jpeg;base64,/9j/4AAQS...
-					d.values[e[i].name] = '.' + b.substring(b.indexOf('/') + 1, b.indexOf(';')) + global.separatorTech + b.substring(b.indexOf(',') + 1);
-				}
-			} else if (e[i].type == 'datetime-local')
+			if (e[i].type == 'datetime-local')
 				d.values[e[i].name] = global.date.local2server(e[i].value);
 			else if (e[i].name)
 				d.values[e[i].name] = e[i].value.replace(/\"/g, '&quot;').replace(/</g, '&lt;');
@@ -1407,7 +1389,7 @@ input+img {
 		const t = this;
 		ui.on(window, 'wheel', function (event) {
 			if (event.ctrlKey)
-				t.zoom(event, event.deltaY);
+				t.zoom(event.deltaY);
 		});
 	}
 	zoomDist = 0;
@@ -1475,15 +1457,15 @@ input+img {
 				}
 			};
 			ui.on(img, 'touchmove', function (event) {
-				console.log(event);
 				var d = img.getRootNode().host.previewCalculateDistance(event);
 				if (d) {
-					var zoom = Math.sign(img.zoomDist - d) * 5;
+					var zoom = Math.sign(img.getRootNode().host.zoomDist - d) * 5;
 					if (zoom > 0)
 						zoom /= event.scale;
 					else
 						zoom *= event.scale;
-					img.getRootNode().host.zoom(event, zoom);
+					console.log(event.scale, event);
+					img.getRootNode().host.zoom(zoom);
 					img.getRootNode().host.zoomDist = d;
 				}
 			});
@@ -1649,36 +1631,35 @@ input+img {
 			t.setAttribute('value', '.' + b.substring(b.indexOf('/') + 1, b.indexOf(';')) + global.separatorTech + b.substring(b.indexOf(',') + 1));
 		}, 500);
 	}
-	zoom(event, delta) {
+	zoom(delta) {
 		var e = this._root.querySelector('img.preview');
 		if (!e)
 			return;
-		if (e && e.nodeName == 'IMG' && e.getAttribute('name') && e.getAttribute('name').indexOf('Preview') > 0) {
-			var style = ('' + ui.cssValue(e, 'max-width')).indexOf('%') > 0 ? 'max-width' : 'max-height';
-			var windowSize = style == 'max-width' ? e.parentNode.clientWidth : e.parentNode.clientHeight;
-			var imageSize = style == 'max-width' ? e.naturalWidth : e.naturalHeight;
-			var zoom = parseFloat(ui.cssValue(e, style)) - delta;
-			if (zoom < 100)
-				zoom = 100;
-			else if (zoom / 100 * windowSize > imageSize)
-				zoom = imageSize / windowSize * 100;
-			zoom = parseInt(zoom);
-			if (zoom == parseInt(ui.cssValue(e, style)))
-				return;
-			ui.css(e, style, zoom + '%');
-			var x = parseInt(ui.cssValue(e, 'margin-left')) + e.clientWidth * delta / 200;
-			if (x + e.clientWidth < e.parentNode.clientWidth)
-				x = e.parentNode.clientWidth - e.clientWidth;
-			else if (x > 0)
-				x = 0;
-			var y = parseInt(ui.cssValue(e, 'margin-top')) + e.clientHeight * delta / 200;
-			if (y + e.clientHeight < e.parentNode.clientHeight)
-				y = e.parentNode.clientHeight - e.clientHeight;
-			else if (y > 0)
-				y = 0;
-			ui.css(e, 'margin-left', x);
-			ui.css(e, 'margin-top', y);
-		}
+		var style = ('' + ui.cssValue(e, 'max-width')).indexOf('%') > 0 ? 'max-width' : 'max-height';
+		var windowSize = style == 'max-width' ? e.parentElement.clientWidth : e.parentElement.clientHeight;
+		var imageSize = style == 'max-width' ? e.naturalWidth : e.naturalHeight;
+		var zoom = parseFloat(ui.cssValue(e, style)) - delta;
+		if (zoom < 100)
+			zoom = 100;
+		else if (zoom / 100 * windowSize > imageSize)
+			zoom = imageSize / windowSize * 100;
+		zoom = parseInt('' + zoom);
+		console.log(style + ' - ' + windowSize + ' - ' + imageSize + ' - ' + delta + ' - ' + zoom);
+		if (zoom == parseInt(ui.cssValue(e, style)))
+			return;
+		ui.css(e, style, zoom + '%');
+		var x = parseInt(ui.cssValue(e, 'margin-left')) + e.clientWidth * delta / 200;
+		if (x + e.clientWidth < e.parentElement.clientWidth)
+			x = e.parentElement.clientWidth - e.clientWidth;
+		else if (x > 0)
+			x = 0;
+		var y = parseInt(ui.cssValue(e, 'margin-top')) + e.clientHeight * delta / 200;
+		if (y + e.clientHeight < e.parentElement.clientHeight)
+			y = e.parentElement.clientHeight - e.clientHeight;
+		else if (y > 0)
+			y = 0;
+		ui.css(e, 'margin-left', x);
+		ui.css(e, 'margin-top', y);
 	}
 }
 customElements.define('input-image', InputImage);
