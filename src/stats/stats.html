@@ -1,0 +1,48 @@
+<main class="mainBG statistics">
+	<popup>
+		<panel></panel>
+		<close onclick="ui2.close()">x</close>
+	</popup>
+	<content>
+		<home>
+			<h1 style="margin-top:1em;" l="home.statistics"></h1>
+			<card class="mainBG" onclick="ui2.open(1)">
+				<top>390</top>
+				<bottom l="home.card1"></bottom>
+			</card>
+			<card class="mainBG" onclick="ui2.open(2)">
+				<top>38</top>
+				<bottom l="home.card2"></bottom>
+			</card>
+			<card class="mainBG" onclick="ui2.open(3)">
+				<top>18</top>
+				<bottom l="home.card3"></bottom>
+			</card>
+			<h1 l="home.userMap"></h1>
+			<mapCanvas></mapCanvas>
+		</home>
+		<marketing style="left:33.33%;">
+			<h1 style="margin-top:1em;" l="marketing.title"></h1>
+			<edit onclick="marketing.edit()"></edit>
+			<list></list>
+		</marketing>
+		<invoice style="left:66.66%;">
+			<h1 style="margin-top:1em;" l="invoice.title"></h1>
+		</invoice>
+	</content>
+	<hint></hint>
+	<navigation class="bgColor">
+		<item onclick="ui2.goTo(0)">
+			<img source="home" />
+		</item>
+		<item onclick="ui2.goTo(1)" class="active">
+			<img source="statistics" />
+		</item>
+		<item onclick="ui2.goTo(2)">
+			<img source="marketing" />
+		</item>
+		<item onclick="ui2.goTo(3)">
+			<img source="invoice" />
+		</item>
+	</navigation>
+</main>

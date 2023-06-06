@@ -1223,7 +1223,8 @@ search hashtags>div label.selected {
 			f.call();
 	}
 }
-customElements.define('input-hashtags', InputHashtags);
+if (!customElements.get('input-hashtags'))
+	customElements.define('input-hashtags', InputHashtags);
 
 class InputCheckbox extends HTMLElement {
 	constructor() {
@@ -1281,7 +1282,8 @@ label:hover {
 		e.setAttribute('checked', e.getAttribute('checked') == 'true' ? 'false' : 'true');
 	}
 }
-customElements.define('input-checkbox', InputCheckbox);
+if (!customElements.get('input-checkbox'))
+	customElements.define('input-checkbox', InputCheckbox);
 
 class InputImage extends HTMLElement {
 	constructor() {
@@ -1662,7 +1664,8 @@ input+img {
 		ui.css(e, 'margin-top', y);
 	}
 }
-customElements.define('input-image', InputImage);
+if (!customElements.get('input-image'))
+	customElements.define('input-image', InputImage);
 
 class InputSlider extends HTMLElement {
 	constructor() {
@@ -1781,7 +1784,8 @@ thumb val {
 		return x;
 	}
 }
-customElements.define('input-slider', InputSlider);
+if (!customElements.get('input-slider'))
+	customElements.define('input-slider', InputSlider);
 
 class ListRow extends HTMLElement {
 	constructor() {
@@ -1941,7 +1945,8 @@ compass::after {
 		this.removeAttribute('badge');
 	}
 }
-customElements.define('list-row', ListRow);
+if (!customElements.get('list-row'))
+	customElements.define('list-row', ListRow);
 
 class DragObject {
 	constructor(o) {

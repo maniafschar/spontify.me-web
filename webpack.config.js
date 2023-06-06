@@ -3,11 +3,14 @@ const express = require('express');
 
 module.exports = (env) => {
 	return {
-		entry: './src/js/fmg.js',
+		entry: {
+			fmg: './src/js/fmg.js',
+			stats: './src/stats/js/main.js',
+		},
 		mode: 'production',
 		output: {
 			globalObject: 'this',
-			filename: 'js/fmg.js',
+			filename: 'js/[name].js',
 			path: path.resolve(__dirname, 'dist'),
 		},
 		optimization: {
@@ -88,6 +91,9 @@ module.exports = (env) => {
 						fs.cpSync('src/js/lang/', 'dist/js/lang', { recursive: true });
 						fs.cpSync('src/logoutcallback.html', 'dist/logoutcallback.html');
 						fs.cpSync('src/oauthcallback.html', 'dist/oauthcallback.html');
+						fs.cpSync('src/stats/stats.html', 'dist/stats.html');
+						fs.cpSync('src/stats/css/stats.css', 'dist/css/stats.css');
+						fs.cpSync('src/stats/images/', 'dist/images', { recursive: true });
 						if (fs.existsSync('clients/' + client + '/images/favicon.ico'))
 							fs.cpSync('clients/' + client + '/images/favicon.ico', 'dist/favicon.ico');
 						file = '/css/style.css';
@@ -102,6 +108,13 @@ module.exports = (env) => {
 							.replace(/\{placeholderHost}/g, props.url.substring(8))
 							.replace(/\{placeholderSchema}/g, props.url.substring(8, props.url.lastIndexOf('.'))));
 						file = 'dist/js/fmg.js';
+						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
+							.replace('{placeholderAppTitle}', props.name)
+							.replace('{placeholderClientId}', '' + Math.max(parseInt(client), 1))
+							.replace('{placeholderServer}', props.server)
+							.replace(/\{placeholderBundleID}/g, bundleId)
+							.replace(/\{placeholderAppleID}/g, props.appleId));
+						file = 'dist/js/stats.js';
 						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
 							.replace('{placeholderAppTitle}', props.name)
 							.replace('{placeholderClientId}', '' + Math.max(parseInt(client), 1))

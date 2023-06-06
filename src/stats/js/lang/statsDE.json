@@ -1,0 +1,18 @@
+{
+	"home.card1": "Benutzer insgesamt",
+	"home.card2": "Benutzer aktiv diesen Monat",
+	"home.card3": "neue Registrieungen diesen Monat",
+	"home.statistics": "Statistiken",
+	"home.userMap": "Benutzer nach Region",
+	"marketing.title": "Marketing",
+	"invoice.title": "Rechnungen",
+	"noEntries": "keine Einträge",
+	"noData": "ohne Angabe",
+	"female": "Frauen",
+	"from": "über",
+	"male": "Männer",
+	"divers": "Divers",
+	"total": "Insgesamt",
+	"verified": "verifiziert",
+	"withImage": "mit Bild"
+}
