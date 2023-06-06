@@ -2,11 +2,13 @@ const path = require('path');
 const express = require('express');
 
 module.exports = (env) => {
+	var e = {
+		fmg: './src/js/fmg.js'
+	}
+	if (env && env.web)
+		e.stats = './src/stats/js/main.js';
 	return {
-		entry: {
-			fmg: './src/js/fmg.js',
-			stats: './src/stats/js/main.js',
-		},
+		entry: e,
 		mode: 'production',
 		output: {
 			globalObject: 'this',
@@ -91,10 +93,6 @@ module.exports = (env) => {
 						fs.cpSync('src/js/lang/', 'dist/js/lang', { recursive: true });
 						fs.cpSync('src/logoutcallback.html', 'dist/logoutcallback.html');
 						fs.cpSync('src/oauthcallback.html', 'dist/oauthcallback.html');
-						fs.cpSync('src/stats/stats.html', 'dist/stats.html');
-						fs.cpSync('src/stats/css/stats.css', 'dist/css/stats.css');
-						fs.cpSync('src/stats/images/', 'dist/images', { recursive: true });
-						fs.cpSync('src/stats/js/lang/', 'dist/js/lang', { recursive: true });
 						if (fs.existsSync('clients/' + client + '/images/favicon.ico'))
 							fs.cpSync('clients/' + client + '/images/favicon.ico', 'dist/favicon.ico');
 						file = '/css/style.css';
@@ -116,12 +114,18 @@ module.exports = (env) => {
 							.replace(/\{placeholderBundleID}/g, bundleId)
 							.replace(/\{placeholderAppleID}/g, props.appleId));
 						file = 'dist/js/stats.js';
-						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
-							.replace('{placeholderAppTitle}', props.name)
-							.replace('{placeholderClientId}', '' + Math.max(parseInt(client), 1))
-							.replace('{placeholderServer}', props.server)
-							.replace(/\{placeholderBundleID}/g, bundleId)
-							.replace(/\{placeholderAppleID}/g, props.appleId));
+						if (fs.existsSync(file)) {
+							fs.cpSync('src/stats/stats.html', 'dist/stats.html');
+							fs.cpSync('src/stats/css/stats.css', 'dist/css/stats.css');
+							fs.cpSync('src/stats/images/', 'dist/images', { recursive: true });
+							fs.cpSync('src/stats/js/lang/', 'dist/js/lang', { recursive: true });
+							fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
+								.replace('{placeholderAppTitle}', props.name)
+								.replace('{placeholderClientId}', '' + Math.max(parseInt(client), 1))
+								.replace('{placeholderServer}', props.server)
+								.replace(/\{placeholderBundleID}/g, bundleId)
+								.replace(/\{placeholderAppleID}/g, props.appleId));
+						}
 						file = 'dist/js/lang/DE.html';
 						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
 							.replace(/\{placeholderAppTitle}/g, props.name));
