@@ -94,6 +94,7 @@ module.exports = (env) => {
 						fs.cpSync('src/stats/stats.html', 'dist/stats.html');
 						fs.cpSync('src/stats/css/stats.css', 'dist/css/stats.css');
 						fs.cpSync('src/stats/images/', 'dist/images', { recursive: true });
+						fs.cpSync('src/stats/js/lang/', 'dist/js/lang', { recursive: true });
 						if (fs.existsSync('clients/' + client + '/images/favicon.ico'))
 							fs.cpSync('clients/' + client + '/images/favicon.ico', 'dist/favicon.ico');
 						file = '/css/style.css';

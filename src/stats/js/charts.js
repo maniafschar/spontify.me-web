@@ -47,7 +47,7 @@ class charts {
 				}
 			},
 			series: [{
-				name: ui2.labels.responseTime,
+				name: ui.l('stats.responseTime'),
 				data: values
 			}],
 			labels: labels
@@ -93,18 +93,18 @@ class charts {
 				offsetX: 0,
 			},
 			series: [{
-				name: ui2.labels.total,
+				name: ui.l('stats.total'),
 				data: total
 			},
 			{
-				name: ui2.labels.verified,
+				name: ui.l('stats.verified'),
 				data: verified
 			},
 			{
-				name: ui2.labels.withImage,
+				name: ui.l('stats.withImage'),
 				data: withImage
 			}],
-			labels: [ui2.labels.female, ui2.labels.male, ui2.labels.divers, ui2.labels.noData]
+			labels: [ui.l('stats.female'), ui.l('stats.male'), ui.l('stats.divers'), ui.l('stats.noData')]
 		});
 	}
 	static initChartAge(data) {
@@ -154,22 +154,22 @@ class charts {
 				}
 			},
 			series: [{
-				name: ui2.labels.female,
+				name: ui.l('stats.female'),
 				data: female
 			},
 			{
-				name: ui2.labels.male,
+				name: ui.l('stats.male'),
 				data: male
 			},
 			{
-				name: ui2.labels.divers,
+				name: ui.l('stats.divers'),
 				data: divers
 			},
 			{
-				name: ui2.labels.noData,
+				name: ui.l('stats.noData'),
 				data: noData
 			}],
-			labels: [ui2.labels.until + ' 20', '20-30', '30-40', '40-50', '50-60', ui2.labels.from + ' 60', ui2.labels.noData]
+			labels: [ui.l('stats.until') + ' 20', '20 - 30', '30 - 40', '40 - 50', '50 - 60', ui.l('stats.from') + ' 60', ui.l('stats.noData')]
 		});
 	}
 	static initChartApi(data) {
@@ -192,7 +192,7 @@ class charts {
 			tooltip: {
 				y: {
 					formatter: function (value, { series, seriesIndex, dataPointIndex, w }) {
-						return ui2.labels.calls.replace('{0}', value).replace('{1}', parseInt(charts.chartApiData[dataPointIndex]._time + 0.5));
+						return ui.l('stats.calls').replace('{0}', value).replace('{1}', parseInt(charts.chartApiData[dataPointIndex]._time + 0.5));
 					}
 				}
 			},
@@ -205,12 +205,12 @@ class charts {
 	}
 	static initChartLocations(data) {
 		var l = [], series = [
-			{ name: ui2.labels.category0, data: [] },
-			{ name: ui2.labels.category1, data: [] },
-			{ name: ui2.labels.category2, data: [] },
-			{ name: ui2.labels.category3, data: [] },
-			{ name: ui2.labels.category4, data: [] },
-			{ name: ui2.labels.category5, data: [] }
+			{ name: ui.l('stats.category0'), data: [] },
+			{ name: ui.l('stats.category1'), data: [] },
+			{ name: ui.l('stats.category2'), data: [] },
+			{ name: ui.l('stats.category3'), data: [] },
+			{ name: ui.l('stats.category4'), data: [] },
+			{ name: ui.l('stats.category5'), data: [] }
 		];
 		for (var i = 1; i < data.length; i++) {
 			var category = parseInt(data[i].category);
@@ -260,7 +260,7 @@ class charts {
 		for (var i = 0; i < data.length; i++) {
 			if (data[i]._time > -1) {
 				values.push(parseInt('' + (data[i]._count * 100 + 0.5)));
-				labels.push((i == data.length - 1 ? ui2.labels.from + ' ' : '') + (data[i]._time * 20));
+				labels.push((i == data.length - 1 ? ui.l('stats.from') + ' ' : '') + (data[i]._time * 20));
 			}
 		}
 		charts.chartLog = new ApexCharts(ui.q('main.statistics popup panel chart.log'), {
@@ -278,7 +278,7 @@ class charts {
 				}
 			},
 			series: [{
-				name: ui2.labels.responseTime,
+				name: ui.l('stats.responseTime'),
 				data: values
 			}],
 			labels: labels

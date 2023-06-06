@@ -5,6 +5,7 @@ import { ui2 } from './ui2';
 import { charts } from './charts';
 import { marketing } from './marketing';
 import { global } from '../../js/global';
+import { ui } from '../../js/ui';
 import { user } from '../../js/user';
 
 window.ApexCharts = ApexCharts;
@@ -14,6 +15,7 @@ window.heatmap = heatmap
 window.charts = charts;
 window.marketing = marketing;
 
+ui.labels = window.ui.labels;
 user.contact = window.user.contact;
 user.clientId = window.user.clientId;
 user.email = window.user.email;

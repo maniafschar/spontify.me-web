@@ -28,9 +28,9 @@ class marketing {
 <field>
 	<label>Geschlecht</label>
 	<value>
-		<input type="checkbox" name="gender" value="2" label="${ui.l('female')}" ${v.gender && v.gender.indexOf(2) > -1 ? ' checked' : ''} />
-		<input type="checkbox" name="gender" value="1" label="${ui.l('male')}" ${v.gender && v.gender.indexOf(1) > -1 ? ' checked' : ''} />
-		<input type="checkbox" name="gender" value="3" label="${ui.l('divers')}" ${v.gender && v.gender.indexOf(3) > -1 ? ' checked' : ''} />
+		<input type="checkbox" name="gender" value="2" label="${ui.l('stats.female')}" ${v.gender && v.gender.indexOf(2) > -1 ? ' checked' : ''} />
+		<input type="checkbox" name="gender" value="1" label="${ui.l('stats.male')}" ${v.gender && v.gender.indexOf(1) > -1 ? ' checked' : ''} />
+		<input type="checkbox" name="gender" value="3" label="${ui.l('stats.divers')}" ${v.gender && v.gender.indexOf(3) > -1 ? ' checked' : ''} />
 	</value>
 </field>
 <field>
@@ -64,7 +64,7 @@ class marketing {
 </field>
 <dialogButtons>
 <buttontext class="bgColor${v.hideSave}" onclick="marketing.test()">Test</buttontext>
-<buttontext class="bgColor${v.hideSave}" onclick="marketing.save()">${ui.l('save')}</buttontext>
+<buttontext class="bgColor${v.hideSave}" onclick="marketing.save()">${ui.l('stats.save')}</buttontext>
 </dialogButtons>`;
 	static templateQuestion = v =>
 		global.template`<field>
@@ -108,9 +108,9 @@ class marketing {
 <field>
 	<label>Geschlecht</label>
 	<value>
-		${v.gender && v.gender.indexOf(2) > -1 ? ui.l('female') : ''}
-		${v.gender && v.gender.indexOf(1) > -1 ? ui.l('male') : ''}
-		${v.gender && v.gender.indexOf(3) > -1 ? ui.l('divers') : ''}
+		${v.gender && v.gender.indexOf(2) > -1 ? ui.l('stats.female') : ''}
+		${v.gender && v.gender.indexOf(1) > -1 ? ui.l('stats.male') : ''}
+		${v.gender && v.gender.indexOf(3) > -1 ? ui.l('stats.divers') : ''}
 	</value>
 </field>
 <field>
@@ -268,7 +268,7 @@ class marketing {
 						r[i].oc = 'marketing.edit(' + r[i].id + ')';
 					s += marketing.templateList(r[i]);
 				}
-				ui.q('main.statistics marketing list').innerHTML = s ? s : ui2.labels.noEntries;
+				ui.q('main.statistics marketing list').innerHTML = s ? s : ui.l('stats.noEntries');
 			});
 		}
 	}

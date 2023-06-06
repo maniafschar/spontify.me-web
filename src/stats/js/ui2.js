@@ -7,7 +7,6 @@ import { global } from '../../js/global';
 export { ui2 };
 
 class ui2 {
-	static labels;
 	static open(index) {
 		var e = ui.q('main.statistics popup').style;
 		if (e.transform && e.transform.indexOf('1') > 0) {
@@ -54,9 +53,9 @@ class ui2 {
 	static init() {
 		communication2.language(global.language, function (response) {
 			var e = ui.qa('main.statistics [l]');
-			ui2.labels = response;
+			ui.labels['stats'] = response;
 			for (var i = 0; i < e.length; i++)
-				e[i].innerHTML = ui2.labels[e[i].getAttribute('l')];
+				e[i].innerHTML = ui.l(e[i].getAttribute('l'));
 		});
 		communication2.loadMap();
 		ui.swipe(ui.q('main.statistics content'), function (dir) {
