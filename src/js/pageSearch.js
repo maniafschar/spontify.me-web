@@ -37,7 +37,7 @@ class pageSearch {
 <explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
 <errorHint></errorHint>
 <dialogButtons>
-<buttontext class="bgColor defaultButton" onclick="pageSearch.contacts.search()">${ui.l('search.action')}</buttontext>
+<button-text class="defaultButton" onclick="pageSearch.contacts.search()">${ui.l('search.action')}</button-text>
 </dialogButtons>
 </form>`,
 		getFields() {
@@ -118,7 +118,7 @@ class pageSearch {
 <explain class="searchKeywordHint">${ui.l('search.hintEvent')}</explain>
 <errorHint></errorHint>
 <dialogButtons>
-<buttontext class="bgColor defaultButton" onclick="pageSearch.events.search()">${ui.l('search.action')}</buttontext>
+<button-text class="defaultButton" onclick="pageSearch.events.search()">${ui.l('search.action')}</button-text>
 </dialogButtons>
 </form>`,
 		getFields() {
@@ -234,7 +234,7 @@ class pageSearch {
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
 <errorHint></errorHint>
 <dialogButtons>
-<buttontext class="bgColor defaultButton" onclick="pageSearch.locations.search()">${ui.l('search.action')}</buttontext>
+<button-text class="defaultButton" onclick="pageSearch.locations.search()">${ui.l('search.action')}</button-text>
 </dialogButtons>
 </form>`,
 		getFields() {

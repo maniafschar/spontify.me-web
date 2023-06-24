@@ -187,7 +187,7 @@ main.statistics row>div {
 	white-space: nowrap;
 }
 
-main.statistics row>div buttontext {
+main.statistics row>div button-text {
 	position: absolute;
 	right: 0.5em;
 	bottom: 1em;

@@ -526,12 +526,13 @@ news buttonIcon {
 	bottom: -1.1em;
 }
 
-.bgColor {
+.bgColor,
+button-text::part(bgColor) {
 	background: linear-gradient(var(--bg2stop) 0%, var(--bg2start) 100%) center center / 100% no-repeat;
 }
 
 a.bgColor:hover,
-buttontext.bgColor:hover {
+button-text::part(bgColor):hover {
 	background: var(--bg2stop);
 }
 
@@ -652,6 +653,11 @@ input-hashtags::part(textarea) {
 	vertical-align: top;
 	border: none;
 	color: black;
+}
+
+input-checkbox,
+button-text {
+	outline: none !important;
 }
 
 input,
@@ -1808,34 +1814,6 @@ notifications listBody {
 	padding: 0;
 }
 
-buttontext {
-	position: relative;
-	border-radius: 0.5em;
-	display: inline-block;
-	cursor: pointer;
-	padding: 1em 1.5em;
-	min-height: 3em;
-	line-height: 1;
-	margin: 0 0.25em;
-	white-space: nowrap;
-	vertical-align: middle;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	color: var(--buttonText);
-	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
-}
-
-buttontext.map {
-	position: absolute;
-	width: 18em;
-	left: 50%;
-	margin-left: -9em;
-	top: 4.25em;
-	opacity: 0.8;
-	font-size: 0.8em;
-	display: none;
-}
-
 buttonIcon {
 	position: absolute;
 	cursor: pointer;
@@ -1916,7 +1894,7 @@ buttonIcon.right {
 	text-align: center;
 }
 
-.appInput buttontext {
+.appInput button-text {
 	padding: 0.5em;
 	min-height: 0;
 	width: 50%;
@@ -1924,7 +1902,7 @@ buttonIcon.right {
 	box-shadow: none;
 }
 
-add buttontext {
+add button-text {
 	text-align: center;
 	margin: 1em 0 0 0;
 }
@@ -2198,15 +2176,6 @@ detail matchIndicatorHint label {
 	margin: 0 !important;
 }
 
-buttontext.favorite::before,
-buttontext.favorite::before {
-	content: '✓';
-	position: absolute;
-	font-size: 2em;
-	right: 0.15em;
-	bottom: 0;
-}
-
 detail>img.present {
 	position: absolute;
 	z-index: 2;
@@ -2447,19 +2416,6 @@ videoCall streams {
 info {
 	text-align: left !important;
 	overflow-y: auto;
-}
-
-.settingsButton {
-	margin: 1em 0 0.25em 0;
-	border-radius: 0 2em 2em 0;
-	z-index: 1;
-}
-
-.settingsButtonRight {
-	margin: 1em 0 0.25em 0;
-	float: right;
-	border-radius: 2em 0 0 2em;
-	clear: both;
 }
 
 skills {

@@ -854,7 +854,7 @@ class formFunc {
 			if (!formFunc.svg.data[id]) {
 				formFunc.svg.data[id] = 1;
 				communication.ajax({
-					url: global.server + 'images/' + id + '.svg',
+					url: 'images/' + id + '.svg',
 					webCall: 'ui.svg.fetch(id)',
 					success(r) {
 						var parser = new DOMParser();
@@ -1034,7 +1034,80 @@ class formFunc {
 		}
 	}
 }
+class ButtonText extends HTMLElement {
+	constructor() {
+		super();
+		this._root = this.attachShadow({ mode: 'closed' });
+		const style = document.createElement('style');
+		style.textContent = `
+:host>span:hover {
+	background: var(--bg2stop);
+}
+		
+:host(.favorite)>span::before {
+	content: '✓';
+	position: absolute;
+	font-size: 2em;
+	right: 0.15em;
+	bottom: 0;
+}
+:host>span {
+	position: relative;
+	border-radius: 0.5em;
+	cursor: pointer;
+	padding: 1em 1.5em;
+	min-height: 3em;
+	line-height: 1;
+	margin: 0 0.25em;
+	white-space: nowrap;
+	vertical-align: middle;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	color: var(--buttonText);
+	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
+	display: inline-block;
+    box-sizing: border-box;
+}
 
+:host(.map)>span {
+	position: absolute;
+	width: 18em;
+	left: 50%;
+	margin-left: -9em;
+	top: 4.25em;
+	opacity: 0.8;
+	font-size: 0.8em;
+	display: none;
+}
+
+:host(.settingsButton)>span {
+	margin: 1em 0 0.25em 0;
+	border-radius: 0 2em 2em 0;
+	z-index: 1;
+}
+
+:host(.settingsButtonRight)>span {
+	margin: 1em 0 0.25em 0;
+	float: right;
+	border-radius: 2em 0 0 2em;
+	clear: both;
+}`;
+		this._root.appendChild(style);
+		var element = document.createElement('span');
+		element.innerHTML = this.innerHTML;
+		element.setAttribute('part', 'bgColor');
+		this._root.appendChild(element);
+		this.innerHTML = null;
+		this.tabIndex = 0;
+		this.style.outline = 'none !important';
+		this.addEventListener('keydown', function (event) {
+			if (event.key == ' ')
+				this.click();
+		})
+	}
+}
+if (!customElements.get('button-text'))
+	customElements.define('button-text', ButtonText);
 class InputHashtags extends HTMLElement {
 	constructor() {
 		super();
@@ -1267,10 +1340,18 @@ label:hover {
 	opacity: 0.8;
 }`;
 		this._root.appendChild(style);
+	}
+	connectedCallback() {
 		this.setAttribute('onclick', 'this.toggleCheckbox(event)' + (this.getAttribute('onclick') ? ';' + this.getAttribute('onclick') : ''));
 		var element = document.createElement('label');
 		element.textContent = this.getAttribute('label');
+		this.removeAttribute('label');
 		this._root.appendChild(element);
+		this.tabIndex = 0;
+		this.addEventListener('keydown', function (event) {
+			if (event.key == ' ')
+				this.click();
+		})
 	}
 	toggleCheckbox(event) {
 		var e = event.target;
@@ -1379,8 +1460,8 @@ input+img {
 		} else {
 			element = document.createElement('div');
 			element.setAttribute('class', 'appInput');
-			element.innerHTML = '<buttontext class="bgColor" onclick="this.getRootNode().host.cameraPicture(&quot;' + element.nodeName + '&quot;,&quot;' + s2 + '&quot;,true)" style="border-radius:0.5em 0 0 0.5em;border-right:solid 1px rgba(255,255,255,0.1);">' + ui.l('camera.shoot') + '</buttontext>' +
-				'<buttontext class="bgColor" onclick="this.getRootNode().host.cameraPicture(&quot;' + element.nodeName + '&quot;,&quot;' + s2 + '&quot;)" style="border-radius:0 0.5em 0.5em 0;">' + ui.l('camera.select') + '</buttontext>';
+			element.innerHTML = '<button-text onclick="this.getRootNode().host.cameraPicture(&quot;' + element.nodeName + '&quot;,&quot;' + s2 + '&quot;,true)" style="border-radius:0.5em 0 0 0.5em;border-right:solid 1px rgba(255,255,255,0.1);">' + ui.l('camera.shoot') + '</button-text>' +
+				'<button-text onclick="this.getRootNode().host.cameraPicture(&quot;' + element.nodeName + '&quot;,&quot;' + s2 + '&quot;)" style="border-radius:0 0.5em 0.5em 0;">' + ui.l('camera.select') + '</button-text>';
 			this._root.appendChild(element);
 		}
 		element = document.createElement('img');

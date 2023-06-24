@@ -85,7 +85,7 @@ class geoData {
 				else if (!geoData.localizationAsked) {
 					if (ui.cssValue('popup', 'display') == 'none') {
 						geoData.localizationAsked = true;
-						ui.navigation.openPopup(ui.l('attention'), ui.l('locations.permission') + '<br/><br/><buttontext onclick="geoData.requestLocationAuthorization()" class="bgColor">' + ui.l('locations.permissionButton') + '</buttontext>');
+						ui.navigation.openPopup(ui.l('attention'), ui.l('locations.permission') + '<br/><br/><button-text onclick="geoData.requestLocationAuthorization()">' + ui.l('locations.permissionButton') + '</button-text>');
 					} else
 						setTimeout(geoData.init, 2000);
 				}
@@ -158,8 +158,8 @@ class geoData {
 	static openLocationPickerDialog() {
 		ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
 			'<mapPicker></mapPicker><br/><input name="town" maxlength="20" placeholder="' + ui.l('home.locationPickerInput') + '"/><mapButton onclick="geoData.mapReposition()" class="defaultButton"></mapButton><br/><br/>' +
-			(geoData.manual ? '<buttontext class="bgColor" onclick="geoData.reset()">' + ui.l('home.locationPickerReset') + '</buttontext>' : '') +
-			'<buttontext class="bgColor" onclick="geoData.saveLocationPicker()">' + ui.l('ready') + '</buttontext><errorHint></errorHint>', null, null,
+			(geoData.manual ? '<button-text onclick="geoData.reset()">' + ui.l('home.locationPickerReset') + '</button-text>' : '') +
+			'<button-text onclick="geoData.saveLocationPicker()">' + ui.l('ready') + '</button-text><errorHint></errorHint>', null, null,
 			function () {
 				setTimeout(function () {
 					if (ui.q('locationPicker').style.display != 'none')

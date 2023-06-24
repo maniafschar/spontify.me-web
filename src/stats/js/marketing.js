@@ -63,8 +63,8 @@ class marketing {
 	<value><textarea name="epilog">${v.storage.epilog}</textarea></value>
 </field>
 <dialogButtons>
-<buttontext class="bgColor${v.hideSave}" onclick="marketing.test()">Test</buttontext>
-<buttontext class="bgColor${v.hideSave}" onclick="marketing.save()">${ui.l('stats.save')}</buttontext>
+<button-text onclick="marketing.test()">Test</button-text>
+<button-text onclick="marketing.save()">${ui.l('stats.save')}</button-text>
 </dialogButtons>`;
 	static templateQuestion = v =>
 		global.template`<field>

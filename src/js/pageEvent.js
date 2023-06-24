@@ -33,7 +33,7 @@ class pageEvent {
 			<li onclick="pageEvent.locationSelected(-2)" style="color:white;" class="${v.hideWithoutLocation}">${ui.l('events.newWithoutLocation')}</li>
 			<ul></ul>
 			<explain style="margin-bottom:0.5em;">${ui.l('events.locationInputHintCreateNew')}</explain>
-			<buttontext onclick="pageLocation.edit()" class="bgColor">${ui.l('locations.new')}</buttontext>
+			<button-text onclick="pageLocation.edit()">${ui.l('locations.new')}</button-text>
 		</eventLocationInputHelper>
 	</value>
 </field>
@@ -108,8 +108,8 @@ class pageEvent {
 	</value>
 </field>
 <dialogButtons style="margin-bottom:0;">
-	<buttontext onclick="pageEvent.save()" class="bgColor">${ui.l('save')}</buttontext>
-	<buttontext onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" class="bgColor${v.hideDelete}" id="deleteElement">${ui.l('delete')}</buttontext>
+	<button-text onclick="pageEvent.save()">${ui.l('save')}</button-text>
+	<button-text onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" class="${v.hideDelete}" id="deleteElement">${ui.l('delete')}</button-text>
 	<popupHint></popupHint>
 </dialogButtons>
 </div>
@@ -278,7 +278,7 @@ class pageEvent {
 			v.startDate = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute;
 		}
 		if (!id || v.price > 0 && ui.q('detail card:last-child participantCount').innerText.length)
-			v.hideDelete = ' hidden';
+			v.hideDelete = 'hidden';
 		d = global.date.getDateFields(new Date());
 		v.today = d.year + '-' + d.month + '-' + d.day;
 		v.id = id;
@@ -412,15 +412,15 @@ class pageEvent {
 		var text = '<div style="margin:1em 0;">';
 		if (futureEvent) {
 			if (v.event.locationId > 0 && (v.event.contactId == user.contact.id || v.eventParticipate.state == 1))
-				text += '<buttontext class="bgColor" onclick="pageEvent.qrcode(' + (v.event.contactId == user.contact.id) + ')">' + ui.l('events.qrcodeButton') + '</buttontext><br/><br/>';
+				text += '<button-text onclick="pageEvent.qrcode(' + (v.event.contactId == user.contact.id) + ')">' + ui.l('events.qrcodeButton') + '</button-text><br/><br/>';
 			if (v.event.price > 0 && user.contact.id != v.event.contactId) {
 				if (!v.eventParticipate.state && v.contact.authenticate)
-					text += '<buttontext class="bgColor participation" onclick="pageLogin.paypal(' + v.contact.id + ')">' + ui.l('events.participante') + '</buttontext>';
+					text += '<button-text class="participation" onclick="pageLogin.paypal(' + v.contact.id + ')">' + ui.l('events.participante') + '</button-text>';
 			} else if (v.eventParticipate.state == 1 || !v.event.maxParticipants || participantCount < v.event.maxParticipants)
-				text += '<buttontext class="bgColor participation" onclick="pageEvent.participate()">' + ui.l('events.participante' + (v.eventParticipate.state == 1 ? 'Stop' : '')) + '</buttontext>';
+				text += '<button-text class="participation" onclick="pageEvent.participate()">' + ui.l('events.participante' + (v.eventParticipate.state == 1 ? 'Stop' : '')) + '</button-text>';
 		}
 		if (participantCount > 0 || futureEvent)
-			text += '<buttontext class="bgColor" onclick="pageEvent.toggleParticipants(event)"><participantCount>' + (participantCount > 0 ? participantCount + '&nbsp;' : '') + '</participantCount>' + ui.l('events.participants') + '</buttontext>';
+			text += '<button-text onclick="pageEvent.toggleParticipants(event)"><participantCount>' + (participantCount > 0 ? participantCount + '&nbsp;' : '') + '</participantCount>' + ui.l('events.participants') + '</button-text>';
 		text += '</div><text name="participants" style="margin:0 -1em;display:none;"></text>';
 		return text;
 	}
@@ -695,10 +695,10 @@ class pageEvent {
 	static participate(order) {
 		var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
 		if (e.event.price > 0 && !user.contact.image) {
-			ui.navigation.openPopup(ui.l('attention'), ui.l('events.participationNoImage') + '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.editProfile') + '</buttontext > ');
+			ui.navigation.openPopup(ui.l('attention'), ui.l('events.participationNoImage') + '<br/><br/><button-text onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.editProfile') + '</button-text > ');
 			return;
 		}
-		var button = ui.q('detail card:last-child buttontext.participation');
+		var button = ui.q('detail card:last-child button-text.participation');
 		var d = { classname: 'EventParticipate', values: {} };
 		var eventDate = e.id.split('_')[1];
 		if (e.eventParticipate.id) {
@@ -706,7 +706,7 @@ class pageEvent {
 			d.id = e.eventParticipate.id;
 			if (e.event.confirm == 1) {
 				if (!ui.q('#stopParticipateReason')) {
-					ui.navigation.openPopup(ui.l('events.stopParticipate'), ui.l('events.stopParticipateText') + '<br/><textarea id="stopParticipateReason" placeholder="' + ui.l('events.stopParticipateHint') + '" style="margin-top:0.5em;"></textarea><buttontext class="bgColor" style="margin-top:1em;" onclick="pageEvent.participate()">' + ui.l('events.stopParticipateButton') + '</buttontext>');
+					ui.navigation.openPopup(ui.l('events.stopParticipate'), ui.l('events.stopParticipateText') + '<br/><textarea id="stopParticipateReason" placeholder="' + ui.l('events.stopParticipateHint') + '" style="margin-top:0.5em;"></textarea><button-text style="margin-top:1em;" onclick="pageEvent.participate()">' + ui.l('events.stopParticipateButton') + '</button-text>');
 					return;
 				}
 				if (!ui.q('#stopParticipateReason').value)
@@ -758,7 +758,7 @@ class pageEvent {
 				ui.navigation.closePopup();
 				if (order) {
 					intro.close();
-					ui.q('detail .eventParticipationButtons buttontext.participation').outerHTML = '';
+					ui.q('detail .eventParticipationButtons button-text.participation').outerHTML = '';
 				}
 				e = ui.q('detail card:last-child[i="' + e.event.id + '_' + eventDate + '"] [name="participants"]');
 				var f = function () {
@@ -997,8 +997,7 @@ class pageEvent {
 		var e = ui.q('detail card:last-child [name="events"]');
 		if (!e)
 			return;
-		var bg = 'bgColor';
-		var a = pageEvent.getCalendarList(r), newButton = field == 'contact' ? '' : '<br/><br/><buttontext onclick="pageEvent.edit(' + id + ')" class="' + bg + '">' + ui.l('events.new') + '</buttontext>';
+		var a = pageEvent.getCalendarList(r), newButton = field == 'contact' ? '' : '<br/><br/><button-text onclick="pageEvent.edit(' + id + ')">' + ui.l('events.new') + '</button-text>';
 		var s = '', v, text;
 		var b = user.contact.id == id;
 		if (b && e.getAttribute('active'))

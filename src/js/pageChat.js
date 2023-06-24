@@ -33,15 +33,15 @@ class pageChat {
 		<chatMoreButton style="display:none;" onclick="pageChat.scrollToBottom()">v v v</chatMoreButton>
 		<closeHint>${ui.l('chat.closeHint')}</closeHint>
 		<chatButtons>
-			<buttontext class="bgColor" onclick="pageChat.askLink()">${ui.l('chat.share')}</buttontext>
-			<buttontext class="bgColor" onclick="pageChat.askLocation()">${ui.l('chat.serviceLocation')}</buttontext>
-			<buttontext class="bgColor" onclick="pageChat.askImage()">${ui.l('picture')}</buttontext>
-			<buttontext class="bgColor quote" ${v.action}="pageChat.insertQuote(event);">${ui.l('quote')}</buttontext>
+			<button-text onclick="pageChat.askLink()">${ui.l('chat.share')}</button-text>
+			<button-text onclick="pageChat.askLocation()">${ui.l('chat.serviceLocation')}</button-text>
+			<button-text onclick="pageChat.askImage()">${ui.l('picture')}</button-text>
+			<button-text class="quote" ${v.action}="pageChat.insertQuote(event);">${ui.l('quote')}</button-text>
 		</chatButtons>
 		<textarea id="chatText" style="height:1.6em;" class="me" placeholder="${ui.l('chat.textHint')}"
 			onkeyup="pageChat.adjustTextarea(this)">${v.draft}</textarea>
-		<buttontext class="bgColor videoButton" ${v.action}="pageChat.sendChatVideoPermissionButton();">${ui.l('chat.videoPermissionButton')}</buttontext>
-		<buttontext class="bgColor sendButton" ${v.action}="pageChat.sendChat(${v.id},null,event);">${ui.l('chat.send')}</buttontext>
+		<button-text class="videoButton" ${v.action}="pageChat.sendChatVideoPermissionButton();">${ui.l('chat.videoPermissionButton')}</button-text>
+		<button-text class="sendButton" ${v.action}="pageChat.sendChat(${v.id},null,event);">${ui.l('chat.send')}</button-text>
 		<div style="display:none;text-align:center;"></div>
 		<input-checkbox onclick="pageChat.aiHint()" label="ai"${v.ai}></input-checkbox>
 	</chatInput>
@@ -77,7 +77,7 @@ class pageChat {
 		if (geoData.localized) {
 			var s = Strings.replaceInternalLinks(' :openPos(' + geoData.current.lat + ',' + geoData.current.lon + '): ');
 			s = s.replace(/onclick="ui.navigation.autoOpen/g, 'onclick="pageChat.doNothing');
-			ui.navigation.openPopup(ui.l('chat.askInsertCurrentLocationLink'), '<div style="text-align:center;margin-bottom:1em;"><div style="float:none;text-align:center;margin:1em 0;">' + s + '</div><buttontext class="bgColor" onclick="pageChat.insertLink()">' + ui.l('chat.send') + '</buttontext></div>');
+			ui.navigation.openPopup(ui.l('chat.askInsertCurrentLocationLink'), '<div style="text-align:center;margin-bottom:1em;"><div style="float:none;text-align:center;margin:1em 0;">' + s + '</div><button-text onclick="pageChat.insertLink()">' + ui.l('chat.send') + '</button-text></div>');
 		} else
 			ui.navigation.openPopup(ui.l('attention'), ui.l('chat.serviceSendError'));
 	}
@@ -98,16 +98,16 @@ class pageChat {
 				s2 = s2.replace(/onclick="ui.navigation.autoOpen/g, 'onclick="pageChat.toggleInsertCopyLinkEntry');
 			else
 				s2 = s2.replace(/onclick="ui.navigation.autoOpen/g, 'onclick="pageChat.doNothing');
-			ui.navigation.openPopup(ui.l('chat.askInsertCopyLink' + (c > 1 ? 's' : '')), '<div style="text-align:center;margin:1em 0;">' + (c > 1 ? '<div id="askInsertCopyLinkHint">' + ui.l('chat.askInsertCopyLinksBody') + '</div>' : '') + '<div style="text-align:center;margin:1em 0;">' + s2 + '</div><buttontext class="bgColor" onclick="pageChat.insertLink(&quot;pressed&quot;)">' + ui.l('chat.send') + '</buttontext></div>');
+			ui.navigation.openPopup(ui.l('chat.askInsertCopyLink' + (c > 1 ? 's' : '')), '<div style="text-align:center;margin:1em 0;">' + (c > 1 ? '<div id="askInsertCopyLinkHint">' + ui.l('chat.askInsertCopyLinksBody') + '</div>' : '') + '<div style="text-align:center;margin:1em 0;">' + s2 + '</div><button-text onclick="pageChat.insertLink(&quot;pressed&quot;)">' + ui.l('chat.send') + '</button-text></div>');
 			ui.classAdd('popup .chatLinks', 'pressed');
 		} else
-			ui.navigation.openPopup(ui.l('attention'), ui.l('link.sendError').replace('{0}', '<br/><buttontext class="bgColor" style="margin:1em;">' + ui.l('chat.share') + '</buttontext><br/>'));
+			ui.navigation.openPopup(ui.l('attention'), ui.l('link.sendError').replace('{0}', '<br/><button-text style="margin:1em;">' + ui.l('chat.share') + '</button-text><br/>'));
 	}
 	static askImage() {
 		if (document.activeElement)
 			document.activeElement.blur();
 		var popupVisible = ui.q('popupContent');
-		ui.navigation.openPopup(ui.l('chat.sendImg'), '<form style="padding:0 2em;"><input type="hidden" name="contactId2" value="' + ui.q('chat').getAttribute('i') + '"><div style="margin:1em;"><input-image></input-image></div></form><div style="text-align:center;margin-bottom:1em;"><buttontext onclick="pageChat.sendChatImage()" class="bgColor" id="popupSendImage" style="display:none;">' + ui.l('chat.send') + '</buttontext></div>');
+		ui.navigation.openPopup(ui.l('chat.sendImg'), '<form style="padding:0 2em;"><input type="hidden" name="contactId2" value="' + ui.q('chat').getAttribute('i') + '"><div style="margin:1em;"><input-image></input-image></div></form><div style="text-align:center;margin-bottom:1em;"><button-text onclick="pageChat.sendChatImage()" id="popupSendImage" style="display:none;">' + ui.l('chat.send') + '</button-text></div>');
 		if (!popupVisible && global.isBrowser()) {
 			var e = ui.q('[name="image"]');
 			if (e)
@@ -328,7 +328,7 @@ class pageChat {
 			v = v.substring(0, p) + s2 + v.substring(p);
 			e.value = v;
 		} else
-			ui.html('popupHint', ui.l('link.sendError').replace('{0}', '<br/><buttontext class="bgColor" style="margin:1em;">' + ui.l('chat.share') + '</buttontext><br/>'));
+			ui.html('popupHint', ui.l('link.sendError').replace('{0}', '<br/><button-text style="margin:1em;">' + ui.l('chat.share') + '</button-text><br/>'));
 	}
 	static listActiveChats(d) {
 		var f = function () {
@@ -435,7 +435,7 @@ class pageChat {
 		}
 		if (user.contact.groups) {
 			ui.navigation.hideMenu();
-			var s = '<div class="smilyBox" style="margin-bottom:1em;"><buttontext onclick="pageChat.insertLinkInGroup()" class="bgColor" style="margin:1em;">' + ui.l('chat.share') + '</buttontext><buttontext class="bgColor" onclick="pageChat.sendChatGroup()">' + ui.l('chat.send') + '</buttontext></div>';
+			var s = '<div class="smilyBox" style="margin-bottom:1em;"><button-text onclick="pageChat.insertLinkInGroup()" style="margin:1em;">' + ui.l('chat.share') + '</button-text><button-text onclick="pageChat.sendChatGroup()">' + ui.l('chat.send') + '</button-text></div>';
 			var v = user.contact.chatTextGroups;
 			if (!v) {
 				v = ui.q('input-checkbox[name="groupdialog"][checked="true"]');
@@ -714,7 +714,7 @@ class pageChat {
 		if (ui.q('chat').getAttribute('status') == 'Friends')
 			Video.startVideoCall(ui.q('chat').getAttribute('i'));
 		else if (ui.q('chat chatConversation chatMessage:not(.me)'))
-			intro.openHint({ desc: ui.l('chat.videoPermissionHint') + '<br/><br/><buttontext class="bgColor" onclick="pageChat.sendChatVideoPermission()">' + ui.l('chat.videoPermissionSendButton') + '</buttontext>', pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;' });
+			intro.openHint({ desc: ui.l('chat.videoPermissionHint') + '<br/><br/><button-text onclick="pageChat.sendChatVideoPermission()">' + ui.l('chat.videoPermissionSendButton') + '</button-text>', pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;' });
 		else
 			intro.openHint({ desc: ui.l('chat.videoPermissionNoChatHint'), pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-1em;' });
 	}

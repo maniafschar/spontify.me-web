@@ -137,10 +137,10 @@ class pageSettings {
 <paypalFees></paypalFees>
 <br/>
 <dialogButtons>
-<buttontext onclick="pageSettings.preview()" class="bgColor">${ui.l('settings.preview')}</buttontext>
+<button-text onclick="pageSettings.preview()">${ui.l('settings.preview')}</button-text>
 </dialogButtons>`;
 	static templateSettings3 = v =>
-		global.template`<buttontext class="bgColor settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;settings tabBody .notification&quot;)">${ui.l('settings.myNotifications')}</buttontext><br/>
+		global.template`<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;settings tabBody .notification&quot;)">${ui.l('settings.myNotifications')}</button-text><br/>
 <div class="notification" class="notifications" style="display:none;padding:0.5em 1em 1em 1em;">
 	<input-checkbox value="true" name="notificationChat" label="${ui.l('notification.chat')}" ${v['contact.notificationChat']}></input-checkbox>
 	<br />
@@ -156,9 +156,9 @@ class pageSettings {
 	<br />
 	<input-checkbox value="true" name="notificationMarkEvent" label="${ui.l('notification.markEvent')}" ${v['contact.notificationMarkEvent']}></input-checkbox>
 </div>
-<buttontext class="bgColor settingsButton" onclick="pageSettings.toggleBlocked()">${ui.l('contacts.blocked')}</buttontext><br/>
+<button-text class="settingsButton" onclick="pageSettings.toggleBlocked()">${ui.l('contacts.blocked')}</button-text><br/>
 <div id="blocked" style="display:none;"></div>
-<buttontext onclick="ui.toggleHeight(&quot;#delete&quot;)" class="bgColor settingsButton">${ui.l('settings.delete')}</buttontext><br/>
+<button-text onclick="ui.toggleHeight(&quot;#delete&quot;)" class="settingsButton">${ui.l('settings.delete')}</button-text><br/>
 <div id="delete" style="display:none;margin:0 1em 1em 1em;">
 <div style="margin:0.25em 0 0.5em 0.5em;">${ui.l('settings.deleteProfileHint')}</div>
 <div>
@@ -193,7 +193,7 @@ class pageSettings {
 <textarea id="deleteAccountFeedback" placeholder="${ui.l('settings.deleteProfileFeedbackHint')}" maxlength="2000"></textarea>
 <errorHint class="textarea"></errorHint>
 <div style="margin-top:1em;text-align:center;">
-<buttontext onclick="pageSettings.deleteProfile()" class="bgColor">${ui.l('settings.deleteProfile')}</buttontext>
+<button-text onclick="pageSettings.deleteProfile()">${ui.l('settings.deleteProfile')}</button-text>
 </div>
 </div>
 ${v.info}`;
@@ -341,8 +341,8 @@ ${v.info}`;
 						v.genderInterest3 = 'checked="true"';
 					v.settings2 = pageSettings.templateSettings2(v);
 					v.info = pageInfo.template()
-						+ '<buttontext class="bgColor settingsButtonRight" onclick="pageLogin.logoff()">' + ui.l('logoff.title') + '</buttontext>'
-						+ '<buttontext class="bgColor settingsButtonRight" onclick="pageInfo.socialShare()">' + ui.l('settings.socialShare') + '</buttontext>'
+						+ '<button-text class="settingsButtonRight" onclick="pageLogin.logoff()">' + ui.l('logoff.title') + '</button-text>'
+						+ '<button-text class="settingsButtonRight" onclick="pageInfo.socialShare()">' + ui.l('settings.socialShare') + '</button-text>'
 						+ pageInfo.templateCopyright();
 					v.settings3 = pageSettings.templateSettings3(v);
 					ui.q('settings').innerHTML = pageSettings.template(v);
@@ -533,7 +533,7 @@ ${v.info}`;
 			if (saveNewEmail)
 				ui.q('input[name="verified"]').value = 'false';
 			else {
-				ui.navigation.openPopup(ui.l('attention'), ui.l('settings.confirmEmailChange') + '<br /><buttontext class="bgColor" onclick="pageSettings.save(&quot;' + goToID + '&quot;,true);ui.navigation.closePopup()" style="margin-top:1em;">' + ui.l('Yes') + '</buttontext><buttontext class="bgColor" onclick="pageSettings.resetEmailToOldValue()" style="margin-top:1em;">' + ui.l('No') + '</buttontext>');
+				ui.navigation.openPopup(ui.l('attention'), ui.l('settings.confirmEmailChange') + '<br /><button-text onclick="pageSettings.save(&quot;' + goToID + '&quot;,true);ui.navigation.closePopup()" style="margin-top:1em;">' + ui.l('Yes') + '</button-text><button-text onclick="pageSettings.resetEmailToOldValue()" style="margin-top:1em;">' + ui.l('No') + '</button-text>');
 				return false;
 			}
 		}
@@ -603,7 +603,7 @@ ${v.info}`;
 	}
 	static unblock(id, blockId) {
 		if (!ui.q('popup [i="' + id + '"]')) {
-			ui.navigation.openPopup(ui.l('attention'), ui.l('contacts.unblock').replace('{0}', ui.q('#blocked row[i="' + id + '"] title').innerText) + '<br /><br /><buttontext class="bgColor" i="' + id + '" onclick="pageSettings.unblock(&quot;' + id + '&quot;,' + blockId + ')">' + ui.l('Yes') + '</buttontext>');
+			ui.navigation.openPopup(ui.l('attention'), ui.l('contacts.unblock').replace('{0}', ui.q('#blocked row[i="' + id + '"] title').innerText) + '<br /><br /><button-text i="' + id + '" onclick="pageSettings.unblock(&quot;' + id + '&quot;,' + blockId + ')">' + ui.l('Yes') + '</button-text>');
 			return;
 		}
 		communication.ajax({

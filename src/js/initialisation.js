@@ -333,7 +333,7 @@ class initialisation {
 				ui.labels['infoLegal'] = r[1];
 			}
 		});
-		ui.q('#addLeft > buttontext').innerHTML = global.appTitle + ' blog';
+		ui.q('#addLeft > button-text').innerHTML = global.appTitle + ' blog';
 		ui.html('info', '');
 		if (exec)
 			exec.call();

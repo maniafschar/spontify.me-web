@@ -13,30 +13,30 @@ class pageInfo {
 	static openSection = 4;
 	static sentFeedback = [];
 	static template = v =>
-		global.template`<buttontext class="bgColor settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info1&quot;)">
+		global.template`<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info1&quot;)">
 	${ui.l('info.legalTitle')}
-</buttontext><br/>
+</button-text><br/>
 <infoblock id="info1" style="display:none;" class="overflow">
 	${ui.l('infoLegal')}
 </infoblock>
-<buttontext class="bgColor settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info3&quot;)">
+<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info3&quot;)">
 	${ui.l('info.dsgvoTitle')}
-</buttontext><br/>
+</button-text><br/>
 <infoblock id="info3" style="display:none;" class="overflow">
 	${ui.l('infoDSGVO')}
 </infoblock>
-<buttontext class="bgColor settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info2&quot;)">
+<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info2&quot;)">
 	${ui.l('info.imprintTitle')}
-</buttontext><br/>
+</button-text><br/>
 <infoblock id="info2" style="display:none;">
 	${ui.l('info.imprint')}
 </infoblock>`;
 	static templateCopyright = v =>
 		global.template`<div style="text-align:center;padding:2em 1em;clear:both;">${ui.l('info.infoOther')}<br/>© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>`;
 	static templateDesc = v =>
-		global.template`<buttontext class="bgColor settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info4&quot;)">
+		global.template`<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info4&quot;)">
 ${ui.l('home.DescLink')}
-</buttontext><br/>
+</button-text><br/>
 <infoblock id="info4" style="display:none;">
 <div>
 	${v.description}
@@ -91,9 +91,9 @@ ${ui.l('home.DescLink')}
 	static socialShareDialog() {
 		var f = function () {
 			if (ui.navigation.getActiveID() == 'home' && pageLogin.timestamp && new Date().getTime() - pageLogin.timestamp > 10000) {
-				intro.openHint({ desc: '<div style="margin:0 0.5em 1em 0.5em;">' + ui.l('info.recommend') + '</div><buttontext class="bgColor" style="margin-top:0.5em;" onclick="pageInfo.socialShare()">' + ui.l('Yes') + '</buttontext>', pos: '15%,20vh', size: '70%,auto' });
+				intro.openHint({ desc: '<div style="margin:0 0.5em 1em 0.5em;">' + ui.l('info.recommend') + '</div><button-text style="margin-top:0.5em;" onclick="pageInfo.socialShare()">' + ui.l('Yes') + '</button-text>', pos: '15%,20vh', size: '70%,auto' });
 				setTimeout(function () {
-					if (ui.q('hint buttontext[onclick*="socialShare"]'))
+					if (ui.q('hint button-text[onclick*="socialShare"]'))
 						user.save({ webCall: 'pageInfo.socialShareDialog()', recommend: global.date.local2server(new Date()) });
 				}, 1500);
 			} else

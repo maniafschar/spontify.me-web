@@ -84,8 +84,8 @@ ${ui.l('events.title')}
 	</value>
 </field>
 <dialogButtons style="margin-bottom:0;">
-	<buttontext onclick="pageHome.saveNews()" class="bgColor">${ui.l('save')}</buttontext>
-	<buttontext onclick="pageHome.deleteNews(${v.id})" class="bgColor deleteButton${v.hideDelete}">${ui.l('delete')}</buttontext>
+	<button-text onclick="pageHome.saveNews()">${ui.l('save')}</button-text>
+	<button-text onclick="pageHome.deleteNews(${v.id})" class="deleteButton${v.hideDelete}">${ui.l('delete')}</button-text>
 	<popupHint></popupHint>
 </dialogButtons>`;
 	static clickNotification(id, action) {
@@ -111,8 +111,8 @@ ${ui.l('events.title')}
 			ui.toggleHeight(e);
 	}
 	static deleteNews(id) {
-		if (ui.q('popup buttontext.deleteButton').innerText != ui.l('confirmDelete'))
-			ui.q('popup buttontext.deleteButton').innerText = ui.l('confirmDelete');
+		if (ui.q('popup button-text.deleteButton').innerText != ui.l('confirmDelete'))
+			ui.q('popup button-text.deleteButton').innerText = ui.l('confirmDelete');
 		else
 			communication.ajax({
 				url: global.serverApi + 'db/one',
@@ -292,8 +292,8 @@ ${ui.l('events.title')}
 	static openLanguage(event) {
 		event.stopPropagation();
 		ui.navigation.openPopup(ui.l('langSelect'),
-			'<div style="padding:1em 0;"><buttontext class="bgColor' + (global.language == 'DE' ? ' favorite' : '') + '" onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE">Deutsch</buttontext>' +
-			'<buttontext class="bgColor' + (global.language == 'EN' ? ' favorite' : '') + '" onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</buttontext></div>');
+			'<div style="padding:1em 0;"><button-text' + (global.language == 'DE' ? ' class="favorite"' : '') + ' onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE">Deutsch</button-text>' +
+			'<button-text' + (global.language == 'EN' ? ' class="favorite"' : '') + ' onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</button-text></div>');
 	}
 	static openNews() {
 		var render = function () {

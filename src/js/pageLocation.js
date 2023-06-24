@@ -64,22 +64,22 @@ ${v.rating}
 <img class="map${v.hideMeGoogle}"
 	onclick="ui.navigation.openHTML(&quot;https://maps.google.com/maps/dir/${geoData.current.lat},${geoData.current.lon}/${v.latitude},${v.longitude}&quot;)" />
 <detailButtons>
-	<buttontext class="bgColor${v.loggedIn}"
-		onclick="ui.navigation.goTo(&quot;login&quot;)">${ui.l('login.action')}</buttontext>
-	<buttontext class="bgColor${v.hideMeEvents}${v.notLoggedIn}" name="buttonEvents"
-		onclick="pageEvent.toggle(${v.locID})">${ui.l('events.title')}</buttontext>
-	<buttontext class="bgColor${v.favorite}${v.hideMeFavorite}${v.notLoggedIn}" name="buttonFavorite"
-		onclick="pageLocation.toggleFavorite(&quot;${v.id}&quot;)">${ui.l('locations.favoritesButton')}</buttontext>
-	<buttontext class="bgColor${v.pressedCopyButton}${v.notLoggedIn}" name="buttonCopy"
-		onclick="pageChat.doCopyLink(event,&quot;${v.event.id ? 'e' : 'l'}=${v.id}&quot;)">${ui.l('chat.share')}</buttontext>
-	<buttontext class="bgColor${v.hideMePotentialParticipants}${v.notLoggedIn}" name="buttonPotentialParticipants"
-		onclick="pageEvent.loadPotentialParticipants()">${ui.l('events.potentialParticipants')}</buttontext>
-	<buttontext class="bgColor${v.hideMeEdit}${v.notLoggedIn}" name="buttonEdit"
-		onclick="${v.editAction}">${ui.l('edit')}</buttontext>
-	<buttontext class="bgColor${v.hideMeGoogle}${v.notLoggedIn}" name="buttonGoogle"
-		onclick="ui.navigation.openHTML(&quot;https://google.com/search?q=${encodeURIComponent(v.name + ' ' + v.town)}&quot;)">${ui.l('locations.google')}</buttontext>
-	<buttontext class="bgColor${v.hideMeBlock}${v.notLoggedIn}" name="buttonBlock"
-		onclick="pageLocation.toggleBlock(&quot;${v.id}&quot;)">${ui.l('contacts.blockAction')}</buttontext>
+	<button-text class="${v.loggedIn}"
+		onclick="ui.navigation.goTo(&quot;login&quot;)">${ui.l('login.action')}</button-text>
+	<button-text class="${v.hideMeEvents}${v.notLoggedIn}" name="buttonEvents"
+		onclick="pageEvent.toggle(${v.locID})">${ui.l('events.title')}</button-text>
+	<button-text class="${v.favorite}${v.hideMeFavorite}${v.notLoggedIn}" name="buttonFavorite"
+		onclick="pageLocation.toggleFavorite(&quot;${v.id}&quot;)">${ui.l('locations.favoritesButton')}</button-text>
+	<button-text class="${v.pressedCopyButton}${v.notLoggedIn}" name="buttonCopy"
+		onclick="pageChat.doCopyLink(event,&quot;${v.event.id ? 'e' : 'l'}=${v.id}&quot;)">${ui.l('chat.share')}</button-text>
+	<button-text class="${v.hideMePotentialParticipants}${v.notLoggedIn}" name="buttonPotentialParticipants"
+		onclick="pageEvent.loadPotentialParticipants()">${ui.l('events.potentialParticipants')}</button-text>
+	<button-text class="${v.hideMeEdit}${v.notLoggedIn}" name="buttonEdit"
+		onclick="${v.editAction}">${ui.l('edit')}</button-text>
+	<button-text class="${v.hideMeGoogle}${v.notLoggedIn}" name="buttonGoogle"
+		onclick="ui.navigation.openHTML(&quot;https://google.com/search?q=${encodeURIComponent(v.name + ' ' + v.town)}&quot;)">${ui.l('locations.google')}</button-text>
+	<button-text class="${v.hideMeBlock}${v.notLoggedIn}" name="buttonBlock"
+		onclick="pageLocation.toggleBlock(&quot;${v.id}&quot;)">${ui.l('contacts.blockAction')}</button-text>
 </detailButtons>
 <text name="events" class="collapsed" style="margin:0 -1em;"></text>
 <text name="matchIndicatorHint" class="popup" style="display:none;" onclick="ui.toggleHeight(this)">
@@ -94,7 +94,7 @@ ${v.rating}
 			<input-checkbox type="radio" name="reason" value="100" deselect="true" label="${ui.l('locations.blockReason100')}"></input-checkbox>
 		</div>
 		<textarea placeholder="${ui.l('contacts.blockDescHint')}" name="note" maxlength="250"></textarea>
-		<buttontext onclick="pageLocation.block()" style="margin-top:0.5em;" class="bgColor">${ui.l('save')}</buttontext>
+		<button-text onclick="pageLocation.block()" style="margin-top:0.5em;">${ui.l('save')}</button-text>
 	</div>
 </text>
 <text name="copy" class="collapsed">
@@ -119,7 +119,7 @@ ${v.rating}
 	<label style="padding-top:1em;">${ui.l('name')}</label>
 	<value>
 		<input type="text" name="name" maxlength="100" value="${v.name}" />
-		<div style="text-align:center;padding-top:1em;${v.showNearByButton}"><buttontext class="bgColor" onclick="pageLocation.showLocationsNearby(event)">${ui.l('all')}</buttontext></div>
+		<div style="text-align:center;padding-top:1em;${v.showNearByButton}"><button-text onclick="pageLocation.showLocationsNearby(event)">${ui.l('all')}</button-text></div>
 		<locationNameInputHelper style="display:none;"></locationNameInputHelper>
 	</value>
 </field>
@@ -148,9 +148,9 @@ ${v.rating}
 	</value>
 </field>
 <dialogButtons>
-	<buttontext onclick="pageLocation.save()" class="bgColor">
+	<button-text onclick="pageLocation.save()">
 		${ui.l('save')}
-	</buttontext>
+	</button-text>
 	${v.deleteButton}
 	<popupHint></popupHint>
 </dialogButtons>
@@ -277,7 +277,7 @@ ${v.rating}
 		if (r > 0)
 			v.rating = '<detailRating onclick="ratings.open(' + v.event.id + ',&quot;' + (v.event.id ? 'event.id=' + v.event.id : eventWithLocation ? 'event.locationId=' + v.locID : 'event.contactId=' + v.contact.id) + '&quot;)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + r) + '%;">★★★★★</full></ratingSelection></detailRating>';
 		else if (v.event.id && v.event.locationId >= -1 && user.contact && v.event.contactId != user.contact.id)
-			v.rating = '<div style="margin:1em 0;" class="ratingButton hidden"><buttontext class="bgColor" onclick="ratings.open(' + v.event.id + ')">' + ui.l('rating.save') + '</buttontext></div>';
+			v.rating = '<div style="margin:1em 0;" class="ratingButton hidden"><button-text onclick="ratings.open(' + v.event.id + ')">' + ui.l('rating.save') + '</button-text></div>';
 		if (eventWithLocation)
 			v.distanceDisplay = ' style="display:none;"';
 		else {
@@ -336,7 +336,7 @@ ${v.rating}
 				pageLocation.editInternal(id, v);
 			else {
 				if (pageLocation.locationsAdded <= global.minLocations)
-					ui.navigation.openPopup(ui.l('attention'), ui.l('locations.editHint').replace('{0}', pageLocation.locationsAdded) + '<br/><br/><buttontext class="bgColor" onclick="pageLocation.edit()">' + ui.l('locations.new') + '</buttontext>');
+					ui.navigation.openPopup(ui.l('attention'), ui.l('locations.editHint').replace('{0}', pageLocation.locationsAdded) + '<br/><br/><button-text onclick="pageLocation.edit()">' + ui.l('locations.new') + '</button-text>');
 				else
 					pageLocation.editInternal(id, v);
 			}
@@ -350,7 +350,7 @@ ${v.rating}
 	static editInternal(id, v) {
 		if (v) {
 			if (v.contactId == user.contact.id)
-				v.deleteButton = '<buttontext onclick="pageLocation.deleteElement(' + id + ',&quot;Location&quot;)" class="bgColor" id="deleteElement">' + ui.l('delete') + '</buttontext>';
+				v.deleteButton = '<button-text onclick="pageLocation.deleteElement(' + id + ',&quot;Location&quot;)" id="deleteElement">' + ui.l('delete') + '</button-text>';
 		} else if (!id && user.get('location'))
 			v = user.get('location').values;
 		if (!v)
@@ -383,8 +383,8 @@ ${v.rating}
 			return 'N';
 	}
 	static listLocation(l) {
-		if (ui.q('locations buttontext.map'))
-			ui.q('locations buttontext.map').style.display = null;
+		if (ui.q('locations button-text.map'))
+			ui.q('locations button-text.map').style.display = null;
 		var s = '';
 		for (var i = 1; i < l.length; i++) {
 			var v = model.convert(new Location(), l, i);
@@ -455,7 +455,7 @@ ${v.rating}
 								s += '<li onclick="pageLocation.setLocationName(event)" d="' + r[i].types[0] + '" n="' + r[i].name + '" a="' + r[i].vicinity + '">' + r[i].name + '</li>';
 						}
 						if (s) {
-							ui.html('locationNameInputHelper', '<ul>' + s + '</ul><div style="text-align:center;"><buttontext onclick="pageLocation.closeLocationInputHelper()" class="bgColor">' + ui.l('locations.closeInputHelper') + '</buttontext></div>');
+							ui.html('locationNameInputHelper', '<ul>' + s + '</ul><div style="text-align:center;"><button-text onclick="pageLocation.closeLocationInputHelper()">' + ui.l('locations.closeInputHelper') + '</button-text></div>');
 							pageLocation.showLocationInputHelper();
 							ui.q('form input[name="name"]').onfocus = pageLocation.showLocationInputHelper;
 						}
@@ -559,12 +559,12 @@ ${v.rating}
 			pageLocation.map.markerMe.setMap(null);
 			pageLocation.map.markerLocation.setMap(null);
 			ui.q('map').setAttribute('created', new Date().getTime());
-			ui.q('locations buttontext.map').style.display = null;
+			ui.q('locations button-text.map').style.display = null;
 		} else {
 			pageLocation.map.canvas = new google.maps.Map(ui.q('map'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true });
 			pageLocation.map.canvas.addListener('bounds_changed', function () {
 				if (new Date().getTime() - ui.q('map').getAttribute('created') > 2000)
-					ui.q('locations buttontext.map').style.display = 'inline-block';
+					ui.q('locations button-text.map').style.display = 'inline-block';
 			});
 		}
 		if (!pageLocation.map.loadActive) {
@@ -646,7 +646,7 @@ ${v.rating}
 		var idFav = ui.q('detailHeader').getAttribute('idFav');
 		var v = { classname: 'LocationFavorite' };
 		if (idFav) {
-			v.values = { favorite: ui.q('detail card:last-child buttontext.favorite') ? false : true };
+			v.values = { favorite: ui.q('detail card:last-child button-text.favorite') ? false : true };
 			v.id = idFav;
 		} else
 			v.values = { locationId: id };
@@ -661,10 +661,10 @@ ${v.rating}
 					v.values.favorite = true;
 				}
 				if (v.values.favorite) {
-					ui.classAdd('detail card:last-child buttontext[name="buttonFavorite"]', 'favorite');
+					ui.classAdd('detail card:last-child button-text[name="buttonFavorite"]', 'favorite');
 					ui.classAdd('row.location[i="' + id + '"]', 'favorite');
 				} else {
-					ui.classRemove('detail card:last-child buttontext.favorite', 'favorite');
+					ui.classRemove('detail card:last-child button-text.favorite', 'favorite');
 					ui.classRemove('row.location[i="' + id + '"]', 'favorite');
 				}
 			}
@@ -679,7 +679,7 @@ ${v.rating}
 			} else {
 				ui.css('locations listBody', 'margin-top', '');
 				ui.css('locations listBody', 'padding-top', '');
-				ui.q('locations buttontext.map').style.display = null;
+				ui.q('locations button-text.map').style.display = null;
 				pageLocation.map.loadActive = false;
 			}
 			ui.toggleHeight('map', pageLocation.scrollMap);

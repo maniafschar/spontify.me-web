@@ -27,8 +27,7 @@ class ratings {
         <field style="margin:0.5em 0 0 0;">
             <input-image></input-image>
         </field>
-        <buttontext onclick="ratings.save()" oId="${v.id}"
-            class="${v.bg}" style="margin-top:0.5em;">${ui.l('rating.save')}</buttontext>
+        <button-text onclick="ratings.save()" oId="${v.id}" style="margin-top:0.5em;">${ui.l('rating.save')}</button-text>
     </form>
 </div>`;
 	static click(x) {
@@ -41,7 +40,6 @@ class ratings {
 	static getForm(id) {
 		var v = {}, draft = user.get('rating' + id);
 		v.participateId = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).eventParticipate.id;
-		v.bg = 'bgColor';
 		if (draft)
 			v.draft = draft.values.description;
 		return ratings.templateForm(v);
@@ -121,7 +119,7 @@ class ratings {
 			success(r) {
 				user.remove('rating');
 				ui.navigation.closePopup();
-				ui.q('detail card:last-child buttontext[onclick*="ratings.open"]').outerHTML = '';
+				ui.q('detail card:last-child button-text[onclick*="ratings.open"]').outerHTML = '';
 			}
 		});
 	}

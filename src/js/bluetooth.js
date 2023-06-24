@@ -145,7 +145,7 @@ class bluetooth {
 			user.save({ webCall: 'bluetooth.toggle()', bluetooth: false }, bluetooth.stop);
 		else {
 			if ((!user.contact.ageMale && !user.contact.ageFemale && !user.contact.ageDivers) || !user.contact.age || !user.contact.gender)
-				ui.navigation.openPopup(ui.l('attention'), ui.l('bluetooth.errorMatching').replace('{0}', ui.l('bluetooth.matching')) + '<br/><br/><buttontext class="bgColor" onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.edit') + '</buttontext>');
+				ui.navigation.openPopup(ui.l('attention'), ui.l('bluetooth.errorMatching').replace('{0}', ui.l('bluetooth.matching')) + '<br/><br/><button-text onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.edit') + '</button-text>');
 			else
 				user.save({ webCall: 'bluetooth.toggle()', bluetooth: true }, bluetooth.requestAuthorization);
 		}
