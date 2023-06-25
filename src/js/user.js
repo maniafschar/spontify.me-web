@@ -53,7 +53,7 @@ class user {
 	<input placeholder="Thema des Termins" ${v.inputDisp}/>
 </appointment>
 <dialogButtons>
-	<button-text onclick="user.appointment()">${ui.l('events.paypalSignUpButton')}</button-text>
+	<button-text onclick="user.appointment()" label="events.paypalSignUpButton"></button-text>
 </dialogButtons>`;
 	static appointment() {
 		if (ui.cssValue('popup appointment', 'display') == 'none')

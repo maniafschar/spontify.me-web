@@ -84,8 +84,8 @@ ${ui.l('events.title')}
 	</value>
 </field>
 <dialogButtons style="margin-bottom:0;">
-	<button-text onclick="pageHome.saveNews()">${ui.l('save')}</button-text>
-	<button-text onclick="pageHome.deleteNews(${v.id})" class="deleteButton${v.hideDelete}">${ui.l('delete')}</button-text>
+	<button-text onclick="pageHome.saveNews()" label="save"></button-text>
+	<button-text onclick="pageHome.deleteNews(${v.id})" class="deleteButton${v.hideDelete}" label="delete"></button-text>
 	<popupHint></popupHint>
 </dialogButtons>`;
 	static clickNotification(id, action) {
@@ -292,8 +292,8 @@ ${ui.l('events.title')}
 	static openLanguage(event) {
 		event.stopPropagation();
 		ui.navigation.openPopup(ui.l('langSelect'),
-			'<div style="padding:1em 0;"><button-text' + (global.language == 'DE' ? ' class="favorite"' : '') + ' onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE">Deutsch</button-text>' +
-			'<button-text' + (global.language == 'EN' ? ' class="favorite"' : '') + ' onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN">English</button-text></div>');
+			'<div style="padding:1em 0;"><button-text' + (global.language == 'DE' ? ' class="favorite"' : '') + ' onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE" label="Deutsch"></button-text>' +
+			'<button-text' + (global.language == 'EN' ? ' class="favorite"' : '') + ' onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN" label="English"></button-text></div>');
 	}
 	static openNews() {
 		var render = function () {

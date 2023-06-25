@@ -33,7 +33,7 @@ class pageEvent {
 			<li onclick="pageEvent.locationSelected(-2)" style="color:white;" class="${v.hideWithoutLocation}">${ui.l('events.newWithoutLocation')}</li>
 			<ul></ul>
 			<explain style="margin-bottom:0.5em;">${ui.l('events.locationInputHintCreateNew')}</explain>
-			<button-text onclick="pageLocation.edit()">${ui.l('locations.new')}</button-text>
+			<button-text onclick="pageLocation.edit()" label="locations.new"></button-text>
 		</eventLocationInputHelper>
 	</value>
 </field>
@@ -48,11 +48,11 @@ class pageEvent {
 <field class="noWTDField">
 	<label>${ui.l('type')}</label>
 	<value>
-		<input-checkbox type="radio" name="type" value="o" label="${ui.l('events.type_o')}" onclick="pageEvent.setForm()" ${v.type_o}></input-checkbox>
-		<input-checkbox type="radio" name="type" value="w1" label="${ui.l('events.type_w1')}" onclick="pageEvent.setForm()" ${v.type_w1}></input-checkbox>
-		<input-checkbox type="radio" name="type" value="w2" label="${ui.l('events.type_w2')}" onclick="pageEvent.setForm()" ${v.type_w2}></input-checkbox>
-		<input-checkbox type="radio" name="type" value="m" label="${ui.l('events.type_m')}" onclick="pageEvent.setForm()" ${v.type_m}></input-checkbox>
-		<input-checkbox type="radio" name="type" value="y" label="${ui.l('events.type_y')}" onclick="pageEvent.setForm()" ${v.type_y}></input-checkbox>
+		<input-checkbox type="radio" name="type" value="o" label="events.type_o" onclick="pageEvent.setForm()" ${v.type_o}></input-checkbox>
+		<input-checkbox type="radio" name="type" value="w1" label="events.type_w1" onclick="pageEvent.setForm()" ${v.type_w1}></input-checkbox>
+		<input-checkbox type="radio" name="type" value="w2" label="events.type_w2" onclick="pageEvent.setForm()" ${v.type_w2}></input-checkbox>
+		<input-checkbox type="radio" name="type" value="m" label="events.type_m" onclick="pageEvent.setForm()" ${v.type_m}></input-checkbox>
+		<input-checkbox type="radio" name="type" value="y" label="events.type_y" onclick="pageEvent.setForm()" ${v.type_y}></input-checkbox>
 	</value>
 </field>
 <field>
@@ -104,12 +104,12 @@ class pageEvent {
 <field class="unpaid noWTDField">
 	<label>${ui.l('events.confirmLabel')}</label>
 	<value>
-		<input-checkbox name="eventconfirm" transient="true" label="${ui.l('events.confirm')}" value="1" ${v.confirm}></input-checkbox>
+		<input-checkbox name="eventconfirm" transient="true" label="events.confirm" value="1" ${v.confirm}></input-checkbox>
 	</value>
 </field>
 <dialogButtons style="margin-bottom:0;">
-	<button-text onclick="pageEvent.save()">${ui.l('save')}</button-text>
-	<button-text onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" class="${v.hideDelete}" id="deleteElement">${ui.l('delete')}</button-text>
+	<button-text onclick="pageEvent.save()" label="save"></button-text>
+	<button-text onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" class="${v.hideDelete}" id="deleteElement" label="delete"></button-text>
 	<popupHint></popupHint>
 </dialogButtons>
 </div>
@@ -379,7 +379,7 @@ class pageEvent {
 						break;
 				} while (v.event.type != 'o' && d1 < todayPlus14);
 			}
-			if (!added && user.contact.id == v.event.contactId) {
+			if (!added && user.contact && user.contact.id == v.event.contactId) {
 				v.event.startDate = global.date.server2local(v.event.startDate);
 				otherEvents.push(v);
 			}
@@ -412,12 +412,12 @@ class pageEvent {
 		var text = '<div style="margin:1em 0;">';
 		if (futureEvent) {
 			if (v.event.locationId > 0 && (v.event.contactId == user.contact.id || v.eventParticipate.state == 1))
-				text += '<button-text onclick="pageEvent.qrcode(' + (v.event.contactId == user.contact.id) + ')">' + ui.l('events.qrcodeButton') + '</button-text><br/><br/>';
+				text += '<button-text onclick="pageEvent.qrcode(' + (v.event.contactId == user.contact.id) + ')" label="events.qrcodeButton"></button-text><br/><br/>';
 			if (v.event.price > 0 && user.contact.id != v.event.contactId) {
 				if (!v.eventParticipate.state && v.contact.authenticate)
-					text += '<button-text class="participation" onclick="pageLogin.paypal(' + v.contact.id + ')">' + ui.l('events.participante') + '</button-text>';
+					text += '<button-text class="participation" onclick="pageLogin.paypal(' + v.contact.id + ')" label="events.participante"></button-text>';
 			} else if (v.eventParticipate.state == 1 || !v.event.maxParticipants || participantCount < v.event.maxParticipants)
-				text += '<button-text class="participation" onclick="pageEvent.participate()">' + ui.l('events.participante' + (v.eventParticipate.state == 1 ? 'Stop' : '')) + '</button-text>';
+				text += '<button-text class="participation" onclick="pageEvent.participate()" label="events.participante' + (v.eventParticipate.state == 1 ? 'Stop' : '') + '"></button-text>';
 		}
 		if (participantCount > 0 || futureEvent)
 			text += '<button-text onclick="pageEvent.toggleParticipants(event)"><participantCount>' + (participantCount > 0 ? participantCount + '&nbsp;' : '') + '</participantCount>' + ui.l('events.participants') + '</button-text>';
@@ -695,7 +695,7 @@ class pageEvent {
 	static participate(order) {
 		var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
 		if (e.event.price > 0 && !user.contact.image) {
-			ui.navigation.openPopup(ui.l('attention'), ui.l('events.participationNoImage') + '<br/><br/><button-text onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.editProfile') + '</button-text > ');
+			ui.navigation.openPopup(ui.l('attention'), ui.l('events.participationNoImage') + '<br/><br/><button-text onclick="ui.navigation.goTo(&quot;settings&quot;)" label="settings.editProfile"></button-text > ');
 			return;
 		}
 		var button = ui.q('detail card:last-child button-text.participation');
@@ -706,7 +706,7 @@ class pageEvent {
 			d.id = e.eventParticipate.id;
 			if (e.event.confirm == 1) {
 				if (!ui.q('#stopParticipateReason')) {
-					ui.navigation.openPopup(ui.l('events.stopParticipate'), ui.l('events.stopParticipateText') + '<br/><textarea id="stopParticipateReason" placeholder="' + ui.l('events.stopParticipateHint') + '" style="margin-top:0.5em;"></textarea><button-text style="margin-top:1em;" onclick="pageEvent.participate()">' + ui.l('events.stopParticipateButton') + '</button-text>');
+					ui.navigation.openPopup(ui.l('events.stopParticipate'), ui.l('events.stopParticipateText') + '<br/><textarea id="stopParticipateReason" placeholder="' + ui.l('events.stopParticipateHint') + '" style="margin-top:0.5em;"></textarea><button-text style="margin-top:1em;" onclick="pageEvent.participate()" label="events.stopParticipateButton"></button-text>');
 					return;
 				}
 				if (!ui.q('#stopParticipateReason').value)
@@ -997,7 +997,7 @@ class pageEvent {
 		var e = ui.q('detail card:last-child [name="events"]');
 		if (!e)
 			return;
-		var a = pageEvent.getCalendarList(r), newButton = field == 'contact' ? '' : '<br/><br/><button-text onclick="pageEvent.edit(' + id + ')">' + ui.l('events.new') + '</button-text>';
+		var a = pageEvent.getCalendarList(r), newButton = field == 'contact' ? '' : '<br/><br/><button-text onclick="pageEvent.edit(' + id + ')" label="events.new"></button-text>';
 		var s = '', v, text;
 		var b = user.contact.id == id;
 		if (b && e.getAttribute('active'))

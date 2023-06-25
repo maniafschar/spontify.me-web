@@ -21,20 +21,20 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 		if (errorID == 'favorites')
 			s = s.replace('{1}', '<br/><br/><br/><br/><buttonIcon style="left:50%;margin:-3em 0 0 -1.5em;"><img src="images/favorite.svg"/></buttonIcon><br/>');
 		else if (errorID == 'matches')
-			s = s.replace('{1}', '<br/><br/><button-text onclick="ui.navigation.goTo(&quot;settings2&quot;)">' + ui.l('Yes') + '</button-text>');
+			s = s.replace('{1}', '<br/><br/><button-text onclick="ui.navigation.goTo(&quot;settings2&quot;)" label="Yes"></button-text>');
 		else if (errorID == 'friends')
-			s = s.replace('{1}', '<br/><br/><button-text>' + ui.l('contacts.requestFriendshipButton') + '</button-text><br/><br/>');
+			s = s.replace('{1}', '<br/><br/><button-text label="contacts.requestFriendshipButton"></button-text><br/><br/>');
 		else if (errorID.toLowerCase().indexOf('groups') > -1)
-			s = s.replace('{1}', '<br/><br/><button-text>' + ui.l('group.action') + '</button-text><br/><br/>');
+			s = s.replace('{1}', '<br/><br/><button-text label="group.action"></button-text><br/><br/>');
 		else if (errorID == 'profile')
-			s = s.replace('{1}', '<br/><br/><button-text onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('settings.edit') + '</button-text>');
+			s = s.replace('{1}', '<br/><br/><button-text onclick="ui.navigation.goTo(&quot;settings&quot;)" label="settings.edit"></button-text>');
 		else if (errorID == 'list')
-			s = s.replace('{1}', '<br/><br/><button-text onclick="pageLocation.edit()">' + ui.l('locations.new') + '</button-text>');
+			s = s.replace('{1}', '<br/><br/><button-text onclick="pageLocation.edit()" label="locations.new"></button-text>');
 		else if (errorID == 'eventsMy')
-			s = s.replace('{1}', '<br/><br/><button-text>' + ui.l('events.participante') + '</button-text><br/><br/>');
+			s = s.replace('{1}', '<br/><br/><button-text label="events.participante"></button-text><br/><br/>');
 		else if (errorID == 'search' &&
 			ui.val('search div.' + ui.q('search tabHeader tab.tabActive').getAttribute('i') + ' [name="keywords"]'))
-			s += '<br/><br/>' + ui.l('noResults.searchWithoutKeywords') + '<br/><br/><button-text onclick="pageSearch.repeatSearch()">' + ui.l('noResults.repeat') + '</button-text>';
+			s += '<br/><br/>' + ui.l('noResults.searchWithoutKeywords') + '<br/><br/><button-text onclick="pageSearch.repeatSearch()" label="noResults.repeat"></button-text>';
 		return '<noResult>' + s.replace(/\{0}/g, ui.l(activeID + '.title')).replace('{1}', '') + '</noResult>';
 	}
 	static load(data, callback, divID, errorID) {
@@ -102,7 +102,7 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 			if (id == 'contacts')
 				v.groups = '<groups style="display:none;"></groups>';
 			else
-				v.map = '<map style="display:none;"></map><button-text class="map" onclick="pageLocation.searchFromMap()">' + ui.l('search.map') + '</button-text>';
+				v.map = '<map style="display:none;"></map><button-text class="map" onclick="pageLocation.searchFromMap()" label="search.map"></button-text>';
 			v.title = ui.l(id + '.title').toLowerCase();
 			e.innerHTML = lists.template(v);
 			formFunc.svg.replaceAll();

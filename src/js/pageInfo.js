@@ -13,30 +13,22 @@ class pageInfo {
 	static openSection = 4;
 	static sentFeedback = [];
 	static template = v =>
-		global.template`<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info1&quot;)">
-	${ui.l('info.legalTitle')}
-</button-text><br/>
+		global.template`<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info1&quot;)" label="info.legalTitle"></button-text><br/>
 <infoblock id="info1" style="display:none;" class="overflow">
 	${ui.l('infoLegal')}
 </infoblock>
-<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info3&quot;)">
-	${ui.l('info.dsgvoTitle')}
-</button-text><br/>
+<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info3&quot;)" label="info.dsgvoTitle"></button-text><br/>
 <infoblock id="info3" style="display:none;" class="overflow">
 	${ui.l('infoDSGVO')}
 </infoblock>
-<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info2&quot;)">
-	${ui.l('info.imprintTitle')}
-</button-text><br/>
+<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info2&quot;)" label="nfo.imprintTitle"></button-text><br/>
 <infoblock id="info2" style="display:none;">
 	${ui.l('info.imprint')}
 </infoblock>`;
 	static templateCopyright = v =>
 		global.template`<div style="text-align:center;padding:2em 1em;clear:both;">${ui.l('info.infoOther')}<br/>© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>`;
 	static templateDesc = v =>
-		global.template`<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info4&quot;)">
-${ui.l('home.DescLink')}
-</button-text><br/>
+		global.template`<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info4&quot;)" label="home.DescLink"></button-text><br/>
 <infoblock id="info4" style="display:none;">
 <div>
 	${v.description}
@@ -91,7 +83,7 @@ ${ui.l('home.DescLink')}
 	static socialShareDialog() {
 		var f = function () {
 			if (ui.navigation.getActiveID() == 'home' && pageLogin.timestamp && new Date().getTime() - pageLogin.timestamp > 10000) {
-				intro.openHint({ desc: '<div style="margin:0 0.5em 1em 0.5em;">' + ui.l('info.recommend') + '</div><button-text style="margin-top:0.5em;" onclick="pageInfo.socialShare()">' + ui.l('Yes') + '</button-text>', pos: '15%,20vh', size: '70%,auto' });
+				intro.openHint({ desc: '<div style="margin:0 0.5em 1em 0.5em;">' + ui.l('info.recommend') + '</div><button-text style="margin-top:0.5em;" onclick="pageInfo.socialShare()" label="Yes"></button-text>', pos: '15%,20vh', size: '70%,auto' });
 				setTimeout(function () {
 					if (ui.q('hint button-text[onclick*="socialShare"]'))
 						user.save({ webCall: 'pageInfo.socialShareDialog()', recommend: global.date.local2server(new Date()) });

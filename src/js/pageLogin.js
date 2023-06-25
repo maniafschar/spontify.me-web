@@ -49,17 +49,13 @@ class pageLogin {
 	<field>
 		<label></label>
 		<value style="text-align:center;">
-			<input-checkbox name="autoLogin" value="1" label="${ui.l('login.keepmeloggedon')}" ${v['keepLoggedIn']}></input-checkbox>
+			<input-checkbox name="autoLogin" value="1" label="login.keepmeloggedon" ${v['keepLoggedIn']}></input-checkbox>
 		</value>
 	</field>
 	<dialogButtons>
-		<button-text onclick="pageLogin.fromForm()" class="defaultButton">
-			${ui.l('login.action')}
-		</button-text>
+		<button-text onclick="pageLogin.fromForm()" class="defaultButton" label="login.action"></button-text>
 		<div style="padding:2em 0 1em 0;">${ui.l('login.alternative')}</div>
-		<button-text onclick="pageLogin.openFB()">
-			Facebook
-		</button-text>
+		<button-text onclick="pageLogin.openFB()" label="Facebook"></button-text>
 		<br />
 		<br />
 		<br />
@@ -82,9 +78,7 @@ class pageLogin {
 	</field>
 	<dialogButtons>
 		<br/>
-		<button-text onclick="pageLogin.sendVerificationEmail()" class="defaultButton">
-		${ui.l('login.recoverPassword')}
-		</button-text>
+		<button-text onclick="pageLogin.sendVerificationEmail()" class="defaultButton" label="login.recoverPassword"></button-text>
 	</dialogButtons>
 	<errorHint></errorHint>
 </form>
@@ -118,31 +112,25 @@ class pageLogin {
     <field>
         <label>${ui.l('gender')}</label>
         <value>
-            <input-checkbox type="radio" name="gender" ${v.gender1} value="1" deselect="true" label="${ui.l('male')}" style="margin-bottom:0;"></input-checkbox>
-            <input-checkbox type="radio" name="gender" ${v.gender2} value="2" deselect="true" label="${ui.l('female')}" style="margin-bottom:0;"></input-checkbox>
-            <input-checkbox type="radio" name="gender" ${v.gender3} value="3" deselect="true" label="${ui.l('divers')}" style="margin-bottom:0;"></input-checkbox>
+            <input-checkbox type="radio" name="gender" ${v.gender1} value="1" deselect="true" label="male" style="margin-bottom:0;"></input-checkbox>
+            <input-checkbox type="radio" name="gender" ${v.gender2} value="2" deselect="true" label="female" style="margin-bottom:0;"></input-checkbox>
+            <input-checkbox type="radio" name="gender" ${v.gender3} value="3" deselect="true" label="divers" style="margin-bottom:0;"></input-checkbox>
         </value>
     </field>
     <field>
         <label>${ui.l('info.legalTitle')}</label>
         <value>
-            <input-checkbox value="true" ${v.agb} name="agb" label="${ui.l('login.legal')}"
+            <input-checkbox value="true" ${v.agb} name="agb" label="login.legal"
 				onclick="pageLogin.validateAGB()"></input-checkbox>
         </value>
     </field>
     <dialogButtons>
 		<br/>
-		<button-text onclick="pageLogin.register()" class="defaultButton">
-			${ui.l('login.register')}
-        </button-text>
+		<button-text onclick="pageLogin.register()" class="defaultButton" label="login.register"></button-text>
         <br /><br />
-        <button-text onclick="ui.navigation.openAGB()" style="margin-left: 0.5em;">
-			${ui.l('info.legalTitle')}${global.separator}${ui.l('info.dsgvoTitle')}
-        </button-text>
+        <button-text onclick="ui.navigation.openAGB()" style="margin-left: 0.5em;" label="${ui.l('info.legalTitle')}${global.separator}${ui.l('info.dsgvoTitle')}"></button-text>
         <br /><br />
-        <button-text onclick="pageLogin.toggleRegistrationHints()" style="margin-left: 0.5em;">
-			${ui.l('login.hintsTitle')}
-        </button-text>
+        <button-text onclick="pageLogin.toggleRegistrationHints()" style="margin-left: 0.5em;" label="login.hintsTitle"></button-text>
     </dialogButtons>
 	<registerHint onclick="pageLogin.toggleRegistrationHints()">${ui.l('login.hints')}</registerHint>
 </form>
@@ -445,7 +433,7 @@ class pageLogin {
 				if (!user.contact.birthday)
 					page1 += '<field><label>' + ui.l('birthday') + '</label><value><input type="date" placeholder="TT.MM.JJJJ" name="birthday" maxlength="10"/></value></field>';
 				if (!user.contact.gender)
-					page1 += '<field><label>' + ui.l('gender') + '</label><value><input-checkbox type="radio" name="gender" value="2" label="' + ui.l('female') + '"></input-checkbox><input-checkbox type="radio" name="gender" value="1" label="' + ui.l('male') + '"></input-checkbox><input-checkbox type="radio" name="gender" value="3" label="' + ui.l('divers') + '"></input-checkbox></value></field>';
+					page1 += '<field><label>' + ui.l('gender') + '</label><value><input-checkbox type="radio" name="gender" value="2" label="female"></input-checkbox><input-checkbox type="radio" name="gender" value="1" label="male"></input-checkbox><input-checkbox type="radio" name="gender" value="3" label="divers"></input-checkbox></value></field>';
 				if (!user.contact.skills && !user.contact.skillsText)
 					page2 = '<field><label>' + ui.l('settings.skillDialog') + '</label><value><input-hashtags></input-hashtags></value></field>';
 				if (page1 || page2) {

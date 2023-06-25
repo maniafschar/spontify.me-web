@@ -27,7 +27,7 @@ class ratings {
         <field style="margin:0.5em 0 0 0;">
             <input-image></input-image>
         </field>
-        <button-text onclick="ratings.save()" oId="${v.id}" style="margin-top:0.5em;">${ui.l('rating.save')}</button-text>
+        <button-text onclick="ratings.save()" oId="${v.id}" style="margin-top:0.5em;" label="rating.save"></button-text>
     </form>
 </div>`;
 	static click(x) {

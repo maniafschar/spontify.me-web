@@ -31,13 +31,13 @@ class pageSearch {
 		fieldValues: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
-<input-checkbox label="${ui.l('search.matches')}" name="matches" ${v.matches}></input-checkbox>
+<input-checkbox label="search.matches" name="matches" ${v.matches}></input-checkbox>
 <label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
 <input-hashtags ids="${v.keywords}" text="${v.keywordsText}" name="keywords"></input-hashtags>
 <explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
 <errorHint></errorHint>
 <dialogButtons>
-<button-text class="defaultButton" onclick="pageSearch.contacts.search()">${ui.l('search.action')}</button-text>
+<button-text class="defaultButton" onclick="pageSearch.contacts.search()" label="search.action"></button-text>
 </dialogButtons>
 </form>`,
 		getFields() {
@@ -112,13 +112,13 @@ class pageSearch {
 		fieldValues: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
-<input-checkbox label="${ui.l('search.matchesEvent')}" name="matches" ${v.matches}></input-checkbox>
+<input-checkbox label="search.matchesEvent" name="matches" ${v.matches}></input-checkbox>
 <label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
 <input-hashtags ids="${v.keywords}" text="${v.keywordsText}" name="keywords"></input-hashtags>
 <explain class="searchKeywordHint">${ui.l('search.hintEvent')}</explain>
 <errorHint></errorHint>
 <dialogButtons>
-<button-text class="defaultButton" onclick="pageSearch.events.search()">${ui.l('search.action')}</button-text>
+<button-text class="defaultButton" onclick="pageSearch.events.search()" label="search.action"></button-text>
 </dialogButtons>
 </form>`,
 		getFields() {
@@ -228,13 +228,13 @@ class pageSearch {
 		fieldValues: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
-<input-checkbox label="${ui.l('search.favorites')}" name="favorites" ${v.favorites}></input-checkbox>
+<input-checkbox label="search.favorites" name="favorites" ${v.favorites}></input-checkbox>
 <label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
 <input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" value="${v.keywords}"/>
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
 <errorHint></errorHint>
 <dialogButtons>
-<button-text class="defaultButton" onclick="pageSearch.locations.search()">${ui.l('search.action')}</button-text>
+<button-text class="defaultButton" onclick="pageSearch.locations.search() label="search.action"></button-text>
 </dialogButtons>
 </form>`,
 		getFields() {

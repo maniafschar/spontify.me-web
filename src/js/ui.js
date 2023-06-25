@@ -528,7 +528,9 @@ class ui {
 			}, pageEvent.listTickets, 'events', 'eventsTicket');
 		}
 	}
-	static l(id) {
+	static l(id, dontReportMissingLabel) {
+		if (!id)
+			return '';
 		var s = ui.labels[id];
 		if (!s && id.indexOf('.') > 0) {
 			var i = id.split('.');
@@ -536,7 +538,8 @@ class ui {
 				s = ui.labels[i[0]][i[1]];
 		}
 		if (!s) {
-			communication.sendError('missing label: ' + id);
+			if (!dontReportMissingLabel)
+				communication.sendError('missing label: ' + id);
 			return '';
 		}
 		return s;
@@ -1038,6 +1041,8 @@ class ButtonText extends HTMLElement {
 	constructor() {
 		super();
 		this._root = this.attachShadow({ mode: 'closed' });
+	}
+	connectedCallback() {
 		const style = document.createElement('style');
 		style.textContent = `
 :host>span:hover {
@@ -1094,16 +1099,23 @@ class ButtonText extends HTMLElement {
 }`;
 		this._root.appendChild(style);
 		var element = document.createElement('span');
-		element.innerHTML = this.innerHTML;
 		element.setAttribute('part', 'bgColor');
 		this._root.appendChild(element);
-		this.innerHTML = null;
 		this.tabIndex = 0;
 		this.style.outline = 'none !important';
+		this.attributeChangedCallback('label', null, this.getAttribute('label'));
 		this.addEventListener('keydown', function (event) {
 			if (event.key == ' ')
 				this.click();
 		})
+	}
+	static get observedAttributes() { return ['label']; }
+	attributeChangedCallback(name, oldValue, newValue) {
+		if (name == 'label' && newValue && this._root.querySelector('span')) {
+			var s = ui.l(newValue, true);
+			this._root.querySelector('span').innerHTML = s ? s : newValue;
+			this.removeAttribute('label');
+		}
 	}
 }
 if (!customElements.get('button-text'))
@@ -1112,6 +1124,8 @@ class InputHashtags extends HTMLElement {
 	constructor() {
 		super();
 		this._root = this.attachShadow({ mode: 'closed' });
+	}
+	connectedCallback() {
 		const style = document.createElement('style');
 		style.textContent = `
 hashtags {
@@ -1303,6 +1317,8 @@ class InputCheckbox extends HTMLElement {
 	constructor() {
 		super();
 		this._root = this.attachShadow({ mode: 'closed' });
+	}
+	connectedCallback() {
 		const style = document.createElement('style');
 		style.textContent = `
 label {
@@ -1340,18 +1356,23 @@ label:hover {
 	opacity: 0.8;
 }`;
 		this._root.appendChild(style);
-	}
-	connectedCallback() {
 		this.setAttribute('onclick', 'this.toggleCheckbox(event)' + (this.getAttribute('onclick') ? ';' + this.getAttribute('onclick') : ''));
 		var element = document.createElement('label');
-		element.textContent = this.getAttribute('label');
-		this.removeAttribute('label');
 		this._root.appendChild(element);
+		this.attributeChangedCallback('label', null, this.getAttribute('label'));
 		this.tabIndex = 0;
 		this.addEventListener('keydown', function (event) {
 			if (event.key == ' ')
 				this.click();
 		})
+	}
+	static get observedAttributes() { return ['label']; }
+	attributeChangedCallback(name, oldValue, newValue) {
+		if (name == 'label' && newValue && this._root.querySelector('label')) {
+			var s = ui.l(newValue, true);
+			this._root.querySelector('label').textContent = s ? s : newValue;
+			this.removeAttribute('label');
+		}
 	}
 	toggleCheckbox(event) {
 		var e = event.target;
@@ -1370,6 +1391,8 @@ class InputImage extends HTMLElement {
 	constructor() {
 		super();
 		this._root = this.attachShadow({ mode: 'closed' });
+	}
+	connectedCallback() {
 		const style = document.createElement('style');
 		style.textContent = `
 inputFile {
@@ -1460,8 +1483,8 @@ input+img {
 		} else {
 			element = document.createElement('div');
 			element.setAttribute('class', 'appInput');
-			element.innerHTML = '<button-text onclick="this.getRootNode().host.cameraPicture(&quot;' + element.nodeName + '&quot;,&quot;' + s2 + '&quot;,true)" style="border-radius:0.5em 0 0 0.5em;border-right:solid 1px rgba(255,255,255,0.1);">' + ui.l('camera.shoot') + '</button-text>' +
-				'<button-text onclick="this.getRootNode().host.cameraPicture(&quot;' + element.nodeName + '&quot;,&quot;' + s2 + '&quot;)" style="border-radius:0 0.5em 0.5em 0;">' + ui.l('camera.select') + '</button-text>';
+			element.innerHTML = '<button-text onclick="this.getRootNode().host.cameraPicture(&quot;' + element.nodeName + '&quot;,&quot;' + s2 + '&quot;,true)" style="border-radius:0.5em 0 0 0.5em;border-right:solid 1px rgba(255,255,255,0.1);" label="camera.shoot"></button-text>' +
+				'<button-text onclick="this.getRootNode().host.cameraPicture(&quot;' + element.nodeName + '&quot;,&quot;' + s2 + '&quot;)" style="border-radius:0 0.5em 0.5em 0;" label="camera.select"></button-text>';
 			this._root.appendChild(element);
 		}
 		element = document.createElement('img');
@@ -1752,6 +1775,8 @@ class InputSlider extends HTMLElement {
 	constructor() {
 		super();
 		this._root = this.attachShadow({ mode: 'closed' });
+	}
+	connectedCallback() {
 		const style = document.createElement('style');
 		style.textContent = `
 * {
@@ -1872,6 +1897,8 @@ class ListRow extends HTMLElement {
 	constructor() {
 		super();
 		this._root = this.attachShadow({ mode: 'closed' });
+	}
+	connectedCallback() {
 		const style = document.createElement('style');
 		style.textContent = `
 div {

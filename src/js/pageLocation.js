@@ -65,21 +65,21 @@ ${v.rating}
 	onclick="ui.navigation.openHTML(&quot;https://maps.google.com/maps/dir/${geoData.current.lat},${geoData.current.lon}/${v.latitude},${v.longitude}&quot;)" />
 <detailButtons>
 	<button-text class="${v.loggedIn}"
-		onclick="ui.navigation.goTo(&quot;login&quot;)">${ui.l('login.action')}</button-text>
+		onclick="ui.navigation.goTo(&quot;login&quot;)" label="login.action"></button-text>
 	<button-text class="${v.hideMeEvents}${v.notLoggedIn}" name="buttonEvents"
-		onclick="pageEvent.toggle(${v.locID})">${ui.l('events.title')}</button-text>
+		onclick="pageEvent.toggle(${v.locID})" label="events.title"></button-text>
 	<button-text class="${v.favorite}${v.hideMeFavorite}${v.notLoggedIn}" name="buttonFavorite"
-		onclick="pageLocation.toggleFavorite(&quot;${v.id}&quot;)">${ui.l('locations.favoritesButton')}</button-text>
+		onclick="pageLocation.toggleFavorite(&quot;${v.id}&quot;)" label="locations.favoritesButton"></button-text>
 	<button-text class="${v.pressedCopyButton}${v.notLoggedIn}" name="buttonCopy"
-		onclick="pageChat.doCopyLink(event,&quot;${v.event.id ? 'e' : 'l'}=${v.id}&quot;)">${ui.l('chat.share')}</button-text>
+		onclick="pageChat.doCopyLink(event,&quot;${v.event.id ? 'e' : 'l'}=${v.id}&quot;)" label="chat.share"></button-text>
 	<button-text class="${v.hideMePotentialParticipants}${v.notLoggedIn}" name="buttonPotentialParticipants"
-		onclick="pageEvent.loadPotentialParticipants()">${ui.l('events.potentialParticipants')}</button-text>
+		onclick="pageEvent.loadPotentialParticipants()" label="events.potentialParticipants"></button-text>
 	<button-text class="${v.hideMeEdit}${v.notLoggedIn}" name="buttonEdit"
-		onclick="${v.editAction}">${ui.l('edit')}</button-text>
+		onclick="${v.editAction}" label="edit"></button-text>
 	<button-text class="${v.hideMeGoogle}${v.notLoggedIn}" name="buttonGoogle"
-		onclick="ui.navigation.openHTML(&quot;https://google.com/search?q=${encodeURIComponent(v.name + ' ' + v.town)}&quot;)">${ui.l('locations.google')}</button-text>
+		onclick="ui.navigation.openHTML(&quot;https://google.com/search?q=${encodeURIComponent(v.name + ' ' + v.town)}&quot;)" label="locations.google"></button-text>
 	<button-text class="${v.hideMeBlock}${v.notLoggedIn}" name="buttonBlock"
-		onclick="pageLocation.toggleBlock(&quot;${v.id}&quot;)">${ui.l('contacts.blockAction')}</button-text>
+		onclick="pageLocation.toggleBlock(&quot;${v.id}&quot;) label="contacts.blockAction"></button-text>
 </detailButtons>
 <text name="events" class="collapsed" style="margin:0 -1em;"></text>
 <text name="matchIndicatorHint" class="popup" style="display:none;" onclick="ui.toggleHeight(this)">
@@ -89,12 +89,12 @@ ${v.rating}
 	<div style="padding:1em 0;">
 		<input-checkbox name="type" value="1" label="${v.blockUser}" ${v.hideBlockUser}></input-checkbox>
 		<div style=";margin-top:1.5em;">
-			<input-checkbox type="radio" name="reason" value="51" deselect="true" label="${ui.l('locations.blockReason1')}"></input-checkbox>
-			<input-checkbox type="radio" name="reason" value="52" deselect="true" label="${ui.l('locations.blockReason2')}" ${v.hideBlockReason2}></input-checkbox>
-			<input-checkbox type="radio" name="reason" value="100" deselect="true" label="${ui.l('locations.blockReason100')}"></input-checkbox>
+			<input-checkbox type="radio" name="reason" value="51" deselect="true" label="locations.blockReason1"></input-checkbox>
+			<input-checkbox type="radio" name="reason" value="52" deselect="true" label="locations.blockReason2" ${v.hideBlockReason2}></input-checkbox>
+			<input-checkbox type="radio" name="reason" value="100" deselect="true" label="locations.blockReason100"></input-checkbox>
 		</div>
 		<textarea placeholder="${ui.l('contacts.blockDescHint')}" name="note" maxlength="250"></textarea>
-		<button-text onclick="pageLocation.block()" style="margin-top:0.5em;">${ui.l('save')}</button-text>
+		<button-text onclick="pageLocation.block()" style="margin-top:0.5em;" label="save"></button-text>
 	</div>
 </text>
 <text name="copy" class="collapsed">
@@ -119,7 +119,7 @@ ${v.rating}
 	<label style="padding-top:1em;">${ui.l('name')}</label>
 	<value>
 		<input type="text" name="name" maxlength="100" value="${v.name}" />
-		<div style="text-align:center;padding-top:1em;${v.showNearByButton}"><button-text onclick="pageLocation.showLocationsNearby(event)">${ui.l('all')}</button-text></div>
+		<div style="text-align:center;padding-top:1em;${v.showNearByButton}"><button-text onclick="pageLocation.showLocationsNearby(event)" label="all"></button-text></div>
 		<locationNameInputHelper style="display:none;"></locationNameInputHelper>
 	</value>
 </field>
@@ -148,9 +148,7 @@ ${v.rating}
 	</value>
 </field>
 <dialogButtons>
-	<button-text onclick="pageLocation.save()">
-		${ui.l('save')}
-	</button-text>
+	<button-text onclick="pageLocation.save()" label="save"></button-text>
 	${v.deleteButton}
 	<popupHint></popupHint>
 </dialogButtons>
@@ -277,7 +275,7 @@ ${v.rating}
 		if (r > 0)
 			v.rating = '<detailRating onclick="ratings.open(' + v.event.id + ',&quot;' + (v.event.id ? 'event.id=' + v.event.id : eventWithLocation ? 'event.locationId=' + v.locID : 'event.contactId=' + v.contact.id) + '&quot;)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + r) + '%;">★★★★★</full></ratingSelection></detailRating>';
 		else if (v.event.id && v.event.locationId >= -1 && user.contact && v.event.contactId != user.contact.id)
-			v.rating = '<div style="margin:1em 0;" class="ratingButton hidden"><button-text onclick="ratings.open(' + v.event.id + ')">' + ui.l('rating.save') + '</button-text></div>';
+			v.rating = '<div style="margin:1em 0;" class="ratingButton hidden"><button-text onclick="ratings.open(' + v.event.id + ')" label="rating.save"></button-text></div>';
 		if (eventWithLocation)
 			v.distanceDisplay = ' style="display:none;"';
 		else {
@@ -336,7 +334,7 @@ ${v.rating}
 				pageLocation.editInternal(id, v);
 			else {
 				if (pageLocation.locationsAdded <= global.minLocations)
-					ui.navigation.openPopup(ui.l('attention'), ui.l('locations.editHint').replace('{0}', pageLocation.locationsAdded) + '<br/><br/><button-text onclick="pageLocation.edit()">' + ui.l('locations.new') + '</button-text>');
+					ui.navigation.openPopup(ui.l('attention'), ui.l('locations.editHint').replace('{0}', pageLocation.locationsAdded) + '<br/><br/><button-text onclick="pageLocation.edit()" label="locations.new"></button-text>');
 				else
 					pageLocation.editInternal(id, v);
 			}
@@ -350,7 +348,7 @@ ${v.rating}
 	static editInternal(id, v) {
 		if (v) {
 			if (v.contactId == user.contact.id)
-				v.deleteButton = '<button-text onclick="pageLocation.deleteElement(' + id + ',&quot;Location&quot;)" id="deleteElement">' + ui.l('delete') + '</button-text>';
+				v.deleteButton = '<button-text onclick="pageLocation.deleteElement(' + id + ',&quot;Location&quot;)" id="deleteElement" label="delete"></button-text>';
 		} else if (!id && user.get('location'))
 			v = user.get('location').values;
 		if (!v)
@@ -455,7 +453,7 @@ ${v.rating}
 								s += '<li onclick="pageLocation.setLocationName(event)" d="' + r[i].types[0] + '" n="' + r[i].name + '" a="' + r[i].vicinity + '">' + r[i].name + '</li>';
 						}
 						if (s) {
-							ui.html('locationNameInputHelper', '<ul>' + s + '</ul><div style="text-align:center;"><button-text onclick="pageLocation.closeLocationInputHelper()">' + ui.l('locations.closeInputHelper') + '</button-text></div>');
+							ui.html('locationNameInputHelper', '<ul>' + s + '</ul><div style="text-align:center;"><button-text onclick="pageLocation.closeLocationInputHelper()" label="locations.closeInputHelper"></button-text></div>');
 							pageLocation.showLocationInputHelper();
 							ui.q('form input[name="name"]').onfocus = pageLocation.showLocationInputHelper;
 						}

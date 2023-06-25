@@ -72,18 +72,18 @@ class pageSettings {
 	<value class="checkbox">
 		<input type="date" placeholder="TT.MM.JJJJ" name="birthday" maxlength="10" id="bd"
 			value="${v.birthday}" style="margin-bottom:0.5em;" />
-		<input-checkbox type="radio" name="birthdayDisplay" value="2" label="${ui.l('settings.showBirthday')}"
+		<input-checkbox type="radio" name="birthdayDisplay" value="2" label="settings.showBirthday"
 			${v.birthdayDisplay2} style="margin-top:0.5em;"></input-checkbox>
-		<input-checkbox type="radio" name="birthdayDisplay" value="1" label="${ui.l('settings.showAge')}"
+		<input-checkbox type="radio" name="birthdayDisplay" value="1" label="settings.showAge"
 			${v.birthdayDisplay1}></input-checkbox>
 	</value>
 </field>
 <field>
 	<label>${ui.l('gender')}</label>
 	<value class="checkbox">
-		<input-checkbox type="radio" name="gender" value="2" label="${ui.l('female')}" ${v.gender2}></input-checkbox>
-		<input-checkbox type="radio" name="gender" value="1" label="${ui.l('male')}" ${v.gender1}></input-checkbox>
-		<input-checkbox type="radio" name="gender" value="3" label="${ui.l('divers')}" ${v.gender3}></input-checkbox>
+		<input-checkbox type="radio" name="gender" value="2" label="female" ${v.gender2}></input-checkbox>
+		<input-checkbox type="radio" name="gender" value="1" label="male" ${v.gender1}></input-checkbox>
+		<input-checkbox type="radio" name="gender" value="3" label="divers" ${v.gender3}></input-checkbox>
 	</value>
 </field>
 <field>
@@ -96,13 +96,13 @@ class pageSettings {
 <field>
 	<label>${ui.l('settings.teaser')}</label>
 	<value class="checkbox">
-		<input-checkbox name="teaser" value="true" label="${ui.l('settings.teaserLabel')}" ${v.teaser}></input-checkbox>
+		<input-checkbox name="teaser" value="true" label="settings.teaserLabel" ${v.teaser}></input-checkbox>
 	</value>
 </field>
 <field>
 	<label>${ui.l('settings.search')}</label>
 	<value class="checkbox">
-		<input-checkbox name="search" value="true" label="${ui.l('settings.searchPseudonym')}" ${v.search}></input-checkbox>
+		<input-checkbox name="search" value="true" label="settings.searchPseudonym" ${v.search}></input-checkbox>
 		<explain>${ui.l('settings.searchPseudonymHint')}</explain>
 	</value>
 </field>
@@ -121,15 +121,15 @@ class pageSettings {
 <field>
 	<label>${ui.l('settings.genderInterest')}</label>
 	<value>
-		<input-checkbox name="genderInterest2" label="${ui.l('settings.genderInterestFemale')}"
+		<input-checkbox name="genderInterest2" label="settings.genderInterestFemale"
 			onclick="pageSettings.toggleGenderSlider(this)" ${v.genderInterest2} transient="true"></input-checkbox>
 		<input-slider type="range" min="18" max="99" value="${v['contact.ageFemale']}" name="ageFemale"></input-slider>
 		<br />
-		<input-checkbox name="genderInterest1" label="${ui.l('settings.genderInterestMale')}"
+		<input-checkbox name="genderInterest1" label="settings.genderInterestMale"
 			onclick="pageSettings.toggleGenderSlider(this)" ${v.genderInterest1} transient="true"></input-checkbox>
 		<input-slider type="range" min="18" max="99" value="${v['contact.ageMale']}" name="ageMale"></input-slider>
 		<br />
-		<input-checkbox name="genderInterest3" label="${ui.l('settings.genderInterestDivers')}"
+		<input-checkbox name="genderInterest3" label="settings.genderInterestDivers"
 			onclick="pageSettings.toggleGenderSlider(this)" ${v.genderInterest3} transient="true"></input-checkbox>
 		<input-slider type="range" min="18" max="99" value="${v['contact.ageDivers']}" name="ageDivers"></input-slider>
 	</value>
@@ -137,63 +137,63 @@ class pageSettings {
 <paypalFees></paypalFees>
 <br/>
 <dialogButtons>
-<button-text onclick="pageSettings.preview()">${ui.l('settings.preview')}</button-text>
+<button-text onclick="pageSettings.preview()" label="settings.preview"></button-text>
 </dialogButtons>`;
 	static templateSettings3 = v =>
-		global.template`<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;settings tabBody .notification&quot;)">${ui.l('settings.myNotifications')}</button-text><br/>
+		global.template`<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;settings tabBody .notification&quot;)" label="settings.myNotifications"></button-text><br/>
 <div class="notification" class="notifications" style="display:none;padding:0.5em 1em 1em 1em;">
-	<input-checkbox value="true" name="notificationChat" label="${ui.l('notification.chat')}" ${v['contact.notificationChat']}></input-checkbox>
+	<input-checkbox value="true" name="notificationChat" label="notification.chat" ${v['contact.notificationChat']}></input-checkbox>
 	<br />
-	<input-checkbox value="true" name="notificationFriendRequest" label="${ui.l('notification.friendRequest')}" ${v['contact.notificationFriendRequest']}></input-checkbox>
+	<input-checkbox value="true" name="notificationFriendRequest" label="notification.friendRequest" ${v['contact.notificationFriendRequest']}></input-checkbox>
 	<br />
-	<input-checkbox value="true" name="notificationBirthday" label="${ui.l('notification.birthday')}" ${v['contact.notificationBirthday']}></input-checkbox>
+	<input-checkbox value="true" name="notificationBirthday" label="notification.birthday" ${v['contact.notificationBirthday']}></input-checkbox>
 	<br />
-	<input-checkbox value="true" name="notificationEngagement" label="${ui.l('notification.engagement')}" ${v['contact.notificationMarkEvent']}></input-checkbox>
+	<input-checkbox value="true" name="notificationEngagement" label="notification.engagement" ${v['contact.notificationMarkEvent']}></input-checkbox>
 	<br />
-	<input-checkbox value="true" name="notificationVisitProfile" label="${ui.l('notification.visitProfile')}" ${v['contact.notificationVisitProfile']}></input-checkbox>
+	<input-checkbox value="true" name="notificationVisitProfile" label="notification.visitProfile" ${v['contact.notificationVisitProfile']}></input-checkbox>
 	<br />
-	<input-checkbox value="true" name="notificationVisitLocation" label="${ui.l('notification.visitLocation')}" ${v['contact.notificationVisitLocation']}></input-checkbox>
+	<input-checkbox value="true" name="notificationVisitLocation" label="notification.visitLocation" ${v['contact.notificationVisitLocation']}></input-checkbox>
 	<br />
-	<input-checkbox value="true" name="notificationMarkEvent" label="${ui.l('notification.markEvent')}" ${v['contact.notificationMarkEvent']}></input-checkbox>
+	<input-checkbox value="true" name="notificationMarkEvent" label="notification.markEvent" ${v['contact.notificationMarkEvent']}></input-checkbox>
 </div>
-<button-text class="settingsButton" onclick="pageSettings.toggleBlocked()">${ui.l('contacts.blocked')}</button-text><br/>
+<button-text class="settingsButton" onclick="pageSettings.toggleBlocked()" label="contacts.blocked"></button-text><br/>
 <div id="blocked" style="display:none;"></div>
-<button-text onclick="ui.toggleHeight(&quot;#delete&quot;)" class="settingsButton">${ui.l('settings.delete')}</button-text><br/>
+<button-text onclick="ui.toggleHeight(&quot;#delete&quot;)" class="settingsButton" label="settings.delete"></button-text><br/>
 <div id="delete" style="display:none;margin:0 1em 1em 1em;">
 <div style="margin:0.25em 0 0.5em 0.5em;">${ui.l('settings.deleteProfileHint')}</div>
 <div>
-<input-checkbox name="deletionReason" label="${ui.l('settings.deleteReason1')}" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint1&quot;)"></input-checkbox>
+<input-checkbox name="deletionReason" label="settings.deleteReason1" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint1&quot;)"></input-checkbox>
 <hintDelete class="hint1" style="display:none;">${ui.l('settings.hintDeleteReason1')}</hintDelete>
 </div>
 <div>
-<input-checkbox name="deletionReason" label="${ui.l('settings.deleteReason2')}" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint2&quot;)"></input-checkbox>
+<input-checkbox name="deletionReason" label="settings.deleteReason2" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint2&quot;)"></input-checkbox>
 <hintDelete class="hint2" style="display:none;">${ui.l('settings.hintDeleteReason2')}</hintDelete>
 </div>
 <div>
-<input-checkbox name="deletionReason" label="${ui.l('settings.deleteReason3')}" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint3&quot;)"></input-checkbox>
+<input-checkbox name="deletionReason" label="settings.deleteReason3" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint3&quot;)"></input-checkbox>
 <hintDelete class="hint3" style="display:none;">${ui.l('settings.hintDeleteReason3')}</hintDelete>
 </div>
 <div>
-<input-checkbox name="deletionReason" label="${ui.l('settings.deleteReason4')}" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint4&quot;)"></input-checkbox>
+<input-checkbox name="deletionReason" label="settings.deleteReason4" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint4&quot;)"></input-checkbox>
 <hintDelete class="hint4" style="display:none;">${ui.l('settings.hintDeleteReason4')}</hintDelete>
 </div>
 <div>
-<input-checkbox name="deletionReason" label="${ui.l('settings.deleteReason5')}" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint5&quot;)"></input-checkbox>
+<input-checkbox name="deletionReason" label="settings.deleteReason5" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint5&quot;)"></input-checkbox>
 <hintDelete class="hint5" style="display:none;">${ui.l('settings.hintDeleteReason5')}</hintDelete>
 </div>
 <div>
-<input-checkbox name="deletionReason" label="${ui.l('settings.deleteReason6')}" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint6&quot;)"></input-checkbox>
+<input-checkbox name="deletionReason" label="settings.deleteReason6" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint6&quot;)"></input-checkbox>
 <hintDelete class="hint6" style="display:none;">${ui.l('settings.hintDeleteReason6')}</hintDelete>
 </div>
 <div>
-<input-checkbox name="deletionReason" label="${ui.l('settings.deleteReason7')}" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint7&quot;)"></input-checkbox>
+<input-checkbox name="deletionReason" label="settings.deleteReason7" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint7&quot;)"></input-checkbox>
 <hintDelete class="hint7" style="display:none;">${ui.l('settings.hintDeleteReason7')}</hintDelete>
 </div>
 <errorHint class="checkbox"></errorHint>
 <textarea id="deleteAccountFeedback" placeholder="${ui.l('settings.deleteProfileFeedbackHint')}" maxlength="2000"></textarea>
 <errorHint class="textarea"></errorHint>
 <div style="margin-top:1em;text-align:center;">
-<button-text onclick="pageSettings.deleteProfile()">${ui.l('settings.deleteProfile')}</button-text>
+<button-text onclick="pageSettings.deleteProfile()" label="settings.deleteProfile"></button-text>
 </div>
 </div>
 ${v.info}`;
@@ -341,8 +341,8 @@ ${v.info}`;
 						v.genderInterest3 = 'checked="true"';
 					v.settings2 = pageSettings.templateSettings2(v);
 					v.info = pageInfo.template()
-						+ '<button-text class="settingsButtonRight" onclick="pageLogin.logoff()">' + ui.l('logoff.title') + '</button-text>'
-						+ '<button-text class="settingsButtonRight" onclick="pageInfo.socialShare()">' + ui.l('settings.socialShare') + '</button-text>'
+						+ '<button-text class="settingsButtonRight" onclick="pageLogin.logoff()" label="logoff.title"></button-text>'
+						+ '<button-text class="settingsButtonRight" onclick="pageInfo.socialShare()" label="settings.socialShare"></button-text>'
 						+ pageInfo.templateCopyright();
 					v.settings3 = pageSettings.templateSettings3(v);
 					ui.q('settings').innerHTML = pageSettings.template(v);
@@ -533,7 +533,7 @@ ${v.info}`;
 			if (saveNewEmail)
 				ui.q('input[name="verified"]').value = 'false';
 			else {
-				ui.navigation.openPopup(ui.l('attention'), ui.l('settings.confirmEmailChange') + '<br /><button-text onclick="pageSettings.save(&quot;' + goToID + '&quot;,true);ui.navigation.closePopup()" style="margin-top:1em;">' + ui.l('Yes') + '</button-text><button-text onclick="pageSettings.resetEmailToOldValue()" style="margin-top:1em;">' + ui.l('No') + '</button-text>');
+				ui.navigation.openPopup(ui.l('attention'), ui.l('settings.confirmEmailChange') + '<br /><button-text onclick="pageSettings.save(&quot;' + goToID + '&quot;,true);ui.navigation.closePopup()" style="margin-top:1em;" label="Yes"></button-text><button-text onclick="pageSettings.resetEmailToOldValue()" style="margin-top:1em;" label="No"></button-text>');
 				return false;
 			}
 		}
@@ -603,7 +603,7 @@ ${v.info}`;
 	}
 	static unblock(id, blockId) {
 		if (!ui.q('popup [i="' + id + '"]')) {
-			ui.navigation.openPopup(ui.l('attention'), ui.l('contacts.unblock').replace('{0}', ui.q('#blocked row[i="' + id + '"] title').innerText) + '<br /><br /><button-text i="' + id + '" onclick="pageSettings.unblock(&quot;' + id + '&quot;,' + blockId + ')">' + ui.l('Yes') + '</button-text>');
+			ui.navigation.openPopup(ui.l('attention'), ui.l('contacts.unblock').replace('{0}', ui.q('#blocked row[i="' + id + '"] title').innerText) + '<br /><br /><button-text i="' + id + '" onclick="pageSettings.unblock(&quot;' + id + '&quot;,' + blockId + ')" label="Yes"></button-text>');
 			return;
 		}
 		communication.ajax({

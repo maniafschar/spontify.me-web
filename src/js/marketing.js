@@ -47,7 +47,7 @@ class marketing {
 					method: 'POST'
 				});
 			}
-			ui.q('hint>div').innerHTML = marketing.data.storage.epilog + '<br/><br/><button-text onclick="intro.close()">Schließen</button-text>';
+			ui.q('hint>div').innerHTML = marketing.data.storage.epilog + '<br/><br/><button-text onclick="intro.close()" label="Schließen"></button-text>';
 			return;
 		}
 		var s = q.question + '<br/>';
@@ -55,7 +55,7 @@ class marketing {
 			s += '<input type="' + (q.answerType ? 'checkbox' : 'radio" next="' + q.answers[i].next) + '" name="answers" value="' + i + '" label="' + q.answers[i].answer + '" />';
 		if (q.textField)
 			s += '<textarea></textarea>';
-		s += '<br/><br/><button-text onclick="marketing.next()">Weiter</button-text><index>' + index + '</index>';
+		s += '<br/><br/><button-text onclick="marketing.next()" label="Weiter"></button-text><index>' + index + '</index>';
 		ui.q('hint>div').innerHTML = s;
 		formFunc.initFields(ui.q('hint'));
 	}
@@ -63,7 +63,7 @@ class marketing {
 		if (marketing.data) {
 			marketing.answers = {};
 			intro.openHint({
-				desc: '<div>' + marketing.data.storage.prolog + '<br/><br/><button-text onclick="marketing.next()">next</button-text><index>-1</index></div>',
+				desc: '<div>' + marketing.data.storage.prolog + '<br/><br/><button-text onclick="marketing.next()" label="next"></button-text><index>-1</index></div>',
 				pos: '5%,5%', size: '90%,auto', onclick: 'return;'
 			});
 		}

@@ -56,21 +56,21 @@ ${v.skills}
 ${v.matchIndicatorHintDescription}
 <detailButtons style="margin-top:1em;">
 	<button-text class="${v.loggedIn}"
-		onclick="ui.navigation.goTo(&quot;login&quot;)">${ui.l('login.action')}</button-text>
+		onclick="ui.navigation.goTo(&quot;login&quot;)" label="login.action"></button-text>
 	<button-text class="${v.blocked}${v.hideMe}"
-		onclick="pageChat.open(${v.id})">${ui.l('chat.title')}</button-text>
+		onclick="pageChat.open(${v.id})" label=chat.title"></button-text>
 	<button-text class="${v.blocked}${v.hideMe}" name="buttonFriend"
-		onclick="pageContact.toggleFriend(${v.id})">${v.labelFriend}</button-text>
+		onclick="pageContact.toggleFriend(${v.id})" label="${v.labelFriend}"></button-text>
 	<button-text class="${v.blocked}${v.hideMe}" name="buttonCopy"
-		onclick="pageChat.doCopyLink(event,&quot;p=${v.id}&quot;)">${ui.l('chat.share')}</button-text>
+		onclick="pageChat.doCopyLink(event,&quot;p=${v.id}&quot;)" label="chat.share"></button-text>
 	<button-text class="${v.blocked}${v.hideMe}" name="buttonGroups"
-		onclick="groups.toggleGroups(${v.id},&quot;${v.contactLinkStatus}&quot;)">${ui.l('group.action')}</button-text>
+		onclick="groups.toggleGroups(${v.id},&quot;${v.contactLinkStatus}&quot;)" label="group.action"></button-text>
 	<button-text class="${v.blocked}" name="buttonEvents"
-		onclick="pageEvent.toggle(${v.id})">${ui.l('events.title')}</button-text>
+		onclick="pageEvent.toggle(${v.id})" label="events.title"></button-text>
 	<button-text class="${v.blocked}" name="buttonLocation"
-		onclick="pageContact.toggleLocation(${v.id})">${ui.l('locations.title')}</button-text>
+		onclick="pageContact.toggleLocation(${v.id})" label="locations.title"></button-text>
 	<button-text class="${v.blocked}${v.hideMe}" name="buttonBlock"
-		onclick="pageContact.toggleBlockUser(${v.id})">${ui.l('contacts.blockAction')}</button-text>
+		onclick="pageContact.toggleBlockUser(${v.id})" label="contacts.blockAction"></button-text>
 </detailButtons>
 <text name="friend" class="collapsed">
 	<div style="padding:2em 0;">
@@ -80,20 +80,20 @@ ${v.matchIndicatorHintDescription}
 <text name="block" class="collapsed">
 	<div style="padding:1em 0;">
 		<div style="margin-top:0.5em;">
-			<input-checkbox type="radio" name="reason" value="1" deselect="true" label="${ui.l('contacts.blockReason1')}"></input-checkbox>
-			<input-checkbox type="radio" name="reason" value="2" deselect="true" label="${ui.l('contacts.blockReason2')}"></input-checkbox>
-			<input-checkbox type="radio" name="reason" value="3" deselect="true" label="${ui.l('contacts.blockReason3')}"></input-checkbox>
-			<input-checkbox type="radio" name="reason" value="4" deselect="true" label="${ui.l('contacts.blockReason4')}"></input-checkbox>
-			<input-checkbox type="radio" name="reason" value="100" deselect="true" label="${ui.l('contacts.blockReason100')}"></input-checkbox>
+			<input-checkbox type="radio" name="reason" value="1" deselect="true" label="contacts.blockReason1"></input-checkbox>
+			<input-checkbox type="radio" name="reason" value="2" deselect="true" label="contacts.blockReason2"></input-checkbox>
+			<input-checkbox type="radio" name="reason" value="3" deselect="true" label="contacts.blockReason3"></input-checkbox>
+			<input-checkbox type="radio" name="reason" value="4" deselect="true" label="contacts.blockReason4"></input-checkbox>
+			<input-checkbox type="radio" name="reason" value="100" deselect="true" label="contacts.blockReason100"></input-checkbox>
 		</div>
 		<textarea placeholder="${ui.l('contacts.blockDescHint')}" name="note" maxlength="250"></textarea>
-		<button-text onclick="pageContact.block()" style="margin-top:0.5em;">${ui.l('save')}</button-text>
+		<button-text onclick="pageContact.block()" style="margin-top:0.5em;" label="save"></button-text>
 	</div>
 </text>
 <text name="events" class="collapsed list"></text>
 <text name="groups" class="collapsed">
 	<detailTogglePanel></detailTogglePanel>
-	<button-text onclick="groups.addGroup(${v.id})" style="margin-top:1em;">${ui.l('group.newButton')}</button-text>
+	<button-text onclick="groups.addGroup(${v.id})" style="margin-top:1em;" label="group.newButton"></button-text>
 </text>
 <text name="copy" class="collapsed">
 	<detailTogglePanel>
@@ -105,24 +105,17 @@ ${v.matchIndicatorHintDescription}
 		global.template`<div>
     ${v.groups}
 </div>
-<button-text style="margin-top:0.5em;" onclick="groups.showRename()">
-    ${ui.l('rename')}
-</button-text>
+<button-text style="margin-top:0.5em;" onclick="groups.showRename()" label="rename"></button-text>
 <button-text style="margin-top:0.5em;"
-    onclick="document.getElementById(&quot;groupsRename&quot;).style.display=&quot;none&quot;;var e=document.getElementById(&quot;groupsDelete&quot;).style;e.display=e.display==&quot;none&quot;?&quot;&quot;:&quot;none&quot;;">
-    ${ui.l('delete')}
-</button-text>
-<button-text style="margin-top:0.5em;display:none;" onclick="pageChat.openGroup()">
-    ${ui.l('chat.groupTitle')}
-</button-text>
+    onclick="document.getElementById(&quot;groupsRename&quot;).style.display=&quot;none&quot;;var e=document.getElementById(&quot;groupsDelete&quot;).style;e.display=e.display==&quot;none&quot;?&quot;&quot;:&quot;none&quot;;"
+	label="delete"></button-text>
+<button-text style="margin-top:0.5em;display:none;" onclick="pageChat.openGroup()" label="chat.groupTitle"></button-text>
 <br />
 <div id="groupsRename" style="display:none;margin-top:2em;">
     <input type="text" style="width:40%;margin-right:0.5em;float:none;" />
-    <button-text onclick="groups.rename()">${ui.l('save')}</button-text>
+    <button-text onclick="groups.rename()" label="save"></button-text>
 </div>
-<button-text onclick="groups.delete()" id="groupsDelete" style="display:none;margin-top:2em;">
-    ${ui.l('confirmDelete')}
-</button-text>`;
+<button-text onclick="groups.delete()" id="groupsDelete" style="display:none;margin-top:2em;" label="confirmDelete"></button-text>`;
 	static block() {
 		var path = 'detail card:last-child [name="block"]';
 		formFunc.resetError(ui.q(path + ' [name="note"]'));
@@ -193,22 +186,22 @@ ${v.matchIndicatorHintDescription}
 		} else
 			v.birthday = preview ? '<previewHint>' + ui.l('settings.previewHintBirthday') + '</previewHint>' : '';
 		v.link = '';
-		v.labelFriend = ui.l('contacts.requestFriendshipButton');
+		v.labelFriend = 'contacts.requestFriendshipButton';
 		if (v.contactLink.id) {
 			if (v.contactLink.status == 'Pending') {
 				if (v.contactLink.contactId != user.contact.id)
-					v.link += '<div style="margin-bottom:0.5em;">' + ui.l('contacts.requestFriendshipHint') + '</div><button-text onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;Friends&quot;,' + v.id + ')" style="margin:0 0.5em;">' + ui.l('contacts.requestFriendshipConfirm') + '</button-text><button-text onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;Rejected&quot;,' + v.id + ');" style="margin:0 0.5em;">' + ui.l('contacts.requestFriendshipReject') + '</button-text>';
+					v.link += '<div style="margin-bottom:0.5em;">' + ui.l('contacts.requestFriendshipHint') + '</div><button-text onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;Friends&quot;,' + v.id + ')" style="margin:0 0.5em;" label="contacts.requestFriendshipConfirm"></button-text><button-text onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;Rejected&quot;,' + v.id + ');" style="margin:0 0.5em;" label="contacts.requestFriendshipReject"></button-text>';
 				else
 					v.link += '<span style="text-align:center;">' + ui.l('contacts.requestFriendshipAlreadySent') + '</span>';
 			} else if (v.contactLink.status == 'Friends') {
-				v.labelFriend = ui.l('contacts.terminateFriendship');
-				v.link += '<button-text onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;' + (v.contactLink.contactId == user.contact.id ? 'Terminated' : 'Terminated2') + '&quot;,' + v.id + ')">' + ui.l('contacts.terminateFriendshipConfirm') + '</button-text>';
+				v.labelFriend = 'contacts.terminateFriendship';
+				v.link += '<button-text onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;' + (v.contactLink.contactId == user.contact.id ? 'Terminated' : 'Terminated2') + '&quot;,' + v.id + ')" label="contacts.terminateFriendshipConfirm"></button-text>';
 			} else if (v.contactLink.status == 'Terminated' && v.contactLink.contactId == user.contact.id || v.contactLink.status == 'Terminated2' && v.contactLink.contactId2 == user.contact.id)
-				v.link += '<button-text onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;Friends&quot;,' + v.id + ')">' + ui.l('contacts.requestFriendshipRestart') + '</button-text>';
+				v.link += '<button-text onclick="pageContact.confirmFriendship(' + v.contactLink.id + ',&quot;Friends&quot;,' + v.id + ')" label="contacts.requestFriendshipRestart"></button-text>';
 			else
 				v.link += ui.l('contacts.requestFriendshipCanceled');
 		} else
-			v.link += '<button-text onclick="pageContact.sendRequestForFriendship(' + v.id + ')">' + ui.l('contacts.requestFriendship') + '</button-text>';
+			v.link += '<button-text onclick="pageContact.sendRequestForFriendship(' + v.id + ')" label="contacts.requestFriendship"></button-text>';
 		if (v.contactLink.status == 'Friends')
 			v.favorite = 'favorite';
 		if (v.authenticate)
@@ -433,7 +426,7 @@ ${v.matchIndicatorHintDescription}
 
 class groups {
 	static addGroup(id) {
-		ui.navigation.openPopup(ui.l('group.newButton'), '<field style="padding:1em;"><label>' + ui.l('name') + '</label><value><input type="text" name="name"/></value></field><dialogButtons><button-text onclick="groups.saveGroup(' + id + ');">' + ui.l('save') + '</button-text></dialogButtons>');
+		ui.navigation.openPopup(ui.l('group.newButton'), '<field style="padding:1em;"><label>' + ui.l('name') + '</label><value><input type="text" name="name"/></value></field><dialogButtons><button-text onclick="groups.saveGroup(' + id + ');" label="save"></button-text></dialogButtons>');
 	}
 	static addToGroup(event, id) {
 		var d = { classname: 'ContactGroupLink' }, e = event.target;
