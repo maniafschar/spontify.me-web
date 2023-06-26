@@ -21,7 +21,7 @@ class pageInfo {
 <infoblock id="info3" style="display:none;" class="overflow">
 	${ui.l('infoDSGVO')}
 </infoblock>
-<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info2&quot;)" label="nfo.imprintTitle"></button-text><br/>
+<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info2&quot;)" label="info.imprintTitle"></button-text><br/>
 <infoblock id="info2" style="display:none;">
 	${ui.l('info.imprint')}
 </infoblock>`;

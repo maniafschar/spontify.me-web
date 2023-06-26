@@ -6,7 +6,3 @@
 	--buttonText: black;
 	--bgHint: rgb(255, 190, 40);
 }
-
-.highlightColor {
-	color: var(--bg2stop);
-}

@@ -1112,7 +1112,7 @@ class ButtonText extends HTMLElement {
 	static get observedAttributes() { return ['label']; }
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (name == 'label' && newValue && this._root.querySelector('span')) {
-			var s = ui.l(newValue, true);
+			var s = ui.l(newValue.trim(), true);
 			this._root.querySelector('span').innerHTML = s ? s : newValue;
 			this.removeAttribute('label');
 		}

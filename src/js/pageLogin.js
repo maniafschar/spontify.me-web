@@ -404,7 +404,7 @@ class pageLogin {
 		);
 	}
 	static passwordDialog() {
-		if (!ui.navigation.openPopup(ui.l('login.changePassword'), '<span>' + ui.l('login.changePasswordBody') + '</span><field><label>' + ui.l('login.password') + '</label><value><input type="password" name="passwd" maxlength="30"></value></field><dialogButtons><button-text onclick="pageLogin.savePassword()">' + ui.l('login.changePassword') + '</button-text></dialogButtons><popupHint></popupHint>', 'pageLogin.warningRegNotComplete()', true))
+		if (!ui.navigation.openPopup(ui.l('login.changePassword'), '<span>' + ui.l('login.changePasswordBody') + '</span><field><label>' + ui.l('login.password') + '</label><value><input type="password" name="passwd" maxlength="30"></value></field><dialogButtons><button-text onclick="pageLogin.savePassword()" label="login.changePassword"></button-text></dialogButtons><popupHint></popupHint>', 'pageLogin.warningRegNotComplete()', true))
 			setTimeout(pageLogin.passwordDialog, 500);
 	}
 	static paypal(id) {
@@ -667,7 +667,7 @@ class pageLogin {
 					pageLogin.login(r[0], r[1], global.getDevice() != 'computer', pageLogin.passwordDialog);
 				} else {
 					setTimeout(function () {
-						ui.navigation.openPopup(ui.l('attention'), ui.l('login.failedOutdated') + '<br/><br/><input' + (email ? ' value="' + email + '"' : '') + '/><br/><br/><button-text onclick="pageLogin.sendVerificationEmail()">' + ui.l('login.failedNotVerifiedButton') + '</button-text>');
+						ui.navigation.openPopup(ui.l('attention'), ui.l('login.failedOutdated') + '<br/><br/><input' + (email ? ' value="' + email + '"' : '') + '/><br/><br/><button-text onclick="pageLogin.sendVerificationEmail()" label="login.failedNotVerifiedButton"></button-text>');
 					}, 2000);
 				}
 			}

@@ -234,7 +234,7 @@ class pageSearch {
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
 <errorHint></errorHint>
 <dialogButtons>
-<button-text class="defaultButton" onclick="pageSearch.locations.search() label="search.action"></button-text>
+<button-text class="defaultButton" onclick="pageSearch.locations.search()" label="search.action"></button-text>
 </dialogButtons>
 </form>`,
 		getFields() {

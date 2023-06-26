@@ -2493,6 +2493,14 @@ menu title {
 	padding-top: 0.75em;
 }
 
+.highlightColor {
+	color: var(--bg2stop);
+}
+
+popup .highlightColor {
+	color: var(--bg1start);
+}
+
 .pulse {
 	animation-name: pulse_animation;
 	animation-duration: 5000ms;

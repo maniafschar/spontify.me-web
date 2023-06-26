@@ -42,7 +42,7 @@ class pageEvent {
 <field>
 	<label style="padding-top:0;">${ui.l('events.hashtags')}</label>
 	<value>
-		<input-hashtags ids="${v.skills}" text="${v.skillsText}"></input-hashtags>
+		<input-hashtags ids="${v.skills}" text="${v.skillsText}" transient="true"></input-hashtags>
 	</value>
 </field>
 <field class="noWTDField">
@@ -284,17 +284,17 @@ class pageEvent {
 		v.id = id;
 		v.locationID = locationID;
 		if (!v.type || v.type == 'o')
-			v.type_o = ' checked';
+			v.type_o = ' checked="true"';
 		if (v.type == 'w1')
-			v.type_w1 = ' checked';
+			v.type_w1 = ' checked="true"';
 		if (v.type == 'w2')
-			v.type_w2 = ' checked';
+			v.type_w2 = ' checked="true"';
 		if (v.type == 'm')
-			v.type_m = ' checked';
+			v.type_m = ' checked="true"';
 		if (v.type == 'y')
-			v.type_y = ' checked';
+			v.type_y = ' checked="true"';
 		if (v.confirm)
-			v.confirm = ' checked';
+			v.confirm = ' checked="true"';
 		if (!v.startDate) {
 			d = new Date();
 			d.setDate(d.getDate() + 1);
@@ -507,11 +507,12 @@ class pageEvent {
 				else
 					image = 'images/contact.svg';
 				var oc;
+				v.idDate = pageEvent.getId(v);
 				if (ui.navigation.getActiveID() == 'settings')
 					oc = 'pageSettings.unblock(&quot;' + v.id + '&quot;,' + v.block.id + ')';
 				else
-					oc = 'details.open(&quot;' + v.id + '&quot;,' + JSON.stringify({ webCall: 'pageEvent.listEvents(as)', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)';
-				s += global.template`<list-row onclick="${oc}" i="${v.id}" class="event${clazz ? ' ' + clazz : ''}"
+					oc = 'details.open(&quot;' + v.idDate + '&quot;,' + JSON.stringify({ webCall: 'pageEvent.listEvents(as)', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)';
+				s += global.template`<list-row onclick="${oc}" i="${v.idDate}" class="event${clazz ? ' ' + clazz : ''}"
 					title="${encodeURIComponent(name)}"
 					text="${encodeURIComponent(text)}"
 					flag1="${flag1}"
@@ -923,7 +924,7 @@ class pageEvent {
 		}
 		ui.q('popup input[name="skills"]').value = ui.q('popup input-hashtags').getAttribute('ids');
 		ui.q('popup input[name="skillsText"]').value = ui.q('popup input-hashtags').getAttribute('text');
-		v = formFunc.getForm('popup form');
+		var v = formFunc.getForm('popup form');
 		if (!v.values.price)
 			v.values.price = 0;
 		if (ui.q('popup errorHint')) {
@@ -962,9 +963,9 @@ class pageEvent {
 			ui.classAdd(e, 'selected');
 	}
 	static setForm() {
-		var b = ui.q('popup [name="type"]').getAttribute('checked');
+		var b = ui.q('popup [name="type"][checked="true"][value="o"]');
 		ui.q('popup label[name="startDate"]').innerText = ui.l('events.' + (b ? 'date' : 'start'));
-		ui.css('popup field[name="endDate"]', 'display', b ? 'none' : '');
+		ui.css('popup field[name="endDate"]', 'display', b || !ui.q('popup [name="type"][checked="true"]') ? 'none' : '');
 		b = ui.q('popup input[name="locationId"]').value;
 		if (!b || b == -2) {
 			ui.css('popup .noWTDField', 'display', 'none');
