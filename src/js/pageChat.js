@@ -12,7 +12,7 @@ import { pageInfo } from './pageInfo';
 import { pageSettings } from './pageSettings';
 import { ui, formFunc } from './ui';
 import { user } from './user';
-import video, { Video } from './video';
+import { Video } from './video';
 
 export { pageChat };
 
@@ -43,7 +43,6 @@ class pageChat {
 		<button-text class="videoButton" ${v.action}="pageChat.sendChatVideoPermissionButton();" label="chat.videoPermissionButton"></button-text>
 		<button-text class="sendButton" ${v.action}="pageChat.sendChat(${v.id},null,event);" label="chat.send"></button-text>
 		<div style="display:none;text-align:center;"></div>
-		<input-checkbox onclick="pageChat.aiHint()" label="ai"${v.ai}></input-checkbox>
 	</chatInput>
 </div>`;
 	static templateMessage = v =>
@@ -52,7 +51,7 @@ class pageChat {
 	static adjustTextarea(e) {
 		ui.adjustTextarea(e);
 		intro.close();
-		ui.css('chatConversation', 'bottom', (ui.q('chatInput').clientHeight + ui.emInPX / 2) + 'px');
+		ui.css('chatConversation', 'bottom', ui.q('chatInput').clientHeight + 'px');
 	}
 	static aiEnabled(id, l) {
 		if (pageChat.admin.id == id) {
@@ -485,10 +484,8 @@ class pageChat {
 				responseType: 'json',
 				webCall: 'pageChat.refresh()',
 				success(r) {
-					if (ui.q('chat[i="' + id + '"] chatConversation')) {
-						var e = ui.q('chat[i="' + id + '"] chatConversation');
-						if (!e)
-							return;
+					var e = ui.q('chat[i="' + id + '"] chatConversation');
+					if (e) {
 						var showButton = e.scrollTop + e.clientHeight < e.scrollHeight;
 						for (var i = 1; i < r.length; i++) {
 							var v = model.convert(new ContactChat(), r, i);
@@ -610,11 +607,11 @@ class pageChat {
 						communication.onError(r);
 				},
 				success(r) {
-					if (ui.q('chat[i="' + id + '"] chatConversation')) {
+					var e = ui.q('chat[i="' + id + '"] chatConversation');
+					if (e) {
 						v.createdAt = new Date();
 						v.id = r;
 						v.contactId = user.contact.id;
-						var e = ui.q('chat[i="' + id + '"] chatConversation');
 						e.innerHTML = e.innerHTML + pageChat.renderMsg(v);
 						pageChat.scrollToBottom();
 						if (v.note) {
