@@ -14,6 +14,7 @@ export { pageHome };
 
 class pageHome {
 	static badge = -1;
+	static club = false;
 	static events;
 	static news;
 	static template = v =>
@@ -182,7 +183,7 @@ ${ui.l('events.title')}
 				v.name = user.contact.pseudonym;
 				v.infoButton = ' hidden';
 				v.langButton = ' hidden';
-				if (user.clientId > 1)
+				if (pageHome.club)
 					v.actionLogo = 'pageHome.openNews()';
 				if (user.contact.type == 'adminContent')
 					v.statsButton = '';

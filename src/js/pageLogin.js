@@ -283,6 +283,7 @@ class pageLogin {
 						setTimeout(function () { ui.html('login', ''); }, 500);
 						ui.navigation.goTo('home');
 					}
+					pageHome.club = v.is_club;
 					pageHome.init(true);
 					Video.init();
 					communication.afterLogin();
