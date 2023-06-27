@@ -58,7 +58,7 @@ ${v.matchIndicatorHintDescription}
 	<button-text class="${v.loggedIn}"
 		onclick="ui.navigation.goTo(&quot;login&quot;)" label="login.action"></button-text>
 	<button-text class="${v.blocked}${v.hideMe}"
-		onclick="pageChat.open(${v.id})" label=chat.title"></button-text>
+		onclick="pageChat.open(${v.id})" label="chat.title"></button-text>
 	<button-text class="${v.blocked}${v.hideMe}" name="buttonFriend"
 		onclick="pageContact.toggleFriend(${v.id})" label="${v.labelFriend}"></button-text>
 	<button-text class="${v.blocked}${v.hideMe}" name="buttonCopy"

@@ -38,7 +38,7 @@ class pageInfo {
 		var e = ui.q('info');
 		if (!e.innerHTML) {
 			var render = function (v) {
-				v.description = ui.l('info.description' + (user.clientId > 1 ? 'Fanclub' : '')).replace('{0}', v.fee).replace(/\{1}/g, global.appTitle.substring(0, global.appTitle.indexOf(global.separator)));
+				v.description = ui.l('info.description' + (user.clientId > 1 ? 'Fanclub' : '')).replace('{0}', v.fee).replace(/\{1}/g, global.appTitle.indexOf(global.separator) > -1 ? global.appTitle.substring(0, global.appTitle.indexOf(global.separator)) : global.appTitle);
 				e.innerHTML = pageInfo.templateDesc(v) + pageInfo.template() + pageInfo.templateCopyright();
 				pageInfo.init();
 			}

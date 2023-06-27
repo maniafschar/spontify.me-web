@@ -1,13 +1,14 @@
 {
 	"de": {
-		"buddy": "Buddy",
-		"buddies": "Buddies"
+		"buddy": "Spieler",
+		"buddies": "Spieler"
 	},
 	"en": {
-		"buddy": "Buddy",
-		"buddies": "Buddies"
+		"buddy": "Player",
+		"buddies": "Players"
 	},
-	"name": "FC Bayern München · Fanclub",
-	"server": "https://fan-club.online",
-	"url": "https://demo.fan-club.online"
+	"email": "support@offline-poker.com",
+	"name": "Offline Poker",
+	"server": "https://offline-poker.com",
+	"url": "https://offline-poker.com"
 }

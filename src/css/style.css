@@ -356,7 +356,7 @@ homeHeader>svg {
 
 homeHeader>text {
 	margin: 1.5em 1em 0 1em;
-	padding-top: 1em;
+	padding: 1em;
 	display: inline-block;
 	cursor: pointer;
 }

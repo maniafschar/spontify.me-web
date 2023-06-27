@@ -335,7 +335,7 @@ class pageChat {
 			var e = ui.q('chatList');
 			if (e.getAttribute("toggle"))
 				setTimeout(f, 500);
-			else {
+			else if (d && d.length) {
 				var s = '';
 				for (var i = 1; i < d.length; i++) {
 					var v = model.convert(new Contact(), d, i);
