@@ -74,8 +74,8 @@ class communication {
 				ui.css('progressbar', 'display', '');
 			xmlhttp.setRequestHeader('webCall', param.webCall);
 			xmlhttp.setRequestHeader('clientId', '' + user.clientId);
-			if (user.contact) {
-				var c = communication.generateCredentials();
+			var c = communication.generateCredentials();
+			if (c.salt) {
 				xmlhttp.setRequestHeader('user', c.user);
 				xmlhttp.setRequestHeader('salt', c.salt);
 				xmlhttp.setRequestHeader('password', c.password);
@@ -94,6 +94,8 @@ class communication {
 		xmlhttp.send(data);
 	}
 	static generateCredentials() {
+		if (!user.contact)
+			return {};
 		var d = new Date();
 		var salt = ('' + (d.getTime() + d.getTimezoneOffset() * 60 * 1000) + Math.random()).replace(/[01]\./, '.');
 		return {
@@ -682,26 +684,28 @@ class WebSocket {
 			return new SockJS(global.serverApi + 'ws/init')
 		});
 		WebSocket.stompClient.reconnectDelay = 5000;
-		WebSocket.stompClient.connect(communication.generateCredentials(), frame => {
-			WebSocket.stompClient.subscribe(
-				"/user/" + user.contact.id + "/video",
-				message => {
-					var data = JSON.parse(message.body);
-					if (data.offer)
-						Video.onOffer(data);
-					else if (data.answer)
-						Video.onAnswer(data.answer);
-					else if (data.candidate)
-						Video.onCandidate(data.candidate);
-					else
-						Video.stopCall();
-				}
-			);
-			WebSocket.stompClient.subscribe(
-				"/user/" + user.contact.id + "/refresh",
-				r => communication.refresh(JSON.parse(r.body))
-			);
-		});
+		var c = communication.generateCredentials();
+		if (c.user)
+			WebSocket.stompClient.connect(c, frame => {
+				WebSocket.stompClient.subscribe(
+					"/user/" + user.contact.id + "/video",
+					message => {
+						var data = JSON.parse(message.body);
+						if (data.offer)
+							Video.onOffer(data);
+						else if (data.answer)
+							Video.onAnswer(data.answer);
+						else if (data.candidate)
+							Video.onCandidate(data.candidate);
+						else
+							Video.stopCall();
+					}
+				);
+				WebSocket.stompClient.subscribe(
+					"/user/" + user.contact.id + "/refresh",
+					r => communication.refresh(JSON.parse(r.body))
+				);
+			});
 	}
 	static disconnect() {
 		if (WebSocket.stompClient)

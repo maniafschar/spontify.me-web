@@ -149,7 +149,7 @@ module.exports = (env) => {
 							.replace('{placeholderAppTitle}', props.name.indexOf(' · ') > -1 ? props.name.substring(props.name.indexOf(' · ') + 3) : props.name);
 						if (fs.existsSync('clients/' + client + '/images/logo.png')) {
 							fs.writeFileSync('dist/images/logo.png', fs.readFileSync('clients/' + client + '/images/logo.png'));
-							s = s.replace('<image', '<image href="images/logo.png"');
+							s = s.replace('<image', '<image href="/images/logo.png"');
 						}
 						fs.writeFileSync(file, s);
 					})

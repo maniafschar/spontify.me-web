@@ -97,7 +97,7 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 	}
 	static setListDivs(id) {
 		var e = ui.q(id);
-		if (!e.innerHTML) {
+		if (e && !e.innerHTML) {
 			var v = {};
 			if (id == 'contacts')
 				v.groups = '<groups style="display:none;"></groups>';

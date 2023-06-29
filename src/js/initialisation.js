@@ -227,8 +227,6 @@ class initialisation {
 			if (dir == 'right')
 				ui.navigation.goTo(ui.q('info').getAttribute('from'));
 		}, 'textarea');
-		if (user.clientId == 7)
-			setTimeout(intro.openIntro, 2000);
 	}
 	static onLoad() {
 		if (global.isBrowser())
@@ -361,6 +359,8 @@ class initialisation {
 				ui.navigation.autoOpen(p);
 			}, 100);
 		}
+		if (!user.contact && user.clientId == 7)
+			setTimeout(intro.openIntro, 2000);
 		if (global.isBrowser())
 			history.pushState(null, null, window.location.origin);
 	}

@@ -73,10 +73,12 @@ class Video {
 			Video.rtcPeerConnection.onicecandidate = event => {
 				if (event.candidate) {
 					var e = communication.generateCredentials();
-					e.name = user.contact.pseudonym;
-					e.id = Video.connectedId;
-					e.candidate = event.candidate;
-					communication.wsSend('/ws/video', e);
+					if (e.user) {
+						e.name = user.contact.pseudonym;
+						e.id = Video.connectedId;
+						e.candidate = event.candidate;
+						communication.wsSend('/ws/video', e);
+					}
 				}
 			};
 			Video.rtcPeerConnection.ontrack = event => {
@@ -133,10 +135,12 @@ class Video {
 				setTimeout(function () {
 					if (Video.offer) {
 						var e = communication.generateCredentials();
-						e.name = user.contact.pseudonym;
-						e.id = Video.connectedId;
-						e.offer = Video.offer;
-						communication.wsSend('/ws/video', e);
+						if (e.user) {
+							e.name = user.contact.pseudonym;
+							e.id = Video.connectedId;
+							e.offer = Video.offer;
+							communication.wsSend('/ws/video', e);
+						}
 					}
 				}, 2000);
 		} else {
@@ -159,14 +163,17 @@ class Video {
 			Video.incomingCallModal(true);
 		} else {
 			var e = communication.generateCredentials();
-			e.id = data.user;
-			communication.wsSend('/ws/video', e);
+			if (e.user) {
+				e.id = data.user;
+				communication.wsSend('/ws/video', e);
+			}
 		}
 	}
 	static acceptCall() {
 		ui.classAdd('call', 'hidden');
 		ui.classRemove('videochat', 'hidden');
 		Video.incomingCallModal();
+		ui.q('videoCall streams').style.left = '';
 		navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
 			ui.q('videoCall #localStream').srcObject = stream;
 			stream.getTracks().forEach(track => Video.getRtcPeerConnection().addTrack(track, stream));
@@ -183,12 +190,14 @@ class Video {
 			Video.getRtcPeerConnection().createAnswer(answer => {
 				Video.getRtcPeerConnection().setLocalDescription(answer);
 				var e = communication.generateCredentials();
-				e.id = Video.connectedId;
-				e.answer = answer;
-				communication.wsSend('/ws/video', e);
-				ui.css('main', 'background', 'transparent');
-				ui.css('content', 'visibility', 'hidden');
-				ui.css('navigation', 'visibility', 'hidden');
+				if (e.user) {
+					e.id = Video.connectedId;
+					e.answer = answer;
+					communication.wsSend('/ws/video', e);
+					ui.css('main', 'background', 'transparent');
+					ui.css('content', 'visibility', 'hidden');
+					ui.css('navigation', 'visibility', 'hidden');
+				}
 			}, error => {
 				alert('error: ' + error);
 			});
@@ -201,8 +210,10 @@ class Video {
 		}
 		if (Video.connectedId) {
 			var e = communication.generateCredentials();
-			e.id = Video.connectedId;
-			communication.wsSend('/ws/video', e);
+			if (e.user) {
+				e.id = Video.connectedId;
+				communication.wsSend('/ws/video', e);
+			}
 		}
 		Video.leave();
 	}
@@ -212,6 +223,7 @@ class Video {
 			return;
 		}
 		Video.connectedId = id;
+		ui.q('videoCall streams').style.left = '';
 		var e = ui.q('videochat');
 		ui.classRemove(e, 'hidden');
 		e.style.background = 'transparent';
@@ -222,12 +234,14 @@ class Video {
 			stream.getTracks().forEach(track => Video.getRtcPeerConnection().addTrack(track, stream));
 			Video.getRtcPeerConnection().createOffer(offer => {
 				var e = communication.generateCredentials();
-				e.name = user.contact.pseudonym;
-				e.id = Video.connectedId;
-				e.offer = offer;
-				communication.wsSend('/ws/video', e);
-				Video.offer = offer;
-				Video.getRtcPeerConnection().setLocalDescription(offer);
+				if (e.user) {
+					e.name = user.contact.pseudonym;
+					e.id = Video.connectedId;
+					e.offer = offer;
+					communication.wsSend('/ws/video', e);
+					Video.offer = offer;
+					Video.getRtcPeerConnection().setLocalDescription(offer);
+				}
 			}, error => {
 				alert('An error has occurred: ' + error);
 			});
@@ -258,8 +272,10 @@ class Video {
 		if (Video.rtcPeerConnection) {
 			if (!Video.getRtcPeerConnection().remoteDescription) {
 				var e = communication.generateCredentials();
-				e.id = Video.connectedId;
-				communication.wsSend('/ws/video', e);
+				if (e.user) {
+					e.id = Video.connectedId;
+					communication.wsSend('/ws/video', e);
+				}
 			}
 			Video.rtcPeerConnection.getTransceivers().forEach(e => {
 				Video.rtcPeerConnection.removeTrack(e.sender);
@@ -268,8 +284,10 @@ class Video {
 			Video.rtcPeerConnection.close();
 			Video.rtcPeerConnection = null;
 			e = communication.generateCredentials();
-			e.id = Video.connectedId;
-			communication.wsSend('/ws/video', e);
+			if (e.user) {
+				e.id = Video.connectedId;
+				communication.wsSend('/ws/video', e);
+			}
 		}
 		var close = stream => {
 			if (stream.srcObject) {
@@ -316,7 +334,7 @@ class Video {
 	}
 	static switchVideo() {
 		var e = ui.q('videoCall streams').style;
-		if (e.left.indexOf('%') > 0) {
+		if (e.left) {
 			e.left = '';
 			ui.q('videoCall videochat buttonIcon.camera svg').style.transform = '';
 		} else {
@@ -324,7 +342,7 @@ class Video {
 			ui.q('videoCall videochat buttonIcon.camera svg').style.transform = 'rotate(180deg)';
 		}
 		if (!global.isBrowser() && window.cordova.plugins && window.cordova.plugins.iosrtc)
-			window.cordova.plugins.iosrtc.refreshVideos()
+			setTimeout(window.cordova.plugins.iosrtc.refreshVideos, 300);
 	}
 	static updateStream(stream) {
 		Video.setActiveDeviceId(stream);

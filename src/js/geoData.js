@@ -139,9 +139,11 @@ class geoData {
 						s += '<label onclick="geoData.saveLocationPicker(' + JSON.stringify(e[i]).replace(/"/g, '\'') + ')">' + e[i].town + '</label>';
 				}
 				s += '<label class="bgColor" onclick="geoData.openLocationPicker(event,true)" style="color:var(--buttonText);">' + ui.l('home.locationPickerTitle') + '</label>';
-				var e = ui.q('locationPicker');
-				e.innerHTML = s;
-				e.removeAttribute('h');
+				e = ui.q('locationPicker');
+				if (e) {
+					e.innerHTML = s;
+					e.removeAttribute('h');
+				}
 			}
 			ui.toggleHeight('locationPicker');
 		} else if (user.contact)

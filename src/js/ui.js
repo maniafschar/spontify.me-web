@@ -1462,29 +1462,48 @@ input {
 	cursor: pointer;
 }
 
-input+img {
+input+img,
+.appInput+img {
 	position: absolute;
 	top: 0;
 	right: 0;
 	height: 100%;
 	border-radius: 0 0.5em 0.5em 0;
+}
+
+button-image {
+	padding: 0.34em 0.75em !important;
+	width: 50% !important;
+	position: relative !important;
+	display: inline-block !important;
+	text-align: left;
+}
+
+button-image.left {
+	border-radius: 0.5em 0 0 0.5em !important;
+	border-right: solid 1px rgba(0, 0, 0, 0.1) !important;
+}
+
+button-image.right {
+	border-radius: 0 0.5em 0.5em 0 !important;
 }`;
 		this._root.appendChild(style);
 		var s = '', s2 = this.getAttribute('name'), element;
+		element = document.createElement('inputFile');
+		element.innerHTML = '<span>' + (this.getAttribute('hint') ? this.getAttribute('hint') : ui.l('fileUpload.select')) + '</span>';
+		this._root.appendChild(element);
 		if (global.isBrowser()) {
-			element = document.createElement('inputFile');
-			element.innerHTML = '<span>' + (this.getAttribute('hint') ? this.getAttribute('hint') : ui.l('fileUpload.select')) + '</span>';
-			this._root.appendChild(element);
 			element = document.createElement('input');
 			element.setAttribute('type', 'file');
 			element.setAttribute('onchange', 'this.getRootNode().host.preview(this)');
 			element.setAttribute('accept', '.gif, .png, .jpg');
 			this._root.appendChild(element);
 		} else {
+			element.style.display = 'none';
 			element = document.createElement('div');
 			element.setAttribute('class', 'appInput');
-			element.innerHTML = '<button-text onclick="this.getRootNode().host.cameraPicture(&quot;' + element.nodeName + '&quot;,&quot;' + s2 + '&quot;,true)" style="border-radius:0.5em 0 0 0.5em;border-right:solid 1px rgba(255,255,255,0.1);" label="camera.shoot"></button-text>' +
-				'<button-text onclick="this.getRootNode().host.cameraPicture(&quot;' + element.nodeName + '&quot;,&quot;' + s2 + '&quot;)" style="border-radius:0 0.5em 0.5em 0;" label="camera.select"></button-text>';
+			element.innerHTML = '<button-image onclick="this.getRootNode().host.cameraPicture(true)" class="left" part="button">' + ui.l('camera.shoot') + '</button-image>' +
+				'<button-image onclick="this.getRootNode().host.cameraPicture()" class="right" part="button">' + ui.l('camera.select') + '</button-image>';
 			this._root.appendChild(element);
 		}
 		element = document.createElement('img');
@@ -1503,18 +1522,18 @@ input+img {
 		if (!e || e.toLowerCase().indexOf('select') < 0)
 			ui.navigation.openPopup(ui.l('attention'), ui.l('camera.notAvailabe').replace('{0}', e));
 	}
-	cameraPicture(id, name, camera) {
-		navigator.camera.getPicture(this.cameraSuccess, this.cameraError,
+	cameraPicture(camera) {
+		var t = this;
+		navigator.camera.getPicture(function (e) { t.cameraSuccess(t, e) }, t.cameraError,
 			{ sourceType: camera ? Camera.PictureSourceType.CAMERA : Camera.PictureSourceType.PHOTOLIBRARY, destinationType: Camera.DestinationType.FILE_URI });
 	}
-	cameraSuccess(e) {
-		this._root.querySelector('div').style.display = 'none';
-		this._root.querySelector('inputFile').style.display = 'block';
-		var t = this;
+	cameraSuccess(t, e) {
+		t._root.querySelector('div').style.display = 'none';
+		t._root.querySelector('inputFile').style.display = 'block';
 		window.resolveLocalFileSystemURL(e,
 			function (fe) {
 				fe.file(function (f) {
-					t.preview2(f);
+					t.preview2(t, f);
 				}, t.cameraError);
 			}, t.cameraError);
 	}
@@ -1532,20 +1551,20 @@ input+img {
 		return x && x.getAttribute('src') && x.getAttribute('src').length > 100;
 	}
 	preview(e) {
-		this.preview2(e.files && e.files.length > 0 ? e.files[0] : null);
+		this.preview2(this, e.files && e.files.length > 0 ? e.files[0] : null);
 	}
-	preview2(file) {
+	preview2(t, file) {
 		if (file) {
-			var ePrev = this._root.querySelector('inputFile');
+			var ePrev = t._root.querySelector('inputFile');
 			ui.css(ePrev, 'z-index', 6);
-			this._root.querySelector('img.icon').style.display = 'none';
+			t._root.querySelector('img.icon').style.display = 'none';
 
 			ui.html(ePrev, `
-<close onclick="this.getRootNode().host.remove()">X</close>
+<close onclick="this.getRootNode().host.remove(this)">X</close>
 <rotate onclick="this.getRootNode().host.rotate(this)">&#8635;</rotate>
 <img class="preview"/>
 <desc></desc>`);
-			var img = this._root.querySelector('img.preview');
+			var img = t._root.querySelector('img.preview');
 			new DragObject(img).ondrag = function (event, delta) {
 				if (parseInt(delta.y) != 0) {
 					var y = parseInt(ui.cssValue(img, 'margin-top')) + delta.y;
@@ -1580,10 +1599,10 @@ input+img {
 				if (d)
 					img.getRootNode().host.zoomDist = d;
 			});
-			this.previewInternal(file);
+			t.previewInternal(file);
 			ui.css('#popupSendImage', 'display', '');
 		} else
-			this.remove();
+			t.remove(t);
 	}
 	previewCalculateDistance(event) {
 		var t;
@@ -1644,21 +1663,21 @@ input+img {
 		};
 		reader.readAsDataURL(f);
 	}
-	remove() {
-		var e = this._root.querySelector('input');
-		if (e) {
+	remove(t) {
+		t = t.getRootNode();
+		var e = t.querySelector('input');
+		if (e)
 			e.value = '';
-			var inputFile = this._root.querySelector('inputFile');
-			ui.html(inputFile, '<span>' + (e.getAttribute('hint') ? e.getAttribute('hint') : ui.l('fileUpload.select')) + '</span>');
-			inputFile.style.zIndex = null;
-			inputFile.style.height = null;
-			this._root.querySelector('img.icon').style.display = '';
-			ui.css('#popupSendImage', 'display', 'none');
-			this.removeAttribute('value');
-			if (!global.isBrowser()) {
-				this._root.querySelector('div').style.display = 'block';
-				inputFile.style.display = 'none';
-			}
+		var inputFile = t.querySelector('inputFile');
+		ui.html(inputFile, '<span>' + (t.host.getAttribute('hint') ? t.host.getAttribute('hint') : ui.l('fileUpload.select')) + '</span>');
+		inputFile.style.zIndex = null;
+		inputFile.style.height = null;
+		t.querySelector('img.icon').style.display = '';
+		ui.css('#popupSendImage', 'display', 'none');
+		t.host.removeAttribute('value');
+		if (!global.isBrowser()) {
+			t.querySelector('div').style.display = 'block';
+			inputFile.style.display = 'none';
 		}
 	}
 	rotate(img) {

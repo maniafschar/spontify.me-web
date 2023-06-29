@@ -1697,7 +1697,7 @@ chatInput errorHint {
 
 chatInput textarea {
 	border-radius: 1.5em 0 0 1.5em;
-	margin-bottom: 0.5em;
+	margin: 0 0 0.5em 1em;
 }
 
 km,
@@ -1874,14 +1874,6 @@ buttonIcon.right {
 
 .appInput {
 	text-align: center;
-}
-
-.appInput button-text {
-	padding: 0.5em;
-	min-height: 0;
-	width: 50%;
-	margin: 0;
-	box-shadow: none;
 }
 
 add button-text {
