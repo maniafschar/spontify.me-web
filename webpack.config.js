@@ -96,14 +96,13 @@ module.exports = (env) => {
 						if (fs.existsSync('clients/' + client + '/images/favicon.ico'))
 							fs.cpSync('clients/' + client + '/images/favicon.ico', 'dist/favicon.ico');
 						file = '/css/style.css';
-						var bundleId = client == 1 ? 'com.jq.spontifyme' : 'com.jq.fanclub.client' + client;
 						fs.writeFileSync('dist' + file, fs.readFileSync('clients/' + client + '/style.css', 'utf8') + '\n\n' + fs.readFileSync('src' + file, 'utf8'));
 						fs.writeFileSync('dist/index.html', fs.readFileSync('src/index.html', 'utf8')
 							.replace(/\{placeholderAppleId}/g, props.appleId)
 							.replace(/\{placeholderEmail}/g, props.email)
 							.replace(/\{placeholderName}/g, props.name)
 							.replace(/\{placeholderUrl}/g, props.url)
-							.replace(/\{placeholderBundleID}/g, bundleId)
+							.replace(/\{placeholderBundleID}/g, props.bundleId)
 							.replace(/\{placeholderHost}/g, props.url.substring(8))
 							.replace(/\{placeholderSchema}/g, props.url.substring(8, props.url.lastIndexOf('.'))));
 						file = 'dist/js/fmg.js';
@@ -111,7 +110,7 @@ module.exports = (env) => {
 							.replace('{placeholderAppTitle}', props.name)
 							.replace('{placeholderClientId}', '' + Math.max(parseInt(client), 1))
 							.replace('{placeholderServer}', props.server)
-							.replace(/\{placeholderBundleID}/g, bundleId)
+							.replace(/\{placeholderBundleID}/g, props.bundleId)
 							.replace(/\{placeholderAppleID}/g, props.appleId));
 						file = 'dist/js/stats.js';
 						if (fs.existsSync(file)) {
@@ -123,7 +122,7 @@ module.exports = (env) => {
 								.replace('{placeholderAppTitle}', props.name)
 								.replace('{placeholderClientId}', '' + Math.max(parseInt(client), 1))
 								.replace('{placeholderServer}', props.server)
-								.replace(/\{placeholderBundleID}/g, bundleId)
+								.replace(/\{placeholderBundleID}/g, props.bundleId)
 								.replace(/\{placeholderAppleID}/g, props.appleId));
 						}
 						file = 'dist/js/lang/DE.html';
@@ -138,14 +137,56 @@ module.exports = (env) => {
 						file = 'dist/js/lang/EN.json';
 						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
 							.replace(/\${buddy}/g, props.en.buddy).replace(/\${buddies}/g, props.en.buddies));
-						file = '../appClient/config.xml';
-						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
-							.replace(/(<widget id=")([^"]+)/, '$1com.jq.fanclub.client' + client)
-							.replace(/(<description\>)([^<]+)/, '$1' + props.name)
-							.replace(/(<host scheme="https" name=")([^"]+)/g, '$1' + props.url.substring(8))
-							.replace(/(<host name="" event="fb" scheme=")([^"]+)/g, '$1' + props.url.substring(8, props.url.lastIndexOf('.'))));
+						var regexs = [
+							{
+								pattern: /(<widget .*version=")([^"]+)/,
+								replace: '$1' + fs.readFileSync('src/js/global.js', 'utf8').match(/static appVersion = '([^']*)/)[1]
+							},
+							{
+								pattern: /(<widget id=")([^"]+)/,
+								replace: '$1' + props.bundleId
+							},
+							{
+								pattern: /(<name\>)([^<]+)/,
+								replace: '$1' + props.name
+							},
+							{
+								pattern: /(<description\>)([^<]+)/,
+								replace: '$1' + props.name
+							},
+							{
+								pattern: /(<author [^>]+)([^<]+)/,
+								replace: '$1>' + props.name + ' Team'
+							},
+							{
+								pattern: /(<author .*email=")([^"]+)/,
+								replace: '$1' + props.email
+							},
+							{
+								pattern: /(<author .*href=")([^"]+)/,
+								replace: '$1' + props.url
+							},
+							{
+								pattern: /(<host scheme="https" name=")([^"]+)/,
+								replace: '$1' + props.url.substring(8)
+							},
+							{
+								pattern: /(<host scheme=")([^"]+)(" name="" event="fb")/,
+								replace: '$1' + props.url.substring(8, props.url.lastIndexOf('.')) + '$3'
+							}
+						];
+						file = '../app/config.xml';
+						var s = fs.readFileSync(file, 'utf8');
+						for (var i = 0; i < regexs.length; i++) {
+							if (!regexs[i].pattern.test(s)) {
+								fs.rmdirSync('dist', { recursive: true });
+								throw new Error('regex ' + regexs[i].pattern + ' failed');
+							}
+							s = s.replace(regexs[i].pattern, regexs[i].replace);
+						}
+						fs.writeFileSync(file, s);
 						file = 'dist/images/logo.svg';
-						var s = fs.readFileSync(file, 'utf8')
+						s = fs.readFileSync(file, 'utf8')
 							.replace('{placeholderAppTitle}', props.name.indexOf(' · ') > -1 ? props.name.substring(props.name.indexOf(' · ') + 3) : props.name);
 						if (fs.existsSync('clients/' + client + '/images/logo.png')) {
 							fs.writeFileSync('dist/images/logo.png', fs.readFileSync('clients/' + client + '/images/logo.png'));

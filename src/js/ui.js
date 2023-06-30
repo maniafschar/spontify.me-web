@@ -856,14 +856,26 @@ class formFunc {
 		fetch(id) {
 			if (!formFunc.svg.data[id]) {
 				formFunc.svg.data[id] = 1;
+				var exec = function (r) {
+					var parser = new DOMParser();
+					var xmlDoc = parser.parseFromString(r, "text/xml");
+					formFunc.svg.data[id] = xmlDoc.getElementsByTagName('svg')[0].outerHTML;
+					formFunc.svg.replaceAll();
+				};
 				communication.ajax({
 					url: 'images/' + id + '.svg',
 					webCall: 'ui.svg.fetch(id)',
+					error(r) {
+						communication.ajax({
+							url: global.server + 'images/' + id + '.svg',
+							webCall: 'ui.svg.fetch(id)',
+							success(r) {
+								exec(r);
+							}
+						});
+					},
 					success(r) {
-						var parser = new DOMParser();
-						var xmlDoc = parser.parseFromString(r, "text/xml");
-						formFunc.svg.data[id] = xmlDoc.getElementsByTagName('svg')[0].outerHTML;
-						formFunc.svg.replaceAll();
+						exec(r);
 					}
 				});
 			}
