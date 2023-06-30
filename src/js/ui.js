@@ -1477,11 +1477,14 @@ button-image {
 	position: relative !important;
 	display: inline-block !important;
 	text-align: left;
+	box-sizing: border-box;
+	background: rgba(255, 255, 255, 0.85);
+	color: black;
 }
 
 button-image.left {
 	border-radius: 0.5em 0 0 0.5em !important;
-	border-right: solid 1px rgba(0, 0, 0, 0.1) !important;
+	border-right: solid 1px rgba(0, 0, 0, 0.3) !important;
 }
 
 button-image.right {
@@ -1502,8 +1505,8 @@ button-image.right {
 			element.style.display = 'none';
 			element = document.createElement('div');
 			element.setAttribute('class', 'appInput');
-			element.innerHTML = '<button-image onclick="this.getRootNode().host.cameraPicture(true)" class="left" part="button">' + ui.l('camera.shoot') + '</button-image>' +
-				'<button-image onclick="this.getRootNode().host.cameraPicture()" class="right" part="button">' + ui.l('camera.select') + '</button-image>';
+			element.innerHTML = '<button-image onclick="this.getRootNode().host.cameraPicture(true)" class="left">' + ui.l('camera.shoot') + '</button-image>' +
+				'<button-image onclick="this.getRootNode().host.cameraPicture()" class="right">' + ui.l('camera.select') + '</button-image>';
 			this._root.appendChild(element);
 		}
 		element = document.createElement('img');
@@ -1562,7 +1565,7 @@ button-image.right {
 			ui.html(ePrev, `
 <close onclick="this.getRootNode().host.remove(this)">X</close>
 <rotate onclick="this.getRootNode().host.rotate(this)">&#8635;</rotate>
-<img class="preview"/>
+<img class="preview" />
 <desc></desc>`);
 			var img = t._root.querySelector('img.preview');
 			new DragObject(img).ondrag = function (event, delta) {
@@ -1741,19 +1744,22 @@ button-image.right {
 		t.lastUpdate = setTimeout(function () {
 			var img = new Image();
 			var i = t._root.querySelector('img.preview');
-			img.src = src;
-			var ratio;
-			if (i.clientHeight > i.clientWidth)
-				ratio = i.naturalWidth / i.clientWidth;
-			else
-				ratio = i.naturalHeight / i.clientHeight;
-			var x = -i.offsetLeft * ratio;
-			var y = -i.offsetTop * ratio;
-			var w = Math.min(i.parentElement.clientWidth, i.clientWidth) * ratio;
-			var h = Math.min(i.parentElement.clientHeight, i.clientHeight) * ratio;
-			var b = t.scale(img, x, y, w, h).data;
-			// b = data:image/jpeg;base64,/9j/4AAQS...
-			t.setAttribute('value', '.' + b.substring(b.indexOf('/') + 1, b.indexOf(';')) + global.separatorTech + b.substring(b.indexOf(',') + 1));
+			if (i) {
+				img.src = src;
+				var ratio;
+				if (i.clientHeight > i.clientWidth)
+					ratio = i.naturalWidth / i.clientWidth;
+				else
+					ratio = i.naturalHeight / i.clientHeight;
+				var x = -i.offsetLeft * ratio;
+				var y = -i.offsetTop * ratio;
+				var w = Math.min(i.parentElement.clientWidth, i.clientWidth) * ratio;
+				var h = Math.min(i.parentElement.clientHeight, i.clientHeight) * ratio;
+				var b = t.scale(img, x, y, w, h).data;
+				// b = data:image/jpeg;base64,/9j/4AAQS...
+				t.setAttribute('value', '.' + b.substring(b.indexOf('/') + 1, b.indexOf(';')) + global.separatorTech + b.substring(b.indexOf(',') + 1));
+			} else
+				t.setAttribute('value', '');
 		}, 500);
 	}
 	zoom(delta) {

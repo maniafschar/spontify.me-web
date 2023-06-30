@@ -342,7 +342,7 @@ class Video {
 			ui.q('videoCall videochat buttonIcon.camera svg').style.transform = 'rotate(180deg)';
 		}
 		if (!global.isBrowser() && window.cordova.plugins && window.cordova.plugins.iosrtc)
-			setTimeout(window.cordova.plugins.iosrtc.refreshVideos, 300);
+			setTimeout(window.cordova.plugins.iosrtc.refreshVideos, 600);
 	}
 	static updateStream(stream) {
 		Video.setActiveDeviceId(stream);
