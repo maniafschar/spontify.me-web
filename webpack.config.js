@@ -185,6 +185,10 @@ module.exports = (env) => {
 							s = s.replace(regexs[i].pattern, regexs[i].replace);
 						}
 						fs.writeFileSync(file, s);
+						file = '../app/google-services.json';
+						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
+							.replace(/("package_name": ")([^"]+)/, '$1' + props.bundleId)
+							.replace(/("bundle_id": ")([^"]+)/, '$1' + props.bundleId));
 						file = 'dist/images/logo.svg';
 						s = fs.readFileSync(file, 'utf8')
 							.replace('{placeholderAppTitle}', props.name.indexOf(' · ') > -1 ? props.name.substring(props.name.indexOf(' · ') + 3) : props.name);
