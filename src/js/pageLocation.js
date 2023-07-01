@@ -79,7 +79,7 @@ ${v.rating}
 	<button-text class="${v.hideMeGoogle}${v.notLoggedIn}" name="buttonGoogle"
 		onclick="ui.navigation.openHTML(&quot;https://google.com/search?q=${encodeURIComponent(v.name + ' ' + v.town)}&quot;)" label="locations.google"></button-text>
 	<button-text class="${v.hideMeBlock}${v.notLoggedIn}" name="buttonBlock"
-		onclick="pageLocation.toggleBlock(&quot;${v.id}&quot;) label="contacts.blockAction"></button-text>
+		onclick="pageLocation.toggleBlock(&quot;${v.id}&quot;)" label="contacts.blockAction"></button-text>
 </detailButtons>
 <text name="events" class="collapsed" style="margin:0 -1em;"></text>
 <text name="matchIndicatorHint" class="popup" style="display:none;" onclick="ui.toggleHeight(this)">
@@ -272,10 +272,15 @@ ${v.rating}
 		else
 			v.image = (v.event.id ? 'images/event.svg' : 'images/location.svg') + '" class="mainBG" style="padding:8em;';
 		var r = v.event.rating || (eventWithLocation ? v.rating : v.contact.rating);
-		if (r > 0)
-			v.rating = '<detailRating onclick="ratings.open(' + v.event.id + ',&quot;' + (v.event.id ? 'event.id=' + v.event.id : eventWithLocation ? 'event.locationId=' + v.locID : 'event.contactId=' + v.contact.id) + '&quot;)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + r) + '%;">★★★★★</full></ratingSelection></detailRating>';
-		else if (v.event.id && v.event.locationId >= -1 && user.contact && v.event.contactId != user.contact.id)
-			v.rating = '<div style="margin:1em 0;" class="ratingButton hidden"><button-text onclick="ratings.open(' + v.event.id + ')" label="rating.save"></button-text></div>';
+		if (r > 0) {
+			if (v.event.id)
+				v.rating = '<input-rating type="event" id="' + v.event.id + '" rating="' + v.event.rating + '"></input-rating>';
+			else if (eventWithLocation)
+				v.rating = '<input-rating type="location" id="' + v.locId + '" rating="' + v.rating + '"></input-rating>';
+			else
+				v.rating = '<input-rating type="contact" id="' + v.contact.id + '" rating="' + v.contact.rating + '"></input-rating>';
+		} else if (v.event.id && v.event.locationId >= -1 && user.contact && v.event.contactId != user.contact.id)
+			v.rating = '<div style="margin:1em 0;" class="ratingButton hidden"><button-text onclick="ui.openRating(' + v.event.id + ')" label="rating.save"></button-text></div>';
 		if (eventWithLocation)
 			v.distanceDisplay = ' style="display:none;"';
 		else {

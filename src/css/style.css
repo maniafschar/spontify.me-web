@@ -637,7 +637,8 @@ listTitle {
 select,
 textarea,
 input,
-input-hashtags::part(textarea) {
+input-hashtags::part(textarea),
+input-rating::part(textarea) {
 	appearance: none;
 	position: relative;
 	font-size: 1em;
@@ -926,7 +927,8 @@ settings qrcode {
 	position: relative;
 }
 
-input-hashtags {
+input-hashtags,
+input-image {
 	position: relative;
 	display: block;
 }
@@ -1001,7 +1003,8 @@ qrCheck.negative {
 	margin-bottom: 1em;
 }
 
-.hidden {
+.hidden,
+list-row::part(hidden) {
 	display: none !important;
 }
 
@@ -1306,76 +1309,6 @@ popupContent>div {
 	overflow-x: hidden;
 	border: solid 0.75em transparent;
 	width: 100%;
-}
-
-ratingHint {
-	margin: 0 1em 1em 1em;
-	display: block;
-}
-
-ratingHistory {
-	display: block;
-}
-
-ratingItem {
-	display: block;
-	background: transparent;
-	padding: 0.5em;
-	text-align: left;
-	width: 100%;
-	position: relative;
-}
-
-ratingItem rating {
-	margin-right: 0.5em;
-	height: 1em;
-}
-
-ratingItem img {
-	max-width: 100%;
-	border-radius: 1em;
-}
-
-rating,
-ratingSelection {
-	position: relative;
-	line-height: 1;
-	display: inline-block;
-	height: 1.5em;
-}
-
-rating empty,
-ratingSelection empty {
-	opacity: 0.3;
-	position: relative;
-}
-
-rating full,
-ratingSelection full {
-	position: absolute;
-	left: 0;
-	overflow: hidden;
-	top: 0;
-	color: var(--bg2stop);
-}
-
-ratingSelection span {
-	width: 2em;
-	display: inline-block;
-	position: relative;
-}
-
-ratingItem span {
-	cursor: pointer;
-}
-
-popupContent> :not(detail) ratingSelection {
-	width: 10em;
-	margin-left: -5em;
-	font-size: 2em;
-	left: 50%;
-	cursor: pointer;
-	display: block;
 }
 
 listSeparator {
@@ -1755,21 +1688,6 @@ form {
 	position: relative;
 	margin: 0;
 	padding: 0;
-}
-
-.ratingBonusImg {
-	width: 55%;
-	border-radius: 0.5em;
-}
-
-ratingBonusCaption {
-	position: absolute;
-	width: 55%;
-	left: 0;
-	bottom: -1.5em;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
 }
 
 detailTitle {
@@ -2220,14 +2138,6 @@ detail detailHeader matchIndicator span {
 
 detail detailHeader .fade {
 	opacity: 0.15;
-}
-
-detail detailRating {
-	font-size: 1.5em;
-	margin: 1em 0 0.75em 0;
-	display: block;
-	position: relative;
-	cursor: pointer;
 }
 
 detail text.list {

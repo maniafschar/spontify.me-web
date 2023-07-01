@@ -262,7 +262,7 @@ ${v.matchIndicatorHintDescription}
 			v.urls = '<urls>' + v.urls + '</urls>';
 		}
 		if (v.rating > 0)
-			v.rating = '<detailRating onclick="ratings.open(null,&quot;' + 'event.contactId=' + v.id + '&quot;)"><ratingSelection><empty>☆☆☆☆☆</empty><full style="width:' + parseInt(0.5 + v.rating) + '%;">★★★★★</full></ratingSelection></detailRating>';
+			v.rating = '<input-rating type="contact" id="' + v.id + '" rating="' + v.rating + '"></input-rating>';
 		else
 			v.rating = '';
 		if (global.isBrowser())

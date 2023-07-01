@@ -167,7 +167,7 @@ class initialisation {
 		});
 		ui.on('popup', 'click', function (event) {
 			var e = event.target;
-			if (ui.parents(e, 'popupTitle') || !ui.q('popup input') && !ui.q('popup textarea') && !ui.q('popup mapPicker')) {
+			if (ui.parents(e, 'popupTitle') || !ui.q('popup input') && !ui.q('popup textarea') && !ui.q('popup input-rating') && !ui.q('popup mapPicker')) {
 				while (e && e.getAttribute) {
 					if (e.getAttribute('onclick') || ui.classContains(e, 'selectable'))
 						return;

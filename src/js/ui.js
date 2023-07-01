@@ -14,6 +14,7 @@ import { pageHome } from './pageHome';
 import { lists } from './lists';
 import { pageEvent } from './pageEvent';
 import { pageSearch } from './pageSearch';
+import { Contact, model } from './model';
 
 export { ui, formFunc };
 
@@ -141,6 +142,9 @@ class ui {
 		if (e.changedTouches && e.changedTouches[0])
 			return e.changedTouches[0].pageY ? e.changedTouches[0].pageY : e.changedTouches[0].clientY + window.document.body.scrollTop;
 		return e.pageY ? e.pageY : e.clientY + window.document.body.scrollTop;
+	}
+	static openRating(id, search) {
+		InputRating.open(id, search);
 	}
 	static navigation = {
 		animationEvent: null,
@@ -1116,6 +1120,10 @@ class ButtonText extends HTMLElement {
 		this.tabIndex = 0;
 		this.style.outline = 'none !important';
 		this.attributeChangedCallback('label', null, this.getAttribute('label'));
+		if (this.innerHTML) {
+			this._root.querySelector('span').innerHTML = this.innerHTML;
+			this.innerHTML = '';
+		}
 		this.addEventListener('keydown', function (event) {
 			if (event.key == ' ')
 				this.click();
@@ -1503,8 +1511,7 @@ button-image.right {
 	border-radius: 0 0.5em 0.5em 0 !important;
 }`;
 		this._root.appendChild(style);
-		var s = '', s2 = this.getAttribute('name'), element;
-		element = document.createElement('inputFile');
+		var s = '', s2 = this.getAttribute('name'), element = document.createElement('inputFile');
 		element.innerHTML = '<span>' + (this.getAttribute('hint') ? this.getAttribute('hint') : ui.l('fileUpload.select')) + '</span>';
 		this._root.appendChild(element);
 		if (global.isBrowser()) {
@@ -1808,6 +1815,246 @@ button-image.right {
 if (!customElements.get('input-image'))
 	customElements.define('input-image', InputImage);
 
+class InputRating extends HTMLElement {
+	constructor() {
+		super();
+		this._root = this.attachShadow({ mode: 'closed' });
+	}
+	connectedCallback() {
+		const style = document.createElement('style');
+		style.textContent = `
+detailRating {
+	font-size: 1.5em;
+	margin: 1em 0 0.75em 0;
+	display: block;
+	position: relative;
+	cursor: pointer;
+}
+
+ratingHint {
+	margin: 0 1em 1em 1em;
+	display: block;
+}
+
+ratingHistory {
+	display: block;
+}
+
+ratingItem {
+	display: block;
+	background: transparent;
+	padding: 0.5em;
+	text-align: left;
+	width: 100%;
+	position: relative;
+}
+
+ratingItem rating {
+	margin-right: 0.5em;
+	height: 1em;
+}
+
+ratingItem img {
+	max-width: 100%;
+	border-radius: 1em;
+}
+
+rating,
+ratingSelection {
+	position: relative;
+	line-height: 1;
+	display: inline-block;
+	height: 1.5em;
+}
+
+rating empty,
+ratingSelection empty {
+	opacity: 0.3;
+	position: relative;
+}
+
+rating full,
+ratingSelection full {
+	position: absolute;
+	left: 0;
+	overflow: hidden;
+	top: 0;
+	color: var(--bg2stop);
+}
+
+ratingSelection span {
+	width: 2em;
+	display: inline-block;
+	position: relative;
+	cursor: pointer;
+}
+
+ratingItem span {
+	cursor: pointer;
+}
+
+popupContent> :not(detail) ratingSelection {
+	width: 10em;
+	margin-left: -5em;
+	font-size: 2em;
+	left: 50%;
+	cursor: pointer;
+	display: block;
+}
+
+input-image {
+	position: relative;
+	display: block;
+	margin: 1em 0;
+}`;
+		this._root.appendChild(style);
+		var element, id = this.getAttribute('id'), rating = 0;
+		var stars = `<empty>☆☆☆☆☆</empty><full style="width:${parseInt('' + (0.5 + rating))}%;">★★★★★</full>`;
+		if (this.getAttribute('dialog') == 'true') {
+			var lastRating = JSON.parse(decodeURIComponent(this.getAttribute('lastRating'))), history = JSON.parse(decodeURIComponent(this.getAttribute('history')));
+			this.removeAttribute('dialog');
+			this.removeAttribute('lastRating');
+			this.removeAttribute('history');
+			var hint, e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
+			if (!id) {
+				var name = ui.q('detail:not([style*="none"]) card:last-child title, [i="' + id + '"] title').innerText.trim();
+				hint = ui.l('rating.' + this.getAttribute('type')).replace('{0}', name);
+			} else if (lastRating.createdAt) {
+				rating = lastRating.rating;
+				hint = ui.l('rating.lastRate').replace('{0}', global.date.formatDate(lastRating.createdAt)) + '<br/><br/><rating>' + stars + '</rating>';
+			} else if (pageEvent.getDate(e) > new Date())
+				hint = ui.l('rating.notStarted');
+			else if (e.eventParticipate.state != 1)
+				hint = ui.l('rating.notParticipated');
+			if (hint) {
+				element = document.createElement('ratingHint');
+				element.innerHTML = hint;
+			} else {
+				element = document.createElement('div');
+				element.innerHTML = this.getForm(id);
+			}
+			this._root.appendChild(element);
+			ui.html('detail card:last-child [name="favLoc"]', '');
+			var s = '', date, pseudonym, description, img;
+			for (var i = 1; i < history.length; i++) {
+				var v = model.convert(new Contact(), history, i);
+				date = global.date.formatDate(v.eventRating.createdAt);
+				pseudonym = v.id == user.contact.id ? ui.l('you') : v.pseudonym;
+				description = v.eventRating.description ? global.separator + v.eventRating.description : '';
+				img = v.eventRating.image ? '<br/><img src="' + global.serverImg + v.eventRating.image + '"/>' : '';
+				rating = v.eventRating.rating;
+				s += '<ratingItem><span onclick="ui.navigation.autoOpen(&quot;' + global.encParam('e=' + pageEvent.getId(v)) + '&quot;,event)">' + stars + date + '</span><span onclick="ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)"> ' + pseudonym + '</span>' + description + img + '</ratingItem>';
+			}
+			if (s) {
+				element = document.createElement('ratingHistory');
+				element.innerHTML = s;
+				this._root.appendChild(element);
+			}
+		} else {
+			element = document.createElement('detailRating');
+			element.setAttribute('onclick', 'this.open(' + (this.getAttribute('type') == 'event' ? id : null) + ',"event.' + (this.getAttribute('type') == 'event' ? 'id' : this.getAttribute('type')) + 'Id=' + id + '")');
+			rating = v.rating;
+			element.innerHTML = '<ratingSelection>' + stars + '</ratingSelection>';
+			this._root.appendChild(element);
+		}
+	}
+	rate(event, x) {
+		var e = event.target.getRootNode().querySelectorAll('ratingSelection > full span');
+		ui.css(e, 'display', 'none');
+		for (var i = 0; i < x; i++)
+			ui.css(e[i], 'display', '');
+		event.target.getRootNode().querySelector('[name="rating"]').value = x * 20;
+	}
+	getForm(id) {
+		var draft = user.get('rating' + id), participateId = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).eventParticipate.id;
+		if (draft)
+			draft = draft.values.description;
+		return `<ratingSelection>
+<empty><span>☆</span><span onclick="this.getRootNode().host.rate(event,2)">☆</span><span
+		onclick="this.getRootNode().host.rate(event,3)">☆</span><span onclick="this.getRootNode().host.rate(event,4)">☆</span><span
+		onclick="this.getRootNode().host.rate(event,5)">☆</span></empty>
+<full><span onclick="this.getRootNode().host.rate(event,1)">★</span><span onclick="this.getRootNode().host.rate(event,2)">★</span><span
+		onclick="this.getRootNode().host.rate(event,3)">★</span><span onclick="this.getRootNode().host.rate(event,4)">★</span><span
+		onclick="this.getRootNode().host.rate(event,5)" style="display:none;">★</span></full>
+</ratingSelection>
+<div style="margin-top:1em;">
+<form onsubmit="return false">
+	<input type="hidden" name="eventParticipateId" value="${participateId ? participateId : ''}" />
+	<input type="hidden" name="rating" value="80" />
+	<field>
+		<textarea maxlength="1000" placeholder="${ui.l('locations.shortDesc')}" name="description" part="textarea">${draft ? draft : ''}</textarea>
+	</field>
+	<field style="margin:0.5em 0 0 0;">
+		<input-image></input-image>
+	</field>
+	<button-text onclick="ratings.save()" oId="${id}" style="margin-top:0.5em;" label="rating.save"></button-text>
+</form>
+</div>`;
+	}
+	static open(id, search) {
+		var lastRating = null, history = null;
+		var render = function () {
+			if (lastRating && history)
+				ui.navigation.openPopup(ui.l('rating.title'), '<input-rating dialog="true"' + (id ? ' id="' + id + '"' : '')
+					+ (history ? ' history="' + encodeURIComponent(JSON.stringify(history)) + '"' : '')
+					+ (lastRating ? ' lastRating="' + encodeURIComponent(JSON.stringify(lastRating)) + '"' : '') + '></input-rating>', 'ratings.saveDraft()');
+		};
+		if (id) {
+			communication.ajax({
+				url: global.serverApi + 'db/list?query=event_rating&search=' + encodeURIComponent('event.id=' + id + ' and eventParticipate.contactId=' + user.contact.id),
+				webCall: 'ui.open(id,search)',
+				responseType: 'json',
+				success(r) {
+					lastRating = r.length > 1 ? model.convert(new Contact(), r, r.length - 1).eventRating : {};
+					render();
+				}
+			});
+		} else
+			lastRating = {};
+		if (search) {
+			communication.ajax({
+				url: global.serverApi + 'db/list?query=event_rating&search=' + encodeURIComponent(search),
+				webCall: 'ui.open(id,search)',
+				responseType: 'json',
+				success(r) {
+					history = r;
+					render();
+				}
+			});
+		} else
+			history = [];
+		render();
+	}
+	save() {
+		var e = ui.q('popup [name="description"]');
+		ui.classRemove(e, 'dialogFieldError');
+		if (ui.val('[name="rating"]') < 25 && !e.value)
+			formFunc.setError(e, 'rating.negativeRateValidation');
+		formFunc.validation.filterWords(e);
+		if (ui.q('popup  errorHint'))
+			return;
+		var v = formFunc.getForm('popup form');
+		v.classname = 'EventRating';
+		communication.ajax({
+			url: global.serverApi + 'db/one',
+			webCall: 'ui.open(id,search)',
+			method: 'POST',
+			body: v,
+			success(r) {
+				user.remove('rating');
+				ui.navigation.closePopup();
+				ui.q('detail card:last-child button-text[onclick*="ratings.open"]').outerHTML = '';
+			}
+		});
+	}
+	saveDraft() {
+		var f = formFunc.getForm('popup form');
+		user.set('rating', f.values.description ? f : null);
+	}
+}
+if (!customElements.get('input-rating'))
+	customElements.define('input-rating', InputRating);
+
 class InputSlider extends HTMLElement {
 	constructor() {
 		super();
@@ -2023,25 +2270,25 @@ imagelist svg {
 	display: none;
 }
 
-:host.favorite imagelist svg {
+:host(.favorite) imagelist svg {
 	display: inline;
 }
 
-badge.authenticated,
-:host.participate badge {
+:host(.authenticated) badge,
+:host(.participate) badge {
 	background: green;
 }
 
-badge.authenticated::after,
-:host.participate badge::after {
+:host(.authenticated) badge::after,
+:host(.participate) badge::after {
 	content: '✓';
 }
 
-:host.canceled badge {
+:host(.canceled) badge {
 	background: red;
 }
 
-:host.canceled badge::after {
+:host(.canceled) badge::after {
 	content: '✗';
 }
 
@@ -2063,7 +2310,13 @@ compass::after {
 		this._root.appendChild(style);
 		var element = document.createElement('badge');
 		element.setAttribute('part', 'badge');
-		element.setAttribute('class', this.getAttribute('badge') ? this.getAttribute('badge') : 'hidden');
+		element.setAttribute('part', 'badge');
+		if (this.getAttribute('badge'))
+			element.setAttribute('class', this.getAttribute('badge'));
+		else if (this.getAttribute('class').indexOf('authenticated') < 0
+			&& this.getAttribute('class').indexOf('canceled') < 0
+			&& this.getAttribute('class').indexOf('participate') < 0)
+			element.setAttribute('part', 'hidden');
 		this._root.appendChild(element);
 		element = document.createElement('div');
 		element.innerHTML = global.template`
@@ -2074,7 +2327,7 @@ compass::after {
 <flag>
 	<km part="km">${this.getAttribute('flag1')}</km>
 	<span>${this.getAttribute('flag2') ? this.getAttribute('flag2') : '&nbsp;'}</span>
-	${decodeURIComponent(this.getAttribute('flag3'))}
+	${this.getAttribute('flag3') ? decodeURIComponent(this.getAttribute('flag3')) : ''}
 </flag>
 <imagelist>
 	<img src="${this.getAttribute('image')}" class="${!this.getAttribute('image') || this.getAttribute('image').indexOf('.svg') > 0 ? 'default" part="mainBG' : ''}" />
