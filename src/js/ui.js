@@ -1820,6 +1820,14 @@ if (!customElements.get('input-image'))
 	customElements.define('input-image', InputImage);
 
 class InputRating extends HTMLElement {
+	rating = `<ratingSelection style="font-size:2em;margin-top:0.5em;">
+	<empty><span>☆</span><span onclick="this.getRootNode().host.rate(event,2)">☆</span><span
+			onclick="this.getRootNode().host.rate(event,3)">☆</span><span onclick="this.getRootNode().host.rate(event,4)">☆</span><span
+			onclick="this.getRootNode().host.rate(event,5)">☆</span></empty>
+	<full><span onclick="this.getRootNode().host.rate(event,1)">★</span><span onclick="this.getRootNode().host.rate(event,2)">★</span><span
+			onclick="this.getRootNode().host.rate(event,3)">★</span><span onclick="this.getRootNode().host.rate(event,4)">★</span><span
+			onclick="this.getRootNode().host.rate(event,5)" style="display:none;">★</span></full>
+	</ratingSelection>`;
 	constructor() {
 		super();
 		this._root = this.attachShadow({ mode: 'closed' });
@@ -1909,9 +1917,9 @@ input-image {
 		this._root.appendChild(style);
 		var element, id = this.getAttribute('id');
 		var stars = '<empty>☆☆☆☆☆</empty><full style="width:{0}%;">★★★★★</full>';
-		if (this.getAttribute('dialog') == 'true') {
+		if (this.getAttribute('ui') == 'dialog') {
 			var lastRating = JSON.parse(decodeURIComponent(this.getAttribute('lastRating'))), history = JSON.parse(decodeURIComponent(this.getAttribute('history')));
-			this.removeAttribute('dialog');
+			this.removeAttribute('ui');
 			this.removeAttribute('lastRating');
 			this.removeAttribute('history');
 			var hint, e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
@@ -1947,6 +1955,15 @@ input-image {
 				element.innerHTML = s;
 				this._root.appendChild(element);
 			}
+		} else if (this.getAttribute('ui') == 'rating') {
+			element = document.createElement('div');
+			element.innerHTML = this.rating;
+			this._root.appendChild(element.children[0]);
+			element = document.createElement('input');
+			element.setAttribute('type', 'hidden');
+			element.setAttribute('name', 'rating');
+			element.setAttribute('value', '80');
+			this._root.appendChild(element);
 		} else {
 			element = document.createElement('detailRating');
 			element.setAttribute('onclick', 'ui.openRating(' + (this.getAttribute('type') == 'event' ? id : null) + ',"event.' + (this.getAttribute('type') == 'event' ? 'id' : this.getAttribute('type') + 'Id') + '=' + id + '")');
@@ -1960,21 +1977,13 @@ input-image {
 		for (var i = 0; i < x; i++)
 			ui.css(e[i], 'display', '');
 		event.target.getRootNode().querySelector('[name="rating"]').value = x * 20;
+		event.target.getRootNode().host.setAttribute('value', x * 20);
 	}
 	getForm(id) {
 		var draft = user.get('rating' + id), participateId = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).eventParticipate.id;
 		if (draft)
 			draft = draft.values.description;
-		return `<ratingSelection style="font-size:2em;margin-top:0.5em;">
-<empty><span>☆</span><span onclick="this.getRootNode().host.rate(event,2)">☆</span><span
-		onclick="this.getRootNode().host.rate(event,3)">☆</span><span onclick="this.getRootNode().host.rate(event,4)">☆</span><span
-		onclick="this.getRootNode().host.rate(event,5)">☆</span></empty>
-<full><span onclick="this.getRootNode().host.rate(event,1)">★</span><span onclick="this.getRootNode().host.rate(event,2)">★</span><span
-		onclick="this.getRootNode().host.rate(event,3)">★</span><span onclick="this.getRootNode().host.rate(event,4)">★</span><span
-		onclick="this.getRootNode().host.rate(event,5)" style="display:none;">★</span></full>
-</ratingSelection>
-<div style="margin-top:1em;">
-<form onsubmit="return false">
+		return `${this.rating}<form style="margin-top:1em;" onsubmit="return false">
 	<input type="hidden" name="eventParticipateId" value="${participateId ? participateId : ''}" />
 	<input type="hidden" name="rating" value="80" />
 	<field>
@@ -1984,14 +1993,13 @@ input-image {
 		<input-image></input-image>
 	</field>
 	<button-text onclick="this.getRootNode().host.save(event)" oId="${id}" style="margin-top:0.5em;" label="rating.save"></button-text>
-</form>
-</div>`;
+</form>`;
 	}
 	static open(id, search) {
 		var lastRating = null, history = null;
 		var render = function () {
 			if (lastRating && history)
-				ui.navigation.openPopup(ui.l('rating.title'), '<input-rating dialog="true"' + (id ? ' id="' + id + '"' : '')
+				ui.navigation.openPopup(ui.l('rating.title'), '<input-rating ui="dialog"' + (id ? ' id="' + id + '"' : '')
 					+ (history ? ' history="' + encodeURIComponent(JSON.stringify(history)) + '"' : '')
 					+ (lastRating ? ' lastRating="' + encodeURIComponent(JSON.stringify(lastRating)) + '"' : '') + '></input-rating>');
 		};
