@@ -526,8 +526,7 @@ news buttonIcon {
 	bottom: -1.1em;
 }
 
-.bgColor,
-button-text::part(bgColor) {
+.bgColor {
 	background: linear-gradient(var(--bg2stop) 0%, var(--bg2start) 100%) center center / 100% no-repeat;
 }
 
@@ -693,7 +692,8 @@ popup .multiple {
 }
 
 textarea,
-input-hashtags::part(textarea) {
+input-hashtags::part(textarea),
+input-rating::part(textarea) {
 	height: 5em;
 	padding-top: 0.5em;
 	overflow-y: auto;

@@ -528,7 +528,7 @@ class ui {
 				distance: 100000,
 				latitude: geoData.current.lat,
 				longitude: geoData.current.lon,
-				search: encodeURIComponent('eventParticipate.contactId=' + user.contact.id + ' and event.contactId=contact.id')
+				search: encodeURIComponent('eventParticipate.contactId=' + user.contact.id + ' and event.contactId=contact.id and contact.clientId=' + user.clientId)
 			}, pageEvent.listTickets, 'events', 'eventsTicket');
 		}
 	}
@@ -806,25 +806,26 @@ class formFunc {
 	static dist = 0;
 
 	static getForm(id) {
+		var form = typeof id == 'string' ? ui.q(id) : id;
 		var d = { values: {} }, cb = {};
-		var e = ui.qa(id + ' textarea:not([transient="true"])');
+		var e = form.querySelectorAll(' textarea:not([transient="true"])');
 		for (var i = 0; i < e.length; i++) {
 			if (e[i].name)
 				d.values[e[i].name] = e[i].value.replace(/\"/g, '&quot;').replace(/</g, '&lt;');
 		}
-		e = ui.qa(id + ' select:not([transient="true"])');
+		e = form.querySelectorAll('select:not([transient="true"])');
 		for (var i = 0; i < e.length; i++) {
 			if (e[i].name)
 				d.values[e[i].name] = e[i].value;
 		}
-		e = ui.qa(id + ' input:not([transient="true"])');
+		e = form.querySelectorAll('input:not([transient="true"])');
 		for (var i = 0; i < e.length; i++) {
 			if (e[i].type == 'datetime-local')
 				d.values[e[i].name] = global.date.local2server(e[i].value);
 			else if (e[i].name)
 				d.values[e[i].name] = e[i].value.replace(/\"/g, '&quot;').replace(/</g, '&lt;');
 		}
-		e = ui.qa(id + ' input-checkbox:not([transient="true"])');
+		e = form.querySelectorAll('input-checkbox:not([transient="true"])');
 		for (var i = 0; i < e.length; i++) {
 			if (e[i].getAttribute('type') == 'radio') {
 				if (e[i].getAttribute('checked') == 'true')
@@ -840,15 +841,15 @@ class formFunc {
 		}
 		for (var k in cb)
 			d.values[k] = cb[k].length > 0 ? cb[k].substring(1) : '';
-		e = ui.qa(id + ' input-slider:not([transient="true"])');
+		e = form.querySelectorAll('input-slider:not([transient="true"])');
 		for (var i = 0; i < e.length; i++)
 			d.values[e[i].getAttribute('name')] = e[i].getAttribute('value');
-		e = ui.qa(id + ' input-hashtags:not([transient="true"])');
+		e = form.querySelectorAll('input-hashtags:not([transient="true"])');
 		for (var i = 0; i < e.length; i++) {
 			d.values[e[i].getAttribute('name')] = e[i].getAttribute('ids');
 			d.values[e[i].getAttribute('name') + 'Text'] = e[i].getAttribute('text');
 		}
-		e = ui.qa(id + ' input-image:not([transient="true"])');
+		e = form.querySelectorAll('input-image:not([transient="true"])');
 		for (var i = 0; i < e.length; i++) {
 			if (e[i].getAttribute('value'))
 				d.values[e[i].getAttribute('name')] = e[i].getAttribute('value');
@@ -1061,6 +1062,10 @@ class ButtonText extends HTMLElement {
 	connectedCallback() {
 		const style = document.createElement('style');
 		style.textContent = `
+span {
+	background: linear-gradient(var(--bg2stop) 0%, var(--bg2start) 100%) center center / 100% no-repeat;
+}
+
 :host>span:hover {
 	background: var(--bg2stop);
 }
@@ -1115,7 +1120,6 @@ class ButtonText extends HTMLElement {
 }`;
 		this._root.appendChild(style);
 		var element = document.createElement('span');
-		element.setAttribute('part', 'bgColor');
 		this._root.appendChild(element);
 		this.tabIndex = 0;
 		this.style.outline = 'none !important';
@@ -1840,7 +1844,7 @@ ratingHistory {
 	display: block;
 }
 
-ratingItem {
+ratingHistory rating {
 	display: block;
 	background: transparent;
 	padding: 0.5em;
@@ -1849,14 +1853,13 @@ ratingItem {
 	position: relative;
 }
 
-ratingItem rating {
-	margin-right: 0.5em;
-	height: 1em;
-}
-
-ratingItem img {
+ratingHistory rating img {
 	max-width: 100%;
 	border-radius: 1em;
+}
+
+ratingHistory span {
+	position: relative;
 }
 
 rating,
@@ -1889,10 +1892,6 @@ ratingSelection span {
 	cursor: pointer;
 }
 
-ratingItem span {
-	cursor: pointer;
-}
-
 popupContent> :not(detail) ratingSelection {
 	width: 10em;
 	margin-left: -5em;
@@ -1908,8 +1907,8 @@ input-image {
 	margin: 1em 0;
 }`;
 		this._root.appendChild(style);
-		var element, id = this.getAttribute('id'), rating = 0;
-		var stars = `<empty>☆☆☆☆☆</empty><full style="width:${parseInt('' + (0.5 + rating))}%;">★★★★★</full>`;
+		var element, id = this.getAttribute('id');
+		var stars = '<empty>☆☆☆☆☆</empty><full style="width:{0}%;">★★★★★</full>';
 		if (this.getAttribute('dialog') == 'true') {
 			var lastRating = JSON.parse(decodeURIComponent(this.getAttribute('lastRating'))), history = JSON.parse(decodeURIComponent(this.getAttribute('history')));
 			this.removeAttribute('dialog');
@@ -1919,10 +1918,9 @@ input-image {
 			if (!id) {
 				var name = ui.q('detail:not([style*="none"]) card:last-child title, [i="' + id + '"] title').innerText.trim();
 				hint = ui.l('rating.' + this.getAttribute('type')).replace('{0}', name);
-			} else if (lastRating.createdAt) {
-				rating = lastRating.rating;
-				hint = ui.l('rating.lastRate').replace('{0}', global.date.formatDate(lastRating.createdAt)) + '<br/><br/><rating>' + stars + '</rating>';
-			} else if (pageEvent.getDate(e) > new Date())
+			} else if (lastRating.createdAt)
+				hint = ui.l('rating.lastRate').replace('{0}', global.date.formatDate(lastRating.createdAt)) + '<br/><br/><rating>' + stars.replace('{0}', lastRating.rating) + '</rating>';
+			else if (pageEvent.getDate(e) > new Date())
 				hint = ui.l('rating.notStarted');
 			else if (e.eventParticipate.state != 1)
 				hint = ui.l('rating.notParticipated');
@@ -1942,8 +1940,7 @@ input-image {
 				pseudonym = v.id == user.contact.id ? ui.l('you') : v.pseudonym;
 				description = v.eventRating.description ? global.separator + v.eventRating.description : '';
 				img = v.eventRating.image ? '<br/><img src="' + global.serverImg + v.eventRating.image + '"/>' : '';
-				rating = v.eventRating.rating;
-				s += '<ratingItem><span onclick="ui.navigation.autoOpen(&quot;' + global.encParam('e=' + pageEvent.getId(v)) + '&quot;,event)">' + stars + date + '</span><span onclick="ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)"> ' + pseudonym + '</span>' + description + img + '</ratingItem>';
+				s += '<rating onclick="ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)"><span>' + stars.replace('{0}', v.eventRating.rating) + '</span> ' + date + ' ' + pseudonym + description + img + '</rating > ';
 			}
 			if (s) {
 				element = document.createElement('ratingHistory');
@@ -1952,9 +1949,8 @@ input-image {
 			}
 		} else {
 			element = document.createElement('detailRating');
-			element.setAttribute('onclick', 'this.open(' + (this.getAttribute('type') == 'event' ? id : null) + ',"event.' + (this.getAttribute('type') == 'event' ? 'id' : this.getAttribute('type')) + 'Id=' + id + '")');
-			rating = v.rating;
-			element.innerHTML = '<ratingSelection>' + stars + '</ratingSelection>';
+			element.setAttribute('onclick', 'ui.openRating(' + (this.getAttribute('type') == 'event' ? id : null) + ',"event.' + (this.getAttribute('type') == 'event' ? 'id' : this.getAttribute('type') + 'Id') + '=' + id + '")');
+			element.innerHTML = '<ratingSelection>' + stars.replace('{0}', this.getAttribute('rating')) + '</ratingSelection>';
 			this._root.appendChild(element);
 		}
 	}
@@ -1969,7 +1965,7 @@ input-image {
 		var draft = user.get('rating' + id), participateId = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).eventParticipate.id;
 		if (draft)
 			draft = draft.values.description;
-		return `<ratingSelection>
+		return `<ratingSelection style="font-size:2em;margin-top:0.5em;">
 <empty><span>☆</span><span onclick="this.getRootNode().host.rate(event,2)">☆</span><span
 		onclick="this.getRootNode().host.rate(event,3)">☆</span><span onclick="this.getRootNode().host.rate(event,4)">☆</span><span
 		onclick="this.getRootNode().host.rate(event,5)">☆</span></empty>
@@ -1987,7 +1983,7 @@ input-image {
 	<field style="margin:0.5em 0 0 0;">
 		<input-image></input-image>
 	</field>
-	<button-text onclick="ratings.save()" oId="${id}" style="margin-top:0.5em;" label="rating.save"></button-text>
+	<button-text onclick="this.getRootNode().host.save(event)" oId="${id}" style="margin-top:0.5em;" label="rating.save"></button-text>
 </form>
 </div>`;
 	}
@@ -1997,7 +1993,7 @@ input-image {
 			if (lastRating && history)
 				ui.navigation.openPopup(ui.l('rating.title'), '<input-rating dialog="true"' + (id ? ' id="' + id + '"' : '')
 					+ (history ? ' history="' + encodeURIComponent(JSON.stringify(history)) + '"' : '')
-					+ (lastRating ? ' lastRating="' + encodeURIComponent(JSON.stringify(lastRating)) + '"' : '') + '></input-rating>', 'ratings.saveDraft()');
+					+ (lastRating ? ' lastRating="' + encodeURIComponent(JSON.stringify(lastRating)) + '"' : '') + '></input-rating>');
 		};
 		if (id) {
 			communication.ajax({
@@ -2025,15 +2021,16 @@ input-image {
 			history = [];
 		render();
 	}
-	save() {
-		var e = ui.q('popup [name="description"]');
+	save(event) {
+		var e = event.target.getRootNode().querySelector('[name="description"]');
 		ui.classRemove(e, 'dialogFieldError');
-		if (ui.val('[name="rating"]') < 25 && !e.value)
+		if (event.target.getRootNode().querySelector('[name="rating"]').value < 25 && !e.value)
 			formFunc.setError(e, 'rating.negativeRateValidation');
-		formFunc.validation.filterWords(e);
-		if (ui.q('popup  errorHint'))
+		else
+			formFunc.validation.filterWords(e);
+		if (event.target.getRootNode().querySelector('errorHint'))
 			return;
-		var v = formFunc.getForm('popup form');
+		var v = formFunc.getForm(event.target.getRootNode().querySelector('form'));
 		v.classname = 'EventRating';
 		communication.ajax({
 			url: global.serverApi + 'db/one',
@@ -2043,13 +2040,18 @@ input-image {
 			success(r) {
 				user.remove('rating');
 				ui.navigation.closePopup();
-				ui.q('detail card:last-child button-text[onclick*="ratings.open"]').outerHTML = '';
+				e = ui.q('detail card:last-child button-text[onclick*="ui.openRating"]');
+				if (e)
+					e.outerHTML = '';
 			}
 		});
 	}
-	saveDraft() {
-		var f = formFunc.getForm('popup form');
-		user.set('rating', f.values.description ? f : null);
+	disconnectedCallback() {
+		var f = this.querySelector('form');
+		if (f) {
+			var v = formFunc.getForm(f);
+			user.set('rating', v.values.description ? v : null);
+		}
 	}
 }
 if (!customElements.get('input-rating'))

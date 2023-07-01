@@ -271,7 +271,7 @@ ${v.rating}
 			v.image = global.serverImg + v.image;
 		else
 			v.image = (v.event.id ? 'images/event.svg' : 'images/location.svg') + '" class="mainBG" style="padding:8em;';
-		var r = v.event.rating || (eventWithLocation ? v.rating : v.contact.rating);
+		var r = v.event.id ? v.event.rating : eventWithLocation ? v.rating : v.contact.rating;
 		if (r > 0) {
 			if (v.event.id)
 				v.rating = '<input-rating type="event" id="' + v.event.id + '" rating="' + v.event.rating + '"></input-rating>';
