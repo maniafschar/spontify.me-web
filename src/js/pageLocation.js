@@ -247,7 +247,7 @@ ${v.rating}
 			var skills = ui.getSkills(eventWithLocation ? v.event : v.contact, 'detail');
 			if (skills.totalMatch) {
 				v.matchIndicator = skills.totalMatch + '/' + skills.total;
-				v.matchIndicatorPercent = parseInt(skills.totalMatch / skills.total * 100 + 0.5);
+				v.matchIndicatorPercent = parseInt('' + (skills.totalMatch / skills.total * 100 + 0.5));
 			} else
 				v.matchIndicatorPercent = 0;
 			v.matchIndicatorHint = ui.l('events.matchIndicatorHint').replace('{0}', skills.totalMatch).replace('{1}', skills.total).replace('{2}', v.matchIndicatorPercent).replace('{3}', skills.categories);
@@ -279,7 +279,7 @@ ${v.rating}
 				v.rating = '<input-rating type="location" id="' + v.locId + '" rating="' + v.rating + '"></input-rating>';
 			else
 				v.rating = '<input-rating type="contact" id="' + v.contact.id + '" rating="' + v.contact.rating + '"></input-rating>';
-		} else if (v.event.id && v.event.locationId >= -1 && user.contact && v.event.contactId != user.contact.id)
+		} else if (v.event.id && user.contact && v.event.contactId != user.contact.id)
 			v.rating = '<div style="margin:1em 0;" class="ratingButton hidden"><button-text onclick="ui.openRating(' + v.event.id + ')" label="rating.save"></button-text></div>';
 		if (eventWithLocation)
 			v.distanceDisplay = ' style="display:none;"';
@@ -391,9 +391,8 @@ ${v.rating}
 		var s = '';
 		for (var i = 1; i < l.length; i++) {
 			var v = model.convert(new Location(), l, i);
-			var text = '', image, flag1, flag2, flag3;
-			if (v._geolocationDistance)
-				flag1 = parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 || !v.id ? 0 : 1).replace('.', ',');
+			var text = '', image, flag1, flag2, flag3 = '';
+			flag1 = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 || !v.id ? 0 : 1).replace('.', ',') : '';
 			if (v._geolocationDistance && v.latitude)
 				flag3 = '<compass style="transform:rotate('
 					+ geoData.getAngel(geoData.current, { lat: v.latitude, lon: v.longitude }) + 'deg);"></compass>';

@@ -465,7 +465,7 @@ class pageEvent {
 				s += '<listSeparator class="highlightColor strong">' + ui.l('events.outdated') + '</listSeparator>';
 			else {
 				v = as[i];
-				var name, text, flag1, flag2, flag3, image, clazz;
+				var name, text, flag1, flag2, flag3 = '', image, clazz;
 				var startDate = global.date.server2local(v.event.startDate);
 				var s2 = global.date.formatDate(startDate, 'weekdayLong');
 				var s3 = s2.substring(0, s2.lastIndexOf(' '));
@@ -478,10 +478,9 @@ class pageEvent {
 				if (startDate >= today)
 					t = t.substring(t.lastIndexOf(' ') + 1);
 				var skills = ui.getSkills(v.event.id ? v.event : v.contact, 'list');
-				if (v._geolocationDistance)
-					flag1 = parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 || !v.id ? 0 : 1).replace('.', ',');
+				flag1 = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 || !v.id ? 0 : 1).replace('.', ',') : '';
 				if (skills.total && skills.totalMatch / skills.total > 0)
-					flag2 = parseInt(skills.totalMatch / skills.total * 100 + 0.5) + '%';
+					flag2 = parseInt('' + (skills.totalMatch / skills.total * 100 + 0.5)) + '%';
 				if (v._geolocationDistance && v.latitude)
 					flag3 = '<compass style="transform:rotate('
 						+ geoData.getAngel(geoData.current, { lat: v.latitude, lon: v.longitude }) + 'deg);"></compass>';
@@ -631,7 +630,7 @@ class pageEvent {
 	}
 	static locationsOfPastEvents() {
 		communication.ajax({
-			url: global.serverApi + 'db/list?query=event_list&search=' + encodeURIComponent('event.locationId>0 and event.contactId=' + user.contact.id),
+			url: global.serverApi + 'db/list?query=event_list&search=' + encodeURIComponent('length(location.name)>0 and event.contactId=' + user.contact.id),
 			webCall: 'pageEvent.locationsOfPastEvents()',
 			responseType: 'json',
 			success(r) {

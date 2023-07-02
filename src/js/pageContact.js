@@ -316,9 +316,8 @@ ${v.matchIndicatorHintDescription}
 			var skills = ui.getSkills(v, 'list');
 			flag1 = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
 			if (skills.total && skills.totalMatch / skills.total > 0)
-				flag2 = parseInt(skills.totalMatch / skills.total * 100 + 0.5) + '%';
-			if (v.gender)
-				flag3 = '<img src="images/gender' + v.gender + '.svg"/>';
+				flag2 = parseInt('' + (skills.totalMatch / skills.total * 100 + 0.5)) + '%';
+			flag3 = v.gender ? '<img src="images/gender' + v.gender + '.svg"/>' : '';
 			if (!v._message1)
 				v._message1 = skills.text();
 			if (!v._message2)

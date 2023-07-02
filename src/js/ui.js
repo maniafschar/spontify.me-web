@@ -279,7 +279,7 @@ class ui {
 			if (pageInfo.openSection == -2)
 				pageInfo.openSection = -1;
 			if (!user.contact && id != 'home' && id != 'info' && id != 'login' && id != 'detail') {
-				intro.openHint({ desc: id, pos: '15%,-6em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:' + (id == 'contacts' ? 9.375 : 40.625) + '%;' });
+				intro.openHint({ desc: id, pos: '15%,-6em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:' + (id == 'contacts' ? 9.375 : 40.625) + '%;margin-right:-1.5em;' });
 				return;
 			}
 			geoData.headingClear();
@@ -1980,11 +1980,13 @@ input-image {
 		event.target.getRootNode().host.setAttribute('value', x * 20);
 	}
 	getForm(id) {
-		var draft = user.get('rating' + id), participateId = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).eventParticipate.id;
+		var draft = user.get('rating' + id), participate = ui.q('detail card:last-child detailHeader').getAttribute('data');
+		if (participate)
+			participate = JSON.parse(decodeURIComponent(participate)).eventParticipate;
 		if (draft)
 			draft = draft.values.description;
 		return `${this.rating}<form style="margin-top:1em;" onsubmit="return false">
-	<input type="hidden" name="eventParticipateId" value="${participateId ? participateId : ''}" />
+	<input type="hidden" name="eventParticipateId" value="${participate && participate.id ? participate.id : ''}" />
 	<input type="hidden" name="rating" value="80" />
 	<field>
 		<textarea maxlength="1000" placeholder="${ui.l('locations.shortDesc')}" name="description" part="textarea">${draft ? draft : ''}</textarea>
@@ -1997,9 +1999,12 @@ input-image {
 	}
 	static open(id, search) {
 		var lastRating = null, history = null;
+		if (!search)
+			search = '';
 		var render = function () {
 			if (lastRating && history)
 				ui.navigation.openPopup(ui.l('rating.title'), '<input-rating ui="dialog"' + (id ? ' id="' + id + '"' : '')
+					+ (' type="' + (search.indexOf('contact') > -1 ? 'contact' : search.indexOf('location') > -1 ? 'location' : 'event') + '"')
 					+ (history ? ' history="' + encodeURIComponent(JSON.stringify(history)) + '"' : '')
 					+ (lastRating ? ' lastRating="' + encodeURIComponent(JSON.stringify(lastRating)) + '"' : '') + '></input-rating>');
 		};
