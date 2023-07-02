@@ -1994,7 +1994,7 @@ input-image {
 	<field style="margin:0.5em 0 0 0;">
 		<input-image></input-image>
 	</field>
-	<button-text onclick="this.getRootNode().host.save(event)" oId="${id}" style="margin-top:0.5em;" label="rating.save"></button-text>
+	<button-text onclick="this.getRootNode().host.save(event)" oId="${id}" style="margin-top:0.5em;" label="rating.save" part="button-text"></button-text>
 </form>`;
 	}
 	static open(id, search) {

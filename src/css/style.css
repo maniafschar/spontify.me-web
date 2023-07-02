@@ -656,6 +656,7 @@ input-rating::part(textarea) {
 }
 
 input-checkbox,
+input-rating::part(button-text),
 button-text {
 	outline: none !important;
 }

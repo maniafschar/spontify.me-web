@@ -219,7 +219,7 @@ class pageEvent {
 	}
 	static edit(locationID, id) {
 		if (!user.contact) {
-			intro.openHint({ desc: 'teaserEvents', pos: '-0.5em,-60%', size: '95%,auto', hinkyClass: 'bottom', hinky: 'right:0.5em;' });
+			intro.openHint({ desc: 'teaserEvents', pos: '-0.5em,-63%', size: '95%,auto', hinkyClass: 'bottom', hinky: 'right:0;' });
 			return;
 		}
 		if (!pageEvent.paypal.fee) {
