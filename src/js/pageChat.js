@@ -2,7 +2,6 @@ import { communication } from './communication';
 import { details } from './details';
 import { geoData } from './geoData';
 import { global, Strings } from './global';
-import { intro } from './intro';
 import { lists } from './lists';
 import { Contact, ContactChat, model } from './model';
 import { groups, pageContact } from './pageContact';
@@ -50,7 +49,7 @@ class pageChat {
 
 	static adjustTextarea(e) {
 		ui.adjustTextarea(e);
-		intro.close();
+		ui.navigation.closeHint();
 		ui.css('chatConversation', 'bottom', ui.q('chatInput').clientHeight + 'px');
 	}
 	static aiEnabled(id, l) {
@@ -66,9 +65,9 @@ class pageChat {
 	}
 	static aiHint() {
 		if (ui.q('chatInput input-checkbox[checked="true"]'))
-			intro.openHint({ desc: 'chatAi', pos: '5%,-10.5em', size: '90%,auto', hinkyClass: 'bottom', hinky: 'left:50%;' });
+			ui.navigation.openHint({ desc: 'chatAi', pos: '5%,-10.5em', size: '90%,auto', hinkyClass: 'bottom', hinky: 'left:50%;' });
 		else
-			intro.close();
+			ui.navigation.closeHint();
 	}
 	static askLocation() {
 		if (document.activeElement)
@@ -125,7 +124,7 @@ class pageChat {
 			if (event.target.onclick || event.target.onmousedown || s == 'TEXTAREA' || s == 'IMG' || s == 'NOTE' || s == 'INPUT')
 				return;
 		}
-		intro.close();
+		ui.navigation.closeHint();
 		ui.navigation.closePopup();
 		var e = ui.q('chat');
 		if (ui.cssValue(e, 'display') == 'none')
@@ -713,9 +712,9 @@ class pageChat {
 		if (ui.q('chat').getAttribute('status') == 'Friends')
 			Video.startVideoCall(ui.q('chat').getAttribute('i'));
 		else if (ui.q('chat chatConversation chatMessage:not(.me)'))
-			intro.openHint({ desc: ui.l('chat.videoPermissionHint') + '<br/><br/><button-text onclick="pageChat.sendChatVideoPermission()" label="chat.videoPermissionSendButton"></button-text>', pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;' });
+			ui.navigation.openHint({ desc: ui.l('chat.videoPermissionHint') + '<br/><br/><button-text onclick="pageChat.sendChatVideoPermission()" label="chat.videoPermissionSendButton"></button-text>', pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;' });
 		else
-			intro.openHint({ desc: ui.l('chat.videoPermissionNoChatHint'), pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-1em;' });
+			ui.navigation.openHint({ desc: ui.l('chat.videoPermissionNoChatHint'), pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-1em;' });
 	}
 	static showScrollButton() {
 		var e = ui.q('chatMoreButton');
@@ -741,8 +740,8 @@ class pageChat {
 				pageHome.closeList();
 			ui.toggleHeight('chatList');
 		} else if (user.contact)
-			intro.openHint({ desc: 'chatEmpty', pos: '0.5em,-7.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1.5em;' });
+			ui.navigation.openHint({ desc: 'chatEmpty', pos: '0.5em,-7.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1.5em;' });
 		else
-			intro.openHint({ desc: 'chatDescription', pos: '0.5em,-7.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1.5em;' });
+			ui.navigation.openHint({ desc: 'chatDescription', pos: '0.5em,-7.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1.5em;' });
 	}
 };

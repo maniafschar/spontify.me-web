@@ -3,7 +3,6 @@ import { communication, FB, WebSocket } from './communication';
 import { details } from './details';
 import { geoData } from './geoData';
 import { global, Strings } from './global';
-import { intro } from './intro';
 import { lists } from './lists';
 import { marketing } from './marketing';
 import { model } from './model';
@@ -369,7 +368,7 @@ class initialisation {
 			}, 100);
 		}
 		if (!user.contact && user.clientId == 7)
-			setTimeout(intro.openIntro, 2000);
+			setTimeout(ui.navigation.openIntro, 2000);
 		if (global.isBrowser())
 			history.pushState(null, null, window.location.origin);
 	}
@@ -403,7 +402,6 @@ window.pageSearch = pageSearch;
 window.pageHome = pageHome;
 window.pageContact = pageContact;
 window.pageLocation = pageLocation;
-window.intro = intro;
 window.formFunc = formFunc;
 window.lists = lists;
 window.details = details;

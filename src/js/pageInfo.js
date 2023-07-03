@@ -2,7 +2,6 @@ import { communication } from './communication';
 import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './init';
-import { intro } from './intro';
 import { pageLogin } from './pageLogin';
 import { ui } from './ui';
 import { user } from './user';
@@ -83,7 +82,7 @@ class pageInfo {
 	static socialShareDialog() {
 		var f = function () {
 			if (ui.navigation.getActiveID() == 'home' && pageLogin.timestamp && new Date().getTime() - pageLogin.timestamp > 10000) {
-				intro.openHint({ desc: '<div style="margin:0 0.5em 1em 0.5em;">' + ui.l('info.recommend') + '</div><button-text style="margin-top:0.5em;" onclick="pageInfo.socialShare()" label="Yes"></button-text>', pos: '15%,20vh', size: '70%,auto' });
+				ui.navigation.openHint({ desc: '<div style="margin:0 0.5em 1em 0.5em;">' + ui.l('info.recommend') + '</div><button-text style="margin-top:0.5em;" onclick="pageInfo.socialShare()" label="Yes"></button-text>', pos: '15%,20vh', size: '70%,auto' });
 				setTimeout(function () {
 					if (ui.q('hint button-text[onclick*="socialShare"]'))
 						user.save({ webCall: 'pageInfo.socialShareDialog()', recommend: global.date.local2server(new Date()) });

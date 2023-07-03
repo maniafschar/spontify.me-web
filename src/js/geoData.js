@@ -1,6 +1,5 @@
 import { communication } from './communication';
 import { global } from './global';
-import { intro } from './intro';
 import { pageHome } from './pageHome';
 import { pageSearch } from './pageSearch';
 import { ui } from './ui';
@@ -154,7 +153,7 @@ class geoData {
 				desc = ui.l('intro.descriptionFanclub').replace(/\{0}/g, global.appTitle.substring(0, global.appTitle.indexOf(global.separator)));
 			} else
 				desc = ui.l('intro.description');
-			intro.openHint({ desc: desc, pos: '5%,10.5em', size: '90%,auto', hinkyClass: 'top', hinky: 'left:50%;' });
+			ui.navigation.openHint({ desc: desc, pos: '5%,10.5em', size: '90%,auto', hinkyClass: 'top', hinky: 'left:50%;' });
 		}
 	}
 	static openLocationPickerDialog() {

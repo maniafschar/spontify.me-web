@@ -3,7 +3,6 @@ import { communication } from "./communication";
 import { details } from "./details";
 import { geoData } from "./geoData";
 import { global, Strings } from "./global";
-import { intro } from "./intro";
 import { lists } from "./lists";
 import { Contact, EventParticipate, Location, model } from "./model";
 import { pageContact } from "./pageContact";
@@ -219,7 +218,7 @@ class pageEvent {
 	}
 	static edit(locationID, id) {
 		if (!user.contact) {
-			intro.openHint({ desc: 'teaserEvents', pos: '-0.5em,-63%', size: '95%,auto', hinkyClass: 'bottom', hinky: 'right:0;' });
+			ui.navigation.openHint({ desc: 'teaserEvents', pos: '-0.5em,-63%', size: '95%,auto', hinkyClass: 'bottom', hinky: 'right:0;' });
 			return;
 		}
 		if (!pageEvent.paypal.fee) {
@@ -665,7 +664,7 @@ class pageEvent {
 		});
 	}
 	static openPaypalPopup(email) {
-		intro.openHint({ desc: '<br/><div id="paypal-button-container"></div>', pos: '15%,20vh', size: '70%,auto' });
+		ui.navigation.openHint({ desc: '<br/><div id="paypal-button-container"></div>', pos: '15%,20vh', size: '70%,auto' });
 		paypal.Buttons({
 			createOrder: function (data, actions) {
 				return actions.order.create({
@@ -756,7 +755,7 @@ class pageEvent {
 				}
 				ui.navigation.closePopup();
 				if (order) {
-					intro.close();
+					ui.navigation.closeHint();
 					ui.q('detail .eventParticipationButtons button-text.participation').outerHTML = '';
 				}
 				e = ui.q('detail card:last-child[i="' + e.event.id + '_' + eventDate + '"] [name="participants"]');
@@ -1084,11 +1083,11 @@ class pageEvent {
 					var location = model.convert(new Contact(), r, 1);
 					var date = location.eventParticipate.eventDate + location.event.startDate.substring(location.event.startDate.indexOf('T'));
 					if (location.eventParticipate.state == 1)
-						intro.openHint({ desc: '<title>' + location._locationName + '</title><br/>' + location._locationAddress.replace(/\n/g, '<br/>') + '<br/><br/>' + ui.l('events.qrcodeDate').replace('{0}', global.date.formatDate(date)) + '<br/>' + location.contact.pseudonym + '<br/><br/><qrCheck>&check;</qrCheck><img src="' + global.serverImg + location.contact.image + '" class="qrVerification"/>', pos: '5%,1em', size: '90%,auto' });
+						ui.navigation.openHint({ desc: '<title>' + location._locationName + '</title>' + location._locationAddress.replace(/\n/g, '<br/>') + '<br/><br/>' + ui.l('events.qrcodeDate').replace('{0}', global.date.formatDate(date)) + '<br/>' + location.contact.pseudonym + '<br/><br/><qrCheck>&check;</qrCheck><img src="' + global.serverImg + location.contact.image + '" class="qrVerification"/>', pos: '5%,1em', size: '90%,auto' });
 					else
-						intro.openHint({ desc: '<title>' + location._locationName + '</title><br/>' + location._locationAddress.replace(/\n/g, '<br/>') + '<br/><br/>' + ui.l('events.qrcodeDate').replace('{0}', global.date.formatDate(date)) + '<br/>' + location.contact.pseudonym + '<br/><emphasis>' + ui.l('events.qrcodeCanceled').replace('{0}', global.date.formatDate(location.eventParticipate.modifiedAt)) + '</emphasis><qrCheck class="negative">&cross;</qrCheck><br/><br/><img src="' + global.serverImg + location.contact.image + '" class="qrVerification"/>', pos: '5%,1em', size: '90%,auto' });
+						ui.navigation.openHint({ desc: '<title>' + location._locationName + '</title>' + location._locationAddress.replace(/\n/g, '<br/>') + '<br/><br/>' + ui.l('events.qrcodeDate').replace('{0}', global.date.formatDate(date)) + '<br/>' + location.contact.pseudonym + '<br/><emphasis>' + ui.l('events.qrcodeCanceled').replace('{0}', global.date.formatDate(location.eventParticipate.modifiedAt)) + '</emphasis><qrCheck class="negative">&cross;</qrCheck><br/><br/><img src="' + global.serverImg + location.contact.image + '" class="qrVerification"/>', pos: '5%,1em', size: '90%,auto' });
 				} else
-					intro.openHint({ desc: '<title>' + ui.l('events.qrcodeButton') + '</title><br/>' + ui.l('events.qrcodeError'), pos: '5%,1em', size: '90%,auto' });
+					ui.navigation.openHint({ desc: '<title>' + ui.l('events.qrcodeButton') + '</title>' + ui.l('events.qrcodeError'), pos: '5%,1em', size: '90%,auto' });
 			}
 		});
 	}

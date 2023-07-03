@@ -3,7 +3,6 @@ import { communication } from './communication';
 import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './init';
-import { intro } from './intro';
 import { Contact, ContactNews, Location, model } from './model';
 import { pageChat } from './pageChat';
 import { pageEvent } from './pageEvent';
@@ -330,7 +329,7 @@ ${ui.l('events.title')}
 			v.events = s ? s : '<card style="text-align:center;padding:0.5em;"><p>' + ui.l('home.noNews').replace('{0}', ui.l('events.title')) + '</p></card>';
 			if (user.contact.type != 'adminContent')
 				v.hideEdit = ' class="hidden"';
-			intro.openHint({ desc: pageHome.templateNews(v), pos: '1em,1em', size: '-1em,auto', onclick: 'return false' });
+			ui.navigation.openHint({ desc: pageHome.templateNews(v), pos: '1em,1em', size: '-1em,auto', onclick: 'return false' });
 		}
 		if (!pageHome.news)
 			communication.ajax({
@@ -380,7 +379,7 @@ ${ui.l('events.title')}
 				formFunc.svg.replaceAll();
 				initialisation.reposition();
 				if (openIntro)
-					intro.openHint({ desc: 'statisticsCharts', pos: '10%,15em', size: '80%,auto', hinky: 'left:50%;', hinkyClass: 'top' })
+					ui.navigation.openHint({ desc: 'statisticsCharts', pos: '10%,15em', size: '80%,auto', hinky: 'left:50%;', hinkyClass: 'top' })
 			}
 		});
 	}
@@ -427,9 +426,9 @@ ${ui.l('events.title')}
 	}
 	static toggleNotification() {
 		if (!user.contact)
-			intro.openHint({ desc: 'notification', pos: '-0.5em,-7.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1.5em;' });
+			ui.navigation.openHint({ desc: 'notification', pos: '-0.5em,-7.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1.5em;' });
 		else if (!ui.q('notificationList>div'))
-			intro.openHint({ desc: 'notificationEmpty', pos: '-0.5em,-7.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1.5em;' });
+			ui.navigation.openHint({ desc: 'notificationEmpty', pos: '-0.5em,-7.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1.5em;' });
 		else {
 			if (ui.q('notificationList').style.display == 'none')
 				pageChat.closeList();

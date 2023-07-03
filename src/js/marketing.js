@@ -1,6 +1,5 @@
 import { communication } from "./communication";
 import { global } from "./global";
-import { intro } from "./intro";
 import { ClientMarketing, model } from "./model";
 import { formFunc, ui } from "./ui";
 
@@ -47,7 +46,7 @@ class marketing {
 					method: 'POST'
 				});
 			}
-			ui.q('hint>div').innerHTML = marketing.data.storage.epilog + '<br/><br/><button-text onclick="intro.close()" label="Schließen"></button-text>';
+			ui.q('hint>div').innerHTML = marketing.data.storage.epilog + '<br/><br/><button-text onclick="ui.navigation.closeHint()" label="Schließen"></button-text>';
 			return;
 		}
 		var s = q.question + '<br/>';
@@ -62,7 +61,7 @@ class marketing {
 	static open() {
 		if (marketing.data) {
 			marketing.answers = {};
-			intro.openHint({
+			ui.navigation.openHint({
 				desc: '<div>' + marketing.data.storage.prolog + '<br/><br/><button-text onclick="marketing.next()" label="next"></button-text><index>-1</index></div>',
 				pos: '5%,5%', size: '90%,auto', onclick: 'return;'
 			});

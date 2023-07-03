@@ -3,7 +3,6 @@ import { communication, Encryption, FB } from './communication';
 import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './init';
-import { intro } from './intro';
 import { marketing } from './marketing';
 import { Contact } from './model';
 import { pageChat } from './pageChat';
@@ -443,7 +442,7 @@ class pageLogin {
 					}
 					setTimeout(function () {
 						if (ui.navigation.getActiveID() == 'home') {
-							intro.openHint({ desc: '<div style="margin-bottom:0.5em;">' + ui.l('settings.completeProfile') + '</div>' + page1 + page2 + '<button-text style="margin-top:0.5em;" onclick="pageLogin.saveProfile()" label="save"></button-text>', pos: '5%,20vh', size: '90%,auto', hinky: 'left:50%;', hinkyClass: 'top', onclick: 'return' });
+							ui.navigation.openHint({ desc: '<div style="margin-bottom:0.5em;">' + ui.l('settings.completeProfile') + '</div>' + page1 + page2 + '<button-text style="margin-top:0.5em;" onclick="pageLogin.saveProfile()" label="save"></button-text>', pos: '5%,20vh', size: '90%,auto', hinky: 'left:50%;', hinkyClass: 'top', onclick: 'return' });
 							user.set('profileCompletePrompt', global.date.local2server(global.date.getToday()));
 						}
 					}, 2000);
@@ -555,9 +554,9 @@ class pageLogin {
 		if (e.values.image)
 			d.image = e.values.image;
 		if (Object.keys(d).length)
-			user.save({ webCall: 'pageLogin.saveProfile()', ...d }, intro.close);
+			user.save({ webCall: 'pageLogin.saveProfile()', ...d }, ui.navigation.closeHint);
 		else
-			intro.close();
+			ui.navigation.closeHint();
 	}
 	static selectTab(id) {
 		if (id != ui.q('hint tabHeader tab.tabActive').getAttribute('i')) {

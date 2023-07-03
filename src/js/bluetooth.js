@@ -1,6 +1,5 @@
 import { communication } from './communication';
 import { global } from './global';
-import { intro } from './intro';
 import { ui } from './ui';
 import { user } from './user';
 
@@ -131,16 +130,16 @@ class bluetooth {
 			} catch (e) { }
 			bluetooth.closePopup();
 			if (ui.q('hint[i="bluetoothOn"]'))
-				intro.close();
+				ui.navigation.closeHint();
 		}
 		ui.html('home item.bluetooth text', ui.l('bluetooth.deactivated'));
 		window.localStorage.removeItem('bluetoothIDs');
 	}
 	static toggle() {
 		if (global.isBrowser())
-			intro.openHint({ desc: 'bluetoothDescriptionBrowser', pos: '10%,-14em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;' });
+			ui.navigation.openHint({ desc: 'bluetoothDescriptionBrowser', pos: '10%,-14em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;' });
 		else if (!user.contact)
-			intro.openHint({ desc: 'bluetoothDescriptionLoggedOff', pos: '10%,-14em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;' });
+			ui.navigation.openHint({ desc: 'bluetoothDescriptionLoggedOff', pos: '10%,-14em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;' });
 		else if (window.localStorage.getItem('bluetoothIDs'))
 			user.save({ webCall: 'bluetooth.toggle()', bluetooth: false }, bluetooth.stop);
 		else {
