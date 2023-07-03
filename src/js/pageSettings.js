@@ -1,7 +1,7 @@
 import { bluetooth } from './bluetooth';
 import { communication } from './communication';
 import { global } from './global';
-import { initialisation } from './initialisation';
+import { initialisation } from './init';
 import { Contact, Location, model } from './model';
 import { pageContact } from './pageContact';
 import { ui, formFunc } from './ui';

@@ -1,7 +1,7 @@
 import { communication } from './communication';
 import { geoData } from './geoData';
 import { global } from './global';
-import { initialisation } from './initialisation';
+import { initialisation } from './init';
 import { intro } from './intro';
 import { pageLogin } from './pageLogin';
 import { ui } from './ui';

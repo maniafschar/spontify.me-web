@@ -1,6 +1,6 @@
 import { communication } from './communication';
 import { global } from './global';
-import { initialisation } from './initialisation';
+import { initialisation } from './init';
 import { pageLogin } from './pageLogin';
 import { formFunc, ui } from './ui';
 import { user } from './user';

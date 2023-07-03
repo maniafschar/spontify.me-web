@@ -2,7 +2,7 @@ import { bluetooth } from './bluetooth';
 import { communication, Encryption, FB } from './communication';
 import { geoData } from './geoData';
 import { global } from './global';
-import { initialisation } from './initialisation';
+import { initialisation } from './init';
 import { intro } from './intro';
 import { marketing } from './marketing';
 import { Contact } from './model';
