@@ -300,7 +300,7 @@ ${v.matchIndicatorHintDescription}
 	}
 	static init() {
 		if (!ui.q('contacts').innerHTML)
-			lists.setListDivs('contacts');
+			ui.q('contacts').innerHTML = '<list-body></list-body>';
 		if (!ui.q('contacts listResults list-row'))
 			setTimeout(ui.navigation.toggleMenu, 500);
 	}
@@ -514,7 +514,6 @@ class groups {
 			return;
 		}
 		var s = user.contact.groups.replace(/type="checkbox"/g, 'type="radio"').replace(/<input /g, '<input onclick="groups.loadListGroups()"');
-		lists.setListDivs(activeID);
 		ui.html('contacts listTitle', '');
 		if (ui.cssValue('groups', 'display') == 'none') {
 			ui.html('contacts listResults', '');

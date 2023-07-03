@@ -6,12 +6,6 @@ import { ui, formFunc } from './ui';
 export { lists };
 
 class lists {
-	static template = v =>
-		global.template`<listHeader>
-<buttonicon class="right bgColor" onclick="ui.navigation.toggleMenu()"><img source="menu"/></buttonicon>
-${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
-<listBody>${v.groups}<listResults></listResults></listBody>`;
-
 	static getListNoResults(activeID, errorID) {
 		var s = ui.l('noResults.' + errorID), p;
 		while ((p = s.indexOf('${')) > -1) {
@@ -58,7 +52,8 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 				if (divID) {
 					if (!s)
 						s = lists.getListNoResults(divID.indexOf('.') ? divID.substring(divID.lastIndexOf('.') + 1) : divID, errorID);
-					lists.setListDivs(divID);
+					if (!ui.q(divID).innerHTML)
+						ui.q(divID).innerHTML = '<list-body></list-body>';
 					ui.html(divID + ' listResults', s);
 					var e = ui.q(divID + ' listBody');
 					if (e)
@@ -91,33 +86,6 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 				if (!ui.q(activeID + ' list-row'))
 					ui.navigation.toggleMenu();
 			});
-		}
-	}
-	static setListDivs(id) {
-		var e = ui.q(id);
-		if (e && !e.innerHTML) {
-			var v = {};
-			if (id == 'contacts')
-				v.groups = '<groups style="display:none;"></groups>';
-			else
-				v.map = '<map style="display:none;"></map><button-text class="map" onclick="pageLocation.searchFromMap()" label="search.map"></button-text>';
-			v.title = ui.l(id + '.title').toLowerCase();
-			e.innerHTML = lists.template(v);
-			formFunc.svg.replaceAll();
-			if (id == 'contacts')
-				ui.swipe('contacts>listBody', function (dir) {
-					if (dir == 'left')
-						ui.navigation.goTo('home', false);
-					else if (dir == 'right')
-						ui.navigation.goTo('events', true);
-				});
-			else if (id == 'events')
-				ui.swipe('events>listBody', function (dir) {
-					if (dir == 'left')
-						ui.navigation.goTo('contacts');
-					else if (dir == 'right')
-						ui.navigation.goTo('search', true);
-				});
 		}
 	}
 	static setListHint(id) {

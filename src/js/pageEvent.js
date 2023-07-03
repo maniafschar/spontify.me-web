@@ -426,7 +426,7 @@ class pageEvent {
 	}
 	static init() {
 		if (!ui.q('events').innerHTML)
-			lists.setListDivs('events');
+			ui.q('events').innerHTML = '<list-body></list-body>';
 		if (!ui.q('events listResults list-row'))
 			setTimeout(ui.navigation.toggleMenu, 500);
 		if (!pageLocation.map.svgLocation)
@@ -548,7 +548,6 @@ class pageEvent {
 			if (events != null && participations != null) {
 				if (menuIndex > -1)
 					ui.attr(divID, 'menuIndex', menuIndex);
-				lists.setListDivs(divID);
 				ui.navigation.hideMenu();
 				var participate = {};
 				for (var i = 1; i < participations.length; i++) {

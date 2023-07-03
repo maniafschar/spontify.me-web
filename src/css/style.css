@@ -1067,7 +1067,6 @@ chat .sendButton {
 	margin: 0.5em;
 }
 
-
 listHeader {
 	position: relative;
 	z-index: 1;
@@ -1086,6 +1085,11 @@ listHeader chatDate {
 	position: absolute;
 	right: 0.5em;
 	line-height: 4;
+}
+
+listResults {
+	display: inline-block;
+	width: 100%;
 }
 
 chatList,
@@ -1201,11 +1205,6 @@ errorHint {
 
 value.checkbox errorHint {
 	margin-top: -0.5em;
-}
-
-listResults {
-	display: inline-block;
-	width: 100%;
 }
 
 noResult {
