@@ -3,7 +3,7 @@ const express = require('express');
 
 module.exports = (env) => {
 	var e = {
-		fmg: './src/js/fmg.js'
+		init: './src/js/init.js'
 	}
 	if (env && env.web)
 		e.stats = './src/stats/js/main.js';
@@ -105,7 +105,7 @@ module.exports = (env) => {
 							.replace(/\{placeholderBundleID}/g, props.bundleId)
 							.replace(/\{placeholderHost}/g, props.url.substring(8))
 							.replace(/\{placeholderSchema}/g, props.url.substring(8, props.url.lastIndexOf('.'))));
-						file = 'dist/js/fmg.js';
+						file = 'dist/js/init.js';
 						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
 							.replace('{placeholderAppTitle}', props.name)
 							.replace('{placeholderClientId}', '' + Math.max(parseInt(client), 1))

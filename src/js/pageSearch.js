@@ -192,7 +192,7 @@ class pageSearch {
 				s += ' and location.longitude>' + (bounds.getSouthWest().lng() + border);
 				s += ' and location.longitude<' + (bounds.getNorthEast().lng() - border);
 			}
-			var v = ui.val('locations filters [name="keywords"]').trim();
+			var v = ui.q('search tabBody div.locations input-hashtags').getAttribute('text');
 			if (v) {
 				v = v.replace(/'/g, '\'\'').split(' ');
 				for (var i = 0; i < v.length; i++) {
@@ -266,7 +266,7 @@ class pageSearch {
 		},
 		getSearch1(bounds) {
 			var s = '';
-			if (ui.q('locations filters [name="matches"][checked="true"]'))
+			if (ui.q('search tabBody div.locations [name="matches"][checked="true"]'))
 				s = pageSearch.events.getMatches();
 			var c = '', d = '';
 			if (bounds) {
@@ -277,7 +277,7 @@ class pageSearch {
 				s += ' and location.longitude>' + (bounds.getSouthWest().lng() + border);
 				s += ' and location.longitude<' + (bounds.getNorthEast().lng() - border);
 			}
-			var v = ui.val('locations filters [name="keywords"]').trim();
+			var v = ui.q('search tabBody div.locations input-hashtags').getAttribute('text');
 			if (v) {
 				v = v.replace(/'/g, '\'\'').split(' ');
 				for (var i = 0; i < v.length; i++) {

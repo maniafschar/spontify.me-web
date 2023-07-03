@@ -685,7 +685,6 @@ ${v.rating}
 				pageLocation.map.loadActive = false;
 			}
 			ui.toggleHeight('map', pageLocation.scrollMap);
-			lists.hideFilter();
 			pageLocation.map.scrollTop = -1;
 			pageLocation.map.id = -1;
 			setTimeout(function () { ui.classRemove('locations listResults row div.highlightMap', 'highlightMap'); }, 500);

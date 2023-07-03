@@ -35,7 +35,7 @@ class initialisation {
 		};
 		setTimeout(f, 2000);
 		window.onerror = function (message, url, line, column, error) {
-			if (url && (url.lastIndexOf('fmg.js') + 6 == url.length || url.lastIndexOf('lang') + 6 == url.lastIndexOf('.js'))) {
+			if (url && (url.lastIndexOf('init.js') + 6 == url.length || url.lastIndexOf('lang') + 6 == url.lastIndexOf('.js'))) {
 				var last = Object.values(communication.currentCalls)[0];
 				communication.sendError('uncaughtExecption:\nmessage: ' + message +
 					'\ncall: ' + (last ? JSON.stringify(last) : '-') +

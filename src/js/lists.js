@@ -40,7 +40,6 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 	static load(data, callback, divID, errorID) {
 		if (divID == 'contacts' && errorID != 'groups' && ui.q('groups') && ui.cssValue('groups', 'display') != 'none')
 			ui.toggleHeight('groups');
-		ui.css(divID + ' filters', 'transform', 'scale(0)');
 		ui.html('popupHint', '');
 		var menuIndex = -1;
 		var wc = data.webCall;
@@ -59,7 +58,6 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 				if (divID) {
 					if (!s)
 						s = lists.getListNoResults(divID.indexOf('.') ? divID.substring(divID.lastIndexOf('.') + 1) : divID, errorID);
-					lists.hideFilter();
 					lists.setListDivs(divID);
 					ui.html(divID + ' listResults', s);
 					var e = ui.q(divID + ' listBody');
@@ -152,11 +150,5 @@ ${v.img}<listTitle>${v.title}</listTitle>${v.map}</listHeader>
 			var i = ui.qa('search tabBody div.' + s + ' listResults list-row').length;
 			ui.q('search tabHeader tab[i="' + s + '"]').innerText = ui.l(s + '.title') + (i ? global.separator + i : '');
 		}
-	}
-	static hideFilter() {
-		var activeID = ui.navigation.getActiveID();
-		var e = ui.q(activeID + ' filters');
-		if (ui.cssValue(e, 'transform').indexOf('1') > 0)
-			ui.css(e, 'transform', 'scale(0)');
 	}
 }

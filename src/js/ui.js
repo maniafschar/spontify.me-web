@@ -346,7 +346,6 @@ class ui {
 				}
 				if (!back)
 					ui.attr(id, 'from', currentID);
-				lists.hideFilter();
 				if (ui.q('locationPicker').style.display != 'none')
 					ui.toggleHeight('locationPicker');
 				ui.navigation.fade(id, back);
