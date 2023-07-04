@@ -356,8 +356,8 @@ class ui {
 				ui.navigation.fade(id, back);
 				ui.navigation.hideMenu();
 				if (ui.q('dialog-navigation item.' + id)) {
-					ui.classRemove('navigation item', 'active');
-					ui.classAdd('navigation item.' + id, 'active');
+					ui.classRemove('dialog-navigation item', 'active');
+					ui.classAdd('dialog-navigation item.' + id, 'active');
 				}
 			}
 		},

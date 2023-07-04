@@ -222,7 +222,7 @@ class pageLogin {
 			ui.navigation.goTo('login');
 	}
 	static init() {
-		ui.classRemove('navigation item', 'active');
+		ui.classRemove('dialog-navigation item', 'active');
 		if (!ui.q('login').innerHTML) {
 			var v = pageLogin.getDraft();
 			if (!global.isBrowser())

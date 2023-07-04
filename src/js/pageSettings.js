@@ -291,7 +291,7 @@ ${v.info}`;
 		return s2;
 	}
 	static init(exec) {
-		ui.classRemove('navigation item', 'active');
+		ui.classRemove('dialog-navigation item', 'active');
 		if (!ui.q('settings').innerHTML) {
 			communication.ajax({
 				url: global.serverApi + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id),

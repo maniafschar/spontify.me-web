@@ -205,7 +205,7 @@ class pageEvent {
 		if (v.contact.imageList)
 			v.imageEventOwner = global.serverImg + v.contact.imageList;
 		else
-			v.imageEventOwner = 'images/contact.svg" style="padding:1em;';
+			v.imageEventOwner = 'images/contacts.svg" style="padding:1em;';
 		v.text = Strings.replaceLinks(v.event.description).replace(/\n/g, '<br/>');
 		v.hideMeFavorite = ' hidden';
 		v.hideMeEvents = ' hidden';
