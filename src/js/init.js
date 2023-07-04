@@ -175,13 +175,13 @@ class initialisation {
 		});
 		ui.on('popup', 'click', function (event) {
 			var e = event.target;
-			if (ui.parents(e, 'popupTitle') || !ui.q('popup input') && !ui.q('popup textarea') && !ui.q('popup input-rating') && !ui.q('popup mapPicker')) {
+			if (ui.parents(e, 'popupTitle') || !ui.q('dialog-popup input') && !ui.q('dialog-popup textarea') && !ui.q('dialog-popup input-rating') && !ui.q('dialog-popup mapPicker')) {
 				while (e && e.getAttribute) {
 					if (e.getAttribute('onclick') || ui.classContains(e, 'selectable'))
 						return;
 					e = e.parentNode;
 				}
-				e = ui.q('popup');
+				e = ui.q('dialog-popup');
 				if (e.getAttribute('close'))
 					eval(e.getAttribute('close'));
 				ui.navigation.closePopup();

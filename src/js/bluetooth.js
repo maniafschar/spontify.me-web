@@ -12,7 +12,7 @@ class bluetooth {
 	static UUID_TX = '32a9cb83-00f9-4714-b130-4d0c1d30e363';
 
 	static closePopup() {
-		if (ui.q('popupContent') && ui.q('popupContent').innerHTML.indexOf(ui.l('bluetooth.deactivatedText')) > -1)
+		if (ui.q('dialog-popup popupContent') && ui.q('dialog-popup popupContent').innerHTML.indexOf(ui.l('bluetooth.deactivatedText')) > -1)
 			ui.navigation.closePopup();
 	}
 	static decode(a) {

@@ -34,7 +34,7 @@ class lists {
 	static load(data, callback, divID, errorID) {
 		if (divID == 'contacts' && errorID != 'groups' && ui.q('groups') && ui.cssValue('groups', 'display') != 'none')
 			ui.toggleHeight('groups');
-		ui.html('popupHint', '');
+		ui.html('dialog-popup popupHint', '');
 		var menuIndex = -1;
 		var wc = data.webCall;
 		delete data.webCall;

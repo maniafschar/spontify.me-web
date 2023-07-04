@@ -56,24 +56,24 @@ class user {
 	<button-text onclick="user.appointment()" label="events.paypalSignUpButton"></button-text>
 </dialogButtons>`;
 	static appointment() {
-		if (ui.cssValue('popup appointment', 'display') == 'none')
-			ui.toggleHeight('popup appointment');
+		if (ui.cssValue('dialog-dialog-popup appointment', 'display') == 'none')
+			ui.toggleHeight('dialog-popup appointment');
 		else {
-			var t = ui.q('popup appointment hour.selected');
+			var t = ui.q('dialog-popup appointment hour.selected');
 			if (t) {
 				t = global.date.local2server(ui.parents(t, 'day').getAttribute('d') + ' ' + t.getAttribute('class').replace(/[a-z ]/gi, '') + ':00:00');
-				var d = ui.q('popup input');
+				var d = ui.q('dialog-popup input');
 				communication.ajax({
 					url: global.serverApi + 'action/appointment',
 					webCall: 'user.appointment()',
 					method: 'POST',
-					body: { description: d.value, type: ui.q('popup .paypal') ? 'AUTHENTICATE' : 'OTHER', time: t },
+					body: { description: d.value, type: ui.q('dialog-popup .paypal') ? 'AUTHENTICATE' : 'OTHER', time: t },
 					responseType: 'json',
 					success(r) {
-						if (ui.q('popup div.paypal')) {
-							ui.q('popup div.paypal dialogButtons').outerHTML = '';
-							ui.q('popup div.paypal appointment').outerHTML = '';
-							ui.q('popup div.paypal explain').innerHTML = ui.l('events.videoCallDate').replace('{0}', global.date.formatDate(e));
+						if (ui.q('dialog-popup div.paypal')) {
+							ui.q('dialog-popup div.paypal dialogButtons').outerHTML = '';
+							ui.q('dialog-popup div.paypal appointment').outerHTML = '';
+							ui.q('dialog-popup div.paypal explain').innerHTML = ui.l('events.videoCallDate').replace('{0}', global.date.formatDate(e));
 						}
 					}
 				});
@@ -106,9 +106,9 @@ class user {
 			success(r) {
 				for (var i = 1; i < r.length; i++) {
 					var d = global.date.getDateFields(global.date.server2local(r[i][0]));
-					ui.classAdd('popup appointment day[d="' + d.year + '-' + d.month + '-' + d.day + '"] .hour' + d.hour, 'closed');
+					ui.classAdd('dialog-popup appointment day[d="' + d.year + '-' + d.month + '-' + d.day + '"] .hour' + d.hour, 'closed');
 				}
-				ui.attr('popup hour', 'onclick', 'pageEvent.selectVideoCall(this)');
+				ui.attr('dialog-popup hour', 'onclick', 'pageEvent.selectVideoCall(this)');
 			}
 		});
 		return user.templateAppointment(v);

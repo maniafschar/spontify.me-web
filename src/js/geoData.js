@@ -115,9 +115,9 @@ class geoData {
 		geoData.current.town = data.town;
 	}
 	static mapReposition() {
-		if (ui.q('popup input').value) {
+		if (ui.q('dialog-popup input').value) {
 			communication.ajax({
-				url: global.serverApi + 'action/google?param=' + encodeURIComponent('town=' + ui.q('popup input').value.trim()),
+				url: global.serverApi + 'action/google?param=' + encodeURIComponent('town=' + ui.q('dialog-popup input').value.trim()),
 				responseType: 'json',
 				webCall: 'geoData.mapReposition()',
 				success(r) {
@@ -230,14 +230,14 @@ class geoData {
 						geoData.current.street = r.street;
 						pageHome.updateLocalisation();
 						pageSearch.updateLocalisation();
-						if (ui.q('popup mapPicker'))
+						if (ui.q('dialog-popup mapPicker'))
 							ui.navigation.closePopup();
 						if (ui.q('locationPicker').style.display != 'none')
 							ui.toggleHeight('locationPicker');
 						if (exec)
 							exec.call();
 					} else
-						ui.html('popup errorHint', ui.l('home.locationNotSetable'));
+						ui.html('dialog-popup errorHint', ui.l('home.locationNotSetable'));
 				}
 			});
 		}

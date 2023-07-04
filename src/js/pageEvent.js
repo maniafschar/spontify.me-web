@@ -23,20 +23,22 @@ class pageEvent {
 <input type="hidden" name="confirm" />
 <input type="hidden" name="skills" value="${v.skills}" />
 <input type="hidden" name="skillsText" value="${v.skillsText}" />
-<field class="location${v.classLocation}">
+<field class="location"${v.styleLocation}>
 	<label style="padding-top:0;">${ui.l('events.location')}</label>
 	<value style="text-align:center;">
 		<input transient="true" name="location" onkeyup="pageEvent.locations()" />
 		<eventLocationInputHelper><explain>${ui.l('events.locationInputHint')}</explain>
 			<li onclick="pageEvent.locationSelected(-1)" style="color:white;">${ui.l('events.newOnlineEvent')}</li>
-			<li onclick="pageEvent.locationSelected(-2)" style="color:white;" class="${v.hideWithoutLocation}">${ui.l('events.newWithoutLocation')}</li>
+			<li onclick="pageEvent.locationSelected(-2)" style="color:white;"${v.hideWithoutLocation}>${ui.l('events.newWithoutLocation')}</li>
 			<ul></ul>
 			<explain style="margin-bottom:0.5em;">${ui.l('events.locationInputHintCreateNew')}</explain>
-			<button-text onclick="pageLocation.edit()" label="locations.new"></button-text>
+			<dialogButtons style="margin-bottom:0;">
+				<button-text onclick="pageLocation.edit()" label="locations.new"></button-text>
+			</dialogButtons>
 		</eventLocationInputHelper>
 	</value>
 </field>
-<div class="event" ${v.styleEvent}>
+<div class="event"${v.styleEvent}>
 <div class="locationName">${v.locationName}</div>
 <field>
 	<label style="padding-top:0;">${ui.l('events.hashtags')}</label>
@@ -88,7 +90,7 @@ class pageEvent {
 		</div>
 	</value>
 </field>
-<field class="paid" style="display:none;">
+<field class="picture" style="display:none;">
 	<label>${ui.l('picture')}</label>
 	<value>
 		<input-image></input-image>
@@ -100,7 +102,7 @@ class pageEvent {
 		<input name="url" value="${v.url}" />
 	</value>
 </field>
-<field class="unpaid noWTDField">
+<field class="confirm noWTDField">
 	<label>${ui.l('events.confirmLabel')}</label>
 	<value>
 		<input-checkbox name="eventconfirm" transient="true" label="events.confirm" value="1" ${v.confirm}></input-checkbox>
@@ -126,22 +128,26 @@ class pageEvent {
 <span class="eventParticipationButtons eventMargin"></span>
 </text>`;
 	static checkPrice() {
-		var e = ui.q('popup .paypal');
-		if (ui.q('popup [name="price"]').value > 0) {
-			if (user.contact.authenticate && ui.cssValue(e, 'display') != 'none' ||
-				!user.contact.authenticate && ui.cssValue(e, 'display') == 'none')
+		var e = ui.q('dialog-popup .paypal');
+		if (ui.q('dialog-popup [name="price"]').value > 0) {
+			if (user.contact.authenticate && ui.cssValue(e, 'display').indexOf('none') < 0 ||
+				!user.contact.authenticate && ui.cssValue(e, 'display').indexOf('none') > -1)
 				ui.toggleHeight(e);
-			if (ui.cssValue(e = ui.q('popup .unpaid'), 'display') != 'none')
-				ui.toggleHeight(e, function () { ui.toggleHeight('popup .paid') });
-			if (ui.cssValue(e = ui.q('popup .url'), 'display') == 'none')
+			if (ui.cssValue(e = ui.q('dialog-popup .confirm'), 'display').indexOf('none') < 0)
+				ui.toggleHeight(e);
+			if (ui.cssValue(e = ui.q('dialog-popup .picture'), 'display').indexOf('none') > -1)
+				ui.toggleHeight(e);
+			if (ui.cssValue(e = ui.q('dialog-popup .url'), 'display').indexOf('none') > -1)
 				ui.toggleHeight(e);
 		} else {
-			if (ui.cssValue(e, 'display') != 'none')
+			if (ui.cssValue(e, 'display').indexOf('none') < 0)
 				ui.toggleHeight(e);
-			if (ui.cssValue(e = ui.q('popup .paid'), 'display') != 'none')
-				ui.toggleHeight(e, function () { ui.toggleHeight('popup .unpaid') });
-			if (ui.cssValue(e = ui.q('popup .url'), 'display') != 'none' &&
-				ui.q('popup [name="locationId"]').value != -1)
+			if (ui.cssValue(e = ui.q('dialog-popup .confirm'), 'display').indexOf('none') > -1)
+				ui.toggleHeight(e);
+			if (ui.cssValue(e = ui.q('dialog-popup .picture'), 'display').indexOf('none') < 0)
+				ui.toggleHeight(e);
+			if (ui.cssValue(e = ui.q('dialog-popup .url'), 'display').indexOf('none') < 0 &&
+				ui.q('dialog-popup [name="locationId"]').value != -1)
 				ui.toggleHeight(e);
 		}
 	}
@@ -246,11 +252,11 @@ class pageEvent {
 				success(r) {
 					for (var i = 1; i < r.length; i++) {
 						var d = global.date.getDateFields(global.date.server2local(r[i][0]));
-						ui.classAdd('popup appointment day[d="' + d.year + '-' + d.month + '-' + d.day + '"] .hour' + d.hour, 'closed');
+						ui.classAdd('dialog-popup appointment day[d="' + d.year + '-' + d.month + '-' + d.day + '"] .hour' + d.hour, 'closed');
 						if (r[i][2] == user.contact.id) {
-							ui.q('popup .paypal explain').innerHTML = ui.q('popup .paypal explain').innerHTML + '<br/><br/>' + ui.l('events.videoCallDateHint').replace('{0}', global.date.formatDate(r[i][0]));
-							ui.q('popup .paypal appointment').outerHTML = '';
-							ui.q('popup .paypal dialogButtons').outerHTML = '';
+							ui.q('dialog-popup .paypal explain').innerHTML = ui.q('dialog-popup .paypal explain').innerHTML + '<br/><br/>' + ui.l('events.videoCallDateHint').replace('{0}', global.date.formatDate(r[i][0]));
+							ui.q('dialog-popup .paypal appointment').outerHTML = '';
+							ui.q('dialog-popup .paypal dialogButtons').outerHTML = '';
 						}
 					}
 				}
@@ -307,17 +313,17 @@ class pageEvent {
 			v.endDate = d.year + '-' + d.month + '-' + d.day;
 		}
 		if (id || locationID > 0) {
-			v.classLocation = ' hidden';
+			v.styleLocation = ' style="display:none !important;"';
 			if (locationID > 0) {
 				var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')))
 				v.locationName = e.name + '<br/>' + e.address.replace(/\n/g, global.separator);
 			}
 		} else {
-			v.styleEvent = ' style="display:none;"';
+			v.styleEvent = ' style="display:none !important;"';
 			pageEvent.locationsOfPastEvents();
 		}
 		if (user.contact.type && user.contact.type.indexOf('admin') > -1)
-			v.hideWithoutLocation = ' hidden';
+			v.hideWithoutLocation = ' style="display:none !important;"';
 		v.payplaSignUpHint = ui.l('events.paypalSignUpHint').replace('{0}', pageEvent.paypal.feeDate ?
 			ui.l('events.paypalSignUpHintFee').replace('{0}', pageEvent.paypal.fee).replace('{1}', global.date.formatDate(pageEvent.paypal.feeDate)).replace('{2}', pageEvent.paypal.feeAfter)
 			: pageEvent.paypal.fee);
@@ -608,7 +614,7 @@ class pageEvent {
 	}
 	static locations() {
 		clearTimeout(pageEvent.nearByExec);
-		var s = ui.q('popup input[name="location"]').value.trim();
+		var s = ui.q('dialog-popup input[name="location"]').value.trim();
 		if (s.length > 3)
 			pageEvent.nearByExec = setTimeout(function () {
 				communication.ajax({
@@ -616,7 +622,7 @@ class pageEvent {
 					webCall: 'pageEvent.locations()',
 					responseType: 'json',
 					success(r) {
-						var s = '', e = ui.q('popup eventLocationInputHelper ul');
+						var s = '', e = ui.q('dialog-popup eventLocationInputHelper ul');
 						if (e) {
 							for (var i = 0; i < r.length; i++)
 								s += '<li i="' + r[i].id + '" onclick="pageEvent.locationSelected(this)">' + r[i].name + '<br/>' + r[i].address.replace(/\n/g, global.separator) + '</li>';
@@ -644,7 +650,7 @@ class pageEvent {
 					var i = 0;
 					var f = function () {
 						i++;
-						var e = ui.q('popup eventLocationInputHelper ul');
+						var e = ui.q('dialog-popup eventLocationInputHelper ul');
 						if (e)
 							e.innerHTML = s;
 						else if (i < 10)
@@ -656,10 +662,11 @@ class pageEvent {
 		});
 	}
 	static locationSelected(e) {
-		ui.q('popup input[name="locationId"]').value = e < 0 ? e : e.getAttribute('i');
-		ui.q('popup .locationName').innerHTML = e == -1 ? ui.l('events.newOnlineEvent') : e == -2 ? ui.l('events.newWithoutLocation') : e.innerHTML;
-		ui.toggleHeight('popup .location', function () {
-			ui.toggleHeight('popup .event');
+		console.log(e);
+		ui.q('dialog-popup input[name="locationId"]').value = e < 0 ? e : e.getAttribute('i');
+		ui.q('dialog-popup .locationName').innerHTML = e == -1 ? ui.l('events.newOnlineEvent') : e == -2 ? ui.l('events.newWithoutLocation') : e.innerHTML;
+		ui.toggleHeight('dialog-popup .location', function () {
+			ui.toggleHeight('dialog-popup .event');
 			pageEvent.setForm();
 		});
 	}
@@ -873,12 +880,12 @@ class pageEvent {
 	}
 	static save() {
 		var d1, d2;
-		var start = ui.q('popup input[name="startDate"]');
-		var end = ui.q('popup input[name="endDate"]');
-		var text = ui.q('popup [name="description"]');
-		var tags = ui.q('popup input-hashtags');
-		var id = ui.q('popup [name="id"]').value;
-		ui.html('popup popupHint', '');
+		var start = ui.q('dialog-popup input[name="startDate"]');
+		var end = ui.q('dialog-popup input[name="endDate"]');
+		var text = ui.q('dialog-popup [name="description"]');
+		var tags = ui.q('dialog-popup input-hashtags');
+		var id = ui.q('dialog-popup [name="id"]').value;
+		ui.html('dialog-popup popupHint', '');
 		formFunc.resetError(start);
 		formFunc.resetError(end);
 		formFunc.resetError(text);
@@ -904,9 +911,9 @@ class pageEvent {
 				formFunc.setError(start, 'events.errorDateFormat');
 			}
 		}
-		if (ui.q('popup [name="price"]').value > 0 && !user.contact.authenticate)
-			formFunc.setError(ui.q('popup [name="price"]'), 'events.errorAuthenticate');
-		if (ui.q('popup [name="type"]').getAttribute('checked') != 'true') {
+		if (ui.q('dialog-popup [name="price"]').value > 0 && !user.contact.authenticate)
+			formFunc.setError(ui.q('dialog-popup [name="price"]'), 'events.errorAuthenticate');
+		if (ui.q('dialog-popup [name="type"]').getAttribute('checked') != 'true') {
 			if (!end.value)
 				formFunc.setError(end, 'events.errorDateNoEnd');
 			else {
@@ -919,18 +926,18 @@ class pageEvent {
 				}
 			}
 		}
-		ui.q('popup input[name="skills"]').value = ui.q('popup input-hashtags').getAttribute('ids');
-		ui.q('popup input[name="skillsText"]').value = ui.q('popup input-hashtags').getAttribute('text');
-		var v = formFunc.getForm('popup form');
+		ui.q('dialog-popup input[name="skills"]').value = ui.q('dialog-popup input-hashtags').getAttribute('ids');
+		ui.q('dialog-popup input[name="skillsText"]').value = ui.q('dialog-popup input-hashtags').getAttribute('text');
+		var v = formFunc.getForm('dialog-popup form');
 		if (!v.values.price)
 			v.values.price = 0;
-		if (ui.q('popup errorHint')) {
-			ui.q('popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });;
+		if (ui.q('dialog-popup errorHint')) {
+			ui.q('dialog-popup popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });;
 			return;
 		}
-		if (ui.q('popup [name="type"]').getAttribute('checked') == 'true')
+		if (ui.q('dialog-popup [name="type"]').getAttribute('checked') == 'true')
 			end.value = start.value.substring(0, start.value.lastIndexOf('T'));
-		ui.q('popup [name="confirm"]').value = ui.q('popup [name="eventconfirm"][checked="true"]') ? 1 : 0;
+		ui.q('dialog-popup [name="confirm"]').value = ui.q('dialog-popup [name="eventconfirm"][checked="true"]') ? 1 : 0;
 		v.classname = 'Event';
 		if (id)
 			v.id = id;
@@ -950,27 +957,27 @@ class pageEvent {
 		});
 	}
 	static saveDraft() {
-		ui.q('popup input[name="skills"]').value = ui.q('popup input-hashtags').getAttribute('ids');
-		ui.q('popup input[name="skillsText"]').value = ui.q('popup input-hashtags').getAttribute('text');
-		user.set('event', formFunc.getForm('popup form'));
+		ui.q('dialog-popup input[name="skills"]').value = ui.q('dialog-popup input-hashtags').getAttribute('ids');
+		ui.q('dialog-popup input[name="skillsText"]').value = ui.q('dialog-popup input-hashtags').getAttribute('text');
+		user.set('event', formFunc.getForm('dialog-popup form'));
 	}
 	static selectVideoCall(e) {
-		ui.classRemove('popup hour', 'selected');
+		ui.classRemove('dialog-popup hour', 'selected');
 		if (!ui.classContains(e, 'closed'))
 			ui.classAdd(e, 'selected');
 	}
 	static setForm() {
-		var b = ui.q('popup [name="type"][checked="true"][value="o"]');
-		ui.q('popup label[name="startDate"]').innerText = ui.l('events.' + (b ? 'date' : 'start'));
-		ui.css('popup field[name="endDate"]', 'display', b || !ui.q('popup [name="type"][checked="true"]') ? 'none' : '');
-		b = ui.q('popup input[name="locationId"]').value;
+		var b = ui.q('dialog-popup [name="type"][checked="true"][value="o"]');
+		ui.q('dialog-popup label[name="startDate"]').innerText = ui.l('events.' + (b ? 'date' : 'start'));
+		ui.css('dialog-popup field[name="endDate"]', 'display', b || !ui.q('dialog-popup [name="type"][checked="true"]') ? 'none' : '');
+		b = ui.q('dialog-popup input[name="locationId"]').value;
 		if (!b || b == -2) {
-			ui.css('popup .noWTDField', 'display', 'none');
-			ui.q('popup [name="price"]').value = null;
+			ui.css('dialog-popup .noWTDField', 'display', 'none');
+			ui.q('dialog-popup [name="price"]').value = null;
 		}
 		if (b == -1) {
-			ui.q('popup .url label').innerText = ui.l('events.urlOnlineEvent');
-			ui.css('popup .url', 'display', null);
+			ui.q('dialog-popup .url label').innerText = ui.l('events.urlOnlineEvent');
+			ui.css('dialog-popup .url', 'display', null);
 		}
 		pageEvent.checkPrice();
 	}

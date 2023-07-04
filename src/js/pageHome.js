@@ -111,8 +111,8 @@ ${ui.l('events.title')}
 			ui.toggleHeight(e);
 	}
 	static deleteNews(id) {
-		if (ui.q('popup button-text.deleteButton').innerText != ui.l('confirmDelete'))
-			ui.q('popup button-text.deleteButton').innerText = ui.l('confirmDelete');
+		if (ui.q('dialog-popup button-text.deleteButton').innerText != ui.l('confirmDelete'))
+			ui.q('dialog-popup button-text.deleteButton').innerText = ui.l('confirmDelete');
 		else
 			communication.ajax({
 				url: global.serverApi + 'db/one',
@@ -393,19 +393,19 @@ ${ui.l('events.title')}
 		ui.q('navigation buttonIcon.notifications badgeNotifications').innerHTML = 0;
 	}
 	static saveNews() {
-		formFunc.resetError(ui.q('popup textarea'));
+		formFunc.resetError(ui.q('dialog-popup textarea'));
 		var v = formFunc.getForm('popup');
-		if (!ui.q('popup textarea').value)
-			formFunc.setError(ui.q('popup textarea'), 'error.description');
+		if (!ui.q('dialog-popup textarea').value)
+			formFunc.setError(ui.q('dialog-popup textarea'), 'error.description');
 		else
-			formFunc.validation.filterWords(ui.q('popup textarea'));
-		if (ui.q('popup errorHint')) {
-			ui.q('popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });;
+			formFunc.validation.filterWords(ui.q('dialog-popup textarea'));
+		if (ui.q('dialog-popup errorHint')) {
+			ui.q('dialog-popup popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });;
 			return;
 		}
 		v.classname = 'ContactNews';
-		if (ui.q('popup input[name="id"]').value)
-			v.id = ui.q('popup input[name="id"]').value;
+		if (ui.q('dialog-popup input[name="id"]').value)
+			v.id = ui.q('dialog-popup input[name="id"]').value;
 		communication.ajax({
 			url: global.serverApi + 'db/one',
 			method: v.id ? 'PUT' : 'POST',

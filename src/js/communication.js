@@ -223,12 +223,12 @@ class communication {
 			} catch (e) { }
 		}
 		if (r.param && r.param.progressBar != false && s && r.param.webCall && r.param.url.indexOf(global.serverApi) == 0) {
-			if (ui.q('popupHint') && ui.q('popup').style.display != 'none')
-				ui.html('popupHint', s);
-			else if (ui.q('popup').getAttribute('error') != status) {
+			if (ui.q('dialog-popup popupHint') && ui.q('dialog-popup').style.display != 'none')
+				ui.html('dialog-popup popupHint', s);
+			else if (ui.q('dialog-popup').getAttribute('error') != status) {
 				ui.navigation.openPopup(ui.l('attention'), s);
 				if (status)
-					ui.q('popup').setAttribute('error', status);
+					ui.q('dialog-popup').setAttribute('error', status);
 			}
 		}
 	}
@@ -247,7 +247,7 @@ class communication {
 				communication.pingExec = null;
 			},
 			success(r) {
-				if (ui.q('popup').getAttribute('error'))
+				if (ui.q('dialog-popup').getAttribute('error'))
 					ui.navigation.closePopup();
 				communication.refresh(r);
 				clearTimeout(communication.pingExec);

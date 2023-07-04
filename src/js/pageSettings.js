@@ -602,7 +602,7 @@ ${v.info}`;
 		ui.css(e.nextElementSibling, 'display', e.getAttribute('checked') == 'true' ? 'block' : 'none');
 	}
 	static unblock(id, blockId) {
-		if (!ui.q('popup [i="' + id + '"]')) {
+		if (!ui.q('dialog-popup [i="' + id + '"]')) {
 			ui.navigation.openPopup(ui.l('attention'), ui.l('contacts.unblock').replace('{0}', ui.q('#blocked row[i="' + id + '"] title').innerText) + '<br /><br /><button-text i="' + id + '" onclick="pageSettings.unblock(&quot;' + id + '&quot;,' + blockId + ')" label="Yes"></button-text>');
 			return;
 		}

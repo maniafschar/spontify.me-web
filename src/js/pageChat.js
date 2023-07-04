@@ -97,14 +97,14 @@ class pageChat {
 			else
 				s2 = s2.replace(/onclick="ui.navigation.autoOpen/g, 'onclick="pageChat.doNothing');
 			ui.navigation.openPopup(ui.l('chat.askInsertCopyLink' + (c > 1 ? 's' : '')), '<div style="text-align:center;margin:1em 0;">' + (c > 1 ? '<div id="askInsertCopyLinkHint">' + ui.l('chat.askInsertCopyLinksBody') + '</div>' : '') + '<div style="text-align:center;margin:1em 0;">' + s2 + '</div><button-text onclick="pageChat.insertLink(&quot;pressed&quot;)" label="chat.send"></button-text></div>');
-			ui.classAdd('popup .chatLinks', 'pressed');
+			ui.classAdd('dialog-popup .chatLinks', 'pressed');
 		} else
 			ui.navigation.openPopup(ui.l('attention'), ui.l('link.sendError').replace('{0}', '<br/><button-text style="margin:1em;" label="chat.share"></button-text><br/>'));
 	}
 	static askImage() {
 		if (document.activeElement)
 			document.activeElement.blur();
-		var popupVisible = ui.q('popupContent');
+		var popupVisible = ui.q('dialog-popup popupContent');
 		ui.navigation.openPopup(ui.l('chat.sendImg'), '<form style="padding:0 2em;"><input type="hidden" name="contactId2" value="' + ui.q('chat').getAttribute('i') + '"><div style="margin:1em;"><input-image></input-image></div></form><div style="text-align:center;margin-bottom:1em;"><button-text onclick="pageChat.sendChatImage()" id="popupSendImage" style="display:none;" label="chat.send"></button-text></div>');
 		if (!popupVisible && global.isBrowser()) {
 			var e = ui.q('[name="image"]');
@@ -300,7 +300,7 @@ class pageChat {
 		});
 	}
 	static insertLink(clazz) {
-		var s = '', e = ui.qa('popup .chatLinks' + (clazz ? '.' + clazz : ''));
+		var s = '', e = ui.qa('dialog-popup .chatLinks' + (clazz ? '.' + clazz : ''));
 		for (var i = 0; i < e.length; i++) {
 			if (e[i].getAttribute('insertID'))
 				s += ' :open(' + e[i].getAttribute('insertID') + '): ';
@@ -326,7 +326,7 @@ class pageChat {
 			v = v.substring(0, p) + s2 + v.substring(p);
 			e.value = v;
 		} else
-			ui.html('popupHint', ui.l('link.sendError').replace('{0}', '<br/><button-text style="margin:1em;" label="chat.share"></button-text><br/>'));
+			ui.html('dialog-popup popupHint', ui.l('link.sendError').replace('{0}', '<br/><button-text style="margin:1em;" label="chat.share"></button-text><br/>'));
 	}
 	static listActiveChats(d) {
 		var f = function () {
@@ -630,7 +630,7 @@ class pageChat {
 		}
 	}
 	static sendChatGroup() {
-		var e = ui.qa('popup input-checkbox[name="groupdialog"][checked="true"]');
+		var e = ui.qa('dialog-popup input-checkbox[name="groupdialog"][checked="true"]');
 		var s = '';
 		for (var i = 0; i < e.length; i++)
 			s += ',' + e[i].value;
@@ -647,12 +647,12 @@ class pageChat {
 				}
 			});
 		} else
-			ui.html('popupHint', ui.l('chat.groupNoInput'));
+			ui.html('dialog-popup popupHint', ui.l('chat.groupNoInput'));
 	}
 	static sendChatImage() {
 		if (formFunc.svg.hasImage()) {
 			var id = ui.q('chat').getAttribute('i');
-			var v = formFunc.getForm('popup form');
+			var v = formFunc.getForm('dialog-popup form');
 			v.classname = 'ContactChat';
 			communication.ajax({
 				url: global.serverApi + 'db/one',
@@ -728,7 +728,7 @@ class pageChat {
 		}, true);
 	}
 	static toggleInsertCopyLinkEntry(id) {
-		var e = ui.q('popup [insertID="' + id + '"]');
+		var e = ui.q('dialog-popup [insertID="' + id + '"]');
 		if (ui.classContains(e, 'pressed'))
 			ui.classRemove(e, 'pressed');
 		else

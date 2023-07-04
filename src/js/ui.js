@@ -148,7 +148,6 @@ class ui {
 	}
 	static navigation = {
 		animationEvent: null,
-		lastPopup: null,
 
 		animation(e, animation, exec) {
 			if (typeof e == 'string')
@@ -218,23 +217,7 @@ class ui {
 			DialogHint.close();
 		},
 		closePopup() {
-			ui.attr('popup', 'error');
-			ui.attr('popup popupTitle', 'modal');
-			var e = ui.q('popupTitle');
-			if (!e || ui.cssValue('popup', 'display') != 'none' && e.getAttribute('modal') != 'true') {
-				ui.navigation.animation(ui.q('popup'), 'popupSlideOut', ui.navigation.closePopupHard);
-				ui.navigation.lastPopup = null;
-				return true;
-			}
-			return false;
-		},
-		closePopupHard() {
-			var e = ui.q('popup');
-			ui.css(e, 'display', 'none');
-			ui.html(e, '');
-			ui.attr('popup', 'error');
-			ui.attr('popup popupTitle', 'modal');
-			ui.classRemove(e, 'animated popupSlideIn popupSlideOut');
+			return DialogPopup.close();
 		},
 		fade(id, back, exec) {
 			var newDiv = ui.q(id);
@@ -411,57 +394,7 @@ class ui {
 			DialogHint.openIntro();
 		},
 		openPopup(title, data, closeAction, modal, exec) {
-			var p = ui.q('popup'), pt = ui.q('popupTitle'), visible = p.style.display != 'none';
-			if (visible && pt && pt.getAttribute('modal') == 'true')
-				return false;
-			if (global.isBrowser() && location.href.indexOf('#') < 0)
-				history.pushState(null, null, '#x');
-			if (visible && ui.navigation.lastPopup == title + global.separatorTech + data)
-				ui.navigation.closePopup();
-			else if (data) {
-				ui.navigation.lastPopup = title + global.separatorTech + data;
-				data = '<popupContent><div>' + data + '</div></popupContent>';
-				if (title)
-					data = '<popupTitle' + (modal ? ' modal="true"' : '') + '><div>' + title + '</div></popupTitle>' + data;
-				var f = function () {
-					ui.navigation.setPopupContent(data, closeAction);
-					ui.attr('popup', 'error', '');
-					ui.navigation.animation(p, visible ? 'slideDown' : 'popupSlideIn');
-					ui.css('popupContent', 'maxHeight', (ui.q('content').clientHeight - (title ? ui.q('popupTitle').clientHeight : 0) - 2 * ui.emInPX) + 'px');
-					if (exec)
-						exec.call();
-				};
-				ui.navigation.closeHint();
-				pageChat.closeList();
-				communication.notification.close();
-				if (!visible)
-					f.call();
-				else
-					ui.navigation.animation(p, 'slideUp', f);
-			} else
-				ui.navigation.animation(p, 'popupSlideOut', ui.navigation.closePopupHard);
-			return true;
-		},
-		openSwipeLeftUI(event) {
-			var e = ui.parents(event.target, 'list-row');
-			if (e)
-				e.click();
-		},
-		selectTab(event) {
-			var e = ui.parents(event.target, 'tab');
-			ui.classRemove(e.parentNode.children, 'tabActive');
-			ui.classAdd(e, 'tabActive');
-			return e;
-		},
-		setPopupContent(s, closeAction) {
-			var e = ui.q('popup');
-			ui.css(e, 'display', 'none');
-			ui.html(e, s);
-			formFunc.initFields(ui.q('popup'));
-			if (closeAction)
-				e.setAttribute('close', closeAction);
-			else
-				e.removeAttribute('close');
+			return DialogPopup.open(title, data, closeAction, modal, exec);
 		},
 		toggleMenu(activeID) {
 			if (!activeID)
@@ -569,9 +502,15 @@ class ui {
 		});
 	}
 	static q(path) {
-		return document.querySelector(path);
+		var e = ui.qa(path);
+		return e.length ? e[0] : null;
 	}
 	static qa(path) {
+		var i = path.indexOf('dialog-popup ');
+		if (i > -1) {
+			i += 13;
+			return document.querySelector(path.substring(0, i))._root.querySelectorAll(path.substring(i));
+		}
 		return document.querySelectorAll(path);
 	}
 	static attr(e, name, value) {
@@ -717,54 +656,49 @@ class ui {
 		});
 	}
 	static toggleHeight(e, exec) {
-		if (typeof e == 'string')
-			e = ui.qa(e);
-		var f = function (e) {
-			if (!e || e.getAttribute('toggle') && new Date().getTime() - e.getAttribute('toggle') < 450)
+		ui.x(e, function (e2) {
+			if (!e2 || e2.getAttribute('toggle') && new Date().getTime() - e2.getAttribute('toggle') < 450)
 				return;
-			e.setAttribute('toggle', new Date().getTime());
-			if (!e.getAttribute('h')) {
-				var p = e.style.position;
-				var d = e.style.display;
-				e.style.visibility = 'hidden';
-				e.style.display = 'block';
-				e.style.height = '';
-				e.style.position = 'absolute';
-				e.setAttribute('h', e.offsetHeight);
-				e.style.position = p;
-				e.style.display = d;
-				e.style.visibility = '';
+			e2.setAttribute('toggle', new Date().getTime());
+			if (!e2.getAttribute('h')) {
+				var p = e2.style.position;
+				var d = e2.style.display;
+				e2.style.visibility = 'hidden';
+				e2.style.display = 'block';
+				e2.style.height = '';
+				e2.style.position = 'absolute';
+				e2.setAttribute('h', e2.offsetHeight);
+				e2.style.position = p;
+				e2.style.display = d;
+				e2.style.visibility = '';
 			}
-			var o = e.style.overflow;
-			var t = e.style.transition;
-			e.style.overflow = 'hidden';
-			var expand = ui.cssValue(e, 'display') == 'none';
-			e.style.height = (expand ? 0 : e.offsetHeight) + 'px';
-			e.style.transition = 'height .4s ease-' + (expand ? 'in' : 'out');
+			var o = e2.style.overflow;
+			var t = e2.style.transition;
+			e2.style.overflow = 'hidden';
+			var expand = ui.cssValue(e2, 'display').indexOf('none') > -1;
+			e2.style.height = (expand ? 0 : e2.offsetHeight) + 'px';
+			e2.style.transition = 'height .4s ease-' + (expand ? 'in' : 'out');
 			if (expand)
-				e.style.display = 'block';
+				e2.style.display = 'block';
 			setTimeout(function () {
-				var h = parseInt(e.style.height);
-				ui.on(e, 'transitionend', function () {
-					e.style.overflow = o;
-					e.style.transition = t;
-					e.style.height = '';
+				var h = parseInt(e2.style.height);
+				ui.on(e2, 'transitionend', function () {
+					e2.style.overflow = o;
+					e2.style.transition = t;
+					e2.style.height = '';
 					if (!expand) {
-						e.style.display = 'none';
-						e.setAttribute('h', h);
+						e2.style.setProperty('display', 'none', 'important');
+						e2.setAttribute('h', h);
 					}
-					e.removeAttribute('toggle');
+					e2.removeAttribute('toggle');
+					if (exec)
+						console.log(exec);
 					if (exec)
 						exec.call();
 				}, true);
-				e.style.height = expand ? e.getAttribute('h') + 'px' : 0;
+				e2.style.height = expand ? e2.getAttribute('h') + 'px' : 0;
 			}, 10);
-		}
-		if (e.length)
-			for (var i = 0; i < e.length; i++)
-				f(e[i]);
-		else
-			f(e);
+		});
 	}
 	static val(id) {
 		var e = ui.qa(id);
@@ -929,7 +863,7 @@ class formFunc {
 		if (event.keyCode == 13) {
 			var e = ui.parents(event.target, 'form');
 			if (!e)
-				e = ui.parents(event.target, 'popup');
+				e = ui.parents(event.target, 'dialog-popup');
 			if (e)
 				e = e.querySelector('.defaultButton');
 			if (e)
@@ -1075,6 +1009,7 @@ class ButtonText extends HTMLElement {
 		style.textContent = `
 span {
 	background: linear-gradient(var(--bg2stop) 0%, var(--bg2start) 100%) center center / 100% no-repeat;
+	outline: none !important;
 }
 
 :host>span:hover {
@@ -1302,8 +1237,8 @@ hinky.bottom {
 				return;
 		}
 		var e = ui.q('main:last-child dialog-hint'), body = (data.desc.indexOf(' ') > -1 ? data.desc : ui.l('intro.' + data.desc)), element;
-		body = body.replace('<rating/>', '<br/><br/><input-rating ui="rating"></input-rating><br/><br/><input type="email" name="email" placeholder="Email"></input><br/><br/><textarea name="feedback" maxlength="1000"></textarea><br/><br/><button-text onclick="this.getRootNode().host.save()" name="feedback" label="✓"></button-text>');
-		body = body.replace('<language/>', '<br/><br/><button-text ' + (global.language == 'DE' ? 'class="favorite"' : '') + ' onclick="this.getRootNode().host.language(&quot;DE&quot;)" l="DE" label="Deutsch"></button-text><button-text class="' + (global.language == 'EN' ? ' favorite' : '') + '" onclick="this.getRootNode().host.language(&quot;EN&quot;)" l="EN" label="English"></button-text>');
+		body = body.replace('<rating/>', '<br/><br/><input-rating ui="rating"></input-rating><br/><br/><input type="email" name="email" placeholder="Email"></input><br/><br/><textarea name="feedback" maxlength="1000"></textarea><br/><br/><button-text onclick="this.getRootNode().host.save()" name="feedback" label="✓" part="button-text"></button-text>');
+		body = body.replace('<language/>', '<br/><br/><button-text ' + (global.language == 'DE' ? 'class="favorite"' : '') + ' onclick="this.getRootNode().host.language(&quot;DE&quot;)" l="DE" label="Deutsch" part="button-text"></button-text><button-text class="' + (global.language == 'EN' ? ' favorite' : '') + '" onclick="this.getRootNode().host.language(&quot;EN&quot;)" l="EN" label="English" part="button-text"></button-text>');
 		if (e != ui.q('dialog-hint'))
 			ui.q('dialog-hint').style.display = '';
 		if (global.hash(data.desc) == e.getAttribute('i')) {
@@ -1346,6 +1281,7 @@ hinky.bottom {
 			e._root.appendChild(document.createElement('br'));
 			element = document.createElement('button-text');
 			element.setAttribute('label', 'login.action');
+			element.setAttribute('part', 'button-text');
 			element.setAttribute('onclick', 'ui.navigation.goTo("login")');
 			e._root.appendChild(element);
 		}
@@ -1431,6 +1367,273 @@ hinky.bottom {
 }
 if (!customElements.get('dialog-hint'))
 	customElements.define('dialog-hint', DialogHint);
+
+class DialogPopup extends HTMLElement {
+	static lastPopup = null;
+
+	constructor() {
+		super();
+		this._root = this.attachShadow({ mode: 'closed' });
+	}
+	connectedCallback() {
+		const style = document.createElement('style');
+		style.textContent = `
+input:checked+label {
+	background: var(--bg1stop) !important;
+	color: black;
+}
+
+.multiple {
+	max-height: 50vh;
+	overflow-y: auto;
+	margin-bottom: 1em;
+}
+
+.paypal {
+	text-align: center;
+	padding: 0.25em 0.5em 0 0.5em;
+}
+
+appointment {
+	display: none;
+	margin-top: 1em;
+	position: relative;
+}
+
+appointment day {
+	position: relative;
+	width: 33%;
+	overflow: hidden;
+	display: block;
+	float: left;
+	padding: 0.5em;
+}
+
+appointment day hour {
+	position: relative;
+	height: 2em;
+	width: 100%;
+	display: block;
+	overflow: hidden;
+	margin: 0.5em 0;
+	background: rgba(0, 0, 0, 0.1);
+	border-radius: 0.5em;
+	line-height: 2;
+	cursor: pointer;
+}
+
+appointment day hour.closed {
+	background-color: red;
+	text-decoration: line-through;
+	opacity: 0.25;
+}
+
+appointment day hour.selected {
+	background-color: rgba(0, 255, 0, 0.9);
+}
+
+appointment day hour.selected::after {
+	content: '✓';
+	position: absolute;
+	opacity: 0.2;
+	font-size: 2em;
+	top: 0.1em;
+	line-height: 1;
+}
+
+appointment day hour.hour09::before {
+	content: '9:00';
+}
+
+appointment day hour.hour10::before {
+	content: '10:00';
+}
+
+appointment day hour.hour11::before {
+	content: '11:00';
+}
+
+appointment day hour.hour12::before {
+	content: '12:00';
+}
+
+appointment day hour.hour13::before {
+	content: '13:00';
+}
+
+appointment day hour.hour14::before {
+	content: '14:00';
+}
+
+appointment day hour.hour15::before {
+	content: '15:00';
+}
+
+appointment day hour.hour16::before {
+	content: '16:00';
+}
+
+appointment day hour.hour17::before {
+	content: '17:00';
+}
+		
+popupTitle {
+	position: relative;
+	display: block;
+	height: 2.6em;
+	z-index: 1;
+	overflow: hidden;
+}
+
+popupTitle>div {
+	white-space: nowrap;
+	font-size: 1.3em;
+	max-width: 90%;
+	display: inline-block;
+	background: rgba(250, 175, 100, 0.95);
+	padding: 0.5em 1em;
+	border-radius: 0.5em 0.5em 0 0;
+	color: black;
+	height: 100%;
+	cursor: pointer;
+	text-overflow: ellipsis;
+}
+
+popupHint {
+	padding: 0.5em;
+	text-align: center;
+	display: block;
+}
+
+popupContent {
+	display: flex;
+	border-radius: 0.5em;
+	background: linear-gradient(rgba(250, 175, 100, 0.95) 0%, rgba(209, 130, 60, 0.95) 100%);
+	color: black;
+}
+
+popupContent>div {
+	overflow-y: auto;
+	overflow-x: hidden;
+	border: solid 0.75em transparent;
+	width: 100%;
+}
+
+ .highlightColor {
+	color: var(--bg1start);
+}
+
+locationNameInputHelper,
+eventLocationInputHelper {
+	position: relative !important;
+	display: block !important;
+	max-height: 25em !important;
+	overflow-y: auto !important;
+	margin: 0.25em 0 !important;
+}
+
+ul {
+	margin: 0;
+	padding: 0;
+}
+
+locationNameInputHelper li,
+eventLocationInputHelper li {
+	list-style-type: none !important;
+	background: rgba(0, 0, 0, 0.1) !important;
+	padding: 0.5em !important;
+	border-radius: 0.5em !important;
+	cursor: pointer !important;
+	margin: 0.5em !important;
+	text-align: center !important;
+	color: white !important;
+}`;
+		this._root.appendChild(style);
+	}
+	static close() {
+		var e = ui.q('dialog-popup');
+		e.removeAttribute('error');
+		if (ui.cssValue(e, 'display') != 'none' && e.getAttribute('modal') != 'true') {
+			ui.navigation.animation(e, 'popupSlideOut', e._root.getRootNode().host.closeHard);
+			DialogPopup.lastPopup = null;
+			return true;
+		}
+		return false;
+	}
+	closeHard() {
+		var e = ui.q('dialog-popup');
+		e.style.display = 'none';
+		e.removeAttribute('error');
+		e.removeAttribute('modal');
+		ui.classRemove(e, 'animated popupSlideIn popupSlideOut');
+		for (var i = e._root.children.length - 1; i > 0; i--)
+			e._root.children[i].remove();
+	}
+	static open(title, data, closeAction, modal, exec) {
+		var e = ui.q('dialog-popup'), visible = e.style.display != 'none';
+		if (visible && e.getAttribute('modal') == 'true')
+			return false;
+		if (global.isBrowser() && location.href.indexOf('#') < 0)
+			history.pushState(null, null, '#x');
+		if (visible && ui.navigation.lastPopup == title + global.separatorTech + data)
+			ui.navigation.closePopup();
+		else if (data) {
+			ui.navigation.lastPopup = title + global.separatorTech + data;
+			var f = function () {
+				e._root.getRootNode().host.closeHard();
+				var element;
+				if (title) {
+					element = document.createElement('popupTitle');
+					if (modal)
+						e.setAttribute('modal', 'true');
+					element.setAttribute('onclick', 'ui.navigation.closePopup()');
+					var element2 = document.createElement('div');
+					element2.innerText = title;
+					element.appendChild(element2);
+					e._root.appendChild(element);
+				}
+				element = document.createElement('popupContent');
+				var element2 = document.createElement('div');
+				element2.innerHTML = data;
+				element.appendChild(element2);
+				e._root.appendChild(element);
+				ui.attr('dialog-popup input', 'part', 'input');
+				ui.attr('dialog-popup input-hashtags', 'part', 'input-hashtags');
+				ui.attr('dialog-popup input-image', 'part', 'input-image');
+				ui.attr('dialog-popup textarea', 'part', 'textarea');
+				ui.attr('dialog-popup label', 'part', 'label');
+				ui.attr('dialog-popup li', 'part', 'li');
+				ui.attr('dialog-popup explain', 'part', 'explain');
+				ui.attr('dialog-popup field', 'part', 'field');
+				ui.attr('dialog-popup value', 'part', 'value');
+				ui.attr('dialog-popup dialogButtons', 'part', 'dialogButtons');
+				ui.css(e, 'display', 'none');
+				formFunc.initFields(e);
+				if (closeAction)
+					e.setAttribute('close', closeAction);
+				else
+					e.removeAttribute('close');
+				e.removeAttribute('error');
+
+				ui.navigation.animation(e, visible ? 'slideDown' : 'popupSlideIn');
+				element.style.maxHeight = (ui.q('content').clientHeight - (title ? ui.q('dialog-popup popupTitle').clientHeight : 0) - 2 * ui.emInPX) + 'px';
+				if (exec)
+					exec.call();
+			};
+			ui.navigation.closeHint();
+			pageChat.closeList();
+			communication.notification.close();
+			if (!visible)
+				f.call();
+			else
+				ui.navigation.animation(e, 'slideUp', f);
+		} else
+			ui.navigation.animation(e, 'popupSlideOut', ui.navigation.closePopupHard);
+		return true;
+	}
+}
+if (!customElements.get('dialog-popup'))
+	customElements.define('dialog-popup', DialogPopup);
 
 class InputHashtags extends HTMLElement {
 	constructor() {
@@ -2186,15 +2389,6 @@ ratingSelection span {
 	display: inline-block;
 	position: relative;
 	cursor: pointer;
-}
-
-popupContent> :not(detail) ratingSelection {
-	width: 10em;
-	margin-left: -5em;
-	font-size: 2em;
-	left: 50%;
-	cursor: pointer;
-	display: block;
 }
 
 input-image {

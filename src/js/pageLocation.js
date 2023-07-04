@@ -344,7 +344,7 @@ ${v.rating}
 					pageLocation.editInternal(id, v);
 			}
 		} else {
-			if (ui.q('popup input[name="location"]'))
+			if (ui.q('dialog-popup input[name="location"]'))
 				pageLocation.reopenEvent = true;
 			pageLocation.editInternal();
 			setTimeout(pageLocation.prefillAddress, 1200);
@@ -475,8 +475,8 @@ ${v.rating}
 		pageLocation.locationsAdded = null;
 	}
 	static save() {
-		ui.html('popupHint', '');
-		var name = ui.q('popup [name="name"]');
+		ui.html('dialog-popup popupHint', '');
+		var name = ui.q('dialog-popup [name="name"]');
 		var address = ui.q('[name="address"]');
 		formFunc.resetError(name);
 		formFunc.resetError(address);
@@ -494,12 +494,12 @@ ${v.rating}
 			else
 				address.value = address.value.replace(/,/g, '\n');
 		}
-		if (ui.q('popup errorHint')) {
+		if (ui.q('dialog-popup errorHint')) {
 			ui.scrollTo('popupContent', 0);
 			return;
 		}
 		var id = ui.val('[name="id"]');
-		var v = formFunc.getForm('popup form');
+		var v = formFunc.getForm('dialog-popup form');
 		v.classname = 'Location';
 		if (id)
 			v.id = id;
@@ -510,9 +510,9 @@ ${v.rating}
 			body: v,
 			error(e) {
 				if (e.status == 500 && e.response && (e.response.indexOf('exists') > -1 || e.response.indexOf('ConstraintViolationException') > -1))
-					ui.html('popupHint', ui.l('locations.alreadyExists'));
+					ui.html('dialog-popup popupHint', ui.l('locations.alreadyExists'));
 				else if (e.status == 500 && e.response && e.response.indexOf('Invalid address') > -1)
-					ui.html('popupHint', ui.l('locations.invalidAddress'));
+					ui.html('dialog-popup popupHint', ui.l('locations.invalidAddress'));
 				else
 					communication.onError(e);
 			},
@@ -530,9 +530,9 @@ ${v.rating}
 		});
 	}
 	static saveDraft() {
-		if (ui.q('popup input[name="id"]').value)
+		if (ui.q('dialog-popup input[name="id"]').value)
 			return;
-		user.set('location', formFunc.getForm('popup form'));
+		user.set('location', formFunc.getForm('dialog-popup form'));
 	}
 	static scrollMap() {
 		if (ui.cssValue('map', 'display') == 'none')

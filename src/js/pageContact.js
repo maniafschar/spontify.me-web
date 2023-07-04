@@ -353,7 +353,7 @@ ${v.matchIndicatorHintDescription}
 			method: 'POST',
 			body: { classname: 'ContactLink', values: { contactId2: id } },
 			success() {
-				if (ui.q('popupContent'))
+				if (ui.q('dialog-popup popupContent'))
 					ui.navigation.closePopup();
 				else {
 					var e = ui.q('detail card:last-child[i="' + id + '"] [name="friend"] button-text');
@@ -558,7 +558,7 @@ class groups {
 		});
 	}
 	static saveGroup(id) {
-		var e = ui.q('popup input[name="name"]');
+		var e = ui.q('dialog-popup input[name="name"]');
 		if (!e.value)
 			return;
 		communication.ajax({

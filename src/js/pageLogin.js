@@ -519,11 +519,11 @@ class pageLogin {
 			formFunc.setError(ui.q('[name="passwd"]'), 'register.errorPseudonymSyntax');
 		else
 			formFunc.resetError(ui.q('[name="passwd"]'));
-		if (!ui.q('popup errorHint')) {
-			user.save({ webCall: 'pageLogin.savePassword()', password: Encryption.encPUB(ui.val('popup [name="passwd"]')) }, function () {
+		if (!ui.q('dialog-popup errorHint')) {
+			user.save({ webCall: 'pageLogin.savePassword()', password: Encryption.encPUB(ui.val('dialog-popup [name="passwd"]')) }, function () {
 				pageLogin.removeCredentials();
-				user.password = ui.val('[name="passwd"]');
-				ui.attr('popupTitle', 'modal', '');
+				user.password = ui.val('dialog-popup [name="passwd"]');
+				ui.attr('dialog-popup', 'modal');
 				ui.navigation.closePopup();
 				user.contact.verified = 1;
 			});
@@ -566,8 +566,8 @@ class pageLogin {
 		}
 	}
 	static sendVerificationEmail() {
-		var fromDialog = ui.q('popupContent');
-		var email = fromDialog ? ui.q('popup input') : ui.qa('input[name="email"]')[1];
+		var fromDialog = ui.q('dialog-popup popupContent');
+		var email = fromDialog ? ui.q('dialog-popup input') : ui.qa('input[name="email"]')[1];
 		formFunc.resetError(email);
 		ui.html('login form[name="loginRecover"] errorHint', '');
 		var b = -1;
@@ -683,11 +683,11 @@ class pageLogin {
 		formFunc.validation.pseudonym(ui.q('input[name="pseudonym"]'));
 	}
 	static warningRegNotComplete() {
-		if (ui.q('popupHint') && ui.q('popupHint').innerHTML) {
+		if (ui.q('dialog-popup popupHint') && ui.q('dialog-popup popupHint').innerHTML) {
 			ui.attr('popupTitle', 'modal', '');
 			pageLogin.logoff();
 		} else {
-			ui.html('popupHint', ui.l('register.notComplete'));
+			ui.html('dialog-popup popupHint', ui.l('register.notComplete'));
 			return false;
 		}
 	}
