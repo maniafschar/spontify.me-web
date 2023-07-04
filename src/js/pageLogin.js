@@ -531,25 +531,25 @@ class pageLogin {
 	}
 	static saveProfile() {
 		var d = {};
-		var e = ui.q('hint input[name="birthday"]');
+		var e = ui.q('dialog-hint input[name="birthday"]');
 		if (e && e.value) {
 			formFunc.validation.birthday(e);
-			if (ui.q('hint errorHint')) {
+			if (ui.q('dialog-hint errorHint')) {
 				pageLogin.selectTab('profile');
 				return;
 			}
 			d.birthday = e.value;
 		}
-		if (ui.q('hint tabBody') && !ui.q('hint input-hashtags').getAttribute('ids') && (!ui.q('hint tabBody').marginLeft || ui.q('hint tabBody').marginLeft.indexOf('-') < 0)) {
+		if (ui.q('dialog-hint tabBody') && !ui.q('dialog-hint input-hashtags').getAttribute('ids') && (!ui.q('dialog-hint tabBody').marginLeft || ui.q('dialog-hint tabBody').marginLeft.indexOf('-') < 0)) {
 			pageLogin.selectTab('skills');
 			return;
 		}
-		if (ui.q('hint input-checkbox[name="gender"][checked="true"]'))
-			d.gender = ui.q('hint input-checkbox[name="gender"][checked="true"]').value;
-		if (ui.q('hint input-hashtags').getAttribute('ids'))
-			d.skills = ui.q('hint input-hashtags').getAttribute('ids');
-		if (ui.q('hint input-hashtags').getAttribute('text'))
-			d.skillsText = ui.q('hint input-hashtags').getAttribute('text');
+		if (ui.q('dialog-hint input-checkbox[name="gender"][checked="true"]'))
+			d.gender = ui.q('dialog-hint input-checkbox[name="gender"][checked="true"]').value;
+		if (ui.q('dialog-hint input-hashtags').getAttribute('ids'))
+			d.skills = ui.q('dialog-hint input-hashtags').getAttribute('ids');
+		if (ui.q('dialog-hint input-hashtags').getAttribute('text'))
+			d.skillsText = ui.q('dialog-hint input-hashtags').getAttribute('text');
 		e = formFunc.getForm('hint');
 		if (e.values.image)
 			d.image = e.values.image;
@@ -559,10 +559,10 @@ class pageLogin {
 			ui.navigation.closeHint();
 	}
 	static selectTab(id) {
-		if (id != ui.q('hint tabHeader tab.tabActive').getAttribute('i')) {
-			ui.classRemove('hint tab', 'tabActive');
-			ui.classAdd('hint tab[i="' + id + '"]', 'tabActive');
-			ui.q('hint tabBody>div').style.marginLeft = id == 'profile' ? 0 : '-100%';
+		if (id != ui.q('dialog-hint tabHeader tab.tabActive').getAttribute('i')) {
+			ui.classRemove('dialog-hint tab', 'tabActive');
+			ui.classAdd('dialog-hint tab[i="' + id + '"]', 'tabActive');
+			ui.q('dialog-hint tabBody>div').style.marginLeft = id == 'profile' ? 0 : '-100%';
 		}
 	}
 	static sendVerificationEmail() {

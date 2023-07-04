@@ -244,7 +244,7 @@ ${v.matchIndicatorHintDescription}
 		if (v.image)
 			v.image = '<img src="' + global.serverImg + v.image + '" />';
 		else {
-			v.image = '<div class="mainBG" style="padding:8em;"><img src="images/contact.svg" ' + (preview ? 'class="fade"' : '') + '/></div>';
+			v.image = '<div class="mainBG" style="padding:8em;"><img src="images/contacts.svg" ' + (preview ? 'class="fade"' : '') + '/></div>';
 			if (preview)
 				v.previewHintImage = '<previewHint class="image">' + ui.l('settings.previewHintImage') + '</previewHint>';
 		}
@@ -312,7 +312,7 @@ ${v.matchIndicatorHintDescription}
 			if (v.imageList)
 				image = global.serverImg + v.imageList;
 			else
-				image = 'images/contact.svg';
+				image = 'images/contacts.svg';
 			var skills = ui.getSkills(v, 'list');
 			flag1 = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
 			if (skills.total && skills.totalMatch / skills.total > 0)

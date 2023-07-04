@@ -436,7 +436,7 @@ class pageEvent {
 			setTimeout(ui.navigation.toggleMenu, 500);
 		if (!pageLocation.map.svgLocation)
 			communication.ajax({
-				url: '/images/location.svg',
+				url: '/images/locations.svg',
 				webCall: 'pageEvent.init()',
 				success(r) {
 					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
@@ -448,7 +448,7 @@ class pageEvent {
 			});
 		if (!pageLocation.map.svgMe)
 			communication.ajax({
-				url: '/images/contact.svg',
+				url: '/images/contacts.svg',
 				webCall: 'pageEvent.init()',
 				success(r) {
 					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
@@ -507,9 +507,9 @@ class pageEvent {
 				else if (v.contact.imageList)
 					image = global.serverImg + v.contact.imageList;
 				else if (v.id)
-					image = 'images/event.svg';
+					image = 'images/events.svg';
 				else
-					image = 'images/contact.svg';
+					image = 'images/contacts.svg';
 				var oc;
 				v.idDate = pageEvent.getId(v);
 				if (ui.navigation.getActiveID() == 'settings')
@@ -844,7 +844,7 @@ class pageEvent {
 						pageEvent.qrcodeExport(canvas);
 					else {
 						image = new Image();
-						image.src = user.contact.image ? global.serverImg + user.contact.image : 'images/contact.svg';
+						image.src = user.contact.image ? global.serverImg + user.contact.image : 'images/contacts.svg';
 						image.crossOrigin = 'anonymous';
 						image.onload = function () {
 							var r = 100;
@@ -1019,7 +1019,7 @@ class pageEvent {
 				if (v.event.imageList || v.imageList || v.event.locationId == -2 && v.contact.imageList)
 					image = global.serverImg + (v.event.imageList ? v.event.imageList : v.imageList ? v.imageList : v.contact.imageList);
 				else
-					image = 'images/event.svg';
+					image = 'images/events.svg';
 				text = '';
 				if (v.event.price > 0)
 					text += global.separator + ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2).replace('.', ','));

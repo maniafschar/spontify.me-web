@@ -277,7 +277,7 @@ class communication {
 			ui.q('chatList').setAttribute('hash', chatHash);
 		}
 		total += chat;
-		e = ui.q('badgeChats');
+		e = ui.q('dialog-navigation badgeChats');
 		if (chat) {
 			ui.classAdd(e.parentNode, 'pulse highlight');
 			ui.html(e, chat);

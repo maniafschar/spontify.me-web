@@ -121,31 +121,7 @@
 			<div></div>
 		</menu>
 		<locationPicker style="display:none;"></locationPicker>
-		<navigation class="bgColor">
-			<buttonIcon onclick="pageChat.toggleUserList()" class="mainBG chats">
-				<badgeChats></badgeChats>
-				<img source="chat" />
-			</buttonIcon>
-			<item onclick="ui.navigation.goTo('home', true)" class="home active">
-				<img source="home" />
-			</item>
-			<item onclick="ui.navigation.goTo('search')" class="search">
-				<img source="search" />
-			</item>
-			<item onclick="ui.navigation.goTo('info')" class="info">
-				<img source="info" />
-			</item>
-			<item onclick="ui.navigation.goTo('events')" class="events">
-				<img source="event" />
-			</item>
-			<item onclick="ui.navigation.goTo('contacts')" class="contacts">
-				<img source="contact" />
-			</item>
-			<buttonIcon onclick="pageHome.toggleNotification()" class="mainBG notifications">
-				<badgeNotifications></badgeNotifications>
-				<img source="news" />
-			</buttonIcon>
-		</navigation>
+		<dialog-navigation></dialog-navigation>
 		<videoCall></videoCall>
 	</main>
 </body>

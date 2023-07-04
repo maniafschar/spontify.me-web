@@ -84,7 +84,7 @@ class pageInfo {
 			if (ui.navigation.getActiveID() == 'home' && pageLogin.timestamp && new Date().getTime() - pageLogin.timestamp > 10000) {
 				ui.navigation.openHint({ desc: '<div style="margin:0 0.5em 1em 0.5em;">' + ui.l('info.recommend') + '</div><button-text style="margin-top:0.5em;" onclick="pageInfo.socialShare()" label="Yes"></button-text>', pos: '15%,20vh', size: '70%,auto' });
 				setTimeout(function () {
-					if (ui.q('hint button-text[onclick*="socialShare"]'))
+					if (ui.q('dialog-hint button-text[onclick*="socialShare"]'))
 						user.save({ webCall: 'pageInfo.socialShareDialog()', recommend: global.date.local2server(new Date()) });
 				}, 1500);
 			} else

@@ -104,42 +104,13 @@ chat a {
 	color: var(--bg1start);
 }
 
-navigation {
+dialog-navigation {
 	position: absolute;
 	bottom: 0;
 	left: 0;
 	height: 4em;
 	width: 100%;
 	z-index: 3;
-}
-
-navigation>item {
-	width: 25%;
-	position: relative;
-	height: 100%;
-	float: left;
-	text-align: center;
-	padding-top: 1.1em;
-	cursor: pointer;
-	transition: all 0.4s ease-out;
-}
-
-navigation>item svg {
-	height: 2em;
-	transition: all 0.4s ease-out;
-	filter: drop-shadow(0.1em 0.1em 0.1em rgba(0, 0, 0, 0.2));
-	padding: 0 0.1em;
-}
-
-navigation>item.active svg {
-	filter: drop-shadow(0.2em 0.2em 0.2em rgba(0, 0, 0, 0.35));
-	margin: -0.2em 0 0 -0.2em;
-	height: 2.1em;
-}
-
-navigation>item.active,
-navigation>item:hover {
-	background: var(--bg2stop);
 }
 
 add {
@@ -255,6 +226,7 @@ subCatTitle {
 }
 
 .mainBG,
+dialog-navigation::part(mainBG),
 list-row::part(mainBG) {
 	background: linear-gradient(120deg, var(--bg1stop) 0%, var(--bg1start) 100%);
 	background-size: 100% 100%;
@@ -1103,18 +1075,6 @@ listSeparator.strong {
 	font-weight: bold;
 }
 
-badgeChats,
-badgeNotifications {
-	text-align: center;
-	position: absolute;
-	line-height: 2;
-	width: 2em;
-}
-
-badgeNotifications {
-	padding-top: 0.1em;
-}
-
 badge,
 list-row::part(badge) {
 	border-radius: 0.8em;
@@ -1471,7 +1431,8 @@ notifications listBody {
 	padding: 0;
 }
 
-buttonIcon {
+buttonIcon,
+dialog-navigation::part(icon) {
 	position: absolute;
 	cursor: pointer;
 	display: inline-flex;
@@ -1481,17 +1442,6 @@ buttonIcon {
 	color: white;
 	border-radius: 50%;
 	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
-}
-
-buttonIcon.chats {
-	border-radius: 0 50% 50% 0;
-	margin-top: -2em;
-}
-
-buttonIcon.notifications {
-	border-radius: 50% 0 0 50%;
-	margin-top: -2em;
-	right: 0;
 }
 
 buttonIcon.statistics {

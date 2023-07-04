@@ -147,7 +147,7 @@ class Video {
 			Video.getRtcPeerConnection().setRemoteDescription(new RTCSessionDescription(answer));
 			ui.css('main', 'background', 'transparent');
 			ui.css('content', 'visibility', 'hidden');
-			ui.css('navigation', 'visibility', 'hidden');
+			ui.css('dialog-navigation', 'visibility', 'hidden');
 			ui.q('videoCall audio.out').pause();
 			ui.q('videoCall audio.in').pause();
 		}
@@ -196,7 +196,7 @@ class Video {
 					communication.wsSend('/ws/video', e);
 					ui.css('main', 'background', 'transparent');
 					ui.css('content', 'visibility', 'hidden');
-					ui.css('navigation', 'visibility', 'hidden');
+					ui.css('dialog-navigation', 'visibility', 'hidden');
 				}
 			}, error => {
 				alert('error: ' + error);
@@ -265,7 +265,7 @@ class Video {
 		ui.classRemove('videoCall videochat buttonIcon.mute', 'muted');
 		ui.css('main', 'background', null);
 		ui.css('content', 'visibility', null);
-		ui.css('navigation', 'visibility', null);
+		ui.css('dialog-navigation', 'visibility', null);
 		ui.q('videoCall audio.out').pause();
 		ui.q('videoCall audio.in').pause();
 		ui.q('videoCall audio.end').play();

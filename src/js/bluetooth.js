@@ -129,7 +129,7 @@ class bluetooth {
 				ble.stopStateNotifications();
 			} catch (e) { }
 			bluetooth.closePopup();
-			if (ui.q('hint[i="bluetoothOn"]'))
+			if (ui.q('dialog-hint[i="bluetoothOn"]'))
 				ui.navigation.closeHint();
 		}
 		ui.html('home item.bluetooth text', ui.l('bluetooth.deactivated'));

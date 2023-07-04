@@ -129,7 +129,7 @@ ${ui.l('events.title')}
 			});
 	}
 	static edit() {
-		if (ui.q('hint tab.tabActive[i="news"]'))
+		if (ui.q('dialog-hint tab.tabActive[i="news"]'))
 			pageHome.editNews();
 		else
 			pageEvent.edit();
@@ -163,7 +163,7 @@ ${ui.l('events.title')}
 			render({});
 	}
 	static goToSettings(event) {
-		if (!ui.parents(event.target, 'hint'))
+		if (ui.cssValue('dialog-hint', 'display') == 'none')
 			ui.navigation.goTo('settings');
 	}
 	static init(force) {
@@ -177,7 +177,7 @@ ${ui.l('events.title')}
 				if (user.contact.imageList)
 					v.imgProfile = '<img src="' + global.serverImg + user.contact.imageList + '"/>';
 				else
-					v.imgProfile = '<img src="images/contact.svg" style="box-shadow:none;"/>';
+					v.imgProfile = '<img src="images/contacts.svg" style="box-shadow:none;"/>';
 				v.logoSmall = ' class="logoSmall"';
 				v.name = user.contact.pseudonym;
 				v.infoButton = ' hidden';
@@ -248,8 +248,8 @@ ${ui.l('events.title')}
 			ui.q('home homeHeader svg text').setAttribute('text-anchor', 'end');
 		}
 		pageHome.updateLocalisation();
-		ui.css('navigation item.search', 'display', user.contact ? '' : 'none');
-		ui.css('navigation item.info', 'display', user.contact ? 'none' : '');
+		ui.css('dialog-navigation item.search', 'display', user.contact ? '' : 'none');
+		ui.css('dialog-navigation item.info', 'display', user.contact ? 'none' : '');
 	}
 	static initNotification(d) {
 		var f = function () {
@@ -268,7 +268,7 @@ ${ui.l('events.title')}
 					if (v.imageList)
 						v.image = global.serverImg + v.imageList;
 					else
-						v.image = 'images/contact.svg';
+						v.image = 'images/contacts.svg';
 					s += '<div onclick="pageHome.clickNotification(' + v.contactNotification.id + ',&quot;' + v.contactNotification.action + '&quot;)" ' + (v.contactNotification.seen == 0 ? ' class="highlightBackground"' : '') + '><img src="' + v.image + '"' + (v.imageList ? '' : ' class="bgColor" style="padding:0.6em;"') + '/><span>' + global.date.formatDate(v.contactNotification.createdAt) + ': ' + v.contactNotification.text + '</span></div>';
 				}
 
@@ -283,11 +283,11 @@ ${ui.l('events.title')}
 	}
 	static initNotificationButton() {
 		if (pageHome.badge > 0)
-			ui.classAdd('navigation buttonIcon.notifications', 'pulse highlight');
+			ui.classAdd('dialog-navigation buttonIcon.notifications', 'pulse highlight');
 		else
-			ui.classRemove('navigation buttonIcon.notifications', 'pulse highlight');
-		if (ui.q('badgeNotifications'))
-			ui.q('badgeNotifications').innerText = Math.max(pageHome.badge, 0);
+			ui.classRemove('dialog-navigation buttonIcon.notifications', 'pulse highlight');
+		if (ui.q('dialog-navigation badgeNotifications'))
+			ui.q('dialog-navigation badgeNotifications').innerText = Math.max(pageHome.badge, 0);
 	}
 	static openLanguage(event) {
 		event.stopPropagation();
@@ -388,9 +388,9 @@ ${ui.l('events.title')}
 		ui.html('chatList', '');
 		ui.html('notificationList', '');
 		ui.html('home', '');
-		ui.classRemove('navigation buttonIcon', 'pulse highlight');
-		ui.q('navigation buttonIcon.chats badgeChats').innerHTML = '';
-		ui.q('navigation buttonIcon.notifications badgeNotifications').innerHTML = 0;
+		ui.classRemove('dialog-navigation buttonIcon', 'pulse highlight');
+		ui.q('dialog-navigation badgeChats').innerHTML = '';
+		ui.q('dialog-navigation badgeNotifications').innerHTML = 0;
 	}
 	static saveNews() {
 		formFunc.resetError(ui.q('dialog-popup textarea'));
@@ -420,9 +420,9 @@ ${ui.l('events.title')}
 
 	}
 	static selectTab(id) {
-		ui.q('hint tabBody').style.marginLeft = (id == 'news' ? 0 : '-100%');
-		ui.classRemove('hint tab', 'tabActive');
-		ui.classAdd('hint tab[i="' + id + '"]', 'tabActive');
+		ui.q('dialog-hint tabBody').style.marginLeft = (id == 'news' ? 0 : '-100%');
+		ui.classRemove('dialog-hint tab', 'tabActive');
+		ui.classAdd('dialog-hint tab[i="' + id + '"]', 'tabActive');
 	}
 	static toggleNotification() {
 		if (!user.contact)

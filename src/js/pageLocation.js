@@ -270,7 +270,7 @@ ${v.rating}
 		if (v.image)
 			v.image = global.serverImg + v.image;
 		else
-			v.image = (v.event.id ? 'images/event.svg' : 'images/location.svg') + '" class="mainBG" style="padding:8em;';
+			v.image = (v.event.id ? 'images/events.svg' : 'images/locations.svg') + '" class="mainBG" style="padding:8em;';
 		var r = v.event.id ? v.event.rating : eventWithLocation ? v.rating : v.contact.rating;
 		if (r > 0) {
 			if (v.event.id)
@@ -403,7 +403,7 @@ ${v.rating}
 			if (v.imageList)
 				image = global.serverImg + v.imageList;
 			else
-				image = 'images/location.svg';
+				image = 'images/locations.svg';
 			var oc;
 			if (ui.navigation.getActiveID() == 'settings')
 				oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';

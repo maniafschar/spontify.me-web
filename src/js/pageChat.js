@@ -340,7 +340,7 @@ class pageChat {
 					if (v.imageList)
 						v.image = global.serverImg + v.imageList;
 					else
-						v.image = 'images/contact.svg';
+						v.image = 'images/contacts.svg';
 					if (v._maxDate.indexOf('.') > 0)
 						v._maxDate = v._maxDate.substring(0, v._maxDate.indexOf('.'));
 					s += '<div onclick="pageChat.open(' + v.id + ')" i="' + v.id + '"' + (v._unseen > 0 ? ' class="highlightBackground"' : v._unseen2 > 0 ? ' class="unseen"' : '') + '><img src="' + v.image + '"' + (v.imageList ? '' : ' class="bgColor" style="padding:0.6em;"') + '/><span>' + v.pseudonym
@@ -397,7 +397,7 @@ class pageChat {
 							}
 							if (!ui.q('chat[i="' + id + '"] listHeader img').getAttribute('src')) {
 								var e2 = ui.q('chat[i="' + id + '"] listHeader img');
-								ui.attr(e2, 'src', 'images/contact.svg');
+								ui.attr(e2, 'src', 'images/contacts.svg');
 								ui.classAdd(e2, 'bgColor');
 								ui.css(e2, 'padding', '0.6em');
 							}

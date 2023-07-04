@@ -23,17 +23,17 @@ class marketing {
 		});
 	}
 	static next() {
-		var index = parseInt(ui.q('hint index').innerText);
-		var answers = ui.qa('hint input-checkbox[checked="true"]');
+		var index = parseInt(ui.q('dialog-hint index').innerText);
+		var answers = ui.qa('dialog-hint input-checkbox[checked="true"]');
 		for (var i = 0; i < answers.length; i++) {
 			if (!marketing.answers['q' + index])
 				marketing.answers['q' + index] = { choice: [] };
 			marketing.answers['q' + index].choice.push(answers[i].value);
 		}
-		if (ui.q('hint textarea') && ui.q('hint textarea').value)
-			marketing.answers['q' + index].text = ui.q('hint textarea').value;
-		if (ui.q('hint input-checkbox[type="radio"][checked="true"]'))
-			index = parseInt(ui.q('hint input-checkbox[type="radio"][checked="true"]').getAttribute('next'));
+		if (ui.q('hint textarea') && ui.q('dialog-hint textarea').value)
+			marketing.answers['q' + index].text = ui.q('dialog-hint textarea').value;
+		if (ui.q('dialog-hint input-checkbox[type="radio"][checked="true"]'))
+			index = parseInt(ui.q('dialog-hint input-checkbox[type="radio"][checked="true"]').getAttribute('next'));
 		else
 			index++;
 		var q = marketing.data.storage.questions[index];
@@ -46,7 +46,7 @@ class marketing {
 					method: 'POST'
 				});
 			}
-			ui.q('hint>div').innerHTML = marketing.data.storage.epilog + '<br/><br/><button-text onclick="ui.navigation.closeHint()" label="Schließen"></button-text>';
+			ui.q('dialog-hint > div').innerHTML = marketing.data.storage.epilog + '<br/><br/><button-text onclick="ui.navigation.closeHint()" label="Schließen"></button-text>';
 			return;
 		}
 		var s = q.question + '<br/>';
@@ -55,8 +55,8 @@ class marketing {
 		if (q.textField)
 			s += '<textarea></textarea>';
 		s += '<br/><br/><button-text onclick="marketing.next()" label="Weiter"></button-text><index>' + index + '</index>';
-		ui.q('hint>div').innerHTML = s;
-		formFunc.initFields(ui.q('hint'));
+		ui.q('dialog-hint > div').innerHTML = s;
+		formFunc.initFields(ui.q('dialog-hint > div'));
 	}
 	static open() {
 		if (marketing.data) {
