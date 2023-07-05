@@ -35,30 +35,6 @@ class ui {
 	static categories = [];
 	static emInPX = 0;
 	static labels = [];
-	static templateMenuEvents = () =>
-		global.template`<container>
-	<a style="display:none;">
-		${ui.l('search.title')}
-	</a><a onclick="ui.query.eventTickets()">
-		${ui.l('events.myTickets')}
-	</a><a onclick="ui.query.eventMy()">
-		${ui.l('events.myEvents')}
-	</a><a onclick="pageEvent.edit()">
-		${ui.l('events.new')}
-	</a>
-</container>`;
-	static templateMenuContacts = () =>
-		global.template`<container>
-    <a style="display:none;">
-			${ui.l('search.title')}
-    </a><a onclick="ui.query.contactFriends()">
-		${ui.l('contacts.friendshipTitle')}
-    </a><a onclick="ui.query.contactVisitees()">
-		${ui.l('title.history')}
-	</a><a onclick="ui.query.contactVisits()">
-		${ui.l('title.visits')}
-	</a>
-</container>`;
 	static adjustTextarea(e) {
 		if (e && e.nodeName == 'TEXTAREA') {
 			e.style.setProperty('height', '1px', 'important');

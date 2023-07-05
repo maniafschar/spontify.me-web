@@ -71,9 +71,31 @@ title {
 				return;
 			e = ui.q('dialog-menu');
 			if (id == 'contacts')
-				ui.html(e._root.querySelector('div'), ui.templateMenuContacts());
+				ui.html(e._root.querySelector('div'), `
+<container>
+	<a style="display:none;">
+			${ui.l('search.title')}
+	</a><a onclick="ui.query.contactFriends()">
+		${ui.l('contacts.friendshipTitle')}
+	</a><a onclick="ui.query.contactVisitees()">
+		${ui.l('title.history')}
+	</a><a onclick="ui.query.contactVisits()">
+		${ui.l('title.visits')}
+	</a>
+</container>`);
 			else if (id == 'events')
-				ui.html(e._root.querySelector('div'), ui.templateMenuEvents());
+				ui.html(e._root.querySelector('div'), `
+<container>
+	<a style="display:none;">
+		${ui.l('search.title')}
+	</a><a onclick="ui.query.eventTickets()">
+		${ui.l('events.myTickets')}
+	</a><a onclick="ui.query.eventMy()">
+		${ui.l('events.myEvents')}
+	</a><a onclick="pageEvent.edit()">
+		${ui.l('events.new')}
+	</a>
+</container>`);
 			e.setAttribute('type', id);
 			ui.classAdd(ui.qa('menu a')[parseInt(ui.q(id).getAttribute('menuIndex'))], 'highlightMenu');
 			ui.css(e, 'transform', e.style.transform.indexOf('1') > 0 ? 'scale(0)' : 'scale(1)')
