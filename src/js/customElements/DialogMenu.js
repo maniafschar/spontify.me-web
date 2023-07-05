@@ -1,4 +1,4 @@
-import { formFunc, ui } from '../ui';
+import { ui } from '../ui';
 import { DialogHint } from './DialogHint';
 
 export { DialogMenu }
