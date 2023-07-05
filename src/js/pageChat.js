@@ -12,6 +12,7 @@ import { pageSettings } from './pageSettings';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 import { VideoCall } from './customElements/VideoCall';
+import { DialogPopup } from './customElements/DialogPopup';
 
 export { pageChat };
 
@@ -326,7 +327,7 @@ class pageChat {
 			v = v.substring(0, p) + s2 + v.substring(p);
 			e.value = v;
 		} else
-			ui.html('dialog-popup popupHint', ui.l('link.sendError').replace('{0}', '<br/><button-text style="margin:1em;" label="chat.share"></button-text><br/>'));
+			DialogPopup.setHint(ui.l('link.sendError').replace('{0}', '<br/><button-text style="margin:1em;" label="chat.share"></button-text><br/>'));
 	}
 	static listActiveChats(d) {
 		var f = function () {
@@ -647,7 +648,7 @@ class pageChat {
 				}
 			});
 		} else
-			ui.html('dialog-popup popupHint', ui.l('chat.groupNoInput'));
+			DialogPopup.setHint(ui.l('chat.groupNoInput'));
 	}
 	static sendChatImage() {
 		if (formFunc.svg.hasImage()) {

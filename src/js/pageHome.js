@@ -86,8 +86,8 @@ ${ui.l('events.title')}
 <dialogButtons style="margin-bottom:0;">
 	<button-text onclick="pageHome.saveNews()" label="save"></button-text>
 	<button-text onclick="pageHome.deleteNews(${v.id})" class="deleteButton${v.hideDelete}" label="delete"></button-text>
-	<popupHint></popupHint>
-</dialogButtons>`;
+</dialogButtons>
+<popupHint></popupHint>`;
 	static clickNotification(id, action) {
 		communication.ajax({
 			url: global.serverApi + 'db/one',

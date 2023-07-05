@@ -15,17 +15,9 @@ import { pageEvent } from './pageEvent';
 import { pageSearch } from './pageSearch';
 import { DialogPopup } from './customElements/DialogPopup';
 import { InputHashtags } from './customElements/InputHashtags';
-import { ButtonText } from './customElements/ButtonText';
 import { DialogHint } from './customElements/DialogHint';
-import { DialogNavigation } from './customElements/DialogNavigation';
-import { InputCheckbox } from './customElements/InputCheckbox';
-import { InputImage } from './customElements/InputImage';
 import { InputRating } from './customElements/InputRating';
-import { InputSlider } from './customElements/InputSlider';
-import { ListBody } from './customElements/ListBody';
-import { ListRow } from './customElements/ListRow';
 import { DialogMenu } from './customElements/DialogMenu';
-import { VideoCall } from './customElements/VideoCall';
 import { DialogLocationPicker } from './customElements/DialogLocationPicker';
 
 export { ui, formFunc, DragObject };
@@ -991,48 +983,6 @@ class formFunc {
 		}
 	}
 }
-
-if (!customElements.get('button-text'))
-	customElements.define('button-text', ButtonText);
-
-if (!customElements.get('dialog-hint'))
-	customElements.define('dialog-hint', DialogHint);
-
-if (!customElements.get('dialog-location-picker'))
-	customElements.define('dialog-location-picker', DialogLocationPicker);
-
-if (!customElements.get('dialog-menu'))
-	customElements.define('dialog-menu', DialogMenu);
-
-if (!customElements.get('dialog-navigation'))
-	customElements.define('dialog-navigation', DialogNavigation);
-
-if (!customElements.get('dialog-popup'))
-	customElements.define('dialog-popup', DialogPopup);
-
-if (!customElements.get('input-checkbox'))
-	customElements.define('input-checkbox', InputCheckbox);
-
-if (!customElements.get('input-hashtags'))
-	customElements.define('input-hashtags', InputHashtags);
-
-if (!customElements.get('input-image'))
-	customElements.define('input-image', InputImage);
-
-if (!customElements.get('input-rating'))
-	customElements.define('input-rating', InputRating);
-
-if (!customElements.get('input-slider'))
-	customElements.define('input-slider', InputSlider);
-
-if (!customElements.get('list-body'))
-	customElements.define('list-body', ListBody);
-
-if (!customElements.get('list-row'))
-	customElements.define('list-row', ListRow);
-
-if (!customElements.get('video-call'))
-	customElements.define('video-call', VideoCall);
 
 class DragObject {
 	constructor(o) {

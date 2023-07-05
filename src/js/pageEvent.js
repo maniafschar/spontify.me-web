@@ -10,6 +10,7 @@ import { pageHome } from "./pageHome";
 import { pageLocation } from "./pageLocation";
 import { formFunc, ui } from "./ui";
 import { user } from "./user";
+import { DialogPopup } from "./customElements/DialogPopup";
 
 export { pageEvent };
 
@@ -29,7 +30,7 @@ class pageEvent {
 		<input transient="true" name="location" onkeyup="pageEvent.locations()" />
 		<eventLocationInputHelper><explain>${ui.l('events.locationInputHint')}</explain>
 			<li onclick="pageEvent.locationSelected(-1)" style="color:white;">${ui.l('events.newOnlineEvent')}</li>
-			<li onclick="pageEvent.locationSelected(-2)" style="color:white;"${v.hideWithoutLocation}>${ui.l('events.newWithoutLocation')}</li>
+			<li onclick="pageEvent.locationSelected(-2)" style="color:white;" ${v.hideWithoutLocation}>${ui.l('events.newWithoutLocation')}</li>
 			<ul></ul>
 			<explain style="margin-bottom:0.5em;">${ui.l('events.locationInputHintCreateNew')}</explain>
 			<dialogButtons style="margin-bottom:0;">
@@ -110,9 +111,9 @@ class pageEvent {
 </field>
 <dialogButtons style="margin-bottom:0;">
 	<button-text onclick="pageEvent.save()" label="save"></button-text>
-	<button-text onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" class="${v.hideDelete}" id="deleteElement" label="delete"></button-text>
-	<popupHint></popupHint>
+	<button-text onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" ${v.hideDelete} id="deleteElement" label="delete"></button-text>
 </dialogButtons>
+<popupHint></popupHint>
 </div>
 </form>`;
 	static templateDetail = v =>
@@ -283,7 +284,7 @@ class pageEvent {
 			v.startDate = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute;
 		}
 		if (!id || v.price > 0 && ui.q('detail card:last-child participantCount').innerText.length)
-			v.hideDelete = 'hidden';
+			v.hideDelete = 'part="hidden"';
 		d = global.date.getDateFields(new Date());
 		v.today = d.year + '-' + d.month + '-' + d.day;
 		v.id = id;
@@ -323,7 +324,7 @@ class pageEvent {
 			pageEvent.locationsOfPastEvents();
 		}
 		if (user.contact.type && user.contact.type.indexOf('admin') > -1)
-			v.hideWithoutLocation = ' style="display:none !important;"';
+			v.hideWithoutLocation = 'part="hidden"';
 		v.payplaSignUpHint = ui.l('events.paypalSignUpHint').replace('{0}', pageEvent.paypal.feeDate ?
 			ui.l('events.paypalSignUpHintFee').replace('{0}', pageEvent.paypal.fee).replace('{1}', global.date.formatDate(pageEvent.paypal.feeDate)).replace('{2}', pageEvent.paypal.feeAfter)
 			: pageEvent.paypal.fee);
@@ -884,7 +885,7 @@ class pageEvent {
 		var text = ui.q('dialog-popup [name="description"]');
 		var tags = ui.q('dialog-popup input-hashtags');
 		var id = ui.q('dialog-popup [name="id"]').value;
-		ui.html('dialog-popup popupHint', '');
+		DialogPopup.setHint('');
 		formFunc.resetError(start);
 		formFunc.resetError(end);
 		formFunc.resetError(text);
@@ -971,7 +972,7 @@ class pageEvent {
 		ui.css('dialog-popup field[name="endDate"]', 'display', b || !ui.q('dialog-popup [name="type"][checked="true"]') ? 'none' : '');
 		b = ui.q('dialog-popup input[name="locationId"]').value;
 		if (!b || b == -2) {
-			ui.css('dialog-popup .noWTDField', 'display', 'none');
+			ui.attr('dialog-popup .noWTDField', 'part', 'hidden');
 			ui.q('dialog-popup [name="price"]').value = null;
 		}
 		if (b == -1) {

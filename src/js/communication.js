@@ -10,6 +10,7 @@ import { pageInfo } from './pageInfo';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 import { VideoCall } from './customElements/VideoCall';
+import { DialogPopup } from './customElements/DialogPopup';
 
 export { communication, FB, Encryption, WebSocket };
 
@@ -223,9 +224,7 @@ class communication {
 			} catch (e) { }
 		}
 		if (r.param && r.param.progressBar != false && s && r.param.webCall && r.param.url.indexOf(global.serverApi) == 0) {
-			if (ui.q('dialog-popup popupHint') && ui.q('dialog-popup').style.display != 'none')
-				ui.html('dialog-popup popupHint', s);
-			else if (ui.q('dialog-popup').getAttribute('error') != status) {
+			if (!DialogPopup.setHint(s) && ui.q('dialog-popup').getAttribute('error') != status) {
 				ui.navigation.openPopup(ui.l('attention'), s);
 				if (status)
 					ui.q('dialog-popup').setAttribute('error', status);

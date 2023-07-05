@@ -776,6 +776,7 @@ qrCheck.negative {
 }
 
 .hidden,
+dialog-popup::part(hidden),
 list-row::part(hidden) {
 	display: none !important;
 }
@@ -807,7 +808,7 @@ dialog-popup::part(dialogButtons) {
 	clear: both;
 	position: relative;
 	width: 100%;
-	margin: 1em 0;
+	margin: 1em 0 0.5em 0;
 	display: block;
 }
 

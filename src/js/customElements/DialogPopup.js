@@ -137,9 +137,9 @@ popupTitle>div {
 }
 
 popupHint {
-	padding: 0.5em;
+	padding-top: 0.5em;
 	text-align: center;
-	display: block;
+	display: none;
 }
 
 popupContent {
@@ -309,5 +309,12 @@ mapButton::before {
 				ui.navigation.animation(e, 'slideUp', f);
 		}
 		return true;
+	}
+	static setHint(s) {
+		if (ui.q('dialog-popup popupHint') && ui.q('dialog-popup').style.display != 'none') {
+			ui.q('dialog-popup popupHint').style.display = s ? 'block' : 'none';
+			return true;
+		}
+		return false;
 	}
 }

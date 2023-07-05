@@ -9,6 +9,7 @@ import { pageChat } from './pageChat';
 import { ui, formFunc } from './ui';
 import { user } from './user';
 import { pageHome } from './pageHome';
+import { DialogPopup } from './customElements/DialogPopup';
 
 export { pageLocation };
 
@@ -150,8 +151,8 @@ ${v.rating}
 <dialogButtons>
 	<button-text onclick="pageLocation.save()" label="save"></button-text>
 	${v.deleteButton}
-	<popupHint></popupHint>
 </dialogButtons>
+<popupHint></popupHint>
 </form>`;
 	static block() {
 		var path = 'detail card:last-child [name="block"]';
@@ -475,7 +476,7 @@ ${v.rating}
 		pageLocation.locationsAdded = null;
 	}
 	static save() {
-		ui.html('dialog-popup popupHint', '');
+		DialogPopup.setHint('');
 		var name = ui.q('dialog-popup [name="name"]');
 		var address = ui.q('[name="address"]');
 		formFunc.resetError(name);
@@ -510,9 +511,9 @@ ${v.rating}
 			body: v,
 			error(e) {
 				if (e.status == 500 && e.response && (e.response.indexOf('exists') > -1 || e.response.indexOf('ConstraintViolationException') > -1))
-					ui.html('dialog-popup popupHint', ui.l('locations.alreadyExists'));
+					DialogPopup.setHint(ui.l('locations.alreadyExists'));
 				else if (e.status == 500 && e.response && e.response.indexOf('Invalid address') > -1)
-					ui.html('dialog-popup popupHint', ui.l('locations.invalidAddress'));
+					DialogPopup.setHint(ui.l('locations.invalidAddress'));
 				else
 					communication.onError(e);
 			},

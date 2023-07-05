@@ -1,4 +1,5 @@
 import { communication } from './communication';
+import { DialogPopup } from './customElements/DialogPopup';
 import { geoData } from './geoData';
 import { global } from './global';
 import { ui, formFunc } from './ui';
@@ -34,7 +35,7 @@ class lists {
 	static load(data, callback, divID, errorID) {
 		if (divID == 'contacts' && errorID != 'groups' && ui.q('groups') && ui.cssValue('groups', 'display') != 'none')
 			ui.toggleHeight('groups');
-		ui.html('dialog-popup popupHint', '');
+		DialogPopup.setHint('');
 		var menuIndex = -1;
 		var wc = data.webCall;
 		delete data.webCall;

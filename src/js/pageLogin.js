@@ -11,7 +11,7 @@ import { pageHome } from './pageHome';
 import { pageLocation } from './pageLocation';
 import { formFunc, ui } from './ui';
 import { user } from './user';
-import { VideoCall } from './customElements/VideoCall';
+import { DialogPopup } from './customElements/DialogPopup';
 
 export { pageLogin };
 
@@ -686,7 +686,7 @@ class pageLogin {
 			ui.attr('popupTitle', 'modal', '');
 			pageLogin.logoff();
 		} else {
-			ui.html('dialog-popup popupHint', ui.l('register.notComplete'));
+			DialogPopup.setHint(ui.l('register.notComplete'));
 			return false;
 		}
 	}
