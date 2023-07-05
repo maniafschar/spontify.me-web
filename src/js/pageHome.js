@@ -170,7 +170,7 @@ ${ui.l('events.title')}
 		var e = ui.q('home');
 		if (force || !ui.q('home teaser.events>div card')) {
 			var v = {
-				actionLogo: 'geoData.openLocationPicker(event)'
+				actionLogo: 'ui.navigation.openLocationPicker(event)'
 			};
 			v.statsButton = ' hidden';
 			if (user.contact) {

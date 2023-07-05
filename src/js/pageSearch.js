@@ -32,7 +32,7 @@ class pageSearch {
 		template: v =>
 			global.template`<form onsubmit="return false">
 <input-checkbox label="search.matches" name="matches" ${v.matches}></input-checkbox>
-<label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
+<label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${geoData.current.town}</label>
 <input-hashtags ids="${v.keywords}" text="${v.keywordsText}" name="keywords"></input-hashtags>
 <explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
 <errorHint></errorHint>
@@ -113,7 +113,7 @@ class pageSearch {
 		template: v =>
 			global.template`<form onsubmit="return false">
 <input-checkbox label="search.matchesEvent" name="matches" ${v.matches}></input-checkbox>
-<label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
+<label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${geoData.current.town}</label>
 <input-hashtags ids="${v.keywords}" text="${v.keywordsText}" name="keywords"></input-hashtags>
 <explain class="searchKeywordHint">${ui.l('search.hintEvent')}</explain>
 <errorHint></errorHint>
@@ -229,7 +229,7 @@ class pageSearch {
 		template: v =>
 			global.template`<form onsubmit="return false">
 <input-checkbox label="search.favorites" name="favorites" ${v.favorites}></input-checkbox>
-<label class="locationPicker" onclick="geoData.openLocationPicker(event)">${geoData.current.town}</label>
+<label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${geoData.current.town}</label>
 <input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" value="${v.keywords}"/>
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
 <errorHint></errorHint>
@@ -335,8 +335,7 @@ class pageSearch {
 		ui.q('search tabBody').style.marginLeft = ((id == 'contacts' ? 0 : id == 'events' ? 1 : 2) * -100) + '%';
 		ui.classRemove('search tab', 'tabActive');
 		ui.classAdd('search tab[i="' + id + '"]', 'tabActive');
-		if (ui.q('locationPicker').style.display != 'none')
-			ui.toggleHeight('locationPicker');
+		ui.navigation.closeLocationPicker();
 	}
 	static swipeLeft() {
 		var x = parseInt(ui.q('search tabBody').style.marginLeft) || 0;

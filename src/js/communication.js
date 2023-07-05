@@ -9,7 +9,7 @@ import { pageHome } from './pageHome';
 import { pageInfo } from './pageInfo';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
-import { Video } from './video';
+import { VideoCall } from './customElements/VideoCall';
 
 export { communication, FB, Encryption, WebSocket };
 
@@ -119,7 +119,7 @@ class communication {
 		if (communication.mapScriptAdded) {
 			var f = function () {
 				if (ui.q('head script[t="map"]'))
-					geoData.openLocationPickerDialog();
+					ui.navigation.openLocationPickerDialog();
 				else
 					setTimeout(f, 100);
 			}
@@ -692,13 +692,13 @@ class WebSocket {
 					message => {
 						var data = JSON.parse(message.body);
 						if (data.offer)
-							Video.onOffer(data);
+							VideoCall.onOffer(data);
 						else if (data.answer)
-							Video.onAnswer(data.answer);
+							VideoCall.onAnswer(data.answer);
 						else if (data.candidate)
-							Video.onCandidate(data.candidate);
+							VideoCall.onCandidate(data.candidate);
 						else
-							Video.stopCall();
+							VideoCall.stopCall();
 					}
 				);
 				WebSocket.stompClient.subscribe(

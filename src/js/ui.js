@@ -25,6 +25,8 @@ import { InputSlider } from './customElements/InputSlider';
 import { ListBody } from './customElements/ListBody';
 import { ListRow } from './customElements/ListRow';
 import { DialogMenu } from './customElements/DialogMenu';
+import { VideoCall } from './customElements/VideoCall';
+import { DialogLocationPicker } from './customElements/DialogLocationPicker';
 
 export { ui, formFunc, DragObject };
 
@@ -226,6 +228,9 @@ class ui {
 		closeHint() {
 			DialogHint.close();
 		},
+		closeLocationPicker() {
+			DialogLocationPicker.close();
+		},
 		closePopup() {
 			return DialogPopup.close();
 		},
@@ -361,8 +366,7 @@ class ui {
 				}
 				if (!back)
 					ui.attr(id, 'from', currentID);
-				if (ui.q('locationPicker').style.display != 'none')
-					ui.toggleHeight('locationPicker');
+				ui.navigation.closeLocationPicker();
 				ui.navigation.fade(id, back);
 				ui.navigation.hideMenu();
 				if (ui.q('dialog-navigation item.' + id)) {
@@ -392,6 +396,12 @@ class ui {
 				}
 			}
 			return e;
+		},
+		openLocationPicker(event, noSelection) {
+			DialogLocationPicker.open(event, noSelection);
+		},
+		openLocationPickerDialog() {
+			DialogLocationPicker.openDialog();
 		},
 		openIntro(event) {
 			if (event && event.target.nodeName == 'CLOSE')
@@ -1009,6 +1019,9 @@ if (!customElements.get('button-text'))
 if (!customElements.get('dialog-hint'))
 	customElements.define('dialog-hint', DialogHint);
 
+if (!customElements.get('dialog-location-picker'))
+	customElements.define('dialog-location-picker', DialogLocationPicker);
+
 if (!customElements.get('dialog-menu'))
 	customElements.define('dialog-menu', DialogMenu);
 
@@ -1038,6 +1051,9 @@ if (!customElements.get('list-body'))
 
 if (!customElements.get('list-row'))
 	customElements.define('list-row', ListRow);
+
+if (!customElements.get('video-call'))
+	customElements.define('video-call', VideoCall);
 
 class DragObject {
 	constructor(o) {

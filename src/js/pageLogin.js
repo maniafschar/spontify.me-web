@@ -11,7 +11,7 @@ import { pageHome } from './pageHome';
 import { pageLocation } from './pageLocation';
 import { formFunc, ui } from './ui';
 import { user } from './user';
-import { Video } from './video';
+import { VideoCall } from './customElements/VideoCall';
 
 export { pageLogin };
 
@@ -283,7 +283,6 @@ class pageLogin {
 					}
 					pageHome.club = v.is_club;
 					pageHome.init(true);
-					Video.init();
 					communication.afterLogin();
 					setTimeout(communication.notification.register, 100);
 					pageChat.initActiveChats();

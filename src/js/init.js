@@ -17,7 +17,7 @@ import { pageSearch } from './pageSearch';
 import { pageSettings } from './pageSettings';
 import { ui, formFunc } from './ui';
 import { user } from './user';
-import { Video } from './video';
+import { VideoCall } from './customElements/VideoCall';
 
 export { initialisation };
 
@@ -414,5 +414,5 @@ window.geoData = geoData;
 window.bluetooth = bluetooth;
 window.Strings = Strings;
 window.groups = groups;
-window.Video = Video;
+window.VideoCall = VideoCall;
 window.marketing = marketing;

@@ -126,49 +126,6 @@ class geoData {
 			});
 		}
 	}
-	static openLocationPicker(event, noSelection) {
-		event.preventDefault();
-		event.stopPropagation();
-		var e = user.get('locationPicker');
-		if (e && e.length > 1 && !noSelection) {
-			if (ui.q('locationPicker').style.display == 'none') {
-				var s = '';
-				for (var i = e.length - 1; i >= 0; i--) {
-					if (e[i].town != geoData.current.town)
-						s += '<label onclick="geoData.saveLocationPicker(' + JSON.stringify(e[i]).replace(/"/g, '\'') + ')">' + e[i].town + '</label>';
-				}
-				s += '<label class="bgColor" onclick="geoData.openLocationPicker(event,true)" style="color:var(--buttonText);">' + ui.l('home.locationPickerTitle') + '</label>';
-				e = ui.q('locationPicker');
-				if (e) {
-					e.innerHTML = s;
-					e.removeAttribute('h');
-				}
-			}
-			ui.toggleHeight('locationPicker');
-		} else if (user.contact)
-			communication.loadMap('geoData.openLocationPickerDialog');
-		else {
-			var desc;
-			if (user.clientId > 1) {
-				desc = ui.l('intro.descriptionFanclub').replace(/\{0}/g, global.appTitle.substring(0, global.appTitle.indexOf(global.separator)));
-			} else
-				desc = ui.l('intro.description');
-			ui.navigation.openHint({ desc: desc, pos: '5%,10.5em', size: '90%,auto', hinkyClass: 'top', hinky: 'left:50%;' });
-		}
-	}
-	static openLocationPickerDialog() {
-		ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
-			'<mapPicker></mapPicker><br/><input name="town" maxlength="20" placeholder="' + ui.l('home.locationPickerInput') + '"/><mapButton onclick="geoData.mapReposition()" class="defaultButton"></mapButton><br/><br/>' +
-			(geoData.manual ? '<button-text onclick="geoData.reset()" label="home.locationPickerReset"></button-text>' : '') +
-			'<button-text onclick="geoData.saveLocationPicker()" label="ready"></button-text><errorHint></errorHint>', null, null,
-			function () {
-				setTimeout(function () {
-					if (ui.q('locationPicker').style.display != 'none')
-						ui.toggleHeight('locationPicker');
-					geoData.map = new google.maps.Map(ui.q('mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 12, center: new google.maps.LatLng(geoData.current.lat, geoData.current.lon), zoom: 9 });
-				}, 500);
-			});
-	}
 	static pause() {
 		if (geoData.id) {
 			navigator.geolocation.clearWatch(geoData.id);

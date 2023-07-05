@@ -89,7 +89,7 @@ body.app>main content,
 body.app>main dialog-hint,
 body.app>main dialog-menu,
 body.app>main dialog-popup,
-body.app>main locationPicker,
+body.app>main dialog-location-picker,
 body.app>main progressbar {
 	margin-top: constant(safe-area-inset-top);
 	margin-top: env(safe-area-inset-top);
@@ -745,26 +745,12 @@ search hashtagButton {
 	right: 0.5em;
 }
 
-locationPicker {
+dialog-location-picker {
 	position: absolute;
 	display: inline-block;
 	right: 0;
 	top: 6em;
 	z-index: 1;
-}
-
-locationPicker label {
-	display: inline;
-	color: black;
-	background: white;
-	cursor: pointer;
-	position: relative;
-	padding: 0.25em 0.75em;
-	border-radius: 1em 0 0 1em;
-	margin: 0.25em 0;
-	clear: both;
-	float: right;
-	box-shadow: 0 0 0.5em rgb(0, 0, 0, 0.3);
 }
 
 img.qrVerification {
@@ -1900,7 +1886,7 @@ progressbar {
 	height: 0.75em;
 }
 
-videoCall {
+video-call {
 	position: absolute;
 	top: 0;
 	bottom: 0;
@@ -1910,84 +1896,6 @@ videoCall {
 	z-index: 3;
 }
 
-videoCall call {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	align-items: center;
-	height: 6em;
-	width: 18em;
-	background: rgba(255, 255, 255, 0.95);
-	border-radius: 1em;
-	padding: 1em;
-	position: fixed;
-	z-index: 1;
-	left: 50%;
-	top: 4em;
-	transform: translate(-50%);
-	filter: drop-shadow(0 0 0.5em rgba(0, 0, 0, 0.4));
-}
-
-videoCall call initiator {
-	display: block;
-	color: black;
-	position: relative;
-}
-
-videoCall call footer {
-	width: 100%;
-	display: flex;
-	justify-content: space-around;
-	align-items: center;
-	margin-top: 1.5em;
-}
-
-videoCall buttonIcon {
-	background: darkgoldenrod;
-	position: relative;
-	scale: 1.5;
-}
-
-videoCall buttonIcon.muted svg path.mute {
-	display: none;
-}
-
-videoCall videochat {
-	height: 100%;
-	width: 100%;
-	position: relative;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: space-between;
-}
-
-
-videoCall videochat buttons {
-	width: 100%;
-	position: absolute;
-	bottom: 2em;
-	display: flex;
-	justify-content: space-around;
-}
-
-videoCall video {
-	height: 100%;
-	width: 50%;
-	object-fit: cover;
-	visibility: hidden;
-	position: relative;
-	float: left;
-}
-
-videoCall streams {
-	height: 100%;
-	width: 200%;
-	left: 0;
-	position: absolute;
-	display: block;
-	transition: all .4s ease-out;
-}
 
 .highlightBackground {
 	background: var(--bg2stop) !important;
