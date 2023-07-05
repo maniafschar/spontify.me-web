@@ -546,7 +546,7 @@ class pageEvent {
 	static loadEvents(params) {
 		var events = null, participations = null, divID = ui.navigation.getActiveID();
 		var menuIndex = -1;
-		ui.qa('menu a').forEach(function (e, i) { if (e.matches(':hover')) menuIndex = i; });
+		ui.qa('dialog-menu a').forEach(function (e, i) { if (e.matches(':hover')) menuIndex = i; });
 		if (divID == 'search')
 			divID += ' tabBody>div.events';
 		var render = function () {

@@ -38,7 +38,7 @@ class lists {
 		var menuIndex = -1;
 		var wc = data.webCall;
 		delete data.webCall;
-		ui.qa('menu a').forEach(function (e, i) { if (e.matches(':hover')) menuIndex = i; });
+		ui.qa('dialog-menu a').forEach(function (e, i) { if (e.matches(':hover')) menuIndex = i; });
 		communication.ajax({
 			url: global.serverApi + 'db/list?' + Object.keys(data).map(key => key + '=' + data[key]).join('&'),
 			responseType: 'json',
@@ -91,10 +91,10 @@ class lists {
 	static setListHint(id) {
 		var e = ui.q(id + ' listHeader listTitle');
 		if (e) {
-			ui.classRemove('menu a', 'highlightMenu');
-			ui.classAdd(ui.qa('menu a')[parseInt(ui.q(ui.navigation.getActiveID()).getAttribute('menuIndex'))], 'highlightMenu');
+			ui.classRemove('dialog-menu a', 'highlightMenu');
+			ui.classAdd(ui.qa('dialog-menu a')[parseInt(ui.q(ui.navigation.getActiveID()).getAttribute('menuIndex'))], 'highlightMenu');
 			var rows = ui.qa(id + ' list-row'), x = 0;
-			var s = ui.q('menu .highlightMenu');
+			var s = ui.q('dialog-menu .highlightMenu');
 			if (s)
 				s = s.innerHTML;
 			if (s) {

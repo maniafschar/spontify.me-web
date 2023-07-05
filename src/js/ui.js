@@ -24,6 +24,7 @@ import { InputRating } from './customElements/InputRating';
 import { InputSlider } from './customElements/InputSlider';
 import { ListBody } from './customElements/ListBody';
 import { ListRow } from './customElements/ListRow';
+import { DialogMenu } from './customElements/DialogMenu';
 
 export { ui, formFunc, DragObject };
 
@@ -371,12 +372,7 @@ class ui {
 			}
 		},
 		hideMenu(exec) {
-			if (ui.cssValue('menu', 'transform').indexOf('1') > 0)
-				ui.navigation.toggleMenu();
-			if (DialogHint.currentStep < 0)
-				ui.navigation.closeHint();
-			if (exec)
-				exec.call();
+			DialogMenu.close(exec);
 		},
 		openAGB() {
 			pageInfo.openSection = 1;
@@ -405,22 +401,8 @@ class ui {
 		openPopup(title, data, closeAction, modal, exec) {
 			return DialogPopup.open(title, data, closeAction, modal, exec);
 		},
-		toggleMenu(activeID) {
-			if (!activeID)
-				activeID = ui.navigation.getActiveID();
-			setTimeout(function () {
-				var e = ui.q('content>[class*="SlideIn"]');
-				if (e && activeID.toLowerCase() != e.nodeName.toLowerCase())
-					return;
-				if (activeID == 'contacts')
-					ui.html(ui.q('menu>div'), ui.templateMenuContacts());
-				else if (activeID == 'events')
-					ui.html(ui.q('menu>div'), ui.templateMenuEvents());
-				e = ui.q('menu');
-				e.setAttribute('type', activeID);
-				ui.classAdd(ui.qa('menu a')[parseInt(ui.q(activeID).getAttribute('menuIndex'))], 'highlightMenu');
-				ui.css(e, 'transform', e.style.transform.indexOf('1') > 0 ? 'scale(0)' : 'scale(1)')
-			}, 10);
+		toggleMenu(id) {
+			DialogMenu.toggle(id);
 		}
 	};
 	static query = {
@@ -528,6 +510,8 @@ class ui {
 			e = customElements('dialog-navigation');
 		if (!e)
 			e = customElements('dialog-hint');
+		if (!e)
+			e = customElements('dialog-menu');
 		if (!e)
 			e = document.querySelectorAll(path);
 		return e;
@@ -1025,17 +1009,20 @@ if (!customElements.get('button-text'))
 if (!customElements.get('dialog-hint'))
 	customElements.define('dialog-hint', DialogHint);
 
+if (!customElements.get('dialog-menu'))
+	customElements.define('dialog-menu', DialogMenu);
+
 if (!customElements.get('dialog-navigation'))
 	customElements.define('dialog-navigation', DialogNavigation);
 
 if (!customElements.get('dialog-popup'))
 	customElements.define('dialog-popup', DialogPopup);
 
-if (!customElements.get('input-hashtags'))
-	customElements.define('input-hashtags', InputHashtags);
-
 if (!customElements.get('input-checkbox'))
 	customElements.define('input-checkbox', InputCheckbox);
+
+if (!customElements.get('input-hashtags'))
+	customElements.define('input-hashtags', InputHashtags);
 
 if (!customElements.get('input-image'))
 	customElements.define('input-image', InputImage);

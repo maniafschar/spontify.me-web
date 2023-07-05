@@ -502,7 +502,7 @@ class groups {
 	}
 	static open() {
 		var activeID = ui.navigation.getActiveID();
-		var e = ui.qa('menu a');
+		var e = ui.qa('dialog-menu a');
 		for (var i = 0; i < e.length; i++) {
 			if (e[i].matches(':hover')) {
 				ui.attr(activeID, 'menuIndex', i);

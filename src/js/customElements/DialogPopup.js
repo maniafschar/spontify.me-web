@@ -149,6 +149,24 @@ popupContent {
 	color: black;
 }
 
+* {
+	-webkit-overflow-scrolling: touch;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	-moz-tap-highlight-color: rgba(0, 0, 0, 0);
+	-webkit-touch-callout: none;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	user-select: none;
+	box-sizing: border-box;
+	text-rendering: optimizelegibility;
+	margin: 0;
+	padding: 0;
+}
+
+*::-webkit-scrollbar {
+	display: none;
+}
+
 popupContent>div {
 	overflow-y: auto;
 	overflow-x: hidden;

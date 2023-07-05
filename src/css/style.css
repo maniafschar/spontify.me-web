@@ -87,7 +87,7 @@ body.app>main {
 body.app>main alert,
 body.app>main content,
 body.app>main dialog-hint,
-body.app>main menu,
+body.app>main dialog-menu,
 body.app>main dialog-popup,
 body.app>main locationPicker,
 body.app>main progressbar {
@@ -2051,7 +2051,7 @@ info subject {
 	padding: 1em 0 0.5em 0;
 }
 
-menu {
+dialog-menu {
 	border-radius: 1em 0 0 1em;
 	box-shadow: 0 0 3em rgba(0, 0, 0, 0.3);
 	background: var(--bgHint);
@@ -2063,25 +2063,6 @@ menu {
 	transition: all .4s ease-out;
 	transform-origin: top right;
 	color: black;
-}
-
-menu a {
-	display: block;
-	position: relative;
-	padding: 0.75em 0;
-	cursor: pointer;
-	color: rgba(0, 0, 0, 0.6);
-}
-
-menu a:hover,
-menu a.highlightMenu {
-	color: black;
-}
-
-menu title {
-	font-weight: bold;
-	color: rgb(0, 94, 160);
-	padding-top: 0.75em;
 }
 
 .highlightColor {
