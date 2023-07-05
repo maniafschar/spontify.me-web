@@ -523,6 +523,8 @@ class ui {
 		if (!e)
 			e = customElements('dialog-menu');
 		if (!e)
+			e = customElements('video-call');
+		if (!e)
 			e = document.querySelectorAll(path);
 		return e;
 	}
@@ -850,7 +852,10 @@ class formFunc {
 				for (var i = 0; i < imgs.length; i++) {
 					var id = imgs[i].getAttribute('source');
 					if (formFunc.svg.data[id]) {
-						if (formFunc.svg.data[id] != 1) {
+						if (formFunc.svg.data[id] == 1) {
+							var img = imgs[i];
+							setTimeout(function () { formFunc.svg.replaceAll([img]) }, 500);
+						} else if (imgs[i].parentNode) {
 							var e = document.createElement('div');
 							e.innerHTML = formFunc.svg.data[id];
 							e.firstChild.onclick = imgs[i].onclick;

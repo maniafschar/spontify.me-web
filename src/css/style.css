@@ -1457,16 +1457,6 @@ buttonIcon svg {
 	line-height: 2.2;
 }
 
-buttonIcon.left {
-	top: 0.5em;
-	left: 0.5em;
-}
-
-buttonIcon.right {
-	top: 0.5em;
-	right: 0.5em;
-}
-
 .appInput {
 	text-align: center;
 }
