@@ -189,8 +189,7 @@ class geoData {
 						pageSearch.updateLocalisation();
 						if (ui.q('dialog-popup mapPicker'))
 							ui.navigation.closePopup();
-						if (ui.q('locationPicker').style.display != 'none')
-							ui.toggleHeight('locationPicker');
+						ui.navigation.closeLocationPicker();
 						if (exec)
 							exec.call();
 					} else
@@ -200,9 +199,6 @@ class geoData {
 		}
 		geoData.localized = true;
 		geoData.updateCompass();
-	}
-	static saveLocationPicker(e) {
-		geoData.save({ latitude: e ? e.lat : geoData.map.getCenter().lat(), longitude: e ? e.lon : geoData.map.getCenter().lng(), manual: true }, function () { pageHome.init(true); });
 	}
 	static updateCompass(angle) {
 		if (!angle)

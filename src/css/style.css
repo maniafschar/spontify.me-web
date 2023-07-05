@@ -423,7 +423,8 @@ news buttonIcon {
 	bottom: -1.1em;
 }
 
-.bgColor {
+.bgColor,
+dialog-location-picker::part(bgColor) {
 	background: linear-gradient(var(--bg2stop) 0%, var(--bg2start) 100%) center center / 100% no-repeat;
 }
 
@@ -729,17 +730,6 @@ dialog-popup::part(input-image) {
 	display: block;
 }
 
-mapButton {
-	font-size: 2em;
-	position: absolute;
-	right: 0;
-	top: 0;
-	padding: 0.2em;
-	cursor: pointer;
-	z-index: 1;
-	color: black;
-}
-
 search hashtagButton {
 	top: 1.6em;
 	right: 0.5em;
@@ -808,12 +798,6 @@ dialog-popup::part(value) {
 
 field .checkbox {
 	margin-bottom: -0.5em;
-}
-
-mapButton {
-	position: relative;
-	float: right;
-	margin-top: -1.05em;
 }
 
 dialogButtons,
@@ -1607,23 +1591,12 @@ subtitle {
 	line-height: 1;
 }
 
-mapPicker {
-	position: relative;
-	display: block;
-	width: 100%;
-	height: 50vh;
-}
-
 map {
 	height: 20em;
 	overflow: hidden;
 	position: relative;
 	display: block;
 	box-shadow: 0 0 1em rgb(0, 0, 0, 0.3);
-}
-
-mapButton::before {
-	content: '>';
 }
 
 img.map {

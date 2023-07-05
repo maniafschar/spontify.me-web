@@ -662,7 +662,6 @@ class pageEvent {
 		});
 	}
 	static locationSelected(e) {
-		console.log(e);
 		ui.q('dialog-popup input[name="locationId"]').value = e < 0 ? e : e.getAttribute('i');
 		ui.q('dialog-popup .locationName').innerHTML = e == -1 ? ui.l('events.newOnlineEvent') : e == -2 ? ui.l('events.newWithoutLocation') : e.innerHTML;
 		ui.toggleHeight('dialog-popup .location', function () {

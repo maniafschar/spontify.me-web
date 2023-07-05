@@ -207,7 +207,6 @@ button-image.right {
 						zoom /= event.scale;
 					else
 						zoom *= event.scale;
-					console.log(event.scale, event);
 					img.getRootNode().host.zoom(zoom);
 					img.getRootNode().host.zoomDist = d;
 				}
@@ -390,7 +389,6 @@ button-image.right {
 		else if (zoom / 100 * windowSize > imageSize)
 			zoom = imageSize / windowSize * 100;
 		zoom = parseInt('' + zoom);
-		console.log(style + ' - ' + windowSize + ' - ' + imageSize + ' - ' + delta + ' - ' + zoom);
 		if (zoom == parseInt(ui.cssValue(e, style)))
 			return;
 		ui.css(e, style, zoom + '%');

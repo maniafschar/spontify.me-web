@@ -411,6 +411,9 @@ class ui {
 		openPopup(title, data, closeAction, modal, exec) {
 			return DialogPopup.open(title, data, closeAction, modal, exec);
 		},
+		saveLocationPicker(e) {
+			DialogLocationPicker.save(e);
+		},
 		toggleMenu(id) {
 			DialogMenu.toggle(id);
 		}
@@ -704,8 +707,6 @@ class ui {
 						e2.setAttribute('h', h);
 					}
 					e2.removeAttribute('toggle');
-					if (exec)
-						console.log(exec);
 					if (exec)
 						exec.call();
 				}, true);

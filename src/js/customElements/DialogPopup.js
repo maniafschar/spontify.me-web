@@ -202,6 +202,30 @@ eventLocationInputHelper li {
 	margin: 0.5em !important;
 	text-align: center !important;
 	color: white !important;
+}
+
+mapPicker {
+	position: relative;
+	display: block;
+	width: 100%;
+	height: 50vh;
+}
+
+mapButton {
+	font-size: 2em;
+	right: 0;
+	top: 0;
+	padding: 0.2em;
+	cursor: pointer;
+	z-index: 1;
+	color: black;
+	position: relative;
+	float: right;
+	margin-top: -1.05em;
+}
+
+mapButton::before {
+	content: '>';
 }`;
 		this._root.appendChild(style);
 	}
