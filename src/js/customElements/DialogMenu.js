@@ -37,7 +37,7 @@ a {
 }
 
 a:hover,
-a.highlightMenu {
+a.highlight {
 	color: black;
 }
 
@@ -97,7 +97,7 @@ title {
 	</a>
 </container>`);
 			e.setAttribute('type', id);
-			ui.classAdd(ui.qa('menu a')[parseInt(ui.q(id).getAttribute('menuIndex'))], 'highlightMenu');
+			ui.classAdd(ui.qa('dialog-menu a')[parseInt(ui.q(id).getAttribute('menuIndex'))], 'highlight');
 			ui.css(e, 'transform', e.style.transform.indexOf('1') > 0 ? 'scale(0)' : 'scale(1)')
 		}, 10);
 	}
