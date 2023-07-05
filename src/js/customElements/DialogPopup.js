@@ -12,7 +12,7 @@ class DialogPopup extends HTMLElement {
 		super();
 		this._root = this.attachShadow({ mode: 'closed' });
 	}
-	connectedCallback() {
+	addStyle() {
 		const style = document.createElement('style');
 		style.textContent = `
 input:checked+label {
@@ -245,7 +245,7 @@ mapButton::before {
 		e.removeAttribute('error');
 		e.removeAttribute('modal');
 		ui.classRemove(e, 'animated popupSlideIn popupSlideOut');
-		for (var i = e._root.children.length - 1; i > 0; i--)
+		for (var i = e._root.children.length - 1; i >= 0; i--)
 			e._root.children[i].remove();
 	}
 	static open(title, data, closeAction, modal, exec) {
@@ -254,12 +254,13 @@ mapButton::before {
 			return false;
 		if (global.isBrowser() && location.href.indexOf('#') < 0)
 			history.pushState(null, null, '#x');
-		if (visible && ui.navigation.lastPopup == title + global.separatorTech + data)
+		if (!data || visible && ui.navigation.lastPopup == title + global.separatorTech + data)
 			ui.navigation.closePopup();
-		else if (data) {
+		else {
 			ui.navigation.lastPopup = title + global.separatorTech + data;
 			var f = function () {
-				e._root.getRootNode().host.closeHard();
+				e._root.host.closeHard();
+				e._root.host.addStyle();
 				var element;
 				if (title) {
 					element = document.createElement('popupTitle');
@@ -306,8 +307,7 @@ mapButton::before {
 				f.call();
 			else
 				ui.navigation.animation(e, 'slideUp', f);
-		} else
-			ui.navigation.animation(e, 'popupSlideOut', ui.navigation.closePopupHard);
+		}
 		return true;
 	}
 }

@@ -7,6 +7,7 @@ import { pageHome } from '../pageHome';
 export { DialogLocationPicker }
 
 class DialogLocationPicker extends HTMLElement {
+	static map;
 	constructor() {
 		super();
 		this._root = this.attachShadow({ mode: 'closed' });
@@ -39,6 +40,18 @@ label {
 					e._root.children[i].remove();
 			});
 	}
+	mapReposition() {
+		if (ui.q('dialog-popup input').value) {
+			communication.ajax({
+				url: global.serverApi + 'action/google?param=' + encodeURIComponent('town=' + ui.q('dialog-popup input').value.trim()),
+				responseType: 'json',
+				webCall: 'geoData.mapReposition()',
+				success(r) {
+					DialogLocationPicker.map.setCenter({ lat: r.latitude, lng: r.longitude });
+				}
+			});
+		}
+	}
 	static open(event, noSelection) {
 		event.preventDefault();
 		event.stopPropagation();
@@ -49,7 +62,7 @@ label {
 				for (var i = l.length - 1; i >= 0; i--) {
 					if (l[i].town != geoData.current.town) {
 						element = document.createElement('label');
-						element.setAttribute('onclick', 'ui.navigation.saveLocationPicker(' + JSON.stringify(l[i]).replace(/"/g, '\'') + ')');
+						element.setAttribute('onclick', 'ui.q("dialog-location-picker")._root.host.save(' + JSON.stringify(l[i]).replace(/"/g, '\'') + ')');
 						element.innerText = l[i].town;
 						e._root.appendChild(element);
 					}
@@ -77,17 +90,17 @@ label {
 	}
 	static openDialog() {
 		ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
-			'<mapPicker></mapPicker><br/><input name="town" maxlength="20" placeholder="' + ui.l('home.locationPickerInput') + '"/><mapButton onclick="geoData.mapReposition()" class="defaultButton"></mapButton><br/><br/>' +
+			'<mapPicker></mapPicker><br/><input name="town" maxlength="20" placeholder="' + ui.l('home.locationPickerInput') + '"/><mapButton onclick="ui.q(&quot;dialog-location-picker&quot;)._root.host.mapReposition()" class="defaultButton"></mapButton><br/><br/>' +
 			(geoData.manual ? '<button-text onclick="geoData.reset()" label="home.locationPickerReset"></button-text>' : '') +
-			'<button-text onclick="ui.navigation.saveLocationPicker()" label="ready"></button-text><errorHint></errorHint>', null, null,
+			'<button-text onclick="ui.q(&quot;dialog-location-picker&quot;)._root.host.save()" label="ready"></button-text><errorHint></errorHint>', null, null,
 			function () {
 				setTimeout(function () {
 					ui.navigation.closeLocationPicker();
-					geoData.map = new google.maps.Map(ui.q('dialog-popup mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 12, center: new google.maps.LatLng(geoData.current.lat, geoData.current.lon), zoom: 9 });
+					DialogLocationPicker.map = new google.maps.Map(ui.q('dialog-popup mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 12, center: new google.maps.LatLng(geoData.current.lat, geoData.current.lon), zoom: 9 });
 				}, 500);
 			});
 	}
-	static save(e) {
+	save(e) {
 		geoData.save({ latitude: e ? e.lat : geoData.map.getCenter().lat(), longitude: e ? e.lon : geoData.map.getCenter().lng(), manual: true }, function () { pageHome.init(true); });
 	}
 }

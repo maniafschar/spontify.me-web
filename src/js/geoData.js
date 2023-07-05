@@ -18,7 +18,6 @@ class geoData {
 	static localizationAsked = false;
 	static localized = false;
 	static manual = false;
-	static map;
 	static rad = 0.017453292519943295;
 
 	static deviceOrientationHandler(event) {
@@ -113,18 +112,6 @@ class geoData {
 		geoData.current.lon = data.lon;
 		geoData.current.treet = data.street;
 		geoData.current.town = data.town;
-	}
-	static mapReposition() {
-		if (ui.q('dialog-popup input').value) {
-			communication.ajax({
-				url: global.serverApi + 'action/google?param=' + encodeURIComponent('town=' + ui.q('dialog-popup input').value.trim()),
-				responseType: 'json',
-				webCall: 'geoData.mapReposition()',
-				success(r) {
-					geoData.map.setCenter({ lat: r.latitude, lng: r.longitude });
-				}
-			});
-		}
 	}
 	static pause() {
 		if (geoData.id) {

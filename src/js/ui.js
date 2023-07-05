@@ -411,9 +411,6 @@ class ui {
 		openPopup(title, data, closeAction, modal, exec) {
 			return DialogPopup.open(title, data, closeAction, modal, exec);
 		},
-		saveLocationPicker(e) {
-			DialogLocationPicker.save(e);
-		},
 		toggleMenu(id) {
 			DialogMenu.toggle(id);
 		}

@@ -1937,7 +1937,7 @@ dialog-menu {
 	box-shadow: 0 0 3em rgba(0, 0, 0, 0.3);
 	background: var(--bgHint);
 	position: absolute;
-	top: 3.7em;
+	top: 4em;
 	z-index: 4;
 	right: 0;
 	padding: 1.25em 2em;
