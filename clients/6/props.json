@@ -1,12 +1,13 @@
 {
 	"de": {
-		"buddy": "Spieler",
-		"buddies": "Spieler"
+		"buddy": "Pokerface",
+		"buddies": "Pokerfaces"
 	},
 	"en": {
-		"buddy": "Player",
-		"buddies": "Players"
+		"buddy": "Pokerface",
+		"buddies": "Pokerfaces"
 	},
+	"bundleId": "com.jq.fanclub.client6",
 	"email": "support@offline-poker.com",
 	"name": "Offline Poker",
 	"server": "https://offline-poker.com",

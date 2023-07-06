@@ -3,6 +3,7 @@ import { ui } from '../ui';
 import { geoData } from '../geoData';
 import { communication } from '../communication';
 import { pageHome } from '../pageHome';
+import { global } from '../global';
 
 export { DialogLocationPicker }
 

@@ -433,6 +433,7 @@
 			"compassN": "North",
 			"compassS": "South",
 			"compassW": "West",
+			"description": "Description of the location",
 			"edit": "{0}",
 			"errorAddress": "Please enter the address.",
 			"errorAddressFormat": "Please enter a correct address with at least 2 rows.",

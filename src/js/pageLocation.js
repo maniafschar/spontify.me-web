@@ -296,7 +296,7 @@ ${v.rating}
 
 		}
 		if (v.description)
-			v.description = '<text class="description">' + Strings.replaceLinks(v.description.replace(/\n/g, '<br/>')) + '</text>';
+			v.description = '<text class="description">' + (v.event.id ? '<b>' + ui.l('locations.description') + '</b><br/><br/>' : '') + Strings.replaceLinks(v.description.replace(/\n/g, '<br/>')) + '</text>';
 		if (v.bonus)
 			v.bonus = '<text style="margin:1em 0;" class="highlightBackground">' + ui.l('locations.bonus') + v.bonus + '<br/>' + ui.l('locations.bonusHint') + '</text>';
 		if (user.contact) {

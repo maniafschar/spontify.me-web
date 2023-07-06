@@ -36,6 +36,7 @@ inputFile close {
 	top: 0;
 	right: 0;
 	width: 4em;
+	cursor: pointer;
 	z-index: 2;
 	text-align: right;
 	padding: 0.5em 0.75em;
@@ -64,6 +65,7 @@ inputFile rotate {
 	padding: 0.25em;
 	color: white;
 	top: 0;
+	cursor: pointer;
 	z-index: 2;
 	filter: drop-shadow(0 0 0.05em rgba(0, 0, 0, 0.8));
 }
