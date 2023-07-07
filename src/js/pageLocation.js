@@ -145,7 +145,7 @@ ${v.rating}
 <field>
 	<label>${ui.l('picture')}</label>
 	<value>
-		<input-image src="${v.image}"></input-image>
+		<input-image name="image" src="${v.image}"></input-image>
 	</value>
 </field>
 <dialogButtons>

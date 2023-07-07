@@ -69,7 +69,7 @@ label:hover {
 		if (e.getAttribute('type') == 'radio') {
 			if (e.getAttribute('checked') == 'true' && e.getAttribute('deselect') != 'true')
 				return;
-			ui.attr('input-checkbox[name="' + e.getAttribute('name') + '"][type="radio"]', 'checked', 'false');
+			ui.attr(e.parentElement.querySelectorAll('input-checkbox[name="' + e.getAttribute('name') + '"][type="radio"]'), 'checked', 'false');
 		}
 		e.setAttribute('checked', e.getAttribute('checked') == 'true' ? 'false' : 'true');
 	}
