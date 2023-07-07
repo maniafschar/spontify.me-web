@@ -1,3 +1,4 @@
+import { initialisation } from '../init';
 import { formFunc } from '../ui';
 
 export { DialogNavigation }
@@ -12,7 +13,7 @@ class DialogNavigation extends HTMLElement {
 	connectedCallback() {
 		this.setAttribute('class', 'bgColor');
 		const style = document.createElement('style');
-		style.textContent = `
+		style.textContent = `${initialisation.customElementsCss}
 item {
 	width: 25%;
 	position: relative;

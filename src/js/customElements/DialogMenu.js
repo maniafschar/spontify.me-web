@@ -1,3 +1,4 @@
+import { initialisation } from '../init';
 import { ui } from '../ui';
 import { DialogHint } from './DialogHint';
 
@@ -11,7 +12,7 @@ class DialogMenu extends HTMLElement {
 	connectedCallback() {
 		this.setAttribute('class', 'bgColor');
 		const style = document.createElement('style');
-		style.textContent = `
+		style.textContent = `${initialisation.customElementsCss}
 div{
 	position: relative;
 	z-index: 1;

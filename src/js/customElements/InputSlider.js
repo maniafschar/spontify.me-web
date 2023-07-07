@@ -1,3 +1,4 @@
+import { initialisation } from '../init';
 import { DragObject, ui } from '../ui';
 
 export { InputSlider }
@@ -9,7 +10,7 @@ class InputSlider extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = `
+		style.textContent = `${initialisation.customElementsCss}
 * {
 	transform: translate3d(0, 0, 0);
 }

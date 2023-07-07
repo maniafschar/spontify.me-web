@@ -201,18 +201,6 @@ hintDelete::after {
 	position: relative;
 }
 
-ul li,
-dialog-popup::part(li),
-ol li {
-	margin-left: 1.85em;
-	text-align: left;
-}
-
-ul li,
-dialog-popup::part(li) {
-	list-style-type: circle;
-}
-
 ol li {
 	list-style-type: decimal;
 }
@@ -223,13 +211,6 @@ subCatTitle {
 	text-align: center;
 	border-bottom: solid 0.06em rgba(255, 255, 255, 0.1);
 	display: block;
-}
-
-.mainBG,
-dialog-navigation::part(mainBG),
-list-row::part(mainBG) {
-	background: linear-gradient(120deg, var(--bg1stop) 0%, var(--bg1start) 100%);
-	background-size: 100% 100%;
 }
 
 homeHeader {
@@ -423,16 +404,6 @@ news buttonIcon {
 	bottom: -1.1em;
 }
 
-.bgColor,
-dialog-location-picker::part(bgColor) {
-	background: linear-gradient(var(--bg2stop) 0%, var(--bg2start) 100%) center center / 100% no-repeat;
-}
-
-a.bgColor:hover,
-button-text::part(bgColor):hover {
-	background: var(--bg2stop);
-}
-
 content {
 	position: absolute;
 	display: block;
@@ -516,46 +487,6 @@ listTitle {
 	padding-left: 1em;
 }
 
-select,
-textarea,
-input,
-dialog-popup::part(input),
-dialog-popup::part(textarea),
-input-hashtags::part(textarea),
-input-rating::part(textarea) {
-	appearance: none;
-	position: relative;
-	font-size: 1em;
-	font-weight: normal;
-	box-sizing: border-box;
-	width: 100%;
-	outline: none !important;
-	font-family: Comfortaa, Verdana, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-	height: 2em;
-	padding: 0em 0.75em;
-	border-radius: 0.5em;
-	background: rgba(255, 255, 255, 0.85);
-	vertical-align: top;
-	border: none;
-	color: black;
-}
-
-input-checkbox,
-input-rating::part(button-text),
-dialog-hint::part(button-text),
-dialog-popup::part(button-text),
-button-text {
-	outline: none !important;
-	appearance: none !important;
-}
-
-input,
-textarea,
-dialog-popup::part(input),
-dialog-popup::part(textarea) {
-	user-select: text;
-}
-
 .selectable {
 	user-select: all;
 }
@@ -571,33 +502,10 @@ dialog-popup::part(textarea) {
 	color: rgba(0, 0, 0, 0.5);
 }
 
-textarea,
-dialog-popup::part(textarea),
-input-hashtags::part(textarea),
-input-rating::part(textarea) {
-	height: 5em;
-	padding-top: 0.5em;
-	overflow-y: auto;
-	resize: none;
-}
-
 li {
 	list-style: none;
 	padding-left: 0.25em;
 	margin: 0.75em 0;
-}
-
-field>label,
-dialog-popup::part(label) {
-	position: relative;
-	display: block;
-	width: 100%;
-	text-align: left;
-	padding: 1em 0 0 1em;
-	text-overflow: ellipsis;
-	overflow: hidden;
-	white-space: nowrap;
-	font-style: italic;
 }
 
 settings,
@@ -645,15 +553,6 @@ settings paypalFees {
 
 #info6 {
 	margin-top: -0.5em;
-	text-align: center;
-}
-
-explain,
-dialog-popup::part(explain) {
-	font-size: 0.8em;
-	padding: 0.5em;
-	display: block;
-	line-height: 1.3;
 	text-align: center;
 }
 
@@ -722,14 +621,6 @@ settings qrcode {
 	position: relative;
 }
 
-input-hashtags,
-input-image,
-dialog-popup::part(input-hashtags),
-dialog-popup::part(input-image) {
-	position: relative;
-	display: block;
-}
-
 search hashtagButton {
 	top: 1.6em;
 	right: 0.5em;
@@ -773,43 +664,6 @@ qrCheck.negative {
 
 #blocked>div {
 	margin-bottom: 1em;
-}
-
-.hidden,
-dialog-popup::part(hidden),
-list-row::part(hidden) {
-	display: none !important;
-}
-
-field,
-dialog-popup::part(field) {
-	position: relative;
-	width: 100%;
-	display: block;
-}
-
-field value,
-dialog-popup::part(value) {
-	text-align: left;
-	position: relative;
-	width: 100%;
-	display: block;
-	min-height: 2em;
-}
-
-field .checkbox {
-	margin-bottom: -0.5em;
-}
-
-dialogButtons,
-dialog-popup::part(dialogButtons) {
-	text-align: center;
-	white-space: nowrap;
-	clear: both;
-	position: relative;
-	width: 100%;
-	margin: 1em 0 0.5em 0;
-	display: block;
 }
 
 .chatLinks.pressed::before {
@@ -1044,36 +898,6 @@ listSeparator {
 
 listSeparator.strong {
 	font-weight: bold;
-}
-
-badge,
-list-row::part(badge) {
-	border-radius: 0.8em;
-	position: absolute;
-	bottom: 0.5em;
-	text-align: center;
-	z-index: 2;
-	box-shadow: 0 0 0.25em rgba(0, 0, 0, 0.3);
-	opacity: 0.9;
-	left: 4.5em;
-	width: 1.6em;
-	height: 1.6em;
-	line-height: 1.6;
-}
-
-badge img {
-	height: 1.5em;
-}
-
-badge span {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	font-weight: bold;
-	height: 100%;
-	line-height: 2.5em;
-	color: var(--bg2stop);
 }
 
 chatDateTitle {
@@ -1321,17 +1145,6 @@ chatInput textarea {
 	margin: 0 0 0.5em 1em;
 }
 
-km,
-list-row::part(km) {
-	position: relative;
-}
-
-km::after,
-list-row::part(km)::after {
-	content: 'KM';
-	font-size: 0.5em;
-}
-
 detailCompass,
 detailDistance {
 	width: 5em;
@@ -1400,19 +1213,6 @@ notifications {
 
 notifications listBody {
 	padding: 0;
-}
-
-buttonIcon,
-dialog-navigation::part(icon) {
-	position: absolute;
-	cursor: pointer;
-	display: inline-flex;
-	padding: 0.5em;
-	text-align: center;
-	z-index: 3;
-	color: white;
-	border-radius: 50%;
-	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
 }
 
 buttonIcon.right {

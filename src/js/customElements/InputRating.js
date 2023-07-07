@@ -4,6 +4,7 @@ import { formFunc, ui } from '../ui';
 import { user } from '../user';
 import { pageEvent } from '../pageEvent';
 import { Contact, model } from '../model';
+import { initialisation } from '../init';
 
 export { InputRating }
 
@@ -22,7 +23,7 @@ class InputRating extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = `
+		style.textContent = `${initialisation.customElementsCss}
 detailRating {
 	font-size: 1.5em;
 	margin: 1em 0 0.75em 0;

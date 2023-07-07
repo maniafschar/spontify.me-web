@@ -1,0 +1,168 @@
+ul li,
+ol li {
+	margin-left: 1.85em;
+	text-align: left;
+}
+
+ul li {
+	list-style-type: circle;
+}
+
+.mainBG {
+	background: linear-gradient(120deg, var(--bg1stop) 0%, var(--bg1start) 100%);
+	background-size: 100% 100%;
+}
+
+.bgColor {
+	background: linear-gradient(var(--bg2stop) 0%, var(--bg2start) 100%) center center / 100% no-repeat;
+}
+
+a.bgColor:hover {
+	background: var(--bg2stop);
+}
+
+select,
+textarea,
+input {
+	appearance: none;
+	position: relative;
+	font-size: 1em;
+	font-weight: normal;
+	box-sizing: border-box;
+	width: 100%;
+	outline: none !important;
+	font-family: Comfortaa, Verdana, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+	height: 2em;
+	padding: 0em 0.75em;
+	border-radius: 0.5em;
+	background: rgba(255, 255, 255, 0.85);
+	vertical-align: top;
+	border: none;
+	color: black;
+}
+
+input-checkbox,
+button-text {
+	outline: none !important;
+	appearance: none !important;
+}
+
+input,
+textarea {
+	user-select: text;
+}
+
+textarea {
+	height: 5em;
+	padding-top: 0.5em;
+	overflow-y: auto;
+	resize: none;
+}
+
+field>label {
+	position: relative;
+	display: block;
+	width: 100%;
+	text-align: left;
+	padding: 1em 0 0 1em;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	font-style: italic;
+}
+
+explain {
+	font-size: 0.8em;
+	padding: 0.5em;
+	display: block;
+	line-height: 1.3;
+	text-align: center;
+}
+
+input-hashtags,
+input-image {
+	position: relative;
+	display: block;
+}
+
+.hidden {
+	display: none !important;
+}
+
+field {
+	position: relative;
+	width: 100%;
+	display: block;
+}
+
+field value {
+	text-align: left;
+	position: relative;
+	width: 100%;
+	display: block;
+	min-height: 2em;
+}
+
+field .checkbox {
+	margin-bottom: -0.5em;
+}
+
+dialogButtons {
+	text-align: center;
+	white-space: nowrap;
+	clear: both;
+	position: relative;
+	width: 100%;
+	margin: 1em 0 0.5em 0;
+	display: block;
+}
+
+badge {
+	border-radius: 0.8em;
+	position: absolute;
+	bottom: 0.5em;
+	text-align: center;
+	z-index: 2;
+	box-shadow: 0 0 0.25em rgba(0, 0, 0, 0.3);
+	opacity: 0.9;
+	left: 4.5em;
+	width: 1.6em;
+	height: 1.6em;
+	line-height: 1.6;
+}
+
+badge img {
+	height: 1.5em;
+}
+
+badge span {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	font-weight: bold;
+	height: 100%;
+	line-height: 2.5em;
+	color: var(--bg2stop);
+}
+
+km {
+	position: relative;
+}
+
+km::after {
+	content: 'KM';
+	font-size: 0.5em;
+}
+
+buttonIcon {
+	position: absolute;
+	cursor: pointer;
+	display: inline-flex;
+	padding: 0.5em;
+	text-align: center;
+	z-index: 3;
+	color: white;
+	border-radius: 50%;
+	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
+}

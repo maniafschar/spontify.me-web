@@ -1,3 +1,4 @@
+import { initialisation } from '../init';
 import { ui } from '../ui';
 
 export { InputHashtags }
@@ -9,7 +10,7 @@ class InputHashtags extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = `
+		style.textContent = `${initialisation.customElementsCss}
 hashtags {
 	position: relative;
 }

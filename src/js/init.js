@@ -35,69 +35,77 @@ import { ListRow } from './customElements/ListRow';
 export { initialisation };
 
 class initialisation {
+	static customElementsCss;
 	static execLocation = null;
 	static hideStatusBar = true;
 	static recoverInvoked = false;
 	static init() {
-		customElements.define('button-text', ButtonText);
-		customElements.define('dialog-hint', DialogHint);
-		customElements.define('dialog-location-picker', DialogLocationPicker);
-		customElements.define('dialog-menu', DialogMenu);
-		customElements.define('dialog-navigation', DialogNavigation);
-		customElements.define('dialog-popup', DialogPopup);
-		customElements.define('input-checkbox', InputCheckbox);
-		customElements.define('input-hashtags', InputHashtags);
-		customElements.define('input-image', InputImage);
-		customElements.define('input-rating', InputRating);
-		customElements.define('input-slider', InputSlider);
-		customElements.define('list-body', ListBody);
-		customElements.define('list-row', ListRow);
-		customElements.define('video-call', VideoCall);
-		formFunc.svg.replaceAll();
-		var f = function () {
-			if (ui.cssValue('content > *', 'display')) {
-				ui.css('preloader', 'opacity', 0);
-				setTimeout(function () {
-					var e = ui.q('preloader');
-					if (e)
-						e.outerHTML = '';
-					e = ui.q('#preloader');
-					if (e)
-						e.outerHTML = '';
-				}, 500);
-			} else
-				setTimeout(f, 200);
-		};
-		setTimeout(f, 2000);
-		window.onerror = function (message, url, line, column, error) {
-			if (url && (url.lastIndexOf('init.js') + 7 == url.length || url.lastIndexOf('lang') + 6 == url.lastIndexOf('.js'))) {
-				var last = Object.values(communication.currentCalls)[0];
-				communication.sendError('uncaughtExecption:\nmessage: ' + message +
-					'\ncall: ' + (last ? JSON.stringify(last) : '-') +
-					'\npage: ' + ui.navigation.getActiveID() +
-					'\ncolumn: ' + url + ': ' + line + '/' + column +
-					'\nerror: ' + JSON.stringify(error));
+		communication.ajax({
+			url: (window.location && window.location.href && window.location.href.indexOf(global.server) == 0 ? '/' : '') + 'css/customElements.css',
+			webCall: 'init.init()',
+			success(r) {
+				initialisation.customElementsCss = r;
+				customElements.define('button-text', ButtonText);
+				customElements.define('dialog-hint', DialogHint);
+				customElements.define('dialog-location-picker', DialogLocationPicker);
+				customElements.define('dialog-menu', DialogMenu);
+				customElements.define('dialog-navigation', DialogNavigation);
+				customElements.define('dialog-popup', DialogPopup);
+				customElements.define('input-checkbox', InputCheckbox);
+				customElements.define('input-hashtags', InputHashtags);
+				customElements.define('input-image', InputImage);
+				customElements.define('input-rating', InputRating);
+				customElements.define('input-slider', InputSlider);
+				customElements.define('list-body', ListBody);
+				customElements.define('list-row', ListRow);
+				customElements.define('video-call', VideoCall);
+				formFunc.svg.replaceAll();
+				var f = function () {
+					if (ui.cssValue('content > *', 'display')) {
+						ui.css('preloader', 'opacity', 0);
+						setTimeout(function () {
+							var e = ui.q('preloader');
+							if (e)
+								e.outerHTML = '';
+							e = ui.q('#preloader');
+							if (e)
+								e.outerHTML = '';
+						}, 500);
+					} else
+						setTimeout(f, 200);
+				};
+				setTimeout(f, 2000);
+				window.onerror = function (message, url, line, column, error) {
+					if (url && (url.lastIndexOf('init.js') + 7 == url.length || url.lastIndexOf('lang') + 6 == url.lastIndexOf('.js'))) {
+						var last = Object.values(communication.currentCalls)[0];
+						communication.sendError('uncaughtExecption:\nmessage: ' + message +
+							'\ncall: ' + (last ? JSON.stringify(last) : '-') +
+							'\npage: ' + ui.navigation.getActiveID() +
+							'\ncolumn: ' + url + ': ' + line + '/' + column +
+							'\nerror: ' + JSON.stringify(error));
+					}
+					communication.currentCalls.splice(0, communication.currentCalls.length);
+					ui.css('progressbar', 'display', 'none');
+				};
+				var t, el = document.createElement('fakeelement');
+				var transitions = {
+					animation: 'animationend',
+					OAnimation: 'oAnimationEnd',
+					MozAnimation: 'animationend',
+					WebkitAnimation: 'webkitAnimationEnd'
+				};
+				for (t in transitions) {
+					if (el.style[t] !== undefined) {
+						ui.navigation.animationEvent = transitions[t];
+						break;
+					}
+				}
+				user.scale = global.getDevice() == 'phone' && ui.q('body').clientWidth < 360 ? 0.8 : 1;
+				ui.css('content>:not(home).content', 'display', 'none');
+				initialisation.reposition();
+				initialisation.setLanguage((navigator.language || navigator.userLanguage).toLowerCase().indexOf('en') > -1 ? 'EN' : 'DE', initialisation.initPostProcessor);
 			}
-			communication.currentCalls.splice(0, communication.currentCalls.length);
-			ui.css('progressbar', 'display', 'none');
-		};
-		var t, el = document.createElement('fakeelement');
-		var transitions = {
-			animation: 'animationend',
-			OAnimation: 'oAnimationEnd',
-			MozAnimation: 'animationend',
-			WebkitAnimation: 'webkitAnimationEnd'
-		};
-		for (t in transitions) {
-			if (el.style[t] !== undefined) {
-				ui.navigation.animationEvent = transitions[t];
-				break;
-			}
-		}
-		user.scale = global.getDevice() == 'phone' && ui.q('body').clientWidth < 360 ? 0.8 : 1;
-		ui.css('content>:not(home).content', 'display', 'none');
-		initialisation.reposition();
-		initialisation.setLanguage((navigator.language || navigator.userLanguage).toLowerCase().indexOf('en') > -1 ? 'EN' : 'DE', initialisation.initPostProcessor);
+		});
 	}
 	static initApp() {
 		window.Keyboard.automaticScrollToTopOnHiding = true;

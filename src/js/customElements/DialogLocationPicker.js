@@ -4,6 +4,7 @@ import { geoData } from '../geoData';
 import { communication } from '../communication';
 import { pageHome } from '../pageHome';
 import { global } from '../global';
+import { initialisation } from '../init';
 
 export { DialogLocationPicker }
 
@@ -15,7 +16,7 @@ class DialogLocationPicker extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = `
+		style.textContent = `${initialisation.customElementsCss}
 label {
 	display: inline;
 	color: black;

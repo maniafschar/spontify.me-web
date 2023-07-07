@@ -1,3 +1,4 @@
+import { initialisation } from "../init";
 import { global } from "../global";
 
 export { ListRow }
@@ -9,7 +10,7 @@ class ListRow extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = `
+		style.textContent = `${initialisation.customElementsCss}
 div {
 	text-align: left;
 	overflow: hidden;

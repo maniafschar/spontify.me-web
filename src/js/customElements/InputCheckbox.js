@@ -1,3 +1,4 @@
+import { initialisation } from '../init';
 import { ui } from '../ui';
 
 export { InputCheckbox }
@@ -9,7 +10,7 @@ class InputCheckbox extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = `
+		style.textContent = `${initialisation.customElementsCss}
 label {
 	cursor: pointer;
 	display: inline-block;

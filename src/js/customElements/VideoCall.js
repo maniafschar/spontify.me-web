@@ -2,6 +2,7 @@ import { global } from '../global';
 import { formFunc, ui } from '../ui';
 import { user } from '../user';
 import { communication } from '../communication';
+import { initialisation } from '../init';
 
 export { VideoCall };
 
@@ -20,7 +21,7 @@ class VideoCall extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = `
+		style.textContent = `${initialisation.customElementsCss}
 call {
 	display: flex;
 	flex-direction: column;

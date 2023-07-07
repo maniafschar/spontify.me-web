@@ -32,7 +32,7 @@ class pageHome {
 </homeHeader>
 <homeBody>
 <teaser class="events">
-	<title>${ui.l('events.title')}</title>
+	<title onclick="pageHome.selectEventDateLocation()">${ui.l('events.title')}</title>
 	<div></div>
 	<buttonIcon onclick="pageEvent.edit()">+</buttonIcon>
 </teaser>
@@ -423,6 +423,9 @@ ${ui.l('events.title')}
 		ui.q('dialog-hint tabBody').style.marginLeft = (id == 'news' ? 0 : '-100%');
 		ui.classRemove('dialog-hint tab', 'tabActive');
 		ui.classAdd('dialog-hint tab[i="' + id + '"]', 'tabActive');
+	}
+	static selectEventDateLocation() {
+
 	}
 	static toggleNotification() {
 		if (!user.contact)

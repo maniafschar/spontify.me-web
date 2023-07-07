@@ -2,6 +2,7 @@ import { global } from '../global';
 import { communication } from '../communication';
 import { pageChat } from '../pageChat';
 import { ui, formFunc } from '../ui';
+import { initialisation } from '../init';
 
 export { DialogPopup }
 
@@ -14,7 +15,7 @@ class DialogPopup extends HTMLElement {
 	}
 	addStyle() {
 		const style = document.createElement('style');
-		style.textContent = `
+		style.textContent = `${initialisation.customElementsCss}
 input:checked+label {
 	background: var(--bg1stop) !important;
 	color: black;

@@ -3,6 +3,7 @@ import { communication } from '../communication';
 import { pageLogin } from '../pageLogin';
 import { formFunc, ui } from '../ui';
 import { user } from '../user';
+import { initialisation } from '../init';
 
 export { DialogHint }
 
@@ -17,7 +18,7 @@ class DialogHint extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = `
+		style.textContent = `${initialisation.customElementsCss}
 .body,
 :host(.body) {
 	position: absolute;
