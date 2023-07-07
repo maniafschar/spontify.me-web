@@ -278,16 +278,6 @@ mapButton::before {
 				element2.innerHTML = data;
 				element.appendChild(element2);
 				e._root.appendChild(element);
-				ui.attr('dialog-popup input', 'part', 'input');
-				ui.attr('dialog-popup input-hashtags', 'part', 'input-hashtags');
-				ui.attr('dialog-popup input-image', 'part', 'input-image');
-				ui.attr('dialog-popup textarea', 'part', 'textarea');
-				ui.attr('dialog-popup label', 'part', 'label');
-				ui.attr('dialog-popup li', 'part', 'li');
-				ui.attr('dialog-popup explain', 'part', 'explain');
-				ui.attr('dialog-popup field', 'part', 'field');
-				ui.attr('dialog-popup value', 'part', 'value');
-				ui.attr('dialog-popup dialogButtons', 'part', 'dialogButtons');
 				ui.css(e, 'display', 'none');
 				formFunc.initFields(e);
 				if (closeAction)
@@ -312,9 +302,13 @@ mapButton::before {
 		return true;
 	}
 	static setHint(s) {
-		if (ui.q('dialog-popup popupHint') && ui.q('dialog-popup').style.display != 'none') {
-			ui.q('dialog-popup popupHint').style.display = s ? 'block' : 'none';
-			return true;
+		if (ui.q('dialog-popup').style.display != 'none') {
+			var e = ui.q('dialog-popup popupHint');
+			if (e) {
+				e.innerHTML = s;
+				e.style.display = s ? 'block' : 'none';
+				return true;
+			}
 		}
 		return false;
 	}

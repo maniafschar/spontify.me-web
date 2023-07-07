@@ -118,8 +118,8 @@ streams {
 		element.innerHTML = `
 <initiator></initiator>
 <footer>
-	<buttonIcon onclick="VideoCall.rejectCall()" part="icon"><img source="videoEnd"/></buttonIcon>
-	<buttonIcon onclick="VideoCall.acceptCall()" part="icon"><img source="videoCall"/></buttonIcon>
+	<buttonIcon onclick="VideoCall.rejectCall()"><img source="videoEnd"/></buttonIcon>
+	<buttonIcon onclick="VideoCall.acceptCall()"><img source="videoCall"/></buttonIcon>
 </footer>`;
 		this._root.appendChild(element);
 		element = document.createElement('videochat');
@@ -130,9 +130,9 @@ streams {
 	<video playsinline autoplay="autoplay" id="localStream"></video>
 </streams>
 <buttons>
-	<buttonIcon onclick="VideoCall.setAudioMute()" class="mute" disabled part="icon"><img source="videoMic"/></buttonIcon>
-	<buttonIcon onclick="VideoCall.stopCall()" part="icon"><img source="videoEnd"/></buttonIcon>
-	<buttonIcon onclick="VideoCall.switchVideo()" class="camera" disabled part="icon"><img source="videoSwitch"/></buttonIcon>
+	<buttonIcon onclick="VideoCall.setAudioMute()" class="mute" disabled><img source="videoMic"/></buttonIcon>
+	<buttonIcon onclick="VideoCall.stopCall()"><img source="videoEnd"/></buttonIcon>
+	<buttonIcon onclick="VideoCall.switchVideo()" class="camera" disabled><img source="videoSwitch"/></buttonIcon>
 </buttons>`;
 		this._root.appendChild(element);
 		element = document.createElement('audio');

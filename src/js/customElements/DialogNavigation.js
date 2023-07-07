@@ -78,12 +78,10 @@ buttonIcon.notifications {
 		var addIcon = function (click, classname) {
 			var element = document.createElement('buttonIcon');
 			element.setAttribute('onclick', click);
-			element.setAttribute('part', 'icon mainBG');
-			element.setAttribute('class', classname.toLowerCase());
+			element.setAttribute('class', classname.toLowerCase() + ' mainBG');
 			var element2 = document.createElement('badge' + classname);
 			element.appendChild(element2);
 			element2 = document.createElement('img');
-			element2.setAttribute('part', 'svg');
 			element2.setAttribute('source', classname.toLowerCase());
 			element.appendChild(element2);
 			t._root.appendChild(element);
@@ -93,7 +91,6 @@ buttonIcon.notifications {
 			element.setAttribute('onclick', click);
 			element.setAttribute('class', classname);
 			var element2 = document.createElement('img');
-			element2.setAttribute('part', 'svg');
 			element2.setAttribute('source', classname);
 			element.appendChild(element2);
 			t._root.appendChild(element);

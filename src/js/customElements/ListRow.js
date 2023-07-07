@@ -135,14 +135,12 @@ compass::after {
 }`;
 		this._root.appendChild(style);
 		var element = document.createElement('badge');
-		element.setAttribute('part', 'badge');
-		element.setAttribute('part', 'badge');
 		if (this.getAttribute('badge'))
 			element.setAttribute('class', this.getAttribute('badge'));
 		else if (this.getAttribute('class').indexOf('authenticated') < 0
 			&& this.getAttribute('class').indexOf('canceled') < 0
 			&& this.getAttribute('class').indexOf('participate') < 0)
-			element.setAttribute('part', 'hidden');
+			element.setAttribute('class', 'hidden');
 		this._root.appendChild(element);
 		element = document.createElement('div');
 		element.innerHTML = global.template`
@@ -151,12 +149,12 @@ compass::after {
 	${decodeURIComponent(this.getAttribute('text'))}
 </text>
 <flag>
-	<km part="km">${this.getAttribute('flag1')}</km>
+	<km>${this.getAttribute('flag1')}</km>
 	<span>${this.getAttribute('flag2') ? this.getAttribute('flag2') : '&nbsp;'}</span>
 	${this.getAttribute('flag3') ? decodeURIComponent(this.getAttribute('flag3')) : ''}
 </flag>
 <imagelist>
-	<img src="${this.getAttribute('image')}" class="${!this.getAttribute('image') || this.getAttribute('image').indexOf('.svg') > 0 ? 'default" part="mainBG' : ''}" />
+	<img src="${this.getAttribute('image')}" class="mainBG${!this.getAttribute('image') || this.getAttribute('image').indexOf('.svg') > 0 ? ' default' : ''}" />
 	<img source="favorite" />
 </imagelist>`;
 		this._root.appendChild(element);

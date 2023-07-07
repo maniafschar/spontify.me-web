@@ -169,12 +169,12 @@ input-image {
 	<input type="hidden" name="eventParticipateId" value="${participate && participate.id ? participate.id : ''}" />
 	<input type="hidden" name="rating" value="80" />
 	<field>
-		<textarea maxlength="1000" placeholder="${ui.l('locations.shortDesc')}" name="description" part="textarea">${draft ? draft : ''}</textarea>
+		<textarea maxlength="1000" placeholder="${ui.l('locations.shortDesc')}" name="description">${draft ? draft : ''}</textarea>
 	</field>
 	<field style="margin:0.5em 0 0 0;">
 		<input-image></input-image>
 	</field>
-	<button-text onclick="this.getRootNode().host.save(event)" oId="${id}" style="margin-top:0.5em;" label="rating.save" part="button-text"></button-text>
+	<button-text onclick="this.getRootNode().host.save(event)" oId="${id}" style="margin-top:0.5em;" label="rating.save"></button-text>
 </form>`;
 	}
 	static open(id, search) {

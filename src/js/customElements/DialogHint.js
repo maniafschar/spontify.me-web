@@ -154,8 +154,8 @@ hinky.bottom {
 				return;
 		}
 		var e = ui.q('main:last-child dialog-hint'), body = (data.desc.indexOf(' ') > -1 ? data.desc : ui.l('intro.' + data.desc)), element;
-		body = body.replace('<rating/>', '<br/><br/><input-rating ui="rating"></input-rating><br/><br/><input type="email" name="email" placeholder="Email"></input><br/><br/><textarea name="feedback" maxlength="1000"></textarea><br/><br/><button-text onclick="this.getRootNode().host.save()" name="feedback" label="✓" part="button-text"></button-text>');
-		body = body.replace('<language/>', '<br/><br/><button-text ' + (global.language == 'DE' ? 'class="favorite"' : '') + ' onclick="this.getRootNode().host.language(&quot;DE&quot;)" l="DE" label="Deutsch" part="button-text"></button-text><button-text class="' + (global.language == 'EN' ? ' favorite' : '') + '" onclick="this.getRootNode().host.language(&quot;EN&quot;)" l="EN" label="English" part="button-text"></button-text>');
+		body = body.replace('<rating/>', '<br/><br/><input-rating ui="rating"></input-rating><br/><br/><input type="email" name="email" placeholder="Email"></input><br/><br/><textarea name="feedback" maxlength="1000"></textarea><br/><br/><button-text onclick="this.getRootNode().host.save()" name="feedback" label="✓"></button-text>');
+		body = body.replace('<language/>', '<br/><br/><button-text ' + (global.language == 'DE' ? 'class="favorite"' : '') + ' onclick="this.getRootNode().host.language(&quot;DE&quot;)" l="DE" label="Deutsch"></button-text><button-text class="' + (global.language == 'EN' ? ' favorite' : '') + '" onclick="this.getRootNode().host.language(&quot;EN&quot;)" l="EN" label="English"></button-text>');
 		if (e != ui.q('dialog-hint'))
 			ui.q('dialog-hint').style.display = '';
 		if (global.hash(data.desc) == e.getAttribute('i')) {
@@ -198,7 +198,6 @@ hinky.bottom {
 			e._root.appendChild(document.createElement('br'));
 			element = document.createElement('button-text');
 			element.setAttribute('label', 'login.action');
-			element.setAttribute('part', 'button-text');
 			element.setAttribute('onclick', 'ui.navigation.goTo("login")');
 			e._root.appendChild(element);
 		}

@@ -80,7 +80,6 @@ search hashtags>div label.selected {
 		this._root.appendChild(element);
 		element = document.createElement('textarea');
 		element.setAttribute('name', 'hashtagsDisp');
-		element.setAttribute('part', 'textarea');
 		element.setAttribute('maxlength', '250');
 		element.setAttribute('transient', 'true');
 		element.setAttribute('onkeyup', 'this.getRootNode().host.synchonizeTags(this.getRootNode())');

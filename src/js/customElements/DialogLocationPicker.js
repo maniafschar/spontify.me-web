@@ -72,7 +72,7 @@ label {
 				element = document.createElement('label');
 				element.setAttribute('onclick', 'ui.navigation.openLocationPicker(event,true)');
 				element.setAttribute('style', 'color:var(--buttonText)');
-				element.setAttribute('part', 'bgColor');
+				element.setAttribute('class', 'bgColor');
 				element.innerText = ui.l('home.locationPickerTitle');
 				e._root.appendChild(element);
 				e.removeAttribute('h');

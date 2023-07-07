@@ -284,7 +284,7 @@ class pageEvent {
 			v.startDate = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute;
 		}
 		if (!id || v.price > 0 && ui.q('detail card:last-child participantCount').innerText.length)
-			v.hideDelete = 'part="hidden"';
+			v.hideDelete = 'class="hidden"';
 		d = global.date.getDateFields(new Date());
 		v.today = d.year + '-' + d.month + '-' + d.day;
 		v.id = id;
@@ -324,7 +324,7 @@ class pageEvent {
 			pageEvent.locationsOfPastEvents();
 		}
 		if (user.contact.type && user.contact.type.indexOf('admin') > -1)
-			v.hideWithoutLocation = 'part="hidden"';
+			v.hideWithoutLocation = 'class="hidden"';
 		v.payplaSignUpHint = ui.l('events.paypalSignUpHint').replace('{0}', pageEvent.paypal.feeDate ?
 			ui.l('events.paypalSignUpHintFee').replace('{0}', pageEvent.paypal.fee).replace('{1}', global.date.formatDate(pageEvent.paypal.feeDate)).replace('{2}', pageEvent.paypal.feeAfter)
 			: pageEvent.paypal.fee);
@@ -972,7 +972,7 @@ class pageEvent {
 		ui.css('dialog-popup field[name="endDate"]', 'display', b || !ui.q('dialog-popup [name="type"][checked="true"]') ? 'none' : '');
 		b = ui.q('dialog-popup input[name="locationId"]').value;
 		if (!b || b == -2) {
-			ui.attr('dialog-popup .noWTDField', 'part', 'hidden');
+			ui.attr('dialog-popup .noWTDField', 'class', 'hidden');
 			ui.q('dialog-popup [name="price"]').value = null;
 		}
 		if (b == -1) {
