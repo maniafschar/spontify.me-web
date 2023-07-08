@@ -148,8 +148,8 @@ class pageChat {
 				details.init();
 			else if (activeID == 'settings')
 				pageSettings.init();
-			if (exec && exec.call)
-				exec.call();
+			if (exec)
+				exec();
 		});
 		return true;
 	}

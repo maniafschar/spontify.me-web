@@ -1,8 +1,4 @@
 <main class="mainBG statistics">
-	<popup>
-		<panel></panel>
-		<close onclick="ui2.close()">x</close>
-	</popup>
 	<content>
 		<home>
 			<h1 style="margin-top:1em;" l="stats.homeStatistics"></h1>
@@ -30,8 +26,8 @@
 			<h1 style="margin-top:1em;" l="stats.invoiceTitle"></h1>
 		</invoice>
 	</content>
-	<hint></hint>
-	<navigation class="bgColor">
+	<dialog-hint></dialog-hint>
+	<dialog-navigation class="bgColor">
 		<item onclick="ui2.goTo(0)">
 			<img source="home" />
 		</item>
@@ -44,5 +40,5 @@
 		<item onclick="ui2.goTo(3)">
 			<img source="invoice" />
 		</item>
-	</navigation>
+	</dialog-navigation>
 </main>

@@ -115,10 +115,6 @@ module.exports = (env) => {
 							.replace(/\{placeholderAppleID}/g, props.appleId));
 						file = 'dist/js/stats.js';
 						if (fs.existsSync(file)) {
-							fs.cpSync('src/stats/stats.html', 'dist/stats.html');
-							fs.cpSync('src/stats/css/stats.css', 'dist/css/stats.css');
-							fs.cpSync('src/stats/images/', 'dist/images', { recursive: true });
-							fs.cpSync('src/stats/js/lang/', 'dist/js/lang', { recursive: true });
 							fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
 								.replace('{placeholderAppTitle}', props.name)
 								.replace('{placeholderClientId}', '' + Math.max(parseInt(client), 1))

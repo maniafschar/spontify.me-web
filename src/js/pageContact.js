@@ -484,7 +484,7 @@ class groups {
 			success(r) {
 				groups.setGroups(r);
 				if (exec)
-					exec.call();
+					exec();
 			}
 		});
 	}

@@ -43,7 +43,6 @@ span {
 	color: var(--buttonText);
 	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
 	display: inline-block;
-    box-sizing: border-box;
 }
 
 :host(.map)>span {

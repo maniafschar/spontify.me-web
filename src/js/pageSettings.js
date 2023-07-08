@@ -365,7 +365,7 @@ ${v.info}`;
 						ui.css(ui.q('#settingsInterest3').nextElementSibling, 'display', 'none');
 					pageSettings.currentSettings = pageSettings.getCurrentSettings();
 					if (exec)
-						exec.call()
+						exec()
 					var x = Math.min(300, ui.q('settings').offsetWidth - 2 * ui.emInPX);
 					new QRCodeStyling({
 						width: x,

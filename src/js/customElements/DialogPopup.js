@@ -150,24 +150,6 @@ popupContent {
 	color: black;
 }
 
-* {
-	-webkit-overflow-scrolling: touch;
-	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-	-moz-tap-highlight-color: rgba(0, 0, 0, 0);
-	-webkit-touch-callout: none;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	user-select: none;
-	box-sizing: border-box;
-	text-rendering: optimizelegibility;
-	margin: 0;
-	padding: 0;
-}
-
-*::-webkit-scrollbar {
-	display: none;
-}
-
 popupContent>div {
 	overflow-y: auto;
 	overflow-x: hidden;
@@ -289,7 +271,7 @@ mapButton::before {
 				ui.navigation.animation(e, visible ? 'slideDown' : 'popupSlideIn');
 				element.style.maxHeight = (ui.q('content').clientHeight - (title ? ui.q('dialog-popup popupTitle').clientHeight : 0) - 2 * ui.emInPX) + 'px';
 				if (exec)
-					exec.call();
+					exec();
 			};
 			ui.navigation.closeHint();
 			pageChat.closeList();

@@ -96,7 +96,6 @@ button-image {
 	position: relative !important;
 	display: inline-block !important;
 	text-align: left;
-	box-sizing: border-box;
 	background: rgba(255, 255, 255, 0.85);
 	color: black;
 }

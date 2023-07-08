@@ -143,7 +143,7 @@ class pageLogin {
 					if (e.status >= 500)
 						pageLogin.removeCredentials();
 					if (exec)
-						exec.call();
+						exec();
 				},
 				success(r) {
 					r = Encryption.jsEncrypt.decrypt(r);
@@ -157,7 +157,7 @@ class pageLogin {
 			return true;
 		}
 		if (exec)
-			exec.call();
+			exec();
 		return false;
 	}
 	static checkUnique(f, exec) {
@@ -174,7 +174,7 @@ class pageLogin {
 					if (r.unique && !r.blocked) {
 						formFunc.resetError(f);
 						if (exec)
-							exec.call();
+							exec();
 					} else
 						formFunc.setError(f, r.blocked ? 'email.domainBlocked' : 'email.alreadyExists');
 				}

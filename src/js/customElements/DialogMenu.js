@@ -61,7 +61,7 @@ title {
 		if (DialogHint.currentStep < 0)
 			ui.navigation.closeHint();
 		if (exec)
-			exec.call();
+			exec();
 	}
 	static toggle(id) {
 		if (!id)

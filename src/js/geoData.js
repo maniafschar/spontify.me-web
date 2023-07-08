@@ -178,7 +178,7 @@ class geoData {
 							ui.navigation.closePopup();
 						ui.navigation.closeLocationPicker();
 						if (exec)
-							exec.call();
+							exec();
 					} else
 						ui.html('dialog-popup errorHint', ui.l('home.locationNotSetable'));
 				}

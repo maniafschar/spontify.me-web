@@ -15,11 +15,4 @@ window.heatmap = heatmap
 window.charts = charts;
 window.marketing = marketing;
 
-ui.labels = window.ui.labels;
-user.contact = window.user.contact;
-user.clientId = window.user.clientId;
-user.email = window.user.email;
-user.password = window.user.password;
-global.language = window.global.language;
-
 ui2.init();

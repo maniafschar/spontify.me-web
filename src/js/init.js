@@ -377,7 +377,7 @@ class initialisation {
 		ui.q('#addLeft > button-text').setAttribute('label', global.appTitle + ' blog');
 		ui.html('info', '');
 		if (exec)
-			exec.call();
+			exec();
 		else
 			pageHome.init(true);
 		if (user.contact && oldLang != global.language)

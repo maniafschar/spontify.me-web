@@ -143,7 +143,7 @@ class ui {
 				ui.on(e, ui.navigation.animationEvent, function () {
 					ui.classRemove(e, 'animated ' + s);
 					if (exec)
-						exec.call();
+						exec();
 				}, true);
 			}, 100);
 		},
@@ -218,7 +218,7 @@ class ui {
 				if (id == 'home')
 					ui.css('content>.content:not(home)', 'display', 'none');
 				if (exec)
-					exec.call();
+					exec();
 			});
 		},
 		getActiveID() {
@@ -351,7 +351,7 @@ class ui {
 			ui.navigation.goTo('info');
 		},
 		openHint(data) {
-			DialogHint.openHint(data);
+			DialogHint.open(data);
 		},
 		openHTML(url, name) {
 			if (!name)
@@ -372,8 +372,12 @@ class ui {
 			DialogLocationPicker.openDialog();
 		},
 		openIntro(event) {
-			if (event && event.target.nodeName == 'CLOSE')
-				return;
+			if (event) {
+				event.preventDefault();
+				event.stopPropagation();
+				if (event.target.nodeName == 'CLOSE')
+					return;
+			}
 			DialogHint.openIntro();
 		},
 		openPopup(title, data, closeAction, modal, exec) {
@@ -602,7 +606,7 @@ class ui {
 				if (scrollCount >= Math.PI) {
 					e.scrollTop = position;
 					if (exec)
-						exec.call();
+						exec();
 					return;
 				}
 				e.scrollTop = scrollTopOrg + (down ? 1 : -1) * (cosParameter - cosParameter * Math.cos(scrollCount));
@@ -675,7 +679,7 @@ class ui {
 					}
 					e2.removeAttribute('toggle');
 					if (exec)
-						exec.call();
+						exec();
 				}, true);
 				e2.style.height = expand ? e2.getAttribute('h') + 'px' : 0;
 			}, 10);
