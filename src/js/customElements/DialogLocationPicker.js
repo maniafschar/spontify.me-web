@@ -64,7 +64,7 @@ label {
 				for (var i = l.length - 1; i >= 0; i--) {
 					if (l[i].town != geoData.current.town) {
 						element = document.createElement('label');
-						element.setAttribute('onclick', 'ui.q("dialog-location-picker")._root.host.save(' + JSON.stringify(l[i]).replace(/"/g, '\'') + ')');
+						element.setAttribute('onclick', 'ui.q("dialog-location-picker").save(' + JSON.stringify(l[i]).replace(/"/g, '\'') + ')');
 						element.innerText = l[i].town;
 						e._root.appendChild(element);
 					}
@@ -89,9 +89,9 @@ label {
 	}
 	static openDialog() {
 		ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
-			'<mapPicker></mapPicker><br/><input name="town" maxlength="20" placeholder="' + ui.l('home.locationPickerInput') + '"/><mapButton onclick="ui.q(&quot;dialog-location-picker&quot;)._root.host.mapReposition()" class="defaultButton"></mapButton><br/><br/>' +
+			'<mapPicker></mapPicker><br/><input name="town" maxlength="20" placeholder="' + ui.l('home.locationPickerInput') + '"/><mapButton onclick="ui.q(&quot;dialog-location-picker&quot;).mapReposition()" class="defaultButton"></mapButton><br/><br/>' +
 			(geoData.manual ? '<button-text onclick="geoData.reset()" label="home.locationPickerReset"></button-text>' : '') +
-			'<button-text onclick="ui.q(&quot;dialog-location-picker&quot;)._root.host.save()" label="ready"></button-text><errorHint></errorHint>', null, null,
+			'<button-text onclick="ui.q(&quot;dialog-location-picker&quot;).save()" label="ready"></button-text><errorHint></errorHint>', null, null,
 			function () {
 				setTimeout(function () {
 					ui.navigation.closeLocationPicker();
@@ -100,6 +100,6 @@ label {
 			});
 	}
 	save(e) {
-		geoData.save({ latitude: e ? e.lat : geoData.map.getCenter().lat(), longitude: e ? e.lon : geoData.map.getCenter().lng(), manual: true }, function () { pageHome.init(true); });
+		geoData.save({ latitude: e ? e.lat : DialogLocationPicker.map.getCenter().lat(), longitude: e ? e.lon : DialogLocationPicker.map.getCenter().lng(), manual: true }, function () { pageHome.init(true); });
 	}
 }

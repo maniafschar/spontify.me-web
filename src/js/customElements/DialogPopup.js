@@ -216,7 +216,7 @@ mapButton::before {
 		var e = ui.q('dialog-popup');
 		e.removeAttribute('error');
 		if (ui.cssValue(e, 'display') != 'none' && e.getAttribute('modal') != 'true') {
-			ui.navigation.animation(e, 'popupSlideOut', e._root.getRootNode().host.closeHard);
+			ui.navigation.animation(e, 'popupSlideOut', e.closeHard);
 			DialogPopup.lastPopup = null;
 			return true;
 		}
@@ -242,8 +242,8 @@ mapButton::before {
 		else {
 			ui.navigation.lastPopup = title + global.separatorTech + data;
 			var f = function () {
-				e._root.host.closeHard();
-				e._root.host.addStyle();
+				e.closeHard();
+				e.addStyle();
 				var element;
 				if (title) {
 					element = document.createElement('popupTitle');
