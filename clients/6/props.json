@@ -1,11 +1,15 @@
 {
 	"de": {
 		"buddy": "Pokerface",
-		"buddies": "Pokerfaces"
+		"buddies": "Pokerfaces",
+		"infoDescription": "Pokerst Du gerne? Also richtig pokern im realen Leben, nicht online?<br/><br/>In <span class=\"highlightColor\">${appTitle}</span> findest Du coole Poker Events, professionelle wie auch von Hobbyspielern organisiert.<br/><br/>${appTitle} ist nicht nur kostenlos, Du kannst auch <span class=\"highlightColor\">Geld verdienen</span>. Baue Dir Deine Poker-Community auf und veranstalte tolle Events. Sind Teilnehmer bereit, für Dein Event zu bezahlen, dann kannst Du mit Deinem Paypal Konto kostenpflichtige Events einstellen. Die Bezahlung der Teilnehmer landet direkt und sofort auf Dein Paypal Account. Lediglich {0}% werden Dir nach Beginn der Veranstaltung als Gebühren berechnet.",
+		"introDescription": "Pokerst Du gerne? Also richtig pokern im realen Leben, nicht online?<br/><br/>In <span class=\"highlightColor\">${appTitle}</span> findest Du coole Poker Events, professionelle wie auch von Hobbyspielern organisiert."
 	},
 	"en": {
 		"buddy": "Pokerface",
-		"buddies": "Pokerfaces"
+		"buddies": "Pokerfaces",
+		"infoDescription": "Do you like poker? So really playing poker in real life, not online?<br/><br/>In <span class=\"highlightColor\">${appTitle}</span> you will find cool poker events, both professional and organized by hobby players.<br/><br/>${appTitle} is not only free, you can also <span class=\"highlightColor\">earn money</span>. Build your poker community and organize great events. If participants are willing to pay for your event, you can set up paid events with your PayPal account. The payment of the participants ends up directly and immediately on your PayPal account. Only {0}% will be charged as fees after the start of the event.",
+		"introDescription": "Do you like poker? So really playing poker in real life, not online?<br/><br/>In <span class=\"highlightColor\">${appTitle}</span> you will find cool poker events, both professional and organized by hobby players."
 	},
 	"bundleId": "com.jq.fanclub.client6",
 	"email": "support@offline-poker.com",

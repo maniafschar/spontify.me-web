@@ -185,8 +185,15 @@ hinky.bottom {
 			ui.css(e, 'bottom', null);
 			element = document.createElement('span');
 			element.innerHTML = body;
-			e = e._root;
-			e.appendChild(element);
+			e._root.appendChild(element);
+			if (!user.contact && DialogHint.currentStep < 0 && (location.pathname.length < 2 || location.pathname.indexOf('index.html') > 0)) {
+				e._root.appendChild(document.createElement('br'));
+				e._root.appendChild(document.createElement('br'));
+				element = document.createElement('button-text');
+				element.setAttribute('label', 'login.action');
+				element.setAttribute('onclick', 'ui.navigation.goTo("login")');
+				e._root.appendChild(element);
+			}
 		} else {
 			element = document.createElement('div');
 			element.innerHTML = body;
@@ -198,14 +205,6 @@ hinky.bottom {
 			e = element;
 		}
 		ui.classAdd(e, 'body');
-		if (!user.contact && DialogHint.currentStep < 0 && (location.pathname.length < 2 || location.pathname.indexOf('index.html') > 0)) {
-			e.appendChild(document.createElement('br'));
-			e.appendChild(document.createElement('br'));
-			element = document.createElement('button-text');
-			element.setAttribute('label', 'login.action');
-			element.setAttribute('onclick', 'ui.navigation.goTo("login")');
-			e.appendChild(element);
-		}
 		if (data.hinky) {
 			element = document.createElement('hinky');
 			element.setAttribute('class', data.hinkyClass);

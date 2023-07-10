@@ -520,7 +520,7 @@ class ui {
 			var s = e2.classList ? ' ' + e2.classList.value + ' ' : '';
 			for (var i = 0; i < valueSplit.length; i++) {
 				if (s.indexOf(' ' + valueSplit[i] + ' ') < 0)
-					e2.classList = (e2.classList.value + ' ' + valueSplit[i]).trim();
+					e2.classList = ((e2.classList ? e2.classList.value + ' ' : '') + valueSplit[i]).trim();
 			}
 		});
 	}

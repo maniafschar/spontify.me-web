@@ -122,18 +122,18 @@ module.exports = (env) => {
 								.replace(/\{placeholderBundleID}/g, props.bundleId)
 								.replace(/\{placeholderAppleID}/g, props.appleId));
 						}
-						file = 'dist/js/lang/DE.html';
-						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
-							.replace(/\{placeholderAppTitle}/g, props.name));
-						file = 'dist/js/lang/EN.html';
-						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
-							.replace(/\{placeholderAppTitle}/g, props.name));
-						file = 'dist/js/lang/DE.json';
-						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
-							.replace(/\${buddy}/g, props.de.buddy).replace(/\${buddies}/g, props.de.buddies));
-						file = 'dist/js/lang/EN.json';
-						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
-							.replace(/\${buddy}/g, props.en.buddy).replace(/\${buddies}/g, props.en.buddies));
+						var languages = ['de', 'en'];
+						for (var i = 0; i < languages.length; i++) {
+							file = 'dist/js/lang/' + languages[i].toUpperCase() + '.html';
+							fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
+								.replace(/\{placeholderAppTitle}/g, props.name));
+							file = 'dist/js/lang/' + languages[i].toUpperCase() + '.json';
+							fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
+								.replace(/\${infoDescription}/g, props[languages[i]].infoDescription.replace(/"/g, '\\"'))
+								.replace(/\${introDescription}/g, props[languages[i]].introDescription.replace(/"/g, '\\"'))
+								.replace(/\${buddy}/g, props[languages[i]].buddy)
+								.replace(/\${buddies}/g, props[languages[i]].buddies));
+						}
 						var regexs = [
 							{
 								pattern: /(<widget .*version=")([^"]+)/,

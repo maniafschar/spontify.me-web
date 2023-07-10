@@ -1,11 +1,15 @@
 {
 	"de": {
 		"buddy": "Buddy",
-		"buddies": "Buddies"
+		"buddies": "Buddies",
+		"infoDescription": "<ul><li>Bist Du <emphasis>{1}</emphasis> Fan?</li><li>Magst Du es, mit anderen {1} Fans mehr zu unternehmen?</li><li>Spiele gemeinsam anschauen, aber auch andere Events gemeinsam zu veranstalten und teilnehmen?</li></ul>Ziel der <emphasis>${appTitle} App</emphasis> ist es, den Austausch zwischen den Fans zu unterstützen. Du findest nicht nur passende Events anderer Fans, Du kannst selbst auch <span class=\"highlightColor\">Suchanfragen</span> einstellen, um spontan gleichgesinnte Fans zu finden.<br/><br/>${appTitle} ist für Dich nicht nur kostenlos, Du kannst sogar <span class=\"highlightColor\">Geld verdienen</span>. Baue Dir Deine Community auf, veranstalte tolle Events, erweitere Deinen Bekanntheitsgrad. Sind Teilnehmer bereit, für Dein Event zu bezahlen, dann kannst Du mit Deinem Paypal Account kostenpflichtige Events einstellen. Die Bezahlung der Teilnehmer landet direkt und sofort auf Dein Paypal Account. Lediglich {0}% werden nach Beginn der Veranstaltung als Gebühren berechnet.",
+		"introDescription": "Bist Du <emphasis>{0}</emphasis> Fan? Magst Du mit anderen {0} Fans mehr unternehmen? Spiele gemeinsam anschauen, aber auch andere Events gemeinsam veranstalten und teilnehmen? Ziel der <emphasis>${appTitle} App</emphasis> ist es, den Austausch zwischen den Fans zu intensivieren."
 	},
 	"en": {
 		"buddy": "Buddy",
-		"buddies": "Buddies"
+		"buddies": "Buddies",
+		"infoDescription": "<ul><li>Are you a <emphasis>{1}</emphasis> fan?</li><li>Do you like doing more with other {1} fans?</li><li>Watch games together, but also organize and participate in other events together?</li></ul>The aim of the <emphasis>${appTitle} app</emphasis> is to support the exchange between fans. Not only do you find suitable events from other fans, you can also set <span class=\"highlightColor\">search queries</span> yourself to spontaneously find like-minded fans.<br/><br/>${appTitle} is not only free for you, you can even <span class=\"highlightColor\">earn money</span>. Build your community, organize great events, increase your level of awareness. If participants are willing to pay for your event, you can set up paid events with your PayPal account. The payment of the participants ends up directly and immediately on your PayPal account. Only {0}% will be charged as fees after the start of the event.",
+		"introDescription": "Are you a <emphasis>{0}</emphasis> fan? Do you like doing more with other {0} fans? Watch games together, but also organize and participate in other events together? The aim of the <emphasis>${appTitle} app</emphasis> is to intensify the exchange between fans."
 	},
 	"appleId": "6447445844",
 	"bundleId": "com.jq.fanclub.client7",

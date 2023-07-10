@@ -81,14 +81,11 @@ label {
 				ui.navigation.closeLocationPicker();
 		} else if (user.contact)
 			communication.loadMap('ui.navigation.openLocationPickerDialog');
-		else {
-			var desc;
-			if (user.clientId > 1) {
-				desc = ui.l('intro.descriptionFanclub').replace(/\{0}/g, global.appTitle.substring(0, global.appTitle.indexOf(global.separator)));
-			} else
-				desc = ui.l('intro.description');
-			ui.navigation.openHint({ desc: desc, pos: '5%,10.5em', size: '90%,auto', hinkyClass: 'top', hinky: 'left:50%;' });
-		}
+		else
+			ui.navigation.openHint({
+				desc: ui.l('intro.description').replace(/\{0}/g, global.appTitle.substring(0, global.appTitle.indexOf(global.separator))),
+				pos: '5%,10.5em', size: '90%,auto', hinkyClass: 'top', hinky: 'left:50%;'
+			});
 	}
 	static openDialog() {
 		ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
