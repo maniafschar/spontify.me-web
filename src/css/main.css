@@ -263,10 +263,9 @@ homeBody teaser div {
 	overflow-x: auto;
 	overflow-y: hidden;
 	white-space: nowrap;
-	padding: 0.5em;
+	padding: 2em 0.5em 0.5em 0.5em;
 	position: absolute;
 	height: 100%;
-	padding-top: 2em;
 	width: 100%;
 	top: 0;
 }
@@ -294,6 +293,12 @@ homeBody teaser card img {
 	height: 100%;
 }
 
+homeBody teaser card svg {
+	height: 100%;
+	padding: 1.6em;
+	margin-top: -1em;
+}
+
 homeBody teaser card text {
 	position: absolute;
 	width: 100%;
@@ -302,19 +307,14 @@ homeBody teaser card text {
 	border-left: solid 0.5em transparent;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	line-height: 1.2;
 }
 
 homeBody teaser title {
 	margin-bottom: 0.25em;
 	font-size: 1.3em;
-}
-
-homeBody teaser buttonIcon {
-	right: 0;
-	font-size: 2.5em;
-	top: 0;
-	box-shadow: none;
-	padding: 0.1em 0.2em 0.3em 0.75em;
+	position: relative;
+	z-index: 1;
 }
 
 home {

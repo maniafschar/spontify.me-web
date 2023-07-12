@@ -17,6 +17,7 @@ class pageHome {
 	static club = false;
 	static events;
 	static news;
+	static teaserMeta;
 	static template = v =>
 		global.template`<homeHeader${v.logoSmall}>
 	<buttonIcon class="statistics${v.statsButton}" onclick="pageHome.openStatistics()">
@@ -33,9 +34,8 @@ class pageHome {
 </homeHeader>
 <homeBody>
 <teaser class="events">
-	<title onclick="pageHome.selectEventDateLocation()">${ui.l('events.title')}</title>
+	<title onclick="pageHome.selectEventDateLocation()" class="highlightColor" style="cursor:pointer;">${ui.l('events.title')}</title>
 	<div></div>
-	<buttonIcon onclick="pageEvent.edit()">+</buttonIcon>
 </teaser>
 <teaser class="contacts">
 	<title>${ui.l('contacts.title')}</title>
@@ -163,6 +163,10 @@ ${ui.l('events.title')}
 		else
 			render({});
 	}
+	static filterEvents() {
+		this.teaserEvents();
+		this.teaserContacts();
+	}
 	static goToSettings(event) {
 		if (ui.cssValue('dialog-hint', 'display') == 'none')
 			ui.navigation.goTo('settings');
@@ -171,7 +175,7 @@ ${ui.l('events.title')}
 		var e = ui.q('home');
 		if (force || !ui.q('home teaser.events>div card')) {
 			var v = {
-				actionLogo: 'ui.navigation.openLocationPicker(event)'
+				actionLogo: 'pageHome.openHint()'
 			};
 			v.statsButton = ' hidden';
 			if (user.contact) {
@@ -185,6 +189,8 @@ ${ui.l('events.title')}
 				v.langButton = ' hidden';
 				if (pageHome.club)
 					v.actionLogo = 'pageHome.openNews()';
+				else
+					v.actionLogo = 'pageHome.goToSettings(event)';
 				if (user.contact.type == 'adminContent')
 					v.statsButton = '';
 			} else {
@@ -193,49 +199,8 @@ ${ui.l('events.title')}
 			}
 			e.innerHTML = pageHome.template(v);
 			initialisation.reposition();
-			communication.ajax({
-				url: global.serverApi + 'action/teaser/contacts',
-				webCall: 'pageHome.init(force)',
-				responseType: 'json',
-				error() { },
-				success(l) {
-					var s = '';
-					for (var i = 1; i < l.length; i++) {
-						var e = model.convert(new Contact(), l, i);
-						s += '<card onclick="details.open(' + e.id + ',' + JSON.stringify({ webCall: 'pageHome.init(force)', query: 'contact_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('contact.id=' + e.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)"><img src="' + global.serverImg + e.imageList + '"/><text>' + e.pseudonym + '</text></card>';
-					}
-					ui.q('home teaser.contacts>div').innerHTML = s;
-					ui.css('home teaser.contacts', 'opacity', 1);
-				}
-			});
-			communication.ajax({
-				url: global.serverApi + 'action/teaser/events',
-				webCall: 'pageHome.init(force)',
-				responseType: 'json',
-				error(e) {
-					ui.q('home teaser.events>div').innerHTML = ui.l('error.noNetworkConnection');
-					ui.css('home teaser.events', 'opacity', 1);
-				},
-				success(l) {
-					var s = '';
-					var e;
-					if (user.contact)
-						e = pageEvent.getCalendarList(l);
-					else {
-						e = [];
-						for (var i = 1; i < l.length; i++)
-							e.push(model.convert(new Location(), l, i));
-					}
-					for (var i = 0; i < e.length; i++) {
-						if ('outdated' != e[i])
-							s += '<card onclick="details.open(&quot;' + pageEvent.getId(e[i]) + '&quot;,' + JSON.stringify({
-								webCall: 'pageHome.init(force)', query: 'event_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('event.id=' + e[i].event.id)
-							}).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)"><img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList ? e[i].imageList : e[i].contact.imageList) + '"/><text>' + e[i].event.description + '</text></card>';
-					}
-					ui.q('home teaser.events>div').innerHTML = s;
-					ui.css('home teaser.events', 'opacity', 1);
-				}
-			});
+			pageHome.teaserContacts();
+			pageHome.teaserEvents();
 		}
 		pageHome.initNotificationButton();
 		if (user.contact)
@@ -289,6 +254,12 @@ ${ui.l('events.title')}
 			ui.classRemove('dialog-navigation buttonIcon.notifications', 'pulse highlight');
 		if (ui.q('dialog-navigation badgeNotifications'))
 			ui.q('dialog-navigation badgeNotifications').innerText = Math.max(pageHome.badge, 0);
+	}
+	static openHint() {
+		ui.navigation.openHint({
+			desc: ui.l('intro.description').replace(/\{0}/g, global.appTitle.substring(0, global.appTitle.indexOf(global.separator))),
+			pos: '5%,10.5em', size: '90%,auto', hinkyClass: 'top', hinky: 'left:50%;'
+		});
 	}
 	static openLanguage(event) {
 		event.stopPropagation();
@@ -411,7 +382,83 @@ ${ui.l('events.title')}
 		ui.classAdd('dialog-hint tab[i="' + id + '"]', 'tabActive');
 	}
 	static selectEventDateLocation() {
-
+		var render = function () {
+			var towns = '', dates = '';
+			for (var i = 1; i < pageHome.teaserMeta.length; i++) {
+				if (towns.indexOf('"' + pageHome.teaserMeta[i].town + '"') < 0)
+					towns += '<input-checkbox onclick="pageHome.filterEvents()" label="' + pageHome.teaserMeta[i].town + '"' + (pageHome.teaserMeta[i].townChecked ? ' checked="true"' : '') + '></input-checkbox>';
+				if (dates.indexOf('"' + pageHome.teaserMeta[i].date + '"') < 0)
+					dates += '<input-checkbox onclick="pageHome.filterEvents()" label="' + global.date.formatDate(pageHome.teaserMeta[i].date) + '"' + (pageHome.teaserMeta[i].dateChecked ? ' checked="true"' : '') + '></input-checkbox>';
+			}
+			ui.navigation.openHint({
+				desc: '<eventFilter>' + towns + '</eventFilter><eventFilter>' + dates + '</eventFilter>',
+				pos: '10%,-65%', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:50%;margin-right:-1.5em;'
+			});
+		}
+		if (pageHome.teaserMeta)
+			render();
+		else
+			communication.ajax({
+				url: global.serverApi + 'action/teaser/meta',
+				webCall: 'pageHome.selectEventDateLocation()',
+				responseType: 'json',
+				error() { },
+				success(l) {
+					pageHome.teaserMeta = [];
+					l = pageEvent.getCalendarList(l);
+					for (var i = 0; i < l.length; i++)
+						pageHome.teaserMeta.push({ town: l[i].town, date: l[i].event.startDate });
+					render();
+				}
+			});
+	}
+	static teaserContacts(search) {
+		communication.ajax({
+			url: global.serverApi + 'action/teaser/contacts' + (search ? '?search=' + encodeURIComponent(search) : ''),
+			webCall: 'pageHome.teaserContacts(search)',
+			responseType: 'json',
+			error() { },
+			success(l) {
+				var s = '';
+				for (var i = 1; i < l.length; i++) {
+					var e = model.convert(new Contact(), l, i);
+					s += '<card onclick="details.open(' + e.id + ',' + JSON.stringify({ webCall: 'pageHome.teaserContacts(search)', query: 'contact_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('contact.id=' + e.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)"><img src="' + global.serverImg + e.imageList + '"/><text>' + e.pseudonym + '</text></card>';
+				}
+				ui.q('home teaser.contacts>div').innerHTML = s;
+				ui.css('home teaser.contacts', 'opacity', 1);
+			}
+		});
+	}
+	static teaserEvents(search) {
+		communication.ajax({
+			url: global.serverApi + 'action/teaser/events' + (search ? '?search=' + encodeURIComponent(search) : ''),
+			webCall: 'pageHome.teaserEvents(search)',
+			responseType: 'json',
+			error(e) {
+				ui.q('home teaser.events>div').innerHTML = ui.l('error.noNetworkConnection');
+				ui.css('home teaser.events', 'opacity', 1);
+			},
+			success(l) {
+				var e, s = '';
+				if (user.contact) {
+					s = '<card onclick="pageEvent.edit()" class="mainBG"><img source="events"/><text>' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>';
+					e = pageEvent.getCalendarList(l);
+				} else {
+					e = [];
+					for (var i = 1; i < l.length; i++)
+						e.push(model.convert(new Location(), l, i));
+				}
+				for (var i = 0; i < e.length; i++) {
+					if ('outdated' != e[i])
+						s += '<card onclick="details.open(&quot;' + pageEvent.getId(e[i]) + '&quot;,' + JSON.stringify({
+							webCall: 'pageHome.teaserEvents(search)', query: 'event_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('event.id=' + e[i].event.id)
+						}).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)"><img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList ? e[i].imageList : e[i].contact.imageList) + '"/><text>' + global.date.formatDate(e[i].event.startDate, 'noWeekday') + '<br/>' + e[i].event.description + '</text></card>';
+				}
+				ui.q('home teaser.events>div').innerHTML = s;
+				ui.css('home teaser.events', 'opacity', 1);
+				formFunc.svg.replaceAll();
+			}
+		});
 	}
 	static toggleNotification() {
 		if (!user.contact)
