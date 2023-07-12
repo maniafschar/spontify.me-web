@@ -5,8 +5,6 @@ module.exports = (env) => {
 	var e = {
 		init: './src/js/init.js'
 	}
-	if (env && env.web)
-		e.stats = './src/stats/js/main.js';
 	return {
 		entry: e,
 		mode: 'production',
@@ -113,15 +111,6 @@ module.exports = (env) => {
 							.replace('{placeholderServer}', props.server)
 							.replace(/\{placeholderBundleID}/g, props.bundleId)
 							.replace(/\{placeholderAppleID}/g, props.appleId));
-						file = 'dist/js/stats.js';
-						if (fs.existsSync(file)) {
-							fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
-								.replace('{placeholderAppTitle}', props.name)
-								.replace('{placeholderClientId}', '' + Math.max(parseInt(client), 1))
-								.replace('{placeholderServer}', props.server)
-								.replace(/\{placeholderBundleID}/g, props.bundleId)
-								.replace(/\{placeholderAppleID}/g, props.appleId));
-						}
 						var languages = ['de', 'en'];
 						for (var i = 0; i < languages.length; i++) {
 							file = 'dist/js/lang/' + languages[i].toUpperCase() + '.html';
