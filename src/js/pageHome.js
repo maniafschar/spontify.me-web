@@ -1,5 +1,6 @@
 import { bluetooth } from './bluetooth';
 import { communication } from './communication';
+import { ContentAdmin } from './customElements/ContentAdmin';
 import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './init';
@@ -362,26 +363,11 @@ ${ui.l('events.title')}
 		render();
 	}
 	static openStatistics(openIntro) {
-		communication.ajax({
-			url: global.server + 'stats.html',
-			webCall: 'pageHome.openStatistics(openIntro)',
-			success(r) {
-				var script = document.createElement('script');
-				script.src = global.server + 'js/stats.js';
-				document.head.appendChild(script);
-				var link = document.createElement('link');
-				link.href = global.server + 'css/stats.css';
-				link.rel = 'stylesheet';
-				document.head.appendChild(link);
-				var e = document.createElement('div');
-				e.innerHTML = r;
-				ui.q('body').appendChild(e.children[0]);
-				formFunc.svg.replaceAll();
-				initialisation.reposition();
-				if (openIntro)
-					ui.navigation.openHint({ desc: 'statisticsCharts', pos: '10%,15em', size: '80%,auto', hinky: 'left:50%;', hinkyClass: 'top' })
-			}
-		});
+		ContentAdmin.init();
+		formFunc.svg.replaceAll();
+		initialisation.reposition();
+		if (openIntro)
+			ui.navigation.openHint({ desc: 'statisticsCharts', pos: '10%,15em', size: '80%,auto', hinky: 'left:50%;', hinkyClass: 'top' })
 	}
 	static reset() {
 		pageHome.badge = -1;
@@ -429,9 +415,9 @@ ${ui.l('events.title')}
 	}
 	static toggleNotification() {
 		if (!user.contact)
-			ui.navigation.openHint({ desc: 'notification', pos: '-0.5em,-7.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1.5em;' });
+			ui.navigation.openHint({ desc: 'notification', pos: '-0.5em,-7.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:0;' });
 		else if (!ui.q('notificationList>div'))
-			ui.navigation.openHint({ desc: 'notificationEmpty', pos: '-0.5em,-7.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:1.5em;' });
+			ui.navigation.openHint({ desc: 'notificationEmpty', pos: '-0.5em,-7.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:0;' });
 		else {
 			if (ui.q('notificationList').style.display == 'none')
 				pageChat.closeList();

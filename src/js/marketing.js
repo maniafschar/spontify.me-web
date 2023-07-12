@@ -1,7 +1,7 @@
-import { communication } from "./communication";
-import { global } from "./global";
-import { ClientMarketing, model } from "./model";
-import { formFunc, ui } from "./ui";
+import { communication } from './communication';
+import { global } from './global';
+import { ClientMarketing, model } from './model';
+import { formFunc, ui } from './ui';
 
 export { marketing }
 

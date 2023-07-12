@@ -397,7 +397,7 @@ ${v.matchIndicatorHintDescription}
 				webCall: 'pageContact.toggleLocation(id)',
 				latitude: geoData.current.lat,
 				longitude: geoData.current.lon,
-				distance: 100000,
+				distance: -1,
 				query: 'location_list',
 				search: encodeURIComponent('location.contactId=' + id)
 			}, function (l) {

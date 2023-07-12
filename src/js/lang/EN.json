@@ -258,6 +258,24 @@
 			"title": "${buddies}",
 			"unblock": "Do you want to unblock the ${buddy}?"
 		},
+		"contentAdmin": {
+			"homeCard1": "users total",
+			"homeCard2": "users active this month",
+			"homeCard3": "new registrations this month",
+			"homeStatistics": "Statistics",
+			"homeUserMap": "Benutzer nach Region",
+			"marketingTitle": "Marketing",
+			"invoiceTitle": "Invoices",
+			"noEntries": "no entries",
+			"noData": "Unspecified",
+			"female": "Women",
+			"from": "over",
+			"male": "Men",
+			"divers": "Diverse",
+			"total": "Total",
+			"verified": "Verified",
+			"withImage": "With Image"
+		},
 		"error": {
 			"description": "Please enter a description.",
 			"detailNotFound": "The entry could not be found.",

@@ -1,16 +1,16 @@
-import QRCodeStyling from "qr-code-styling";
-import { communication } from "./communication";
-import { details } from "./details";
-import { geoData } from "./geoData";
-import { global, Strings } from "./global";
-import { lists } from "./lists";
-import { Contact, EventParticipate, Location, model } from "./model";
-import { pageContact } from "./pageContact";
-import { pageHome } from "./pageHome";
-import { pageLocation } from "./pageLocation";
-import { formFunc, ui } from "./ui";
-import { user } from "./user";
-import { DialogPopup } from "./customElements/DialogPopup";
+import QRCodeStyling from 'qr-code-styling';
+import { communication } from './communication';
+import { details } from './details';
+import { geoData } from './geoData';
+import { global, Strings } from './global';
+import { lists } from './lists';
+import { Contact, EventParticipate, Location, model } from './model';
+import { pageContact } from './pageContact';
+import { pageHome } from './pageHome';
+import { pageLocation } from './pageLocation';
+import { formFunc, ui } from './ui';
+import { user } from './user';
+import { DialogPopup } from './customElements/DialogPopup';
 
 export { pageEvent };
 
@@ -1062,7 +1062,7 @@ class pageEvent {
 					query: 'event_listParticipate',
 					latitude: geoData.current.lat,
 					longitude: geoData.current.lon,
-					distance: 100000,
+					distance: -1,
 					limit: 0,
 					search: encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\' and eventParticipate.contactId=contact.id')
 				}, function (l) {

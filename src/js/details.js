@@ -39,7 +39,7 @@ class details {
 			return;
 		var wc = data.webCall;
 		delete data.webCall;
-		data.distance = 100000;
+		data.distance = -1;
 		data.latitude = geoData.current.lat;
 		data.longitude = geoData.current.lon;
 		communication.ajax({

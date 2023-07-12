@@ -210,12 +210,12 @@ hinky.bottom {
 			element.setAttribute('class', data.hinkyClass);
 			element.setAttribute('style', data.hinky);
 			element.setAttribute('onclick', 'ui.navigation.closeHint()');
-			e.appendChild(element);
+			(e._root ? e._root : e).appendChild(element);
 		}
 		element = document.createElement('close');
 		element.innerText = 'x';
 		element.setAttribute('onclick', 'ui.navigation.closeHint()');
-		e.appendChild(element);
+		(e._root ? e._root : e).appendChild(element);
 		if (data.pos.split(',')[0].indexOf('-') == 0) {
 			ui.css(e, 'left', '');
 			ui.css(e, 'right', data.pos.split(',')[0].substring(1));

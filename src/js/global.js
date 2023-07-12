@@ -311,7 +311,7 @@ class Strings {
 			lists.load({
 				webCall: 'global.replaceInternalLinks(s)',
 				query: table + '_list',
-				distance: 100000,
+				distance: -1,
 				search: encodeURIComponent('(' + search.substring(4) + ')')
 			}, function (l) {
 				var s, e, processed = [], t = l[0][0].substring(0, l[0][0].indexOf('.'));

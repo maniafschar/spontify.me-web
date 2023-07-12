@@ -258,6 +258,24 @@
 			"title": "${buddies}",
 			"unblock": "Möchtest Du {0} wieder entblockieren?"
 		},
+		"contentAdmin": {
+			"homeCard1": "Benutzer insgesamt",
+			"homeCard2": "Benutzer aktiv diesen Monat",
+			"homeCard3": "neue Registrieungen diesen Monat",
+			"homeStatistics": "Statistiken",
+			"homeUserMap": "Benutzer nach Region",
+			"marketingTitle": "Marketing",
+			"invoiceTitle": "Rechnungen",
+			"noEntries": "keine Einträge",
+			"noData": "ohne Angabe",
+			"female": "Frauen",
+			"from": "über",
+			"male": "Männer",
+			"divers": "Divers",
+			"total": "Insgesamt",
+			"verified": "verifiziert",
+			"withImage": "mit Bild"
+		},
 		"error": {
 			"description": "Bitte gib eine Beschreibung an.",
 			"detailNotFound": "Der Eintrag konnte nicht gefunden werden.",

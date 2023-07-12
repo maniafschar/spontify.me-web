@@ -31,6 +31,7 @@ import { InputRating } from './customElements/InputRating';
 import { InputSlider } from './customElements/InputSlider';
 import { ListBody } from './customElements/ListBody';
 import { ListRow } from './customElements/ListRow';
+import { ContentAdmin } from './customElements/ContentAdmin';
 
 export { initialisation };
 
@@ -46,6 +47,7 @@ class initialisation {
 			success(r) {
 				initialisation.customElementsCss = r;
 				customElements.define('button-text', ButtonText);
+				customElements.define('content-admin', ContentAdmin);
 				customElements.define('dialog-hint', DialogHint);
 				customElements.define('dialog-location-picker', DialogLocationPicker);
 				customElements.define('dialog-menu', DialogMenu);
@@ -451,3 +453,4 @@ window.Strings = Strings;
 window.groups = groups;
 window.VideoCall = VideoCall;
 window.marketing = marketing;
+window.ContentAdmin = ContentAdmin;

@@ -405,6 +405,12 @@ content {
 	display: block;
 }
 
+content-admin {
+	width: 300%;
+	float: left;
+	transition: all .4s ease-out;
+}
+
 groups {
 	padding: 0 1em 1em 1em;
 	display: block;

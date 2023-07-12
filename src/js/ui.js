@@ -392,7 +392,7 @@ class ui {
 			return lists.load({
 				webCall: 'ui.query.contactFriends()',
 				query: 'contact_list',
-				distance: 100000,
+				distance: -1,
 				limit: 0,
 				latitude: geoData.current.lat,
 				longitude: geoData.current.lon,
@@ -403,7 +403,7 @@ class ui {
 			return lists.load({
 				webCall: 'ui.query.contactVisitees()',
 				query: 'contact_listVisit',
-				distance: 100000,
+				distance: -1,
 				sort: false,
 				latitude: geoData.current.lat,
 				longitude: geoData.current.lon,
@@ -420,7 +420,7 @@ class ui {
 			return lists.load({
 				webCall: 'ui.query.contactVisits()',
 				query: 'contact_listVisit',
-				distance: 100000,
+				distance: -1,
 				sort: false,
 				latitude: geoData.current.lat,
 				longitude: geoData.current.lon,
@@ -431,7 +431,7 @@ class ui {
 			pageEvent.loadEvents({
 				webCall: 'ui.query.eventMy()',
 				query: 'event_list',
-				distance: 100000,
+				distance: -1,
 				latitude: geoData.current.lat,
 				longitude: geoData.current.lon,
 				search: encodeURIComponent('event.contactId=' + user.contact.id)
@@ -441,7 +441,7 @@ class ui {
 			return lists.load({
 				webCall: 'ui.query.eventTickets()',
 				query: 'event_listParticipate',
-				distance: 100000,
+				distance: -1,
 				latitude: geoData.current.lat,
 				longitude: geoData.current.lon,
 				search: encodeURIComponent('eventParticipate.contactId=' + user.contact.id + ' and event.contactId=contact.id and contact.clientId=' + user.clientId)
@@ -496,6 +496,8 @@ class ui {
 			e = customElements('dialog-menu');
 		if (!e)
 			e = customElements('video-call');
+		if (!e)
+			e = customElements('content-admin');
 		if (!e)
 			e = document.querySelectorAll(path);
 		return e;

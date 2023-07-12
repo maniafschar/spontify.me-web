@@ -1,11 +1,11 @@
-import { geoData } from "./geoData";
-import { global } from "./global";
-import { pageContact } from "./pageContact";
-import { formFunc, ui } from "./ui";
-import { user } from "./user";
-import { lists } from "./lists";
-import { pageEvent } from "./pageEvent";
-import { pageLocation } from "./pageLocation";
+import { geoData } from './geoData';
+import { global } from './global';
+import { pageContact } from './pageContact';
+import { formFunc, ui } from './ui';
+import { user } from './user';
+import { lists } from './lists';
+import { pageEvent } from './pageEvent';
+import { pageLocation } from './pageLocation';
 
 export { pageSearch };
 
@@ -101,7 +101,7 @@ class pageSearch {
 				webCall: 'pageSearch.contacts.search()',
 				latitude: geoData.current.lat,
 				longitude: geoData.current.lon,
-				distance: 100000,
+				distance: -1,
 				query: 'contact_list',
 				search: encodeURIComponent(pageSearch.contacts.getSearch())
 			}, pageContact.listContacts, 'search tabBody>div.contacts', 'search');
@@ -217,7 +217,7 @@ class pageSearch {
 				webCall: 'pageSearch.events.search()',
 				latitude: geoData.current.lat,
 				longitude: geoData.current.lon,
-				distance: 100000,
+				distance: -1,
 				query: 'event_list',
 				search: encodeURIComponent(pageSearch.events.getSearch())
 			});
@@ -302,7 +302,7 @@ class pageSearch {
 				webCall: 'pageSearch.locations.search()',
 				latitude: geoData.current.lat,
 				longitude: geoData.current.lon,
-				distance: 100000,
+				distance: -1,
 				query: 'location_list',
 				search: encodeURIComponent(pageSearch.locations.getSearch())
 			}, pageLocation.listLocation, 'search tabBody>div.locations', 'search');
