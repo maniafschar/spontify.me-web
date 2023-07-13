@@ -188,7 +188,8 @@ ${ui.l('events.title')}
 			ui.navigation.openHint({
 				desc: '<eventFilter>' + towns + '</eventFilter><eventFilter>' + dates + '</eventFilter>',
 				pos: '2%,-65%', size: '96%,auto', hinkyClass: 'bottom', hinky: 'right:50%;margin-right:-1.5em;',
-				onclose: 'pageHome.filterClose()'
+				onclose: 'pageHome.filterClose()',
+				noLogin: true
 			});
 		}
 		if (pageHome.teaserMeta)

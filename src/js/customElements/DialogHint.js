@@ -158,20 +158,18 @@ eventFilter {
 	static open(data) {
 		if (new Date().getTime() / 60000 - DialogHint.lastHint < 4)
 			return;
-		if (data && data.action) {
+		if (data && data.action)
 			eval(data.action);
-			if (data.action.indexOf('pageHome.openStatistics') > -1)
-				return;
-		}
-		var e = ui.q('dialog-hint'), body = (data.desc.indexOf(' ') > -1 ? data.desc : ui.l('intro.' + data.desc)), element;
-		body = body.replace('<rating/>', '<br/><br/><input-rating ui="rating"></input-rating><br/><br/><input type="email" name="email" placeholder="Email"></input><br/><br/><textarea name="feedback" maxlength="1000"></textarea><br/><br/><button-text onclick="this.save()" name="feedback" label="✓"></button-text>');
-		body = body.replace('<language/>', '<br/><br/><button-text ' + (global.language == 'DE' ? 'class="favorite"' : '') + ' onclick="this.language(&quot;DE&quot;)" l="DE" label="Deutsch"></button-text><button-text class="' + (global.language == 'EN' ? ' favorite' : '') + '" onclick="this.language(&quot;EN&quot;)" l="EN" label="English"></button-text>');
+		var e = ui.q('dialog-hint');
 		if (e != ui.q('dialog-hint'))
 			ui.q('dialog-hint').style.display = '';
 		if (global.hash(data.desc) == e.getAttribute('i')) {
 			DialogHint.close();
 			return;
 		}
+		var body = (data.desc.indexOf(' ') > -1 ? data.desc : ui.l('intro.' + data.desc)), element;
+		body = body.replace('<rating/>', '<br/><br/><input-rating ui="rating"></input-rating><br/><br/><input type="email" name="email" placeholder="Email"></input><br/><br/><textarea name="feedback" maxlength="1000"></textarea><br/><br/><button-text onclick="this.save()" name="feedback" label="✓"></button-text>');
+		body = body.replace('<language/>', '<br/><br/><button-text ' + (global.language == 'DE' ? 'class="favorite"' : '') + ' onclick="this.language(&quot;DE&quot;)" l="DE" label="Deutsch"></button-text><button-text class="' + (global.language == 'EN' ? ' favorite' : '') + '" onclick="this.language(&quot;EN&quot;)" l="EN" label="English"></button-text>');
 		ui.css(e, 'display', 'block');
 		if (body.indexOf('<input') < 0)
 			ui.attr(e, 'onclick', data.onclick ? data.onclick : DialogHint.currentStep > -1 ? 'ui.navigation.openIntro(event)' : 'ui.navigation.closeHint()');
@@ -192,7 +190,7 @@ eventFilter {
 			element = document.createElement('span');
 			element.innerHTML = body;
 			e._root.appendChild(element);
-			if (!user.contact && DialogHint.currentStep < 0 && (location.pathname.length < 2 || location.pathname.indexOf('index.html') > 0)) {
+			if (!user.contact && data.noLogin != true && DialogHint.currentStep < 0 && (location.pathname.length < 2 || location.pathname.indexOf('index.html') > 0)) {
 				e._root.appendChild(document.createElement('br'));
 				e._root.appendChild(document.createElement('br'));
 				element = document.createElement('button-text');
