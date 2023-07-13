@@ -24,7 +24,7 @@ class pageHome {
 		<img source="statistics"/>
 	</buttonIcon>
 	<img onclick="${v.actionLogo}" source="logo"/>
-	<text onclick="pageHome.goToSettings(event)" ${v.dispProfile}>
+	<text onclick="ui.navigation.goTo(&quot;settings&quot;)" ${v.dispProfile}>
 		${v.imgProfile}<br/>
 		<name>${v.name}</name>
 	</text>
@@ -209,10 +209,6 @@ ${ui.l('events.title')}
 				}
 			});
 	}
-	static goToSettings(event) {
-		if (ui.cssValue('dialog-hint', 'display') == 'none')
-			ui.navigation.goTo('settings');
-	}
 	static init(force) {
 		var e = ui.q('home');
 		if (force || !ui.q('home teaser.events>div card')) {
@@ -232,7 +228,7 @@ ${ui.l('events.title')}
 				if (pageHome.club)
 					v.actionLogo = 'pageHome.openNews()';
 				else
-					v.actionLogo = 'pageHome.goToSettings(event)';
+					v.actionLogo = 'ui.navigation.goTo(&quot;settings&quot;)';
 				if (user.contact.type == 'adminContent')
 					v.statsButton = '';
 			} else {
@@ -451,14 +447,9 @@ ${ui.l('events.title')}
 			},
 			success(l) {
 				var e, s = '';
-				if (user.contact) {
+				if (user.contact)
 					s = '<card onclick="pageEvent.edit()" class="mainBG"><img source="events"/><text>' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>';
-					e = pageEvent.getCalendarList(l);
-				} else {
-					e = [];
-					for (var i = 1; i < l.length; i++)
-						e.push(model.convert(new Location(), l, i));
-				}
+				e = pageEvent.getCalendarList(l);
 				var dates = ui.qa('dialog-hint eventFilter:last-child input-checkbox[checked="true"]');
 				var dateFiltered = function (e2) {
 					if ('outdated' == e2)
