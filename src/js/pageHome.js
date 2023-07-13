@@ -34,7 +34,7 @@ class pageHome {
 </homeHeader>
 <homeBody>
 <teaser class="events">
-	<title onclick="pageHome.selectEventDateLocation()" class="highlightColor" style="cursor:pointer;">${ui.l('events.title')}</title>
+	<title onclick="pageHome.filterOpen()" class="highlightColor" style="cursor:pointer;">${ui.l('events.title')}</title>
 	<div></div>
 </teaser>
 <teaser class="contacts">
@@ -163,9 +163,50 @@ ${ui.l('events.title')}
 		else
 			render({});
 	}
+	static filterClose() {
+		if (ui.q('dialog-hint input-checkbox[checked="true"]')) {
+			ui.attr('dialog-hint input-checkbox', 'checked', 'false');
+			pageHome.teaserEvents();
+		}
+		ui.navigation.closeHint();
+	}
 	static filterEvents() {
-		this.teaserEvents();
-		this.teaserContacts();
+		var search = '', e = ui.qa('dialog-hint eventFilter:first-child input-checkbox[checked="true"]');
+		for (var i = 0; i < e.length; i++)
+			search += ' or location.town=\'' + e[i].getAttribute('value') + '\'';
+		pageHome.teaserEvents(search ? search.substring(4) : null);
+	}
+	static filterOpen() {
+		var render = function () {
+			var towns = '', dates = '';
+			for (var i = 0; i < pageHome.teaserMeta.length; i++) {
+				if (towns.indexOf('"' + pageHome.teaserMeta[i].town + '"') < 0)
+					towns += '<input-checkbox onclick="pageHome.filterEvents()" value="' + pageHome.teaserMeta[i].town + '" label="' + pageHome.teaserMeta[i].town + '"></input-checkbox>';
+				if (dates.indexOf('"' + pageHome.teaserMeta[i].date + '"') < 0)
+					dates += '<input-checkbox onclick="pageHome.filterEvents()" value="' + global.date.local2server(pageHome.teaserMeta[i].date).substring(0, 10) + '" label="' + global.date.formatDate(pageHome.teaserMeta[i].date).split(' ')[1] + '"></input-checkbox>';
+			}
+			ui.navigation.openHint({
+				desc: '<eventFilter>' + towns + '</eventFilter><eventFilter>' + dates + '</eventFilter>',
+				pos: '2%,-65%', size: '96%,auto', hinkyClass: 'bottom', hinky: 'right:50%;margin-right:-1.5em;',
+				onclose: 'pageHome.filterClose()'
+			});
+		}
+		if (pageHome.teaserMeta)
+			render();
+		else
+			communication.ajax({
+				url: global.serverApi + 'action/teaser/meta',
+				webCall: 'pageHome.filterOpen()',
+				responseType: 'json',
+				error() { },
+				success(l) {
+					pageHome.teaserMeta = [];
+					l = pageEvent.getCalendarList(l);
+					for (var i = 0; i < l.length; i++)
+						pageHome.teaserMeta.push({ town: l[i].town, date: l[i].event.startDate });
+					render();
+				}
+			});
 	}
 	static goToSettings(event) {
 		if (ui.cssValue('dialog-hint', 'display') == 'none')
@@ -381,48 +422,17 @@ ${ui.l('events.title')}
 		ui.classRemove('dialog-hint tab', 'tabActive');
 		ui.classAdd('dialog-hint tab[i="' + id + '"]', 'tabActive');
 	}
-	static selectEventDateLocation() {
-		var render = function () {
-			var towns = '', dates = '';
-			for (var i = 1; i < pageHome.teaserMeta.length; i++) {
-				if (towns.indexOf('"' + pageHome.teaserMeta[i].town + '"') < 0)
-					towns += '<input-checkbox onclick="pageHome.filterEvents()" label="' + pageHome.teaserMeta[i].town + '"' + (pageHome.teaserMeta[i].townChecked ? ' checked="true"' : '') + '></input-checkbox>';
-				if (dates.indexOf('"' + pageHome.teaserMeta[i].date + '"') < 0)
-					dates += '<input-checkbox onclick="pageHome.filterEvents()" label="' + global.date.formatDate(pageHome.teaserMeta[i].date) + '"' + (pageHome.teaserMeta[i].dateChecked ? ' checked="true"' : '') + '></input-checkbox>';
-			}
-			ui.navigation.openHint({
-				desc: '<eventFilter>' + towns + '</eventFilter><eventFilter>' + dates + '</eventFilter>',
-				pos: '10%,-65%', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:50%;margin-right:-1.5em;'
-			});
-		}
-		if (pageHome.teaserMeta)
-			render();
-		else
-			communication.ajax({
-				url: global.serverApi + 'action/teaser/meta',
-				webCall: 'pageHome.selectEventDateLocation()',
-				responseType: 'json',
-				error() { },
-				success(l) {
-					pageHome.teaserMeta = [];
-					l = pageEvent.getCalendarList(l);
-					for (var i = 0; i < l.length; i++)
-						pageHome.teaserMeta.push({ town: l[i].town, date: l[i].event.startDate });
-					render();
-				}
-			});
-	}
-	static teaserContacts(search) {
+	static teaserContacts() {
 		communication.ajax({
-			url: global.serverApi + 'action/teaser/contacts' + (search ? '?search=' + encodeURIComponent(search) : ''),
-			webCall: 'pageHome.teaserContacts(search)',
+			url: global.serverApi + 'action/teaser/contacts',
+			webCall: 'pageHome.teaserContacts()',
 			responseType: 'json',
 			error() { },
 			success(l) {
 				var s = '';
 				for (var i = 1; i < l.length; i++) {
 					var e = model.convert(new Contact(), l, i);
-					s += '<card onclick="details.open(' + e.id + ',' + JSON.stringify({ webCall: 'pageHome.teaserContacts(search)', query: 'contact_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('contact.id=' + e.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)"><img src="' + global.serverImg + e.imageList + '"/><text>' + e.pseudonym + '</text></card>';
+					s += '<card onclick="details.open(' + e.id + ',' + JSON.stringify({ webCall: 'pageHome.teaserContacts()', query: 'contact_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('contact.id=' + e.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)"><img src="' + global.serverImg + e.imageList + '"/><text>' + e.pseudonym + '</text></card>';
 				}
 				ui.q('home teaser.contacts>div').innerHTML = s;
 				ui.css('home teaser.contacts', 'opacity', 1);
@@ -448,8 +458,20 @@ ${ui.l('events.title')}
 					for (var i = 1; i < l.length; i++)
 						e.push(model.convert(new Location(), l, i));
 				}
+				var dates = ui.qa('dialog-hint eventFilter:last-child input-checkbox[checked="true"]');
+				var dateFiltered = function (e2) {
+					if ('outdated' == e2)
+						return true;
+					if (!dates.length)
+						return false;
+					for (var i = 0; i < dates.length; i++) {
+						if (e2.event.startDate.toISOString().indexOf(dates[i].getAttribute('value')) == 0)
+							return false;
+					}
+					return true;
+				}
 				for (var i = 0; i < e.length; i++) {
-					if ('outdated' != e[i])
+					if (!dateFiltered(e[i]))
 						s += '<card onclick="details.open(&quot;' + pageEvent.getId(e[i]) + '&quot;,' + JSON.stringify({
 							webCall: 'pageHome.teaserEvents(search)', query: 'event_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('event.id=' + e[i].event.id)
 						}).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)"><img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList ? e[i].imageList : e[i].contact.imageList) + '"/><text>' + global.date.formatDate(e[i].event.startDate, 'noWeekday') + '<br/>' + e[i].event.description + '</text></card>';

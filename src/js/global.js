@@ -228,7 +228,9 @@ class global {
 		return '1=0';
 	}
 	static hash(s) {
-		return s.split('').reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0);
+		if (s)
+			return s.split('').reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0);
+		return 0;
 	}
 	static isBrowser() {
 		return window.cordova ? false : true;

@@ -104,6 +104,12 @@ hinky.top {
 hinky.bottom {
 	bottom: -1em;
 	border-top: solid 1.5em var(--bgHint);
+}
+
+eventFilter {
+	display: block;
+    max-height: 4em;
+    overflow-y: auto;
 }`;
 		this._root.appendChild(style);
 	}
@@ -129,10 +135,10 @@ hinky.bottom {
 		}, 500);
 	}
 	static close(data) {
-		ui.q('main:last-child dialog-hint').removeAttribute('onclick');
+		ui.q('dialog-hint').removeAttribute('onclick');
 		if (!data)
 			DialogHint.currentStep = -1;
-		var e = ui.q('main:last-child dialog-hint');
+		var e = ui.q('dialog-hint');
 		if (ui.cssValue(e, 'display') != 'block')
 			return;
 		ui.on(e, 'transitionend', function () {
@@ -157,7 +163,7 @@ hinky.bottom {
 			if (data.action.indexOf('pageHome.openStatistics') > -1)
 				return;
 		}
-		var e = ui.q('main:last-child dialog-hint'), body = (data.desc.indexOf(' ') > -1 ? data.desc : ui.l('intro.' + data.desc)), element;
+		var e = ui.q('dialog-hint'), body = (data.desc.indexOf(' ') > -1 ? data.desc : ui.l('intro.' + data.desc)), element;
 		body = body.replace('<rating/>', '<br/><br/><input-rating ui="rating"></input-rating><br/><br/><input type="email" name="email" placeholder="Email"></input><br/><br/><textarea name="feedback" maxlength="1000"></textarea><br/><br/><button-text onclick="this.save()" name="feedback" label="✓"></button-text>');
 		body = body.replace('<language/>', '<br/><br/><button-text ' + (global.language == 'DE' ? 'class="favorite"' : '') + ' onclick="this.language(&quot;DE&quot;)" l="DE" label="Deutsch"></button-text><button-text class="' + (global.language == 'EN' ? ' favorite' : '') + '" onclick="this.language(&quot;EN&quot;)" l="EN" label="English"></button-text>');
 		if (e != ui.q('dialog-hint'))
@@ -209,12 +215,11 @@ hinky.bottom {
 			element = document.createElement('hinky');
 			element.setAttribute('class', data.hinkyClass);
 			element.setAttribute('style', data.hinky);
-			element.setAttribute('onclick', 'ui.navigation.closeHint()');
 			(e._root ? e._root : e).appendChild(element);
 		}
 		element = document.createElement('close');
 		element.innerText = 'x';
-		element.setAttribute('onclick', 'ui.navigation.closeHint()');
+		element.setAttribute('onclick', data.onclose ? data.onclose : 'ui.navigation.closeHint()');
 		(e._root ? e._root : e).appendChild(element);
 		if (data.pos.split(',')[0].indexOf('-') == 0) {
 			ui.css(e, 'left', '');
@@ -235,9 +240,9 @@ hinky.bottom {
 		else
 			ui.css(e, 'width', data.size.split(',')[0]);
 		ui.css(e, 'height', data.size.split(',')[1]);
-		ui.attr(ui.q('main:last-child dialog-hint'), 'i', global.hash(data.desc));
+		ui.attr(ui.q('dialog-hint'), 'i', global.hash(data.desc));
 		formFunc.initFields(element);
-		setTimeout(function () { ui.css('main:last-child dialog-hint', 'opacity', 1) }, 10);
+		setTimeout(function () { ui.css('dialog-hint', 'opacity', 1) }, 10);
 	}
 	static openIntro() {
 		if (DialogHint.steps.length == 0) {
@@ -258,7 +263,7 @@ hinky.bottom {
 			ui.navigation.closeHint();
 			return;
 		}
-		var e = ui.q('main:last-child dialog-hint');
+		var e = ui.q('dialog-hint');
 		if (ui.cssValue(e, 'transform').indexOf('1') > -1) {
 			if (e)
 				e.click();
@@ -272,12 +277,12 @@ hinky.bottom {
 			DialogHint.open(DialogHint.steps[DialogHint.currentStep]);
 	}
 	static save() {
-		if (formFunc.validation.email(ui.q('main:last-child dialog-hint input[name="email"]')) < 0)
+		if (formFunc.validation.email(ui.q('dialog-hint input[name="email"]')) < 0)
 			communication.ajax({
 				url: global.serverApi + 'action/notify',
 				webCall: 'ui.openIntro()',
 				method: 'POST',
-				body: 'text=' + encodeURIComponent(JSON.stringify(formFunc.getForm('main:last-child hint'))),
+				body: 'text=' + encodeURIComponent(JSON.stringify(formFunc.getForm('hint'))),
 				success(r) {
 					ui.navigation.openHint({ desc: 'Lieben Dank für Dein Feedback!', pos: '20%,12em', size: '60%,auto' });
 				}

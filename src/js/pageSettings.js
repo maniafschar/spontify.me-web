@@ -250,15 +250,15 @@ ${v.info}`;
 	}
 	static getCurrentSettings() {
 		var s = ui.val('settings input[name="email"]');
-		s += global.separatorTech + ui.q('settings [name="image_disp"] img');
+		s += global.separatorTech + global.hash(ui.val('settings input-image[name="image"]'));
 		s += global.separatorTech + ui.val('settings textarea[name="description"]');
 		s += global.separatorTech + ui.val('settings textarea[name="urls"]');
 		s += global.separatorTech + ui.val('settings input[name="birthday"]');
 		s += global.separatorTech + ui.val('settings input-checkbox[name="birthdayDisplay"][checked="true"]');
 		s += global.separatorTech + ui.val('settings input-checkbox[name="gender"][checked="true"]');
-		s += global.separatorTech + ui.val('settings input[name="ageFemale"]');
-		s += global.separatorTech + ui.val('settings input[name="ageMale"]');
-		s += global.separatorTech + ui.val('settings input[name="ageDivers"]');
+		s += global.separatorTech + ui.val('settings input-slider[name="ageFemale"]');
+		s += global.separatorTech + ui.val('settings input-slider[name="ageMale"]');
+		s += global.separatorTech + ui.val('settings input-slider[name="ageDivers"]');
 		s += global.separatorTech + (ui.q('settings input-checkbox[name="genderInterest1"][checked="true"]') ? 1 : 0);
 		s += global.separatorTech + (ui.q('settings input-checkbox[name="genderInterest2"][checked="true"]') ? 1 : 0);
 		s += global.separatorTech + (ui.q('settings input-checkbox[name="genderInterest3"][checked="true"]') ? 1 : 0);
@@ -279,16 +279,6 @@ ${v.info}`;
 		s += global.separatorTech + ui.q('settings input-hashtags').getAttribute('ids');
 		s += global.separatorTech + ui.q('settings input-hashtags').getAttribute('text');
 		return s;
-	}
-	static getMultiplePopupValues(id) {
-		var s = ui.val('#' + id).split(','), s2 = '';
-		for (var i = 0; i < s.length; i++) {
-			if (s[i].trim().length > 0)
-				s2 += global.separatorTech + (s[i] < 10 ? '00' : s[i] < 100 ? '0' : '') + Number(s[i]);
-		}
-		if (s2.length > 0)
-			s2 = s2.substring(1);
-		return s2;
 	}
 	static init(exec) {
 		ui.classRemove('dialog-navigation item', 'active');
@@ -453,7 +443,6 @@ ${v.info}`;
 				}
 			});
 		}
-		formFunc.svg.remove();
 		pageSettings.currentSettings = pageSettings.getCurrentSettings();
 		bluetooth.reset();
 		if (goToID) {
