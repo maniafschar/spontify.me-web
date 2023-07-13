@@ -591,6 +591,8 @@ search .locationPicker {
 	cursor: pointer;
 	border-radius: 1em 0 0 1em;
 	white-space: nowrap;
+	left: initial;
+	margin: 0;
 }
 
 settings explain {

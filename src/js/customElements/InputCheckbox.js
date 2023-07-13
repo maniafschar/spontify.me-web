@@ -11,29 +11,6 @@ class InputCheckbox extends HTMLElement {
 	connectedCallback() {
 		const style = document.createElement('style');
 		style.textContent = `${initialisation.customElementsCss}
-label {
-	cursor: pointer;
-	display: inline-block;
-	position: relative;
-	text-align: left;
-	width: auto;
-	padding: 0.34em 1.25em;
-	margin-left: 0.25em;
-	margin-right: 0.25em;
-	margin-bottom: 0.5em;
-	left: -0.25em;
-	color: black;
-	background: rgba(255, 255, 255, 0.85);
-	border-radius: 0.5em;
-	transition: all .4s;
-}
-label>img {
-	height: 3em;
-	margin: -1em;
-}
-label:hover {
-	color: black;
-}
 :host([checked="true"]) label {
 	padding-left: 1.75em;
 	padding-right: 0.75em;

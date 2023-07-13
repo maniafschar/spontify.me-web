@@ -32,6 +32,7 @@ import { InputSlider } from './customElements/InputSlider';
 import { ListBody } from './customElements/ListBody';
 import { ListRow } from './customElements/ListRow';
 import { ContentAdmin } from './customElements/ContentAdmin';
+import { InputDate } from './customElements/InputDate';
 
 export { initialisation };
 
@@ -54,6 +55,7 @@ class initialisation {
 				customElements.define('dialog-navigation', DialogNavigation);
 				customElements.define('dialog-popup', DialogPopup);
 				customElements.define('input-checkbox', InputCheckbox);
+				customElements.define('input-date', InputDate);
 				customElements.define('input-hashtags', InputHashtags);
 				customElements.define('input-image', InputImage);
 				customElements.define('input-rating', InputRating);

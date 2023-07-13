@@ -76,6 +76,32 @@ textarea {
 	resize: none;
 }
 
+label {
+	cursor: pointer;
+	display: inline-block;
+	position: relative;
+	text-align: left;
+	width: auto;
+	padding: 0.34em 1.25em;
+	margin-left: 0.25em;
+	margin-right: 0.25em;
+	margin-bottom: 0.5em;
+	left: -0.25em;
+	color: black;
+	background: rgba(255, 255, 255, 0.85);
+	border-radius: 0.5em;
+	transition: all .4s;
+}
+
+label>img {
+	height: 3em;
+	margin: -1em;
+}
+
+label:hover {
+	color: black;
+}
+
 field>label {
 	position: relative;
 	display: block;
@@ -86,6 +112,17 @@ field>label {
 	overflow: hidden;
 	white-space: nowrap;
 	font-style: italic;
+	background: transparent;
+	color: white;
+	margin: 0;
+	left: 0;
+	border-radius: 0;
+	cursor: default;
+	opacity: 0.7;
+}
+
+field>label:hover {
+	color: white;
 }
 
 explain {

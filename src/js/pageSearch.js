@@ -112,7 +112,7 @@ class pageSearch {
 		fieldValues: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
-<input-checkbox label="search.matchesEvent" name="matches" ${v.matches}></input-checkbox>
+<input-date name="date" ${v.matches}></input-date>
 <label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${geoData.current.town}</label>
 <input-hashtags ids="${v.keywords}" text="${v.keywordsText}" name="keywords"></input-hashtags>
 <explain class="searchKeywordHint">${ui.l('search.hintEvent')}</explain>
