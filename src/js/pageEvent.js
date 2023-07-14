@@ -529,7 +529,7 @@ class pageEvent {
 		return (s ? '<listSeparator class="highlightColor strong">' + ui.l('events.ticketCurrent') + '</listSeparator>' + s : '') +
 			(p ? '<listSeparator class="highlightColor strong">' + ui.l('events.ticketPast') + '</listSeparator>' + p : '');
 	}
-	static loadEvents(params) {
+	static loadEvents(params, filter) {
 		var events = null, participations = null, divID = ui.navigation.getActiveID();
 		var menuIndex = -1;
 		ui.qa('dialog-menu a').forEach(function (e, i) { if (e.matches(':hover')) menuIndex = i; });
@@ -550,6 +550,8 @@ class pageEvent {
 					if (events[i].event)
 						events[i].eventParticipate = participate[events[i].event.id + '.' + global.date.local2server(events[i].event.startDate).substring(0, 10)] || {};
 				}
+				if (filter)
+					filter(events);
 				var s = pageEvent.listEvents(events);
 				if (!s)
 					s = lists.getListNoResults(divID.indexOf('.') ? divID.substring(divID.lastIndexOf('.') + 1) : divID, ui.navigation.getActiveID());
@@ -567,7 +569,7 @@ class pageEvent {
 				render();
 			});
 		lists.load({
-			webCall: 'pageEvent.loadEvents(params)',
+			webCall: 'pageEvent.loadEvents(params,filter)',
 			query: 'event_listParticipateRaw',
 			search: encodeURIComponent('eventParticipate.contactId=' + user.contact.id)
 		}, function (l) {

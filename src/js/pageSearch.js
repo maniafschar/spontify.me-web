@@ -121,12 +121,6 @@ class pageSearch {
 <button-text class="defaultButton" onclick="pageSearch.events.search()" label="search.action"></button-text>
 </dialogButtons>
 </form>`,
-		getDates() {
-			var type = ui.val('search tabBody div.events input-date');
-			if (!type) {
-				return 'event.endDate>=\'' + global.date.local2server(new Date()).substring(0, 10) + '\'';
-			}
-		},
 		getFields() {
 			var v = {};
 			v.keywords = pageSearch.events.fieldValues.keywords;
@@ -155,7 +149,7 @@ class pageSearch {
 				s += (s ? ' or ' : '') + global.getRegEx('event.skills', v);
 			if (s)
 				s = '(' + s + ') and ';
-			return s + pageSearch.events.getDates();
+			return s + 'event.endDate>=\'' + global.date.local2server(new Date()).substring(0, 10) + '\'';
 		},
 		getSearch1(bounds) {
 			var s = '';
@@ -196,6 +190,49 @@ class pageSearch {
 				distance: -1,
 				query: 'event_list',
 				search: encodeURIComponent(pageSearch.events.getSearch())
+			}, function (events) {
+				var type = ui.val('search tabBody div.events input-date');
+				if (!type)
+					return;
+				var d = new Date();
+				var today = d.toISOString().substring(0, 10);
+				d.setDate(d.getDate() + 1);
+				var tomorrow = d.toISOString().substring(0, 10);
+				var sunday = new Date();
+				sunday.setHours(23);
+				sunday.setMinutes(59);
+				sunday.setSeconds(59);
+				while (sunday.getDay() != 0)
+					sunday.setDate(sunday.getDate() + 1);
+				var sundayNextWeek = new Date(sunday.getTime());
+				sundayNextWeek.setDate(sundayNextWeek.getDate() + 7);
+				var friday = new Date();
+				friday.setHours(0);
+				friday.setMinutes(0);
+				friday.setSeconds(0);
+				while (friday.getDay() != 5)
+					friday.setDate(friday.getDate() + 1);
+				for (var i = events.length - 1; i >= 0; i--) {
+					if (type == 'today') {
+						if (global.date.local2server(events[i].event.startDate).indexOf(today) != 0)
+							events.splice(i, 1);
+					} else if (type == 'tomorrow') {
+						if (global.date.local2server(events[i].event.startDate).indexOf(tomorrow) != 0)
+							events.splice(i, 1);
+					} else if (type == 'thisWeek') {
+						if (events[i].event.startDate > sunday)
+							events.splice(i, 1);
+					} else if (type == 'thisWeekend') {
+						if (events[i].event.startDate < friday || events[i].event.startDate > sunday)
+							events.splice(i, 1);
+					} else if (type == 'nextWeek') {
+						if (events[i].event.startDate < sunday || events[i].event.startDate > sundayNextWeek)
+							events.splice(i, 1);
+					} else {
+						if (global.date.local2server(events[i].event.startDate).indexOf(type) != 0)
+							events.splice(i, 1);
+					}
+				}
 			});
 			user.set('searchEvents', pageSearch.events.fieldValues);
 		}
