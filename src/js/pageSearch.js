@@ -121,6 +121,12 @@ class pageSearch {
 <button-text class="defaultButton" onclick="pageSearch.events.search()" label="search.action"></button-text>
 </dialogButtons>
 </form>`,
+		getDates() {
+			var type = ui.val('search tabBody div.events input-date');
+			if (!type) {
+				return 'event.endDate>=\'' + global.date.local2server(new Date()).substring(0, 10) + '\'';
+			}
+		},
 		getFields() {
 			var v = {};
 			v.keywords = pageSearch.events.fieldValues.keywords;
@@ -128,32 +134,6 @@ class pageSearch {
 			if (pageSearch.events.fieldValues.matches == 'true')
 				v.matches = ' checked="true"';
 			return pageSearch.events.template(v);
-		},
-		getMatches() {
-			var search = '(' + global.getRegEx("event.skills", user.contact.skills) + ' or ' + global.getRegEx('event.skillsText', user.contact.skillsText) + ')';
-			var gender = function (age, i) {
-				if (age) {
-					var ageSplit = age.split(','), s2 = '';
-					if (ageSplit[0] > 18)
-						s2 = 'contact.age>=' + ageSplit[0];
-					if (ageSplit[1] < 99)
-						s2 += (s2 ? ' and ' : '') + 'contact.age<=' + ageSplit[1];
-					return 'contact.gender=' + i + (s2 ? ' and ' + s2 : '');
-				}
-				return '';
-			}
-			var s = gender(user.contact.ageMale, 1), g = '';
-			if (s)
-				g += ' or ' + s;
-			s = gender(user.contact.ageFemale, 2);
-			if (s)
-				g += ' or ' + s;
-			s = gender(user.contact.ageDivers, 3);
-			if (s)
-				g += ' or ' + s;
-			if (g)
-				search += ' and (event.price>0 or ' + g.substring(4) + ')';
-			return search;
 		},
 		getSearch() {
 			var v = ui.q('search tabBody div.events input-hashtags').getAttribute('text'), s = '';
@@ -174,12 +154,8 @@ class pageSearch {
 			if (v)
 				s += (s ? ' or ' : '') + global.getRegEx('event.skills', v);
 			if (s)
-				s = '(' + s + ')';
-			if (ui.q('search tabBody div.events [name="matches"][checked="true"]'))
-				s += (s ? ' and ' : '') + pageSearch.events.getMatches();
-			var d = new Date();
-			d.setDate(new Date().getDate() + 14);
-			return 'event.startDate<=\'' + global.date.local2server(d).substring(0, 10) + '\' and event.endDate>=\'' + global.date.local2server(new Date()).substring(0, 10) + '\'' + (s ? ' and ' + s : '');
+				s = '(' + s + ') and ';
+			return s + pageSearch.events.getDates();
 		},
 		getSearch1(bounds) {
 			var s = '';

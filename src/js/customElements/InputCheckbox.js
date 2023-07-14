@@ -31,7 +31,7 @@ class InputCheckbox extends HTMLElement {
 		this.addEventListener('keydown', function (event) {
 			if (event.key == ' ')
 				this.click();
-		})
+		});
 	}
 	static get observedAttributes() { return ['label']; }
 	attributeChangedCallback(name, oldValue, newValue) {

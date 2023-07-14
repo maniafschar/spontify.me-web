@@ -30,7 +30,12 @@ hashtags label {
 	overflow-x: hidden;
 	text-overflow: ellipsis;
 	border-radius: 1em;
-	cursor: pointer;
+	background: transparent;
+	color: white;
+}
+
+hashtags label:hover {
+	color: white;
 }
 
 hashtags>div {

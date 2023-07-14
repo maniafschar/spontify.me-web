@@ -341,33 +341,18 @@ class pageEvent {
 			list.push(model.convert(new Location(), data, i));
 		var s;
 		var today = global.date.getToday();
-		var todayPlus14 = new Date();
 		var actualEvents = [], otherEvents = [];
-		todayPlus14.setDate(todayPlus14.getDate() + 13);
-		todayPlus14.setHours(23);
-		todayPlus14.setMinutes(59);
-		todayPlus14.setSeconds(59);
 		for (var i = 0; i < list.length; i++) {
 			var v = list[i];
 			var d1 = global.date.server2local(v.event.startDate);
 			var d2 = global.date.server2local(v.event.endDate);
+			d2.setHours(23);
+			d2.setMinutes(59);
+			d2.setSeconds(59);
 			var added = false;
-			if (d1 < todayPlus14 && d2 > today) {
-				if (v.event.type == 'w1') {
-					while (d1 < today)
-						d1.setDate(d1.getDate() + 7);
-				} else if (v.event.type == 'w2') {
-					while (d1 < today)
-						d1.setDate(d1.getDate() + 14);
-				} else if (v.event.type == 'm') {
-					while (d1 < today)
-						d1.setMonth(d1.getMonth() + 1);
-				} else if (v.event.type == 'y') {
-					while (d1 < today)
-						d1.setFullYear(d1.getFullYear() + 1);
-				}
+			if (d2 > today) {
 				do {
-					if (d1 > today && d1 < todayPlus14) {
+					if (d1 > today && d1 <= d2) {
 						added = true;
 						var v2 = JSON.parse(JSON.stringify(v));
 						v2.event.startDate = new Date(d1.getTime());
@@ -383,7 +368,7 @@ class pageEvent {
 						d1.setFullYear(d1.getFullYear() + 1);
 					else
 						break;
-				} while (v.event.type != 'o' && d1 < todayPlus14);
+				} while (v.event.type != 'o' && d1 < d2);
 			}
 			if (!added && user.contact && user.contact.id == v.event.contactId) {
 				v.event.startDate = global.date.server2local(v.event.startDate);

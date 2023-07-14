@@ -352,8 +352,6 @@ ${ui.l('events.title')}
 				}
 			});
 		if (!pageHome.events) {
-			var d = new Date();
-			d.setDate(new Date().getDate() + 14);
 			communication.ajax({
 				url: global.serverApi + 'db/list?query=event_list&search=' + encodeURIComponent('contact.type=\'adminContent\' and event.endDate>=\'' + global.date.local2server(new Date()).substring(0, 10) + '\''),
 				webCall: 'pageHome.openNews()',
