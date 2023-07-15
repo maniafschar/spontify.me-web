@@ -33,7 +33,7 @@ class InputDate extends HTMLElement {
 <label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').select('thisWeek')">${ui.l('search.dateSelectionThisWeek')}</label>
 <label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').select('thisWeekend')">${ui.l('search.dateSelectionThisWeekend')}</label>
 <label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').select('nextWeek')">${ui.l('search.dateSelectionNextWeek')}</label>
-<input onchange="ui.q('input-date[i=&quot;${this.x}&quot;]').select(event.target.value)" type="date" placeholder="TT.MM.JJJJ"/>
+<input onchange="ui.q('input-date[i=&quot;${this.x}&quot;]').select(event.target.value)" type="date" value="${this.getAttribute('value') && this.getAttribute('value').indexOf('-') ? this.getAttribute('value') : new Date().toISOString().substring(0, 10)}"/>
 </div>`,
 			pos: (this.getBoundingClientRect().x - ui.q('main').getBoundingClientRect().x + ui.emInPX) + 'px,' + (this.getBoundingClientRect().y + this.getBoundingClientRect().height + ui.emInPX) + 'px', size: '60%,auto', hinkyClass: 'top', hinky: 'left:2em;'
 		});

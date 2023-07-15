@@ -136,7 +136,8 @@ compass::after {
 		var element = document.createElement('badge');
 		if (this.getAttribute('badge'))
 			element.setAttribute('class', this.getAttribute('badge'));
-		else if (this.getAttribute('class').indexOf('authenticated') < 0
+		else if (this.getAttribute('class')
+			&& this.getAttribute('class').indexOf('authenticated') < 0
 			&& this.getAttribute('class').indexOf('canceled') < 0
 			&& this.getAttribute('class').indexOf('participate') < 0)
 			element.setAttribute('class', 'hidden');
