@@ -210,8 +210,9 @@ class pageSearch {
 				friday.setHours(0);
 				friday.setMinutes(0);
 				friday.setSeconds(0);
-				while (friday.getDay() != 5)
-					friday.setDate(friday.getDate() + 1);
+				if (friday.getDay() < 5)
+					while (friday.getDay() != 5)
+						friday.setDate(friday.getDate() + 1);
 				for (var i = events.length - 1; i >= 0; i--) {
 					if (type == 'today') {
 						if (global.date.local2server(events[i].event.startDate).indexOf(today) != 0)
