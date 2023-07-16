@@ -316,6 +316,7 @@
 			"new": "neues Event",
 			"newOnlineEvent": "Online Event",
 			"newWithoutLocation": "Suchanfrage",
+			"newWithoutLocationDescription": "Mit einer Suchanfrage informierst Du ${buddies} in 20km Umkreis, dass Du gerne um diese Uhrzeit etwas unternehmen möchtest. Meldet sich jemand, könnt Ihr genauen Ort und Uhrzeit vereinbaren.",
 			"next": "Kommenden {0}",
 			"noEvents": "Momentan wurden keine Events gefunden.",
 			"noImage": "Lade eine Profilbild hoch, dann kannst Du hier etwas unternehmen.<br/>Würdest Du mit neuen ${buddies} etwas unternehmen wollen, die kein schönes Profil hier haben?",

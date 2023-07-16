@@ -316,6 +316,7 @@
 			"new": "new event",
 			"newOnlineEvent": "Online Event",
 			"newWithoutLocation": "Search request",
+			"newWithoutLocationDescription": "With a search query you inform ${buddies} in a 20km radius that you would like to do something at this time. If someone gets in touch, you can agree on the exact place and time.",
 			"next": "Coming {0}",
 			"noEvents": "At the moment, no Events found.",
 			"noImage": "Upload a profile picture, then you can create an event.<br/>Would you like to do something with new ${buddies}, who do not have a nice profile here?",
