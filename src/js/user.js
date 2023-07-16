@@ -8,9 +8,9 @@ export { user };
 class user {
 	static clientId = parseInt('{placeholderClientId}');
 	static contact;
+	static appConfig = {};
 	static email;
 	static password = null;
-	static scale = 1;
 	static templateAppointment = v =>
 		global.template`<appointment>
 	<div>${ui.l('settings.videoCall')}</div>

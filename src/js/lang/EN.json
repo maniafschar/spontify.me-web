@@ -587,7 +587,7 @@
 			"dateSelectionTomorrow": "tomorrow",
 			"favorites": "my favorites",
 			"hintContact": "Skills, name, description are searched.",
-			"hintEvent": "Skills, name/address/phone number of the location, description event/location/creator are searched.",
+			"hintEvent": "Name/address/phone number of the location, description event/location/creator are searched.",
 			"hintLocation": "Name, address (including district name), phone number, description are searched.",
 			"map": "search in this area",
 			"matches": "with similar interests",

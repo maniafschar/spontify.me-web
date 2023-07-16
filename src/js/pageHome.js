@@ -225,7 +225,7 @@ ${ui.l('events.title')}
 				v.name = user.contact.pseudonym;
 				v.infoButton = ' hidden';
 				v.langButton = ' hidden';
-				if (pageHome.club)
+				if (user.appConfig.club)
 					v.actionLogo = 'pageHome.openNews()';
 				else
 					v.actionLogo = 'ui.navigation.goTo(&quot;settings&quot;)';

@@ -281,7 +281,7 @@ class pageLogin {
 						setTimeout(function () { ui.html('login', ''); }, 500);
 						ui.navigation.goTo('home');
 					}
-					pageHome.club = v.is_club;
+					user.appConfig = JSON.parse(v.app_config);
 					pageHome.init(true);
 					communication.afterLogin();
 					setTimeout(communication.notification.register, 100);

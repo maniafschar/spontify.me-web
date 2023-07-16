@@ -587,7 +587,7 @@
 			"dateSelectionTomorrow": "morgen",
 			"favorites": "meine Favoriten",
 			"hintContact": "Skills, Name, Beschreibung werden durchsucht.",
-			"hintEvent": "Skills, Name/Adresse/Telefonnummer der Location, Beschreibung Event/Location/Ersteller werden durchsucht.",
+			"hintEvent": "Name/Adresse/Telefonnummer der Location, Beschreibung Event/Location/Ersteller werden durchsucht.",
 			"hintLocation": "Name, Adresse (inklusive Stadtteilname), Telefonnummer, Beschreibung werden durchsucht.",
 			"map": "in diesem Bereich suchen",
 			"matches": "mit gem. Skills",

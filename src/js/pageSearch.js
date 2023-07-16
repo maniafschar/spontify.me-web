@@ -114,7 +114,7 @@ class pageSearch {
 			global.template`<form onsubmit="return false">
 <input-date name="date" ${v.matches}></input-date>
 <label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${geoData.current.town}</label>
-<input-hashtags ids="${v.keywords}" text="${v.keywordsText}" name="keywords"></input-hashtags>
+${v.keywords}
 <explain class="searchKeywordHint">${ui.l('search.hintEvent')}</explain>
 <errorHint></errorHint>
 <dialogButtons>
@@ -123,8 +123,10 @@ class pageSearch {
 </form>`,
 		getFields() {
 			var v = {};
-			v.keywords = pageSearch.events.fieldValues.keywords;
-			v.keywordsText = pageSearch.events.fieldValues.keywordsText;
+			if (user.appConfig.eventNoHashtags)
+				v.keywords = '<input value="' + pageSearch.events.fieldValues.keywords + '" name="keywords"></input>'
+			else
+				v.keywords = '<input-hashtags ids="' + pageSearch.events.fieldValues.keywords + '" text="' + pageSearch.events.fieldValues.keywordsText + '" name="keywords"></input-hashtags>'
 			if (pageSearch.events.fieldValues.matches == 'true')
 				v.matches = ' checked="true"';
 			return pageSearch.events.template(v);
@@ -210,7 +212,7 @@ class pageSearch {
 				friday.setHours(0);
 				friday.setMinutes(0);
 				friday.setSeconds(0);
-				if (friday.getDay() < 5)
+				if (friday.getDay() < 5 && friday.getDay() > 0)
 					while (friday.getDay() != 5)
 						friday.setDate(friday.getDate() + 1);
 				for (var i = events.length - 1; i >= 0; i--) {

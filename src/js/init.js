@@ -104,7 +104,6 @@ class initialisation {
 						break;
 					}
 				}
-				user.scale = global.getDevice() == 'phone' && ui.q('body').clientWidth < 360 ? 0.8 : 1;
 				ui.css('content>:not(home).content', 'display', 'none');
 				initialisation.reposition();
 				initialisation.setLanguage((navigator.language || navigator.userLanguage).toLowerCase().indexOf('en') > -1 ? 'EN' : 'DE', initialisation.initPostProcessor);
@@ -281,15 +280,6 @@ class initialisation {
 		else
 			ui.on(document, 'deviceready', initialisation.init, false);
 	}
-	static openZoom(event) {
-		var name = event.target.parentNode.getAttribute('name');
-		if (!name || name.indexOf('_disp') < 0)
-			ui.navigation.openPopup(ui.l('settings.scale'),
-				'<input-checkbox name="zoom" type="radio" label="settings.scale0" onclick="initialisation.zoom()" value="0.8"' + (user.scale == 0.8 ? ' checked' : '') + '></input-checkbox>' +
-				'<input-checkbox name="zoom" type="radio" label="settings.scale1" onclick="initialisation.zoom()" value="1.0"' + (user.scale == 1.0 ? ' checked' : '') + '></input-checkbox>' +
-				'<input-checkbox name="zoom" type="radio" label="settings.scale2" onclick="initialisation.zoom()" value="1.2"' + (user.scale == 1.2 ? ' checked' : '') + '></input-checkbox>' +
-				'<input-checkbox name="zoom" type="radio" label="settings.scale3" onclick="initialisation.zoom()" value="1.4"' + (user.scale == 1.4 ? ' checked' : '') + '></input-checkbox>');
-	}
 	static reposition() {
 		if (!ui.q('body main'))
 			return;
@@ -424,10 +414,6 @@ class initialisation {
 			} catch (e) {
 			}
 		}
-	}
-	static zoom() {
-		user.scale = parseFloat(ui.val('input-checkbox[name="zoom"][checked="true"]'));
-		initialisation.reposition();
 	}
 }
 window.model = model;

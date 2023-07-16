@@ -29,7 +29,7 @@ class pageEvent {
 	<value style="text-align:center;">
 		<input transient="true" name="location" onkeyup="pageEvent.locations()" />
 		<eventLocationInputHelper><explain>${ui.l('events.locationInputHint')}</explain>
-			<li onclick="pageEvent.locationSelected(-1)" style="color:white;">${ui.l('events.newOnlineEvent')}</li>
+			<li onclick="pageEvent.locationSelected(-1)" style="color:white;"${v.eventNoOnline}>${ui.l('events.newOnlineEvent')}</li>
 			<li onclick="pageEvent.locationSelected(-2)" style="color:white;" ${v.hideWithoutLocation}>${ui.l('events.newWithoutLocation')}</li>
 			<ul></ul>
 			<explain style="margin-bottom:0.5em;">${ui.l('events.locationInputHintCreateNew')}</explain>
@@ -41,7 +41,7 @@ class pageEvent {
 </field>
 <div class="event"${v.styleEvent}>
 <div class="locationName">${v.locationName}</div>
-<field>
+<field${v.eventNoHashtags}>
 	<label style="padding-top:0;">${ui.l('events.hashtags')}</label>
 	<value>
 		<input-hashtags ids="${v.skills}" text="${v.skillsText}" transient="true"></input-hashtags>
@@ -329,6 +329,10 @@ class pageEvent {
 			ui.l('events.paypalSignUpHintFee').replace('{0}', pageEvent.paypal.fee).replace('{1}', global.date.formatDate(pageEvent.paypal.feeDate)).replace('{2}', pageEvent.paypal.feeAfter)
 			: pageEvent.paypal.fee);
 		v.appointment = user.getAppointmentTemplate('authenticate');
+		if (user.appConfig.eventNoHashtags)
+			v.eventNoHashtags = ' class="hidden"';
+		if (user.appConfig.eventNoOnline)
+			v.eventNoOnline = ' class="hidden"';
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
 		if (id)
 			pageEvent.setForm();
@@ -877,10 +881,14 @@ class pageEvent {
 		formFunc.resetError(end);
 		formFunc.resetError(text);
 		formFunc.resetError(tags);
-		if (!tags.getAttribute('ids') && !tags.getAttribute('text'))
-			formFunc.setError(tags, 'error.hashtags');
-		else
-			formFunc.validation.filterWords(tags);
+		if (!user.appConfig.eventNoHashtags) {
+			if (!tags.getAttribute('ids') && !tags.getAttribute('text'))
+				formFunc.setError(tags, 'error.hashtags');
+			else
+				formFunc.validation.filterWords(tags);
+			ui.q('dialog-popup input[name="skills"]').value = ui.q('dialog-popup input-hashtags').getAttribute('ids');
+			ui.q('dialog-popup input[name="skillsText"]').value = ui.q('dialog-popup input-hashtags').getAttribute('text');
+		}
 		if (!text.value)
 			formFunc.setError(text, 'error.description');
 		else
@@ -913,8 +921,6 @@ class pageEvent {
 				}
 			}
 		}
-		ui.q('dialog-popup input[name="skills"]').value = ui.q('dialog-popup input-hashtags').getAttribute('ids');
-		ui.q('dialog-popup input[name="skillsText"]').value = ui.q('dialog-popup input-hashtags').getAttribute('text');
 		var v = formFunc.getForm('dialog-popup form');
 		if (!v.values.price)
 			v.values.price = 0;
