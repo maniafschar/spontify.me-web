@@ -691,7 +691,7 @@ class ui {
 		var e = ui.qa(id);
 		if (e) {
 			if (e.length == 1)
-				return e[0].nodeName == 'TEXTAREA' ? e[0].value : e[0].getAttribute('value');
+				return e[0].nodeName == 'INPUT' || e[0].nodeName == 'TEXTAREA' ? e[0].value : e[0].getAttribute('value');
 			var s = '';
 			for (var i = 0; i < e.length; i++)
 				s += global.separatorTech + e[i].getAttribute('value');

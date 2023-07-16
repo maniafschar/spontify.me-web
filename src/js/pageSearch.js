@@ -132,7 +132,11 @@ ${v.keywords}
 			return pageSearch.events.template(v);
 		},
 		getSearch() {
-			var v = ui.q('search tabBody div.events input-hashtags').getAttribute('text'), s = '';
+			var v, s = '';
+			if (user.appConfig.eventNoHashtags)
+				v = ui.val('search tabBody div.events input');
+			else
+				v = ui.q('search tabBody div.events input-hashtags').getAttribute('text');
 			if (v) {
 				v = v.replace(/'/g, '\'\'').split('|');
 				for (var i = 0; i < v.length; i++) {
@@ -146,9 +150,11 @@ ${v.keywords}
 				}
 				s = s.substring(0, s.length - 4);
 			}
-			v = ui.q('search tabBody div.events input-hashtags').getAttribute('ids');
-			if (v)
-				s += (s ? ' or ' : '') + global.getRegEx('event.skills', v);
+			if (!user.appConfig.eventNoHashtags) {
+				v = ui.q('search tabBody div.events input-hashtags').getAttribute('ids');
+				if (v)
+					s += (s ? ' or ' : '') + global.getRegEx('event.skills', v);
+			}
 			if (s)
 				s = '(' + s + ') and ';
 			return s + 'event.endDate>=\'' + global.date.local2server(new Date()).substring(0, 10) + '\'';
