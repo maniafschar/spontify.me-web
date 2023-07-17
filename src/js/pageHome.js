@@ -182,8 +182,10 @@ ${ui.l('events.title')}
 			for (var i = 0; i < pageHome.teaserMeta.length; i++) {
 				if (towns.indexOf('"' + pageHome.teaserMeta[i].town + '"') < 0)
 					towns += '<input-checkbox onclick="pageHome.filterEvents()" value="' + pageHome.teaserMeta[i].town + '" label="' + pageHome.teaserMeta[i].town + '"></input-checkbox>';
-				if (dates.indexOf('"' + pageHome.teaserMeta[i].date + '"') < 0)
-					dates += '<input-checkbox onclick="pageHome.filterEvents()" value="' + global.date.local2server(pageHome.teaserMeta[i].date).substring(0, 10) + '" label="' + global.date.formatDate(pageHome.teaserMeta[i].date).split(' ')[1] + '"></input-checkbox>';
+				if (dates.indexOf('"' + pageHome.teaserMeta[i].date + '"') < 0) {
+					var d = global.date.formatDate(pageHome.teaserMeta[i].date);
+					dates += '<input-checkbox onclick="pageHome.filterEvents()" value="' + global.date.local2server(pageHome.teaserMeta[i].date).substring(0, 10) + '" label="' + d.substring(0, d.lastIndexOf(' ')) + '"></input-checkbox>';
+				}
 			}
 			ui.navigation.openHint({
 				desc: '<eventFilter>' + towns + '</eventFilter><eventFilter>' + dates + '</eventFilter>',
@@ -245,8 +247,9 @@ ${ui.l('events.title')}
 			ui.html('home item.bluetooth text', ui.l(bluetooth.state == 'on' && user.contact.bluetooth ? 'bluetooth.activated' : 'bluetooth.deactivated'));
 		formFunc.svg.replaceAll();
 		if (user.contact) {
-			ui.q('home homeHeader svg image').setAttribute('x', 770);
-			ui.q('home homeHeader svg image').setAttribute('width', 230);
+			ui.q('home homeHeader svg image').setAttribute('x', 760);
+			ui.q('home homeHeader svg image').setAttribute('y', -35);
+			ui.q('home homeHeader svg image').setAttribute('width', 250);
 			ui.q('home homeHeader svg text').setAttribute('x', 1000);
 			ui.q('home homeHeader svg text').setAttribute('y', 350);
 			ui.q('home homeHeader svg text').setAttribute('text-anchor', 'end');

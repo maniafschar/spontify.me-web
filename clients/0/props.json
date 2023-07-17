@@ -1,11 +1,15 @@
 {
 	"de": {
 		"buddy": "Buddy",
-		"buddies": "Buddies"
+		"buddies": "Buddies",
+		"infoDescription": "infoDescription",
+		"introDescription": "introDescription"
 	},
 	"en": {
 		"buddy": "Buddy",
-		"buddies": "Buddies"
+		"buddies": "Buddies",
+		"infoDescription": "infoDescription",
+		"introDescription": "introDescription"
 	},
 	"name": "test",
 	"server": "http://localhost:9001",
