@@ -252,10 +252,12 @@ class pageEvent {
 					for (var i = 1; i < r.length; i++) {
 						var d = global.date.getDateFields(global.date.server2local(r[i][0]));
 						ui.classAdd('dialog-popup appointment day[d="' + d.year + '-' + d.month + '-' + d.day + '"] .hour' + d.hour, 'closed');
-						if (r[i][2] == user.contact.id) {
+						if (r[i][2]) {
 							ui.q('dialog-popup .paypal explain').innerHTML = ui.q('dialog-popup .paypal explain').innerHTML + '<br/><br/>' + ui.l('events.videoCallDateHint').replace('{0}', global.date.formatDate(r[i][0]));
-							ui.q('dialog-popup .paypal appointment').outerHTML = '';
-							ui.q('dialog-popup .paypal dialogButtons').outerHTML = '';
+							if (ui.q('dialog-popup .paypal appointment'))
+								ui.q('dialog-popup .paypal appointment').outerHTML = '';
+							if (ui.q('dialog-popup .paypal dialogButtons'))
+								ui.q('dialog-popup .paypal dialogButtons').outerHTML = '';
 						}
 					}
 				}

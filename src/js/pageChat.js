@@ -207,9 +207,9 @@ class pageChat {
 		s = s.replace(/\n/g, '<br/>');
 		s = Strings.replaceEmoji(s);
 		if (v.action) {
-			var isVideoCall = v.action.indexOf('VideoCall.startVideoCall(') == 0, addAction = true;
+			var isVideoCall = v.action.indexOf('ui.startVideoCall(') == 0, addAction = true;
 			if (isVideoCall) {
-				var isOponent = v.action.indexOf('VideoCall.startVideoCall(' + user.contact.id + ')') != 0;
+				var isOponent = v.action.indexOf('ui.startVideoCall(' + user.contact.id + ')') != 0;
 				if (isOponent) {
 					var date = global.date.server2local(v.createdAt);
 					date.setHours(date.getHours() + 1);
@@ -676,7 +676,7 @@ class pageChat {
 	static sendChatVideoPermission() {
 		var id = ui.q('chat').getAttribute('i'), v = {
 			note: ui.l('chat.videoPermission'),
-			action: 'VideoCall.startVideoCall(' + user.contact.id + ')',
+			action: 'ui.startVideoCall(' + user.contact.id + ')',
 			contactId2: id
 		};
 		communication.ajax({
@@ -711,7 +711,7 @@ class pageChat {
 	}
 	static sendChatVideoPermissionButton() {
 		if (ui.q('chat').getAttribute('status') == 'Friends')
-			VideoCall.startVideoCall(ui.q('chat').getAttribute('i'));
+			ui.startVideoCall(ui.q('chat').getAttribute('i'));
 		else if (ui.q('chat chatConversation chatMessage:not(.me)'))
 			ui.navigation.openHint({ desc: ui.l('chat.videoPermissionHint') + '<br/><br/><button-text onclick="pageChat.sendChatVideoPermission()" label="chat.videoPermissionSendButton"></button-text>', pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;' });
 		else

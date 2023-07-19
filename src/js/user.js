@@ -73,7 +73,7 @@ class user {
 						if (ui.q('dialog-popup div.paypal')) {
 							ui.q('dialog-popup div.paypal dialogButtons').outerHTML = '';
 							ui.q('dialog-popup div.paypal appointment').outerHTML = '';
-							ui.q('dialog-popup div.paypal explain').innerHTML = ui.l('events.videoCallDate').replace('{0}', global.date.formatDate(e));
+							ui.q('dialog-popup div.paypal explain').innerHTML = ui.l('events.videoCallDate').replace('{0}', global.date.formatDate(t));
 						}
 					}
 				});

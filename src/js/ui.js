@@ -19,6 +19,7 @@ import { DialogHint } from './customElements/DialogHint';
 import { InputRating } from './customElements/InputRating';
 import { DialogMenu } from './customElements/DialogMenu';
 import { DialogLocationPicker } from './customElements/DialogLocationPicker';
+import { VideoCall } from './customElements/VideoCall';
 
 export { ui, formFunc, DragObject };
 
@@ -125,6 +126,12 @@ class ui {
 	}
 	static openRating(id, search) {
 		InputRating.open(id, search);
+	}
+	static startAdminCall() {
+		VideoCall.startAdminCall();
+	}
+	static startVideoCall(id) {
+		VideoCall.startVideoCall(id);
 	}
 	static navigation = {
 		animationEvent: null,
