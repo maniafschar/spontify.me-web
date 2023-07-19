@@ -125,12 +125,23 @@ field>label:hover {
 	color: white;
 }
 
+errorHint {
+	text-align: center;
+	position: relative;
+	z-index: 0;
+	display: block;
+	line-height: 1.2;
+	margin-top: 0.25em;
+	padding: 0 0.5em;
+}
+
 explain {
 	font-size: 0.8em;
 	padding: 0.5em;
 	display: block;
 	line-height: 1.3;
 	text-align: center;
+	color: white;
 }
 
 input-hashtags,
@@ -219,4 +230,8 @@ buttonIcon {
 	color: white;
 	border-radius: 50%;
 	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
+}
+
+.highlightColor {
+	color: var(--bg1stop);
 }

@@ -56,7 +56,7 @@ class user {
 	<button-text onclick="user.appointment()" label="events.paypalSignUpButton"></button-text>
 </dialogButtons>`;
 	static appointment() {
-		if (ui.cssValue('dialog-dialog-popup appointment', 'display') == 'none')
+		if (ui.cssValue('dialog-popup appointment', 'display') == 'none')
 			ui.toggleHeight('dialog-popup appointment');
 		else {
 			var t = ui.q('dialog-popup appointment hour.selected');

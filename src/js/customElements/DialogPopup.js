@@ -36,6 +36,7 @@ appointment {
 	display: none;
 	margin-top: 1em;
 	position: relative;
+	color: white;
 }
 
 appointment day {
@@ -128,10 +129,9 @@ popupTitle>div {
 	font-size: 1.3em;
 	max-width: 90%;
 	display: inline-block;
-	background: rgba(250, 175, 100, 0.95);
+	background: var(--bg3stop);
 	padding: 0.5em 1em;
 	border-radius: 0.5em 0.5em 0 0;
-	color: black;
 	height: 100%;
 	cursor: pointer;
 	text-overflow: ellipsis;
@@ -146,7 +146,7 @@ popupHint {
 popupContent {
 	display: flex;
 	border-radius: 0.5em;
-	background: linear-gradient(rgba(250, 175, 100, 0.95) 0%, rgba(209, 130, 60, 0.95) 100%);
+	background: linear-gradient(var(--bg3stop) 0%, var(--bg3start) 100%);
 	color: black;
 }
 
@@ -155,10 +155,6 @@ popupContent>div {
 	overflow-x: hidden;
 	border: solid 0.75em transparent;
 	width: 100%;
-}
-
- .highlightColor {
-	color: var(--bg1start);
 }
 
 locationNameInputHelper,

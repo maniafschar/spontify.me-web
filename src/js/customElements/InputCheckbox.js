@@ -42,12 +42,14 @@ class InputCheckbox extends HTMLElement {
 		}
 	}
 	toggleCheckbox(event) {
-		var e = event.target;
+		var e = event.target, alterState = true;
 		if (e.getAttribute('type') == 'radio') {
-			if (e.getAttribute('checked') == 'true' && e.getAttribute('deselect') != 'true')
+			alterState = e.getAttribute('checked') != 'true';
+			if (!alterState && e.getAttribute('deselect') != 'true')
 				return;
 			ui.attr(e.parentElement.querySelectorAll('input-checkbox[name="' + e.getAttribute('name') + '"][type="radio"]'), 'checked', 'false');
 		}
-		e.setAttribute('checked', e.getAttribute('checked') == 'true' ? 'false' : 'true');
+		if (alterState)
+			e.setAttribute('checked', e.getAttribute('checked') == 'true' ? 'false' : 'true');
 	}
 }

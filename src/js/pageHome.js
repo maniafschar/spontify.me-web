@@ -188,7 +188,7 @@ ${ui.l('events.title')}
 				}
 			}
 			ui.navigation.openHint({
-				desc: '<eventFilter>' + towns + '</eventFilter><eventFilter>' + dates + '</eventFilter>',
+				desc: '<eventFilter style="margin-bottom:1em;">' + towns + '</eventFilter><eventFilter>' + dates + '</eventFilter>',
 				pos: '2%,-65%', size: '96%,auto', hinkyClass: 'bottom', hinky: 'right:50%;margin-right:-1.5em;',
 				onclose: 'pageHome.filterClose()',
 				noLogin: true
@@ -449,7 +449,7 @@ ${ui.l('events.title')}
 			success(l) {
 				var e, s = '';
 				if (user.contact)
-					s = '<card onclick="pageEvent.edit()" class="mainBG"><img source="events"/><text>' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>';
+					s = '<card onclick="pageEvent.edit()" class="mainBG"><img source="add"/><text>' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>';
 				e = pageEvent.getCalendarList(l);
 				var dates = ui.qa('dialog-hint eventFilter:last-child input-checkbox[checked="true"]');
 				var dateFiltered = function (e2) {

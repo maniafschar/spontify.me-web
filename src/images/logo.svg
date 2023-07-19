@@ -13,5 +13,5 @@
 		</style>
 	</defs>
 	<image x="300" width="400" />
-	<text x="500" y="400" font-size="80" font-family="Adelina" text-anchor="middle" fill="white">{placeholderAppTitle}</text>
+	<text x="500" y="400" font-size="75" font-family="Adelina" text-anchor="middle" fill="white">{placeholderAppTitle}</text>
 </svg>

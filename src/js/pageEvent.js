@@ -24,97 +24,106 @@ class pageEvent {
 <input type="hidden" name="confirm" />
 <input type="hidden" name="skills" value="${v.skills}" />
 <input type="hidden" name="skillsText" value="${v.skillsText}" />
-<field class="location"${v.styleLocation}>
+<div class="event">
+	<div class="locationName" style="color:white;cursor:pointer;" onclick="pageEvent.selectLocation()">${v.locationName}</div>
+	<field>
+		<label>${ui.l('type')}</label>
+		<value>
+			<input-checkbox type="radio" name="type" transient="true" value="0" label="events.location" onclick="pageEvent.setForm()" ${v.typeLocation}></input-checkbox>
+			<input-checkbox type="radio" name="type" transient="true" value="-1" label="events.newOnlineEvent" onclick="pageEvent.setForm()" ${v.typeOnlineEvent}></input-checkbox>
+			<input-checkbox type="radio" name="type" transient="true" value="-2" label="events.newWithoutLocation" onclick="pageEvent.setForm()" ${v.typeWithoutLocation} ${v.hideWithoutLocation}></input-checkbox>
+		</value>
+	</field>
+	<explain class="newWithoutLocation" style="display:none;">${ui.l('events.newWithoutLocationDescription')}</explain>
+	<field${v.eventNoHashtags}>
+		<label style="padding-top:0;">${ui.l('events.hashtags')}</label>
+		<value>
+			<input-hashtags ids="${v.skills}" text="${v.skillsText}" transient="true"></input-hashtags>
+		</value>
+	</field>
+	<field class="noWTDField">
+		<label>${ui.l('events.repetition')}</label>
+		<value>
+			<input-checkbox type="radio" name="repetition" value="o" label="events.repetition_o" onclick="pageEvent.setForm()" ${v.repetition_o}></input-checkbox>
+			<input-checkbox type="radio" name="repetition" value="w1" label="events.repetition_w1" onclick="pageEvent.setForm()" ${v.repetition_w1}></input-checkbox>
+			<input-checkbox type="radio" name="repetition" value="w2" label="events.repetition_w2" onclick="pageEvent.setForm()" ${v.repetition_w2}></input-checkbox>
+			<input-checkbox type="radio" name="repetition" value="m" label="events.repetition_m" onclick="pageEvent.setForm()" ${v.repetition_m}></input-checkbox>
+			<input-checkbox type="radio" name="repetition" value="y" label="events.repetition_y" onclick="pageEvent.setForm()" ${v.repetition_y}></input-checkbox>
+		</value>
+	</field>
+	<field>
+		<label name="startDate">${ui.l('events.start')}</label>
+		<value>
+			<input type="datetime-local" name="startDate" placeholder="TT.MM.JJJJ HH:MM" value="${v.startDate}" step="900" min="${v.today}T00:00:00" />
+		</value>
+	</field>
+	<field class="noWTDField" name="endDate" style="display:none;">
+		<label>${ui.l('events.end')}</label>
+		<value>
+			<input type="date" name="endDate" placeholder="TT.MM.JJJJ" value="${v.endDate}" min="${v.today}" />
+		</value>
+	</field>
+	<field>
+		<label>${ui.l('description')}</label>
+		<value>
+			<textarea name="description" maxlength="1000">${v.description}</textarea>
+		</value>
+	</field>
+	<field class="noWTDField">
+		<label>${ui.l('events.maxParticipants')}</label>
+		<value>
+			<input type="number" name="maxParticipants" maxlength="250" value="${v.maxParticipants}" onmousewheel="return false;" />
+		</value>
+	</field>
+	<field class="noWTDField">
+		<label>${ui.l('events.price')}</label>
+		<value>
+			<input type="number" step="any" name="price" value="${v.price}" onkeyup="pageEvent.checkPrice()" onmousewheel="return false;" />
+			<div class="paypal" style="display:none;">
+				<explain>${v.payplaSignUpHint}</explain>
+				${v.appointment}
+			</div>
+		</value>
+	</field>
+	<field class="picture" style="display:none;">
+		<label>${ui.l('picture')}</label>
+		<value>
+			<input-image></input-image>
+		</value>
+	</field>
+	<field class="url" style="display:none;">
+		<label>${ui.l('events.url')}</label>
+		<value>
+			<input name="url" value="${v.url}" />
+		</value>
+	</field>
+	<field class="confirm noWTDField">
+		<label>${ui.l('events.confirmLabel')}</label>
+		<value>
+			<input-checkbox name="eventconfirm" transient="true" label="events.confirm" value="1" ${v.confirm}></input-checkbox>
+		</value>
+	</field>
+	<dialogButtons>
+		<button-text onclick="pageEvent.selectLocation()" label="events.selectLocation" class="selectLocation"></button-text>
+		<button-text onclick="pageEvent.save()" label="save" class="save hidden"></button-text>
+		<button-text onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" ${v.hideDelete} id="deleteElement" label="delete"></button-text>
+	</dialogButtons>
+	<popupHint></popupHint>
+</div>
+<field class="location" style="display:none;">
 	<label style="padding-top:0;">${ui.l('events.location')}</label>
 	<value style="text-align:center;">
 		<input transient="true" name="location" onkeyup="pageEvent.locations()" />
-		<eventLocationInputHelper><explain>${ui.l('events.locationInputHint')}</explain>
-			<li onclick="pageEvent.locationSelected(-1)" style="color:white;"${v.eventNoOnline}>${ui.l('events.newOnlineEvent')}</li>
-			<li onclick="pageEvent.locationSelected(-2)" style="color:white;" ${v.hideWithoutLocation}>${ui.l('events.newWithoutLocation')}</li>
+		<explain>${ui.l('events.locationInputHint')}</explain>
+		<eventLocationInputHelper>
 			<ul></ul>
-			<explain style="margin-bottom:0.5em;">${ui.l('events.locationInputHintCreateNew')}</explain>
-			<dialogButtons style="margin-bottom:0;">
-				<button-text onclick="pageLocation.edit()" label="locations.new"></button-text>
-			</dialogButtons>
 		</eventLocationInputHelper>
+		<explain>${ui.l('events.locationInputHintCreateNew')}</explain>
+		<dialogButtons style="margin-top:0;">
+			<button-text onclick="pageLocation.edit()" label="locations.new"></button-text>
+		</dialogButtons>
 	</value>
 </field>
-<div class="event"${v.styleEvent}>
-<div class="locationName">${v.locationName}</div>
-<field${v.eventNoHashtags}>
-	<label style="padding-top:0;">${ui.l('events.hashtags')}</label>
-	<value>
-		<input-hashtags ids="${v.skills}" text="${v.skillsText}" transient="true"></input-hashtags>
-	</value>
-</field>
-<field class="noWTDField">
-	<label>${ui.l('type')}</label>
-	<value>
-		<input-checkbox type="radio" name="type" value="o" label="events.type_o" onclick="pageEvent.setForm()" ${v.type_o}></input-checkbox>
-		<input-checkbox type="radio" name="type" value="w1" label="events.type_w1" onclick="pageEvent.setForm()" ${v.type_w1}></input-checkbox>
-		<input-checkbox type="radio" name="type" value="w2" label="events.type_w2" onclick="pageEvent.setForm()" ${v.type_w2}></input-checkbox>
-		<input-checkbox type="radio" name="type" value="m" label="events.type_m" onclick="pageEvent.setForm()" ${v.type_m}></input-checkbox>
-		<input-checkbox type="radio" name="type" value="y" label="events.type_y" onclick="pageEvent.setForm()" ${v.type_y}></input-checkbox>
-	</value>
-</field>
-<field>
-	<label name="startDate">${ui.l('events.start')}</label>
-	<value>
-		<input type="datetime-local" name="startDate" placeholder="TT.MM.JJJJ HH:MM" value="${v.startDate}" step="900" min="${v.today}T00:00:00" />
-	</value>
-</field>
-<field class="noWTDField" name="endDate">
-	<label>${ui.l('events.end')}</label>
-	<value>
-		<input type="date" name="endDate" placeholder="TT.MM.JJJJ" value="${v.endDate}" min="${v.today}" />
-	</value>
-</field>
-<field>
-	<label>${ui.l('description')}</label>
-	<value>
-		<textarea name="description" maxlength="1000">${v.description}</textarea>
-	</value>
-</field>
-<field class="noWTDField">
-	<label>${ui.l('events.maxParticipants')}</label>
-	<value>
-		<input type="number" name="maxParticipants" maxlength="250" value="${v.maxParticipants}" onmousewheel="return false;" />
-	</value>
-</field>
-<field class="noWTDField">
-	<label>${ui.l('events.price')}</label>
-	<value>
-		<input type="number" step="any" name="price" value="${v.price}" onkeyup="pageEvent.checkPrice()" onmousewheel="return false;" />
-		<div class="paypal" style="display:none;">
-			<explain>${v.payplaSignUpHint}</explain>
-			${v.appointment}
-		</div>
-	</value>
-</field>
-<field class="picture" style="display:none;">
-	<label>${ui.l('picture')}</label>
-	<value>
-		<input-image></input-image>
-	</value>
-</field>
-<field class="url" style="display:none;">
-	<label>${ui.l('events.url')}</label>
-	<value>
-		<input name="url" value="${v.url}" />
-	</value>
-</field>
-<field class="confirm noWTDField">
-	<label>${ui.l('events.confirmLabel')}</label>
-	<value>
-		<input-checkbox name="eventconfirm" transient="true" label="events.confirm" value="1" ${v.confirm}></input-checkbox>
-	</value>
-</field>
-<dialogButtons style="margin-bottom:0;">
-	<button-text onclick="pageEvent.save()" label="save"></button-text>
-	<button-text onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" ${v.hideDelete} id="deleteElement" label="delete"></button-text>
-</dialogButtons>
-<popupHint></popupHint>
-</div>
 </form>`;
 	static templateDetail = v =>
 		global.template`<text class="description event" ${v.oc}>
@@ -129,35 +138,24 @@ class pageEvent {
 <span class="eventParticipationButtons eventMargin"></span>
 </text>`;
 	static checkPrice() {
-		var e = ui.q('dialog-popup .paypal');
 		if (ui.q('dialog-popup [name="price"]').value > 0) {
-			if (user.contact.authenticate && ui.cssValue(e, 'display').indexOf('none') < 0 ||
-				!user.contact.authenticate && ui.cssValue(e, 'display').indexOf('none') > -1)
-				ui.toggleHeight(e);
-			if (ui.cssValue(e = ui.q('dialog-popup .confirm'), 'display').indexOf('none') < 0)
-				ui.toggleHeight(e);
-			if (ui.cssValue(e = ui.q('dialog-popup .picture'), 'display').indexOf('none') > -1)
-				ui.toggleHeight(e);
-			if (ui.cssValue(e = ui.q('dialog-popup .url'), 'display').indexOf('none') > -1)
-				ui.toggleHeight(e);
+			pageEvent.openSection('dialog-popup .paypal', !user.contact.authenticate);
+			pageEvent.openSection('dialog-popup .confirm', false);
+			pageEvent.openSection('dialog-popup .picture', true);
+			pageEvent.openSection('dialog-popup .url', true);
 		} else {
-			if (ui.cssValue(e, 'display').indexOf('none') < 0)
-				ui.toggleHeight(e);
-			if (ui.cssValue(e = ui.q('dialog-popup .confirm'), 'display').indexOf('none') > -1)
-				ui.toggleHeight(e);
-			if (ui.cssValue(e = ui.q('dialog-popup .picture'), 'display').indexOf('none') < 0)
-				ui.toggleHeight(e);
-			if (ui.cssValue(e = ui.q('dialog-popup .url'), 'display').indexOf('none') < 0 &&
-				ui.q('dialog-popup [name="locationId"]').value != -1)
-				ui.toggleHeight(e);
+			pageEvent.openSection('dialog-popup .paypal', false);
+			pageEvent.openSection('dialog-popup .confirm', ui.val('dialog-popup [name="type"][checked="true"]') != -2);
+			pageEvent.openSection('dialog-popup .picture', false);
+			pageEvent.openSection('dialog-popup .url', ui.val('dialog-popup [name="type"][checked="true"]') == -1);
 		}
 	}
 	static detail(v) {
 		v.eventParticipate = new EventParticipate();
 		v.copyLinkHint = ui.l('copyLinkHint.event');
-		if (v.event.type != 'o') {
+		if (v.event.repetition != 'o') {
 			var s = global.date.formatDate(v.event.endDate);
-			v.endDate = ' (' + ui.l('events.type_' + v.event.type) + ' ' + ui.l('to') + s.substring(s.indexOf(' ')) + ')';
+			v.endDate = ' (' + ui.l('events.repetition_' + v.event.repetition) + ' ' + ui.l('to') + s.substring(s.indexOf(' ')) + ')';
 		}
 		var d = pageEvent.getDate(v);
 		v.date = global.date.formatDate(d);
@@ -289,16 +287,16 @@ class pageEvent {
 		v.today = d.year + '-' + d.month + '-' + d.day;
 		v.id = id;
 		v.locationID = locationID;
-		if (!v.type || v.type == 'o')
-			v.type_o = ' checked="true"';
-		if (v.type == 'w1')
-			v.type_w1 = ' checked="true"';
-		if (v.type == 'w2')
-			v.type_w2 = ' checked="true"';
-		if (v.type == 'm')
-			v.type_m = ' checked="true"';
-		if (v.type == 'y')
-			v.type_y = ' checked="true"';
+		if (!v.repetition || v.repetition == 'o')
+			v.repetition_o = ' checked="true"';
+		if (v.repetition == 'w1')
+			v.repetition_w1 = ' checked="true"';
+		if (v.repetition == 'w2')
+			v.repetition_w2 = ' checked="true"';
+		if (v.repetition == 'm')
+			v.repetition_m = ' checked="true"';
+		if (v.repetition == 'y')
+			v.repetition_y = ' checked="true"';
 		if (v.confirm)
 			v.confirm = ' checked="true"';
 		if (!v.startDate) {
@@ -314,15 +312,12 @@ class pageEvent {
 			v.endDate = d.year + '-' + d.month + '-' + d.day;
 		}
 		if (id || locationID > 0) {
-			v.styleLocation = ' style="display:none !important;"';
 			if (locationID > 0) {
 				var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')))
 				v.locationName = e.name + '<br/>' + e.address.replace(/\n/g, global.separator);
 			}
-		} else {
-			v.styleEvent = ' style="display:none !important;"';
+		} else
 			pageEvent.locationsOfPastEvents();
-		}
 		if (user.contact.type && user.contact.type.indexOf('admin') > -1)
 			v.hideWithoutLocation = 'class="hidden"';
 		v.payplaSignUpHint = ui.l('events.paypalSignUpHint').replace('{0}', pageEvent.paypal.feeDate ?
@@ -331,8 +326,12 @@ class pageEvent {
 		v.appointment = user.getAppointmentTemplate('authenticate');
 		if (user.appConfig.eventNoHashtags)
 			v.eventNoHashtags = ' class="hidden"';
-		if (user.appConfig.eventNoOnline)
-			v.eventNoOnline = ' class="hidden"';
+		if (v.locationId == -1)
+			v.typeOnlineEvent = 'checked="true"';
+		else if (v.locationId == -2)
+			v.typeWithoutLocation = 'checked="true"';
+		else
+			v.typeLocation = 'checked="true"';
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
 		if (id)
 			pageEvent.setForm();
@@ -362,17 +361,17 @@ class pageEvent {
 						v2.event.startDate = new Date(d1.getTime());
 						actualEvents.push(v2);
 					}
-					if (v.event.type == 'w1')
+					if (v.event.repetition == 'w1')
 						d1.setDate(d1.getDate() + 7);
-					else if (v.event.type == 'w2')
+					else if (v.event.repetition == 'w2')
 						d1.setDate(d1.getDate() + 14);
-					else if (v.event.type == 'm')
+					else if (v.event.repetition == 'm')
 						d1.setMonth(d1.getMonth() + 1);
-					else if (v.event.type == 'y')
+					else if (v.event.repetition == 'y')
 						d1.setFullYear(d1.getFullYear() + 1);
 					else
 						break;
-				} while (v.event.type != 'o' && d1 < d2);
+				} while (v.event.repetition != 'o' && d1 < d2);
 			}
 			if (!added && user.contact && user.contact.id == v.event.contactId) {
 				v.event.startDate = global.date.server2local(v.event.startDate);
@@ -688,6 +687,10 @@ class pageEvent {
 			}
 		}).render('#paypal-button-container');
 	}
+	static openSection(e, open) {
+		if (!open && ui.cssValue(e, 'display').indexOf('none') < 0 || open && ui.cssValue(e, 'display').indexOf('none') > -1)
+			ui.toggleHeight(e);
+	}
 	static participate(order) {
 		var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
 		if (e.event.price > 0 && !user.contact.image) {
@@ -908,7 +911,7 @@ class pageEvent {
 		}
 		if (ui.q('dialog-popup [name="price"]').value > 0 && !user.contact.authenticate)
 			formFunc.setError(ui.q('dialog-popup [name="price"]'), 'events.errorAuthenticate');
-		if (ui.q('dialog-popup [name="type"]').getAttribute('checked') != 'true') {
+		if (ui.q('dialog-popup [name="repetition"]').getAttribute('checked') != 'true') {
 			if (!end.value)
 				formFunc.setError(end, 'events.errorDateNoEnd');
 			else {
@@ -928,7 +931,7 @@ class pageEvent {
 			ui.q('dialog-popup popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });;
 			return;
 		}
-		if (ui.q('dialog-popup [name="type"]').getAttribute('checked') == 'true')
+		if (ui.q('dialog-popup [name="repetition"]').getAttribute('checked') == 'true')
 			end.value = start.value.substring(0, start.value.lastIndexOf('T'));
 		ui.q('dialog-popup [name="confirm"]').value = ui.q('dialog-popup [name="eventconfirm"][checked="true"]') ? 1 : 0;
 		v.classname = 'Event';
@@ -954,23 +957,38 @@ class pageEvent {
 		ui.q('dialog-popup input[name="skillsText"]').value = ui.q('dialog-popup input-hashtags').getAttribute('text');
 		user.set('event', formFunc.getForm('dialog-popup form'));
 	}
+	static selectLocation() {
+		ui.toggleHeight('dialog-popup .event', function () {
+			ui.toggleHeight('dialog-popup .location');
+		});
+	}
 	static selectVideoCall(e) {
 		ui.classRemove('dialog-popup hour', 'selected');
 		if (!ui.classContains(e, 'closed'))
 			ui.classAdd(e, 'selected');
 	}
 	static setForm() {
-		var b = ui.q('dialog-popup [name="type"][checked="true"][value="o"]');
+		var b = ui.q('dialog-popup [name="repetition"][checked="true"][value="o"]');
 		ui.q('dialog-popup label[name="startDate"]').innerText = ui.l('events.' + (b ? 'date' : 'start'));
-		ui.css('dialog-popup field[name="endDate"]', 'display', b || !ui.q('dialog-popup [name="type"][checked="true"]') ? 'none' : '');
-		b = ui.q('dialog-popup input[name="locationId"]').value;
-		if (!b || b == -2) {
-			ui.attr('dialog-popup .noWTDField', 'class', 'hidden');
+		pageEvent.openSection('dialog-popup field[name="endDate"]', !b && ui.q('dialog-popup [name="repetition"][checked="true"]'));
+		b = ui.val('dialog-popup input-checkbox[name="type"][checked="true"]');
+		var es = ui.qa('dialog-popup .noWTDField:not(field[name="endDate"])');
+		for (var i = 0; i < es.length; i++)
+			pageEvent.openSection(es[i], b != -2);
+		if (b == -2)
 			ui.q('dialog-popup [name="price"]').value = null;
-		}
-		if (b == -1) {
+		else if (b == -1) {
 			ui.q('dialog-popup .url label').innerText = ui.l('events.urlOnlineEvent');
-			ui.css('dialog-popup .url', 'display', null);
+			pageEvent.openSection('dialog-popup .url', true);
+		}
+		pageEvent.openSection('dialog-popup .newWithoutLocation', b == -2);
+		pageEvent.openSection('dialog-popup .locationName', b == 0);
+		if (b == 0 && !ui.val('dialog-popup [name="id"]') && !ui.q('dialog-popup .event .locationName').innerText) {
+			ui.classRemove('dialog-popup .event dialogButtons .selectLocation', 'hidden');
+			ui.classAdd('dialog-popup .event dialogButtons .save', 'hidden');
+		} else {
+			ui.classRemove('dialog-popup .event dialogButtons .save', 'hidden');
+			ui.classAdd('dialog-popup .event dialogButtons .selectLocation', 'hidden');
 		}
 		pageEvent.checkPrice();
 	}

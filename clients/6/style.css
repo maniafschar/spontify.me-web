@@ -1,8 +1,10 @@
 :root {
-	--bg1start: rgb(0, 0, 60);
-	--bg1stop: rgb(0, 70, 180);
-	--bg2start: rgb(184, 100, 80);
-	--bg2stop: rgb(255, 185, 50);
+	--bg1start: rgb(110, 20, 0);
+	--bg1stop: rgb(251, 40, 4);
+	--bg2start: rgb(0, 110, 20);
+	--bg2stop: rgb(30, 180, 50);
+	--bg3start: rgb(10, 30, 110);
+	--bg3stop: rgb(30, 70, 180);
 	--buttonText: white;
 	--bgHint: rgb(170, 255, 255);
 }

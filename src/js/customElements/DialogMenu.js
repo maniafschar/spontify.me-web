@@ -10,7 +10,7 @@ class DialogMenu extends HTMLElement {
 		this._root = this.attachShadow({ mode: 'closed' });
 	}
 	connectedCallback() {
-		this.setAttribute('class', 'bgColor');
+		this.style.background = 'linear-gradient(var(--bg3stop) 0%, var(--bg3start) 100%)';
 		const style = document.createElement('style');
 		style.textContent = `${initialisation.customElementsCss}
 div{
@@ -22,7 +22,7 @@ div{
 hinky {
 	right: 0.9em;
 	top: -1em;
-	border-bottom: solid 1.1em var(--bg2stop);
+	border-bottom: solid 1.1em var(--bg3stop);
 	position: absolute;
 	border-right: solid 1.1em transparent;
 	border-left: solid 1.1em transparent;
@@ -34,12 +34,11 @@ a {
 	position: relative;
 	padding: 0.75em 0;
 	cursor: pointer;
-	color: rgba(0, 0, 0, 0.6);
 }
 
 a:hover,
 a.highlight {
-	color: black;
+	color: var(--bgHint);
 }
 
 title {

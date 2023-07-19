@@ -3,6 +3,8 @@
 	--bg1stop: rgb(255, 4, 250);
 	--bg2start: rgb(150, 160, 0);
 	--bg2stop: rgb(210, 225, 20);
+	--bg3start: rgb(209, 130, 60, 0.95);
+	--bg3stop: rgb(250, 175, 100, 0.95);
 	--buttonText: black;
 	--bgHint: rgb(255, 190, 40);
 }
