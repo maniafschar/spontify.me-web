@@ -226,7 +226,7 @@ homeHeader img {
 	max-height: 22vh;
 	border-radius: 50%;
 	margin-bottom: 0.5em;
-	box-shadow: 0 0 1em rgba(0, 0, 0, 0.6);
+	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
 }
 
 homeHeader.logoSmall>svg {
@@ -1575,7 +1575,7 @@ detail detailHeader matchIndicator span {
 	left: 50%;
 	margin-left: -1em;
 	border-radius: 2em;
-	border: solid 0.75em rgba(255, 255, 255, 0.6);
+	border: solid 0.75em rgba(255, 255, 255, 0.3);
 }
 
 detail detailHeader .fade {

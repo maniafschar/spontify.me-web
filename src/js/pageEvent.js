@@ -653,8 +653,8 @@ class pageEvent {
 		});
 	}
 	static locationSelected(e) {
-		ui.q('dialog-popup input[name="locationId"]').value = e < 0 ? e : e.getAttribute('i');
-		ui.q('dialog-popup .locationName').innerHTML = e == -1 ? ui.l('events.newOnlineEvent') : e == -2 ? ui.l('events.newWithoutLocationDescription') : e.innerHTML;
+		ui.q('dialog-popup input[name="locationId"]').value = e.getAttribute('i');
+		ui.q('dialog-popup .locationName').innerHTML = e.innerHTML;
 		ui.toggleHeight('dialog-popup .location', function () {
 			ui.toggleHeight('dialog-popup .event');
 			pageEvent.setForm();
