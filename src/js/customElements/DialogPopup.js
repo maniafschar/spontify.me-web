@@ -147,7 +147,7 @@ popupContent {
 	display: flex;
 	border-radius: 0.5em;
 	background: linear-gradient(var(--bg3stop) 0%, var(--bg3start) 100%);
-	color: black;
+	color: var(--buttonText);
 }
 
 popupContent>div {

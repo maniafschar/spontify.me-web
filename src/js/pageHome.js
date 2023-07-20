@@ -92,7 +92,7 @@ ${ui.l('events.title')}
 	static clickNotification(id, action) {
 		communication.ajax({
 			url: global.serverApi + 'db/one',
-			webCall: 'pageHome.clickNotification(id,action)',
+			webCall: 'pageHome.clickNotification',
 			method: 'PUT',
 			body: {
 				classname: 'ContactNotification',
@@ -121,7 +121,7 @@ ${ui.l('events.title')}
 					classname: 'ContactNews',
 					id: id
 				},
-				webCall: 'pageHome.deleteNews(id)',
+				webCall: 'pageHome.deleteNews',
 				method: 'DELETE',
 				success(r) {
 					ui.navigation.closePopup();
@@ -154,7 +154,7 @@ ${ui.l('events.title')}
 		if (id)
 			communication.ajax({
 				url: global.serverApi + 'db/one?query=contact_listNews&search=' + encodeURIComponent('contactNews.id=' + id),
-				webCall: 'pageHome.editNews(id)',
+				webCall: 'pageHome.editNews',
 				responseType: 'json',
 				success(l) {
 					render(model.convert(new ContactNews(), l));
@@ -199,7 +199,7 @@ ${ui.l('events.title')}
 		else
 			communication.ajax({
 				url: global.serverApi + 'action/teaser/meta',
-				webCall: 'pageHome.filterOpen()',
+				webCall: 'pageHome.filterOpen',
 				responseType: 'json',
 				error() { },
 				success(l) {
@@ -332,7 +332,7 @@ ${ui.l('events.title')}
 			s = '';
 			for (var i = 0; i < pageHome.events.length; i++) {
 				var e = pageHome.events[i];
-				s += '<card onclick="details.open(&quot;' + pageEvent.getId(e) + '&quot;,' + JSON.stringify({ webCall: 'pageHome.openNews()', query: 'event_list', search: encodeURIComponent('event.id=' + e.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)" style="cursor:pointer;">';
+				s += '<card onclick="details.open(&quot;' + pageEvent.getId(e) + '&quot;,' + JSON.stringify({ webCall: 'pageHome.openNews', query: 'event_list', search: encodeURIComponent('event.id=' + e.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)" style="cursor:pointer;">';
 				s += '<p><date>' + global.date.formatDate(e.event.startDate) + '</date>';
 				if (e.event.image || e.image)
 					s += '<img src="' + global.serverImg + (e.event.image || e.image) + '"/>';
@@ -347,7 +347,7 @@ ${ui.l('events.title')}
 		if (!pageHome.news)
 			communication.ajax({
 				url: global.serverApi + 'db/list?query=contact_listNews&limit=25' + (user.contact.type == 'adminContent' ? '' : '&search=' + encodeURIComponent('contactNews.publish<\'' + global.date.local2server(new Date()) + '\'')),
-				webCall: 'pageHome.openNews()',
+				webCall: 'pageHome.openNews',
 				responseType: 'json',
 				success(l) {
 					pageHome.news = l;
@@ -357,7 +357,7 @@ ${ui.l('events.title')}
 		if (!pageHome.events) {
 			communication.ajax({
 				url: global.serverApi + 'db/list?query=event_list&search=' + encodeURIComponent('contact.type=\'adminContent\' and event.endDate>=\'' + global.date.local2server(new Date()).substring(0, 10) + '\''),
-				webCall: 'pageHome.openNews()',
+				webCall: 'pageHome.openNews',
 				responseType: 'json',
 				success(l) {
 					var e = pageEvent.getCalendarList(l);
@@ -405,7 +405,7 @@ ${ui.l('events.title')}
 		communication.ajax({
 			url: global.serverApi + 'db/one',
 			method: v.id ? 'PUT' : 'POST',
-			webCall: 'pageHome.saveNews()',
+			webCall: 'pageHome.saveNews',
 			body: v,
 			success(r) {
 				ui.navigation.closePopup();
@@ -423,14 +423,14 @@ ${ui.l('events.title')}
 	static teaserContacts() {
 		communication.ajax({
 			url: global.serverApi + 'action/teaser/contacts',
-			webCall: 'pageHome.teaserContacts()',
+			webCall: 'pageHome.teaserContacts',
 			responseType: 'json',
 			error() { },
 			success(l) {
 				var s = '';
 				for (var i = 1; i < l.length; i++) {
 					var e = model.convert(new Contact(), l, i);
-					s += '<card onclick="details.open(' + e.id + ',' + JSON.stringify({ webCall: 'pageHome.teaserContacts()', query: 'contact_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('contact.id=' + e.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)"><img src="' + global.serverImg + e.imageList + '"/><text>' + e.pseudonym + '</text></card>';
+					s += '<card onclick="details.open(' + e.id + ',' + JSON.stringify({ webCall: 'pageHome.teaserContacts', query: 'contact_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('contact.id=' + e.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)"><img src="' + global.serverImg + e.imageList + '"/><text>' + e.pseudonym + '</text></card>';
 				}
 				ui.q('home teaser.contacts>div').innerHTML = s;
 				ui.css('home teaser.contacts', 'opacity', 1);
@@ -440,7 +440,7 @@ ${ui.l('events.title')}
 	static teaserEvents(search) {
 		communication.ajax({
 			url: global.serverApi + 'action/teaser/events' + (search ? '?search=' + encodeURIComponent(search) : ''),
-			webCall: 'pageHome.teaserEvents(search)',
+			webCall: 'pageHome.teaserEvents',
 			responseType: 'json',
 			error(e) {
 				ui.q('home teaser.events>div').innerHTML = ui.l('error.noNetworkConnection');
@@ -466,7 +466,7 @@ ${ui.l('events.title')}
 				for (var i = 0; i < e.length; i++) {
 					if (!dateFiltered(e[i]))
 						s += '<card onclick="details.open(&quot;' + pageEvent.getId(e[i]) + '&quot;,' + JSON.stringify({
-							webCall: 'pageHome.teaserEvents(search)', query: 'event_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('event.id=' + e[i].event.id)
+							webCall: 'pageHome.teaserEvents', query: 'event_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('event.id=' + e[i].event.id)
 						}).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)"><img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList ? e[i].imageList : e[i].contact.imageList) + '"/><text>' + global.date.formatDate(e[i].event.startDate, 'noWeekday') + '<br/>' + e[i].event.description + '</text></card>';
 				}
 				ui.q('home teaser.events>div').innerHTML = s;

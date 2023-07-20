@@ -191,7 +191,7 @@ input-image {
 		if (id) {
 			communication.ajax({
 				url: global.serverApi + 'db/list?query=event_rating&search=' + encodeURIComponent('event.id=' + id + ' and eventParticipate.contactId=' + user.contact.id),
-				webCall: 'ui.open(id,search)',
+				webCall: 'InputRating.open',
 				responseType: 'json',
 				success(r) {
 					lastRating = r.length > 1 ? model.convert(new Contact(), r, r.length - 1).eventRating : {};
@@ -203,7 +203,7 @@ input-image {
 		if (search) {
 			communication.ajax({
 				url: global.serverApi + 'db/list?query=event_rating&search=' + encodeURIComponent(search),
-				webCall: 'ui.open(id,search)',
+				webCall: 'InputRating.open',
 				responseType: 'json',
 				success(r) {
 					history = r;
@@ -214,7 +214,7 @@ input-image {
 			history = [];
 		render();
 	}
-	save(event) {
+	static save(event) {
 		var e = event.target.getRootNode().querySelector('[name="description"]');
 		ui.classRemove(e, 'dialogFieldError');
 		if (event.target.getRootNode().querySelector('[name="rating"]').value < 25 && !e.value)
@@ -227,7 +227,7 @@ input-image {
 		v.classname = 'EventRating';
 		communication.ajax({
 			url: global.serverApi + 'db/one',
-			webCall: 'ui.open(id,search)',
+			webCall: 'InputRating.save',
 			method: 'POST',
 			body: v,
 			success(r) {

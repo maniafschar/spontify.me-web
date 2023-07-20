@@ -187,15 +187,15 @@ class ui {
 					var idIntern = id.indexOf('&') > 0 ? id.substring(0, id.indexOf('&')) : id;
 					ui.navigation.closePopup();
 					if (idIntern.indexOf('l=') == 0)
-						details.open(idIntern.substring(2), { webCall: 'ui.navigation.autoOpen(id,event)', query: 'location_list', search: encodeURIComponent('location.id=' + idIntern.substring(2)) }, pageLocation.detailLocationEvent);
+						details.open(idIntern.substring(2), { webCall: 'ui.navigation.autoOpen', query: 'location_list', search: encodeURIComponent('location.id=' + idIntern.substring(2)) }, pageLocation.detailLocationEvent);
 					else if (idIntern.indexOf('e=') == 0)
-						details.open(idIntern.substring(2), { webCall: 'ui.navigation.autoOpen(id,event)', query: 'event_list', search: encodeURIComponent('event.id=' + idIntern.substring(2, idIntern.indexOf('_') > 0 ? idIntern.indexOf('_') : idIntern.length)) }, pageLocation.detailLocationEvent);
+						details.open(idIntern.substring(2), { webCall: 'ui.navigation.autoOpen', query: 'event_list', search: encodeURIComponent('event.id=' + idIntern.substring(2, idIntern.indexOf('_') > 0 ? idIntern.indexOf('_') : idIntern.length)) }, pageLocation.detailLocationEvent);
 					else if (idIntern.indexOf('f=') == 0)
 						pageContact.sendRequestForFriendship(idIntern.substring(2));
 					else if (idIntern.indexOf('q=') == 0)
 						pageEvent.verifyParticipation(idIntern.substring(2));
 					else if (idIntern.indexOf('=') == 1)
-						details.open(idIntern.substring(2), { webCall: 'ui.navigation.autoOpen(id,event)', query: 'contact_list', search: encodeURIComponent('contact.id=' + idIntern.substring(2)) }, pageContact.detail);
+						details.open(idIntern.substring(2), { webCall: 'ui.navigation.autoOpen', query: 'contact_list', search: encodeURIComponent('contact.id=' + idIntern.substring(2)) }, pageContact.detail);
 				}
 			};
 			f.call();
@@ -397,7 +397,7 @@ class ui {
 	static query = {
 		contactFriends() {
 			return lists.load({
-				webCall: 'ui.query.contactFriends()',
+				webCall: 'ui.query.contactFriends',
 				query: 'contact_list',
 				distance: -1,
 				limit: 0,
@@ -408,7 +408,7 @@ class ui {
 		},
 		contactVisitees() {
 			return lists.load({
-				webCall: 'ui.query.contactVisitees()',
+				webCall: 'ui.query.contactVisitees',
 				query: 'contact_listVisit',
 				distance: -1,
 				sort: false,
@@ -420,12 +420,12 @@ class ui {
 		contactVisits() {
 			communication.ajax({
 				url: global.serverApi + 'db/one',
-				webCall: 'ui.query.contactVisits()',
+				webCall: 'ui.query.contactVisits',
 				method: 'PUT',
 				body: { classname: 'Contact', id: user.contact.id, values: { visitPage: global.date.local2server(new Date()) } }
 			});
 			return lists.load({
-				webCall: 'ui.query.contactVisits()',
+				webCall: 'ui.query.contactVisits',
 				query: 'contact_listVisit',
 				distance: -1,
 				sort: false,
@@ -436,7 +436,7 @@ class ui {
 		},
 		eventMy() {
 			pageEvent.loadEvents({
-				webCall: 'ui.query.eventMy()',
+				webCall: 'ui.query.eventMy',
 				query: 'event_list',
 				distance: -1,
 				latitude: geoData.current.lat,
@@ -446,7 +446,7 @@ class ui {
 		},
 		eventTickets() {
 			return lists.load({
-				webCall: 'ui.query.eventTickets()',
+				webCall: 'ui.query.eventTickets',
 				query: 'event_listParticipate',
 				distance: -1,
 				latitude: geoData.current.lat,
@@ -807,11 +807,11 @@ class formFunc {
 				};
 				communication.ajax({
 					url: 'images/' + id + '.svg',
-					webCall: 'ui.svg.fetch(id,img)',
+					webCall: 'ui.svg.fetch',
 					error(r) {
 						communication.ajax({
 							url: global.server + 'images/' + id + '.svg',
-							webCall: 'ui.svg.fetch(id,img)',
+							webCall: 'ui.svg.fetch',
 							success(r) {
 								exec(r);
 							}

@@ -47,7 +47,7 @@ label {
 			communication.ajax({
 				url: global.serverApi + 'action/google?param=' + encodeURIComponent('town=' + ui.q('dialog-popup input').value.trim()),
 				responseType: 'json',
-				webCall: 'geoData.mapReposition()',
+				webCall: 'DialogLocationPicker.mapReposition',
 				success(r) {
 					DialogLocationPicker.map.setCenter({ lat: r.latitude, lng: r.longitude });
 				}

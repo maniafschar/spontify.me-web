@@ -537,7 +537,7 @@ class heatmap {
 		communication.ajax({
 			url: global.serverApi + 'statistics/contact/location',
 			responseType: 'json',
-			webCall: 'communication.get(type,callback)',
+			webCall: 'ContentAdmin.init',
 			success(l) {
 				var points = [], n = 10000, w = 10000, s = -10000, e = -10000;
 				if (l) {
@@ -821,7 +821,7 @@ class marketing {
 			communication.ajax({
 				url: global.serverApi + 'statistics/marketing',
 				responseType: 'json',
-				webCall: 'communication.get(type,callback)',
+				webCall: 'ContentAdmin.init',
 				success(response) {
 					marketing.data = [];
 					for (var i = 1; i < response.length; i++) {
@@ -898,7 +898,7 @@ class marketing {
 			method: 'PUT',
 			body: { classname: 'ClientMarketing', id: o.id, values: o },
 			responseType: 'json',
-			webCall: 'communication.save(o,callback)',
+			webCall: 'ContentAdmin.save',
 			success() {
 				exec ? exec() : ui.navigation.closeHint();
 			}
@@ -937,7 +937,7 @@ class ui2 {
 			communication.ajax({
 				url: global.serverApi + 'statistics/contact/' + chartToken,
 				responseType: 'json',
-				webCall: 'communication.get(type,callback)',
+				webCall: 'ContentAdmin.open',
 				success(response) {
 					var list = [];
 					for (var i = 1; i < response.length; i++) {
@@ -1007,7 +1007,7 @@ class ui2 {
 			communication.ajax({
 				url: global.serverApi + 'action/google?param=js',
 				responseType: 'text',
-				webCall: 'communication.loadMap()',
+				webCall: 'ContentAdmin.init',
 				success(r) {
 					var script = document.createElement('script');
 					script.src = r + '&libraries=visualization&callback=ContentAdmin.initHeatmap';

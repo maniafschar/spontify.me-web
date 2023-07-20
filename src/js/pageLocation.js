@@ -180,7 +180,7 @@ ${v.rating}
 			v.values.locationId = id;
 		communication.ajax({
 			url: global.serverApi + 'db/one',
-			webCall: 'pageLocation.block()',
+			webCall: 'pageLocation.block',
 			method: v.id ? 'PUT' : 'POST',
 			body: v,
 			success() {
@@ -206,7 +206,7 @@ ${v.rating}
 			}
 			communication.ajax({
 				url: global.serverApi + 'db/one',
-				webCall: 'pageLocation.deleteElement(id,classname)',
+				webCall: 'pageLocation.deleteElement',
 				method: 'DELETE',
 				body: { classname: classname, id: id },
 				success(r) {
@@ -313,7 +313,7 @@ ${v.rating}
 		if (v.address && user.contact)
 			communication.ajax({
 				url: global.serverApi + 'action/map?source=' + geoData.current.lat + ',' + geoData.current.lon + '&destination=' + v.latitude + ',' + v.longitude,
-				webCall: 'pageLocation.detailLocationEvent(l,id)',
+				webCall: 'pageLocation.detailLocationEvent',
 				progressBar: false,
 				success(r) {
 					var x = 0, f = function () {
@@ -410,7 +410,7 @@ ${v.rating}
 				oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';
 			else
 				oc = 'details.open(&quot;' + v.id + '&quot;,' + JSON.stringify({
-					webCall: 'pageLocation.listLocation(l)', query: 'location_list', search: encodeURIComponent('location.id=' + v.id)
+					webCall: 'pageLocation.listLocation', query: 'location_list', search: encodeURIComponent('location.id=' + v.id)
 				}).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)';
 			s += global.template`<list-row onclick="${oc}" i="${v.id}" class="location${v.locationFavorite.favorite ? ' favorite' : ''}"
 					title="${encodeURIComponent(v.name)}"
@@ -433,7 +433,7 @@ ${v.rating}
 		if (geoData.localized && ui.q('input[name="name"]') && !ui.val('[name="address"]')) {
 			communication.ajax({
 				url: global.serverApi + 'action/google?param=' + encodeURIComponent('latlng=' + geoData.current.lat + ',' + geoData.current.lon),
-				webCall: 'pageLocation.prefillAddress()',
+				webCall: 'pageLocation.prefillAddress',
 				responseType: 'json',
 				success(r) {
 					if (r.formatted && !ui.val('[name="address"]'))
@@ -446,7 +446,7 @@ ${v.rating}
 		if (ui.q('input[name="name"]')) {
 			communication.ajax({
 				url: global.serverApi + 'action/google?param=' + encodeURIComponent('place/nearbysearch/json?radius=100&sensor=false&location=' + geoData.current.lat + ',' + geoData.current.lon),
-				webCall: 'pageLocation.showLocationsNearby(event)',
+				webCall: 'pageLocation.showLocationsNearby',
 				responseType: 'json',
 				success(r) {
 					if (r.status == 'OK') {
@@ -506,7 +506,7 @@ ${v.rating}
 			v.id = id;
 		communication.ajax({
 			url: global.serverApi + 'db/one',
-			webCall: 'pageLocation.save()',
+			webCall: 'pageLocation.save',
 			method: id ? 'PUT' : 'POST',
 			body: v,
 			error(e) {
@@ -522,7 +522,7 @@ ${v.rating}
 				user.remove('location');
 				if (!r)
 					r = id;
-				details.open(r, { webCall: 'pageLocation.save()', query: 'location_list', search: encodeURIComponent('location.id=' + r) }, id ? function (l, id) {
+				details.open(r, { webCall: 'pageLocation.save', query: 'location_list', search: encodeURIComponent('location.id=' + r) }, id ? function (l, id) {
 					ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id);
 				} : pageLocation.detailLocationEvent);
 				if (!id && pageLocation.reopenEvent)
@@ -629,7 +629,7 @@ ${v.rating}
 		if (!e.getAttribute('blockID')) {
 			communication.ajax({
 				url: global.serverApi + 'db/one?query=misc_block&search=' + encodeURIComponent('block.contactId=' + user.contact.id + ' and ' + (id.indexOf && id.indexOf('_') > 0 ? 'block.eventId=' + id.substring(0, id.indexOf('_')) : 'block.locationId=' + id)),
-				webCall: 'pageLocation.toggleBlock(id)',
+				webCall: 'pageLocation.toggleBlock',
 				success(r) {
 					if (r) {
 						var v = JSON.parse(r);
@@ -655,7 +655,7 @@ ${v.rating}
 			v.values = { locationId: id };
 		communication.ajax({
 			url: global.serverApi + 'db/one',
-			webCall: 'pageLocation.toggleFavorite(id)',
+			webCall: 'pageLocation.toggleFavorite',
 			method: idFav ? 'PUT' : 'POST',
 			body: v,
 			success(r) {

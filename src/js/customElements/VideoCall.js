@@ -357,7 +357,7 @@ streams {
 		ui.classRemove('video-call videochat', 'hidden');
 		communication.ajax({
 			url: global.serverApi + 'action/videocall/' + id,
-			webCall: 'video.startVideoCall(id)',
+			webCall: 'VideoCall.startVideoCall',
 			method: 'POST'
 		})
 	}
@@ -474,7 +474,7 @@ streams {
 	static startAdminCall() {
 		communication.ajax({
 			url: global.serverApi + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contactVideoCall.time>\'' + global.date.local2server(global.date.getToday()) + '\' and contactVideoCall.contactId=' + user.contact.id),
-			webCall: 'video.startAdminCall()',
+			webCall: 'VideoCall.startAdminCall',
 			responseType: 'json',
 			success(r) {
 				if (r.length > 1) {

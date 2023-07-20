@@ -226,7 +226,7 @@ ${v.info}`;
 			s = reasons[i].getAttribute('label') + '\n' + s;
 		communication.ajax({
 			url: global.serverApi + 'db/one',
-			webCall: 'pageSettings.deleteProfile()',
+			webCall: 'pageSettings.deleteProfile',
 			method: 'POST',
 			body: {
 				classname: 'Ticket',
@@ -239,7 +239,7 @@ ${v.info}`;
 			success() {
 				communication.ajax({
 					url: global.serverApi + 'authentication/one',
-					webCall: 'pageSettings.deleteProfile()',
+					webCall: 'pageSettings.deleteProfile',
 					method: 'DELETE',
 					success(r) {
 						pageLogin.resetAfterLogoff();
@@ -285,7 +285,7 @@ ${v.info}`;
 		if (!ui.q('settings').innerHTML) {
 			communication.ajax({
 				url: global.serverApi + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id),
-				webCall: 'pageSettings.init(exec)',
+				webCall: 'pageSettings.init',
 				responseType: 'json',
 				success(v) {
 					var d = v['contact.birthday'];
@@ -338,7 +338,7 @@ ${v.info}`;
 					ui.q('settings').innerHTML = pageSettings.template(v);
 					communication.ajax({
 						url: global.serverApi + 'action/paypalKey',
-						webCall: 'pageSettings.init(exec)',
+						webCall: 'pageSettings.init',
 						responseType: 'json',
 						success(r) {
 							ui.q('settings paypalFees').innerHTML = ui.l('settings.paypalFees').replace('{0}', r.feeDate ?
@@ -409,7 +409,7 @@ ${v.info}`;
 	}
 	static preview() {
 		if (pageSettings.currentSettings == pageSettings.getCurrentSettings())
-			details.open(user.contact.id, { webCall: 'pageSettings.preview()', query: 'contact_list', search: encodeURIComponent('contact.id=' + user.contact.id) }, pageContact.detail);
+			details.open(user.contact.id, { webCall: 'pageSettings.preview', query: 'contact_list', search: encodeURIComponent('contact.id=' + user.contact.id) }, pageContact.detail);
 		else
 			pageSettings.save('autoOpen');
 	}
@@ -431,7 +431,7 @@ ${v.info}`;
 		if (ui.q('[name="image_disp"] img')) {
 			communication.ajax({
 				url: global.serverApi + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id),
-				webCall: 'pageSettings.postSave(goToID)',
+				webCall: 'pageSettings.postSave',
 				responseType: 'json',
 				success(r) {
 					user.contact.image = r['contact.image'];
@@ -536,7 +536,7 @@ ${v.info}`;
 		ui.q('input[name="email"]').value = ui.val('input[name="email"]').trim().toLowerCase();
 		ui.q('settings input[name="skills"]').value = ui.q('settings input-hashtags').getAttribute('ids');
 		ui.q('settings input[name="skillsText"]').value = ui.q('settings input-hashtags').getAttribute('text');
-		user.save({ webCall: 'pageSettings.save(goToID,saveNewEmail)', ...formFunc.getForm('settings tabBody') }, () => pageSettings.postSave(goToID));
+		user.save({ webCall: 'pageSettings.save', ...formFunc.getForm('settings tabBody') }, () => pageSettings.postSave(goToID));
 	}
 	static selectTab(i) {
 		ui.classRemove('settings tab', 'tabActive');
@@ -571,17 +571,17 @@ ${v.info}`;
 			});
 		else {
 			lists.load({
-				webCall: 'pageSettings.toggleBlocked()',
+				webCall: 'pageSettings.toggleBlocked',
 				query: 'contact_listBlocked',
 				limit: 0
 			}, function (l) { pageSettings.list(l, pageContact.listContacts, 'contact'); });
 			lists.load({
-				webCall: 'pageSettings.toggleBlocked()',
+				webCall: 'pageSettings.toggleBlocked',
 				query: 'location_listBlocked',
 				limit: 0
 			}, function (l) { pageSettings.list(l, pageLocation.listLocation, 'location'); });
 			lists.load({
-				webCall: 'pageSettings.toggleBlocked()',
+				webCall: 'pageSettings.toggleBlocked',
 				query: 'event_listBlocked',
 				limit: 0
 			}, function (l) { pageSettings.list(l, pageEvent.listEvents, 'event'); });
@@ -597,7 +597,7 @@ ${v.info}`;
 		}
 		communication.ajax({
 			url: global.serverApi + 'db/one',
-			webCall: 'pageSettings.unblock(id,blockId)',
+			webCall: 'pageSettings.unblock',
 			method: 'DELETE',
 			body: { classname: 'Block', id: blockId },
 			success() {

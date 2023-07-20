@@ -85,7 +85,7 @@ class pageEvent {
 			</div>
 		</value>
 	</field>
-	<field class="picture" style="display:none;">
+	<field class="picture" style="display:none;" name="image">
 		<label>${ui.l('picture')}</label>
 		<value>
 			<input-image></input-image>
@@ -168,7 +168,7 @@ class pageEvent {
 				v.hideMePotentialParticipants = '';
 			communication.ajax({
 				url: global.serverApi + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + v.event.id + ' and eventParticipate.eventDate=\'' + v.id.split('_')[1] + '\''),
-				webCall: 'pageEvent.detail(v)',
+				webCall: 'pageEvent.detail',
 				responseType: 'json',
 				success(r) {
 					var count = 0;
@@ -229,7 +229,7 @@ class pageEvent {
 		if (!pageEvent.paypal.fee) {
 			communication.ajax({
 				url: global.serverApi + 'action/paypalKey',
-				webCall: 'pageEvent.edit(locationID,id)',
+				webCall: 'pageEvent.edit',
 				responseType: 'json',
 				success(r) {
 					pageEvent.paypal.fee = r.fee;
@@ -246,7 +246,7 @@ class pageEvent {
 			d.setDate(d.getDate() + 1);
 			communication.ajax({
 				url: global.serverApi + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contactVideoCall.time>\'' + global.date.local2server(d) + '\''),
-				webCall: 'pageEvent.edit(locationID,id)',
+				webCall: 'pageEvent.edit',
 				responseType: 'json',
 				success(r) {
 					for (var i = 1; i < r.length; i++) {
@@ -428,7 +428,7 @@ class pageEvent {
 		if (!pageLocation.map.svgLocation)
 			communication.ajax({
 				url: '/images/locations.svg',
-				webCall: 'pageEvent.init()',
+				webCall: 'pageEvent.init',
 				success(r) {
 					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
 					e.setAttribute('fill', 'black');
@@ -440,7 +440,7 @@ class pageEvent {
 		if (!pageLocation.map.svgMe)
 			communication.ajax({
 				url: '/images/contacts.svg',
-				webCall: 'pageEvent.init()',
+				webCall: 'pageEvent.init',
 				success(r) {
 					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
 					e.setAttribute('fill', 'black');
@@ -506,7 +506,7 @@ class pageEvent {
 				if (ui.navigation.getActiveID() == 'settings')
 					oc = 'pageSettings.unblock(&quot;' + v.id + '&quot;,' + v.block.id + ')';
 				else
-					oc = 'details.open(&quot;' + v.idDate + '&quot;,' + JSON.stringify({ webCall: 'pageEvent.listEvents(as)', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)';
+					oc = 'details.open(&quot;' + v.idDate + '&quot;,' + JSON.stringify({ webCall: 'pageEvent.listEvents', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)';
 				s += global.template`<list-row onclick="${oc}" i="${v.idDate}" class="event${clazz ? ' ' + clazz : ''}"
 					title="${encodeURIComponent(name)}"
 					text="${encodeURIComponent(text)}"
@@ -574,7 +574,7 @@ class pageEvent {
 				render();
 			});
 		lists.load({
-			webCall: 'pageEvent.loadEvents(params,filter)',
+			webCall: 'pageEvent.loadEvents',
 			query: 'event_listParticipateRaw',
 			search: encodeURIComponent('eventParticipate.contactId=' + user.contact.id)
 		}, function (l) {
@@ -591,7 +591,7 @@ class pageEvent {
 		var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
 		var search = global.getRegEx('contact.skills', e.event.skills) + ' or ' + global.getRegEx('contact.skillsText', e.event.skillsText) + ' and contact.id<>' + user.contact.id;
 		lists.load({
-			webCall: 'pageEvent.loadPotentialParticipants()',
+			webCall: 'pageEvent.loadPotentialParticipants',
 			query: 'contact_list',
 			distance: 50,
 			latitude: geoData.current.lat,
@@ -612,7 +612,7 @@ class pageEvent {
 			pageEvent.nearByExec = setTimeout(function () {
 				communication.ajax({
 					url: global.serverApi + 'action/searchLocation?search=' + encodeURIComponent(s),
-					webCall: 'pageEvent.locations()',
+					webCall: 'pageEvent.locations',
 					responseType: 'json',
 					success(r) {
 						var s = '', e = ui.q('dialog-popup eventLocationInputHelper ul');
@@ -628,7 +628,7 @@ class pageEvent {
 	static locationsOfPastEvents() {
 		communication.ajax({
 			url: global.serverApi + 'db/list?query=event_list&search=' + encodeURIComponent('length(location.name)>0 and event.contactId=' + user.contact.id),
-			webCall: 'pageEvent.locationsOfPastEvents()',
+			webCall: 'pageEvent.locationsOfPastEvents',
 			responseType: 'json',
 			success(r) {
 				var s = '', processed = {};
@@ -722,7 +722,7 @@ class pageEvent {
 		}
 		communication.ajax({
 			url: global.serverApi + 'db/one',
-			webCall: 'pageEvent.participate(order)',
+			webCall: 'pageEvent.participate',
 			method: e.eventParticipate.id ? 'PUT' : 'POST',
 			body: d,
 			success(r) {
@@ -878,6 +878,7 @@ class pageEvent {
 		var d1, d2;
 		var start = ui.q('dialog-popup input[name="startDate"]');
 		var end = ui.q('dialog-popup input[name="endDate"]');
+		var price = ui.q('dialog-popup [name="price"]');
 		var text = ui.q('dialog-popup [name="description"]');
 		var tags = ui.q('dialog-popup input-hashtags');
 		var id = ui.q('dialog-popup [name="id"]').value;
@@ -886,6 +887,7 @@ class pageEvent {
 		formFunc.resetError(end);
 		formFunc.resetError(text);
 		formFunc.resetError(tags);
+		formFunc.resetError(price);
 		if (!user.appConfig.eventNoHashtags) {
 			if (!tags.getAttribute('ids') && !tags.getAttribute('text'))
 				formFunc.setError(tags, 'error.hashtags');
@@ -911,8 +913,12 @@ class pageEvent {
 				formFunc.setError(start, 'events.errorDateFormat');
 			}
 		}
-		if (ui.q('dialog-popup [name="price"]').value > 0 && !user.contact.authenticate)
-			formFunc.setError(ui.q('dialog-popup [name="price"]'), 'events.errorAuthenticate');
+		if (price.value > 0 && !user.contact.authenticate)
+			formFunc.setError(price, 'events.errorAuthenticate');
+		if (!price.value || price.value == 0) {
+			ui.q('dialog-popup input-image').removeAttribute('value');
+			ui.q('dialog-popup input[name="url]').value = '';
+		}
 		if (ui.q('dialog-popup [name="repetition"]').getAttribute('checked') != 'true') {
 			if (!end.value)
 				formFunc.setError(end, 'events.errorDateNoEnd');
@@ -942,12 +948,12 @@ class pageEvent {
 		communication.ajax({
 			url: global.serverApi + 'db/one',
 			method: id ? 'PUT' : 'POST',
-			webCall: 'pageEvent.save()',
+			webCall: 'pageEvent.save',
 			body: v,
 			success(r) {
 				ui.navigation.closePopup();
 				user.remove('event');
-				details.open(id ? ui.q('detail card:last-child').getAttribute('i') : r + '_' + global.date.local2server(v.values.startDate).substring(0, 10), { webCall: 'pageEvent.save()', query: 'event_list', search: encodeURIComponent('event.id=' + (id ? id : r)) },
+				details.open(id ? ui.q('detail card:last-child').getAttribute('i') : r + '_' + global.date.local2server(v.values.startDate).substring(0, 10), { webCall: 'pageEvent.save', query: 'event_list', search: encodeURIComponent('event.id=' + (id ? id : r)) },
 					id ? function (l, id) { ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id); } : pageLocation.detailLocationEvent);
 				pageEvent.refreshToggle();
 				pageHome.events = null;
@@ -977,12 +983,8 @@ class pageEvent {
 		var es = ui.qa('dialog-popup .noWTDField:not(field[name="endDate"])');
 		for (var i = 0; i < es.length; i++)
 			pageEvent.openSection(es[i], b != -2);
-		if (b == -2)
-			ui.q('dialog-popup [name="price"]').value = null;
-		else if (b == -1) {
-			ui.q('dialog-popup .url label').innerText = ui.l('events.urlOnlineEvent');
-			pageEvent.openSection('dialog-popup .url', true);
-		}
+		ui.q('dialog-popup .url label').innerText = ui.l(b == -1 ? 'events.urlOnlineEvent' : 'events.url');
+		pageEvent.openSection('dialog-popup .url', b == -1);
 		pageEvent.openSection('dialog-popup .newWithoutLocation', b == -2);
 		pageEvent.openSection('dialog-popup .locationName', b == 0);
 		if (b == 0 && !ui.val('dialog-popup [name="id"]') && !ui.q('dialog-popup .event .locationName').innerText) {
@@ -1001,7 +1003,7 @@ class pageEvent {
 				var field = ui.q('detail card:last-child').getAttribute('type');
 				communication.ajax({
 					url: global.serverApi + 'db/list?query=event_list&search=' + encodeURIComponent('event.' + field + 'Id=' + id),
-					webCall: 'pageEvent.toggle(id)',
+					webCall: 'pageEvent.toggle',
 					responseType: 'json',
 					success(r) {
 						pageEvent.toggleInternal(r, id, field);
@@ -1047,7 +1049,7 @@ class pageEvent {
 					text = '<br/>' + v.name + text;
 				s += global.template`<list-row
 					${v.eventParticipate.state == 1 ? ' class="participate"' : v.eventParticipate.state == -1 ? ' class="canceled"' : ''}
-					onclick="details.open(&quot;${idIntern}&quot;,${JSON.stringify({ webCall: 'pageEvent.toggleInternal(r,id,field)', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;')},pageLocation.detailLocationEvent)"
+					onclick="details.open(&quot;${idIntern}&quot;,${JSON.stringify({ webCall: 'pageEvent.toggleInternal', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;')},pageLocation.detailLocationEvent)"
 					title="${encodeURIComponent(title)}"
 					text="${encodeURIComponent(text)}"
 					image="${image}">
@@ -1071,7 +1073,7 @@ class pageEvent {
 			else {
 				var id = decodeURIComponent(ui.q('detail card:last-child').getAttribute('i')).split('_');
 				lists.load({
-					webCall: 'pageEvent.toggleParticipants(event)',
+					webCall: 'pageEvent.toggleParticipants',
 					query: 'event_listParticipate',
 					latitude: geoData.current.lat,
 					longitude: geoData.current.lon,
@@ -1096,7 +1098,7 @@ class pageEvent {
 		}
 		communication.ajax({
 			url: global.serverApi + 'db/list?query=event_listParticipate&search=' + encodeURIComponent('eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\' and eventParticipate.contactId=' + u + ' and eventParticipate.contactId=contact.id'),
-			webCall: 'pageEvent.verifyParticipation(id)',
+			webCall: 'pageEvent.verifyParticipation',
 			responseType: 'json',
 			success(r) {
 				if (r.length > 1) {

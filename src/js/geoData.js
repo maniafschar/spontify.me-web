@@ -130,7 +130,7 @@ class geoData {
 		pageSearch.updateLocalisation();
 		geoData.init();
 		ui.navigation.closePopup();
-		user.save({ webCall: 'geoData.reset()', latitude: geoData.current.lat, longitude: geoData.current.lon }, function () { pageHome.init(true); });
+		user.save({ webCall: 'geoData.reset', latitude: geoData.current.lat, longitude: geoData.current.lon }, function () { pageHome.init(true); });
 	}
 	static save(position, exec) {
 		var d = geoData.getDistance(geoData.current.lat, geoData.current.lon, position.latitude, position.longitude);
@@ -146,7 +146,7 @@ class geoData {
 				url: global.serverApi + 'action/position',
 				progressBar: false,
 				method: 'POST',
-				webCall: 'geoData.save(position,exec)',
+				webCall: 'geoData.save',
 				body: position,
 				responseType: 'json',
 				error(r) {

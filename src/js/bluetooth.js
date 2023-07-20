@@ -97,7 +97,7 @@ class bluetooth {
 						communication.ajax({
 							url: global.serverApi + 'db/one',
 							method: 'POST',
-							webCall: 'bluetooth.scanStart()',
+							webCall: 'bluetooth.scanStart',
 							body: {
 								classname: 'ContactBluetooth',
 								values: { contactId2: id }
@@ -141,12 +141,12 @@ class bluetooth {
 		else if (!user.contact)
 			ui.navigation.openHint({ desc: 'bluetoothDescriptionLoggedOff', pos: '10%,-14em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;' });
 		else if (window.localStorage.getItem('bluetoothIDs'))
-			user.save({ webCall: 'bluetooth.toggle()', bluetooth: false }, bluetooth.stop);
+			user.save({ webCall: 'bluetooth.toggle', bluetooth: false }, bluetooth.stop);
 		else {
 			if ((!user.contact.ageMale && !user.contact.ageFemale && !user.contact.ageDivers) || !user.contact.age || !user.contact.gender)
 				ui.navigation.openPopup(ui.l('attention'), ui.l('bluetooth.errorMatching').replace('{0}', ui.l('bluetooth.matching')) + '<br/><br/><button-text onclick="ui.navigation.goTo(&quot;settings&quot;)" label="settings.edit"></button-text>');
 			else
-				user.save({ webCall: 'bluetooth.toggle()', bluetooth: true }, bluetooth.requestAuthorization);
+				user.save({ webCall: 'bluetooth.toggle', bluetooth: true }, bluetooth.requestAuthorization);
 		}
 	}
 }

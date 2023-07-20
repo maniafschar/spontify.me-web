@@ -311,7 +311,7 @@ class Strings {
 			for (var i = 0; i < load[table].length; i++)
 				search += ' or ' + table + '.id=' + load[table][i];
 			lists.load({
-				webCall: 'global.replaceInternalLinks(s)',
+				webCall: 'global.replaceInternalLinks',
 				query: table + '_list',
 				distance: -1,
 				search: encodeURIComponent('(' + search.substring(4) + ')')
@@ -361,7 +361,7 @@ class Strings {
 					communication.ajax({
 						url: global.serverApi + 'action/map?destination=' + l2,
 						progressBar: false,
-						webCall: 'global.replaceInternalLinks(s)',
+						webCall: 'global.replaceInternalLinks',
 						success(r) {
 							ui.attr('img[l="' + imgId + '"]', 'src', 'data:image/png;base64,' + r);
 						}

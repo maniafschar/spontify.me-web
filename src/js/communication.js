@@ -130,7 +130,7 @@ class communication {
 			communication.ajax({
 				url: global.serverApi + 'action/google?param=js',
 				responseType: 'text',
-				webCall: 'communication.loadMap(callback)',
+				webCall: 'communication.loadMap',
 				success(r) {
 					var script = document.createElement('script');
 					script.src = r + '&callback=' + callback;
@@ -183,7 +183,7 @@ class communication {
 			communication.notification.push.on('error', communication.notification.onError);
 		},
 		saveToken(e) {
-			user.save({ webCall: 'communication.notification.saveToken(e)', pushSystem: global.getOS(), pushToken: e.registrationId });
+			user.save({ webCall: 'communication.notification.saveToken', pushSystem: global.getOS(), pushToken: e.registrationId });
 		}
 	}
 	static onError(r) {
@@ -239,7 +239,7 @@ class communication {
 		communication.ajax({
 			url: global.serverApi + 'action/ping',
 			progressBar: false,
-			webCall: 'communication.ping()',
+			webCall: 'communication.ping',
 			responseType: 'json',
 			error() {
 				clearTimeout(communication.pingExec);
@@ -288,7 +288,7 @@ class communication {
 			communication.ajax({
 				url: global.serverApi + 'db/list?query=contact_listNotification',
 				responseType: 'json',
-				webCall: 'communication.refresh(r)',
+				webCall: 'communication.refresh',
 				success(r2) {
 					pageHome.initNotification(r2);
 				}
@@ -332,7 +332,7 @@ class communication {
 		communication.ajax({
 			url: global.serverApi + 'action/notify',
 			method: 'POST',
-			webCall: 'communication.sendError(text)',
+			webCall: 'communication.sendError',
 			body: 'text=' + encodeURIComponent(body),
 			error(r) {
 				console.log(r);

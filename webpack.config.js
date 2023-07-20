@@ -45,33 +45,46 @@ module.exports = (env) => {
 				apply: compiler => {
 					compiler.hooks.beforeCompile.tap('webCalls', () => {
 						var method = function (s) {
-							var i = s.lastIndexOf('static');
-							var s2 = s.substring(i + 6, s.indexOf('{', i)).trim();
-							if (s2.indexOf(' =') > 0) {
-								s2 = s2.substring(0, s2.indexOf(' =')) + '.';
-								s = s.substring(i + 6);
-								i = s.lastIndexOf('},\n');
-								if (i < 0)
-									i = s.indexOf(' {\n');
-								i += 3;
-								s2 += s.substring(i, s.indexOf('{', i)).trim();
+							var i = s.length;
+							while ((i = s.lastIndexOf(') {', i - 1)) > -1) {
+								var line = s.substring(s.lastIndexOf('\n', i) + 1, i);
+								if (line.charAt(2) != '\t' && line.indexOf('function (') < 0) {
+									var func = line.substring(0, line.indexOf('(')).replace('static ', '');
+									if (func && func.indexOf(' ') < 0) {
+										var middle = '';
+										if (line.charAt(1) == '\t') {
+											var i2 = i;
+											while ((i2 = s.lastIndexOf(' = {', i2 - 1)) > -1) {
+												var s3 = s.substring(s.lastIndexOf('\n', i2) + 1, i2);
+												if (s3.indexOf('\tstatic ') == 0) {
+													middle = s3.trim().replace('static ', '') + '.';
+													break;
+												}
+											}
+										}
+										return middle + func.trim();
+									}
+								}
 							}
-							return s2.replace(/ /g, '');
-						}
+						};
 						var fs = require('fs'), dir = 'src/js/';
 						if (fs.existsSync('dist'))
 							fs.rmSync('dist', { recursive: true });
-						var files = fs.readdirSync(dir);
-						for (var i = 0; i < files.length; i++) {
-							if (files[i].indexOf('.js') > 0) {
-								var i2 = 0, s = fs.readFileSync(dir + files[i], 'utf8');
-								while ((i2 = s.indexOf('webCall: \'', i2)) > -1) {
-									i2 += 10;
-									s = s.substring(0, i2) + files[i].substring(0, files[i].length - 3) + '.' + method(s.substring(0, i2)) + s.substring(s.indexOf('\',', i2));
+						var processFiles = function (d) {
+							var files = fs.readdirSync(d);
+							for (var i = 0; i < files.length; i++) {
+								if (files[i].indexOf('.js') > 0) {
+									var i2 = 0, s = fs.readFileSync(d + files[i], 'utf8');
+									while ((i2 = s.indexOf('webCall: \'', i2)) > -1) {
+										i2 += 10;
+										s = s.substring(0, i2) + files[i].substring(0, files[i].length - 3) + '.' + method(s.substring(0, i2)) + s.substring(s.indexOf('\',', i2));
+									}
+									fs.writeFileSync(d + files[i], s);
 								}
-								fs.writeFileSync(dir + files[i], s);
 							}
-						}
+						};
+						processFiles(dir);
+						processFiles(dir + 'customElements/');
 					})
 				}
 			},

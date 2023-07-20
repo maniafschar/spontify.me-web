@@ -44,7 +44,7 @@ class initialisation {
 	static init() {
 		communication.ajax({
 			url: (window.location && window.location.href && window.location.href.indexOf(global.server) == 0 ? '/' : '') + 'css/customElements.css',
-			webCall: 'init.init()',
+			webCall: 'init.init',
 			success(r) {
 				initialisation.customElementsCss = r;
 				customElements.define('button-text', ButtonText);
@@ -168,14 +168,14 @@ class initialisation {
 			geoData.pause();
 			if (!user.contact)
 				communication.setApplicationIconBadgeNumber(0);
-			user.save({ webCall: 'init.initApp()', active: false });
+			user.save({ webCall: 'init.initApp', active: false });
 		});
 		ui.on(document, 'resume', function () {
 			global.paused = false;
 			if (user.contact)
 				WebSocket.connect();
 			geoData.init();
-			user.save({ webCall: 'init.initApp()', active: true });
+			user.save({ webCall: 'init.initApp', active: true });
 			if (global.getParam('r'))
 				initialisation.recoverPassword();
 		});
@@ -326,7 +326,7 @@ class initialisation {
 		communication.ajax({
 			url: (window.location && window.location.href && window.location.href.indexOf(global.server) == 0 ? '/' : '') + 'js/lang/' + lang + '.json',
 			responseType: 'json',
-			webCall: 'init.setLanguage(lang,exec)',
+			webCall: 'init.setLanguage',
 			error(r) {
 				if (r.responseText && r.responseText.indexOf('categories') > -1 && r.responseText.indexOf('weekday') > -1)
 					initialisation.setLanguageInternal(r.responseText, lang, exec);
@@ -361,7 +361,7 @@ class initialisation {
 		ui.labels = s.labels;
 		communication.ajax({
 			url: (window.location && window.location.href && window.location.href.indexOf(global.server) == 0 ? '/' : '') + 'js/lang/' + lang + '.html',
-			webCall: 'init.setLanguageInternal(s,lang,exec)',
+			webCall: 'init.setLanguageInternal',
 			success(r) {
 				r = r.split('\n\n');
 				ui.labels['infoDSGVO'] = r[0];
@@ -375,7 +375,7 @@ class initialisation {
 		else
 			pageHome.init(true);
 		if (user.contact && oldLang != global.language)
-			user.save({ webCall: 'init.setLanguageInternal(s,lang,exec)', language: lang });
+			user.save({ webCall: 'init.setLanguageInternal', language: lang });
 		ui.navigation.closePopup();
 	}
 	static recoverPassword() {

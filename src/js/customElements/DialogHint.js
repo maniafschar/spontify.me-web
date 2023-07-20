@@ -278,7 +278,7 @@ eventFilter {
 		if (formFunc.validation.email(ui.q('dialog-hint input[name="email"]')) < 0)
 			communication.ajax({
 				url: global.serverApi + 'action/notify',
-				webCall: 'ui.openIntro()',
+				webCall: 'DialogHint.save',
 				method: 'POST',
 				body: 'text=' + encodeURIComponent(JSON.stringify(formFunc.getForm('hint'))),
 				success(r) {

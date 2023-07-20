@@ -65,7 +65,7 @@ class user {
 				var d = ui.q('dialog-popup input');
 				communication.ajax({
 					url: global.serverApi + 'action/appointment',
-					webCall: 'user.appointment()',
+					webCall: 'user.appointment',
 					method: 'POST',
 					body: { description: d.value, type: ui.q('dialog-popup .paypal') ? 'AUTHENTICATE' : 'OTHER', time: t },
 					responseType: 'json',
@@ -101,7 +101,7 @@ class user {
 		v.appointmentDay3Raw = global.date.local2server(d).substring(0, 10);
 		communication.ajax({
 			url: global.serverApi + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contactVideoCall.time>\'' + global.date.local2server(d) + '\''),
-			webCall: 'user.getAppointmentTemplate(type)',
+			webCall: 'user.getAppointmentTemplate',
 			responseType: 'json',
 			success(r) {
 				for (var i = 1; i < r.length; i++) {
@@ -136,7 +136,7 @@ class user {
 		}
 		if (save) {
 			user.contact.storage = d;
-			user.save({ webCall: 'user.remove(key)', storage: JSON.stringify(user.contact.storage) });
+			user.save({ webCall: 'user.remove', storage: JSON.stringify(user.contact.storage) });
 		}
 	}
 	static reset() {
@@ -175,7 +175,7 @@ class user {
 	static set(key, value) {
 		if (value) {
 			user.contact.storage[key] = value;
-			user.save({ webCall: 'user.set(key,value)', storage: JSON.stringify(user.contact.storage) });
+			user.save({ webCall: 'user.set', storage: JSON.stringify(user.contact.storage) });
 		} else
 			user.remove(key);
 	}
