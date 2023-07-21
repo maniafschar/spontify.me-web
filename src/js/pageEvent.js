@@ -917,7 +917,7 @@ class pageEvent {
 			formFunc.setError(price, 'events.errorAuthenticate');
 		if (!price.value || price.value == 0) {
 			ui.q('dialog-popup input-image').removeAttribute('value');
-			ui.q('dialog-popup input[name="url]').value = '';
+			ui.q('dialog-popup input[name="url"]').value = '';
 		}
 		if (ui.q('dialog-popup [name="repetition"]').getAttribute('checked') != 'true') {
 			if (!end.value)

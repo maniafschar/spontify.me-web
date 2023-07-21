@@ -25,7 +25,7 @@ label {
 	position: relative;
 	padding: 0.25em 0.75em;
 	border-radius: 1em 0 0 1em;
-	margin: 0.25em 0;
+	margin: 0.25em -0.25em 0.25em 0;
 	clear: both;
 	float: right;
 	box-shadow: 0 0 0.5em rgb(0, 0, 0, 0.3);
@@ -41,18 +41,6 @@ label {
 				for (var i = e._root.children.length - 1; i > 0; i--)
 					e._root.children[i].remove();
 			});
-	}
-	mapReposition() {
-		if (ui.q('dialog-popup input').value) {
-			communication.ajax({
-				url: global.serverApi + 'action/google?param=' + encodeURIComponent('town=' + ui.q('dialog-popup input').value.trim()),
-				responseType: 'json',
-				webCall: 'DialogLocationPicker.mapReposition',
-				success(r) {
-					DialogLocationPicker.map.setCenter({ lat: r.latitude, lng: r.longitude });
-				}
-			});
-		}
 	}
 	static open(event, noSelection) {
 		event.preventDefault();
@@ -84,9 +72,9 @@ label {
 	}
 	static openDialog() {
 		ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
-			'<mapPicker></mapPicker><br/><input name="town" maxlength="20" placeholder="' + ui.l('home.locationPickerInput') + '"/><mapButton onclick="ui.q(&quot;dialog-location-picker&quot;).mapReposition()" class="defaultButton"></mapButton><br/><br/>' +
-			(geoData.manual ? '<button-text onclick="geoData.reset()" label="home.locationPickerReset"></button-text>' : '') +
-			'<button-text onclick="ui.q(&quot;dialog-location-picker&quot;).save()" label="ready"></button-text><errorHint></errorHint>', null, null,
+			'<mapPicker></mapPicker><br/>' +
+			'<input name="town" maxlength="20" placeholder="' + ui.l('home.locationPickerInput') + '" onkeydown="ui.q(&quot;dialog-location-picker&quot;).setButtonLabel()"/><br/><br/>' +
+			'<button-text onclick="ui.q(&quot;dialog-location-picker&quot;).save()" label="home.locationPickerButtonSet"></button-text><errorHint></errorHint>', null, null,
 			function () {
 				setTimeout(function () {
 					ui.navigation.closeLocationPicker();
@@ -95,6 +83,21 @@ label {
 			});
 	}
 	save(e) {
-		geoData.save({ latitude: e ? e.lat : DialogLocationPicker.map.getCenter().lat(), longitude: e ? e.lon : DialogLocationPicker.map.getCenter().lng(), manual: true }, function () { pageHome.init(true); });
+		if (ui.q('dialog-popup input').value) {
+			communication.ajax({
+				url: global.serverApi + 'action/google?param=' + encodeURIComponent('town=' + ui.q('dialog-popup input').value.trim()),
+				responseType: 'json',
+				webCall: 'DialogLocationPicker.save',
+				success(r) {
+					DialogLocationPicker.map.setCenter({ lat: r.latitude, lng: r.longitude });
+					ui.q('dialog-popup input').value = '';
+					ui.q('dialog-location-picker').setButtonLabel();
+				}
+			});
+		} else
+			geoData.save({ latitude: e ? e.lat : DialogLocationPicker.map.getCenter().lat(), longitude: e ? e.lon : DialogLocationPicker.map.getCenter().lng(), manual: true }, function () { pageHome.init(true); });
+	}
+	setButtonLabel() {
+		ui.attr('dialog-popup button-text', 'label', ui.q('dialog-popup input').value ? 'home.locationPickerButtonLookup' : 'home.locationPickerButtonSet');
 	}
 }

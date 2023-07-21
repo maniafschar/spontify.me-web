@@ -375,6 +375,8 @@
 			"locationNotSetable": "There's no town at this point.",
 			"locationPickerInput": "search location here or on the map",
 			"locationPickerReset": "Reset",
+			"locationPickerButtonLookup": "Search location...",
+			"locationPickerButtonSet": "Fix location",
 			"locationPickerTitle": "Choose location",
 			"news": "News",
 			"noNews": "No {0} yet from your club.",

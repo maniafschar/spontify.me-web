@@ -375,6 +375,8 @@
 			"locationNotSetable": "An dieser Stelle existiert kein Ort.",
 			"locationPickerInput": "Ort hier eingeben oder auf der Karte suchen",
 			"locationPickerReset": "Zurücksetzen",
+			"locationPickerButtonLookup": "Standort suchen...",
+			"locationPickerButtonSet": "Standort festlegen",
 			"locationPickerTitle": "Standort wählen",
 			"news": "News",
 			"noNews": "Noch gibt es keine {0} von Deinem Verein.",
