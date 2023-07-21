@@ -73,7 +73,7 @@ label {
 	static openDialog() {
 		ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
 			'<mapPicker></mapPicker><br/>' +
-			'<input name="town" maxlength="20" placeholder="' + ui.l('home.locationPickerInput') + '" onkeydown="ui.q(&quot;dialog-location-picker&quot;).setButtonLabel()"/><br/><br/>' +
+			'<input name="town" maxlength="20" placeholder="' + ui.l('home.locationPickerInput') + '" onkeydown="ui.q(&quot;dialog-location-picker&quot;).setButtonLabel(event)"/><br/><br/>' +
 			'<button-text onclick="ui.q(&quot;dialog-location-picker&quot;).save()" label="home.locationPickerButtonSet"></button-text><errorHint></errorHint>', null, null,
 			function () {
 				setTimeout(function () {
@@ -97,7 +97,10 @@ label {
 		} else
 			geoData.save({ latitude: e ? e.lat : DialogLocationPicker.map.getCenter().lat(), longitude: e ? e.lon : DialogLocationPicker.map.getCenter().lng(), manual: true }, function () { pageHome.init(true); });
 	}
-	setButtonLabel() {
-		ui.attr('dialog-popup button-text', 'label', ui.q('dialog-popup input').value ? 'home.locationPickerButtonLookup' : 'home.locationPickerButtonSet');
+	setButtonLabel(event) {
+		if (event && event.keyCode == 13)
+			this.save();
+		else
+			ui.attr('dialog-popup button-text', 'label', ui.q('dialog-popup input').value ? 'home.locationPickerButtonLookup' : 'home.locationPickerButtonSet');
 	}
 }

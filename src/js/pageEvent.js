@@ -18,7 +18,23 @@ class pageEvent {
 	static nearByExec = null;
 	static paypal = { fee: null, feeDate: null, feeAfter: null, currency: null, merchantUrl: null };
 	static templateEdit = v =>
-		global.template`<form name="editElement" onsubmit="return false">
+		global.template`
+<style>
+.locationName {
+	position: relative;
+}
+.locationName::after {
+	content: '✎';
+    height: 2em;
+    display: inline-block;
+    position: absolute;
+    bottom: -0.25em;
+    font-size: 2em;
+    right: 0.75em;
+    transform: rotate(80deg);
+}
+</style>
+<form name="editElement" onsubmit="return false">
 <input type="hidden" name="id" value="${v.id}"/>
 <input type="hidden" name="locationId" value="${v.locationID}"/>
 <input type="hidden" name="confirm" />

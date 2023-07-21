@@ -354,6 +354,7 @@ ${v.keywords}
 		pageSearch[type].search();
 	}
 	static selectTab(id) {
+		ui.navigation.closeHint();
 		ui.q('search tabBody').style.marginLeft = ((id == 'events' ? 0 : id == 'contacts' ? 1 : 2) * -100) + '%';
 		ui.classRemove('search tab', 'tabActive');
 		ui.classAdd('search tab[i="' + id + '"]', 'tabActive');

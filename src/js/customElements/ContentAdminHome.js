@@ -83,22 +83,22 @@ h1 {
 			e = ui.qa('content-admin-home [l]');
 			for (var i = 0; i < e.length; i++)
 				e[i].innerHTML = ui.l('contentAdmin.' + e[i].getAttribute('l'));
-		}
-		if (ui.q('head script[src*="ui.initHeatmap"]')) {
-			heatmap.init();
 			formFunc.svg.replaceAll();
 			initialisation.reposition();
-		} else
-			communication.ajax({
-				url: global.serverApi + 'action/google?param=js',
-				responseType: 'text',
-				webCall: 'ContentAdminHome.init',
-				success(r) {
-					var script = document.createElement('script');
-					script.src = r + '&libraries=visualization&callback=ui.initHeatmap';
-					document.head.appendChild(script);
-				}
-			});
+			if (ui.q('head script[src*="ui.initHeatmap"]'))
+				heatmap.init();
+			else
+				communication.ajax({
+					url: global.serverApi + 'action/google?param=js',
+					responseType: 'text',
+					webCall: 'ContentAdminHome.init',
+					success(r) {
+						var script = document.createElement('script');
+						script.src = r + '&libraries=visualization&callback=ui.initHeatmap';
+						document.head.appendChild(script);
+					}
+				});
+		}
 	}
 	static initHeatmap() {
 		heatmap.init();
