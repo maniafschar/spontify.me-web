@@ -405,10 +405,11 @@ content {
 	display: block;
 }
 
-content-admin {
-	width: 300%;
-	float: left;
-	transition: all .4s ease-out;
+content-admin-home,
+content-admin-marketing,
+content-admin-invoice {
+	padding: 0.5em 1em;
+	overflow-y: auto;
 }
 
 groups {

@@ -20,6 +20,10 @@ import { InputRating } from './customElements/InputRating';
 import { DialogMenu } from './customElements/DialogMenu';
 import { DialogLocationPicker } from './customElements/DialogLocationPicker';
 import { VideoCall } from './customElements/VideoCall';
+import { ContentAdminHome } from './customElements/ContentAdminHome';
+import { DialogNavigation } from './customElements/DialogNavigation';
+import { ContentAdminMarketing } from './customElements/ContentAdminMarketing';
+import { ContentAdminInvoice } from './customElements/ContentAdminInvoice';
 
 export { ui, formFunc, DragObject };
 
@@ -123,6 +127,9 @@ class ui {
 		if (e.changedTouches && e.changedTouches[0])
 			return e.changedTouches[0].pageY ? e.changedTouches[0].pageY : e.changedTouches[0].clientY + window.document.body.scrollTop;
 		return e.pageY ? e.pageY : e.clientY + window.document.body.scrollTop;
+	}
+	static initHeatmap() {
+		ContentAdminHome.initHeatmap();
 	}
 	static openRating(id, search) {
 		InputRating.open(id, search);
@@ -302,6 +309,12 @@ class ui {
 				pageEvent.init();
 			else if (id == 'chat')
 				pageChat.init();
+			else if (id == 'content-admin-home')
+				ContentAdminHome.init();
+			else if (id == 'content-admin-marketing')
+				ContentAdminMarketing.init();
+			else if (id == 'content-admin-invoice')
+				ContentAdminInvoice.init();
 			pageChat.closeList();
 			pageHome.closeList();
 			ui.navigation.closePopup();
@@ -344,10 +357,7 @@ class ui {
 				ui.navigation.closeLocationPicker();
 				ui.navigation.fade(id, back);
 				ui.navigation.hideMenu();
-				if (ui.q('dialog-navigation item.' + id)) {
-					ui.classRemove('dialog-navigation item', 'active');
-					ui.classAdd('dialog-navigation item.' + id, 'active');
-				}
+				DialogNavigation.highlight(id);
 			}
 		},
 		hideMenu(exec) {
@@ -504,7 +514,11 @@ class ui {
 		if (!e)
 			e = customElements('video-call');
 		if (!e)
-			e = customElements('content-admin');
+			e = customElements('content-admin-home');
+		if (!e)
+			e = customElements('content-admin-marketing');
+		if (!e)
+			e = customElements('content-admin-invoice');
 		if (!e)
 			e = document.querySelectorAll(path);
 		return e;

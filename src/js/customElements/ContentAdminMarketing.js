@@ -3,9 +3,9 @@ import { initialisation } from '../init';
 import { communication } from '../communication';
 import { global } from '../global';
 
-export { ContentAdmin }
+export { ContentAdminMarketing }
 
-class ContentAdmin extends HTMLElement {
+class ContentAdminMarketing extends HTMLElement {
 	constructor() {
 		super();
 		this._root = this.attachShadow({ mode: 'closed' });
@@ -13,16 +13,6 @@ class ContentAdmin extends HTMLElement {
 	connectedCallback() {
 		const style = document.createElement('style');
 		style.textContent = `${initialisation.customElementsCss}
-:host(*)>* {
-	text-align: center;
-	width: 33.33%;
-	padding: 1em;
-	overflow-y: auto;
-	position: absolute;
-	float: left;
-	height: 100%;
-}
-
 card {
 	width: 6em;
 	height: 8em;
@@ -55,6 +45,12 @@ mapCanvas {
 	height: 40em;
 	border-radius: 0.5em;
 	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.5);
+	margin-top: 0.5em;
+}
+
+h1 {
+	font-size: 1.3em;
+	margin-top: 0.5em;
 }
 
 block {
@@ -239,333 +235,20 @@ results freetext div {
 		this._root.appendChild(style);
 	}
 	static init() {
-		ui2.init();
-	}
-	static initHeatmap() {
-		heatmap.init();
-	}
-}
-
-class charts {
-	static chartAge;
-	static chartApi;
-	static chartApiData;
-	static chartGender;
-	static chartLocations;
-	static chartLog;
-	static chartLogin;
-	static chartUser;
-
-	static initChart(query, data) {
-		ui.q('main.statistics popup panel chart.' + query.toLowerCase()).innerHTML = '';
-		if (charts['chart' + query])
-			charts['chart' + query].destroy();
-		charts['initChart' + query](data);
-		charts['chart' + query].render();
-	}
-	static initChartLogin(data) {
-		var total = 0, date, labels = [], values = [], processed = {};
-		for (var i = 0; i < data.length; i++) {
-			if (date != data[i].createdAt.substring(0, 10)) {
-				if (date) {
-					labels.push(date);
-					values.push(total);
-				}
-				date = data[i].createdAt.substring(0, 10);
-				if (date.indexOf('-01') == 7) {
-					processed = {};
-					total = 0;
-				}
-			}
-			if (!processed['user' + data[i].contactId]) {
-				processed['user' + data[i].contactId] = true;
-				total++;
-			}
+		var r = ui.q('content-admin-marketing');
+		if (r._root.childElementCount == 1) {
+			var e = document.createElement('h1');
+			e.setAttribute('l', 'marketingTitle');
+			r._root.appendChild(e);
+			e = document.createElement('edit');
+			e.setAttribute('onclick', 'marketing.edit()');
+			r._root.appendChild(e);
+			e = document.createElement('list');
+			r._root.appendChild(e);
+			e = ui.qa('content-admin-marketing [l]');
+			for (var i = 0; i < e.length; i++)
+				e[i].innerHTML = ui.l('contentAdmin.' + e[i].getAttribute('l'));
 		}
-		charts.chartLogin = new ApexCharts(ui.q('main.statistics popup panel chart.login'), {
-			chart: {
-				type: 'bar',
-				toolbar: {
-					show: false
-				}
-			},
-			series: [{
-				name: ui.l('stats.responseTime'),
-				data: values
-			}],
-			labels: labels
-		});
-	}
-	static initChartUser(data) {
-		var total = [0, 0, 0, 0], verified = [0, 0, 0, 0], withImage = [0, 0, 0, 0], genderMap = [2, 1, 3, null];
-		for (var i = 0; i < data.length; i++) {
-			var x = data[i]._count / 1000;
-			for (var i2 = 0; i2 < genderMap.length; i2++) {
-				if (data[i].gender == genderMap[i2]) {
-					total[i2] += x;
-					if (data[i].verified)
-						verified[i2] += x;
-					if (data[i]._image)
-						withImage[i2] += x;
-				}
-			}
-		}
-		for (var i = 0; i < total.length; i++) {
-			total[i] = (parseInt(total[i] * 10 + 0.5) / 10);
-			verified[i] = (parseInt(verified[i] * 10 + 0.5) / 10);
-			withImage[i] = (parseInt(withImage[i] * 10 + 0.5) / 10);
-		}
-		charts.chartUser = new ApexCharts(ui.q('main.statistics popup panel chart.user'), {
-			chart: {
-				type: 'bar',
-				toolbar: {
-					show: false
-				}
-			},
-			plotOptions: {
-				bar: {
-					horizontal: true
-				}
-			},
-			dataLabels: {
-				enabled: true,
-				textAnchor: 'start',
-				formatter: function (val, opt) {
-					return val + '%'
-				},
-				offsetX: 0,
-			},
-			series: [{
-				name: ui.l('stats.total'),
-				data: total
-			},
-			{
-				name: ui.l('stats.verified'),
-				data: verified
-			},
-			{
-				name: ui.l('stats.withImage'),
-				data: withImage
-			}],
-			labels: [ui.l('stats.female'), ui.l('stats.male'), ui.l('stats.divers'), ui.l('stats.noData')]
-		});
-	}
-	static initChartAge(data) {
-		var female = [0, 0, 0, 0, 0, 0, 0], male = [0, 0, 0, 0, 0, 0, 0], divers = [0, 0, 0, 0, 0, 0, 0], noData = [0, 0, 0, 0, 0, 0, 0];
-		for (var i = 0; i < data.length; i++) {
-			var x = data[i]._count / 1000, i2;
-			if (data[i]._age == null)
-				i2 = male.length - 1;
-			else
-				i2 = data[i]._age - 1;
-			if (i2 < 0)
-				i2 = 0;
-			else if (i2 > male.length - 1)
-				i2 = male.length - 1;
-			if (data[i].contact.gender == 1)
-				male[i2] += x;
-			else if (data[i].contact.gender == 2)
-				female[i2] += x;
-			else if (data[i].contact.gender == 3)
-				divers[i2] += x;
-			else
-				noData[i2] += x;
-		}
-		for (var i = 0; i < female.length; i++) {
-			female[i] = parseInt(0.5 + female[i]);
-			male[i] = parseInt(0.5 + male[i]);
-			divers[i] = parseInt(0.5 + divers[i]);
-			noData[i] = parseInt(0.5 + noData[i]);
-		}
-		charts.chartAge = new ApexCharts(ui.q('main.statistics popup panel chart.age'), {
-			chart: {
-				type: 'bar',
-				toolbar: {
-					show: false
-				}
-			},
-			dataLabels: {
-				formatter: function (val, opt) {
-					return val + '%'
-				}
-			},
-			tooltip: {
-				y: {
-					formatter: function (value, { series, seriesIndex, dataPointIndex, w }) {
-						return value + '%';
-					}
-				}
-			},
-			series: [{
-				name: ui.l('stats.female'),
-				data: female
-			},
-			{
-				name: ui.l('stats.male'),
-				data: male
-			},
-			{
-				name: ui.l('stats.divers'),
-				data: divers
-			},
-			{
-				name: ui.l('stats.noData'),
-				data: noData
-			}],
-			labels: [ui.l('stats.until') + ' 20', '20 - 30', '30 - 40', '40 - 50', '50 - 60', ui.l('stats.from') + ' 60', ui.l('stats.noData')]
-		});
-	}
-	static initChartApi(data) {
-		charts.chartApiData = [];
-		var labels = [], values = [];
-		for (var i = 0; i < data.length; i++) {
-			if (data[i]._percentage >= 0.005) {
-				values.push(parseInt('' + (data[i]._percentage * 100 + 0.5)));
-				labels.push(data[i]._label);
-				charts.chartApiData.push(data[i]);
-			}
-		}
-		charts.chartApi = new ApexCharts(ui.q('main.statistics popup panel chart.api'), {
-			chart: {
-				type: 'bar',
-				toolbar: {
-					show: false
-				}
-			},
-			tooltip: {
-				y: {
-					formatter: function (value, { series, seriesIndex, dataPointIndex, w }) {
-						return ui.l('stats.calls').replace('{0}', value).replace('{1}', parseInt(charts.chartApiData[dataPointIndex]._time + 0.5));
-					}
-				}
-			},
-			series: [{
-				name: '',
-				data: values
-			}],
-			labels: labels
-		});
-	}
-	static initChartLocations(data) {
-		var l = [], series = [
-			{ name: ui.l('stats.category0'), data: [] },
-			{ name: ui.l('stats.category1'), data: [] },
-			{ name: ui.l('stats.category2'), data: [] },
-			{ name: ui.l('stats.category3'), data: [] },
-			{ name: ui.l('stats.category4'), data: [] },
-			{ name: ui.l('stats.category5'), data: [] }
-		];
-		for (var i = 1; i < data.length; i++) {
-			var category = parseInt(data[i].category);
-			var town = data[i].town;
-			var e = null;
-			for (var i2 = 0; i2 < l.length; i2++) {
-				if (l[i2].town == town) {
-					e = l[i2];
-					break;
-				}
-			}
-			if (!e) {
-				e = { total: 0, town: town };
-				l.push(e);
-			}
-			e[category] = data[i]._c / 10;
-			e.total += e[category];
-		}
-		l.sort(function (a, b) { return a.total < b.total ? 1 : -1 });
-		var labels = [];
-		for (var i = 0; i < Math.min(10, l.length); i++) {
-			for (var i2 = 0; i2 < series.length; i2++)
-				series[i2].data.push(l[i][i2] ? l[i][i2] : 0);
-			labels.push(l[i].town);
-		}
-		charts.chartLocations = new ApexCharts(ui.q('popup panel chart.locations'), {
-			chart: {
-				type: 'bar',
-				stacked: true,
-				toolbar: {
-					show: false
-				}
-			},
-			tooltip: {
-				y: {
-					formatter: function (value, { series, seriesIndex, dataPointIndex, w }) {
-						return value + '%';
-					}
-				}
-			},
-			series: series,
-			labels: labels
-		});
-	}
-	static initChartLog(data) {
-		var labels = [], values = [];
-		for (var i = 0; i < data.length; i++) {
-			if (data[i]._time > -1) {
-				values.push(parseInt('' + (data[i]._count * 100 + 0.5)));
-				labels.push((i == data.length - 1 ? ui.l('stats.from') + ' ' : '') + (data[i]._time * 20));
-			}
-		}
-		charts.chartLog = new ApexCharts(ui.q('main.statistics popup panel chart.log'), {
-			chart: {
-				type: 'line',
-				toolbar: {
-					show: false
-				}
-			},
-			tooltip: {
-				y: {
-					formatter: function (value, { series, seriesIndex, dataPointIndex, w }) {
-						return value + '%';
-					}
-				}
-			},
-			series: [{
-				name: ui.l('stats.responseTime'),
-				data: values
-			}],
-			labels: labels
-		});
-	}
-
-}
-
-class heatmap {
-	static map;
-
-	static init() {
-		communication.ajax({
-			url: global.serverApi + 'statistics/contact/location',
-			responseType: 'json',
-			webCall: 'ContentAdmin.init',
-			success(l) {
-				var points = [], n = 10000, w = 10000, s = -10000, e = -10000;
-				if (l) {
-					for (var i = 0; i < l.length; i++) {
-						points.push(new google.maps.LatLng(l[i].latitude, l[i].longitude));
-						if (n > l[i].latitude)
-							n = l[i].latitude;
-						if (s < l[i].latitude)
-							s = l[i].latitude;
-						if (w > l[i].longitude)
-							w = l[i].longitude;
-						if (e < l[i].longitude)
-							e = l[i].longitude;
-					}
-				}
-				heatmap.map = new google.maps.Map(ui.q('content-admin mapCanvas'), {
-					center: { lat: 48.1, lng: 11.6 },
-					zoom: 5,
-					mapTypeId: google.maps.MapTypeId.SATELLITE
-				});
-				new google.maps.visualization.HeatmapLayer({
-					data: points,
-					map: heatmap.map,
-					dissipating: true,
-					maxIntensity: 10
-				});
-			}
-		});
 	}
 }
 
@@ -592,9 +275,9 @@ class marketing {
 <field>
 	<label>Geschlecht</label>
 	<value>
-		<input type="checkbox" name="gender" value="2" label="${ui.l('stats.female')}" ${v.gender && v.gender.indexOf(2) > -1 ? ' checked' : ''} />
-		<input type="checkbox" name="gender" value="1" label="${ui.l('stats.male')}" ${v.gender && v.gender.indexOf(1) > -1 ? ' checked' : ''} />
-		<input type="checkbox" name="gender" value="3" label="${ui.l('stats.divers')}" ${v.gender && v.gender.indexOf(3) > -1 ? ' checked' : ''} />
+		<input type="checkbox" name="gender" value="2" label="${ui.l('contentAdmin.female')}" ${v.gender && v.gender.indexOf(2) > -1 ? ' checked' : ''} />
+		<input type="checkbox" name="gender" value="1" label="${ui.l('contentAdmin.male')}" ${v.gender && v.gender.indexOf(1) > -1 ? ' checked' : ''} />
+		<input type="checkbox" name="gender" value="3" label="${ui.l('contentAdmin.divers')}" ${v.gender && v.gender.indexOf(3) > -1 ? ' checked' : ''} />
 	</value>
 </field>
 <field>
@@ -672,9 +355,9 @@ class marketing {
 <field>
 	<label>Geschlecht</label>
 	<value>
-		${v.gender && v.gender.indexOf(2) > -1 ? ui.l('stats.female') : ''}
-		${v.gender && v.gender.indexOf(1) > -1 ? ui.l('stats.male') : ''}
-		${v.gender && v.gender.indexOf(3) > -1 ? ui.l('stats.divers') : ''}
+		${v.gender && v.gender.indexOf(2) > -1 ? ui.l('contentAdmin.female') : ''}
+		${v.gender && v.gender.indexOf(1) > -1 ? ui.l('contentAdmin.male') : ''}
+		${v.gender && v.gender.indexOf(3) > -1 ? ui.l('contentAdmin.divers') : ''}
 	</value>
 </field>
 <field>
@@ -723,7 +406,7 @@ class marketing {
 	static addQuestion(e) {
 		if (e.value && e.parentElement.parentElement.parentElement.lastElementChild == e.parentElement.parentElement) {
 			var e2 = document.createElement('div');
-			e2.innerHTML = marketing.templateQuestion({ index: ui.qa('content-admin questions>field').length + 1 });
+			e2.innerHTML = marketing.templateQuestion({ index: ui.qa('content-admin-marketing questions>field').length + 1 });
 			e.parentElement.parentElement.parentElement.appendChild(e2.children[0]);
 		}
 	}
@@ -817,11 +500,11 @@ class marketing {
 		return o;
 	}
 	static init() {
-		if (!ui.q('content-admin marketing list').innerHTML) {
+		if (!ui.q('content-admin-marketing marketing list').innerHTML) {
 			communication.ajax({
 				url: global.serverApi + 'statistics/marketing',
 				responseType: 'json',
-				webCall: 'ContentAdmin.init',
+				webCall: 'ContentAdminMarketing.init',
 				success(response) {
 					marketing.data = [];
 					for (var i = 1; i < response.length; i++) {
@@ -844,7 +527,7 @@ class marketing {
 							marketing.data[i].oc = 'marketing.edit(' + marketing.data[i].id + ')';
 						s += marketing.templateList(marketing.data[i]);
 					}
-					ui.q('content-admin marketing list').innerHTML = s ? s : ui.l('stats.noEntries');
+					ui.q('content-admin-marketing list').innerHTML = s ? s : ui.l('contentAdmin.noEntries');
 				}
 			});
 		}
@@ -898,7 +581,7 @@ class marketing {
 			method: 'PUT',
 			body: { classname: 'ClientMarketing', id: o.id, values: o },
 			responseType: 'json',
-			webCall: 'ContentAdmin.save',
+			webCall: 'ContentAdminMarketing.save',
 			success() {
 				exec ? exec() : ui.navigation.closeHint();
 			}
@@ -923,113 +606,5 @@ class marketing {
 		else
 			ui.classAdd(e, 'closed');
 		ui.toggleHeight(e.nextElementSibling);
-	}
-}
-
-class ui2 {
-	static open(index) {
-		var s = '', map = {
-			button1: ['User', 'Log'],
-			button2: ['Login', 'Age'],
-			button3: ['Api', 'Locations']
-		};
-		var exec = function (chartToken) {
-			communication.ajax({
-				url: global.serverApi + 'statistics/contact/' + chartToken,
-				responseType: 'json',
-				webCall: 'ContentAdmin.open',
-				success(response) {
-					var list = [];
-					for (var i = 1; i < response.length; i++) {
-						var o = {}, keys = response[0];
-						for (var i2 = 0; i2 < keys.length; i2++) {
-							var k = keys[i2].split('.');
-							o[k[k.length - 1]] = response[i][i2];
-						}
-						list.push(o);
-					}
-					charts.initChart(chartToken, list);
-				}
-			});
-			return chartToken.toLowerCase();
-		}
-		for (var i = 0; i < map['button' + index].length; i++)
-			s += '<chart class="' + exec(map['button' + index][i]) + '"></chart>';
-		ui.navigation.openHint(s);
-	}
-	static goTo(i) {
-		var e = ui.q('dialog-navigation item.active');
-		if (e)
-			e.classList.remove('active');
-		ui.navigation.closeHint();
-		if (i == 0)
-			ui.q('main.statistics').outerHTML = '';
-		else {
-			ui.q('dialog-navigation item:nth-child(' + (i + 1) + ')').classList.add('active');
-			ui.q('contentAdmin').style.marginLeft = (-(i - 1) * 100) + '%';
-			if (i == 2)
-				marketing.init();
-		}
-	}
-	static init() {
-		ui.q('content-admin')._root.innerHTML = `
-<home style="left:0;">
-	<h1 style="margin-top:1em;" l="stats.homeStatistics"></h1>
-	<card class="mainBG" onclick="ui2.open(1)">
-		<top>390</top>
-		<bottom l="stats.homeCard1"></bottom>
-	</card>
-	<card class="mainBG" onclick="ui2.open(2)">
-		<top>38</top>
-		<bottom l="stats.homeCard2"></bottom>
-	</card>
-	<card class="mainBG" onclick="ui2.open(3)">
-		<top>18</top>
-		<bottom l="stats.homeCard3"></bottom>
-	</card>
-	<h1 l="stats.homeUserMap"></h1>
-	<mapCanvas></mapCanvas>
-</home>
-<marketing style="left:33.33%;">
-	<h1 style="margin-top:1em;" l="stats.marketingTitle"></h1>
-	<edit onclick="marketing.edit()"></edit>
-	<list></list>
-</marketing>
-<invoice style="left:66.66%;">
-	<h1 style="margin-top:1em;" l="stats.invoiceTitle"></h1>
-</invoice>`;
-		var e = ui.qa('contentAdmin [l]');
-		for (var i = 0; i < e.length; i++)
-			e[i].innerHTML = ui.l('contentAdmin.' + e[i].getAttribute('l'));
-		if (ui.q('head script[src*="heatmap.init"]'))
-			heatmap.init();
-		else
-			communication.ajax({
-				url: global.serverApi + 'action/google?param=js',
-				responseType: 'text',
-				webCall: 'ContentAdmin.init',
-				success(r) {
-					var script = document.createElement('script');
-					script.src = r + '&libraries=visualization&callback=ContentAdmin.initHeatmap';
-					document.head.appendChild(script);
-				}
-			});
-		ui.swipe(ui.q('contentAdmin'), function (dir) {
-			if (dir != 'left' && dir != 'right')
-				return;
-			var i = ui.q('contentAdmin').style.marginLeft;
-			if (!i)
-				i = 1;
-			else
-				i = -parseInt(i) / 100 + 1;
-			if (dir == 'right') {
-				if (--i < 1)
-					return;
-			} else {
-				if (++i > 3)
-					return;
-			}
-			ui2.goTo(i);
-		});
 	}
 }

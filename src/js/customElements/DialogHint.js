@@ -251,7 +251,7 @@ eventFilter {
 			DialogHint.steps.push({ desc: 'searchExplained', pos: '10%,4em', size: '80%,auto', hinky: 'left:50%;', hinkyClass: 'top', action: 'this.actionGoToSearch()' });
 			DialogHint.steps.push({ desc: 'search', pos: '5%,-5em', size: '90%,auto', action: 'this.actionSearch()' });
 			DialogHint.steps.push({ desc: 'marketingStart', pos: '0.8em,5em', size: '80%,auto', hinky: 'left:1.6em;', hinkyClass: 'top', action: 'ui.navigation.goTo("home")' });
-			DialogHint.steps.push({ desc: 'statisticsCharts', pos: '10%,15em', size: '80%,auto', action: 'pageHome.openStatistics(true)' });
+			DialogHint.steps.push({ desc: 'statisticsCharts', pos: '10%,15em', size: '80%,auto', action: 'ui.navigation.goTo("content-admin-home")' });
 			DialogHint.steps.push({ desc: 'statisticsCharts2', pos: '10%,26em', size: '80%,auto', hinky: 'left:50%;', hinkyClass: 'top', action: 'ui2.open(1)' });
 			DialogHint.steps.push({ desc: 'statisticsMap', pos: '10%,2em', size: '80%,auto', hinky: 'left:50%;', hinkyClass: 'bottom', action: 'this.actionZommMap()' });
 			DialogHint.steps.push({ desc: 'marketingQuestions', pos: '10%,12em', size: '80%,auto', action: 'ui2.goTo(2)' });

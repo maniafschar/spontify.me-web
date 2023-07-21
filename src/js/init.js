@@ -31,8 +31,10 @@ import { InputRating } from './customElements/InputRating';
 import { InputSlider } from './customElements/InputSlider';
 import { ListBody } from './customElements/ListBody';
 import { ListRow } from './customElements/ListRow';
-import { ContentAdmin } from './customElements/ContentAdmin';
+import { ContentAdminHome } from './customElements/ContentAdminHome';
 import { InputDate } from './customElements/InputDate';
+import { ContentAdminMarketing } from './customElements/ContentAdminMarketing';
+import { ContentAdminInvoice } from './customElements/ContentAdminInvoice';
 
 export { initialisation };
 
@@ -48,7 +50,9 @@ class initialisation {
 			success(r) {
 				initialisation.customElementsCss = r;
 				customElements.define('button-text', ButtonText);
-				customElements.define('content-admin', ContentAdmin);
+				customElements.define('content-admin-home', ContentAdminHome);
+				customElements.define('content-admin-marketing', ContentAdminMarketing);
+				customElements.define('content-admin-invoice', ContentAdminInvoice);
 				customElements.define('dialog-hint', DialogHint);
 				customElements.define('dialog-location-picker', DialogLocationPicker);
 				customElements.define('dialog-menu', DialogMenu);
@@ -441,4 +445,3 @@ window.Strings = Strings;
 window.groups = groups;
 window.VideoCall = VideoCall;
 window.marketing = marketing;
-window.ContentAdmin = ContentAdmin;

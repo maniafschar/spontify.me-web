@@ -1,6 +1,5 @@
 import { bluetooth } from './bluetooth';
 import { communication } from './communication';
-import { ContentAdmin } from './customElements/ContentAdmin';
 import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './init';
@@ -20,7 +19,7 @@ class pageHome {
 	static teaserMeta;
 	static template = v =>
 		global.template`<homeHeader${v.logoSmall}>
-	<buttonIcon class="statistics${v.statsButton}" onclick="pageHome.openStatistics()">
+	<buttonIcon class="statistics${v.statsButton}" onclick="ui.navigation.goTo(&quot;content-admin-home&quot;)">
 		<img source="statistics"/>
 	</buttonIcon>
 	<img onclick="${v.actionLogo}" source="logo"/>
@@ -371,13 +370,6 @@ ${ui.l('events.title')}
 			});
 		}
 		render();
-	}
-	static openStatistics(openIntro) {
-		ContentAdmin.init();
-		formFunc.svg.replaceAll();
-		initialisation.reposition();
-		if (openIntro)
-			ui.navigation.openHint({ desc: 'statisticsCharts', pos: '10%,15em', size: '80%,auto', hinky: 'left:50%;', hinkyClass: 'top' })
 	}
 	static reset() {
 		pageHome.badge = -1;

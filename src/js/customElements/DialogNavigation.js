@@ -1,5 +1,5 @@
 import { initialisation } from '../init';
-import { formFunc } from '../ui';
+import { formFunc, ui } from '../ui';
 
 export { DialogNavigation }
 
@@ -86,9 +86,9 @@ buttonIcon.notifications {
 			element.appendChild(element2);
 			t._root.appendChild(element);
 		};
-		var addItem = function (click, classname) {
+		var addItem = function (classname) {
 			var element = document.createElement('item');
-			element.setAttribute('onclick', click);
+			element.setAttribute('onclick', 'ui.navigation.goTo("' + classname + '"' + ('home' == classname ? ',true)' : ')'));
 			element.setAttribute('class', classname);
 			var element2 = document.createElement('img');
 			element2.setAttribute('source', classname);
@@ -96,13 +96,29 @@ buttonIcon.notifications {
 			t._root.appendChild(element);
 		};
 		addIcon('pageChat.toggleUserList()', 'Chats');
-		addItem('ui.navigation.goTo("home", true)', 'home');
-		addItem('ui.navigation.goTo("search")', 'search');
-		addItem('ui.navigation.goTo("info")', 'info');
-		addItem('ui.navigation.goTo("events")', 'events');
-		addItem('ui.navigation.goTo("contacts")', 'contacts');
+		addItem('home');
+		addItem('search');
+		addItem('info');
+		addItem('events');
+		addItem('contacts');
+		addItem('content-admin-home');
+		addItem('content-admin-marketing');
+		addItem('content-admin-invoice');
 		addIcon('pageHome.toggleNotification()', 'Notifications');
 		this._root.querySelector('item').classList.add('active');
 		formFunc.svg.replaceAll(this._root.querySelectorAll('img'));
+	}
+	static highlight(id) {
+		if (ui.q('dialog-navigation item.' + id)) {
+			ui.classRemove('dialog-navigation item', 'active');
+			ui.classAdd('dialog-navigation item.' + id, 'active');
+			if (id == 'home')
+				ui.classRemove('dialog-navigation item', 'hidden');
+			else if (id == 'content-admin-home') {
+				ui.classAdd('dialog-navigation item.search', 'hidden');
+				ui.classAdd('dialog-navigation item.events', 'hidden');
+				ui.classAdd('dialog-navigation item.contacts', 'hidden');
+			}
+		}
 	}
 }
