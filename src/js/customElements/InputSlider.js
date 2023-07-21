@@ -70,17 +70,19 @@ thumb val {
 	}
 	initSliderDrag(o) {
 		var thumbLeft = o[0];
-		var thumbRight = o[1];
+		var thumbRight;
+		if (o.length > 1)
+			thumbRight = o[1];
 		var update = this.updateSlider;
 		var init = function (e) {
 			var tmp = new DragObject(e);
 			update(e);
 			tmp.ondrag = function (event) {
 				var slider = event.target;
-				if (slider.nodeName == 'INPUT-SLIDER') {
+				if (slider._root) {
 					var x = ui.getEvtPos(event, true) - slider.getBoundingClientRect().x;
 					if (!this.obj.classList.contains('right')) {
-						if (x > thumbRight.offsetLeft)
+						if (thumbRight && x > thumbRight.offsetLeft)
 							x = thumbRight.offsetLeft;
 					} else if (x < thumbLeft.offsetLeft + thumbLeft.offsetWidth)
 						x = thumbLeft.offsetLeft + thumbLeft.offsetWidth;

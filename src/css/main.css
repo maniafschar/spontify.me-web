@@ -668,14 +668,6 @@ qrCheck.negative {
 	color: rgba(0, 0, 0, 0.3);
 }
 
-input-slider {
-	position: relative;
-	height: 1.85em;
-	margin: 0 1.25em 1.85em 1.25em;
-	border-bottom: solid 1px rgba(255, 255, 255, 0.3);
-	display: block;
-}
-
 chat {
 	z-index: 3;
 }
