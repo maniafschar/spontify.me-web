@@ -13,126 +13,9 @@ class ContentAdminMarketing extends HTMLElement {
 	connectedCallback() {
 		const style = document.createElement('style');
 		style.textContent = `${initialisation.customElementsCss}
-card {
-	width: 6em;
-	height: 8em;
-	display: inline-flex;
-	flex-flow: column;
-	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.5);
-	border-radius: 0.5em;
-	margin: 1em;
-	cursor: pointer;
-}
-
-card top {
-	display: block;
-	height: 2.5em;
-	line-height: 2.5;
-	font-size: 1.3em;
-	font-weight: bold;
-	border-bottom: solid 1px rgba(255, 255, 255, 0.5);
-}
-
-card bottom {
-	line-height: 1.5;
-	font-size: 0.7em;
-	padding: 0.5em;
-}
-
-mapCanvas {
-	display: inline-block;
-	width: 100%;
-	height: 40em;
-	border-radius: 0.5em;
-	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.5);
-	margin-top: 0.5em;
-}
-
 h1 {
 	font-size: 1.3em;
 	margin-top: 0.5em;
-}
-
-block {
-	display: inline-block;
-	position: relative;
-	background: rgba(255, 255, 255, 0.9);
-	padding: 1.5em;
-	border-radius: 1em;
-	margin: 1em 0;
-	box-shadow: 0 0 2em rgb(0 0 0 / 30%);
-	width: 40em;
-	color: black;
-	line-height: 1.8;
-}
-
-chart {
-	display: block;
-	position: relative;
-	background: rgba(255, 255, 255, 0.9);
-	border-radius: 0.5em;
-	color: black;
-}
-
-popup {
-	transform: scale(0);
-	box-shadow: 0 0 5em rgba(0, 0, 0, 0.3);
-	background-color: rgba(255, 255, 255, 0.9);
-	border-radius: 0.5em;
-	transition: all .4s ease-out;
-	color: black;
-	bottom: 4em;
-	width: initial !important;
-	left: 1em !important;
-	top: 1em !important;
-	right: 1em !important;
-	padding: 1em !important;
-	text-align: left;
-}
-
-marketing edit,
-popup close {
-	position: absolute;
-	right: 0;
-	top: 0;
-	padding: 0.5em 0.75em 1.5em 5em;
-	cursor: pointer;
-}
-
-popup close {
-	opacity: 0.3;
-}
-
-popup panel {
-	position: relative;
-	display: block;
-	overflow-y: auto;
-	height: 100%;
-}
-
-marketing edit {
-	display: block;
-	padding: 0.5em 0.75em 1em 2.5em;
-	font-size: 2em;
-	font-weight: bold;
-}
-
-popup edit::after,
-marketing edit::after {
-	content: '+';
-}
-
-
-popup edit.question {
-	display: block;
-	color: black;
-	opacity: 1;
-	position: relative;
-	font-size: 3em;
-	padding: 0;
-	height: 1em;
-	line-height: 1;
-	text-align: right;
 }
 
 questions>field {
@@ -411,7 +294,7 @@ class marketing {
 		}
 	}
 	static edit(id) {
-		var e = ui.q('main.statistics popup').style;
+		var e = ui.q('dialog-hint').style;
 		if (e.transform && e.transform.indexOf('1') > 0) {
 			e.transform = 'scale(0)';
 			return;
@@ -433,31 +316,31 @@ class marketing {
 			}
 			v = { id: max + 1, language: global.language, storage: {} };
 		}
-		ui.q('main.statistics popup panel').innerHTML = marketing.templateEdit(v);
+		ui.q('dialog-hint').innerHTML = marketing.templateEdit(v);
 		e.transform = 'scale(1)';
 		if (v.storage.questions) {
 			for (var i = 0; i < v.storage.questions.length; i++) {
 				if (i > 0) {
 					var e2 = document.createElement('div');
 					e2.innerHTML = marketing.templateQuestion({ index: i + 1, ...v.storage.questions[i] });
-					ui.q('main.statistics popup questions').appendChild(e2.children[0]);
+					ui.q('dialog-hint questions').appendChild(e2.children[0]);
 				}
 				for (var i2 = 1; i2 < v.storage.questions[i].answers.length; i2++) {
 					var e2 = document.createElement('div');
 					e2.innerHTML = marketing.templateAnswer(v.storage.questions[i].answers[i2]);
-					var e3 = ui.qa('main.statistics popup questions>field:nth-child(' + (i + 1) + ')>value')[1];
+					var e3 = ui.qa('dialog-hint questions>field:nth-child(' + (i + 1) + ')>value')[1];
 					e3.insertBefore(e2.children[0], e3.querySelector('input[type="checkbox"]'));
 				}
 			}
 		}
-		formFunc.initFields(ui.q('main.statistics popup panel'));
+		formFunc.initFields(ui.q('dialog-hint panel'));
 	}
 	static html2json() {
-		var e = ui.qa('main.statistics questions field'), o = {};
+		var e = ui.qa('dialog-hint questions field'), o = {};
 		var read = function (label, o) {
-			var e2 = ui.q('main.statistics popup [name="' + label + '"]');
+			var e2 = ui.q('dialog-hint [name="' + label + '"]');
 			if (e2.type == 'checkbox' || e2.type == 'radio') {
-				e2 = ui.qa('main.statistics popup [name="' + label + '"]:checked');
+				e2 = ui.qa('dialog-hint [name="' + label + '"]:checked');
 				var s = '';
 				for (var i = 0; i < e2.length; i++)
 					s += e2[i].value;
@@ -566,8 +449,8 @@ class marketing {
 						if (v.endDate)
 							v.endDate = global.date.formatDate(v.endDate);
 						v.age = v.age.replace(',', ' - ');
-						ui.q('main.statistics popup panel').innerHTML = marketing.templateResults(v);
-						ui.q('main.statistics popup').style.transform = 'scale(1)';
+						ui.q('dialog-hint').innerHTML = marketing.templateResults(v);
+						ui.q('dialog-hint').style.transform = 'scale(1)';
 						break;
 					}
 				}

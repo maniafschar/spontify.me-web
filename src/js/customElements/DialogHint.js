@@ -18,6 +18,7 @@ class DialogHint extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
+		style.setAttribute('i', 'true');
 		style.textContent = `${initialisation.customElementsCss}
 .body,
 :host(.body) {
@@ -110,6 +111,14 @@ eventFilter {
 	display: block;
     max-height: 4em;
     overflow-y: auto;
+}
+
+chart {
+	display: block;
+	position: relative;
+	background: rgba(255, 255, 255, 0.9);
+	border-radius: 0.5em;
+	color: black;
 }`;
 		this._root.appendChild(style);
 	}
@@ -144,8 +153,10 @@ eventFilter {
 		ui.on(e, 'transitionend', function () {
 			ui.attr(e, 'style');
 			ui.attr(e, 'i');
-			for (var i = e._root.children.length - 1; i > 0; i--)
-				e._root.children[i].remove();
+			for (var i = e._root.children.length - 1; i >= 0; i--) {
+				if (e._root.children[i].getAttribute('i') != 'true')
+					e._root.children[i].remove();
+			}
 			if (data)
 				DialogHint.open(data);
 		}, true);

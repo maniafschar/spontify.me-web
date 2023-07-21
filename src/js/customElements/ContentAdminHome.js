@@ -51,27 +51,6 @@ mapCanvas {
 h1 {
 	font-size: 1.3em;
 	margin-top: 0.5em;
-}
-
-block {
-	display: inline-block;
-	position: relative;
-	background: rgba(255, 255, 255, 0.9);
-	padding: 1.5em;
-	border-radius: 1em;
-	margin: 1em 0;
-	box-shadow: 0 0 2em rgb(0 0 0 / 30%);
-	width: 40em;
-	color: black;
-	line-height: 1.8;
-}
-
-chart {
-	display: block;
-	position: relative;
-	background: rgba(255, 255, 255, 0.9);
-	border-radius: 0.5em;
-	color: black;
 }`;
 		this._root.appendChild(style);
 	}
@@ -109,8 +88,6 @@ chart {
 			heatmap.init();
 			formFunc.svg.replaceAll();
 			initialisation.reposition();
-			if (false)
-				ui.navigation.openHint({ desc: 'statisticsCharts', pos: '10%,15em', size: '80%,auto', hinky: 'left:50%;', hinkyClass: 'top' })
 		} else
 			communication.ajax({
 				url: global.serverApi + 'action/google?param=js',
@@ -154,7 +131,7 @@ chart {
 		}
 		for (var i = 0; i < map['button' + index].length; i++)
 			s += '<chart class="' + exec(map['button' + index][i]) + '"></chart>';
-		ui.navigation.openHint(s);
+		ui.navigation.openHint({ desc: '<div style="width:100%;height:80vh;overflow-y:auto;">' + s + '</div>', pos: '5%,1em', size: '90%,auto', onclick: 'return false;' });
 	}
 }
 
@@ -169,18 +146,23 @@ class charts {
 	static chartUser;
 
 	static initChart(query, data) {
-		if (!ui.q('head script[src*="apexcharts"]')) {
-			var script = document.createElement('script');
-			script.src = 'https://cdn.jsdelivr.net/npm/apexcharts';
-			script.onload = function () {
-				ui.q('main.statistics popup panel chart.' + query.toLowerCase()).innerHTML = '';
+		var exec = function () {
+			if (ApexCharts) {
+				ui.q('dialog-hint chart.' + query.toLowerCase()).innerHTML = '';
 				if (charts['chart' + query])
 					charts['chart' + query].destroy();
 				charts['initChart' + query](data);
 				charts['chart' + query].render();
-			}
+			} else
+				setTimeout(exec, 500);
+		};
+		if (!ui.q('head script[src*="apexcharts"]')) {
+			var script = document.createElement('script');
+			script.src = 'https://cdn.jsdelivr.net/npm/apexcharts';
+			script.onload = exec;
 			document.head.appendChild(script);
-		}
+		} else
+			exec();
 	}
 	static initChartLogin(data) {
 		var total = 0, date, labels = [], values = [], processed = {};
@@ -201,7 +183,7 @@ class charts {
 				total++;
 			}
 		}
-		charts.chartLogin = new ApexCharts(ui.q('main.statistics popup panel chart.login'), {
+		charts.chartLogin = new ApexCharts(ui.q('dialog-hint chart.login'), {
 			chart: {
 				type: 'bar',
 				toolbar: {
@@ -234,7 +216,7 @@ class charts {
 			verified[i] = (parseInt(verified[i] * 10 + 0.5) / 10);
 			withImage[i] = (parseInt(withImage[i] * 10 + 0.5) / 10);
 		}
-		charts.chartUser = new ApexCharts(ui.q('main.statistics popup panel chart.user'), {
+		charts.chartUser = new ApexCharts(ui.q('dialog-hint chart.user'), {
 			chart: {
 				type: 'bar',
 				toolbar: {
@@ -296,7 +278,7 @@ class charts {
 			divers[i] = parseInt(0.5 + divers[i]);
 			noData[i] = parseInt(0.5 + noData[i]);
 		}
-		charts.chartAge = new ApexCharts(ui.q('main.statistics popup panel chart.age'), {
+		charts.chartAge = new ApexCharts(ui.q('dialog-hint chart.age'), {
 			chart: {
 				type: 'bar',
 				toolbar: {
@@ -344,7 +326,7 @@ class charts {
 				charts.chartApiData.push(data[i]);
 			}
 		}
-		charts.chartApi = new ApexCharts(ui.q('main.statistics popup panel chart.api'), {
+		charts.chartApi = new ApexCharts(ui.q('dialog-hint chart.api'), {
 			chart: {
 				type: 'bar',
 				toolbar: {
@@ -425,7 +407,7 @@ class charts {
 				labels.push((i == data.length - 1 ? ui.l('contentAdmin.from') + ' ' : '') + (data[i]._time * 20));
 			}
 		}
-		charts.chartLog = new ApexCharts(ui.q('main.statistics popup panel chart.log'), {
+		charts.chartLog = new ApexCharts(ui.q('dialog-hint chart.log'), {
 			chart: {
 				type: 'line',
 				toolbar: {
@@ -460,16 +442,16 @@ class heatmap {
 			success(l) {
 				var points = [], n = 10000, w = 10000, s = -10000, e = -10000;
 				if (l) {
-					for (var i = 0; i < l.length; i++) {
-						points.push(new google.maps.LatLng(l[i].latitude, l[i].longitude));
-						if (n > l[i].latitude)
-							n = l[i].latitude;
-						if (s < l[i].latitude)
-							s = l[i].latitude;
-						if (w > l[i].longitude)
-							w = l[i].longitude;
-						if (e < l[i].longitude)
-							e = l[i].longitude;
+					for (var i = 1; i < l.length; i++) {
+						points.push(new google.maps.LatLng(l[i][0], l[i][1]));
+						if (n > l[i][0])
+							n = l[i][0];
+						if (s < l[i][0])
+							s = l[i][0];
+						if (w > l[i][1])
+							w = l[i][1];
+						if (e < l[i][1])
+							e = l[i][1];
 					}
 				}
 				heatmap.map = new google.maps.Map(ui.q('content-admin-home mapCanvas'), {
