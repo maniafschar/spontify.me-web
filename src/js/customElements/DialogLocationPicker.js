@@ -89,9 +89,11 @@ label {
 				responseType: 'json',
 				webCall: 'DialogLocationPicker.save',
 				success(r) {
-					DialogLocationPicker.map.setCenter({ lat: r.latitude, lng: r.longitude });
-					ui.q('dialog-popup input').value = '';
-					ui.q('dialog-location-picker').setButtonLabel();
+					if (r && r.length) {
+						DialogLocationPicker.map.setCenter({ lat: r[0].latitude, lng: r[0].longitude });
+						ui.q('dialog-popup input').value = '';
+						ui.q('dialog-location-picker').setButtonLabel();
+					}
 				}
 			});
 		} else
