@@ -32,7 +32,7 @@ class pageSearch {
 		template: v =>
 			global.template`<form onsubmit="return false">
 <input-checkbox label="search.matches" name="matches" ${v.matches}></input-checkbox>
-<label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${geoData.current.town}</label>
+<label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${geoData.getCurrent().town}</label>
 <input-hashtags ids="${v.keywords}" text="${v.keywordsText}" name="keywords"></input-hashtags>
 <explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
 <errorHint></errorHint>
@@ -99,8 +99,8 @@ class pageSearch {
 			pageSearch.contacts.fieldValues = formFunc.getForm('search tabBody div.contacts form').values;
 			lists.load({
 				webCall: 'pageSearch.contacts.search',
-				latitude: geoData.current.lat,
-				longitude: geoData.current.lon,
+				latitude: geoData.getCurrent().lat,
+				longitude: geoData.getCurrent().lon,
 				distance: -1,
 				query: 'contact_list',
 				search: encodeURIComponent(pageSearch.contacts.getSearch())
@@ -113,7 +113,7 @@ class pageSearch {
 		template: v =>
 			global.template`<form onsubmit="return false">
 <input-date name="date" ${v.matches}></input-date>
-<label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${geoData.current.town}</label>
+<label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${geoData.getCurrent().town}</label>
 ${v.keywords}
 <explain class="searchKeywordHint">${ui.l('search.hintEvent')}</explain>
 <errorHint></errorHint>
@@ -193,8 +193,8 @@ ${v.keywords}
 			pageSearch.events.fieldValues = formFunc.getForm('search tabBody div.events form').values;
 			pageEvent.loadEvents({
 				webCall: 'pageSearch.events.search',
-				latitude: geoData.current.lat,
-				longitude: geoData.current.lon,
+				latitude: geoData.getCurrent().lat,
+				longitude: geoData.getCurrent().lon,
 				distance: -1,
 				query: 'event_list',
 				search: encodeURIComponent(pageSearch.events.getSearch())
@@ -251,7 +251,7 @@ ${v.keywords}
 		template: v =>
 			global.template`<form onsubmit="return false">
 <input-checkbox label="search.favorites" name="favorites" ${v.favorites}></input-checkbox>
-<label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${geoData.current.town}</label>
+<label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${geoData.getCurrent().town}</label>
 <input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" value="${v.keywords}"/>
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
 <errorHint></errorHint>
@@ -322,8 +322,8 @@ ${v.keywords}
 			pageSearch.locations.fieldValues = formFunc.getForm('search tabBody div.locations form').values;
 			lists.load({
 				webCall: 'pageSearch.locations.search',
-				latitude: geoData.current.lat,
-				longitude: geoData.current.lon,
+				latitude: geoData.getCurrent().lat,
+				longitude: geoData.getCurrent().lon,
 				distance: -1,
 				query: 'location_list',
 				search: encodeURIComponent(pageSearch.locations.getSearch())
@@ -379,6 +379,6 @@ ${v.keywords}
 			pageSearch.selectTab('events');
 	}
 	static updateLocalisation() {
-		ui.html('search label.locationPicker', geoData.current.town);
+		ui.html('search label.locationPicker', geoData.getCurrent().town);
 	}
 }

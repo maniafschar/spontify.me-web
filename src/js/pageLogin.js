@@ -246,8 +246,6 @@ class pageLogin {
 					user.email = u;
 					user.password = p;
 					user.init(v);
-					if (v['geo_location'])
-						geoData.initManual(JSON.parse(v['geo_location']));
 					ui.css('progressbar', 'display', 'none');
 					if (global.language != user.contact.language && user.contact.id != 1)
 						initialisation.setLanguage(user.contact.language);

@@ -50,7 +50,7 @@ label {
 			if (ui.q('dialog-location-picker').style.display == 'none') {
 				var s = '';
 				for (var i = l.length - 1; i >= 0; i--) {
-					if (l[i].town != geoData.current.town) {
+					if (l[i].town != geoData.getCurrent().town) {
 						element = document.createElement('label');
 						element.setAttribute('onclick', 'ui.q("dialog-location-picker").save(' + JSON.stringify(l[i]).replace(/"/g, '\'') + ')');
 						element.innerText = l[i].town;
@@ -78,7 +78,7 @@ label {
 			function () {
 				setTimeout(function () {
 					ui.navigation.closeLocationPicker();
-					DialogLocationPicker.map = new google.maps.Map(ui.q('dialog-popup mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 12, center: new google.maps.LatLng(geoData.current.lat, geoData.current.lon), zoom: 9 });
+					DialogLocationPicker.map = new google.maps.Map(ui.q('dialog-popup mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 12, center: new google.maps.LatLng(geoData.getCurrent().lat, geoData.getCurrent().lon), zoom: 9 });
 				}, 500);
 			});
 	}
@@ -95,7 +95,7 @@ label {
 				}
 			});
 		} else
-			geoData.save({ latitude: e ? e.lat : DialogLocationPicker.map.getCenter().lat(), longitude: e ? e.lon : DialogLocationPicker.map.getCenter().lng(), manual: true }, function () { pageHome.init(true); });
+			geoData.save({ latitude: e ? e.lat : DialogLocationPicker.map.getCenter().lat(), longitude: e ? e.lon : DialogLocationPicker.map.getCenter().lng(), manual: true });
 	}
 	setButtonLabel(event) {
 		if (event && event.keyCode == 13)
