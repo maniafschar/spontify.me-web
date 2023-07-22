@@ -83,7 +83,7 @@ label {
 			});
 	}
 	save(e) {
-		if (ui.q('dialog-popup input').value) {
+		if (ui.q('dialog-popup input') && ui.q('dialog-popup input').value) {
 			communication.ajax({
 				url: global.serverApi + 'action/google?param=' + encodeURIComponent('town=' + ui.q('dialog-popup input').value.trim()),
 				responseType: 'json',
