@@ -120,7 +120,7 @@ ${v.rating}
 	<label style="padding-top:1em;">${ui.l('name')}</label>
 	<value>
 		<input type="text" name="name" maxlength="100" value="${v.name}" />
-		<div style="text-align:center;padding-top:1em;${v.showNearByButton}"><button-text onclick="pageLocation.showLocationsNearby(event)" label="all"></button-text></div>
+		<div class="locationNameInputHelperButton" style="text-align:center;padding-top:1em;${v.showNearByButton}"><button-text onclick="pageLocation.showLocationsNearby(event)" label="all"></button-text></div>
 		<locationNameInputHelper style="display:none;"></locationNameInputHelper>
 	</value>
 </field>
@@ -194,7 +194,7 @@ ${v.rating}
 		});
 	}
 	static closeLocationInputHelper() {
-		var e = ui.q('locationNameInputHelper');
+		var e = ui.q('dialog-popup locationNameInputHelper');
 		if (e.innerHTML)
 			ui.toggleHeight(e);
 	}
@@ -443,29 +443,28 @@ ${v.rating}
 		}
 	}
 	static showLocationsNearby(event) {
-		if (ui.q('input[name="name"]')) {
-			communication.ajax({
-				url: global.serverApi + 'action/google?param=' + encodeURIComponent('place/nearbysearch/json?radius=100&sensor=false&location=' + geoData.current.lat + ',' + geoData.current.lon),
-				webCall: 'pageLocation.showLocationsNearby',
-				responseType: 'json',
-				success(r) {
-					if (r.status == 'OK') {
-						event.target.parentNode.outerHTML = '';
-						r = r.results;
-						var s = '';
-						for (var i = 0; i < r.length; i++) {
-							if (r[i].types[0] && r[i].types[0].indexOf('locality') < 0 && r[i].types[0].indexOf('route') < 0 && r[i].name && !r[i].permanently_closed)
-								s += '<li onclick="pageLocation.setLocationName(event)" d="' + r[i].types[0] + '" n="' + r[i].name + '" a="' + r[i].vicinity + '">' + r[i].name + '</li>';
-						}
-						if (s) {
-							ui.html('locationNameInputHelper', '<ul>' + s + '</ul><div style="text-align:center;"><button-text onclick="pageLocation.closeLocationInputHelper()" label="locations.closeInputHelper"></button-text></div>');
-							pageLocation.showLocationInputHelper();
-							ui.q('form input[name="name"]').onfocus = pageLocation.showLocationInputHelper;
-						}
+		communication.ajax({
+			url: global.serverApi + 'action/google?param=' + encodeURIComponent('place/nearbysearch/json?radius=100&sensor=false&location=' + geoData.current.lat + ',' + geoData.current.lon),
+			webCall: 'pageLocation.showLocationsNearby',
+			responseType: 'json',
+			success(r) {
+				if (r.status == 'OK') {
+					if (ui.q('dialog-popup .locationNameInputHelperButton'))
+						ui.q('dialog-popup .locationNameInputHelperButton').outerHTML = '';
+					r = r.results;
+					var s = '';
+					for (var i = 0; i < r.length; i++) {
+						if (r[i].types[0] && r[i].types[0].indexOf('locality') < 0 && r[i].types[0].indexOf('route') < 0 && r[i].name && !r[i].permanently_closed)
+							s += '<li onclick="pageLocation.setLocationName(event)" d="' + r[i].types[0] + '" n="' + r[i].name + '" a="' + r[i].vicinity + '">' + r[i].name + '</li>';
+					}
+					if (s) {
+						ui.q('dialog-popup locationNameInputHelper').innerHTML = '<ul>' + s + '</ul><div style="text-align:center;"><button-text onclick="pageLocation.closeLocationInputHelper()" label="locations.closeInputHelper"></button-text></div>';
+						pageLocation.showLocationInputHelper();
+						ui.q('dialog-popup form input[name="name"]').onfocus = pageLocation.showLocationInputHelper;
 					}
 				}
-			});
-		}
+			}
+		});
 	}
 	static replaceMapDescData(s) {
 		if (!s)
@@ -606,21 +605,21 @@ ${v.rating}
 	}
 	static setLocationName(event) {
 		var e = event.target;
-		ui.q('form input[name="name"]').value = e.getAttribute('n');
-		ui.q('form textarea[name="description"]').value = e.getAttribute('d');
+		ui.q('dialog-popup input[name="name"]').value = e.getAttribute('n');
+		ui.q('dialog-popup textarea[name="description"]').value = e.getAttribute('d');
 		var s = e.getAttribute('a');
 		if (s.indexOf(',') > 0) {
 			var s2 = '';
 			s = s.split(',');
 			for (var i = 0; i < s.length; i++)
 				s2 += s[i].trim() + '\n';
-			ui.q('form textarea[name="address"]').value = s2.trim();
+			ui.q('dialog-popup textarea[name="address"]').value = s2.trim();
 		}
 		pageLocation.closeLocationInputHelper();
 	}
 	static showLocationInputHelper(event) {
-		var e = ui.q('locationNameInputHelper');
-		if (e.innerHTML && ui.cssValue(e, 'display') == 'none' && (!event || !ui.q('form input[name="name"]').value))
+		var e = ui.q('dialog-popup locationNameInputHelper');
+		if (e.innerHTML && ui.cssValue(e, 'display') == 'none' && (!event || !ui.q('dialog-popup input[name="name"]').value))
 			ui.toggleHeight(e);
 	}
 	static toggleBlock(id) {
