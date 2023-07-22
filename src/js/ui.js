@@ -848,7 +848,7 @@ class formFunc {
 					var id = imgs[i].getAttribute('source');
 					if (formFunc.svg.data[id]) {
 						if (formFunc.svg.data[id] == 1) {
-							var img = imgs[i];
+							const img = imgs[i];
 							setTimeout(function () { formFunc.svg.replaceAll([img]) }, 500);
 						} else if (imgs[i].parentNode) {
 							var e = document.createElement('div');

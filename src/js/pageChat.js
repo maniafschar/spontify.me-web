@@ -713,9 +713,9 @@ class pageChat {
 		if (ui.q('chat').getAttribute('status') == 'Friends')
 			ui.startVideoCall(ui.q('chat').getAttribute('i'));
 		else if (ui.q('chat chatConversation chatMessage:not(.me)'))
-			ui.navigation.openHint({ desc: ui.l('chat.videoPermissionHint') + '<br/><br/><button-text onclick="pageChat.sendChatVideoPermission()" label="chat.videoPermissionSendButton"></button-text>', pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;' });
+			ui.navigation.openHint({ desc: ui.l('chat.videoPermissionHint') + '<br/><br/><button-text onclick="pageChat.sendChatVideoPermission()" label="chat.videoPermissionSendButton"></button-text>', pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-4em;' });
 		else
-			ui.navigation.openHint({ desc: ui.l('chat.videoPermissionNoChatHint'), pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-1em;' });
+			ui.navigation.openHint({ desc: ui.l('chat.videoPermissionNoChatHint'), pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-4em;' });
 	}
 	static showScrollButton() {
 		var e = ui.q('chatMoreButton');

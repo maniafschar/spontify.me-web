@@ -55,13 +55,14 @@ call footer {
 }
 
 buttonIcon {
-	background: darkgoldenrod;
-	cursor: pointer;
-	display: inline-flex;
-	padding: 1em;
-	z-index: 3;
-	border-radius: 50%;
-	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
+	position: absolute;
+    background: darkgoldenrod;
+    cursor: pointer;
+    padding: 1em;
+    z-index: 3;
+    border-radius: 50%;
+    box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
+    margin-left: -2.5em;
 }
 
 buttonIcon.muted svg path.mute {
@@ -86,10 +87,11 @@ videochat {
 
 videochat buttons {
 	width: 100%;
-	position: absolute;
-	bottom: 2em;
-	display: flex;
-	justify-content: space-around;
+    position: absolute;
+    bottom: 2em;
+    display: inline-block;
+    height: 6em;
+    left: 0;
 }
 
 video {
@@ -130,9 +132,9 @@ streams {
 	<video playsinline autoplay="autoplay" id="localStream"></video>
 </streams>
 <buttons>
-	<buttonIcon onclick="VideoCall.setAudioMute()" class="mute" disabled><img source="videoMic"/></buttonIcon>
-	<buttonIcon onclick="VideoCall.stopCall()"><img source="videoEnd"/></buttonIcon>
-	<buttonIcon onclick="VideoCall.switchVideo()" class="camera" disabled><img source="videoSwitch"/></buttonIcon>
+	<buttonIcon onclick="VideoCall.setAudioMute()" class="mute" disabled style="left:25%;"><img source="videoMic"/></buttonIcon>
+	<buttonIcon onclick="VideoCall.stopCall()" style="left:50%;"><img source="videoEnd"/></buttonIcon>
+	<buttonIcon onclick="VideoCall.switchVideo()" class="camera" disabled style="left:75%;"><img source="videoSwitch"/></buttonIcon>
 </buttons>`;
 		this._root.appendChild(element);
 		element = document.createElement('audio');
