@@ -149,8 +149,9 @@ ${v.rating}
 	</value>
 </field>
 <dialogButtons>
+	<button-text onclick="pageEvent.edit()" label="locations.backToEvent"${v.backToEventDisplay}></button-text>
 	<button-text onclick="pageLocation.save()" label="save"></button-text>
-	${v.deleteButton}
+	<button-text onclick="pageLocation.deleteElement(${v.id},&quot;Location&quot;)" id="deleteElement" label="delete"${v.deleteButtonDisplay}></button-text>
 </dialogButtons>
 <popupHint></popupHint>
 </form>`;
@@ -352,13 +353,12 @@ ${v.rating}
 		}
 	}
 	static editInternal(id, v) {
-		if (v) {
-			if (v.contactId == user.contact.id)
-				v.deleteButton = '<button-text onclick="pageLocation.deleteElement(' + id + ',&quot;Location&quot;)" id="deleteElement" label="delete"></button-text>';
-		} else if (!id && user.get('location'))
+		if (!v && !id && user.get('location'))
 			v = user.get('location').values;
 		if (!v)
 			v = {};
+		if (v.contactId != user.contact.id)
+			v.deleteButtonDisplay = ' class="hidden"';
 		if (id)
 			v.showNearByButton = 'display:none';
 		if (!v.longitude)
@@ -367,6 +367,8 @@ ${v.rating}
 			v.latitude = geoData.current.lat;
 		if (v.image)
 			v.image = 'src="' + global.serverImg + v.image + '"';
+		if (id)
+			v.backToEventDisplay = ' class="hidden"';
 		ui.navigation.openPopup(ui.l('locations.' + (id ? 'edit' : 'new')).replace('{0}', v.name), pageLocation.templateEdit(v), id ? '' : 'pageLocation.saveDraft()');
 	}
 	static hasCategory(cats, catString) {

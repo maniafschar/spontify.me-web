@@ -441,6 +441,7 @@
 			"address": "Adresse",
 			"alreadyExists": "Die Location existiert bereits!",
 			"asMessage": "da will ich um {0} hin",
+			"backToEvent": "Zurück zum Event",
 			"blockReason1": "verstößt gegen AGBs",
 			"blockReason2": "existiert nicht",
 			"blockReason100": "Sonstiges",

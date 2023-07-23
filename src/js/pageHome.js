@@ -3,7 +3,7 @@ import { communication } from './communication';
 import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './init';
-import { Contact, ContactNews, Location, model } from './model';
+import { Contact, ContactNews, model } from './model';
 import { pageChat } from './pageChat';
 import { pageEvent } from './pageEvent';
 import { formFunc, ui } from './ui';
@@ -13,7 +13,6 @@ export { pageHome };
 
 class pageHome {
 	static badge = -1;
-	static club = false;
 	static events;
 	static news;
 	static teaserMeta;
