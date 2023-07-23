@@ -27,7 +27,7 @@ call {
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
-	height: 6em;
+	height: 5em;
 	width: 18em;
 	background: rgba(255, 255, 255, 0.95);
 	border-radius: 1em;
@@ -51,7 +51,7 @@ call footer {
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
-	margin-top: 1.5em;
+	margin-top: 2.5em;
 }
 
 buttonIcon {
@@ -62,7 +62,7 @@ buttonIcon {
     z-index: 3;
     border-radius: 50%;
     box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
-    margin-left: -2.5em;
+    margin-left: -2em;
 }
 
 buttonIcon.muted svg path.mute {
@@ -70,8 +70,9 @@ buttonIcon.muted svg path.mute {
 }
 
 buttonIcon svg {
-	width: 3em;
-	height: 3em;
+	width: 2em;
+	height: 2em;
+	display: block;
 }
 
 videochat {
@@ -88,9 +89,9 @@ videochat {
 videochat buttons {
 	width: 100%;
     position: absolute;
-    bottom: 2em;
+    bottom: 1em;
     display: inline-block;
-    height: 6em;
+    height: 5em;
     left: 0;
 }
 
@@ -117,11 +118,12 @@ streams {
 }`;
 		this._root.appendChild(style);
 		var element = document.createElement('call');
+		element.setAttribute('class', 'hidden');
 		element.innerHTML = `
 <initiator></initiator>
 <footer>
-	<buttonIcon onclick="VideoCall.rejectCall()"><img source="videoEnd"/></buttonIcon>
-	<buttonIcon onclick="VideoCall.acceptCall()"><img source="videoCall"/></buttonIcon>
+	<buttonIcon onclick="VideoCall.rejectCall()" style="left:5em;"><img source="videoEnd"/></buttonIcon>
+	<buttonIcon onclick="VideoCall.acceptCall()" style="right:3em;"><img source="videoCall"/></buttonIcon>
 </footer>`;
 		this._root.appendChild(element);
 		element = document.createElement('videochat');
@@ -132,9 +134,9 @@ streams {
 	<video playsinline autoplay="autoplay" id="localStream"></video>
 </streams>
 <buttons>
-	<buttonIcon onclick="VideoCall.setAudioMute()" class="mute" disabled style="left:25%;"><img source="videoMic"/></buttonIcon>
+	<buttonIcon onclick="VideoCall.setAudioMute()" class="mute" disabled style="left:20%;"><img source="videoMic"/></buttonIcon>
 	<buttonIcon onclick="VideoCall.stopCall()" style="left:50%;"><img source="videoEnd"/></buttonIcon>
-	<buttonIcon onclick="VideoCall.switchVideo()" class="camera" disabled style="left:75%;"><img source="videoSwitch"/></buttonIcon>
+	<buttonIcon onclick="VideoCall.switchVideo()" class="camera" disabled style="left:80%;"><img source="videoSwitch"/></buttonIcon>
 </buttons>`;
 		this._root.appendChild(element);
 		element = document.createElement('audio');
@@ -292,7 +294,7 @@ streams {
 			ui.q('video-call videochat buttonIcon.mute').disabled = false;
 			ui.q('video-call videochat buttonIcon.camera').disabled = false;
 			VideoCall.prepareVideoElement('remoteStream');
-			VideoCall.getRtcPeerConnection().createAnswer(answer => {
+			VideoCall.getRtcPeerConnection().createAnswer().then(answer => {
 				VideoCall.getRtcPeerConnection().setLocalDescription(answer);
 				var e = communication.generateCredentials();
 				if (e.user) {
@@ -303,8 +305,8 @@ streams {
 					ui.css('content', 'visibility', 'hidden');
 					ui.css('dialog-navigation', 'visibility', 'hidden');
 				}
-			}, error => {
-				alert('error: ' + error);
+			}).catch(error => {
+				ui.navigation.openPopup(ui.l('attention'), error);
 			});
 		});
 	}
@@ -333,11 +335,10 @@ streams {
 		ui.classRemove(e, 'hidden');
 		e.style.background = 'transparent';
 		ui.css('video-call', 'display', 'block');
-		ui.q('video-call audio.dial').play();
 		navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
 			ui.q('video-call #localStream').srcObject = stream;
 			stream.getTracks().forEach(track => VideoCall.getRtcPeerConnection().addTrack(track, stream));
-			VideoCall.getRtcPeerConnection().createOffer(offer => {
+			VideoCall.getRtcPeerConnection().createOffer().then(offer => {
 				var e = communication.generateCredentials();
 				if (e.user) {
 					e.name = user.contact.pseudonym;
@@ -346,22 +347,21 @@ streams {
 					communication.wsSend('/ws/video', e);
 					VideoCall.offer = offer;
 					VideoCall.getRtcPeerConnection().setLocalDescription(offer);
+					ui.q('video-call audio.dial').play();
+					communication.ajax({
+						url: global.serverApi + 'action/videocall/' + id,
+						webCall: 'VideoCall.startVideoCall',
+						method: 'POST'
+					});
 				}
-			}, error => {
-				alert('An error has occurred: ' + error);
+			}).catch(error => {
+				ui.navigation.openPopup(ui.l('attention'), error);
 			});
 			VideoCall.setActiveDeviceId(stream);
 			VideoCall.prepareVideoElement('localStream');
 		}).catch((err) => {
 			ui.navigation.openPopup(ui.l('attention'), err);
 		});
-		ui.classAdd('video-call call', 'hidden');
-		ui.classRemove('video-call videochat', 'hidden');
-		communication.ajax({
-			url: global.serverApi + 'action/videocall/' + id,
-			webCall: 'VideoCall.startVideoCall',
-			method: 'POST'
-		})
 	}
 	static stopCall() {
 		VideoCall.offer = null;
@@ -375,20 +375,13 @@ streams {
 		ui.q('video-call audio.call').pause();
 		ui.q('video-call audio.end').play();
 		if (VideoCall.rtcPeerConnection) {
-			if (!VideoCall.getRtcPeerConnection().remoteDescription) {
-				var e = communication.generateCredentials();
-				if (e.user) {
-					e.id = VideoCall.connectedId;
-					communication.wsSend('/ws/video', e);
-				}
-			}
 			VideoCall.rtcPeerConnection.getTransceivers().forEach(e => {
 				VideoCall.rtcPeerConnection.removeTrack(e.sender);
 				e.stop();
 			});
 			VideoCall.rtcPeerConnection.close();
 			VideoCall.rtcPeerConnection = null;
-			e = communication.generateCredentials();
+			var e = communication.generateCredentials();
 			if (e.user) {
 				e.id = VideoCall.connectedId;
 				communication.wsSend('/ws/video', e);
@@ -419,6 +412,8 @@ streams {
 	static leave() {
 		ui.q('video-call').style.display = 'none';
 		ui.classAdd('video-call call', 'hidden');
+		ui.q('video-call #localStream').style.visibility = 'hidden';
+		ui.q('video-call #remoteStream').style.visibility = 'hidden';
 	};
 	static setActiveDeviceId(stream) {
 		if (stream && (global.isBrowser() || global.getOS() != 'ios')) {
@@ -447,10 +442,6 @@ streams {
 		}
 		if (!global.isBrowser() && window.cordova.plugins && window.cordova.plugins.iosrtc)
 			setTimeout(window.cordova.plugins.iosrtc.refreshVideos, 600);
-	}
-	static updateStream(stream) {
-		VideoCall.setActiveDeviceId(stream);
-		VideoCall.prepareVideoElement('localStream');
 	}
 	static incomingCallModal(show) {
 		if (show) {
