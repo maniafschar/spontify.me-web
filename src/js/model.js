@@ -6,8 +6,6 @@ class model {
 	static reportedErrors = {};
 	static convert(object, list, index) {
 		var keys, object2Transform, objectName;
-		if (typeof object == 'string')
-			object = new Contact();
 		if (index) {
 			if (index >= list.length)
 				return object;

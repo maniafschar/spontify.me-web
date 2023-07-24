@@ -2,6 +2,7 @@ import { formFunc, ui } from '../ui';
 import { initialisation } from '../init';
 import { communication } from '../communication';
 import { global } from '../global';
+import { Contact, model } from '../model';
 
 export { ContentAdminMarketing }
 
@@ -20,58 +21,29 @@ h1 {
 	margin-top: 0.5em;
 }
 
-row {
-	margin: 0 -1em;
+list {
+	margin-top: 1em;
+    position: relative;
+    display: block;
 }
 
-row>div {
-	padding: 0.75em;
-	white-space: nowrap;
+row {
+	width: 100%;
+    position: relative;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    display: block;
+    white-space: nowrap;
+    background: rgba(0, 0, 0, 0.1);
+	padding: 0.5em 0.75em;
+	cursor: pointer;
 }
 
 row>div button-text {
 	position: absolute;
 	right: 0.5em;
 	bottom: 1em;
-}
-
-results {
-	position: relative;
-	display: block;
-	padding-bottom: 3em;
-}
-
-results question,
-results answer {
-	display: block;
-	position: relative;
-}
-
-results answer percentage {
-	width: 10%;
-	display: inline-block;
-}
-
-results answer percentage::after {
-	content: '%';
-}
-
-results question {
-	margin-top: 2em;
-	font-weight: bold;
-}
-
-results freetexttitle {
-	margin-top: 0.75em;
-}
-
-results freetext {
-	display: none;
-	position: relative;
-}
-
-results freetext div {
-	padding: 0.25em;
 }
 
 edit {
@@ -125,11 +97,14 @@ edit::after {
 							if (ContentAdminMarketing.data[i].startDate)
 								ContentAdminMarketing.data[i].period = global.date.formatDate(ContentAdminMarketing.data[i].startDate) + ' - ' + global.date.formatDate(ContentAdminMarketing.data[i].endDate);
 							if (ContentAdminMarketing.data[i].startDate && global.date.server2local(ContentAdminMarketing.data[i].startDate) < new Date()) {
-								ContentAdminMarketing.data[i].oc = 'ui.q("content-admin-marketing").results(' + ContentAdminMarketing.data[i].id + ')';
+								ContentAdminMarketing.data[i].oc = 'ui.q(&quot;content-admin-marketing&quot;).results(' + ContentAdminMarketing.data[i].id + ')';
 								ContentAdminMarketing.data[i].period += global.separator + (global.date.server2local(ContentAdminMarketing.data[i].endDate) < new Date() ? ' Beendet' : ' Gestartet');
 							} else
-								ContentAdminMarketing.data[i].oc = 'ui.q("content-admin-marketing").edit(' + ContentAdminMarketing.data[i].id + ')';
-							s += ContentAdminMarketing.templateList(ContentAdminMarketing.data[i]);
+								ContentAdminMarketing.data[i].oc = 'ui.q(&quot;content-admin-marketing&quot;).edit(' + ContentAdminMarketing.data[i].id + ')';
+							s += ContentAdminMarketing.templateList({
+								...ContentAdminMarketing.data[i],
+								text: encodeURIComponent(ContentAdminMarketing.data[i].storage.prolog + '<br/>' + ContentAdminMarketing.data[i].storage.questions[0].question)
+							});
 						}
 						ui.q('content-admin-marketing list').innerHTML = s ? s : ui.l('contentAdmin.noEntries');
 					}
@@ -258,12 +233,10 @@ questions value .answerMultiSelect {
 <select name="next">${v.nextOptions}</select>
 </answer>`;
 	static templateList = v =>
-		global.template`<row onclick="${v.oc}">
-	<div>
-		${v.period}<br />
-		${v.storage.prolog}<br />
-		${v.storage.questions[0].question}
-	</div>
+		global.template`<row onclick="${v.oc}" title="${v.period}" text="${v.text}">
+	${v.period}<br />
+	${v.storage.prolog}<br />
+	${v.storage.questions[0].question}
 </row>`;
 	static templateResults = v =>
 		global.template`<metadata onclick="ui.q(&quot;content-admin-marketing&quot;).toggle(this)" class="collapsible closed">Metadaten</metadata>
@@ -356,7 +329,7 @@ questions value .answerMultiSelect {
 			}
 			v = { id: max + 1, language: global.language, storage: {} };
 		}
-		ui.navigation.openPopup(ui.l('ready'), ContentAdminMarketing.templateEdit(v));
+		ui.navigation.openPopup(ui.l('contentAdmin.marketingTitle'), ContentAdminMarketing.templateEdit(v));
 		if (v.storage.questions) {
 			for (var i = 0; i < v.storage.questions.length; i++) {
 				if (i > 0) {
@@ -423,20 +396,22 @@ questions value .answerMultiSelect {
 	}
 	results(id) {
 		communication.ajax({
-			url: 'db/list?query=contact_listMarketing&search=' + encodeURIComponent('contactMarketing.clientMarketingId=' + id),
+			url: global.serverApi + 'db/list?query=contact_listMarketing&search=' + encodeURIComponent('contactMarketing.clientMarketingId=' + id),
+			responseType: 'json',
+			webCall: 'ContentAdminMarketing.results',
 			success(r) {
 				for (var i = 0; i < ContentAdminMarketing.data.length; i++) {
 					if (ContentAdminMarketing.data[i].id == id) {
 						var v = { ...ContentAdminMarketing.data[i] };
-						v.participants = r.length;
+						v.participants = r.length - 1;
 						v.answers = '';
-						for (var i = 0; i < r.length; i++)
-							r[i] = JSON.parse(r[i].storage);
+						for (var i = 1; i < r.length; i++)
+							r[i] = JSON.parse(model.convert(new Contact(), r, i).storage);
 						for (var i = 0; i < v.storage.questions.length; i++) {
 							var choices = [], text = '';
 							for (var i2 = 0; i2 < v.storage.questions[i].answers.length; i2++)
 								choices.push(0);
-							for (var i2 = 0; i2 < r.length; i2++) {
+							for (var i2 = 1; i2 < r.length; i2++) {
 								if (r[i2]['q' + i]) {
 									for (var i3 = 0; i3 < r[i2]['q' + i].choice.length; i3++)
 										choices[r[i2]['q' + i].choice[i3]]++;
@@ -447,7 +422,7 @@ questions value .answerMultiSelect {
 							v.answers += '<question>' + v.storage.questions[i].question + '</question><answers>';
 							v.share = v.share ? 'auf soziale Netzwerke veröffentlichen' : '-';
 							for (var i2 = 0; i2 < v.storage.questions[i].answers.length; i2++)
-								v.answers += '<answer><percentage>' + (r.length ? Math.round(choices[i2] / r.length * 100) : 0) + '</percentage>' + v.storage.questions[i].answers[i2].answer + '</answer>';
+								v.answers += '<answer><percentage>' + (r.length > 1 ? Math.round(choices[i2] / (r.length - 1) * 100) : 0) + '</percentage>' + v.storage.questions[i].answers[i2].answer + '</answer>';
 							v.answers += (text ? '<freetexttitle onclick="ui.q(&quot;content-admin-marketing&quot;).toggle(this)" class="collapsible closed">Freitext</freetexttitle><freetext>' + text + '</freetext>' : '') + '</answers>';
 						}
 						if (v.startDate)
@@ -455,8 +430,70 @@ questions value .answerMultiSelect {
 						if (v.endDate)
 							v.endDate = global.date.formatDate(v.endDate);
 						v.age = v.age.replace(',', ' - ');
-						ui.q('dialog-hint').innerHTML = ContentAdminMarketing.templateResults(v);
-						ui.q('dialog-hint').style.transform = 'scale(1)';
+						v.css = `<style>
+.main {
+	width: 100%;
+	height: 80vh;
+	text-align: left;
+	overflow-y: auto;
+}
+
+metadata {
+	cursor: pointer;
+	font-weight: bold;
+}
+
+metadata::before {
+	content: '▼';
+	display: inline-block;
+	padding-right: 0.5em;
+	transition: all .4s ease-out;
+}
+
+metadata.closed::before {
+	transform: translate(-0.3em, -0.3em) rotate(-90deg);
+}
+
+results {
+	position: relative;
+	display: block;
+	padding-bottom: 3em;
+}
+
+results question,
+results answer {
+	display: block;
+	position: relative;
+}
+
+results answer percentage {
+	width: 10%;
+	display: inline-block;
+}
+
+results answer percentage::after {
+	content: '%';
+}
+
+results question {
+	margin-top: 2em;
+	font-weight: bold;
+}
+
+results freetexttitle {
+	margin-top: 0.75em;
+}
+
+results freetext {
+	display: none;
+	position: relative;
+}
+
+results freetext div {
+	padding: 0.25em;
+}
+</style>`;
+						ui.navigation.openHint({ desc: v.css + '<div class="main">' + ContentAdminMarketing.templateResults(v) + '</div>', pos: '5%,1em', size: '90%,auto', onclick: 'return false;' });
 						break;
 					}
 				}

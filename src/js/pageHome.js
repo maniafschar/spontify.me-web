@@ -19,7 +19,7 @@ class pageHome {
 	static template = v =>
 		global.template`<homeHeader${v.logoSmall}>
 	<buttonIcon class="statistics${v.statsButton}" onclick="ui.navigation.goTo(&quot;content-admin-home&quot;)">
-		<img source="statistics"/>
+		<img source="content-admin-home"/>
 	</buttonIcon>
 	<img onclick="${v.actionLogo}" source="logo"/>
 	<text onclick="ui.navigation.goTo(&quot;settings&quot;)" ${v.dispProfile}>
