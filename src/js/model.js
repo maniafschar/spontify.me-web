@@ -71,7 +71,6 @@ class ClientMarketing extends BaseEntity {
 }
 
 class Contact extends BaseEntity {
-	active;
 	age;
 	ageDivers;
 	ageFemale;
