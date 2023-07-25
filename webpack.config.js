@@ -113,6 +113,7 @@ module.exports = (env) => {
 							.replace(/\{placeholderAppleId}/g, props.appleId)
 							.replace(/\{placeholderEmail}/g, props.email)
 							.replace(/\{placeholderName}/g, props.name)
+							.replace(/\{placeholderDescription}/g, props.name + ' · Events · ' + props.en.buddies)
 							.replace(/\{placeholderUrl}/g, props.url)
 							.replace(/\{placeholderBundleID}/g, props.bundleId)
 							.replace(/\{placeholderHost}/g, props.url.substring(8))
@@ -151,7 +152,7 @@ module.exports = (env) => {
 							},
 							{
 								pattern: /(<description\>)([^<]+)/,
-								replace: '$1' + props.name
+								replace: '$1' + props.name + ' · Events · ' + props.en.buddies
 							},
 							{
 								pattern: /(<author [^>]+)([^<]+)/,
