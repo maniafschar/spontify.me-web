@@ -256,6 +256,7 @@ class ui {
 		goTo(id, back) {
 			if (ui.classContains('content', 'animated'))
 				return;
+			VideoCall.init();
 			communication.notification.close();
 			var currentID = ui.navigation.getActiveID();
 			if (currentID == 'chat' && ui.q('content>chat:not([style*="none"])') && id != 'detail' && id != 'settings') {
@@ -497,11 +498,13 @@ class ui {
 	}
 	static qa(path) {
 		var customElements = function (p) {
-			p += ' ';
-			var i = path.indexOf(p);
-			if (i > -1) {
-				i += p.length;
-				return document.querySelector(path.substring(0, i))._root.querySelectorAll(path.substring(i));
+			if (path.indexOf(',') < 0) {
+				var i = path.indexOf(p);
+				if (i > -1) {
+					i = path.indexOf(' ', i) > -1 ? path.indexOf(' ', i) : i + p.length;
+					if (path.substring(i).trim())
+						return document.querySelector(path.substring(0, i))._root.querySelectorAll(path.substring(i).trim());
+				}
 			}
 		}
 		var e = customElements('dialog-popup');
@@ -513,6 +516,10 @@ class ui {
 			e = customElements('dialog-menu');
 		if (!e)
 			e = customElements('video-call');
+		if (!e)
+			e = customElements('input-hashtags');
+		if (!e)
+			e = customElements('list-row');
 		if (!e)
 			e = customElements('content-admin-home');
 		if (!e)

@@ -12,6 +12,7 @@ import { pageLocation } from './pageLocation';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 import { DialogPopup } from './customElements/DialogPopup';
+import { VideoCall } from './customElements/VideoCall';
 
 export { pageLogin };
 

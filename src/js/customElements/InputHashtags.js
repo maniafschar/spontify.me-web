@@ -89,15 +89,21 @@ search hashtags>div label.selected {
 		element.setAttribute('transient', 'true');
 		element.setAttribute('onkeyup', 'this.getRootNode().host.synchonizeTags(this.getRootNode())');
 		element.setAttribute('style', 'height:2em;');
-		element.textContent = InputHashtags.ids2Text(this.getAttribute('ids')) + (this.getAttribute('text') ? ' ' + this.getAttribute('text') : '').trim();
 		this._root.appendChild(element);
 		element = document.createElement('hashtags');
 		element.setAttribute('style', 'display:none;');
 		element.innerHTML = this.selection();
 		this._root.appendChild(element);
 		this.synchonizeTags(this._root);
+		this.attributeChangedCallback();
 		var r = this._root;
 		setTimeout(function () { ui.adjustTextarea(r.querySelector('textarea')) }, 1000);
+	}
+	static get observedAttributes() { return ['ids', 'text']; }
+	attributeChangedCallback(name, oldValue, newValue) {
+		var e = this._root.querySelector('textarea');
+		if (e)
+			e.value = (InputHashtags.ids2Text(this.getAttribute('ids')) + (this.getAttribute('text') ? ' ' + this.getAttribute('text') : '')).trim();
 	}
 	add(root, tag) {
 		var e = root.querySelector('textarea');

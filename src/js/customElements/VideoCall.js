@@ -14,6 +14,7 @@ class VideoCall extends HTMLElement {
 	static rtcPeerConnection;
 	static offer;
 	static permission = true;
+	static audio = new Audio();
 
 	constructor() {
 		super();
@@ -139,23 +140,6 @@ streams {
 	<buttonIcon onclick="VideoCall.switchVideo()" class="camera" disabled style="left:80%;"><img source="videoSwitch"/></buttonIcon>
 </buttons>`;
 		this._root.appendChild(element);
-		element = document.createElement('audio');
-		element.setAttribute('class', 'end');
-		element.setAttribute('preload', 'auto');
-		element.innerHTML = `<source src="audio/end.mp3" type="audio/mp3" />`;
-		this._root.appendChild(element);
-		element = document.createElement('audio');
-		element.setAttribute('class', 'dial');
-		element.setAttribute('loop', 'true');
-		element.setAttribute('preload', 'auto');
-		element.innerHTML = `<source src="audio/dial.mp3" type="audio/mp3" />`;
-		this._root.appendChild(element);
-		element = document.createElement('audio');
-		element.setAttribute('class', 'call');
-		element.setAttribute('loop', 'true');
-		element.setAttribute('preload', 'auto');
-		element.innerHTML = `<source src="audio/call.mp3" type="audio/mp3" />`;
-		this._root.appendChild(element);
 		formFunc.svg.replaceAll(ui.qa('video-call img'));
 		ui.swipe('video-call streams', dir => {
 			ui.q('video-call streams').style.left = dir == 'left' ? '-100%' : '';
@@ -236,6 +220,12 @@ streams {
 		}
 		return VideoCall.rtcPeerConnection;
 	}
+	static init() {
+		if (!VideoCall.audio.src) {
+			VideoCall.audio.src = 'data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV';
+			VideoCall.audio.play();
+		}
+	}
 	static onAnswer(answer) {
 		if (answer.userState) {
 			if (answer.userState == 'offline' && VideoCall.offer)
@@ -252,11 +242,11 @@ streams {
 				}, 2000);
 		} else {
 			VideoCall.getRtcPeerConnection().setRemoteDescription(new RTCSessionDescription(answer));
+			ui.q('video-call #localStream').srcObject.getAudioTracks()[0].enabled = true;
 			ui.css('main', 'background', 'transparent');
 			ui.css('content', 'visibility', 'hidden');
 			ui.css('dialog-navigation', 'visibility', 'hidden');
-			ui.q('video-call audio.dial').pause();
-			ui.q('video-call audio.call').pause();
+			VideoCall.audio.pause();
 		}
 	}
 	static onCandidate(candidate) {
@@ -289,8 +279,7 @@ streams {
 			var e = ui.q('video-call videochat');
 			ui.classRemove(e, 'hidden');
 			e.style.background = 'transparent';
-			ui.q('video-call audio.dial').pause();
-			ui.q('video-call audio.call').pause();
+			VideoCall.audio.pause();
 			ui.q('video-call videochat buttonIcon.mute').disabled = false;
 			ui.q('video-call videochat buttonIcon.camera').disabled = false;
 			VideoCall.prepareVideoElement('remoteStream');
@@ -329,6 +318,8 @@ streams {
 			ui.navigation.openPopup(ui.l('attention'), ui.l('chat.videoPermissionDenied'));
 			return;
 		}
+		VideoCall.audio.src = 'audio/dial.mp3';
+		VideoCall.audio.loop = true;
 		VideoCall.connectedId = id;
 		ui.q('video-call streams').style.left = '';
 		var e = ui.q('video-call videochat');
@@ -338,6 +329,7 @@ streams {
 		navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
 			ui.q('video-call #localStream').srcObject = stream;
 			stream.getTracks().forEach(track => VideoCall.getRtcPeerConnection().addTrack(track, stream));
+			ui.q('video-call #localStream').srcObject.getAudioTracks()[0].enabled = false;
 			VideoCall.getRtcPeerConnection().createOffer().then(offer => {
 				var e = communication.generateCredentials();
 				if (e.user) {
@@ -347,7 +339,7 @@ streams {
 					communication.wsSend('/ws/video', e);
 					VideoCall.offer = offer;
 					VideoCall.getRtcPeerConnection().setLocalDescription(offer);
-					ui.q('video-call audio.dial').play();
+					VideoCall.audio.play();
 					communication.ajax({
 						url: global.serverApi + 'action/videocall/' + id,
 						webCall: 'VideoCall.startVideoCall',
@@ -371,9 +363,10 @@ streams {
 		ui.css('main', 'background', null);
 		ui.css('content', 'visibility', null);
 		ui.css('dialog-navigation', 'visibility', null);
-		ui.q('video-call audio.dial').pause();
-		ui.q('video-call audio.call').pause();
-		ui.q('video-call audio.end').play();
+		VideoCall.audio.pause();
+		VideoCall.audio.src = 'audio/end.mp3';
+		VideoCall.audio.loop = false;
+		VideoCall.audio.play();
 		if (VideoCall.rtcPeerConnection) {
 			VideoCall.rtcPeerConnection.getTransceivers().forEach(e => {
 				VideoCall.rtcPeerConnection.removeTrack(e.sender);
@@ -450,10 +443,12 @@ streams {
 			ui.q('video-call').style.display = 'block';
 			ui.q('video-call call initiator').innerHTML = VideoCall.connectedUser;
 			ui.classRemove('video-call call', 'hidden');
-			ui.q('video-call audio.call').play();
+			VideoCall.audio.src = 'audio/call.mp3';
+			VideoCall.audio.loop = true;
+			VideoCall.audio.play();
 		} else {
 			ui.classAdd('video-call call', 'hidden');
-			ui.q('video-call audio.call').pause();
+			VideoCall.audio.pause();
 		}
 	}
 	static prepareVideoElement(videoElement) {
