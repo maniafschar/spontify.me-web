@@ -1098,7 +1098,7 @@ chatInput {
 	position: absolute;
 	bottom: 0;
 	width: 100%;
-	padding: 0 0 0.5em 0.5em;
+	padding-bottom: 0.5em;
 	left: 0;
 }
 
@@ -1329,8 +1329,7 @@ detail row.canceled::before {
 }
 
 chatButtons {
-	padding: 0.5em;
-	margin-left: -0.5em;
+	padding: 0.5em 1em;
 	white-space: nowrap;
 	overflow-x: auto;
 	display: block;

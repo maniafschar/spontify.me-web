@@ -233,7 +233,7 @@ class communication {
 	}
 	static ping() {
 		clearTimeout(communication.pingExec);
-		if (!user.contact || !user.contact.id)
+		if (!user.contact || !user.contact.id || global.paused)
 			return;
 		communication.pingExec = -1;
 		communication.ajax({
@@ -346,8 +346,13 @@ class communication {
 		if (communication.notification.push && !isNaN(total))
 			communication.notification.push.setApplicationIconBadgeNumber(function () { }, communication.notification.onError, total);
 	}
-	static wsSend(destination, body) {
-		WebSocket.stompClient.send(destination, {}, JSON.stringify(body));
+	static wsSend(destination, body, i) {
+		try {
+			WebSocket.stompClient.send(destination, {}, JSON.stringify(body));
+		} catch (e) {
+			if (i < 10)
+				setTimeout(function () { communication.wsSend(destination, body, i ? i + 1 : 1); }, 500);
+		}
 	}
 };
 
