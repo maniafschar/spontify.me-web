@@ -79,7 +79,7 @@ class geoData {
 		if (global.isBrowser())
 			geoData.init2('granted');
 		else {
-			cordova.plugins.diagnostic.isLocationAuthorized(function (status) {
+			window.cordova.plugins.diagnostic.isLocationAuthorized(function (status) {
 				if (status || global.getOS() == 'ios')
 					geoData.init2('granted');
 				else if (!geoData.localizationAsked) {
@@ -115,14 +115,14 @@ class geoData {
 	}
 	static requestLocationAuthorization() {
 		ui.navigation.closePopup();
-		cordova.plugins.diagnostic.requestLocationAuthorization(geoData.init2, null, cordova.plugins.diagnostic.locationAuthorizationMode.WHEN_IN_USE);
+		window.cordova.plugins.diagnostic.requestLocationAuthorization(geoData.init2, null, cordova.plugins.diagnostic.locationAuthorizationMode.WHEN_IN_USE);
 	}
 	static reset() {
 		pageHome.updateLocalisation();
 		pageSearch.updateLocalisation();
 		geoData.init();
 		ui.navigation.closePopup();
-		user.save({ webCall: 'geoData.reset', latitude: geoData.current.lat, longitude: geoData.current.lon }, function () { pageHome.init(true); });
+		user.save({ webCall: 'geoData.reset', latitude: geoData.current.lat, longitude: geoData.current.lon });
 	}
 	static save(position, exec) {
 		var d = geoData.getDistance(geoData.current.lat, geoData.current.lon, position.latitude, position.longitude);

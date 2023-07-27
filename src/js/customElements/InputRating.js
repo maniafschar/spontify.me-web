@@ -214,7 +214,7 @@ input-image {
 			history = [];
 		render();
 	}
-	static save(event) {
+	save(event) {
 		var e = event.target.getRootNode().querySelector('[name="description"]');
 		ui.classRemove(e, 'dialogFieldError');
 		if (event.target.getRootNode().querySelector('[name="rating"]').value < 25 && !e.value)

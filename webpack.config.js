@@ -14,7 +14,7 @@ module.exports = (env) => {
 			path: path.resolve(__dirname, 'dist'),
 		},
 		optimization: {
-			minimize: true
+			minimize: env.debug ? false : true
 		},
 		target: ['web', 'es5'],
 		devServer: {

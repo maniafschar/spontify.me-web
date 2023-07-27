@@ -41,7 +41,6 @@ export { initialisation };
 class initialisation {
 	static customElementsCss;
 	static execLocation = null;
-	static hideStatusBar = true;
 	static recoverInvoked = false;
 	static init() {
 		communication.ajax({
@@ -119,11 +118,11 @@ class initialisation {
 		ui.on(window, 'keyboardDidHide', function () {
 			window.scrollTo(0, 0);
 		});
-		if (cordova.plugins && cordova.plugins.backgroundMode) {
-			cordova.plugins.backgroundMode.on('activate', function () {
-				cordova.plugins.backgroundMode.disableWebViewOptimizations();
+		if (window.cordova.plugins && window.cordova.plugins.backgroundMode) {
+			window.cordova.plugins.backgroundMode.on('activate', function () {
+				window.cordova.plugins.backgroundMode.disableWebViewOptimizations();
 			});
-			cordova.plugins.backgroundMode.setDefaults({ silent: true });
+			window.cordova.plugins.backgroundMode.setDefaults({ silent: true });
 		}
 		initialisation.statusBar();
 		universalLinks.subscribe(null, function (e) {
@@ -141,13 +140,12 @@ class initialisation {
 		universalLinks.subscribe('fb', function (e) {
 			FB.oauthCallback(e.url)
 		});
-		window.open = cordova.InAppBrowser.open;
+		window.open = window.cordova.InAppBrowser.open;
 		ui.on('content > *', 'click', function (event) {
 			if ((ui.classContains(event.target, 'content') || !event.target.onclick && !event.target.parentElement.onclick && event.target.nodeName != 'INPUT') && event.screenY > 0 && event.screenY < parseInt(ui.cssValue('main', 'padding-top')) + 5 * ui.emInPX) {
 				try {
 					event.preventDefault();
 				} catch (e) { }
-				initialisation.hideStatusBar = !initialisation.hideStatusBar;
 				initialisation.statusBar();
 			}
 		});
@@ -172,15 +170,14 @@ class initialisation {
 			geoData.pause();
 			if (!user.contact)
 				communication.setApplicationIconBadgeNumber(0);
-			user.save({ webCall: 'init.initApp', active: false });
 		});
 		ui.on(document, 'resume', function () {
 			global.paused = false;
-			if (user.contact)
+			if (user.contact && user.contact.id) {
 				WebSocket.connect();
-			geoData.init();
-			user.save({ webCall: 'init.initApp', active: true });
-			if (global.getParam('r'))
+				communication.ping();
+				geoData.init();
+			} else if (global.getParam('r'))
 				initialisation.recoverPassword();
 		});
 	}
@@ -408,13 +405,10 @@ class initialisation {
 	static statusBar() {
 		if (!global.isBrowser()) {
 			try {
-				if (initialisation.hideStatusBar) {
-					StatusBar.show();
+				if (StatusBar.isVisible)
 					StatusBar.hide();
-				} else {
-					StatusBar.hide();
+				else
 					StatusBar.show();
-				}
 			} catch (e) {
 			}
 		}

@@ -1628,6 +1628,7 @@ progressbar {
 }
 
 video-call {
+	background: transparent;
 	position: absolute;
 	top: 0;
 	bottom: 0;

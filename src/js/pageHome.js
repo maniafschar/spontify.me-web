@@ -1,5 +1,6 @@
 import { bluetooth } from './bluetooth';
 import { communication } from './communication';
+import { VideoCall } from './customElements/VideoCall';
 import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './init';
@@ -467,6 +468,7 @@ ${ui.l('events.title')}
 		});
 	}
 	static toggleNotification() {
+		VideoCall.init();
 		if (!user.contact)
 			ui.navigation.openHint({ desc: 'notification', pos: '-0.5em,-7.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:0;' });
 		else if (!ui.q('notificationList>div'))

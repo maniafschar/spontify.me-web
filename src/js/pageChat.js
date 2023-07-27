@@ -736,6 +736,7 @@ class pageChat {
 			ui.classAdd(e, 'pressed');
 	}
 	static toggleUserList() {
+		VideoCall.init();
 		if (ui.q('chatList>div')) {
 			if (ui.q('chatList').style.display == 'none')
 				pageHome.closeList();

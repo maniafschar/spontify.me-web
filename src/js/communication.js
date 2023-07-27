@@ -141,8 +141,6 @@ class communication {
 		}
 	}
 	static notification = {
-		push: null,
-
 		close() {
 			if (ui.cssValue('alert', 'display') != 'none') {
 				ui.navigation.animation('alert', 'homeSlideOut',
@@ -168,22 +166,20 @@ class communication {
 		register() {
 			if (global.isBrowser())
 				return;
-			communication.notification.push = window.PushNotification.init({
-				android: {
-					senderID: '688983380542'
-				},
-				ios: {
-					alert: 'true',
-					badge: true,
-					sound: 'false'
-				}
+			window.cordova.plugins.firebase.messaging.requestPermission().then(function () {
+				window.cordova.plugins.firebase.messaging.getToken("apns-string").then(function (token) {
+					communication.notification.saveToken(token);
+				});
 			});
-			communication.notification.push.on('registration', communication.notification.saveToken);
-			communication.notification.push.on('notification', communication.notification.open);
-			communication.notification.push.on('error', communication.notification.onError);
+			window.cordova.plugins.firebase.messaging.onTokenRefresh(function () {
+				window.cordova.plugins.firebase.messaging.getToken(global.getOS() == 'ios' ? 'apns-string' : null).then(function (token) {
+					communication.notification.saveToken(token);
+				});
+			});
+			window.cordova.plugins.firebase.messaging.onMessage(communication.notification.open, communication.notification.onError);
 		},
 		saveToken(e) {
-			user.save({ webCall: 'communication.notification.saveToken', pushSystem: global.getOS(), pushToken: e.registrationId });
+			user.save({ webCall: 'communication.notification.saveToken', pushSystem: global.getOS(), pushToken: e });
 		}
 	}
 	static onError(r) {
@@ -343,8 +339,8 @@ class communication {
 		});
 	}
 	static setApplicationIconBadgeNumber(total) {
-		if (communication.notification.push && !isNaN(total))
-			communication.notification.push.setApplicationIconBadgeNumber(function () { }, communication.notification.onError, total);
+		if (window.cordova && window.cordova.plugins.firebase && !isNaN(total))
+			window.cordova.plugins.firebase.messaging.setBadge(total);
 	}
 	static wsSend(destination, body, i) {
 		try {
@@ -688,9 +684,8 @@ class WebSocket {
 			return new SockJS(global.serverApi + 'ws/init')
 		});
 		WebSocket.stompClient.reconnectDelay = 5000;
-		var c = communication.generateCredentials();
-		if (c.user)
-			WebSocket.stompClient.connect(c, frame => {
+		if (communication.generateCredentials().user)
+			WebSocket.stompClient.connect({}, frame => {
 				WebSocket.stompClient.subscribe(
 					"/user/" + user.contact.id + "/video",
 					message => {

@@ -51,9 +51,9 @@ class bluetooth {
 	static requestAuthorization(logon) {
 		bluetooth.reset();
 		var stateListener = function () {
-			if (cordova.plugins && cordova.plugins.backgroundMode) {
-				cordova.plugins.backgroundMode.enable();
-				cordova.plugins.backgroundMode.on('failure', function (e) {
+			if (window.cordova.plugins && window.cordova.plugins.backgroundMode) {
+				window.cordova.plugins.backgroundMode.enable();
+				window.cordova.plugins.backgroundMode.on('failure', function (e) {
 					communication.sendError('ble background mode: ' + JSON.stringify(e));
 				});
 			}
@@ -70,9 +70,9 @@ class bluetooth {
 				}
 			})
 		};
-		if (cordova.plugins.diagnostic.requestBluetoothAuthorization) {
+		if (window.cordova.plugins.diagnostic.requestBluetoothAuthorization) {
 			try {
-				cordova.plugins.diagnostic.requestBluetoothAuthorization(stateListener);
+				window.cordova.plugins.diagnostic.requestBluetoothAuthorization(stateListener);
 			} catch (e) {
 				ui.navigation.openPopup(ui.l('attention'), ui.l('bluetooth.error').replace('{0}', e));
 			}
