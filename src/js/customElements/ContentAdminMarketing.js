@@ -3,6 +3,7 @@ import { initialisation } from '../init';
 import { communication } from '../communication';
 import { global } from '../global';
 import { Contact, model } from '../model';
+import { marketing } from 'js/marketing';
 
 export { ContentAdminMarketing }
 
@@ -307,7 +308,7 @@ questions value .answerMultiSelect {
 	addQuestion(e) {
 		if (e.value && e.parentElement.parentElement.parentElement.lastElementChild == e.parentElement.parentElement) {
 			var e2 = document.createElement('div');
-			e2.innerHTML = ContentAdminMarketing.templateQuestion({ index: ui.qa('content-admin-marketing questions>field').length + 1 });
+			e2.innerHTML = ContentAdminMarketing.templateQuestion({ index: ui.qa('dialog-popup questions>field').length + 1 });
 			e.parentElement.parentElement.parentElement.appendChild(e2.children[0]);
 		}
 	}
@@ -335,12 +336,12 @@ questions value .answerMultiSelect {
 				if (i > 0) {
 					var e2 = document.createElement('div');
 					e2.innerHTML = ContentAdminMarketing.templateQuestion({ index: i + 1, ...v.storage.questions[i] });
-					ui.q('dialog-hint questions').appendChild(e2.children[0]);
+					ui.q('dialog-popup questions').appendChild(e2.children[0]);
 				}
 				for (var i2 = 1; i2 < v.storage.questions[i].answers.length; i2++) {
 					var e2 = document.createElement('div');
 					e2.innerHTML = ContentAdminMarketing.templateAnswer(v.storage.questions[i].answers[i2]);
-					var e3 = ui.qa('dialog-hint questions>field:nth-child(' + (i + 1) + ')>value')[1];
+					var e3 = ui.qa('dialog-popup questions>field:nth-child(' + (i + 1) + ')>value')[1];
 					e3.insertBefore(e2.children[0], e3.querySelector('input-checkbox'));
 				}
 			}
@@ -348,11 +349,11 @@ questions value .answerMultiSelect {
 		formFunc.initFields(ui.q('dialog-popup popupContent'));
 	}
 	static html2json() {
-		var e = ui.qa('dialog-hint questions field'), o = {};
+		var e = ui.qa('dialog-popup questions field'), o = {};
 		var read = function (label, o) {
-			var e2 = ui.q('dialog-hint [name="' + label + '"]');
+			var e2 = ui.q('dialog-popup [name="' + label + '"]');
 			if (e2.type == 'checkbox' || e2.type == 'radio') {
-				e2 = ui.qa('dialog-hint [name="' + label + '"]:checked');
+				e2 = ui.qa('dialog-popup [name="' + label + '"]:checked');
 				var s = '';
 				for (var i = 0; i < e2.length; i++)
 					s += e2[i].value;
@@ -500,7 +501,7 @@ results freetext div {
 			}
 		});
 	}
-	save(exec) {
+	save() {
 		var o = ContentAdminMarketing.html2json();
 		communication.ajax({
 			url: global.serverApi + 'db/one',
@@ -509,19 +510,15 @@ results freetext div {
 			responseType: 'json',
 			webCall: 'ContentAdminMarketing.save',
 			success() {
-				exec ? exec() : ui.navigation.closeHint();
+				ui.navigation.closePopup();
 			}
 		});
 	}
 	test() {
-		this.save(
-			function () {
-				d.storage = JSON.parse(d.storage);
-				d.mode = 'test';
-				ContentAdminMarketing.data = d;
-				ui.q('content-admin-marketing').open();
-				window.close();
-			});
+		marketing.data = ContentAdminMarketing.html2json();
+		marketing.data.storage = JSON.parse(marketing.data.storage);
+		marketing.data.mode = 'test';
+		marketing.open();
 	}
 	toggleAnswerType(e) {
 		e.target.parentElement.classList = e.target.getAttribute('checked') == 'true' ? 'multiSelect' : '';

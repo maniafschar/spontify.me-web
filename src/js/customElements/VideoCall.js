@@ -74,6 +74,7 @@ buttonIcon svg {
 	width: 2em;
 	height: 2em;
 	display: block;
+	transition: all 0.4s ease-out;
 }
 
 videochat {
@@ -131,8 +132,8 @@ streams {
 		element.setAttribute('class', 'hidden');
 		element.innerHTML = `
 <streams>
-	<video playsinline autoplay="autoplay" id="remoteStream"></video>
-	<video playsinline autoplay="autoplay" id="localStream"></video>
+	<video playsinline="true" autoplay="autoplay" id="remoteStream" controls="false"></video>
+	<video playsinline="true" autoplay="autoplay" id="localStream" controls="false"></video>
 </streams>
 <buttons>
 	<buttonIcon onclick="VideoCall.setAudioMute()" class="mute" disabled style="left:20%;"><img source="videoMic"/></buttonIcon>
@@ -147,11 +148,6 @@ streams {
 		if (!global.isBrowser()) {
 			if (global.getOS() == 'android')
 				window.cordova.plugins.permissions.requestPermissions([window.cordova.plugins.permissions.CAMERA, window.cordova.plugins.permissions.RECORD_AUDIO, window.cordova.plugins.permissions.MODIFY_AUDIO_SETTINGS]);
-			else if (global.getOS() == 'ios') {
-				window.cordova.plugins.iosrtc.registerGlobals();
-				window.cordova.plugins.iosrtc.selectAudioOutput('speaker');
-				window.cordova.plugins.iosrtc.requestPermission(true, true, function () { });
-			}
 		}
 	}
 	static getRtcPeerConnection() {
@@ -256,6 +252,7 @@ streams {
 			VideoCall.connectedId = data.user;
 			VideoCall.getRtcPeerConnection().setRemoteDescription(new RTCSessionDescription(data.offer));
 			VideoCall.incomingCallModal(true);
+			ui.q('video-call').style.background = '';
 		} else {
 			var e = communication.generateCredentials();
 			if (e.user) {
@@ -340,6 +337,7 @@ streams {
 			ui.q('video-call #localStream').srcObject = stream;
 			stream.getTracks().forEach(track => VideoCall.getRtcPeerConnection().addTrack(track, stream));
 			ui.q('video-call #localStream').srcObject.getAudioTracks()[0].enabled = false;
+			ui.q('video-call').style.background = '';
 			VideoCall.getRtcPeerConnection().createOffer().then(offer => {
 				var e = communication.generateCredentials();
 				if (e.user) {

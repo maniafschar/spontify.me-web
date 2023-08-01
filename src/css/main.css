@@ -406,13 +406,15 @@ content {
 }
 
 content-admin-home {
-	padding: 0.5em 1em;
+	padding-left: 1em;
+	padding-right: 1em;
 }
 
 content-admin-home,
 content-admin-marketing,
 content-admin-invoice {
 	overflow-y: auto;
+	padding-top: 0.5em;
 }
 
 groups {
@@ -677,11 +679,10 @@ chat {
 
 chat listHeader img {
 	position: relative;
-	width: 3.5em;
+	width: 4em;
 	border-radius: 0 0 1em 0;
 	box-shadow: 0 0 0.5em rgb(0, 0, 0, 0.3);
 	margin-right: 0.4em;
-	margin-top: -0.5em;
 }
 
 chat .sendButton {

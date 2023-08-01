@@ -396,6 +396,8 @@ class pageChat {
 								if (r2['contact.imageList'])
 									ui.attr('chat[i="' + id + '"] listHeader img', 'src', global.serverImg + r2['contact.imageList']);
 							}
+							if (ui.cssValue('main', 'padding-top'))
+								ui.q('chat[i="' + id + '"] listHeader img').style.borderRadius = '0 2em 2em 0';
 							if (!ui.q('chat[i="' + id + '"] listHeader img').getAttribute('src')) {
 								var e2 = ui.q('chat[i="' + id + '"] listHeader img');
 								ui.attr(e2, 'src', 'images/contacts.svg');

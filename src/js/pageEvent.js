@@ -37,7 +37,6 @@ class pageEvent {
 <form name="editElement" onsubmit="return false">
 <input type="hidden" name="id" value="${v.id}"/>
 <input type="hidden" name="locationId" value="${v.locationID}"/>
-<input type="hidden" name="confirm" />
 <input type="hidden" name="skills" value="${v.skills}" />
 <input type="hidden" name="skillsText" value="${v.skillsText}" />
 <div class="event">
@@ -60,11 +59,10 @@ class pageEvent {
 	<field class="noWTDField">
 		<label>${ui.l('events.repetition')}</label>
 		<value>
-			<input-checkbox type="radio" name="repetition" value="o" label="events.repetition_o" onclick="pageEvent.setForm()" ${v.repetition_o}></input-checkbox>
-			<input-checkbox type="radio" name="repetition" value="w1" label="events.repetition_w1" onclick="pageEvent.setForm()" ${v.repetition_w1}></input-checkbox>
-			<input-checkbox type="radio" name="repetition" value="w2" label="events.repetition_w2" onclick="pageEvent.setForm()" ${v.repetition_w2}></input-checkbox>
-			<input-checkbox type="radio" name="repetition" value="m" label="events.repetition_m" onclick="pageEvent.setForm()" ${v.repetition_m}></input-checkbox>
-			<input-checkbox type="radio" name="repetition" value="y" label="events.repetition_y" onclick="pageEvent.setForm()" ${v.repetition_y}></input-checkbox>
+			<input-checkbox type="radio" deselect="true" name="repetition" value="w1" label="events.repetition_w1" onclick="pageEvent.setForm()" ${v.repetition_w1}></input-checkbox>
+			<input-checkbox type="radio" deselect="true" name="repetition" value="w2" label="events.repetition_w2" onclick="pageEvent.setForm()" ${v.repetition_w2}></input-checkbox>
+			<input-checkbox type="radio" deselect="true" name="repetition" value="m" label="events.repetition_m" onclick="pageEvent.setForm()" ${v.repetition_m}></input-checkbox>
+			<input-checkbox type="radio" deselect="true" name="repetition" value="y" label="events.repetition_y" onclick="pageEvent.setForm()" ${v.repetition_y}></input-checkbox>
 		</value>
 	</field>
 	<field>
@@ -116,7 +114,7 @@ class pageEvent {
 	<field class="confirm noWTDField">
 		<label>${ui.l('events.confirmLabel')}</label>
 		<value>
-			<input-checkbox name="eventconfirm" transient="true" label="events.confirm" value="1" ${v.confirm}></input-checkbox>
+			<input-checkbox name="confirm" label="events.confirm" value="1" ${v.confirm}></input-checkbox>
 		</value>
 	</field>
 	<dialogButtons>
@@ -299,7 +297,7 @@ class pageEvent {
 			d = global.date.getDateFields(global.date.server2local(v.startDate));
 			v.startDate = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute;
 		}
-		if (!id || v.price > 0 && ui.q('detail card:last-child participantCount').innerText.length)
+		if (!id || v.price > 0 && ui.q('detail card:last-child participantCount')?.innerText.length)
 			v.hideDelete = 'class="hidden"';
 		d = global.date.getDateFields(new Date());
 		v.today = d.year + '-' + d.month + '-' + d.day;
@@ -935,7 +933,7 @@ class pageEvent {
 			ui.q('dialog-popup input-image').removeAttribute('value');
 			ui.q('dialog-popup input[name="url"]').value = '';
 		}
-		if (ui.q('dialog-popup [name="repetition"]').getAttribute('checked') != 'true') {
+		if (ui.q('dialog-popup [name="repetition"][checked="true"]')) {
 			if (!end.value)
 				formFunc.setError(end, 'events.errorDateNoEnd');
 			else {
@@ -947,7 +945,8 @@ class pageEvent {
 					formFunc.setError(end, 'events.errorDateEndFormat');
 				}
 			}
-		}
+		} else
+			end.value = start.value.substring(0, start.value.lastIndexOf('T'));
 		var v = formFunc.getForm('dialog-popup form');
 		if (!v.values.price)
 			v.values.price = 0;
@@ -955,12 +954,11 @@ class pageEvent {
 			ui.q('dialog-popup popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });;
 			return;
 		}
-		if (ui.q('dialog-popup [name="repetition"]').getAttribute('checked') == 'true')
-			end.value = start.value.substring(0, start.value.lastIndexOf('T'));
-		ui.q('dialog-popup [name="confirm"]').value = ui.q('dialog-popup [name="eventconfirm"][checked="true"]') ? 1 : 0;
+		if (!ui.q('dialog-popup [name="repetition"][checked="true"]'))
+			v.repetition = 'o';
+		if (!v.confirm)
+			v.confirm = 0;
 		v.classname = 'Event';
-		if (id)
-			v.id = id;
 		communication.ajax({
 			url: global.serverApi + 'db/one',
 			method: id ? 'PUT' : 'POST',
@@ -969,7 +967,8 @@ class pageEvent {
 			success(r) {
 				ui.navigation.closePopup();
 				user.remove('event');
-				details.open(id ? ui.q('detail card:last-child').getAttribute('i') : r + '_' + global.date.local2server(v.values.startDate).substring(0, 10), { webCall: 'pageEvent.save', query: 'event_list', search: encodeURIComponent('event.id=' + (id ? id : r)) },
+				details.open(id ? ui.q('detail card:last-child').getAttribute('i') : r + '_' + global.date.local2server(v.values.startDate).substring(0, 10),
+					{ webCall: 'pageEvent.save', query: 'event_list', search: encodeURIComponent('event.id=' + (id ? id : r)) },
 					id ? function (l, id) { ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id); } : pageLocation.detailLocationEvent);
 				pageEvent.refreshToggle();
 				pageHome.events = null;
@@ -992,9 +991,9 @@ class pageEvent {
 			ui.classAdd(e, 'selected');
 	}
 	static setForm() {
-		var b = ui.q('dialog-popup [name="repetition"][checked="true"][value="o"]');
-		ui.q('dialog-popup label[name="startDate"]').innerText = ui.l('events.' + (b ? 'date' : 'start'));
-		pageEvent.openSection('dialog-popup field[name="endDate"]', !b && ui.q('dialog-popup [name="repetition"][checked="true"]'));
+		var b = ui.q('dialog-popup [name="repetition"][checked="true"]');
+		ui.q('dialog-popup label[name="startDate"]').innerText = ui.l('events.' + (b ? 'start' : 'date'));
+		pageEvent.openSection('dialog-popup field[name="endDate"]', b);
 		b = ui.val('dialog-popup input-checkbox[name="type"][checked="true"]');
 		var es = ui.qa('dialog-popup .noWTDField:not(field[name="endDate"])');
 		for (var i = 0; i < es.length; i++)
