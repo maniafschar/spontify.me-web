@@ -3,7 +3,7 @@ import { initialisation } from '../init';
 import { communication } from '../communication';
 import { global } from '../global';
 import { Contact, model } from '../model';
-import { marketing } from 'js/marketing';
+import { marketing } from '../marketing';
 
 export { ContentAdminMarketing }
 

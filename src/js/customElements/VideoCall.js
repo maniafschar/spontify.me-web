@@ -374,8 +374,10 @@ streams {
 		VideoCall.playAudio('end');
 		if (VideoCall.rtcPeerConnection) {
 			VideoCall.rtcPeerConnection.getTransceivers().forEach(e => {
-				VideoCall.rtcPeerConnection.removeTrack(e.sender);
-				e.stop();
+				try {
+					VideoCall.rtcPeerConnection.removeTrack(e.sender);
+					e.stop();
+				} catch (e) { }
 			});
 			VideoCall.rtcPeerConnection.close();
 			VideoCall.rtcPeerConnection = null;
