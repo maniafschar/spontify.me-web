@@ -356,6 +356,7 @@ ${v.matchIndicatorHintDescription}
 				if (ui.q('dialog-popup popupContent'))
 					ui.navigation.closePopup();
 				else {
+					ui.navigation.closeHint();
 					var e = ui.q('detail card:last-child[i="' + id + '"] [name="friend"] button-text');
 					if (e)
 						e.outerHTML = '<span style="text-align:center;">' + ui.l('contacts.requestFriendshipAlreadySent') + '</span>';

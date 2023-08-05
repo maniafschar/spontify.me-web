@@ -438,10 +438,8 @@ streams {
 			ui.q('video-call videochat buttonIcon.camera svg').style.transform = '';
 		} else {
 			e.left = '-100%';
-			ui.q('video-call videochat buttonIcon.camera svg').style.transform = 'rotate(180deg)';
+			ui.q('video-call videochat buttonIcon.camera svg').style.transform = 'rotateY(180deg)';
 		}
-		if (!global.isBrowser() && window.cordova.plugins && window.cordova.plugins.iosrtc)
-			setTimeout(window.cordova.plugins.iosrtc.refreshVideos, 600);
 	}
 	static incomingCallModal(show) {
 		if (show) {

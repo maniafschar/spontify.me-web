@@ -206,21 +206,8 @@ class pageChat {
 		s = Strings.replaceLinks(s);
 		s = s.replace(/\n/g, '<br/>');
 		s = Strings.replaceEmoji(s);
-		if (v.action) {
-			var isVideoCall = v.action.indexOf('ui.startVideoCall(') == 0, addAction = true;
-			if (isVideoCall) {
-				var isOponent = v.action.indexOf('ui.startVideoCall(' + user.contact.id + ')') != 0;
-				if (isOponent) {
-					var date = global.date.server2local(v.createdAt);
-					date.setHours(date.getHours() + 1);
-					if (date < new Date())
-						addAction = false;
-				} else
-					addAction = false;
-			}
-			if (addAction)
-				s = '<a onclick="' + v.action + '">' + s + '</a>';
-		}
+		if (v.action && v.action.indexOf('ui.startVideoCall(' + user.contact.id + ')') < 0)
+			s = '<a onclick="' + v.action + '">' + s + '</a>';
 		return s;
 	}
 	static getSelectionBoundary(el, start) {
@@ -375,6 +362,7 @@ class pageChat {
 			success(r) {
 				if (!r || r.length < 1)
 					return;
+				ui.q('chat').removeAttribute('video');
 				ui.attr('chat', 'from', ui.navigation.getActiveID());
 				var f = function () {
 					ui.html('chat', pageChat.template({
@@ -392,11 +380,14 @@ class pageChat {
 							ui.attr('chat[i="' + id + '"] listHeader chatName', 'onclick', 'ui.navigation.autoOpen("' + global.encParam('p=' + id) + '",event)');
 							if (r2) {
 								ui.html('chat[i="' + id + '"] listHeader chatName span', r2['contact.pseudonym']);
-								ui.q('chat').setAttribute('status', r2['contactLink.status']);
+								if (r2['contactLink.status'] == 'Friends' || r2['contactLink.status'] == 'Pending' && r2['contactLink.contactId'] != user.contact.id)
+									ui.q('chat').setAttribute('video', 'enabled');
+								else if (r2['contactLink.status'] == 'Pending')
+									ui.q('chat').setAttribute('video', 'pending');
 								if (r2['contact.imageList'])
 									ui.attr('chat[i="' + id + '"] listHeader img', 'src', global.serverImg + r2['contact.imageList']);
 							}
-							if (ui.cssValue('main', 'padding-top'))
+							if (ui.cssValue('main', 'padding-top') && parseInt(ui.cssValue('main', 'padding-top')))
 								ui.q('chat[i="' + id + '"] listHeader img').style.borderRadius = '0 2em 2em 0';
 							if (!ui.q('chat[i="' + id + '"] listHeader img').getAttribute('src')) {
 								var e2 = ui.q('chat[i="' + id + '"] listHeader img');
@@ -675,49 +666,13 @@ class pageChat {
 		} else
 			ui.navigation.closePopup();
 	}
-	static sendChatVideoPermission() {
-		var id = ui.q('chat').getAttribute('i'), v = {
-			note: ui.l('chat.videoPermission'),
-			action: 'ui.startVideoCall(' + user.contact.id + ')',
-			contactId2: id
-		};
-		communication.ajax({
-			url: global.serverApi + 'db/one',
-			method: 'POST',
-			webCall: 'pageChat.sendChatVideoPermission',
-			body: {
-				classname: 'ContactChat',
-				values: v
-			},
-			error(r) {
-				r = JSON.parse(r.response);
-				if (r.class == 'IllegalArgumentException' && r.msg == 'duplicate chat') {
-					ui.q('#chatText').value = '';
-					pageChat.adjustTextarea(ui.q('#chatText'));
-				} else
-					communication.onError(r);
-			},
-			success(r) {
-				if (ui.q('chat[i="' + id + '"] chatConversation')) {
-					v.createdAt = new Date();
-					v.id = r;
-					v.contactId = user.contact.id;
-					var e = ui.q('chat[i="' + id + '"] chatConversation');
-					e.innerHTML = e.innerHTML + pageChat.renderMsg(v);
-					pageChat.scrollToBottom();
-				}
-				pageChat.initActiveChats();
-			}
-		});
-
-	}
 	static sendChatVideoPermissionButton() {
-		if (ui.q('chat').getAttribute('status') == 'Friends')
+		if (ui.q('chat').getAttribute('video') == 'enabled')
 			ui.startVideoCall(ui.q('chat').getAttribute('i'));
-		else if (ui.q('chat chatConversation chatMessage:not(.me)'))
-			ui.navigation.openHint({ desc: ui.l('chat.videoPermissionHint') + '<br/><br/><button-text onclick="pageChat.sendChatVideoPermission()" label="chat.videoPermissionSendButton"></button-text>', pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-4em;' });
+		else if (ui.q('chat').getAttribute('video') == 'pending')
+			ui.navigation.openHint({ desc: ui.l('chat.videoPermissionHintPending'), pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-4em;' });
 		else
-			ui.navigation.openHint({ desc: ui.l('chat.videoPermissionNoChatHint'), pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-4em;' });
+			ui.navigation.openHint({ desc: ui.l('chat.videoPermissionHint') + '<br/><br/><button-text onclick="pageContact.sendRequestForFriendship(' + ui.q('chat').getAttribute('i') + ')" label="contacts.requestFriendship"></button-text>', pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-4em;' });
 	}
 	static showScrollButton() {
 		var e = ui.q('chatMoreButton');
