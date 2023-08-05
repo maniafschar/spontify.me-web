@@ -40,7 +40,7 @@ class pageChat {
 		</chatButtons>
 		<textarea id="chatText" style="height:1.6em;" class="me" placeholder="${ui.l('chat.textHint')}"
 			onkeyup="pageChat.adjustTextarea(this)">${v.draft}</textarea>
-		<button-text class="videoButton" ${v.action}="pageChat.sendChatVideoPermissionButton();" label="chat.videoPermissionButton"></button-text>
+		<button-text class="videoButton" ${v.action}="pageChat.video();" label="chat.videoPermissionButton"></button-text>
 		<button-text class="sendButton" ${v.action}="pageChat.sendChat(${v.id},null,event);" label="chat.send"></button-text>
 		<div style="display:none;text-align:center;"></div>
 	</chatInput>
@@ -380,10 +380,6 @@ class pageChat {
 							ui.attr('chat[i="' + id + '"] listHeader chatName', 'onclick', 'ui.navigation.autoOpen("' + global.encParam('p=' + id) + '",event)');
 							if (r2) {
 								ui.html('chat[i="' + id + '"] listHeader chatName span', r2['contact.pseudonym']);
-								if (r2['contactLink.status'] == 'Friends' || r2['contactLink.status'] == 'Pending' && r2['contactLink.contactId'] != user.contact.id)
-									ui.q('chat').setAttribute('video', 'enabled');
-								else if (r2['contactLink.status'] == 'Pending')
-									ui.q('chat').setAttribute('video', 'pending');
 								if (r2['contact.imageList'])
 									ui.attr('chat[i="' + id + '"] listHeader img', 'src', global.serverImg + r2['contact.imageList']);
 							}
@@ -666,14 +662,6 @@ class pageChat {
 		} else
 			ui.navigation.closePopup();
 	}
-	static sendChatVideoPermissionButton() {
-		if (ui.q('chat').getAttribute('video') == 'enabled')
-			ui.startVideoCall(ui.q('chat').getAttribute('i'));
-		else if (ui.q('chat').getAttribute('video') == 'pending')
-			ui.navigation.openHint({ desc: ui.l('chat.videoPermissionHintPending'), pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-4em;' });
-		else
-			ui.navigation.openHint({ desc: ui.l('chat.videoPermissionHint') + '<br/><br/><button-text onclick="pageContact.sendRequestForFriendship(' + ui.q('chat').getAttribute('i') + ')" label="contacts.requestFriendship"></button-text>', pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-4em;' });
-	}
 	static showScrollButton() {
 		var e = ui.q('chatMoreButton');
 		ui.css(e, 'display', 'block');
@@ -703,4 +691,20 @@ class pageChat {
 		else
 			ui.navigation.openHint({ desc: 'chatDescription', pos: '0.5em,-7.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1.5em;' });
 	}
-};
+	static video() {
+		var id = ui.q('chat').getAttribute('i');
+		communication.ajax({
+			url: global.serverApi + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + id),
+			responseType: 'json',
+			webCall: 'pageChat.video',
+			success(r) {
+				if (r && (r['contactLink.status'] == 'Friends' || r['contactLink.status'] == 'Pending' && r['contactLink.contactId'] != user.contact.id))
+					ui.startVideoCall(id);
+				else if (r && r['contactLink.status'] == 'Pending')
+					ui.navigation.openHint({ desc: ui.l('chat.videoPermissionHintPending'), pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-4em;' });
+				else
+					ui.navigation.openHint({ desc: ui.l('chat.videoPermissionHint') + '<br/><br/><button-text onclick="pageContact.sendRequestForFriendship(' + ui.q('chat').getAttribute('i') + ')" label="contacts.requestFriendship"></button-text>', pos: '2em,-9em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:50%;margin-left:-4em;' });
+			}
+		});
+	}
+}
