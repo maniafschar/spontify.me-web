@@ -114,6 +114,20 @@ class lists {
 			else if (rows.length > x)
 				x = x + '/' + rows.length;
 			e.innerHTML = ui.l('search.results').replace('{0}', x) + ' ' + s;
+			if (id == 'contacts')
+				ui.swipe('contacts>listBody', function (dir) {
+					if (dir == 'left')
+						ui.navigation.goTo('home', false);
+					else if (dir == 'right')
+						ui.navigation.goTo('events', true);
+				});
+			else if (id == 'events')
+				ui.swipe('events>listBody', function (dir) {
+					if (dir == 'left')
+						ui.navigation.goTo('contacts');
+					else if (dir == 'right')
+						ui.navigation.goTo('search', true);
+				});
 		} else if (id.indexOf('search') == 0) {
 			var s = id.substring(id.lastIndexOf('.') + 1);
 			var i = ui.qa('search tabBody div.' + s + ' listResults list-row').length;
