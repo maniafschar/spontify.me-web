@@ -18,7 +18,7 @@ class DialogHint extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.setAttribute('i', 'true');
+		style.setAttribute('css', 'true');
 		style.textContent = `${initialisation.customElementsCss}
 .body,
 :host(.body) {
@@ -151,10 +151,9 @@ chart {
 		if (ui.cssValue(e, 'display') != 'block')
 			return;
 		ui.on(e, 'transitionend', function () {
-			ui.attr(e, 'style');
 			ui.attr(e, 'i');
 			for (var i = e._root.children.length - 1; i >= 0; i--) {
-				if (e._root.children[i].getAttribute('i') != 'true')
+				if (e._root.children[i].getAttribute('css') != 'true')
 					e._root.children[i].remove();
 			}
 			if (data)

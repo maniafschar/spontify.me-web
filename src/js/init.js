@@ -257,7 +257,23 @@ class initialisation {
 				pageSearch.swipeLeft();
 			else if (dir == 'right')
 				pageSearch.swipeRight();
-		}, 'input,textarea,input-slider,thumb,val');
+		});
+		ui.swipe('contacts', function (dir, event) {
+			if (ui.parents(event.target, 'listBody')) {
+				if (dir == 'left')
+					ui.navigation.goTo('home', false);
+				else if (dir == 'right')
+					ui.navigation.goTo('events', true);
+			}
+		});
+		ui.swipe('events', function (dir, event) {
+			if (ui.parents(event.target, 'listBody')) {
+				if (dir == 'left')
+					ui.navigation.goTo('contacts');
+				else if (dir == 'right')
+					ui.navigation.goTo('search', true);
+			}
+		});
 		ui.swipe('login', function (dir) {
 			if (dir == 'left')
 				pageLogin.swipeLeft();

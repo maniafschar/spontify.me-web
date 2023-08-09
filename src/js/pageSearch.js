@@ -367,16 +367,16 @@ ${v.keywords}
 		else if (x == -100)
 			pageSearch.selectTab('locations');
 		else
-			pageSearch.selectTab('events');
+			pageSearch.selectTab('contacts');
 	}
 	static swipeRight() {
 		var x = parseInt(ui.q('search tabBody').style.marginLeft) || 0;
 		if (x == 0)
 			ui.navigation.goTo('home', true);
 		else if (x == -100)
-			pageSearch.selectTab('contacts');
-		else
 			pageSearch.selectTab('events');
+		else
+			pageSearch.selectTab('contacts');
 	}
 	static updateLocalisation() {
 		ui.html('search label.locationPicker', geoData.getCurrent().town);

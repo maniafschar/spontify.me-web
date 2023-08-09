@@ -17,20 +17,6 @@ class ListBody extends HTMLElement {
 			element.innerHTML = (id == 'contacts' ? '<groups style="display:none;"></groups>' : '') + '<listResults></listResults>';
 			this.appendChild(element);
 			formFunc.svg.replaceAll();
-			if (id == 'contacts')
-				ui.swipe('contacts>listBody', function (dir) {
-					if (dir == 'left')
-						ui.navigation.goTo('home', false);
-					else if (dir == 'right')
-						ui.navigation.goTo('events', true);
-				});
-			else if (id == 'events')
-				ui.swipe('events>listBody', function (dir) {
-					if (dir == 'left')
-						ui.navigation.goTo('contacts');
-					else if (dir == 'right')
-						ui.navigation.goTo('search', true);
-				});
 		}
 	}
 }
