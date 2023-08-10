@@ -424,8 +424,13 @@ ${ui.l('events.title')}
 					var e = model.convert(new Contact(), l, i);
 					s += '<card onclick="details.open(' + e.id + ',' + JSON.stringify({ webCall: 'pageHome.teaserContacts', query: 'contact_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('contact.id=' + e.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)"><img src="' + global.serverImg + e.imageList + '"/><text>' + e.pseudonym + '</text></card>';
 				}
-				ui.q('home teaser.contacts>div').innerHTML = s;
+				var e = ui.q('home teaser.contacts>div');
+				e.innerHTML = s;
 				ui.css('home teaser.contacts', 'opacity', 1);
+				e.addEventListener("wheel", event => {
+					e.scrollBy({ left: event.deltaY });
+					event.preventDefault();
+				});
 			}
 		});
 	}
@@ -461,9 +466,15 @@ ${ui.l('events.title')}
 							webCall: 'pageHome.teaserEvents', query: 'event_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('event.id=' + e[i].event.id)
 						}).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)"><img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList ? e[i].imageList : e[i].contact.imageList) + '"/><text>' + global.date.formatDate(e[i].event.startDate, 'noWeekday') + '<br/>' + e[i].event.description + '</text></card>';
 				}
-				ui.q('home teaser.events>div').innerHTML = s;
+				e = ui.q('home teaser.events>div');
+				e.innerHTML = s;
 				ui.css('home teaser.events', 'opacity', 1);
 				formFunc.svg.replaceAll();
+				e.addEventListener("wheel", event => {
+					e.scrollBy({ left: event.deltaY });
+					event.preventDefault();
+				});
+
 			}
 		});
 	}
