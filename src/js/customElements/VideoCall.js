@@ -307,6 +307,7 @@ streams {
 				}
 			}).catch(error => {
 				ui.navigation.openPopup(ui.l('attention'), error);
+				VideoCall.stopCall();
 			});
 		});
 	}
@@ -363,6 +364,7 @@ streams {
 			VideoCall.prepareVideoElement('localStream');
 		}).catch((err) => {
 			ui.navigation.openPopup(ui.l('attention'), err);
+			VideoCall.stopCall();
 		});
 	}
 	static stopCall() {
