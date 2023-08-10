@@ -359,6 +359,7 @@ streams {
 				}
 			}).catch(error => {
 				ui.navigation.openPopup(ui.l('attention'), error);
+				VideoCall.stopCall();
 			});
 			VideoCall.setActiveDeviceId(stream);
 			VideoCall.prepareVideoElement('localStream');
@@ -392,9 +393,8 @@ streams {
 			}
 		}
 		var close = stream => {
-			if (stream.srcObject) {
+			if (stream.srcObject)
 				stream.srcObject.getTracks().forEach(track => track.stop());
-			}
 			stream.removeAttribute('src');
 			stream.removeAttribute('srcObject');
 		};
