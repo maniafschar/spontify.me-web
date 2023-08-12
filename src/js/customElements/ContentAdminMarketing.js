@@ -63,9 +63,9 @@ edit::after {
 }`;
 		this._root.appendChild(style);
 	}
-	static init() {
+	static init(force) {
 		var r = ui.q('content-admin-marketing');
-		if (r._root.childElementCount == 1) {
+		if (force || r._root.childElementCount == 1) {
 			var e = document.createElement('h1');
 			e.setAttribute('l', 'marketingTitle');
 			r._root.appendChild(e);
@@ -222,10 +222,10 @@ questions value .answerMultiSelect {
 	<label>Frage ${v.index ? v.index : 1}</label>
 	<value><input name="question" onblur="ui.q(&quot;content-admin-marketing&quot;).addQuestion(this)" value="${v.question}"></input></value>
 	<label>Antworten</label>
-	<value${v.answerType ? ' class="multiSelect"' : ''}>
+	<value${v.multiple ? ' class="multiSelect"' : ''}>
 		${ContentAdminMarketing.templateAnswer(v.answers ? v.answers[0] : {})}
 		<input-checkbox name="textField" value="1" ${v.textField ? ' checked="true"' : ''} label="Freitextfeld"></input-checkbox>
-		<input-checkbox name="answerType" onclick="ui.q(&quot;content-admin-marketing&quot;).toggleAnswerType(event)" value="1" ${v.answerType ? ' checked="true"' : ''} label="Mehrfachauswahl" class="answerMultiSelect"></input-checkbox>
+		<input-checkbox name="multiple" onclick="ui.q(&quot;content-admin-marketing&quot;).toggleAnswerType(event)" value="1" ${v.multiple ? ' checked="true"' : ''} label="Mehrfachauswahl" class="answerMultiSelect"></input-checkbox>
 	</value>
 </field>`;
 	static templateAnswer = v =>
@@ -328,7 +328,7 @@ questions value .answerMultiSelect {
 				if (ContentAdminMarketing.data[i].id > max)
 					max = ContentAdminMarketing.data[i].id;
 			}
-			v = { id: max + 1, language: global.language, storage: {} };
+			v = { language: global.language, storage: {} };
 		}
 		ui.navigation.openPopup(ui.l('contentAdmin.marketingTitle'), ContentAdminMarketing.templateEdit(v));
 		if (v.storage.questions) {
@@ -376,7 +376,7 @@ questions value .answerMultiSelect {
 			if (e[i].querySelector('input[name="question"]').value) {
 				var q = {
 					question: e[i].querySelector('input[name="question"]').value,
-					answerType: e[i].querySelector('input-checkbox[name="answerType"]').getAttribute('checked'),
+					multiple: e[i].querySelector('input-checkbox[name="multiple"]').getAttribute('checked'),
 					textField: e[i].querySelector('input-checkbox[name="textField"]').getAttribute('checked'),
 					answers: []
 				};
@@ -505,12 +505,13 @@ results freetext div {
 		var o = ContentAdminMarketing.html2json();
 		communication.ajax({
 			url: global.serverApi + 'db/one',
-			method: 'PUT',
+			method: o.id ? 'PUT' : 'POST',
 			body: { classname: 'ClientMarketing', id: o.id, values: o },
 			responseType: 'json',
 			webCall: 'ContentAdminMarketing.save',
 			success() {
 				ui.navigation.closePopup();
+				ui.q('content-admin-marketing').init(true);
 			}
 		});
 	}

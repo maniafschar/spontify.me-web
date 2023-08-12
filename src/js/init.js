@@ -295,7 +295,7 @@ class initialisation {
 		if (global.isBrowser())
 			initialisation.init();
 		else
-			ui.on(document, 'deviceready', initialisation.init, false);
+			ui.on(document, 'deviceready', initialisation.init);
 	}
 	static reposition() {
 		if (!ui.q('body main'))

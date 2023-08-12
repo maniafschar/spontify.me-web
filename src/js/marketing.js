@@ -2,6 +2,7 @@ import { communication } from './communication';
 import { global } from './global';
 import { ClientMarketing, model } from './model';
 import { formFunc, ui } from './ui';
+import { user } from './user';
 
 export { marketing }
 
@@ -32,31 +33,36 @@ class marketing {
 		}
 		if (ui.q('hint textarea') && ui.q('dialog-hint textarea').value)
 			marketing.answers['q' + index].text = ui.q('dialog-hint textarea').value;
-		if (ui.q('dialog-hint input-checkbox[type="radio"][checked="true"]'))
+		if (ui.q('dialog-hint input-checkbox[type="radio"][checked="true"]') &&
+			ui.q('dialog-hint input-checkbox[type="radio"][checked="true"]').getAttribute('next'))
 			index = parseInt(ui.q('dialog-hint input-checkbox[type="radio"][checked="true"]').getAttribute('next'));
 		else
 			index++;
 		var q = marketing.data.storage.questions[index];
+		if (marketing.data.mode != 'test') {
+			communication.ajax({
+				url: global.serverApi + (user.contact ? 'db/one' : 'action/marketing'),
+				webCall: 'marketing.next',
+				body: { classname: 'ContactMarketing', id: marketing.data.answerId, values: { clientMarketingId: marketing.data.id, storage: JSON.stringify(marketing.answers) } },
+				method: marketing.data.answerId ? 'PUT' : 'POST',
+				success(r) {
+					if (r)
+						marketing.data.answerId = r;
+				}
+			});
+		}
 		if (!q) {
-			if (marketing.data.mode != 'test') {
-				communication.ajax({
-					url: global.serverApi + 'db/one',
-					webCall: 'marketing.next',
-					body: { classname: 'ContactMarketing', values: { clientMarketingId: marketing.data.id, storage: JSON.stringify(marketing.answers) } },
-					method: 'POST'
-				});
-			}
-			ui.q('dialog-hint > div').innerHTML = marketing.data.storage.epilog + '<br/><br/><button-text onclick="ui.navigation.closeHint()" label="Schließen"></button-text>';
+			ui.q('dialog-hint div').innerHTML = marketing.data.storage.epilog + '<br/><br/><button-text onclick="ui.navigation.closeHint()" label="Schließen"></button-text>';
 			return;
 		}
 		var s = q.question + '<br/>';
 		for (var i = 0; i < q.answers.length; i++)
-			s += '<input type="' + (q.answerType ? 'checkbox' : 'radio" next="' + q.answers[i].next) + '" name="answers" value="' + i + '" label="' + q.answers[i].answer + '" />';
+			s += '<br/><input-checkbox' + (q.multiple ? '' : ' type="radio" next="' + q.answers[i].next + '"') + ' name="answers" value="' + i + '" label="' + q.answers[i].answer + '"></input-checkbox>';
 		if (q.textField)
 			s += '<textarea></textarea>';
 		s += '<br/><br/><button-text onclick="marketing.next()" label="Weiter"></button-text><index>' + index + '</index>';
-		ui.q('dialog-hint > div').innerHTML = s;
-		formFunc.initFields(ui.q('dialog-hint > div'));
+		ui.q('dialog-hint div').innerHTML = s;
+		formFunc.initFields(ui.q('dialog-hint div'));
 	}
 	static open() {
 		if (marketing.data) {

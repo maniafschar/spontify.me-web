@@ -4,7 +4,8 @@ import { VideoCall } from './customElements/VideoCall';
 import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './init';
-import { Contact, ContactNews, model } from './model';
+import { marketing } from './marketing';
+import { ClientMarketing, Contact, ContactNews, model } from './model';
 import { pageChat } from './pageChat';
 import { pageEvent } from './pageEvent';
 import { formFunc, ui } from './ui';
@@ -211,8 +212,25 @@ ${ui.l('events.title')}
 			});
 	}
 	static init(force) {
-		var e = ui.q('home');
+		var e = ui.q('home'), m = global.getParam('m');
 		if (force || !ui.q('home teaser.events>div card')) {
+			if (m) {
+				communication.ajax({
+					url: global.serverApi + 'action/marketing',
+					webCall: 'pageHome.init',
+					responseType: 'json',
+					error() { },
+					success(r) {
+						history.pushState(null, null, '#x');
+						if (r.length > 1) {
+							marketing.data = model.convert(new ClientMarketing(), r, 1);
+							marketing.data.storage = JSON.parse(marketing.data.storage);
+						} else
+							pageHome.init();
+					}
+				});
+				return;
+			}
 			var v = {
 				actionLogo: 'pageHome.openHint()'
 			};
