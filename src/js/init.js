@@ -326,7 +326,7 @@ class initialisation {
 		}
 		ui.css('body', 'font-size', font + 'px');
 		ui.emInPX = parseFloat(ui.cssValue(document.body, 'font-size'));
-		if (window.innerWidth / xWidth > 1.8) {
+		if (window.innerWidth / xWidth > 1.8 && ui.q('home homeBody')) {
 			ui.css('add', 'width', ((window.innerWidth - xWidth) / 2) + 'px');
 			ui.css('add#addRight', 'display', 'block');
 		} else

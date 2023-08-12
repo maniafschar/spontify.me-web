@@ -523,6 +523,10 @@
 			"register": "Register",
 			"title": "Login"
 		},
+		"marketing": {
+			"next": "Next",
+			"previous": "Back"
+		},
 		"noResults": {
 			"block": "You do not have any blocked ${buddies}/Locations/Events.",
 			"events": "Events of the next 2 weeks are listed here. Currently no Events are entered in your vicinity.<br/><br/>You can also enter events yourself, simply choose your favorite location and click on the Events button on the bottom of the page.",

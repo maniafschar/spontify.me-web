@@ -321,6 +321,22 @@ home {
 	z-index: 1;
 }
 
+marketing {
+	padding: 2em 1em;
+	overflow-y: auto;
+	height: 100%;
+	width: 100%;
+	display: none;
+	z-index: 4;
+	text-align: center;
+	position: absolute;
+}
+
+answers {
+	text-align: left;
+	display: inline-block;
+}
+
 news {
 	position: relative;
 	display: block;

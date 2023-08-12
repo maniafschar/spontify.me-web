@@ -216,7 +216,7 @@ ${ui.l('events.title')}
 		if (force || !ui.q('home teaser.events>div card')) {
 			if (m) {
 				communication.ajax({
-					url: global.serverApi + 'action/marketing',
+					url: global.serverApi + 'action/marketing?m=' + m,
 					webCall: 'pageHome.init',
 					responseType: 'json',
 					error() { },
@@ -225,6 +225,7 @@ ${ui.l('events.title')}
 						if (r.length > 1) {
 							marketing.data = model.convert(new ClientMarketing(), r, 1);
 							marketing.data.storage = JSON.parse(marketing.data.storage);
+							marketing.open(true);
 						} else
 							pageHome.init();
 					}
