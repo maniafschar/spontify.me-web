@@ -323,13 +323,38 @@ home {
 
 marketing {
 	padding: 2em 1em;
-	overflow-y: auto;
 	height: 100%;
 	width: 100%;
 	display: none;
 	z-index: 4;
 	text-align: center;
 	position: absolute;
+}
+
+marketing>div {
+	overflow-y: auto;
+	height: 100%;
+	padding-bottom: 4em;
+}
+
+marketing buttons {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	height: 4em;
+	width: 100%;
+}
+
+marketing buttons button-text {
+	position: absolute;
+}
+
+marketing buttons button-text.left {
+	left: 1em;
+}
+
+marketing buttons button-text.right {
+	right: 1em;
 }
 
 answers {

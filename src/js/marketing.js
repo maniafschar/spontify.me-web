@@ -36,10 +36,16 @@ class marketing {
 		var prefix = ui.q('marketing').innerHTML ? 'marketing ' : 'dialog-hint ';
 		var answers = ui.qa(prefix + 'input-checkbox[checked="true"]');
 		var index = marketing.index[marketing.index.length - 1];
+		if (index > 0 && !marketing.data.storage.questions[index]) {
+			marketing.close();
+			return;
+		}
 		if (!marketing.answers['q' + index])
 			marketing.answers['q' + index] = { choice: [] };
-		for (var i = 0; i < answers.length; i++)
-			marketing.answers['q' + index].choice.push(answers[i].getAttribute('value'));
+		for (var i = 0; i < answers.length; i++) {
+			if (!marketing.answers['q' + index].choice.includes(answers[i].getAttribute('value')))
+				marketing.answers['q' + index].choice.push(answers[i].getAttribute('value'));
+		}
 		if (ui.q('hint textarea') && ui.q(prefix + 'textarea').value)
 			marketing.answers['q' + index].text = ui.q(prefix + 'textarea').value;
 		if (marketing.data.mode != 'test') {
@@ -60,18 +66,17 @@ class marketing {
 		else
 			index++;
 		marketing.index.push(index);
-		if (!marketing.data.storage.questions[index]) {
-			ui.q(prefix + 'div').innerHTML = marketing.data.storage.epilog + '<br/><br/><button-text onclick="marketing.close()" label="Schließen"></button-text>';
-			return;
-		}
-		marketing.setQuestion(index);
+		if (marketing.data.storage.questions[index])
+			marketing.setQuestion(index);
+		else
+			ui.q(prefix + 'div').innerHTML = marketing.data.storage.epilog.replace(/\n/g, '<br/>');
 	}
 	static open(inline) {
 		if (marketing.data) {
 			if (!marketing.answers)
 				marketing.answers = {};
 			marketing.index.push(-1);
-			var s = '<div>' + marketing.data.storage.prolog.replace(/\n/g, '<br/>') + '<br/><br/><button-text onclick="marketing.next()" label="Yes"></button-text><button-text onclick="marketing.close()" label="No"></button-text></div>';
+			var s = '<div>' + marketing.data.storage.prolog.replace(/\n/g, '<br/>') + '</div><buttons><button-text onclick="marketing.close()" label="No" class="left"></button-text><button-text onclick="marketing.next()" label="Yes" class="right"></button-text></buttons>';
 			if (inline) {
 				var e = ui.q('marketing');
 				e.innerHTML = s;
@@ -99,8 +104,13 @@ class marketing {
 			s += '</answers>';
 			if (q.textField)
 				s += '<textarea></textarea>';
-			s += '<br/><br/><button-text onclick="marketing.previous()" label="marketing.previous"></button-text><button-text onclick="marketing.next()" label="marketing.next"></button-text>';
 			ui.q(prefix + 'div').innerHTML = s;
+			var e = ui.q('marketing button-text.left');
+			e.setAttribute('label', 'marketing.previous');
+			e.setAttribute('onclick', 'marketing.previous()');
+			var e = ui.q('marketing button-text.right');
+			e.setAttribute('label', 'marketing.next');
+			e.setAttribute('onclick', 'marketing.next()');
 			formFunc.initFields(ui.q(prefix + 'div'));
 		}
 	}
