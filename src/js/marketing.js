@@ -40,12 +40,9 @@ class marketing {
 			marketing.close();
 			return;
 		}
-		if (!marketing.answers['q' + index])
-			marketing.answers['q' + index] = { choice: [] };
-		for (var i = 0; i < answers.length; i++) {
-			if (!marketing.answers['q' + index].choice.includes(answers[i].getAttribute('value')))
-				marketing.answers['q' + index].choice.push(answers[i].getAttribute('value'));
-		}
+		marketing.answers['q' + index] = { choice: [] };
+		for (var i = 0; i < answers.length; i++)
+			marketing.answers['q' + index].choice.push(answers[i].getAttribute('value'));
 		if (ui.q('hint textarea') && ui.q(prefix + 'textarea').value)
 			marketing.answers['q' + index].text = ui.q(prefix + 'textarea').value;
 		if (marketing.data.mode != 'test') {
