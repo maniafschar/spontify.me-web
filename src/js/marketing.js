@@ -32,11 +32,11 @@ class marketing {
 			}
 		});
 	}
-	static next() {
+	static next(back) {
 		var prefix = ui.q('marketing').innerHTML ? 'marketing ' : 'dialog-hint ';
 		var answers = ui.qa(prefix + 'input-checkbox[checked="true"]');
 		var index = marketing.index[marketing.index.length - 1];
-		if (index > 0 && !marketing.data.storage.questions[index]) {
+		if (index > 0 && !back && !marketing.data.storage.questions[index]) {
 			marketing.close();
 			return;
 		}
@@ -57,43 +57,45 @@ class marketing {
 				}
 			});
 		}
-		if (ui.q(prefix + 'input-checkbox[type="radio"][checked="true"]') &&
-			ui.q(prefix + 'input-checkbox[type="radio"][checked="true"]').getAttribute('next'))
-			index = parseInt(ui.q(prefix + 'input-checkbox[type="radio"][checked="true"]').getAttribute('next'));
-		else
-			index++;
-		marketing.index.push(index);
-		if (marketing.data.storage.questions[index])
-			marketing.setQuestion(index);
-		else
-			ui.q(prefix + 'div').innerHTML = marketing.data.storage.epilog.replace(/\n/g, '<br/>');
+		if (back) {
+			marketing.index.splice(marketing.index.length - 1, 1);
+			marketing.setQuestion(marketing.index[marketing.index.length - 1]);
+		} else {
+			if (ui.q(prefix + 'input-checkbox[type="radio"][checked="true"]') &&
+				ui.q(prefix + 'input-checkbox[type="radio"][checked="true"]').getAttribute('next'))
+				index = parseInt(ui.q(prefix + 'input-checkbox[type="radio"][checked="true"]').getAttribute('next'));
+			else
+				index++;
+			marketing.index.push(index);
+			if (marketing.data.storage.questions[index])
+				marketing.setQuestion(index);
+			else
+				ui.q(prefix + 'div').innerHTML = marketing.data.storage.epilog.replace(/\n/g, '<br/>');
+		}
 	}
 	static open(inline) {
 		if (marketing.data) {
 			if (!marketing.answers)
 				marketing.answers = {};
 			marketing.index.push(-1);
-			var s = '<div>' + marketing.data.storage.prolog.replace(/\n/g, '<br/>') + '</div><buttons><button-text onclick="marketing.close()" label="No" class="left"></button-text><button-text onclick="marketing.next()" label="Yes" class="right"></button-text></buttons>';
+			var s = '<div>' + marketing.data.storage.prolog.replace(/\n/g, '<br/>') + '</div><buttons><button-text onclick="marketing.close()" label="No" class="left"></button-text><button-text onclick="marketing.next()" label="Yes" class="right"></button-text><progress></progress></buttons>';
 			if (inline) {
 				var e = ui.q('marketing');
 				e.innerHTML = s;
 				e.style.display = 'block';
 			} else
 				ui.navigation.openHint({
-					desc: s,
+					desc: '<marketing>' + s + '</marketing>',
 					pos: '5%,5%', size: '90%,auto', onclick: 'return;'
 				});
 		}
 	}
-	static previous() {
-		marketing.index.splice(marketing.index.length - 1, 1);
-		marketing.setQuestion(marketing.index[marketing.index.length - 1]);
-	}
 	static setQuestion(index) {
 		var prefix = ui.q('marketing').innerHTML ? 'marketing ' : 'dialog-hint ';
-		if (index < 0)
+		if (index < 0) {
 			marketing.open(prefix.indexOf('-') < 0);
-		else {
+			ui.q('marketing buttons progress').style.width = 0;
+		} else {
 			var q = marketing.data.storage.questions[index];
 			var s = q.question + '<br/><answers>';
 			for (var i = 0; i < q.answers.length; i++)
@@ -104,11 +106,12 @@ class marketing {
 			ui.q(prefix + 'div').innerHTML = s;
 			var e = ui.q('marketing button-text.left');
 			e.setAttribute('label', 'marketing.previous');
-			e.setAttribute('onclick', 'marketing.previous()');
+			e.setAttribute('onclick', 'marketing.next(true)');
 			var e = ui.q('marketing button-text.right');
 			e.setAttribute('label', 'marketing.next');
 			e.setAttribute('onclick', 'marketing.next()');
 			formFunc.initFields(ui.q(prefix + 'div'));
+			ui.q('marketing buttons progress').style.width = ((1 + index) / marketing.data.storage.questions.length * 100) + '%';
 		}
 	}
 }

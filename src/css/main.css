@@ -345,6 +345,15 @@ marketing buttons {
 	width: 100%;
 }
 
+marketing buttons progress {
+	position: absolute;
+	background: rgba(255, 255, 255, 0.5);
+	left: 0;
+	bottom: 0;
+	height: 0.5em;
+	width: 0;
+}
+
 marketing buttons button-text {
 	position: absolute;
 }

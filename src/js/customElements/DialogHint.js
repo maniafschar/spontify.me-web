@@ -158,6 +158,8 @@ chart {
 			}
 			if (data)
 				DialogHint.open(data);
+			else
+				e.style.display = '';
 		}, true);
 		ui.css(e, 'opacity', 0);
 	}

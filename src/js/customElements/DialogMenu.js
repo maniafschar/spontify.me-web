@@ -10,7 +10,7 @@ class DialogMenu extends HTMLElement {
 		this._root = this.attachShadow({ mode: 'closed' });
 	}
 	connectedCallback() {
-		this.style.background = 'linear-gradient(var(--bg3stop) 0%, var(--bg3start) 100%)';
+		ui.classAdd(this, 'bgColor');
 		const style = document.createElement('style');
 		style.textContent = `${initialisation.customElementsCss}
 div{
@@ -22,7 +22,7 @@ div{
 hinky {
 	right: 0.9em;
 	top: -1em;
-	border-bottom: solid 1.1em var(--bg3stop);
+	border-bottom: solid 1.1em var(--bg2stop);
 	position: absolute;
 	border-right: solid 1.1em transparent;
 	border-left: solid 1.1em transparent;
