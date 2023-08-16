@@ -78,7 +78,7 @@ class marketing {
 			if (!marketing.answers)
 				marketing.answers = {};
 			marketing.index.push(-1);
-			var s = '<div>' + marketing.data.storage.prolog.replace(/\n/g, '<br/>') + '</div><buttons><button-text onclick="marketing.close()" label="No" class="left"></button-text><button-text onclick="marketing.next()" label="Yes" class="right"></button-text><progress></progress></buttons>';
+			var s = '<div>' + marketing.data.storage.prolog.replace(/\n/g, '<br/>') + '</div><buttons><button-text onclick="marketing.close()" label="No" class="left"></button-text><button-text onclick="marketing.next()" label="Yes" class="right"></button-text><progressindex></progressindex></buttons>';
 			if (inline) {
 				var e = ui.q('marketing');
 				e.innerHTML = s;
@@ -94,7 +94,7 @@ class marketing {
 		var prefix = ui.q('marketing').innerHTML ? 'marketing ' : 'dialog-hint ';
 		if (index < 0) {
 			marketing.open(prefix.indexOf('-') < 0);
-			ui.q('marketing buttons progress').style.width = 0;
+			ui.q('marketing buttons progressindex').style.width = 0;
 		} else {
 			var q = marketing.data.storage.questions[index];
 			var s = q.question + '<br/><answers>';
@@ -111,7 +111,7 @@ class marketing {
 			e.setAttribute('label', 'marketing.next');
 			e.setAttribute('onclick', 'marketing.next()');
 			formFunc.initFields(ui.q(prefix + 'div'));
-			ui.q('marketing buttons progress').style.width = ((1 + index) / marketing.data.storage.questions.length * 100) + '%';
+			ui.q('marketing buttons progressindex').style.width = ((1 + index) / marketing.data.storage.questions.length * 100) + '%';
 		}
 	}
 }
