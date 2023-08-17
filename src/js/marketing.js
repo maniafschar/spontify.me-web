@@ -43,8 +43,10 @@ class marketing {
 		marketing.answers['q' + index] = { choice: [] };
 		for (var i = 0; i < answers.length; i++)
 			marketing.answers['q' + index].choice.push(answers[i].getAttribute('value'));
-		if (ui.q('hint textarea') && ui.q(prefix + 'textarea').value)
+		if (ui.q(prefix + 'textarea') && ui.q(prefix + 'textarea').value)
 			marketing.answers['q' + index].text = ui.q(prefix + 'textarea').value;
+		if (!back && ui.q(prefix + 'input-checkbox') && !marketing.answers['q' + index].choice.length && !marketing.answers['q' + index].text)
+			return;
 		if (marketing.data.mode != 'test') {
 			communication.ajax({
 				url: global.serverApi + (user.contact ? 'db/one' : 'action/marketing'),
