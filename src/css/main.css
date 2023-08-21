@@ -280,7 +280,7 @@ homeBody teaser.events {
 }
 
 homeBody teaser card {
-	margin: 0 0.75em;
+	margin: 0 0.5em;
 	border-radius: 1em;
 	overflow: hidden;
 	position: relative;
