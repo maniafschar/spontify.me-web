@@ -53,9 +53,8 @@ edit {
 	top: 0;
 	cursor: pointer;
 	display: block;
-	padding: 0.5em 0.75em 1em 2.5em;
-	font-size: 2em;
-	font-weight: bold;
+	padding: 0.4em 0.4em 0.5em 2.5em;
+	font-size: 3em;
 }
 
 edit::after {
