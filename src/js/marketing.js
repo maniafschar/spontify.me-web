@@ -44,8 +44,12 @@ class marketing {
 			marketing.answers['q' + index] = { a: [] };
 			for (var i = 0; i < answers.length; i++)
 				marketing.answers['q' + index].a.push(answers[i].getAttribute('value'));
-			if (ui.q(prefix + 'textarea') && ui.q(prefix + 'textarea').value)
-				marketing.answers['q' + index].text = ui.q(prefix + 'textarea').value;
+			if (ui.q(prefix + 'textarea')) {
+				if (ui.q(prefix + 'textarea').value)
+					marketing.answers['q' + index].text = ui.q(prefix + 'textarea').value.trim();
+				else if (!back && ui.q(prefix + 'input-checkbox:last-child').getAttribute('checked') == 'true')
+					return;
+			}
 			if (!back && ui.q(prefix + 'input-checkbox') && !marketing.answers['q' + index].a.length && !marketing.answers['q' + index].text)
 				return;
 		}
