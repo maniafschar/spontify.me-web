@@ -353,6 +353,7 @@ marketing buttons progressindex {
 	bottom: 0;
 	height: 0.5em;
 	width: 0;
+	transition: all .4s linear;
 }
 
 marketing buttons button-text {

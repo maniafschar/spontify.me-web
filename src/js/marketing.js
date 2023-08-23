@@ -71,7 +71,10 @@ class marketing {
 						marketing.data.answerId = r;
 					if (marketing.data.storage.questions[index])
 						marketing.setQuestion(index);
-					else
+					else if (index < 0) {
+						marketing.open(prefix.indexOf('-') < 0);
+						ui.q('marketing buttons progressindex').style.width = 0;
+					} else
 						ui.q(prefix + 'div').innerHTML = marketing.data.storage.epilog.replace(/\n/g, '<br/>');
 				}
 			});
@@ -96,26 +99,21 @@ class marketing {
 	}
 	static setQuestion(index) {
 		var prefix = ui.q('marketing').innerHTML ? 'marketing ' : 'dialog-hint ';
-		if (index < 0) {
-			marketing.open(prefix.indexOf('-') < 0);
-			ui.q('marketing buttons progressindex').style.width = 0;
-		} else {
-			var q = marketing.data.storage.questions[index];
-			var s = q.question + '<br/><answers>';
-			for (var i = 0; i < q.answers.length; i++)
-				s += '<br/><input-checkbox' + (q.multiple ? '' : ' type="radio" next="' + q.answers[i].next + '"') + ' name="answers" value="' + i + '" label="' + q.answers[i].answer + '" checked="' + (marketing.answers['q' + index]?.a.includes('' + i) ? true : false) + '"></input-checkbox>';
-			s += '</answers>';
-			if (q.textField)
-				s += '<textarea></textarea>';
-			ui.q(prefix + 'div').innerHTML = s;
-			var e = ui.q('marketing button-text.left');
-			e.setAttribute('label', 'marketing.previous');
-			e.setAttribute('onclick', 'marketing.next(true)');
-			var e = ui.q('marketing button-text.right');
-			e.setAttribute('label', 'marketing.next');
-			e.setAttribute('onclick', 'marketing.next()');
-			formFunc.initFields(ui.q(prefix + 'div'));
-			ui.q('marketing buttons progressindex').style.width = ((1 + index) / marketing.data.storage.questions.length * 100) + '%';
-		}
+		var q = marketing.data.storage.questions[index];
+		var s = q.question + '<br/><answers>';
+		for (var i = 0; i < q.answers.length; i++)
+			s += '<br/><input-checkbox' + (q.multiple ? '' : ' type="radio" next="' + q.answers[i].next + '"') + ' name="answers" value="' + i + '" label="' + q.answers[i].answer + '" checked="' + (marketing.answers['q' + index]?.a.includes('' + i) ? true : false) + '"></input-checkbox>';
+		s += '</answers>';
+		if (q.textField)
+			s += '<textarea></textarea>';
+		ui.q(prefix + 'div').innerHTML = s;
+		var e = ui.q('marketing button-text.left');
+		e.setAttribute('label', 'marketing.previous');
+		e.setAttribute('onclick', 'marketing.next(true)');
+		var e = ui.q('marketing button-text.right');
+		e.setAttribute('label', 'marketing.next');
+		e.setAttribute('onclick', 'marketing.next()');
+		formFunc.initFields(ui.q(prefix + 'div'));
+		ui.q('marketing buttons progressindex').style.width = ((1 + index) / marketing.data.storage.questions.length * 100) + '%';
 	}
 }
