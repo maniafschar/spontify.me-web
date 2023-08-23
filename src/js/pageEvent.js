@@ -167,7 +167,7 @@ class pageEvent {
 	static detail(v) {
 		v.eventParticipate = new EventParticipate();
 		v.copyLinkHint = ui.l('copyLinkHint.event');
-		if (v.event.repetition != 'o') {
+		if (v.event.repetition && v.event.repetition != 'o') {
 			var s = global.date.formatDate(v.event.endDate);
 			v.endDate = ' (' + ui.l('events.repetition_' + v.event.repetition) + ' ' + ui.l('to') + s.substring(s.indexOf(' ')) + ')';
 		}

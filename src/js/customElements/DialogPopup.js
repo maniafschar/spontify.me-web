@@ -122,6 +122,7 @@ popupTitle {
 	height: 2.6em;
 	z-index: 1;
 	overflow: hidden;
+	color: var(--popupText);
 }
 
 popupTitle>div {
@@ -147,7 +148,7 @@ popupContent {
 	display: flex;
 	border-radius: 0.5em;
 	background: linear-gradient(var(--bg3stop) 0%, var(--bg3start) 100%);
-	color: var(--buttonText);
+	color: var(--popupText);
 }
 
 popupContent>div {
@@ -155,6 +156,10 @@ popupContent>div {
 	overflow-x: hidden;
 	border: solid 0.75em transparent;
 	width: 100%;
+}
+
+popupContent label {
+	color: var(--popupText);
 }
 
 locationNameInputHelper,

@@ -27,7 +27,7 @@ ul li {
 }
 
 .mainBG {
-	background: linear-gradient(120deg, var(--bg1stop) 0%, var(--bg1start) 100%);
+	background: radial-gradient(ellipse at 40% 35%, var(--bg1stop) 0%, var(--bg1start) 130%);
 	background-size: 100% 100%;
 }
 
@@ -37,6 +37,10 @@ ul li {
 
 a.bgColor:hover {
 	background: var(--bg2stop);
+}
+
+.selectable {
+	user-select: all;
 }
 
 select,
@@ -233,7 +237,7 @@ buttonIcon {
 }
 
 .highlightColor {
-	color: var(--bg1stop);
+	color: var(--bg2stop);
 }
 
 input-slider {

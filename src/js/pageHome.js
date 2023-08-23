@@ -180,7 +180,7 @@ ${ui.l('events.title')}
 		var render = function () {
 			var towns = '', dates = '';
 			for (var i = 0; i < pageHome.teaserMeta.length; i++) {
-				if (towns.indexOf('"' + pageHome.teaserMeta[i].town + '"') < 0)
+				if (pageHome.teaserMeta[i].town && towns.indexOf('"' + pageHome.teaserMeta[i].town + '"') < 0)
 					towns += '<input-checkbox onclick="pageHome.filterEvents()" value="' + pageHome.teaserMeta[i].town + '" label="' + pageHome.teaserMeta[i].town + '"></input-checkbox>';
 				if (dates.indexOf('"' + pageHome.teaserMeta[i].date + '"') < 0) {
 					var d = global.date.formatDate(pageHome.teaserMeta[i].date);
@@ -447,8 +447,10 @@ ${ui.l('events.title')}
 				e.innerHTML = s;
 				ui.css('home teaser.contacts', 'opacity', 1);
 				e.addEventListener("wheel", event => {
-					e.scrollBy({ left: event.deltaY });
-					event.preventDefault();
+					if (event.deltaY) {
+						e.scrollBy({ left: event.deltaY });
+						event.preventDefault();
+					}
 				});
 			}
 		});
@@ -490,8 +492,10 @@ ${ui.l('events.title')}
 				ui.css('home teaser.events', 'opacity', 1);
 				formFunc.svg.replaceAll();
 				e.addEventListener("wheel", event => {
-					e.scrollBy({ left: event.deltaY });
-					event.preventDefault();
+					if (event.deltaY) {
+						e.scrollBy({ left: event.deltaY });
+						event.preventDefault();
+					}
 				});
 
 			}

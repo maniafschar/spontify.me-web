@@ -40,28 +40,18 @@ class marketing {
 			marketing.close();
 			return;
 		}
-		marketing.answers['q' + index] = { choice: [] };
-		for (var i = 0; i < answers.length; i++)
-			marketing.answers['q' + index].choice.push(answers[i].getAttribute('value'));
-		if (ui.q(prefix + 'textarea') && ui.q(prefix + 'textarea').value)
-			marketing.answers['q' + index].text = ui.q(prefix + 'textarea').value;
-		if (!back && ui.q(prefix + 'input-checkbox') && !marketing.answers['q' + index].choice.length && !marketing.answers['q' + index].text)
-			return;
-		if (marketing.data.mode != 'test') {
-			communication.ajax({
-				url: global.serverApi + (user.contact ? 'db/one' : 'action/marketing'),
-				webCall: 'marketing.next',
-				body: { classname: 'ContactMarketing', id: marketing.data.answerId, values: { clientMarketingId: marketing.data.id, storage: JSON.stringify(marketing.answers) } },
-				method: marketing.data.answerId ? 'PUT' : 'POST',
-				success(r) {
-					if (r)
-						marketing.data.answerId = r;
-				}
-			});
+		if (index > -1) {
+			marketing.answers['q' + index] = { a: [] };
+			for (var i = 0; i < answers.length; i++)
+				marketing.answers['q' + index].a.push(answers[i].getAttribute('value'));
+			if (ui.q(prefix + 'textarea') && ui.q(prefix + 'textarea').value)
+				marketing.answers['q' + index].text = ui.q(prefix + 'textarea').value;
+			if (!back && ui.q(prefix + 'input-checkbox') && !marketing.answers['q' + index].a.length && !marketing.answers['q' + index].text)
+				return;
 		}
 		if (back) {
 			marketing.index.splice(marketing.index.length - 1, 1);
-			marketing.setQuestion(marketing.index[marketing.index.length - 1]);
+			index = marketing.index[marketing.index.length - 1];
 		} else {
 			if (ui.q(prefix + 'input-checkbox[type="radio"][checked="true"]') &&
 				ui.q(prefix + 'input-checkbox[type="radio"][checked="true"]').getAttribute('next'))
@@ -69,10 +59,22 @@ class marketing {
 			else
 				index++;
 			marketing.index.push(index);
-			if (marketing.data.storage.questions[index])
-				marketing.setQuestion(index);
-			else
-				ui.q(prefix + 'div').innerHTML = marketing.data.storage.epilog.replace(/\n/g, '<br/>');
+		}
+		if (marketing.data.mode != 'test') {
+			communication.ajax({
+				url: global.serverApi + (user.contact ? 'db/one' : 'action/marketing'),
+				webCall: 'marketing.next',
+				body: { classname: 'ContactMarketing', id: marketing.data.answerId, values: { clientMarketingId: marketing.data.id, storage: JSON.stringify(marketing.answers), finished: marketing.data.storage.questions[index] ? false : true } },
+				method: marketing.data.answerId ? 'PUT' : 'POST',
+				success(r) {
+					if (r)
+						marketing.data.answerId = r;
+					if (marketing.data.storage.questions[index])
+						marketing.setQuestion(index);
+					else
+						ui.q(prefix + 'div').innerHTML = marketing.data.storage.epilog.replace(/\n/g, '<br/>');
+				}
+			});
 		}
 	}
 	static open(inline) {
@@ -101,7 +103,7 @@ class marketing {
 			var q = marketing.data.storage.questions[index];
 			var s = q.question + '<br/><answers>';
 			for (var i = 0; i < q.answers.length; i++)
-				s += '<br/><input-checkbox' + (q.multiple ? '' : ' type="radio" next="' + q.answers[i].next + '"') + ' name="answers" value="' + i + '" label="' + q.answers[i].answer + '" checked="' + (marketing.answers['q' + index]?.choice.includes('' + i) ? true : false) + '"></input-checkbox>';
+				s += '<br/><input-checkbox' + (q.multiple ? '' : ' type="radio" next="' + q.answers[i].next + '"') + ' name="answers" value="' + i + '" label="' + q.answers[i].answer + '" checked="' + (marketing.answers['q' + index]?.a.includes('' + i) ? true : false) + '"></input-checkbox>';
 			s += '</answers>';
 			if (q.textField)
 				s += '<textarea></textarea>';

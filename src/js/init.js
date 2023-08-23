@@ -413,7 +413,7 @@ class initialisation {
 				ui.navigation.autoOpen(p);
 			}, 100);
 		}
-		if (!user.contact && user.clientId == 7)
+		if (!user.contact && user.clientId == 7 && !p)
 			setTimeout(ui.navigation.openIntro, 2000);
 		if (global.isBrowser())
 			history.pushState(null, null, window.location.origin);

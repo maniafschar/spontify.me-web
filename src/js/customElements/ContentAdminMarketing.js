@@ -217,7 +217,7 @@ questions value .answerMultiSelect {
 <button-text onclick="ui.q(&quot;content-admin-marketing&quot;).save()" label="save"></button-text>
 </dialogButtons>`;
 	static templateQuestion = v =>
-		global.template`<field>
+		global.template`<field i="${v.id}">
 	<label>Frage ${v.index ? v.index : 1}</label>
 	<value><input name="question" onblur="ui.q(&quot;content-admin-marketing&quot;).addQuestion(this)" value="${v.question}"></input></value>
 	<label>Antworten</label>
@@ -307,7 +307,12 @@ questions value .answerMultiSelect {
 	addQuestion(e) {
 		if (e.value && e.parentElement.parentElement.parentElement.lastElementChild == e.parentElement.parentElement) {
 			var e2 = document.createElement('div');
-			e2.innerHTML = ContentAdminMarketing.templateQuestion({ index: ui.qa('dialog-popup questions>field').length + 1 });
+			var max = 0;
+			ui.qa('dialog-popup questions field').forEach(function (e) {
+				if (e.getAttribute('i') > max)
+					max = e.getAttribute('i');
+			});
+			e2.innerHTML = ContentAdminMarketing.templateQuestion({ index: ui.qa('dialog-popup questions>field').length + 1, id: max + 1 });
 			e.parentElement.parentElement.parentElement.appendChild(e2.children[0]);
 		}
 	}
@@ -374,6 +379,7 @@ questions value .answerMultiSelect {
 		for (var i = 0; i < e.length; i++) {
 			if (e[i].querySelector('input[name="question"]').value) {
 				var q = {
+					id: e[i].getAttribute('i'),
 					question: e[i].querySelector('input[name="question"]').value,
 					multiple: e[i].querySelector('input-checkbox[name="multiple"]').getAttribute('checked'),
 					textField: e[i].querySelector('input-checkbox[name="textField"]').getAttribute('checked'),
