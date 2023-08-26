@@ -43,14 +43,14 @@ class marketing {
 		if (index > -1) {
 			marketing.answers['q' + index] = { a: [] };
 			for (var i = 0; i < answers.length; i++)
-				marketing.answers['q' + index].a.push(answers[i].getAttribute('value'));
+				marketing.answers['q' + index].a.push(parseInt(answers[i].getAttribute('value')));
 			if (ui.q(prefix + 'textarea')) {
 				if (ui.q(prefix + 'textarea').value)
-					marketing.answers['q' + index].text = ui.q(prefix + 'textarea').value.trim();
+					marketing.answers['q' + index].t = ui.q(prefix + 'textarea').value.trim();
 				else if (!back && ui.q(prefix + 'input-checkbox:last-child').getAttribute('checked') == 'true')
 					return;
 			}
-			if (!back && ui.q(prefix + 'input-checkbox') && !marketing.answers['q' + index].a.length && !marketing.answers['q' + index].text)
+			if (!back && ui.q(prefix + 'input-checkbox') && !marketing.answers['q' + index].a.length && !marketing.answers['q' + index].t)
 				return;
 		}
 		if (back) {
@@ -62,9 +62,21 @@ class marketing {
 				index = parseInt(ui.q(prefix + 'input-checkbox[type="radio"][checked="true"]').getAttribute('next'));
 			else
 				index++;
-			marketing.index.push(index);
 		}
-		if (marketing.data.mode != 'test') {
+		var next = function () {
+			if (!back)
+				marketing.index.push(index);
+			if (marketing.data.storage.questions[index])
+				marketing.setQuestion(index);
+			else if (index < 0) {
+				marketing.open(prefix.indexOf('-') < 0);
+				ui.q('marketing buttons progressindex').style.width = 0;
+			} else
+				ui.q(prefix + 'div').innerHTML = marketing.data.storage.epilog.replace(/\n/g, '<br/>');
+		};
+		if (marketing.data.mode == 'test')
+			next();
+		else
 			communication.ajax({
 				url: global.serverApi + (user.contact ? 'db/one' : 'action/marketing'),
 				webCall: 'marketing.next',
@@ -73,16 +85,9 @@ class marketing {
 				success(r) {
 					if (r)
 						marketing.data.answerId = r;
-					if (marketing.data.storage.questions[index])
-						marketing.setQuestion(index);
-					else if (index < 0) {
-						marketing.open(prefix.indexOf('-') < 0);
-						ui.q('marketing buttons progressindex').style.width = 0;
-					} else
-						ui.q(prefix + 'div').innerHTML = marketing.data.storage.epilog.replace(/\n/g, '<br/>');
+					next();
 				}
 			});
-		}
 	}
 	static open(inline) {
 		if (marketing.data) {
@@ -106,17 +111,15 @@ class marketing {
 		var q = marketing.data.storage.questions[index];
 		var s = q.question + '<br/><answers' + (q.textField ? ' style="width:100%;"' : '') + '>';
 		for (var i = 0; i < q.answers.length; i++)
-			s += '<br/><input-checkbox' + (q.multiple ? '' : ' type="radio" next="' + q.answers[i].next + '"') + ' name="answers" value="' + i + '" label="' + q.answers[i].answer + '" checked="' + (marketing.answers['q' + index]?.a.includes('' + i) ? true : false) + '"></input-checkbox>';
+			s += '<br/><input-checkbox' + (q.multiple ? '' : ' type="radio" next="' + q.answers[i].next + '"') + ' name="answers" value="' + i + '" label="' + q.answers[i].answer + '" checked="' + (marketing.answers['q' + index]?.a.includes(i) ? true : false) + '"></input-checkbox>';
 		s += '</answers>';
 		if (q.textField) {
-			var v = '';
-			if (q.textFieldDefault)
+			var v = marketing.answers['q' + index]?.t;
+			if (!v && q.textFieldDefault)
 				try {
 					v = eval(q.textFieldDefault);
-					if (!v)
-						v = '';
 				} catch (e) { }
-			s += '<textarea>' + v + '</textarea>';
+			s += '<textarea>' + (v ? v : '') + '</textarea>';
 		}
 		ui.q(prefix + 'div').innerHTML = s;
 		var e = ui.q('marketing button-text.left');
