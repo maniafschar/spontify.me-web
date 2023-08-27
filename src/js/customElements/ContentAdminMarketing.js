@@ -402,7 +402,7 @@ questions value .answerMultiSelect {
 	}
 	results(id) {
 		communication.ajax({
-			url: global.serverApi + 'db/list?query=contact_listMarketing&search=' + encodeURIComponent('contactMarketing.clientMarketingId=' + id),
+			url: global.serverApi + 'db/list?query=contact_listMarketing&search=' + encodeURIComponent('contactMarketing.finished=true and contactMarketing.clientMarketingId=' + id),
 			responseType: 'json',
 			webCall: 'ContentAdminMarketing.results',
 			success(r) {
@@ -414,21 +414,22 @@ questions value .answerMultiSelect {
 						for (var i = 1; i < r.length; i++)
 							r[i] = JSON.parse(model.convert(new Contact(), r, i).storage);
 						for (var i = 0; i < v.storage.questions.length; i++) {
-							var choices = [], text = '';
+							var answers = [], text = '', total = 0;
 							for (var i2 = 0; i2 < v.storage.questions[i].answers.length; i2++)
-								choices.push(0);
+								answers.push(0);
 							for (var i2 = 1; i2 < r.length; i2++) {
 								if (r[i2]['q' + i]) {
-									for (var i3 = 0; i3 < r[i2]['q' + i].choice.length; i3++)
-										choices[r[i2]['q' + i].choice[i3]]++;
-									if (r[i2]['q' + i].text)
-										text += '<div>' + r[i2]['q' + i].text + '</div>';
+									for (var i3 = 0; i3 < r[i2]['q' + i].a.length; i3++)
+										answers[r[i2]['q' + i].a[i3]]++;
+									if (r[i2]['q' + i].t)
+										text += '<div>' + r[i2]['q' + i].t + '</div>';
+									total++;
 								}
 							}
-							v.answers += '<question>' + v.storage.questions[i].question + '</question><answers>';
+							v.answers += '<question>' + v.storage.questions[i].question + '<span>' + total + '/' + (r.length - 1) + '</span></question><answers>';
 							v.share = v.share ? 'auf soziale Netzwerke veröffentlichen' : '-';
 							for (var i2 = 0; i2 < v.storage.questions[i].answers.length; i2++)
-								v.answers += '<answer><percentage>' + (r.length > 1 ? Math.round(choices[i2] / (r.length - 1) * 100) : 0) + '</percentage>' + v.storage.questions[i].answers[i2].answer + '</answer>';
+								v.answers += '<answer><percentage>' + (answers[i2] ? Math.round(answers[i2] / total * 100) : 0) + '</percentage>' + v.storage.questions[i].answers[i2].answer + '</answer>';
 							v.answers += (text ? '<freetexttitle onclick="ui.q(&quot;content-admin-marketing&quot;).toggle(this)" class="collapsible closed">Freitext</freetexttitle><freetext>' + text + '</freetext>' : '') + '</answers>';
 						}
 						if (v.startDate)
@@ -484,6 +485,12 @@ results answer percentage::after {
 results question {
 	margin-top: 2em;
 	font-weight: bold;
+}
+
+results question span {
+	font-weight: normal;
+	font-size: .8em;
+	margin-left: 1em;
 }
 
 results freetexttitle {
