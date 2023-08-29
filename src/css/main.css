@@ -474,28 +474,6 @@ groups {
 	display: block;
 }
 
-.collapsible {
-	padding-left: 1em;
-	cursor: pointer;
-	display: block;
-	font-weight: bold;
-	position: relative;
-}
-
-.collapsible::before {
-	content: 'v';
-	display: inline-block;
-	position: absolute;
-	left: 0;
-	top: -0.1em;
-	font-size: 0.7em;
-	transition: all .4s ease-out;
-}
-
-.collapsible.closed::before {
-	transform: rotate(-90deg);
-}
-
 login registerHint {
 	position: absolute;
 	margin-right: 1.666%;

@@ -2,7 +2,7 @@ import { formFunc, ui } from '../ui';
 import { initialisation } from '../init';
 import { communication } from '../communication';
 import { global } from '../global';
-import { Contact, model } from '../model';
+import { ContactMarketing, model } from '../model';
 import { marketing } from '../marketing';
 
 export { ContentAdminMarketing }
@@ -242,6 +242,12 @@ questions value .answerMultiSelect {
 		global.template`<metadata onclick="ui.q(&quot;content-admin-marketing&quot;).toggle(this)" class="collapsible closed">Metadaten</metadata>
 <div style="display:none;">
 <field>
+	<label>Teilnehmer</label>
+	<value>
+		${v.participants} teilgenommen, ${v.terminated} abgeschlossen
+	</value>
+</field>
+<field>
 	<label>Zeitraum</label>
 	<value>
 		${v.startDate} - ${v.endDate}
@@ -292,9 +298,6 @@ questions value .answerMultiSelect {
 		${v.storage.epilog}
 	</value>
 </field>
-</div>
-<div>
-	<br/>${v.participants} Teilnehmer
 </div>
 <results>${v.answers}</results>`;
 	addAnswer(e) {
@@ -402,34 +405,38 @@ questions value .answerMultiSelect {
 	}
 	results(id) {
 		communication.ajax({
-			url: global.serverApi + 'db/list?query=contact_listMarketing&search=' + encodeURIComponent('contactMarketing.finished=true and contactMarketing.clientMarketingId=' + id),
+			url: global.serverApi + 'db/list?query=contact_listMarketing&search=' + encodeURIComponent('contactMarketing.clientMarketingId=' + id),
 			responseType: 'json',
 			webCall: 'ContentAdminMarketing.results',
 			success(r) {
 				for (var i = 0; i < ContentAdminMarketing.data.length; i++) {
 					if (ContentAdminMarketing.data[i].id == id) {
-						var v = { ...ContentAdminMarketing.data[i] };
+						var v = { ...ContentAdminMarketing.data[i] }, answers = [];
+						for (var i = 1; i < r.length; i++) {
+							var m = model.convert(new ContactMarketing(), r, i);
+							if (m.finished)
+								answers.push(JSON.parse(m.storage));
+						}
 						v.participants = r.length - 1;
+						v.terminated = answers.length;
 						v.answers = '';
-						for (var i = 1; i < r.length; i++)
-							r[i] = JSON.parse(model.convert(new Contact(), r, i).storage);
 						for (var i = 0; i < v.storage.questions.length; i++) {
-							var answers = [], text = '', total = 0;
+							var answersAverage = [], text = '', total = 0;
 							for (var i2 = 0; i2 < v.storage.questions[i].answers.length; i2++)
-								answers.push(0);
-							for (var i2 = 1; i2 < r.length; i2++) {
-								if (r[i2]['q' + i]) {
-									for (var i3 = 0; i3 < r[i2]['q' + i].a.length; i3++)
-										answers[r[i2]['q' + i].a[i3]]++;
-									if (r[i2]['q' + i].t)
-										text += '<div>' + r[i2]['q' + i].t + '</div>';
+								answersAverage.push(0);
+							for (var i2 = 0; i2 < answers.length; i2++) {
+								if (answers[i2]['q' + i]) {
+									for (var i3 = 0; i3 < answers[i2]['q' + i].a.length; i3++)
+										answersAverage[answers[i2]['q' + i].a[i3]]++;
+									if (answers[i2]['q' + i].t)
+										text += '<div>' + answers[i2]['q' + i].t + '</div>';
 									total++;
 								}
 							}
-							v.answers += '<question>' + v.storage.questions[i].question + '<span>' + total + '/' + (r.length - 1) + '</span></question><answers>';
+							v.answers += '<question>' + v.storage.questions[i].question + '<span>' + total + '/' + answers.length + '</span></question><answers>';
 							v.share = v.share ? 'auf soziale Netzwerke veröffentlichen' : '-';
 							for (var i2 = 0; i2 < v.storage.questions[i].answers.length; i2++)
-								v.answers += '<answer><percentage>' + (answers[i2] ? Math.round(answers[i2] / total * 100) : 0) + '</percentage>' + v.storage.questions[i].answers[i2].answer + '</answer>';
+								v.answers += '<answer><percentage>' + (answersAverage[i2] ? Math.round(answersAverage[i2] / total * 100) : 0) + '</percentage>' + v.storage.questions[i].answers[i2].answer + '</answer>';
 							v.answers += (text ? '<freetexttitle onclick="ui.q(&quot;content-admin-marketing&quot;).toggle(this)" class="collapsible closed">Freitext</freetexttitle><freetext>' + text + '</freetext>' : '') + '</answers>';
 						}
 						if (v.startDate)
@@ -445,20 +452,24 @@ questions value .answerMultiSelect {
 	overflow-y: auto;
 }
 
-metadata {
+.collapsible {
 	cursor: pointer;
 	font-weight: bold;
 }
 
-metadata::before {
+.collapsible::before {
 	content: '▼';
 	display: inline-block;
 	padding-right: 0.5em;
 	transition: all .4s ease-out;
 }
 
-metadata.closed::before {
+.collapsible.closed::before {
 	transform: translate(-0.3em, -0.3em) rotate(-90deg);
+}
+
+label {
+	color: black !important;
 }
 
 results {
