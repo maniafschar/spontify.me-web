@@ -345,7 +345,7 @@ ${v.keywords}
 			ui.q('search tabBody div.events').innerHTML = pageSearch.events.getFields() + '<listResults></listResults>';
 			ui.q('search tabBody div.locations').innerHTML = pageSearch.locations.getFields() + '<listResults></listResults>';
 			formFunc.initFields(ui.q('search'));
-			pageSearch.selectTab('events');
+			pageSearch.selectTab();
 		}
 	}
 	static repeatSearch() {
@@ -355,9 +355,14 @@ ${v.keywords}
 	}
 	static selectTab(id) {
 		ui.navigation.closeHint();
-		ui.q('search tabBody').style.marginLeft = ((id == 'events' ? 0 : id == 'contacts' ? 1 : 2) * -100) + '%';
+		ui.css('search tabBody>div', 'opacity', 1);
+		if (id)
+			ui.on('search tabBody', 'transitionend', function () {
+				ui.css('search tabBody>div:not(.' + id + ')', 'opacity', 0);
+			}, true);
+		ui.q('search tabBody').style.marginLeft = ((id == 'locations' ? 2 : id == 'contacts' ? 1 : 0) * -100) + '%';
 		ui.classRemove('search tab', 'tabActive');
-		ui.classAdd('search tab[i="' + id + '"]', 'tabActive');
+		ui.classAdd('search tab[i="' + (id ? id : 'events') + '"]', 'tabActive');
 		ui.navigation.closeLocationPicker();
 	}
 	static swipeLeft() {
