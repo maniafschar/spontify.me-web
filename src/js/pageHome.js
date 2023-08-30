@@ -43,7 +43,72 @@ class pageHome {
 </teaser>
 </homeBody>`;
 	static templateNews = v =>
-		global.template`<news>
+		global.template`<style>
+news {
+	position: relative;
+	display: block;
+	overflow: hidden;
+}
+
+news tab {
+	width: 50%;
+}
+
+news tabBody {
+	width: 200%;
+	transition: all 0.4s ease-out;
+	max-height: 80vh;
+	overflow: auto;
+}
+
+news tabBody div {
+	width: 50%;
+	display: block;
+	float: left;
+	position: relative;
+	padding-bottom: 2em;
+}
+
+news tabBody card {
+	text-align: left;
+	position: relative;
+	display: block;
+	margin-top: 1em;
+}
+
+news tabBody card::after {
+	content: ' ';
+	display: block;
+	clear: both;
+}
+
+news tabBody card p {
+	background: rgba(0, 0, 0, 0.05);
+	padding: 0.5em;
+	border-radius: 1em;
+}
+
+news tabBody card date {
+	font-size: 0.7em;
+	display: block;
+}
+
+news tabBody card img {
+	max-width: 50%;
+	float: right;
+	position: relative;
+	margin-left: 0.75em;
+	border-radius: 0.5em;
+}
+
+news buttonIcon {
+	right: -0.5em;
+	box-shadow: none;
+	color: black;
+	font-size: 3.2em;
+	bottom: -1.1em;
+}
+</style><news>
 <buttonIcon onclick="pageHome.edit()"${v.hideEdit}>+</buttonIcon>
 <tabHeader>
 <tab onclick="pageHome.selectTab('news')" i="news" class="tabActive">
@@ -333,7 +398,7 @@ ${ui.l('events.title')}
 			var v = {}, s = '';
 			for (var i = 1; i < pageHome.news.length; i++) {
 				var e = model.convert(new ContactNews(), pageHome.news, i);
-				var oc = user.contact.type == 'adminContent' ?
+				var oc = user.contact && user.contact.type == 'adminContent' ?
 					'onclick="pageHome.editNews(' + e.id + ')"' :
 					e.url ? 'onclick="ui.navigation.openHTML(&quot;' + e.url + '&quot;)"' : '';
 				s += oc ? '<card ' + oc + ' style="cursor:pointer;">' : '<card>';

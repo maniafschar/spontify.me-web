@@ -373,71 +373,6 @@ answers {
 	display: inline-block;
 }
 
-news {
-	position: relative;
-	display: block;
-	overflow: hidden;
-}
-
-news tab {
-	width: 50%;
-}
-
-news tabBody {
-	width: 200%;
-	transition: all 0.4s ease-out;
-	max-height: 80vh;
-	overflow: auto;
-}
-
-news tabBody div {
-	width: 50%;
-	display: block;
-	float: left;
-	position: relative;
-	padding-bottom: 2em;
-}
-
-news tabBody card {
-	text-align: left;
-	position: relative;
-	display: block;
-	margin-top: 1em;
-}
-
-news tabBody card::after {
-	content: ' ';
-	display: block;
-	clear: both;
-}
-
-news tabBody card p {
-	background: rgba(0, 0, 0, 0.05);
-	padding: 0.5em;
-	border-radius: 1em;
-}
-
-news tabBody card date {
-	font-size: 0.7em;
-	display: block;
-}
-
-news tabBody card img {
-	max-width: 50%;
-	float: right;
-	position: relative;
-	margin-left: 0.75em;
-	border-radius: 0.5em;
-}
-
-news buttonIcon {
-	right: -0.5em;
-	box-shadow: none;
-	color: black;
-	font-size: 3.2em;
-	bottom: -1.1em;
-}
-
 content {
 	position: absolute;
 	display: block;
@@ -1608,41 +1543,6 @@ detail text.list {
 
 detail urls label {
 	color: var(--bg1start) !important;
-}
-
-tabHeader {
-	height: 1.5em;
-	line-height: 1.6;
-	white-space: nowrap;
-	display: block;
-	margin: 0 0.5em;
-}
-
-.tabActive {
-	opacity: 1;
-}
-
-tab {
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	overflow: hidden;
-	height: 100%;
-	opacity: 0.5;
-	padding: 0;
-	display: inline;
-	cursor: pointer;
-	position: relative;
-	width: 33.3%;
-	float: left;
-	text-transform: lowercase;
-	transition: all .4s;
-}
-
-tabBody {
-	min-height: 3em;
-	position: relative;
-	width: 100%;
-	display: block;
 }
 
 progressbar {

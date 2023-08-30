@@ -66,12 +66,12 @@ h1 {
 			e.setAttribute('onclick', 'ui.q("content-admin-home").open(1)');
 			r._root.appendChild(e);
 			e = document.createElement('card');
-			e.innerHTML = `<top>390</top><bottom l="homeCard2"></bottom>`;
+			e.innerHTML = `<top>103</top><bottom l="homeCard2"></bottom>`;
 			e.setAttribute('class', 'mainBG');
 			e.setAttribute('onclick', 'ui.q("content-admin-home").open(2)');
 			r._root.appendChild(e);
 			e = document.createElement('card');
-			e.innerHTML = `<top>390</top><bottom l="homeCard3"></bottom>`;
+			e.innerHTML = `<top>68</top><bottom l="homeCard3"></bottom>`;
 			e.setAttribute('class', 'mainBG');
 			e.setAttribute('onclick', 'ui.q("content-admin-home").open(3)');
 			r._root.appendChild(e);

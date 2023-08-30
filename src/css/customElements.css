@@ -247,3 +247,38 @@ input-slider {
 	border-bottom: solid 1px rgba(255, 255, 255, 0.3);
 	display: block;
 }
+
+tabHeader {
+	height: 1.5em;
+	line-height: 1.6;
+	white-space: nowrap;
+	display: block;
+	margin: 0 0.5em;
+}
+
+.tabActive {
+	opacity: 1;
+}
+
+tab {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	height: 100%;
+	opacity: 0.5;
+	padding: 0;
+	display: inline;
+	cursor: pointer;
+	position: relative;
+	width: 33.3%;
+	float: left;
+	text-transform: lowercase;
+	transition: all .4s;
+}
+
+tabBody {
+	min-height: 3em;
+	position: relative;
+	width: 100%;
+	display: block;
+}
