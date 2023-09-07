@@ -36,7 +36,7 @@ appointment {
 	display: none;
 	margin-top: 1em;
 	position: relative;
-	color: white;
+	color: var(--text);
 }
 
 appointment day {
@@ -185,7 +185,7 @@ eventLocationInputHelper li {
 	cursor: pointer !important;
 	margin: 0.5em !important;
 	text-align: center !important;
-	color: white !important;
+	color: var(--text) !important;
 }
 
 mapPicker {

@@ -4,5 +4,8 @@
 	--bg2start: rgb(180, 150, 0);
 	--bg2stop: rgb(255, 217, 45);
 	--buttonText: black;
+	--buttonText: black;
+	--popupText: black;
 	--bgHint: rgb(255, 190, 40);
+	--text: white;
 }

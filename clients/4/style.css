@@ -1,7 +1,12 @@
 :root {
-	--bg1start: rgb(0, 70, 110);
-	--bg1stop: rgb(90, 170, 221);
-	--bg2start: rgb(0, 0, 0);
-	--bg2stop: rgb(60, 60, 110);
+	--bg1start: rgb(246, 194, 166);
+	--bg1stop: rgb(245, 239, 232);
+	--bg2start: rgb(20, 20, 40);
+	--bg2stop: rgb(67, 67, 107);
+	--bg3start: rgb(130, 209, 60, 0.95);
+	--bg3stop: rgb(175, 250, 100, 0.95);
 	--buttonText: white;
+	--popupText: black;
+	--bgHint: rgb(170, 255, 255);
+	--text: black;
 }
