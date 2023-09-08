@@ -93,6 +93,7 @@ module.exports = (env) => {
 					compiler.hooks.afterEmit.tap('client', () => {
 						var fs = require('fs'), file, client = env && env.client && !isNaN(env.client) ? env.client : '1';
 						var props = JSON.parse(fs.readFileSync('clients/' + client + '/props.json', 'utf8'));
+						props.nameShort = props.name.indexOf(' · ') > -1 ? props.name.substring(props.name.indexOf(' · ') + 3) : props.name;
 						fs.mkdirSync('dist/audio');
 						fs.mkdirSync('dist/css');
 						fs.mkdirSync('dist/font');
@@ -148,7 +149,7 @@ module.exports = (env) => {
 							},
 							{
 								pattern: /(<name\>)([^<]+)/,
-								replace: '$1' + props.name
+								replace: '$1' + props.nameShort
 							},
 							{
 								pattern: /(<description\>)([^<]+)/,
@@ -191,7 +192,7 @@ module.exports = (env) => {
 							.replace(/("bundle_id": ")([^"]+)/, '$1' + props.bundleId));
 						file = 'dist/images/logo.svg';
 						s = fs.readFileSync(file, 'utf8')
-							.replace('{placeholderAppTitle}', props.name.indexOf(' · ') > -1 ? props.name.substring(props.name.indexOf(' · ') + 3) : props.name);
+							.replace('{placeholderAppTitle}', props.nameShort);
 						if (fs.existsSync('clients/' + client + '/images/logo.png')) {
 							fs.writeFileSync('dist/images/logo.png', fs.readFileSync('clients/' + client + '/images/logo.png'));
 							s = s.replace('<image', '<image href="/images/logo.png"');
