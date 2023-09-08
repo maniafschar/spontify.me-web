@@ -20,7 +20,7 @@ class pageHome {
 	static teaserMeta;
 	static template = v =>
 		global.template`<homeHeader${v.logoSmall}>
-	<buttonIcon class="statistics${v.statsButton}" onclick="ui.navigation.goTo(&quot;content-admin-home&quot;)">
+	<buttonIcon class="statistics bgColor${v.statsButton}" onclick="ui.navigation.goTo(&quot;content-admin-home&quot;)">
 		<img source="content-admin-home"/>
 	</buttonIcon>
 	<img onclick="${v.actionLogo}" source="logo"/>
@@ -359,7 +359,7 @@ ${ui.l('events.title')}
 						v.image = global.serverImg + v.imageList;
 					else
 						v.image = 'images/contacts.svg';
-					s += '<div onclick="pageHome.clickNotification(' + v.contactNotification.id + ',&quot;' + v.contactNotification.action + '&quot;)" ' + (v.contactNotification.seen == 0 ? ' class="highlightBackground"' : '') + '><img src="' + v.image + '"' + (v.imageList ? '' : ' class="bgColor" style="padding:0.6em;"') + '/><span>' + global.date.formatDate(v.contactNotification.createdAt) + ': ' + v.contactNotification.text + '</span></div>';
+					s += '<div onclick="pageHome.clickNotification(' + v.contactNotification.id + ',&quot;' + v.contactNotification.action + '&quot;)" ' + (v.contactNotification.seen == 0 ? ' class="highlightBackground"' : '') + '><img src="' + v.image + '"' + (v.imageList ? '' : ' class="mainBG" style="padding:0.6em;"') + '/><span>' + global.date.formatDate(v.contactNotification.createdAt) + ': ' + v.contactNotification.text + '</span></div>';
 				}
 
 				e.innerHTML = s;
@@ -532,7 +532,7 @@ ${ui.l('events.title')}
 			success(l) {
 				var e, s = '';
 				if (user.contact)
-					s = '<card onclick="pageEvent.edit()" class="mainBG"><img source="add"/><text>' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>';
+					s = '<card onclick="pageEvent.edit()" class="mainBG" style="color:var(--text)"><img source="add"/><text>' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>';
 				e = pageEvent.getCalendarList(l);
 				var dates = ui.qa('dialog-hint eventFilter:last-child input-checkbox[checked="true"]');
 				var dateFiltered = function (e2) {

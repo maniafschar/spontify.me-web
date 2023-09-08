@@ -30,6 +30,7 @@ hinky {
 }
 
 a {
+	color: var(--buttonText);
 	display: block;
 	position: relative;
 	padding: 0.75em 0;

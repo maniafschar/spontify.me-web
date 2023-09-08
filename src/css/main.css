@@ -1159,7 +1159,6 @@ buttonIcon.right {
 buttonIcon.statistics {
 	top: 1em;
 	left: 1em;
-	background: rgba(0, 0, 0, 0.3);
 	font-size: 0.77em;
 	padding: 1em;
 }
