@@ -57,16 +57,16 @@ news tab {
 news tabBody {
 	width: 200%;
 	transition: all 0.4s ease-out;
-	max-height: 80vh;
-	overflow: auto;
 }
 
-news tabBody div {
+news tabBody>div {
 	width: 50%;
 	display: block;
 	float: left;
 	position: relative;
 	padding-bottom: 2em;
+	max-height: 80vh;
+	overflow: auto;
 }
 
 news tabBody card {
@@ -408,6 +408,8 @@ ${ui.l('events.title')}
 					s += '<p><date>' + global.date.formatDate(e.publish) + '</date>';
 				if (e.image)
 					s += '<img src="' + global.serverImg + e.image + '"/>';
+				else if (e.imgUrl)
+					s += '<img src="' + e.imgUrl + '"/>';
 				s += e.description;
 				s += '</p></card>'
 			}

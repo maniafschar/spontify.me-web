@@ -152,6 +152,7 @@ class ContactMarketing extends BaseEntity {
 class ContactNews extends BaseEntity {
 	description;
 	image;
+	imgUrl;
 	publish;
 	url;
 }
