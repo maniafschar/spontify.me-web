@@ -132,15 +132,14 @@ chart {
 		ui.q('search .defaultButton').click();
 	}
 	static actionZommMap() {
-		eval('ui2.close()');
 		setTimeout(function () {
-			ui.q('body home mapcanvas').scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+			ui.q('content-admin-home mapcanvas').scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
 			setTimeout(function () {
-				ui.q('[aria-label=\"Vergrößern\"]').click();
-				ui.q('[aria-label=\"Vergrößern\"]').click();
-				ui.q('[aria-label=\"Vergrößern\"]').click();
+				ui.q('content-admin-home [aria-label=\"Vergrößern\"]').click();
+				ui.q('content-admin-home [aria-label=\"Vergrößern\"]').click();
+				ui.q('content-admin-home [aria-label=\"Vergrößern\"]').click();
 			}, 500);
-			setTimeout(function () { ui.q('[aria-label=\"Stadtplan anzeigen\"]').click() }, 1500);
+			setTimeout(function () { ui.q('content-admin-home  [aria-label=\"Stadtplan anzeigen\"]').click() }, 1500);
 		}, 500);
 	}
 	static close(data) {
@@ -163,7 +162,7 @@ chart {
 		}, true);
 		ui.css(e, 'opacity', 0);
 	}
-	static language(lang) {
+	language(lang) {
 		DialogHint.currentStep--;
 		initialisation.setLanguage(lang);
 	}
@@ -180,8 +179,8 @@ chart {
 			return;
 		}
 		var body = (data.desc.indexOf(' ') > -1 ? data.desc : ui.l('intro.' + data.desc)), element;
-		body = body.replace('<rating/>', '<br/><br/><input-rating ui="rating"></input-rating><br/><br/><input type="email" name="email" placeholder="Email"></input><br/><br/><textarea name="feedback" maxlength="1000"></textarea><br/><br/><button-text onclick="this.save()" name="feedback" label="✓"></button-text>');
-		body = body.replace('<language/>', '<br/><br/><button-text ' + (global.language == 'DE' ? 'class="favorite"' : '') + ' onclick="this.language(&quot;DE&quot;)" l="DE" label="Deutsch"></button-text><button-text class="' + (global.language == 'EN' ? ' favorite' : '') + '" onclick="this.language(&quot;EN&quot;)" l="EN" label="English"></button-text>');
+		body = body.replace('<rating/>', '<br/><br/><input-rating name="rating"></input-rating><br/><br/><input type="email" name="email" placeholder="Email"></input><br/><br/><textarea name="feedback" maxlength="1000"></textarea><br/><br/><button-text onclick="ui.q(&quot;dialog-hint&quot;).save()" name="feedback" label="✓"></button-text>');
+		body = body.replace('<language/>', '<br/><br/><button-text ' + (global.language == 'DE' ? 'class="favorite"' : '') + ' onclick="ui.q(&quot;dialog-hint&quot;).language(&quot;DE&quot;)" l="DE" label="Deutsch"></button-text><button-text class="' + (global.language == 'EN' ? ' favorite' : '') + '" onclick="ui.q(&quot;dialog-hint&quot;).language(&quot;EN&quot;)" l="EN" label="English"></button-text>');
 		ui.css(e, 'display', 'block');
 		if (body.indexOf('<input') < 0)
 			ui.attr(e, 'onclick', data.onclick ? data.onclick : DialogHint.currentStep > -1 ? 'ui.navigation.openIntro(event)' : 'ui.navigation.closeHint()');
@@ -264,9 +263,9 @@ chart {
 			DialogHint.steps.push({ desc: 'search', pos: '5%,-5em', size: '90%,auto', action: 'this.actionSearch()' });
 			DialogHint.steps.push({ desc: 'marketingStart', pos: '0.8em,5em', size: '80%,auto', hinky: 'left:1.6em;', hinkyClass: 'top', action: 'ui.navigation.goTo("home")' });
 			DialogHint.steps.push({ desc: 'statisticsCharts', pos: '10%,15em', size: '80%,auto', action: 'ui.navigation.goTo("content-admin-home")' });
-			DialogHint.steps.push({ desc: 'statisticsCharts2', pos: '10%,26em', size: '80%,auto', hinky: 'left:50%;', hinkyClass: 'top', action: 'ui2.open(1)' });
+			DialogHint.steps.push({ desc: 'statisticsCharts2', pos: '10%,12em', size: '80%,auto', hinky: 'left:50%;', hinkyClass: 'top' });
 			DialogHint.steps.push({ desc: 'statisticsMap', pos: '10%,2em', size: '80%,auto', hinky: 'left:50%;', hinkyClass: 'bottom', action: 'this.actionZommMap()' });
-			DialogHint.steps.push({ desc: 'marketingQuestions', pos: '10%,12em', size: '80%,auto', action: 'ui2.goTo(2)' });
+			DialogHint.steps.push({ desc: 'marketingQuestions', pos: '10%,12em', size: '80%,auto', action: 'ui.navigation.goTo("content-admin-marketing")' });
 			DialogHint.steps.push({ desc: 'epilog', pos: '10%,8em', size: '80%,auto' });
 		}
 		if (DialogHint.currentStep == DialogHint.steps.length - 1) {
@@ -286,13 +285,13 @@ chart {
 		else
 			DialogHint.open(DialogHint.steps[DialogHint.currentStep]);
 	}
-	static save() {
+	save() {
 		if (formFunc.validation.email(ui.q('dialog-hint input[name="email"]')) < 0)
 			communication.ajax({
 				url: global.serverApi + 'action/notify',
 				webCall: 'DialogHint.save',
 				method: 'POST',
-				body: 'text=' + encodeURIComponent(JSON.stringify(formFunc.getForm('hint'))),
+				body: 'text=' + encodeURIComponent(JSON.stringify(formFunc.getForm('dialog-hint span'))),
 				success(r) {
 					ui.navigation.openHint({ desc: 'Lieben Dank für Dein Feedback!', pos: '20%,12em', size: '60%,auto' });
 				}

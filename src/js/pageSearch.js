@@ -6,6 +6,7 @@ import { user } from './user';
 import { lists } from './lists';
 import { pageEvent } from './pageEvent';
 import { pageLocation } from './pageLocation';
+import { DialogHint } from './customElements/DialogHint';
 
 export { pageSearch };
 
@@ -354,7 +355,8 @@ ${v.keywords}
 		pageSearch[type].search();
 	}
 	static selectTab(id) {
-		ui.navigation.closeHint();
+		if (DialogHint.currentStep < 0)
+			ui.navigation.closeHint();
 		ui.css('search tabBody>div', 'opacity', 1);
 		if (id)
 			ui.on('search tabBody', 'transitionend', function () {

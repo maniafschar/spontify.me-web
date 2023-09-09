@@ -1562,7 +1562,7 @@ video-call {
 
 
 .highlightBackground {
-	background: var(--bg2stop) !important;
+	background: var(--bg3stop) !important;
 }
 
 .highlightMap::before {

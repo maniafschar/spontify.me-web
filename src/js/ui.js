@@ -180,6 +180,10 @@ class ui {
 						ui.navigation.goTo('info');
 						return true;
 					}
+					if (id.indexOf('news') == 0) {
+						pageHome.openNews();
+						return true;
+					}
 					if (id.indexOf('chat=') != 0 && id.indexOf('m=') != 0) {
 						id = global.decParam(id);
 						if (!id)
@@ -800,6 +804,9 @@ class formFunc {
 		for (var k in cb)
 			d.values[k] = cb[k].length > 0 ? cb[k].substring(1) : '';
 		e = form.querySelectorAll('input-slider:not([transient="true"])');
+		for (var i = 0; i < e.length; i++)
+			d.values[e[i].getAttribute('name')] = e[i].getAttribute('value');
+		e = form.querySelectorAll('input-rating:not([transient="true"])');
 		for (var i = 0; i < e.length; i++)
 			d.values[e[i].getAttribute('name')] = e[i].getAttribute('value');
 		e = form.querySelectorAll('input-hashtags:not([transient="true"])');
