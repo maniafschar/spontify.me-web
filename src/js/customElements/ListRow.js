@@ -19,6 +19,8 @@ div {
 	margin: 1em 0 0.5em 0;
 	height: 6em;
 	transition: all 0.4s ease-out;
+	stroke: var(--text);
+	fill: var(--text);
 }
 
 text {

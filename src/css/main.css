@@ -1115,6 +1115,7 @@ detail detailDistance svg {
 	left: 0;
 	top: 1em;
 	opacity: 0.3;
+	width: 100%;
 }
 
 a:link,
@@ -1379,6 +1380,8 @@ detail detailTogglePanel {
 
 detail {
 	z-index: 3;
+	stroke: var(--text);
+	fill: var(--text);
 }
 
 detail>div {
