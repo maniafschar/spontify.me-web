@@ -219,6 +219,7 @@ chart {
 			ui.css(e, 'bottom', 0);
 			e = element;
 		}
+		ui.css(e, 'width', null);
 		ui.classAdd(e, 'body');
 		if (data.hinky) {
 			element = document.createElement('hinky');

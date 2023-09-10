@@ -314,7 +314,6 @@ class communication {
 				return;
 		}
 		var body = 'TEXT\n\t' + text.replace(/\n/g, '\n\t');
-		body += '\n\nCONTACTID\n\t' + (user.contact ? user.contact.id : '-');
 		body += '\n\nAPPNAME\n\t' + navigator.appName;
 		body += '\n\nAPPVERSION\n\t' + navigator.appVersion;
 		body += '\n\nLANGUAGE\n\t' + navigator.language;

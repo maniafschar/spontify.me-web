@@ -61,7 +61,7 @@ class lists {
 						e.scrollTop = 0;
 					lists.setListHint(divID);
 				}
-				formFunc.svg.replaceAll();
+				formFunc.svg.replaceAll(ui.qa('list-row img[source]'));
 				geoData.updateCompass();
 			}
 		});

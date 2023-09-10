@@ -225,7 +225,7 @@ ${v.matchIndicatorHintDescription}
 				if (a && v.age >= parseInt(a.split(',')[0]) && v.age <= parseInt(a.split(',')[1]))
 					v.matchIndicatorClass = ' class="pulse"';
 			}
-			v.gender = '<img src="images/gender' + v.gender + '.svg" />';
+			v.gender = '<img source="gender' + v.gender + '" />';
 		}
 		if (skills.totalMatch) {
 			v.matchIndicator = skills.totalMatch + '/' + skills.total;
@@ -244,7 +244,7 @@ ${v.matchIndicatorHintDescription}
 		if (v.image)
 			v.image = '<img src="' + global.serverImg + v.image + '" />';
 		else {
-			v.image = '<div class="mainBG" style="padding:8em;"><img src="images/contacts.svg" ' + (preview ? 'class="fade"' : '') + '/></div>';
+			v.image = '<div class="mainBG" style="padding:8em;"><img source="contacts" ' + (preview ? 'class="fade"' : '') + '/></div>';
 			if (preview)
 				v.previewHintImage = '<previewHint class="image">' + ui.l('settings.previewHintImage') + '</previewHint>';
 		}
@@ -293,7 +293,7 @@ ${v.matchIndicatorHintDescription}
 			if (bd == 2) {
 				r.birthday = ui.l('contacts.bday').replace('{0}', global.date.formatDate(b));
 				if (d2.getMonth() == d1.getMonth() && d2.getDate() == d1.getDate())
-					r.present = '<img src="images/present.svg"/>';
+					r.present = '<img source="present"/>';
 			}
 		}
 		return r;
@@ -310,14 +310,14 @@ ${v.matchIndicatorHintDescription}
 			var v = model.convert(new Contact(), l, i);
 			var image, text, flag1, flag2, flag3, birth = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
 			if (v.imageList)
-				image = global.serverImg + v.imageList;
+				image = v.imageList;
 			else
-				image = 'images/contacts.svg';
+				image = 'contacts';
 			var skills = ui.getSkills(v, 'list');
 			flag1 = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
 			if (skills.total && skills.totalMatch / skills.total > 0)
 				flag2 = parseInt('' + (skills.totalMatch / skills.total * 100 + 0.5)) + '%';
-			flag3 = v.gender ? '<img src="images/gender' + v.gender + '.svg"/>' : '';
+			flag3 = v.gender ? '<img source="gender' + v.gender + '"/>' : '';
 			if (!v._message1)
 				v._message1 = skills.text();
 			if (!v._message2)

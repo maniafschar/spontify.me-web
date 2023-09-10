@@ -54,7 +54,7 @@ flag>* {
 	width: 100%;
 }
 
-flag img {
+flag svg {
 	height: 1em;
 }
 
@@ -71,28 +71,29 @@ imagelist {
 	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
 }
 
-imagelist img {
+imagelist svg {
 	height: 100%;
 	max-width: 100%;
 }
 
-imagelist img.default {
+imagelist svg.default {
 	padding: 1em;
 }
 
-imagelist img.present {
+imagelist svg.present {
 	position: absolute;
 	left: 0;
 	height: 2.5em;
 	border-radius: 0;
 }
 
-imagelist svg {
+imagelist svg.favorite {
 	position: absolute;
 	left: 0.25em;
 	bottom: 0.25em;
 	width: 1.5em;
 	display: none;
+	height: initial;
 }
 
 :host(.favorite) imagelist svg {
@@ -154,8 +155,8 @@ compass::after {
 	${this.getAttribute('flag3') ? decodeURIComponent(this.getAttribute('flag3')) : ''}
 </flag>
 <imagelist>
-	<img src="${this.getAttribute('image')}" class="mainBG${!this.getAttribute('image') || this.getAttribute('image').indexOf('.svg') > 0 ? ' default' : ''}" />
-	<img source="favorite" />
+	<img ${(this.getAttribute('image').indexOf('/') > 0 ? 'src="' + global.serverImg : 'source="') + this.getAttribute('image')}" class="${!this.getAttribute('image') || this.getAttribute('image').indexOf('/') < 0 ? 'mainBG default' : ''}" />
+	<img source="favorite" class="favorite" />
 </imagelist>`;
 		this._root.appendChild(element);
 		this.removeAttribute('title');

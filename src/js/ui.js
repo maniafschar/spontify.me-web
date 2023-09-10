@@ -506,7 +506,16 @@ class ui {
 				var i = path.indexOf(p);
 				if (i > -1 && path.indexOf(' ', i) > -1) {
 					i = path.indexOf(' ', i);
-					return document.querySelector(path.substring(0, i))._root.querySelectorAll(path.substring(i).trim());
+					var path1 = path.substring(0, i);
+					var path2 = path.substring(i).trim();
+					var result = [];
+					var e = document.querySelectorAll(path1);
+					for (i = 0; i < e.length; i++) {
+						var e2 = e[i]._root.querySelectorAll(path2);
+						for (var i2 = 0; i2 < e2.length; i2++)
+							result.push(e2[i2]);
+					}
+					return result;
 				}
 			}
 		}
@@ -867,6 +876,7 @@ class formFunc {
 							var e = document.createElement('div');
 							e.innerHTML = formFunc.svg.data[id];
 							e.firstChild.onclick = imgs[i].onclick;
+							e.firstChild.setAttribute('class', imgs[i].getAttribute('class'));
 							imgs[i].parentNode.replaceChild(e.firstChild, imgs[i]);
 						}
 					} else

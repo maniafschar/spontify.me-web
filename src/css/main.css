@@ -1109,7 +1109,7 @@ detailCompass span {
 	opacity: 0.6;
 }
 
-detail detailDistance img {
+detail detailDistance svg {
 	height: 3em;
 	position: absolute;
 	left: 0;

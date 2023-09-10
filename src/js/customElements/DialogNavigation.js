@@ -32,6 +32,8 @@ item svg {
 	padding: 0 0.1em;
 	width: 2em;
 	line-height: 2.2;
+	stroke: var(--navigation);
+	fill: var(--navigation);
 }
 
 item.active svg {

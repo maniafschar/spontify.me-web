@@ -508,13 +508,13 @@ class pageEvent {
 				if (v.event.imageList)
 					image = global.serverImg + v.event.imageList;
 				else if (v.imageList)
-					image = global.serverImg + v.imageList;
+					image = v.imageList;
 				else if (v.contact.imageList)
-					image = global.serverImg + v.contact.imageList;
+					image = v.contact.imageList;
 				else if (v.id)
-					image = 'images/events.svg';
+					image = 'events';
 				else
-					image = 'images/contacts.svg';
+					image = 'contacts';
 				var oc;
 				v.idDate = pageEvent.getId(v);
 				if (ui.navigation.getActiveID() == 'settings')

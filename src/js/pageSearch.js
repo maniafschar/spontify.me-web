@@ -13,7 +13,7 @@ export { pageSearch };
 class pageSearch {
 	static template = v =>
 		global.template`<tabHeader>
-	<tab onclick="pageSearch.selectTab('events')" i="events">
+	<tab onclick="pageSearch.selectTab('events')" i="events" class="tabActive">
 		${ui.l('events.title')}
 	</tab>
 	<tab onclick="pageSearch.selectTab('contacts')" i="contacts">
@@ -25,8 +25,8 @@ class pageSearch {
 </tabHeader>
 <tabBody>
 	<div class="events"></div>
-	<div class="contacts"></div>
-	<div class="locations"></div>
+	<div class="contacts" style="opacity:0;"></div>
+	<div class="locations" style="opacity:0;"></div>
 </tabBody>`;
 	static contacts = {
 		fieldValues: null,
@@ -346,7 +346,6 @@ ${v.keywords}
 			ui.q('search tabBody div.events').innerHTML = pageSearch.events.getFields() + '<listResults></listResults>';
 			ui.q('search tabBody div.locations').innerHTML = pageSearch.locations.getFields() + '<listResults></listResults>';
 			formFunc.initFields(ui.q('search'));
-			pageSearch.selectTab();
 		}
 	}
 	static repeatSearch() {
@@ -358,10 +357,9 @@ ${v.keywords}
 		if (DialogHint.currentStep < 0)
 			ui.navigation.closeHint();
 		ui.css('search tabBody>div', 'opacity', 1);
-		if (id)
-			ui.on('search tabBody', 'transitionend', function () {
-				ui.css('search tabBody>div:not(.' + id + ')', 'opacity', 0);
-			}, true);
+		ui.on('search tabBody', 'transitionend', function () {
+			ui.css('search tabBody>div:not(.' + id + ')', 'opacity', 0);
+		}, true);
 		ui.q('search tabBody').style.marginLeft = ((id == 'locations' ? 2 : id == 'contacts' ? 1 : 0) * -100) + '%';
 		ui.classRemove('search tab', 'tabActive');
 		ui.classAdd('search tab[i="' + (id ? id : 'events') + '"]', 'tabActive');

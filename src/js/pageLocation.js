@@ -31,7 +31,7 @@ class pageLocation {
 	static templateDetail = v =>
 		global.template`<detailHeader idFav="${v.locationFavorite.id}" data="${v.data}">
 	<detailImg>
-		<img src="${v.image}" />
+		${v.image}
 		<detailTitle>
 			<title>${v.name}</title>
 		</detailTitle>
@@ -270,9 +270,9 @@ ${v.rating}
 			v.hideMeMatchIndicator = ' class="hidden"';
 		}
 		if (v.image)
-			v.image = global.serverImg + v.image;
+			v.image = '<img src="' + global.serverImg + v.image + '" />';
 		else
-			v.image = (v.event.id ? 'images/events.svg' : 'images/locations.svg') + '" class="mainBG" style="padding:8em;';
+			v.image = '<div class="mainBG" style="padding:8em;"><img source="' + (v.event.id ? 'events' : 'locations') + '" /></div>';
 		var r = v.event.id ? v.event.rating : eventWithLocation ? v.rating : v.contact.rating;
 		if (r > 0) {
 			if (v.event.id)
@@ -288,7 +288,7 @@ ${v.rating}
 		else {
 			v.compassDisplay = ' style="display:none;"';
 			if (v.contact.gender)
-				v.gender = '<img src="images/gender' + v.contact.gender + '.svg" />';
+				v.gender = '<img source="gender' + v.contact.gender + '" />';
 		}
 		if (eventWithLocation) {
 			v.address = v.address.replace(/\n/g, '<br />');
@@ -404,9 +404,9 @@ ${v.rating}
 			if (v.address)
 				text += v.address;
 			if (v.imageList)
-				image = global.serverImg + v.imageList;
+				image = v.imageList;
 			else
-				image = 'images/locations.svg';
+				image = 'locations';
 			var oc;
 			if (ui.navigation.getActiveID() == 'settings')
 				oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';
