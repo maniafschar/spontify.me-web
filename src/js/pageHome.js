@@ -107,9 +107,9 @@ news tabBody card img {
 news buttonIcon {
 	left: -0.5em;
 	box-shadow: none;
-	color: black;
 	font-size: 3.2em;
-	top: -0.7em;
+	top: -0.6em;
+	line-height: 1em;
 }
 </style><news>
 <buttonIcon onclick="pageHome.edit()"${v.hideEdit}>+</buttonIcon>
