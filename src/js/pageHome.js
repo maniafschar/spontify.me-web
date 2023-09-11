@@ -48,6 +48,7 @@ news {
 	position: relative;
 	display: block;
 	overflow: hidden;
+ 	padding-top: 1em;
 }
 
 news tab {
@@ -73,7 +74,7 @@ news tabBody card {
 	text-align: left;
 	position: relative;
 	display: block;
-	margin-top: 1em;
+	margin-bottom: 1em;
 }
 
 news tabBody card::after {
@@ -104,11 +105,11 @@ news tabBody card img {
 }
 
 news buttonIcon {
-	right: -0.5em;
+	left: -0.5em;
 	box-shadow: none;
 	color: black;
 	font-size: 3.2em;
-	bottom: -1.1em;
+	top: -0.7em;
 }
 </style><news>
 <buttonIcon onclick="pageHome.edit()"${v.hideEdit}>+</buttonIcon>
