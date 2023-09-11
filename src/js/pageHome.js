@@ -85,7 +85,7 @@ news tabBody card::after {
 
 news tabBody card p {
 	background: rgba(200, 255, 0, 0.1);
-	padding: 0.75em 0.75em 1.75em 0.75em;
+	padding: 0.75em;
 	border-radius: 1em;
  	text-align: center;
 }
@@ -405,10 +405,11 @@ ${ui.l('events.title')}
 					'onclick="pageHome.editNews(' + e.id + ')"' :
 					e.url ? 'onclick="ui.navigation.openHTML(&quot;' + e.url + '&quot;)"' : '';
 				s += oc ? '<card ' + oc + ' style="cursor:pointer;">' : '<card>';
+				s += '<p' + (e.image || e.imgUrl ? ' style="padding-bottom:1.75em;">' : '>');
 				if (global.date.server2local(e.publish) > new Date())
-					s += '<p><date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
+					s += '<date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
 				else
-					s += '<p><date>' + global.date.formatDate(e.publish) + '</date>';
+					s += '<date' + global.date.formatDate(e.publish) + '</date>';
 				s += e.description;
 				if (e.image)
 					s += '<img src="' + global.serverImg + e.image + '"/>';
