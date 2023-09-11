@@ -38,7 +38,7 @@ class pageSettings {
 </tabBody><save class="highlightColor" onclick="pageSettings.save()">&check;</save>`;
 	static templateSettings1 = v =>
 		global.template`<field>
-	<label style="padding-top:1em;">${ui.l('pseudonym')}</label>
+	<label>${ui.l('pseudonym')}</label>
 	<value>
 		<input name="pseudonym" value="${v['contact.pseudonym']}" />
 	</value>
