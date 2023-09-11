@@ -1511,11 +1511,11 @@ detail detailHeader matchIndicator svg .circle {
 }
 
 detail detailHeader matchIndicator svg .percentage {
-	font-family: sans-serif;
 	font-size: 0.5em;
 	text-anchor: middle;
 	font-family: Comfortaa;
 	fill: white;
+	stroke: transparent;
 }
 
 detail detailHeader matchIndicator span {
