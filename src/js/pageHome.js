@@ -83,9 +83,10 @@ news tabBody card::after {
 }
 
 news tabBody card p {
-	background: rgba(0, 0, 0, 0.05);
-	padding: 0.5em;
+	background: rgba(200, 255, 0, 0.1);
+	padding: 0.75em 0.75em 1.75em 0.75em;
 	border-radius: 1em;
+ 	text-align: center;
 }
 
 news tabBody card date {
@@ -94,10 +95,11 @@ news tabBody card date {
 }
 
 news tabBody card img {
-	max-width: 50%;
-	float: right;
+	width: 96%;
+	float: left;
 	position: relative;
-	margin-left: 0.75em;
+	margin-left: 2%;
+ 	margin-top: 0.5em;
 	border-radius: 0.5em;
 }
 
@@ -406,11 +408,11 @@ ${ui.l('events.title')}
 					s += '<p><date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
 				else
 					s += '<p><date>' + global.date.formatDate(e.publish) + '</date>';
+				s += e.description;
 				if (e.image)
 					s += '<img src="' + global.serverImg + e.image + '"/>';
 				else if (e.imgUrl)
 					s += '<img src="' + e.imgUrl + '"/>';
-				s += e.description;
 				s += '</p></card>'
 			}
 			v.news = s ? s : '<card style="text-align:center;padding:0.5em;"><p>' + ui.l('home.noNews').replace('{0}', ui.l('home.news')) + '</p></card>';
@@ -419,9 +421,9 @@ ${ui.l('events.title')}
 				var e = pageHome.events[i];
 				s += '<card onclick="details.open(&quot;' + pageEvent.getId(e) + '&quot;,' + JSON.stringify({ webCall: 'pageHome.openNews', query: 'event_list', search: encodeURIComponent('event.id=' + e.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)" style="cursor:pointer;">';
 				s += '<p><date>' + global.date.formatDate(e.event.startDate) + '</date>';
+				s += e.event.description;
 				if (e.event.image || e.image)
 					s += '<img src="' + global.serverImg + (e.event.image || e.image) + '"/>';
-				s += e.event.description;
 				s += '</p></card>'
 			}
 			v.events = s ? s : '<card style="text-align:center;padding:0.5em;"><p>' + ui.l('home.noNews').replace('{0}', ui.l('events.title')) + '</p></card>';
