@@ -121,6 +121,7 @@ module.exports = (env) => {
 							.replace(/\{placeholderSchema}/g, props.url.substring(8, props.url.lastIndexOf('.'))));
 						file = 'dist/js/init.js';
 						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
+							.replace('{imprintCustom}', props.imprint ? props.imprint : '')
 							.replace('{placeholderAppTitle}', props.name)
 							.replace('{placeholderClientId}', '' + Math.max(parseInt(client), 1))
 							.replace('{placeholderServer}', props.server)

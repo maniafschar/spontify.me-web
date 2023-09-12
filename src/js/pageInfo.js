@@ -22,7 +22,7 @@ class pageInfo {
 </infoblock>
 <button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info2&quot;)" label="info.imprintTitle"></button-text><br/>
 <infoblock id="info2" style="display:none;">
-	${ui.l('info.imprint')}
+	${ui.l('info.imprint')}${pageInfo.getImprintCustom()}
 </infoblock>`;
 	static templateCopyright = v =>
 		global.template`<div style="text-align:center;padding:2em 1em;clear:both;">${ui.l('info.infoOther')}<br/>© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>`;
@@ -33,12 +33,16 @@ class pageInfo {
 	${v.description}
 </div>
 </infoblock>`;
+	static getImprintCustom() {
+		if (global.imprintCustom)
+			return '<br/><br/><b>' + ui.l('info.licensedFor') + '</b><br/>' + global.imprintCustom;
+	}
 	static init() {
 		var e = ui.q('info');
 		if (!e.innerHTML) {
 			var render = function (v) {
 				v.description = ui.l('info.description').replace('{0}', v.fee).replace(/\{1}/g, global.appTitle.indexOf(global.separator) > -1 ? global.appTitle.substring(0, global.appTitle.indexOf(global.separator)) : global.appTitle);
-				e.innerHTML = pageInfo.templateDesc(v) + pageInfo.template() + pageInfo.templateCopyright();
+				e.innerHTML = pageInfo.templateDesc(v) + pageInfo.template(v) + pageInfo.templateCopyright();
 				pageInfo.init();
 			}
 			communication.ajax({

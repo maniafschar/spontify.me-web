@@ -1460,6 +1460,7 @@ detail matchIndicatorHint span {
 detail matchIndicatorHint label {
 	color: black !important;
 	margin: 0 !important;
+	left: 0;
 }
 
 detail>img.present {

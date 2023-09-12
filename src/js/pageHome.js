@@ -84,9 +84,9 @@ news tabBody card::after {
 }
 
 news tabBody card p {
-	background: rgba(200, 255, 0, 0.1);
+	background: rgba(255, 0, 0, 0.1);
 	padding: 0.75em;
-	border-radius: 1em;
+	border-radius: 0.5em;
  	text-align: center;
 }
 
@@ -409,7 +409,7 @@ ${ui.l('events.title')}
 				if (global.date.server2local(e.publish) > new Date())
 					s += '<date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
 				else
-					s += '<date' + global.date.formatDate(e.publish) + '</date>';
+					s += '<date>' + global.date.formatDate(e.publish) + '</date>';
 				s += e.description;
 				if (e.image)
 					s += '<img src="' + global.serverImg + e.image + '"/>';
