@@ -411,8 +411,8 @@ groups {
 
 login registerHint {
 	position: absolute;
-	margin-right: 1.666%;
-	width: 30%;
+	margin-right: 2%;
+	width: 96%;
 	right: 0;
 	bottom: 4em;
 	padding: 1em 0.5em;

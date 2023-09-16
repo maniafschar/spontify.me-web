@@ -422,7 +422,7 @@ ${ui.l('events.title')}
 			for (var i = 0; i < pageHome.events.length; i++) {
 				var e = pageHome.events[i];
 				s += '<card onclick="details.open(&quot;' + pageEvent.getId(e) + '&quot;,' + JSON.stringify({ webCall: 'pageHome.openNews', query: 'event_list', search: encodeURIComponent('event.id=' + e.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)" style="cursor:pointer;">';
-				s += '<p><date>' + global.date.formatDate(e.event.startDate) + '</date>';
+				s += '<p' + (e.image || e.imgUrl ? ' style="padding-bottom:1.75em;"' : '') + '><date>' + global.date.formatDate(e.event.startDate) + '</date>';
 				s += e.event.description;
 				if (e.event.image || e.image)
 					s += '<img src="' + global.serverImg + (e.event.image || e.image) + '"/>';

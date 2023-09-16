@@ -180,7 +180,7 @@ class ui {
 						ui.navigation.goTo('info');
 						return true;
 					}
-					if (id.indexOf('news') == 0) {
+					if (id.indexOf('news=') == 0) {
 						pageHome.openNews();
 						return true;
 					}

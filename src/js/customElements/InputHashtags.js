@@ -195,7 +195,7 @@ search hashtags>div label.selected {
 		ui.classRemove(e.querySelectorAll('category label.selected'), 'selected');
 		ui.classAdd(e.querySelectorAll('category label')[i], 'selected');
 		var a = e.querySelectorAll('div')[i];
-		e.style.minHeight = '12em';
+		e.style.minHeight = '14em';
 		var f = function () { ui.toggleHeight(a, function () { e.style.minHeight = null; }); };
 		if (visibleBlock && visibleBlock != a)
 			ui.toggleHeight(visibleBlock, f);
