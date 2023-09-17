@@ -66,7 +66,7 @@ news tabBody>div {
 	float: left;
 	position: relative;
 	padding-bottom: 2em;
-	max-height: 80vh;
+	max-height: 70vh;
 	overflow: auto;
 }
 
