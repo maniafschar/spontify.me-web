@@ -181,7 +181,7 @@ class ui {
 						return true;
 					}
 					if (id.indexOf('news=') == 0) {
-						pageHome.openNews();
+						pageHome.openNews(id.substring(5));
 						return true;
 					}
 					if (id.indexOf('chat=') != 0 && id.indexOf('m=') != 0) {

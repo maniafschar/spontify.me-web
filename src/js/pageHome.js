@@ -394,7 +394,7 @@ ${ui.l('events.title')}
 			'<div style="padding:1em 0;"><button-text' + (global.language == 'DE' ? ' class="favorite"' : '') + ' onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE" label="Deutsch"></button-text>' +
 			'<button-text' + (global.language == 'EN' ? ' class="favorite"' : '') + ' onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN" label="English"></button-text></div>');
 	}
-	static openNews() {
+	static openNews(id) {
 		var render = function () {
 			if (!pageHome.news || !pageHome.events)
 				return;
@@ -432,6 +432,16 @@ ${ui.l('events.title')}
 			if (user.contact.type != 'adminContent')
 				v.hideEdit = ' class="hidden"';
 			ui.navigation.openHint({ desc: pageHome.templateNews(v), pos: '1em,1em', size: '-1em,auto', onclick: 'return false' });
+			if (id)
+				communication.ajax({
+					url: global.serverApi + 'db/one?query=contact_listNews&search=' + encodeURIComponent('contactNews.id=' + id),
+					webCall: 'pageHome.openNews',
+					responseType: 'json',
+					success(r) {
+						if (r && r['contactNews.url'])
+							ui.navigation.openHTML(r['contactNews.url']);
+					}
+				});
 		}
 		if (!pageHome.news)
 			communication.ajax({

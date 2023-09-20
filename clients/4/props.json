@@ -11,7 +11,7 @@
 		"infoDescription": "<ul><li>Are you a <emphasis>{1}</emphasis> fan?</li><li>Do you like doing more with other {1} fans?</li><li>Watch games together, but also organize and participate in other events together?</li></ul>The aim of the <emphasis>${appTitle} app</emphasis> is to support the exchange between fans. Not only do you find suitable events from other fans, you can also set <span class=\"highlightColor\">search queries</span> yourself to spontaneously find like-minded fans.<br/><br/>${appTitle} is not only free for you, you can even <span class=\"highlightColor\">earn money</span>. Build your community, organize great events, increase your level of awareness. If participants are willing to pay for your event, you can set up paid events with your PayPal account. The payment of the participants ends up directly and immediately on your PayPal account. Only {0}% will be charged as fees after the start of the event.",
 		"introDescription": "Are you a <emphasis>{0}</emphasis> fan? Do you like doing more with other {0} fans? Watch games together, but also organize and participate in other events together? The aim of the <emphasis>${appTitle} app</emphasis> is to intensify the exchange between fans."
 	},
-	"appleId": "",
+	"appleId": "6466737275",
 	"bundleId": "com.jq.fanclub.client4",
 	"email": "support@fan-club.online",
 	"imprint": "FC Bayern Total<br/>c/o Peter Grad<br/>Ellmosener Str. 11<br/>83043 Bad Aibling<br/>Deutschland<br/><br/>Telefon: 0173 2111 563<br/>E-Mail: fcbayerntotal@web.de<br/>https://fcbayerntotal.com",
