@@ -249,7 +249,10 @@ chart {
 			ui.css(e, 'right', data.size.split(',')[0].substring(1));
 		else
 			ui.css(e, 'width', data.size.split(',')[0]);
-		ui.css(e, 'height', data.size.split(',')[1]);
+		if (data.size.split(',')[1].indexOf('-') == 0)
+			ui.css(e, 'bottom', data.size.split(',')[1].substring(1));
+		else
+			ui.css(e, 'height', data.size.split(',')[1]);
 		ui.attr(ui.q('dialog-hint'), 'i', global.hash(data.desc));
 		formFunc.initFields(element);
 		setTimeout(function () { ui.css('dialog-hint', 'opacity', 1) }, 10);

@@ -348,11 +348,11 @@ ${v.info}`;
 					});
 					formFunc.initFields(ui.q('settings'));
 					if (!v['contact.ageFemale'])
-						ui.css(ui.q('#settingsInterest2').nextElementSibling, 'display', 'none');
+						ui.css(ui.q('settings [name="ageFemale"]'), 'display', 'none');
 					if (!v['contact.ageMale'])
-						ui.css(ui.q('#settingsInterest1').nextElementSibling, 'display', 'none');
+						ui.css(ui.q('settings [name="ageMale"]'), 'display', 'none');
 					if (!v['contact.ageDivers'])
-						ui.css(ui.q('#settingsInterest3').nextElementSibling, 'display', 'none');
+						ui.css(ui.q('settings [name="ageDivers"]'), 'display', 'none');
 					pageSettings.currentSettings = pageSettings.getCurrentSettings();
 					if (exec)
 						exec()
@@ -465,9 +465,9 @@ ${v.info}`;
 		formFunc.resetError(ui.q('input[name="gender"]'));
 		formFunc.resetError(ui.q('textarea[name="description"]'));
 		formFunc.resetError(ui.q('textarea[name="urls"]'));
-		formFunc.resetError(ui.q('#settingsInterest1'));
-		formFunc.resetError(ui.q('#settingsInterest2'));
-		formFunc.resetError(ui.q('#settingsInterest3'));
+		formFunc.resetError(ui.q('settings [name="ageFemale"]'));
+		formFunc.resetError(ui.q('settings [name="ageMale"]'));
+		formFunc.resetError(ui.q('settings [name="ageDivers"]'));
 	}
 	static resetEmailToOldValue() {
 		ui.q('input[name="email"]').value = pageSettings.currentSettings.split(global.separatorTech)[0];
@@ -527,11 +527,11 @@ ${v.info}`;
 			}
 		}
 		if (!ui.q('input-checkbox[name="genderInterest1"][checked="true"]'))
-			ui.q('#settingsInterest1').value = '';
+			ui.q('settings [name="ageMale"]').value = '';
 		if (!ui.q('input-checkbox[name="genderInterest2"][checked="true"]'))
-			ui.q('#settingsInterest2').value = '';
+			ui.q('settings [name="ageFemale"]').value = '';
 		if (!ui.q('input-checkbox[name="genderInterest3"][checked="true"]'))
-			ui.q('#settingsInterest3').value = '';
+			ui.q('settings [name="ageDivers"]').value = '';
 		ui.q('textarea[name="description"]').value = ui.val('textarea[name="description"]').replace(/</g, '&lt;');
 		ui.q('input[name="email"]').value = ui.val('input[name="email"]').trim().toLowerCase();
 		ui.q('settings input[name="skills"]').value = ui.q('settings input-hashtags').getAttribute('ids');

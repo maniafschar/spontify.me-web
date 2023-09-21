@@ -49,6 +49,7 @@ news {
 	display: block;
 	overflow: hidden;
  	padding-top: 1em;
+	 height: 100%;
 }
 
 news tab {
@@ -58,6 +59,7 @@ news tab {
 news tabBody {
 	width: 200%;
 	transition: all 0.4s ease-out;
+	height: 100%;
 }
 
 news tabBody>div {
@@ -66,7 +68,7 @@ news tabBody>div {
 	float: left;
 	position: relative;
 	padding-bottom: 2em;
-	max-height: 70vh;
+	height: 100%;
 	overflow: auto;
 }
 
@@ -87,7 +89,7 @@ news tabBody card p {
 	background: rgba(255, 0, 0, 0.1);
 	padding: 0.75em;
 	border-radius: 0.5em;
- 	text-align: center;
+	width: 96%;
 }
 
 news tabBody card date {
@@ -96,11 +98,11 @@ news tabBody card date {
 }
 
 news tabBody card img {
-	width: 96%;
-	float: left;
+	width: 100%;
+	float: right;
 	position: relative;
-	margin-left: 2%;
- 	margin-top: 0.5em;
+	margin-right: -6%;
+	margin-top: 0.5em;
 	border-radius: 0.5em;
 }
 
@@ -364,12 +366,14 @@ ${ui.l('events.title')}
 						v.image = 'images/contacts.svg';
 					s += '<div onclick="pageHome.clickNotification(' + v.contactNotification.id + ',&quot;' + v.contactNotification.action + '&quot;)" ' + (v.contactNotification.seen == 0 ? ' class="highlightBackground"' : '') + '><img src="' + v.image + '"' + (v.imageList ? '' : ' class="mainBG" style="padding:0.6em;"') + '/><span>' + global.date.formatDate(v.contactNotification.createdAt) + ': ' + v.contactNotification.text + '</span></div>';
 				}
-
 				e.innerHTML = s;
 				if (ui.cssValue(e, 'display') == 'none')
 					e.removeAttribute('h');
 				pageHome.badge = ui.qa('notificationList .highlightBackground').length;
 				pageHome.initNotificationButton();
+				pageHome.news = null;
+				if (ui.q('dialog-hint news'))
+					pageHome.openNews();
 			}
 		};
 		f.call();
@@ -431,7 +435,10 @@ ${ui.l('events.title')}
 			v.events = s ? s : '<card style="text-align:center;padding:0.5em;"><p>' + ui.l('home.noNews').replace('{0}', ui.l('events.title')) + '</p></card>';
 			if (user.contact.type != 'adminContent')
 				v.hideEdit = ' class="hidden"';
-			ui.navigation.openHint({ desc: pageHome.templateNews(v), pos: '1em,1em', size: '-1em,auto', onclick: 'return false' });
+			if (ui.q('dialog-hint news'))
+				ui.q('dialog-hint span').innerHTML = pageHome.templateNews(v);
+			else
+				ui.navigation.openHint({ desc: pageHome.templateNews(v), pos: '1em,1em', size: '-1em,-4em', onclick: 'return false' });
 			if (id)
 				communication.ajax({
 					url: global.serverApi + 'db/one?query=contact_listNews&search=' + encodeURIComponent('contactNews.id=' + id),

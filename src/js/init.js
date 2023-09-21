@@ -387,6 +387,8 @@ class initialisation {
 		});
 		ui.q('#addLeft > button-text').setAttribute('label', global.appTitle + ' blog');
 		ui.html('info', '');
+		ui.html('settings', '');
+		ui.html('login', '');
 		if (exec)
 			exec();
 		else
