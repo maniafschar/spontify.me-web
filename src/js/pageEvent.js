@@ -495,7 +495,7 @@ class pageEvent {
 					flag3 = '<compass style="transform:rotate('
 						+ geoData.getAngel(geoData.current, { lat: v.latitude, lon: v.longitude }) + 'deg);"></compass>';
 				else if (v.contact.gender)
-					flag3 = '<img src="images/gender' + v.contact.gender + '.svg" />';
+					flag3 = '<img source="gender' + v.contact.gender + '" />';
 				if (v.name)
 					name = t + ' ' + v.name;
 				else
