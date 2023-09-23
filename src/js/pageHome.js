@@ -315,7 +315,7 @@ ${ui.l('events.title')}
 				v.name = user.contact.pseudonym;
 				v.infoButton = ' hidden';
 				v.langButton = ' hidden';
-				if (user.appConfig.club)
+				if (user.appConfig.club && !user.appConfig.rss)
 					v.actionLogo = 'pageHome.openNews()';
 				else
 					v.actionLogo = 'ui.navigation.goTo(&quot;settings&quot;)';
@@ -402,6 +402,7 @@ ${ui.l('events.title')}
 		var render = function () {
 			if (!pageHome.news || !pageHome.events)
 				return;
+			pageHome.closeList();
 			var v = {}, s = '';
 			for (var i = 1; i < pageHome.news.length; i++) {
 				var e = model.convert(new ContactNews(), pageHome.news, i);

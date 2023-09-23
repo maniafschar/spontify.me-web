@@ -62,9 +62,9 @@ badgeNotifications {
 }
 
 badgeNotifications {
-	margin-top: -0.3em;
-    font-size: 1.6em;
-    margin-left: -0.3em;
+	margin-top: -0.15em;
+    font-size: 1.3em;
+    margin-left: -0.15em;
 }
 
 buttonIcon.chats {

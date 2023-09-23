@@ -932,6 +932,8 @@ class formFunc {
 				var error = document.createElement('errorHint');
 				error.innerHTML = s;
 				error.classList.add('highlightColor');
+				if (e.nodeName == 'INPUT-CHECKBOX')
+					error.setAttribute('onclick', 'var e=this.previousElementSibling;formFunc.resetError(e);e.setAttribute("checked", true)');
 				e2.append(error);
 			}
 			e2 = e2.parentNode;
