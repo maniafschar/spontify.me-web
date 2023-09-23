@@ -876,7 +876,8 @@ class formFunc {
 							var e = document.createElement('div');
 							e.innerHTML = formFunc.svg.data[id];
 							e.firstChild.onclick = imgs[i].onclick;
-							e.firstChild.setAttribute('class', imgs[i].getAttribute('class'));
+							if (imgs[i].getAttribute('class'))
+								e.firstChild.setAttribute('class', imgs[i].getAttribute('class'));
 							imgs[i].parentNode.replaceChild(e.firstChild, imgs[i]);
 						}
 					} else

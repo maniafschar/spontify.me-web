@@ -315,7 +315,7 @@ ${ui.l('events.title')}
 				v.name = user.contact.pseudonym;
 				v.infoButton = ' hidden';
 				v.langButton = ' hidden';
-				if (user.appConfig.club && !user.appConfig.rss)
+				if (user.appConfig.club)
 					v.actionLogo = 'pageHome.openNews()';
 				else
 					v.actionLogo = 'ui.navigation.goTo(&quot;settings&quot;)';
@@ -406,7 +406,7 @@ ${ui.l('events.title')}
 			var v = {}, s = '';
 			for (var i = 1; i < pageHome.news.length; i++) {
 				var e = model.convert(new ContactNews(), pageHome.news, i);
-				var oc = user.contact && user.contact.type == 'adminContent' ?
+				var oc = user.contact && user.contact.type == 'adminContent' && !user.appConfig.rss ?
 					'onclick="pageHome.editNews(' + e.id + ')"' :
 					e.url ? 'onclick="ui.navigation.openHTML(&quot;' + e.url + '&quot;)"' : '';
 				s += oc ? '<card ' + oc + ' style="cursor:pointer;">' : '<card>';
@@ -434,7 +434,7 @@ ${ui.l('events.title')}
 				s += '</p></card>'
 			}
 			v.events = s ? s : '<card style="text-align:center;padding:0.5em;"><p>' + ui.l('home.noNews').replace('{0}', ui.l('events.title')) + '</p></card>';
-			if (user.contact.type != 'adminContent')
+			if (user.contact.type != 'adminContent' || user.appConfig.rss)
 				v.hideEdit = ' class="hidden"';
 			if (ui.q('dialog-hint news'))
 				ui.q('dialog-hint span').innerHTML = pageHome.templateNews(v);
@@ -453,7 +453,7 @@ ${ui.l('events.title')}
 		}
 		if (!pageHome.news)
 			communication.ajax({
-				url: global.serverApi + 'db/list?query=contact_listNews&limit=25' + (user.contact.type == 'adminContent' ? '' : '&search=' + encodeURIComponent('contactNews.publish<\'' + global.date.local2server(new Date()) + '\'')),
+				url: global.serverApi + 'db/list?query=contact_listNews&limit=25' + (user.contact.type == 'adminContent' && !user.appConfig.rss ? '' : '&search=' + encodeURIComponent('contactNews.publish<\'' + global.date.local2server(new Date()) + '\'')),
 				webCall: 'pageHome.openNews',
 				responseType: 'json',
 				success(l) {
