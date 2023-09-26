@@ -250,7 +250,7 @@ mapButton::before {
 					element = document.createElement('popupTitle');
 					if (modal)
 						e.setAttribute('modal', 'true');
-					element.setAttribute('onclick', 'ui.navigation.closePopup()');
+					element.setAttribute('onclick', (closeAction ? 'if(' + closeAction + '!=false)' : '') + 'ui.navigation.closePopup()');
 					var element2 = document.createElement('div');
 					element2.innerText = title;
 					element.appendChild(element2);
@@ -263,10 +263,6 @@ mapButton::before {
 				e._root.appendChild(element);
 				ui.css(e, 'display', 'none');
 				formFunc.initFields(e);
-				if (closeAction)
-					e.setAttribute('close', closeAction);
-				else
-					e.removeAttribute('close');
 				e.removeAttribute('error');
 
 				ui.navigation.animation(e, visible ? 'slideDown' : 'popupSlideIn');

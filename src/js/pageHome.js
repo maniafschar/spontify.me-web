@@ -49,7 +49,8 @@ news {
 	display: block;
 	overflow: hidden;
  	padding-top: 1em;
-	 height: 100%;
+	height: 100%;
+	margin: 0 -1em;
 }
 
 news tab {
@@ -88,7 +89,7 @@ news tabBody card::after {
 news tabBody card p {
 	background: rgba(255, 0, 0, 0.1);
 	padding: 0.75em;
-	border-radius: 0.5em;
+	border-radius: 0 2em 0.5em 0;
 	width: 96%;
 }
 
@@ -101,9 +102,9 @@ news tabBody card img {
 	width: 100%;
 	float: right;
 	position: relative;
-	margin-right: -6%;
+	margin-right: -2.2em;
 	margin-top: 0.5em;
-	border-radius: 0.5em;
+	border-radius: 0.5em 0 0 3em;
 }
 
 news buttonIcon {
@@ -433,7 +434,7 @@ ${ui.l('events.title')}
 					s += '<img src="' + global.serverImg + (e.event.image || e.image) + '"/>';
 				s += '</p></card>'
 			}
-			v.events = s ? s : '<card style="text-align:center;padding:0.5em;"><p>' + ui.l('home.noNews').replace('{0}', ui.l('events.title')) + '</p></card>';
+			v.events = s ? s : '<card style="text-align:center;padding-top:3em;">' + ui.l('home.noNews').replace('{0}', ui.l('events.title')) + '</card>';
 			if (user.contact.type != 'adminContent' || user.appConfig.rss)
 				v.hideEdit = ' class="hidden"';
 			if (ui.q('dialog-hint news'))

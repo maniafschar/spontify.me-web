@@ -287,8 +287,6 @@
 		"events": {
 			"acceptedMarketingEvent": "Dein Event wurde genehmigt, viel Spaß!",
 			"canceled": "Du hast Deine Teilnahme abgesagt",
-			"confirm": "Sagt ein ${buddy} ab, kann er sich nicht wieder anmelden",
-			"confirmLabel": "Bestätigung",
 			"createdBy": "Event erstellt von",
 			"date": "Datum",
 			"edit": "Event editieren",
@@ -351,7 +349,7 @@
 			"stopParticipate": "Teilnahme absagen",
 			"stopParticipateButton": "Endgültig absagen!",
 			"stopParticipateHint": "Begründung der Absage hier eingeben",
-			"stopParticipateText": "Absagen von verbindlichen Zusagen können nicht revidiert werden. Möchtest Du fortfahren? Wenn Ja, dann gib eine Begründung für Deine Absage an:",
+			"stopParticipateText": "Absagen können nicht revidiert werden. Möchtest Du fortfahren? Wenn Ja, dann gib eine Begründung für Deine Absage an:",
 			"this": "Diesen {0}",
 			"ticketCurrent": "Aktuelle Tickets",
 			"ticketInteresst": "Tickets passend zu Deinen Skills",

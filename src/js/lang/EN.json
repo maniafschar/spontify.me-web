@@ -287,8 +287,6 @@
 		"events": {
 			"acceptedMarketingEvent": "Your event was accepted, have fun!",
 			"canceled": "You have canceled your participation",
-			"confirm": "If a ${buddy} cancels, he cannot re-participate",
-			"confirmLabel": "Confirmation",
 			"createdBy": "Event created by",
 			"date": "Date",
 			"edit": "Edit Event",
@@ -351,7 +349,7 @@
 			"stopParticipate": "Cancel participation",
 			"stopParticipateButton": "Definitively cancel!",
 			"stopParticipateHint": "Enter your reason for the cancellation here",
-			"stopParticipateText": "Cancellations of binding events cannot be revised. Do you wish to continue? If Yes, then enter a reason for your cancellation:",
+			"stopParticipateText": "Cancellations cannot be revised. Do you wish to continue? If Yes, then enter a reason for your cancellation:",
 			"this": "This {0}",
 			"ticketCurrent": "Actual tickets",
 			"ticketInteresst": "Tickets fitting your skills",

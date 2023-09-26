@@ -111,12 +111,6 @@ class pageEvent {
 			<input name="url" value="${v.url}" />
 		</value>
 	</field>
-	<field class="confirm noWTDField">
-		<label>${ui.l('events.confirmLabel')}</label>
-		<value>
-			<input-checkbox name="confirm" label="events.confirm" value="1" ${v.confirm}></input-checkbox>
-		</value>
-	</field>
 	<dialogButtons>
 		<button-text onclick="pageEvent.selectLocation()" label="events.selectLocation" class="selectLocation"></button-text>
 		<button-text onclick="pageEvent.save()" label="save" class="save hidden"></button-text>
@@ -144,7 +138,6 @@ class pageEvent {
 <div><span class="chatLinks" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;),event)"><img src="${v.imageEventOwner}"><br>${v.contact.pseudonym}</span></div>
 <div class="date eventMargin">${v.date}${v.endDate}</div>
 <div class="eventMargin">${v.text}</div>
-<div class="eventMargin">${v.eventMustBeConfirmed}</div>
 <div class="eventMargin">${v.maxParticipants}</div>
 <div class="price eventMargin">${v.eventPrice}</div>
 <div class="eventMargin"><urls>${v.url}</urls></div>
@@ -154,12 +147,10 @@ class pageEvent {
 	static checkPrice() {
 		if (ui.q('dialog-popup [name="price"]').value > 0) {
 			pageEvent.openSection('dialog-popup .paypal', !user.contact.authenticate);
-			pageEvent.openSection('dialog-popup .confirm', false);
 			pageEvent.openSection('dialog-popup .picture', true);
 			pageEvent.openSection('dialog-popup .url', true);
 		} else {
 			pageEvent.openSection('dialog-popup .paypal', false);
-			pageEvent.openSection('dialog-popup .confirm', ui.val('dialog-popup [name="type"][checked="true"]') != -2);
 			pageEvent.openSection('dialog-popup .picture', false);
 			pageEvent.openSection('dialog-popup .url', ui.val('dialog-popup [name="type"][checked="true"]') == -1);
 		}
@@ -213,8 +204,6 @@ class pageEvent {
 			v.eventPrice = ui.l('events.priceDisp0');
 		if (v.event.maxParticipants)
 			v.maxParticipants = ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
-		if (v.event.confirm == 1)
-			v.eventMustBeConfirmed = ui.l('events.participationMustBeConfirmed');
 		if (v.contact.imageList)
 			v.imageEventOwner = global.serverImg + v.contact.imageList;
 		else
@@ -313,8 +302,6 @@ class pageEvent {
 			v.repetition_m = ' checked="true"';
 		if (v.repetition == 'y')
 			v.repetition_y = ' checked="true"';
-		if (v.confirm)
-			v.confirm = ' checked="true"';
 		if (!v.startDate) {
 			d = new Date();
 			d.setDate(d.getDate() + 1);
@@ -416,12 +403,12 @@ class pageEvent {
 		return id + global.date.local2server(v.event.startDate).substring(0, 10);
 	}
 	static getParticipateButton(v, participantCount) {
-		if (v.event.confirm && v.eventParticipate.state == -1)
+		if (v.eventParticipate.state == -1)
 			return '';
 		var futureEvent = pageEvent.getDate(v) > new Date();
 		var text = '<div style="margin:1em 0;">';
 		if (futureEvent) {
-			if (v.event.locationId > 0 && (v.event.contactId == user.contact.id || v.eventParticipate.state == 1))
+			if (false && v.event.locationId > 0 && (v.event.contactId == user.contact.id || v.eventParticipate.state == 1))
 				text += '<button-text onclick="pageEvent.qrcode(' + (v.event.contactId == user.contact.id) + ')" label="events.qrcodeButton"></button-text><br/><br/>';
 			if (v.event.price > 0 && user.contact.id != v.event.contactId) {
 				if (!v.eventParticipate.state && v.contact.authenticate)
@@ -719,15 +706,13 @@ class pageEvent {
 		if (e.eventParticipate.id) {
 			d.values.state = e.eventParticipate.state == 1 ? -1 : 1;
 			d.id = e.eventParticipate.id;
-			if (e.event.confirm == 1) {
-				if (!ui.q('#stopParticipateReason')) {
-					ui.navigation.openPopup(ui.l('events.stopParticipate'), ui.l('events.stopParticipateText') + '<br/><textarea id="stopParticipateReason" placeholder="' + ui.l('events.stopParticipateHint') + '" style="margin-top:0.5em;"></textarea><button-text style="margin-top:1em;" onclick="pageEvent.participate()" label="events.stopParticipateButton"></button-text>');
-					return;
-				}
-				if (!ui.q('#stopParticipateReason').value)
-					return;
-				d.values.reason = ui.q('#stopParticipateReason').value;
+			if (!ui.q('#stopParticipateReason')) {
+				ui.navigation.openPopup(ui.l('events.stopParticipate'), ui.l('events.stopParticipateText') + '<br/><textarea id="stopParticipateReason" placeholder="' + ui.l('events.stopParticipateHint') + '" style="margin-top:0.5em;"></textarea><br/><br/><button-text style="margin-top:1em;" onclick="pageEvent.participate()" label="events.stopParticipateButton"></button-text>');
+				return;
 			}
+			if (!ui.q('#stopParticipateReason').value)
+				return;
+			d.values.reason = ui.q('#stopParticipateReason').value;
 		} else {
 			d.values.state = 1;
 			d.values.eventId = e.event.id;
@@ -755,10 +740,7 @@ class pageEvent {
 					ui.classAdd('detail card:last-child .event', 'participate');
 					ui.classAdd('row[i="' + e.event.id + '_' + eventDate + '"]', 'participate');
 					ui.q('detail card:last-child .event .reason').innerHTML = '';
-					if (e.event.confirm == '1')
-						button.outerHTML = '';
-					else
-						button.innerText = ui.l('events.participanteStop');
+					button.outerHTML = '';
 					e2.innerHTML = e2.innerHTML ? (parseInt(e2.innerHTML) + 1) + ' ' : '1 ';
 				} else {
 					ui.classRemove('detail card:last-child .event', 'participate');
@@ -811,7 +793,7 @@ class pageEvent {
 			grd.addColorStop(1, ui.cssValue(':root', '--bg1start'));
 			context.fillStyle = grd;
 			context.fillRect(0, 0, canvas.width, canvas.height);
-			context.fillStyle = 'white';
+			context.fillStyle = ui.cssValue(':root', '--text');
 			var image = new Image();
 			image.src = URL.createObjectURL(qr);
 			image.onload = function () {
@@ -955,10 +937,9 @@ class pageEvent {
 			return;
 		}
 		if (!ui.q('dialog-popup [name="repetition"][checked="true"]'))
-			v.repetition = 'o';
-		if (!v.confirm)
-			v.confirm = 0;
+			v.values.repetition = 'o';
 		v.classname = 'Event';
+		v.id = id;
 		communication.ajax({
 			url: global.serverApi + 'db/one',
 			method: id ? 'PUT' : 'POST',
@@ -1055,8 +1036,6 @@ class pageEvent {
 					text += global.separator + ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2).replace('.', ','));
 				if (v.event.maxParticipants)
 					text += global.separator + ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
-				if (v.event.confirm == 1)
-					text += global.separator + ui.l('events.participationMustBeConfirmed');
 				if (text)
 					text = '<br/>' + text.substring(global.separator.length);
 				text += '<br/>' + v.event.description;

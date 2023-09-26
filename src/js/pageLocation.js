@@ -200,7 +200,7 @@ ${v.rating}
 			ui.toggleHeight(e);
 	}
 	static deleteElement(id, classname) {
-		if (ui.q('#deleteElement').innerHTML.indexOf(' ') > 0) {
+		if (ui.q('dialog-popup #deleteElement').getAttribute('execute')) {
 			if (!id) {
 				ui.navigation.closePopup();
 				return;
@@ -226,8 +226,12 @@ ${v.rating}
 					}, 700);
 				}
 			});
-		} else
-			ui.html('#deleteElement', ui.l('delete.confirm'));
+		} else {
+			var e = ui.q('dialog-popup #deleteElement');
+			e.setAttribute('label', ui.l('delete.confirm'));
+			e.setAttribute('execute', true);
+
+		}
 	}
 	static detailLocationEvent(l, id) {
 		var v = model.convert(new Location(), l);

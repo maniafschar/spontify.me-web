@@ -126,16 +126,8 @@ class initialisation {
 		}
 		initialisation.statusBar();
 		universalLinks.subscribe(null, function (e) {
-			if (e.path) {
-				var s = global.server.substring(0, global.server.lastIndexOf('/'));
-				if (e.url.indexOf(s) == 0) {
-					s = e.url.substring(s.length);
-					if (s.length < 2)
-						return;
-					global.url = s;
-				} else
-					global.url = e.url;
-			}
+			if (e.url.indexOf('?') > -1)
+				ui.navigation.autoOpen(e.url.substring(e.url.indexOf('?') + 1));
 		});
 		universalLinks.subscribe('fb', function (e) {
 			FB.oauthCallback(e.url)
