@@ -31,11 +31,7 @@ hashtags label {
 	text-overflow: ellipsis;
 	border-radius: 1em;
 	background: transparent;
-	color: white;
-}
-
-hashtags label:hover {
-	color: white;
+	color: var(--text);
 }
 
 hashtags>div {
@@ -69,15 +65,6 @@ hashtagButton {
 
 hashtagButton::before {
 	content: '+';
-}
-settings field hashtags>div label,
-search hashtags>div label {
-	color: rgba(255, 255, 255, 0.4);
-}
-
-settings field hashtags>div label.selected,
-search hashtags>div label.selected {
-	color: white;
 }`;
 		this._root.appendChild(style);
 		var element = document.createElement('hashtagButton');

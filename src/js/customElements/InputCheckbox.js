@@ -15,6 +15,7 @@ class InputCheckbox extends HTMLElement {
 	padding-left: 1.75em;
 	padding-right: 0.75em;
 	color: black;
+	opacity: 1;
 }
 :host([checked="true"]) label:before {
 	position: absolute;

@@ -506,6 +506,20 @@ settings paypalFees {
 	padding-top: 2em;
 }
 
+settings genderSelectHint {
+	left: -0.5em;
+	background: rgba(0, 0, 0, 0.2);
+	position: absolute;
+	right: -0.5em;
+	top: 0.5em;
+	bottom: -2em;
+	color: white;
+	padding: 3em;
+	font-size: 1.3em;
+	line-height: 1.8;
+	display: none;
+}
+
 #info6 {
 	margin-top: -0.5em;
 	text-align: center;

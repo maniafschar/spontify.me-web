@@ -108,14 +108,6 @@ class pageLogin {
         </value>
     </field>
     <field>
-        <label>${ui.l('gender')}</label>
-        <value>
-            <input-checkbox type="radio" name="gender" ${v.gender1} value="1" deselect="true" label="male" style="margin-bottom:0;"></input-checkbox>
-            <input-checkbox type="radio" name="gender" ${v.gender2} value="2" deselect="true" label="female" style="margin-bottom:0;"></input-checkbox>
-            <input-checkbox type="radio" name="gender" ${v.gender3} value="3" deselect="true" label="divers" style="margin-bottom:0;"></input-checkbox>
-        </value>
-    </field>
-    <field>
         <label>${ui.l('info.legalTitle')}</label>
         <value>
             <input-checkbox value="true" ${v.agb} name="agb" label="login.legal"

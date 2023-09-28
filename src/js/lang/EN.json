@@ -627,7 +627,7 @@
 			"deleteReason6": "don't understand the usefulness of the app",
 			"deleteReason7": "none of these",
 			"editProfile": "Edit profile",
-			"genderUsingInterrestedIn": "\"Prefered from\" may only be used, when you enter your own gender.",
+			"genderSelectHint": "You can change these fields after you have entered your age/birthday and gender.",
 			"hintDeleteReason1": "The app is brand new, can't you give us a few more months?",
 			"hintDeleteReason2": "With valuable input from you we can make the app easier. Would you like to support us?",
 			"hintDeleteReason3": "In the notifications above you can turn off specific notifications.",

@@ -99,11 +99,10 @@ news tabBody card date {
 }
 
 news tabBody card img {
-	width: 100%;
-	float: right;
+	width: 96%;
+	margin-left: 4%;
 	position: relative;
-	margin-right: -2.2em;
-	margin-top: 0.5em;
+	margin-top: -1.5em;
 	border-radius: 0.5em 0 0 3em;
 }
 
@@ -416,12 +415,12 @@ ${ui.l('events.title')}
 					s += '<date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
 				else
 					s += '<date>' + global.date.formatDate(e.publish) + '</date>';
-				s += e.description;
+				s += e.description + '</p>';
 				if (e.image)
 					s += '<img src="' + global.serverImg + e.image + '"/>';
 				else if (e.imgUrl)
 					s += '<img src="' + e.imgUrl + '"/>';
-				s += '</p></card>'
+				s += '</card>'
 			}
 			v.news = s ? s : '<card style="text-align:center;padding:0.5em;"><p>' + ui.l('home.noNews').replace('{0}', ui.l('home.news')) + '</p></card>';
 			s = '';
@@ -429,10 +428,10 @@ ${ui.l('events.title')}
 				var e = pageHome.events[i];
 				s += '<card onclick="details.open(&quot;' + pageEvent.getId(e) + '&quot;,' + JSON.stringify({ webCall: 'pageHome.openNews', query: 'event_list', search: encodeURIComponent('event.id=' + e.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)" style="cursor:pointer;">';
 				s += '<p' + (e.image || e.imgUrl ? ' style="padding-bottom:1.75em;"' : '') + '><date>' + global.date.formatDate(e.event.startDate) + '</date>';
-				s += e.event.description;
+				s += e.event.description + '</p>';
 				if (e.event.image || e.image)
 					s += '<img src="' + global.serverImg + (e.event.image || e.image) + '"/>';
-				s += '</p></card>'
+				s += '</card>'
 			}
 			v.events = s ? s : '<card style="text-align:center;padding-top:3em;">' + ui.l('home.noNews').replace('{0}', ui.l('events.title')) + '</card>';
 			if (user.contact.type != 'adminContent' || user.appConfig.rss)

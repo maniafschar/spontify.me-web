@@ -133,6 +133,7 @@ class pageSettings {
 			onclick="pageSettings.toggleGenderSlider(this)" ${v.genderInterest3} transient="true"></input-checkbox>
 		<input-slider type="range" min="18" max="99" value="${v['contact.ageDivers']}" name="ageDivers"></input-slider>
 	</value>
+	<genderSelectHint>${ui.l('settings.genderSelectHint')}</genderSelectHint>
 </field>
 <paypalFees></paypalFees>
 <br/>
@@ -479,15 +480,6 @@ ${v.info}`;
 		pageSettings.reset();
 		if (!user.contact || pageSettings.currentSettings == pageSettings.getCurrentSettings())
 			return true;
-		if (ui.q('settings input-checkbox[name="genderInterest1"][checked="true"]') ||
-			ui.q('settings input-checkbox[name="genderInterest2"][checked="true"]') ||
-			ui.q('settings input-checkbox[name="genderInterest3"][checked="true"]')) {
-			var e = ui.q('settings [name="birthday"]');
-			if (!e.value)
-				formFunc.setError(e, 'settings.bdayUsingInterrestedIn');
-			if (!ui.q('settings input-checkbox[name="gender"][checked="true"]'))
-				formFunc.setError(ui.q('settings [name="gender"]'), 'settings.genderUsingInterrestedIn');
-		}
 		if (ui.q('settings [name="birthday"]').parentNode.lastChild.tagName != 'ERRORHINT')
 			formFunc.validation.birthday(ui.q('input[name="birthday"]'));
 		if (ui.q('input-checkbox[name="guide"][checked="true"]') && !ui.val('textarea[name="description"]'))
@@ -526,11 +518,12 @@ ${v.info}`;
 				return false;
 			}
 		}
-		if (!ui.q('input-checkbox[name="genderInterest1"][checked="true"]'))
+		var x = ui.q('settings input-checkbox[name="gender"][checked="true"]') && ui.q('settings input[name="birthday"]').value;
+		if (!x || !ui.q('input-checkbox[name="genderInterest1"][checked="true"]'))
 			ui.q('settings [name="ageMale"]').value = '';
-		if (!ui.q('input-checkbox[name="genderInterest2"][checked="true"]'))
+		if (!x || !ui.q('input-checkbox[name="genderInterest2"][checked="true"]'))
 			ui.q('settings [name="ageFemale"]').value = '';
-		if (!ui.q('input-checkbox[name="genderInterest3"][checked="true"]'))
+		if (!x || !ui.q('input-checkbox[name="genderInterest3"][checked="true"]'))
 			ui.q('settings [name="ageDivers"]').value = '';
 		ui.q('textarea[name="description"]').value = ui.val('textarea[name="description"]').replace(/</g, '&lt;');
 		ui.q('input[name="email"]').value = ui.val('input[name="email"]').trim().toLowerCase();
@@ -542,6 +535,7 @@ ${v.info}`;
 		ui.classRemove('settings tab', 'tabActive');
 		ui.classAdd(ui.qa('settings tab')[i], 'tabActive');
 		ui.q('settings tabBody').style.marginLeft = i * -100 + '%';
+		ui.css('settings genderSelectHint', 'display', ui.q('settings input-checkbox[name="gender"][checked="true"]') && ui.q('settings input[name="birthday"]').value ? 'none' : 'block');
 	}
 	static swipeLeft() {
 		var m = ui.q('settings tabBody').style.marginLeft;
