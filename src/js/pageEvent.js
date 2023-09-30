@@ -953,7 +953,7 @@ class pageEvent {
 					id ? function (l, id) { ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id); } : pageLocation.detailLocationEvent);
 				pageEvent.refreshToggle();
 				pageHome.events = null;
-				document.dispatchEvent(new CustomEvent('Event', { detail: { type: 'save', ...v } }));
+				document.dispatchEvent(new CustomEvent('Event', { detail: { action: 'save', ...v } }));
 			}
 		});
 	}
