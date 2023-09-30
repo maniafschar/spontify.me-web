@@ -81,7 +81,6 @@ hashtagButton::before {
 		element.setAttribute('style', 'display:none;');
 		element.innerHTML = this.selection();
 		this._root.appendChild(element);
-		this.synchonizeTags(this._root);
 		this.attributeChangedCallback();
 		var r = this._root;
 		setTimeout(function () { ui.adjustTextarea(r.querySelector('textarea')) }, 1000);
