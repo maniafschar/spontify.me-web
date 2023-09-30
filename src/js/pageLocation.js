@@ -213,7 +213,7 @@ ${v.rating}
 				success(r) {
 					ui.navigation.closePopup();
 					ui.navigation.goTo('home');
-					document.dispatchEvent(new CustomEvent(classname, { detail: { type: 'delete' } }));
+					document.dispatchEvent(new CustomEvent(classname, { detail: { action: 'delete' } }));
 					setTimeout(function () {
 						if (classname == 'Location')
 							lists.removeListEntry(id, 'locations');

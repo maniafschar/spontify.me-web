@@ -22,6 +22,9 @@ class InputCheckbox extends HTMLElement {
 	content: '\\2713';
 	left: 0.5em;
 	opacity: 0.8;
+}
+label {
+	color: var(--popupText);
 }`;
 		this._root.appendChild(style);
 		this.setAttribute('onclick', 'this.toggleCheckbox(event)' + (this.getAttribute('onclick') ? ';' + this.getAttribute('onclick') : ''));

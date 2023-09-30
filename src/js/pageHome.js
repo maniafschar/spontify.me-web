@@ -282,7 +282,10 @@ ${ui.l('events.title')}
 			});
 	}
 	static init(force) {
-		document.addEventListener('Event', function () { pageHome.events = null });
+		document.addEventListener('Event', function () {
+			pageHome.events = null;
+			pageHome.teaserEvents();
+		});
 		document.addEventListener('Notification', function () { pageHome.news = null });
 		var e = ui.q('home'), m = global.getParam('m');
 		if (force || !ui.q('home teaser.events>div card')) {
@@ -373,7 +376,7 @@ ${ui.l('events.title')}
 					e.removeAttribute('h');
 				pageHome.badge = ui.qa('notificationList .highlightBackground').length;
 				pageHome.initNotificationButton();
-				document.dispatchEvent(new CustomEvent('Notification'));
+				document.dispatchEvent(new CustomEvent('Notification', { detail: { action: 'refresh' } }));
 				if (ui.q('dialog-hint news'))
 					pageHome.openNews();
 			}
@@ -560,6 +563,8 @@ ${ui.l('events.title')}
 				if (user.contact)
 					s = '<card onclick="pageEvent.edit()" class="mainBG" style="color:var(--text)"><img source="add"/><text>' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>';
 				e = pageEvent.getCalendarList(l);
+				if (e.length > 20)
+					e.splice(20, e.length);
 				var dates = ui.qa('dialog-hint eventFilter:last-child input-checkbox[checked="true"]');
 				var dateFiltered = function (e2) {
 					if ('outdated' == e2)

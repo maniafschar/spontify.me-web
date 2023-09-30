@@ -13,7 +13,10 @@ class InputDate extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = `${initialisation.customElementsCss}`;
+		style.textContent = `${initialisation.customElementsCss}
+label {
+	color: var(--popupText);
+}`;
 		this._root.appendChild(style);
 		this.setAttribute('onclick', 'this.toggle(event)');
 		this.setAttribute('i', '' + this.x);
