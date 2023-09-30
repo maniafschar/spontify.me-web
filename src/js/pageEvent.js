@@ -337,7 +337,7 @@ class pageEvent {
 			v.typeLocation = 'checked="true"';
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
 		if (id)
-			pageEvent.setForm();
+			setTimeout(pageEvent.setForm, 400);
 	}
 	static getCalendarList(data) {
 		if (!data || data.length < 2)
@@ -932,6 +932,8 @@ class pageEvent {
 		var v = formFunc.getForm('dialog-popup form');
 		if (!v.values.price)
 			v.values.price = 0;
+		if (ui.val('dialog-popup input-checkbox[name="type"][checked="true"]'))
+			v.values.locationId = ui.val('dialog-popup input-checkbox[name="type"][checked="true"]');
 		if (ui.q('dialog-popup errorHint')) {
 			ui.q('dialog-popup popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });;
 			return;
@@ -975,11 +977,11 @@ class pageEvent {
 	static setForm() {
 		var b = ui.q('dialog-popup [name="repetition"][checked="true"]');
 		ui.q('dialog-popup label[name="startDate"]').innerText = ui.l('events.' + (b ? 'start' : 'date'));
-		pageEvent.openSection('dialog-popup field[name="endDate"]', b);
 		b = ui.val('dialog-popup input-checkbox[name="type"][checked="true"]');
 		var es = ui.qa('dialog-popup .noWTDField:not(field[name="endDate"])');
 		for (var i = 0; i < es.length; i++)
 			pageEvent.openSection(es[i], b != -2);
+		pageEvent.openSection('dialog-popup field[name="endDate"]', b != -2 && ui.q('dialog-popup [name="repetition"][checked="true"]') != null);
 		ui.q('dialog-popup .url label').innerText = ui.l(b == -1 ? 'events.urlOnlineEvent' : 'events.url');
 		pageEvent.openSection('dialog-popup .url', b == -1);
 		pageEvent.openSection('dialog-popup .newWithoutLocation', b == -2);
