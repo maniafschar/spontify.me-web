@@ -932,7 +932,7 @@ class pageEvent {
 		var v = formFunc.getForm('dialog-popup form');
 		if (!v.values.price)
 			v.values.price = 0;
-		if (ui.val('dialog-popup input-checkbox[name="type"][checked="true"]'))
+		if (ui.val('dialog-popup input-checkbox[name="type"][checked="true"]') < 0)
 			v.values.locationId = ui.val('dialog-popup input-checkbox[name="type"][checked="true"]');
 		if (ui.q('dialog-popup errorHint')) {
 			ui.q('dialog-popup popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });;
