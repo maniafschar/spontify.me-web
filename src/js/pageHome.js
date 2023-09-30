@@ -282,6 +282,8 @@ ${ui.l('events.title')}
 			});
 	}
 	static init(force) {
+		document.addEventListener('Event', function () { pageHome.events = null });
+		document.addEventListener('Notification', function () { pageHome.news = null });
 		var e = ui.q('home'), m = global.getParam('m');
 		if (force || !ui.q('home teaser.events>div card')) {
 			if (m) {
@@ -371,7 +373,7 @@ ${ui.l('events.title')}
 					e.removeAttribute('h');
 				pageHome.badge = ui.qa('notificationList .highlightBackground').length;
 				pageHome.initNotificationButton();
-				pageHome.news = null;
+				document.dispatchEvent(new CustomEvent('Notification'));
 				if (ui.q('dialog-hint news'))
 					pageHome.openNews();
 			}
