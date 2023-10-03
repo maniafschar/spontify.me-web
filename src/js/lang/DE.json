@@ -498,7 +498,6 @@
 			"backToLogin": "Zurück zum Login",
 			"changePassword": "Neues Passwort setzen",
 			"changePasswordBody": "Es muss mindestens 8 Zeichen lang sein. Verwende bitte, zu Deiner eigenen Sicherheit, kein triviales Passwort.",
-			"failed": "Anmeldung fehlgeschlagen, {0}",
 			"failedApple": "Deine Email wurde nicht freigegeben. Um Apple Login zu benutzen, benötigt ${appTitle} Deine Email. Du kannst Dich aber auch über die anderen Login Möglichkeiten einloggen.",
 			"failedData": "Anmeldung fehlgeschlagen, falsche Login Daten!",
 			"failedNotVerified": "Du hast Deine Emailadresse noch nicht verifiziert. Bitte klicke auf den Link in der Email, die wir Dir zugesendet haben.",

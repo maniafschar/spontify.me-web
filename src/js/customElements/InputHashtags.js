@@ -135,12 +135,13 @@ hashtagButton::before {
 		ids = ids.split('|');
 		for (var i = 0; i < ids.length; i++) {
 			var id = ids[i].split('\.');
-			for (var i2 = 0; i2 < ui.categories[id[0]].values.length; i2++) {
-				if (ui.categories[id[0]].values[i2].split('|')[1] == id[1]) {
-					a.push(ui.categories[id[0]].values[i2].split('|')[0]);
-					break;
+			if (ui.categories[id[0]])
+				for (var i2 = 0; i2 < ui.categories[id[0]].values.length; i2++) {
+					if (ui.categories[id[0]].values[i2].split('|')[1] == id[1]) {
+						a.push(ui.categories[id[0]].values[i2].split('|')[0]);
+						break;
+					}
 				}
-			}
 		}
 		a.sort(function (a, b) { return a.toLowerCase() > b.toLowerCase() ? 1 : -1 });
 		return a.join(' ').trim();

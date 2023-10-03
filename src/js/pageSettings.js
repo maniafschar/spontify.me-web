@@ -429,21 +429,6 @@ ${v.info}`;
 		user.contact.skillsText = ui.q('settings input-hashtags').getAttribute('text');
 		user.contact.skills = user.contact.skills.category;
 		user.contact.age = user.contact.birthday ? pageContact.getBirthday(user.contact.birthday).age : null;
-		if (ui.q('[name="image_disp"] img')) {
-			communication.ajax({
-				url: global.serverApi + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id),
-				webCall: 'pageSettings.postSave',
-				responseType: 'json',
-				success(r) {
-					user.contact.image = r['contact.image'];
-					user.contact.imageList = r['contact.imageList'];
-					pageHome.init(true);
-					var e = formFunc.svg.fieldId.get('_icon');
-					if (e)
-						e.setAttribute('src', global.serverImg + user.contact.imageList);
-				}
-			});
-		}
 		pageSettings.currentSettings = pageSettings.getCurrentSettings();
 		bluetooth.reset();
 		if (goToID) {
@@ -452,11 +437,20 @@ ${v.info}`;
 			else
 				ui.navigation.goTo(goToID, true);
 		}
-		var l = ui.val('input-checkbox[name="language"][checked="true"]');
-		if (l != global.language)
-			initialisation.setLanguage(l);
 		ui.css('settings save', 'display', '');
-		ui.q('homeHeader name').innerText = user.contact.pseudonym;
+		if (ui.q('[name="image_disp"] img')) {
+			communication.ajax({
+				url: global.serverApi + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id),
+				webCall: 'pageSettings.postSave',
+				responseType: 'json',
+				success(r) {
+					user.contact.image = r['contact.image'];
+					user.contact.imageList = r['contact.imageList'];
+					document.dispatchEvent(new CustomEvent('Settings', { detail: { action: 'save' } }));
+				}
+			});
+		} else
+			document.dispatchEvent(new CustomEvent('Settings', { detail: { action: 'save' } }));
 	}
 	static reset() {
 		formFunc.resetError(ui.q('input[name="pseudonym"]'));

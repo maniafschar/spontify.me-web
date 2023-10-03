@@ -125,6 +125,7 @@ dialog-hint {
 	line-height: 1.5;
 	color: black;
 	padding: 1em;
+	overflow: hidden;
 }
 
 alert close {
@@ -322,55 +323,9 @@ home {
 	z-index: 1;
 }
 
-marketing {
-	padding: 2em 1em;
-	height: 100%;
-	width: 100%;
+main>marketing {
 	display: none;
-	z-index: 4;
-	text-align: center;
 	position: absolute;
-}
-
-marketing>div {
-	overflow-y: auto;
-	height: 100%;
-	padding-bottom: 4em;
-}
-
-marketing buttons {
-	position: absolute;
-	left: 0;
-	bottom: 0;
-	height: 4em;
-	width: 100%;
-}
-
-marketing buttons progressindex {
-	position: absolute;
-	background: rgba(255, 255, 255, 0.5);
-	left: 0;
-	bottom: 0;
-	height: 0.5em;
-	width: 0;
-	transition: all .4s linear;
-}
-
-marketing buttons button-text {
-	position: absolute;
-}
-
-marketing buttons button-text.left {
-	left: 1em;
-}
-
-marketing buttons button-text.right {
-	right: 1em;
-}
-
-answers {
-	text-align: left;
-	display: inline-block;
 }
 
 content {

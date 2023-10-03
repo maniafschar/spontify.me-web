@@ -498,7 +498,6 @@
 			"backToLogin": "Return to login",
 			"changePassword": "set new password",
 			"changePasswordBody": "There must be at least 8 characters long. To please, for your own safety, not a trivial password.",
-			"failed": "Login failed, {0}",
 			"failedApple": "Your email address is not displayed to ${appTitle}. To use Apple login, we need your email. You may also use other login possibilities.",
 			"failedData": "Login failed, incorrect login data!",
 			"failedNotVerified": "You did not verify your email address. Please click the link we sent to you.",

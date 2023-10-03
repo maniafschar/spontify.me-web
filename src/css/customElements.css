@@ -140,7 +140,6 @@ explain {
 	display: block;
 	line-height: 1.3;
 	text-align: center;
-	color: var(--text);
 }
 
 input-hashtags,

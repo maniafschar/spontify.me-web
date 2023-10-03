@@ -287,26 +287,11 @@ ${ui.l('events.title')}
 			pageHome.teaserEvents();
 		});
 		document.addEventListener('Notification', function () { pageHome.news = null });
+		document.addEventListener('Settings', function () {
+			pageHome.init(true);
+		});
 		var e = ui.q('home'), m = global.getParam('m');
 		if (force || !ui.q('home teaser.events>div card')) {
-			if (m) {
-				communication.ajax({
-					url: global.serverApi + 'action/marketing?m=' + m,
-					webCall: 'pageHome.init',
-					responseType: 'json',
-					error() { },
-					success(r) {
-						history.pushState(null, null, '#x');
-						if (r.length > 1) {
-							marketing.data = model.convert(new ClientMarketing(), r, 1);
-							marketing.data.storage = JSON.parse(marketing.data.storage);
-							marketing.open(true);
-						} else
-							pageHome.init();
-					}
-				});
-				return;
-			}
 			var v = {
 				actionLogo: 'pageHome.openHint()'
 			};

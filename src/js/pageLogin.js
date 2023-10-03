@@ -280,6 +280,7 @@ class pageLogin {
 					bluetooth.init();
 					pageLocation.locationsAdded = v.location_added;
 					marketing.init();
+					document.dispatchEvent(new CustomEvent('User', { detail: { action: 'login' } }));
 					if (exec)
 						setTimeout(exec, 1500);
 					else
@@ -289,8 +290,12 @@ class pageLogin {
 					pageLogin.removeCredentials();
 					if (v)
 						ui.navigation.openPopup(ui.l('login.finishRegTitle'), ui.l('login.finishRegBody'));
-					else
+					else if (ui.q('input[name="password"]'))
 						formFunc.setError(ui.q('input[name="password"]'), 'login.failedData');
+					else {
+						ui.navigation.openPopup(ui.l('attention'), ui.l('login.failedData'));
+						pageHome.init();
+					}
 				}
 			},
 			error(r) {
@@ -474,6 +479,7 @@ class pageLogin {
 		window.localStorage.removeItem('autoLogin');
 	}
 	static resetAfterLogoff() {
+		document.dispatchEvent(new CustomEvent('User', { detail: { action: 'logoff' } }));
 		user.reset();
 		bluetooth.stop();
 		initialisation.reset();

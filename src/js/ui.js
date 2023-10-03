@@ -24,6 +24,8 @@ import { ContentAdminHome } from './customElements/ContentAdminHome';
 import { DialogNavigation } from './customElements/DialogNavigation';
 import { ContentAdminMarketing } from './customElements/ContentAdminMarketing';
 import { ContentAdminInvoice } from './customElements/ContentAdminInvoice';
+import { marketing } from './marketing';
+import { ClientMarketing, model } from './model';
 
 export { ui, formFunc, DragObject };
 
@@ -167,7 +169,7 @@ class ui {
 			if (event)
 				event.stopPropagation();
 			var f = function () {
-				if (ui.q('#preloader'))
+				if (ui.q('#preloader') && id.indexOf('m=') != 0)
 					setTimeout(f, 100);
 				else {
 					if (id.indexOf('https://') == 0) {
@@ -184,12 +186,28 @@ class ui {
 						pageHome.openNews(id.substring(5));
 						return true;
 					}
+					if (id.indexOf('m=') == 0) {
+						communication.ajax({
+							url: global.serverApi + 'action/marketing?' + id,
+							webCall: 'ui.navigation.autoOpen',
+							responseType: 'json',
+							error() { },
+							success(r) {
+								if (r.length > 1) {
+									marketing.data = model.convert(new ClientMarketing(), r, 1);
+									marketing.data.storage = JSON.parse(marketing.data.storage);
+									marketing.open(!user.contact);
+								}
+							}
+						});
+						return true;
+					}
 					if (id.indexOf('chat=') != 0 && id.indexOf('m=') != 0) {
 						id = global.decParam(id);
 						if (!id)
 							return false;
 					}
-					if (!user.contact && id.indexOf('l=') != 0)
+					if (!user.contact)
 						return false;
 					if (id.indexOf('chat=') == 0) {
 						pageChat.open(id.substring(5));
@@ -205,7 +223,7 @@ class ui {
 						pageContact.sendRequestForFriendship(idIntern.substring(2));
 					else if (idIntern.indexOf('q=') == 0)
 						pageEvent.verifyParticipation(idIntern.substring(2));
-					else if (idIntern.indexOf('=') == 1)
+					else if (idIntern.indexOf('p=') == 0)
 						details.open(idIntern.substring(2), { webCall: 'ui.navigation.autoOpen', query: 'contact_list', search: encodeURIComponent('contact.id=' + idIntern.substring(2)) }, pageContact.detail);
 				}
 			};

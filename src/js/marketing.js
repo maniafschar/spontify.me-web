@@ -11,6 +11,58 @@ class marketing {
 	static data;
 	static answers;
 	static index = [];
+	static style = `<style>
+marketing {
+	padding: 2em 1em;
+	height: 100%;
+	width: 100%;
+	z-index: 4;
+	text-align: center;
+}
+
+marketing>div {
+	overflow-y: auto;
+	height: 100%;
+	padding-bottom: 4em;
+}
+
+marketing buttons {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	height: 4em;
+	width: 100%;
+}
+
+marketing buttons progressindex {
+	position: absolute;
+	background: rgba(255, 255, 255, 0.5);
+	left: 0;
+	bottom: 0;
+	height: 0.5em;
+	width: 0;
+	transition: all .4s linear;
+}
+
+marketing buttons button-text {
+	position: absolute;
+}
+
+marketing buttons button-text.left {
+	left: 1em;
+}
+
+marketing buttons button-text.right {
+	right: 1em;
+}
+
+answers {
+	text-align: left;
+	display: inline-block;
+	max-height: 60vh;
+    overflow-y: auto;
+}
+</style>`;
 	static close() {
 		if (ui.q('marketing').innerHTML) {
 			pageHome.init(true);
@@ -27,6 +79,7 @@ class marketing {
 				if (r.length > 1) {
 					marketing.data = model.convert(new ClientMarketing(), r, 1);
 					marketing.data.storage = JSON.parse(marketing.data.storage);
+					marketing.open();
 				} else
 					marketing.data = null;
 			}
@@ -69,16 +122,16 @@ class marketing {
 			if (marketing.data.storage.questions[index])
 				marketing.setQuestion(index);
 			else if (index < 0) {
-				marketing.open(prefix.indexOf('-') < 0);
-				ui.q('marketing buttons progressindex').style.width = 0;
+				ui.q(prefix + 'div').innerHTML = marketing.data.storage.prolog ? marketing.data.storage.prolog.replace(/\n/g, '<br/>') : '';
+				ui.q(prefix + 'buttons progressindex').style.width = 0;
 			} else
-				ui.q(prefix + 'div').innerHTML = marketing.data.storage.epilog.replace(/\n/g, '<br/>');
+				ui.q(prefix + 'div').innerHTML = marketing.data.storage.epilog ? marketing.data.storage.epilog.replace(/\n/g, '<br/>') : '';
 		};
 		if (marketing.data.mode == 'test')
 			next();
 		else
 			communication.ajax({
-				url: global.serverApi + (user.contact ? 'db/one' : 'action/marketing'),
+				url: global.serverApi + 'action/marketing',
 				webCall: 'marketing.next',
 				body: { classname: 'ContactMarketing', id: marketing.data.answerId, values: { clientMarketingId: marketing.data.id, storage: JSON.stringify(marketing.answers), finished: back || marketing.data.storage.questions[index] ? false : true } },
 				method: marketing.data.answerId ? 'PUT' : 'POST',
@@ -90,20 +143,26 @@ class marketing {
 			});
 	}
 	static open(inline) {
-		if (marketing.data) {
+		var isMarketingOpen = function () {
+			return (ui.q('dialog-hint marketing') && ui.q('dialog-hint marketing').innerHTML) || ui.q('marketing').innerHTML;
+		}
+		if (marketing.data && !isMarketingOpen()) {
 			if (!marketing.answers)
 				marketing.answers = {};
 			marketing.index.push(-1);
-			var s = '<div>' + marketing.data.storage.prolog.replace(/\n/g, '<br/>') + '</div><buttons><button-text onclick="marketing.close()" label="No" class="left"></button-text><button-text onclick="marketing.next()" label="Yes" class="right"></button-text><progressindex></progressindex></buttons>';
+			var s = '<div>' + (marketing.data.storage.prolog ? marketing.data.storage.prolog.replace(/\n/g, '<br/>') : '') + '</div><buttons><button-text onclick="marketing.close()" label="No" class="left"></button-text><button-text onclick="marketing.next()" label="Yes" class="right"></button-text><progressindex></progressindex></buttons>';
 			if (inline) {
 				var e = ui.q('marketing');
-				e.innerHTML = s;
+				e.innerHTML = marketing.style + s;
 				e.style.display = 'block';
 			} else
-				ui.navigation.openHint({
-					desc: '<marketing>' + s + '</marketing>',
-					pos: '5%,5%', size: '90%,auto', onclick: 'return;'
-				});
+				setTimeout(function () {
+					if (!isMarketingOpen())
+						ui.navigation.openHint({
+							desc: marketing.style + '<marketing>' + s + '</marketing>',
+							pos: '5%,5%', size: '90%,90%', onclick: 'return;'
+						});
+				}, 2000);
 		}
 	}
 	static setQuestion(index) {
@@ -122,13 +181,13 @@ class marketing {
 			s += '<textarea>' + (v ? v : '') + '</textarea>';
 		}
 		ui.q(prefix + 'div').innerHTML = s;
-		var e = ui.q('marketing button-text.left');
+		var e = ui.q(prefix + 'button-text.left');
 		e.setAttribute('label', 'marketing.previous');
 		e.setAttribute('onclick', 'marketing.next(true)');
-		var e = ui.q('marketing button-text.right');
+		var e = ui.q(prefix + 'button-text.right');
 		e.setAttribute('label', 'marketing.next');
 		e.setAttribute('onclick', 'marketing.next()');
 		formFunc.initFields(ui.q(prefix + 'div'));
-		ui.q('marketing buttons progressindex').style.width = ((1 + index) / marketing.data.storage.questions.length * 100) + '%';
+		ui.q(prefix + 'buttons progressindex').style.width = ((1 + index) / marketing.data.storage.questions.length * 100) + '%';
 	}
 }

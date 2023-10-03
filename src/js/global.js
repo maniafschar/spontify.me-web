@@ -211,7 +211,6 @@ class global {
 		if (!v || v.indexOf('?') < 0)
 			v = global.url;
 		if (v) {
-			console.log(v);
 			if (v.indexOf('?') == 0)
 				v = v.substring(1);
 			if (!n)

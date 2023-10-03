@@ -39,6 +39,7 @@ row {
     background: rgba(0, 0, 0, 0.1);
 	padding: 0.5em 0.75em;
 	cursor: pointer;
+	margin-bottom: 1em;
 }
 
 row>div button-text {
@@ -63,53 +64,55 @@ edit::after {
 		this._root.appendChild(style);
 	}
 	static init(force) {
-		var r = ui.q('content-admin-marketing');
-		if (force || r._root.childElementCount == 1) {
-			var e = document.createElement('h1');
-			e.setAttribute('l', 'marketingTitle');
-			r._root.appendChild(e);
-			e = document.createElement('edit');
-			e.setAttribute('onclick', 'ui.q("content-admin-marketing").edit()');
-			r._root.appendChild(e);
-			e = document.createElement('list');
-			r._root.appendChild(e);
-			e = ui.qa('content-admin-marketing [l]');
-			for (var i = 0; i < e.length; i++)
-				e[i].innerHTML = ui.l('contentAdmin.' + e[i].getAttribute('l'));
-			if (!ui.q('content-admin-marketing list').innerHTML) {
-				communication.ajax({
-					url: global.serverApi + 'statistics/marketing',
-					responseType: 'json',
-					webCall: 'ContentAdminMarketing.init',
-					success(response) {
-						ContentAdminMarketing.data = [];
-						for (var i = 1; i < response.length; i++) {
-							var o = {}, keys = response[0];
-							for (var i2 = 0; i2 < keys.length; i2++) {
-								var k = keys[i2].split('.');
-								o[k[k.length - 1]] = response[i][i2];
-							}
-							ContentAdminMarketing.data.push(o);
-						}
-						var s = '';
-						for (var i = 0; i < ContentAdminMarketing.data.length; i++) {
-							ContentAdminMarketing.data[i].storage = JSON.parse(ContentAdminMarketing.data[i].storage);
-							if (ContentAdminMarketing.data[i].startDate)
-								ContentAdminMarketing.data[i].period = global.date.formatDate(ContentAdminMarketing.data[i].startDate) + ' - ' + global.date.formatDate(ContentAdminMarketing.data[i].endDate);
-							if (ContentAdminMarketing.data[i].startDate && global.date.server2local(ContentAdminMarketing.data[i].startDate) < new Date()) {
-								ContentAdminMarketing.data[i].oc = 'ui.q(&quot;content-admin-marketing&quot;).results(' + ContentAdminMarketing.data[i].id + ')';
-								ContentAdminMarketing.data[i].period += global.separator + (global.date.server2local(ContentAdminMarketing.data[i].endDate) < new Date() ? ' Beendet' : ' Gestartet');
-							} else
-								ContentAdminMarketing.data[i].oc = 'ui.q(&quot;content-admin-marketing&quot;).edit(' + ContentAdminMarketing.data[i].id + ')';
-							s += ContentAdminMarketing.templateList({
-								...ContentAdminMarketing.data[i],
-								text: encodeURIComponent(ContentAdminMarketing.data[i].storage.prolog + '<br/>' + ContentAdminMarketing.data[i].storage.questions[0].question)
-							});
-						}
-						ui.q('content-admin-marketing list').innerHTML = s ? s : ui.l('contentAdmin.noEntries');
-					}
-				});
+		var e = ui.q('content-admin-marketing');
+		if (force || e._root.childElementCount == 1) {
+			for (var i = e._root.children.length - 1; i >= 1; i--) {
+				if (e._root.children[i].getAttribute('css') != 'true')
+					e._root.children[i].remove();
 			}
+			var e2 = document.createElement('h1');
+			e2.setAttribute('l', 'marketingTitle');
+			e._root.appendChild(e2);
+			e2 = document.createElement('edit');
+			e2.setAttribute('onclick', 'ui.q("content-admin-marketing").edit()');
+			e._root.appendChild(e2);
+			e2 = document.createElement('list');
+			e._root.appendChild(e2);
+			e2 = ui.qa('content-admin-marketing [l]');
+			for (var i = 0; i < e2.length; i++)
+				e2[i].innerHTML = ui.l('contentAdmin.' + e2[i].getAttribute('l'));
+			communication.ajax({
+				url: global.serverApi + 'statistics/marketing',
+				responseType: 'json',
+				webCall: 'ContentAdminMarketing.init',
+				success(response) {
+					ContentAdminMarketing.data = [];
+					for (var i = 1; i < response.length; i++) {
+						var o = {}, keys = response[0];
+						for (var i2 = 0; i2 < keys.length; i2++) {
+							var k = keys[i2].split('.');
+							o[k[k.length - 1]] = response[i][i2];
+						}
+						ContentAdminMarketing.data.push(o);
+					}
+					var s = '';
+					for (var i = 0; i < ContentAdminMarketing.data.length; i++) {
+						ContentAdminMarketing.data[i].storage = JSON.parse(ContentAdminMarketing.data[i].storage);
+						if (ContentAdminMarketing.data[i].startDate)
+							ContentAdminMarketing.data[i].period = global.date.formatDate(ContentAdminMarketing.data[i].startDate) + ' - ' + global.date.formatDate(ContentAdminMarketing.data[i].endDate);
+						if (ContentAdminMarketing.data[i].startDate && global.date.server2local(ContentAdminMarketing.data[i].startDate) < new Date()) {
+							ContentAdminMarketing.data[i].oc = 'ui.q(&quot;content-admin-marketing&quot;).results(' + ContentAdminMarketing.data[i].id + ')';
+							ContentAdminMarketing.data[i].period += global.separator + (global.date.server2local(ContentAdminMarketing.data[i].endDate) < new Date() ? ' Beendet' : ' Gestartet');
+						} else
+							ContentAdminMarketing.data[i].oc = 'ui.q(&quot;content-admin-marketing&quot;).edit(' + ContentAdminMarketing.data[i].id + ')';
+						s += ContentAdminMarketing.templateList({
+							...ContentAdminMarketing.data[i],
+							text: encodeURIComponent(ContentAdminMarketing.data[i].storage.prolog + '<br/>' + ContentAdminMarketing.data[i].storage.questions[0].question)
+						});
+					}
+					ui.q('content-admin-marketing list').innerHTML = s ? s : ui.l('contentAdmin.noEntries');
+				}
+			});
 		}
 	}
 	static templateEdit = v =>
@@ -163,8 +166,8 @@ questions value .answerMultiSelect {
 <field>
 	<label>Zeitraum</label>
 	<value class="marketingPeriod">
-		<input name="startDate" type="datetime-local" value="${v.startDate}"></input>
-		<input name="endDate" type="datetime-local" value="${v.endDate}"></input>
+		<input name="startDate" type="datetime-local" value="${v.startDateField}"></input>
+		<input name="endDate" type="datetime-local" value="${v.endDateField}"></input>
 		<explain>Achtung: Nach Beginn der Umfrage sind die Daten hier nicht mehr änderbar.</explain>
 	</value>
 </field>
@@ -211,6 +214,10 @@ questions value .answerMultiSelect {
 <field>
 	<label>Schlusswort</label>
 	<value><textarea name="epilog">${v.storage.epilog}</textarea></value>
+</field>
+<field>
+	<label>Link</label>
+	<value class="selectable">${global.server}?m=${v.id}</value>
 </field>
 <dialogButtons>
 <button-text onclick="ui.q(&quot;content-admin-marketing&quot;).test()" label="Test"></button-text>
@@ -337,6 +344,14 @@ questions value .answerMultiSelect {
 			}
 			v = { language: global.language, storage: {} };
 		}
+		if (v.startDate) {
+			var d = global.date.getDateFields(global.date.server2local(v.startDate));
+			v.startDateField = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute;
+		}
+		if (v.endDate) {
+			var d = global.date.getDateFields(global.date.server2local(v.endDate));
+			v.endDateField = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute;
+		}
 		ui.navigation.openPopup(ui.l('contentAdmin.marketingTitle'), ContentAdminMarketing.templateEdit(v));
 		if (v.storage.questions) {
 			for (var i = 0; i < v.storage.questions.length; i++) {
@@ -365,8 +380,12 @@ questions value .answerMultiSelect {
 				for (var i = 0; i < e2.length; i++)
 					s += e2[i].value;
 				o[label] = s;
-			} else if (e2.value)
-				o[label] = e2.value;
+			} else if (e2.value) {
+				if (e2.type && e2.type.indexOf('date') > -1)
+					o[label] = global.date.local2server(e2.value);
+				else
+					o[label] = e2.value;
+			}
 		}
 		read('id', o);
 		read('language', o);
@@ -443,7 +462,7 @@ questions value .answerMultiSelect {
 							v.startDate = global.date.formatDate(v.startDate);
 						if (v.endDate)
 							v.endDate = global.date.formatDate(v.endDate);
-						v.age = v.age.replace(',', ' - ');
+						v.age = v.age?.replace(',', ' - ');
 						v.css = `<style>
 .main {
 	width: 100%;
@@ -534,7 +553,7 @@ results freetext div {
 			webCall: 'ContentAdminMarketing.save',
 			success() {
 				ui.navigation.closePopup();
-				ui.q('content-admin-marketing').init(true);
+				ContentAdminMarketing.init(true);
 			}
 		});
 	}
