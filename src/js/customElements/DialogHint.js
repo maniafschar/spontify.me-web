@@ -72,6 +72,7 @@ errorHint {
 index {
 	display: none;
 }
+
 b {
 	margin-bottom: 0.5em;
 	display: inline-block;

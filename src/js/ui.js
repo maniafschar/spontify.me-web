@@ -193,7 +193,7 @@ class ui {
 							responseType: 'json',
 							error() { },
 							success(r) {
-								if (r.length > 1) {
+								if (r && r.length > 1) {
 									marketing.data = model.convert(new ClientMarketing(), r, 1);
 									marketing.data.storage = JSON.parse(marketing.data.storage);
 									marketing.open(!user.contact);

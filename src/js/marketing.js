@@ -62,6 +62,10 @@ answers {
 	max-height: 60vh;
     overflow-y: auto;
 }
+
+b{
+	margin-bottom: 0;
+}
 </style>`;
 	static close() {
 		if (ui.q('marketing').innerHTML) {
@@ -123,6 +127,10 @@ answers {
 				marketing.setQuestion(index);
 			else if (index < 0) {
 				ui.q(prefix + 'div').innerHTML = marketing.data.storage.prolog ? marketing.data.storage.prolog.replace(/\n/g, '<br/>') : '';
+				var e = ui.q(prefix + 'button-text.left');
+				e.setAttribute('label', 'No');
+				e.setAttribute('onclick', 'marketing.close()');
+				ui.q(prefix + 'button-text.right').setAttribute('label', 'Yes');
 				ui.q(prefix + 'buttons progressindex').style.width = 0;
 			} else
 				ui.q(prefix + 'div').innerHTML = marketing.data.storage.epilog ? marketing.data.storage.epilog.replace(/\n/g, '<br/>') : '';
