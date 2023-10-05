@@ -16,5 +16,6 @@
 	"email": "support@after-work.events",
 	"name": "afterwork",
 	"server": "https://after-work.events",
-	"url": "https://after-work.events"
+	"url": "https://after-work.events",
+	"appConfig": {}
 }

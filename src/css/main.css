@@ -205,14 +205,26 @@ homeHeader {
 	padding-top: 6%;
 }
 
+home.news homeHeader {
+	height: 25%;
+	padding: 0 0 1em 0;
+}
+
 homeHeader.logoSmall {
 	padding-top: 0;
 }
 
 homeHeader>svg {
-	height: auto;
-	max-height: 85%;
+	max-height: 100%;
 	cursor: pointer;
+}
+
+home.news homeHeader>svg {
+	top: 0;
+	right: initial;
+	left: 0;
+	height: 100%;
+	padding: 1em 0.5em 0 0.5em;
 }
 
 homeHeader>text {
@@ -222,12 +234,25 @@ homeHeader>text {
 	cursor: pointer;
 }
 
-homeHeader img {
+home.news homeHeader>text {
+	margin: 0;
+	position: absolute;
+	right: 0;
+	height: 75%;
+	padding: 1em 0 1em 1em;
+}
+
+homeHeader>text img {
 	height: 8em;
 	max-height: 22vh;
 	border-radius: 50%;
 	margin-bottom: 0.5em;
 	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+}
+
+home.news homeHeader>text img {
+	height: 100%;
+	border-radius: 50% 0 0 50%;
 }
 
 homeHeader.logoSmall>svg {
@@ -242,12 +267,20 @@ homeHeader name {
 	font-size: 1.3em;
 }
 
+home.news name {
+	display: none;
+}
+
 homeBody {
 	position: relative;
 	width: 100%;
 	display: block;
 	height: 60%;
 	overflow: hidden;
+}
+
+home.news homeBody {
+	height: 75%;
 }
 
 homeBody teaser {
@@ -258,6 +291,10 @@ homeBody teaser {
 	transition: all 0.4s ease-out;
 	height: 38%;
 	display: block;
+}
+
+home.news homeBody teaser {
+	height: 28%;
 }
 
 homeBody teaser div {
@@ -272,11 +309,23 @@ homeBody teaser div {
 }
 
 homeBody teaser.contacts {
-	bottom: 2.2em;
+	top: 1em;
 }
 
 homeBody teaser.events {
-	top: 1em;
+	bottom: 2.2em;
+}
+
+home.news homeBody teaser.news {
+	top: 0;
+}
+
+home.news homeBody teaser.contacts {
+	top: 33.33%;
+}
+
+home.news homeBody teaser.events {
+	top: 66.66%;
 }
 
 homeBody teaser card {

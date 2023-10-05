@@ -8,7 +8,6 @@ export { user };
 class user {
 	static clientId = parseInt('{placeholderClientId}');
 	static contact;
-	static appConfig = {};
 	static email;
 	static password = null;
 	static templateAppointment = v =>

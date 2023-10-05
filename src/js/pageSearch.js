@@ -124,7 +124,7 @@ ${v.keywords}
 </form>`,
 		getFields() {
 			var v = {};
-			if (user.appConfig.eventNoHashtags)
+			if (global.config.eventNoHashtags)
 				v.keywords = '<input value="' + pageSearch.events.fieldValues.keywords + '" name="keywords"></input>'
 			else
 				v.keywords = '<input-hashtags ids="' + pageSearch.events.fieldValues.keywords + '" text="' + pageSearch.events.fieldValues.keywordsText + '" name="keywords"></input-hashtags>'
@@ -134,7 +134,7 @@ ${v.keywords}
 		},
 		getSearch() {
 			var v, s = '';
-			if (user.appConfig.eventNoHashtags)
+			if (global.config.eventNoHashtags)
 				v = ui.val('search tabBody div.events input');
 			else
 				v = ui.q('search tabBody div.events input-hashtags').getAttribute('text');
@@ -151,7 +151,7 @@ ${v.keywords}
 				}
 				s = s.substring(0, s.length - 4);
 			}
-			if (!user.appConfig.eventNoHashtags) {
+			if (!global.config.eventNoHashtags) {
 				v = ui.q('search tabBody div.events input-hashtags').getAttribute('ids');
 				if (v)
 					s += (s ? ' or ' : '') + global.getRegEx('event.skills', v);

@@ -327,7 +327,7 @@ class pageEvent {
 			ui.l('events.paypalSignUpHintFee').replace('{0}', pageEvent.paypal.fee).replace('{1}', global.date.formatDate(pageEvent.paypal.feeDate)).replace('{2}', pageEvent.paypal.feeAfter)
 			: pageEvent.paypal.fee);
 		v.appointment = user.getAppointmentTemplate('authenticate');
-		if (user.appConfig.eventNoHashtags)
+		if (global.config.eventNoHashtags)
 			v.eventNoHashtags = ' class="hidden"';
 		if (v.locationId == -1)
 			v.typeOnlineEvent = 'checked="true"';
@@ -884,7 +884,7 @@ class pageEvent {
 		formFunc.resetError(text);
 		formFunc.resetError(tags);
 		formFunc.resetError(price);
-		if (!user.appConfig.eventNoHashtags) {
+		if (!global.config.eventNoHashtags) {
 			if (!tags.getAttribute('ids') && !tags.getAttribute('text'))
 				formFunc.setError(tags, 'error.hashtags');
 			else

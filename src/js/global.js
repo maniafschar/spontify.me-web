@@ -10,6 +10,7 @@ export { global, Strings };
 class global {
 	static appTitle = '{placeholderAppTitle}';
 	static appVersion = '0.5.5';
+	static config = JSON.parse('{placeholderAppConfig}');
 	static imprintCustom = '{imprintCustom}';
 	static language = null;
 	static minLocations = 5;

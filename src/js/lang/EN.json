@@ -417,6 +417,7 @@
 			"chatEmpty": "You don't have started any chats with other ${buddies} yet. Click on <b>Chat</b> in a ${buddies}'s profile.",
 			"contacts": "<title>${buddies}</title>You can find your friends as well as <emphasis>profile visitors</emphasis> in this area after logging in.",
 			"description": "${introDescription}",
+			"descriptionNews": "Sign up to get the latest articles pushed to your phone.",
 			"epilog": "That was a quick look at the app. Thank you very much for the time you took! You are welcome to rate us and leave a few words.<rating/>",
 			"events": "<title>Events</title>Events in which you <emphasis>participate</emphasis> or which you have <emphasis>created</emphasis> can be found here after logging in.",
 			"home": "<b>What is Fanclub?</b><br><br>For the <emphasis>club</emphasis>:<br/>new <emphasis>marketing opportunities</emphasis>.<br/><br/>For the <emphasis>fan</emphasis>:<br/>new fans <emphasis >get to know</emphasis>, regardless of whether you're in a foreign city or just want to meet new people.<br><br>But first things first, we'll introduce the app from the fan's point of view.<language/>",
