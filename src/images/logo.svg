@@ -9,6 +9,6 @@
 			}
 		</style>
 	</defs>
-	<image/>
+	<image width="320" x="40" />
 	<text x="200" y="390" font-size="75" font-family="Adelina" text-anchor="middle" fill="var(--text)">{placeholderAppTitle}</text>
 </svg>

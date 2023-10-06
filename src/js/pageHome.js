@@ -320,11 +320,16 @@ ${ui.l('events.title')}
 			ui.html('home item.bluetooth text', ui.l(bluetooth.state == 'on' && user.contact.bluetooth ? 'bluetooth.activated' : 'bluetooth.deactivated'));
 		formFunc.svg.replaceAll();
 		if (user.contact) {
+			ui.q('home homeHeader svg image').setAttribute('x', 0);
 			if (global.config.club)
-				ui.q('home homeHeader svg image').setAttribute('style', 'height:98%;');
+				ui.q('home homeHeader svg image').setAttribute('width', 390);
 			else
 				ui.q('home homeHeader svg image').setAttribute('width', 400);
 			ui.q('home homeHeader svg text').setAttribute('style', 'display:none;');
+		} else {
+			ui.q('home homeHeader svg image').setAttribute('x', 40);
+			ui.q('home homeHeader svg image').setAttribute('width', 320);
+			ui.q('home homeHeader svg text').setAttribute('style', '');
 		}
 		pageHome.updateLocalisation();
 		ui.css('dialog-navigation item.search', 'display', user.contact ? '' : 'none');
