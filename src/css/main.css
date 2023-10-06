@@ -256,11 +256,10 @@ home.news homeHeader>text img {
 }
 
 homeHeader.logoSmall>svg {
-	height: 6em;
+	height: 5em;
 	position: absolute;
-	right: 0.5em;
+	right: 0;
 	top: 0.5em;
-	margin-top: 0;
 }
 
 homeHeader name {
