@@ -16,5 +16,8 @@
 	"email": "support@offline-poker.com",
 	"name": "Offline Poker",
 	"server": "https://offline-poker.com",
-	"url": "https://offline-poker.com"
+	"url": "https://offline-poker.com",
+	"appConfig": {
+		"eventNoHashtags": true
+	}
 }

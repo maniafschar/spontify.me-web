@@ -16,5 +16,8 @@
 	"email": "support@fan-club.online",
 	"name": "Fanclub",
 	"server": "https://fan-club.online",
-	"url": "https://alpenherz.fan-club.online"
+	"url": "https://alpenherz.fan-club.online",
+	"appConfig": {
+		"club": true
+	}
 }
