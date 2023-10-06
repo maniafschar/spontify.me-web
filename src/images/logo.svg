@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 400">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
 	<defs>
 		<style>
 			@font-face {
@@ -12,6 +12,6 @@
 			}
 		</style>
 	</defs>
-	<image x="300" width="400" />
-	<text x="500" y="400" font-size="75" font-family="Adelina" text-anchor="middle" fill="var(--text)">{placeholderAppTitle}</text>
+	<image x="0" width="400" />
+	<text x="200" y="400" font-size="75" font-family="Adelina" text-anchor="middle" fill="var(--text)">{placeholderAppTitle}</text>
 </svg>
