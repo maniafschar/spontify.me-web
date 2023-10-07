@@ -541,6 +541,8 @@ class ui {
 		if (!e)
 			e = customElements('dialog-navigation');
 		if (!e)
+			e = customElements('button-text');
+		if (!e)
 			e = customElements('dialog-hint');
 		if (!e)
 			e = customElements('dialog-menu');

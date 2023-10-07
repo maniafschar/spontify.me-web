@@ -528,6 +528,7 @@ ${v.rating}
 					r = id;
 				details.open(r, { webCall: 'pageLocation.save', query: 'location_list', search: encodeURIComponent('location.id=' + r) }, id ? function (l, id) {
 					ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id);
+					formFunc.svg.replaceAll();
 				} : pageLocation.detailLocationEvent);
 				if (!id && pageLocation.reopenEvent)
 					setTimeout(function () { pageEvent.edit(r); }, 1000);

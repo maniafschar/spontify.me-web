@@ -84,7 +84,7 @@ a {
 }
 
 chat a {
-	color: var(--bg1start);
+	color: rgb(0, 0, 120);
 }
 
 dialog-navigation {
@@ -125,7 +125,6 @@ dialog-hint {
 	line-height: 1.5;
 	color: black;
 	padding: 1em;
-	overflow: hidden;
 }
 
 alert close {
@@ -217,6 +216,10 @@ homeHeader.logoSmall {
 homeHeader>svg {
 	max-height: 100%;
 	cursor: pointer;
+}
+
+homeHeader svg {
+	fill: var(--text);
 }
 
 home.news homeHeader>svg {
@@ -655,12 +658,19 @@ chat {
 	z-index: 3;
 }
 
+chat listHeader svg,
 chat listHeader img {
 	position: relative;
 	width: 4em;
 	border-radius: 0 0 1em 0;
 	box-shadow: 0 0 0.5em rgb(0, 0, 0, 0.3);
 	margin-right: 0.4em;
+}
+
+chat listHeader svg {
+	padding: 0.6em;
+	fill: var(--navigation);
+	vertical-align: middle;
 }
 
 chat .sendButton {
@@ -765,6 +775,8 @@ chatList>div>span {
 }
 
 chatList img,
+chatList svg.bgColor,
+notificationList svg.bgColor,
 notificationList img {
 	position: absolute;
 	height: 100%;
@@ -772,16 +784,24 @@ notificationList img {
 	margin-top: -0.25em;
 }
 
+chatList svg.bgColor,
 chatList img {
 	border-radius: 0 2em 2em 0;
 }
 
+notificationList svg.bgColor,
 notificationList img {
 	border-radius: 2em 0 0 2em;
 	right: 0;
 }
 
-chatList svg {
+chatList svg.bgColor,
+notificationList svg.bgColor {
+	padding: 0.6em;
+	fill: var(--navigation);
+}
+
+chatList svg:not(.bgColor) {
 	position: absolute;
 	right: 1em;
 	height: 1em;
@@ -789,7 +809,7 @@ chatList svg {
 	bottom: 0.5em;
 }
 
-chatList>div.unseen svg {
+chatList>div.unseen svg(.bgColor) {
 	opacity: 0.3;
 }
 

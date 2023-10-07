@@ -125,7 +125,7 @@ ${v.keywords}
 		getFields() {
 			var v = {};
 			if (global.config.eventNoHashtags)
-				v.keywords = '<input value="' + pageSearch.events.fieldValues.keywords + '" name="keywords"></input>'
+				v.keywords = '<input value="' + (pageSearch.events.fieldValues.keywords ? pageSearch.events.fieldValues.keywords : '') + '" name="keywords"></input>'
 			else
 				v.keywords = '<input-hashtags ids="' + pageSearch.events.fieldValues.keywords + '" text="' + pageSearch.events.fieldValues.keywordsText + '" name="keywords"></input-hashtags>'
 			if (pageSearch.events.fieldValues.matches == 'true')

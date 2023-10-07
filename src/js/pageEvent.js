@@ -135,7 +135,7 @@ class pageEvent {
 </form>`;
 	static templateDetail = v =>
 		global.template`<text class="description event" ${v.oc}>
-<div><span class="chatLinks" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;),event)"><img src="${v.imageEventOwner}"><br>${v.contact.pseudonym}</span></div>
+<div><span class="chatLinks" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;),event)"><img ${v.imageEventOwner}/><br>${v.contact.pseudonym}</span></div>
 <div class="date eventMargin">${v.date}${v.endDate}</div>
 <div class="eventMargin">${v.text}</div>
 <div class="eventMargin">${v.maxParticipants}</div>
@@ -205,9 +205,9 @@ class pageEvent {
 		if (v.event.maxParticipants)
 			v.maxParticipants = ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
 		if (v.contact.imageList)
-			v.imageEventOwner = global.serverImg + v.contact.imageList;
+			v.imageEventOwner = 'src="' + global.serverImg + v.contact.imageList + '"';
 		else
-			v.imageEventOwner = 'images/contacts.svg" style="padding:1em;';
+			v.imageEventOwner = 'source="contacts" style="padding:1em;"';
 		v.text = Strings.replaceLinks(v.event.description).replace(/\n/g, '<br/>');
 		v.hideMeFavorite = ' hidden';
 		v.hideMeEvents = ' hidden';
@@ -286,7 +286,7 @@ class pageEvent {
 			d = global.date.getDateFields(global.date.server2local(v.startDate));
 			v.startDate = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute;
 		}
-		if (!id || v.price > 0 && ui.q('detail card:last-child participantCount')?.innerText.length)
+		if (!id || v.price > 0 && ui.q('detail card:last-child button-text participantCount')?.innerText.length)
 			v.hideDelete = 'class="hidden"';
 		d = global.date.getDateFields(new Date());
 		v.today = d.year + '-' + d.month + '-' + d.day;
@@ -734,7 +734,7 @@ class pageEvent {
 					e.eventParticipate.id = r;
 				}
 				ui.q('detail card:last-child detailHeader').setAttribute('data', encodeURIComponent(JSON.stringify(e)));
-				var e2 = ui.q('detail card[i="' + e.event.id + '_' + eventDate + '"] participantCount');
+				var e2 = ui.q('detail card[i="' + e.event.id + '_' + eventDate + '"] button-text participantCount');
 				if (e.eventParticipate.state == '1') {
 					ui.classRemove('detail card:last-child .event', 'canceled');
 					ui.classRemove('row[i="' + e.event.id + '_' + eventDate + '"]', 'canceled');
@@ -956,7 +956,6 @@ class pageEvent {
 					{ webCall: 'pageEvent.save', query: 'event_list', search: encodeURIComponent('event.id=' + (id ? id : r)) },
 					id ? function (l, id) { ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id); } : pageLocation.detailLocationEvent);
 				pageEvent.refreshToggle();
-				pageHome.events = null;
 				document.dispatchEvent(new CustomEvent('Event', { detail: { action: 'save', ...v } }));
 			}
 		});

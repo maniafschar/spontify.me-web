@@ -295,7 +295,7 @@ ${ui.l('events.title')}
 				if (user.contact.imageList)
 					v.imgProfile = '<img src="' + global.serverImg + user.contact.imageList + '"/>';
 				else
-					v.imgProfile = '<img src="images/contacts.svg" style="box-shadow:none;"/>';
+					v.imgProfile = '<img source="contacts" style="box-shadow:none;"/>';
 				v.logoSmall = ' class="logoSmall"';
 				v.name = user.contact.pseudonym;
 				v.infoButton = ' hidden';
@@ -310,6 +310,7 @@ ${ui.l('events.title')}
 			else
 				ui.classRemove('home', 'news');
 			e.innerHTML = pageHome.template(v);
+			formFunc.svg.replaceAll();
 			initialisation.reposition();
 			pageHome.teaserContacts();
 			pageHome.teaserEvents();
@@ -350,12 +351,13 @@ ${ui.l('events.title')}
 						return;
 					}
 					if (v.imageList)
-						v.image = global.serverImg + v.imageList;
+						v.image = 'src="' + global.serverImg + v.imageList + '"';
 					else
-						v.image = 'images/contacts.svg';
-					s += '<div onclick="pageHome.clickNotification(' + v.contactNotification.id + ',&quot;' + v.contactNotification.action + '&quot;)" ' + (v.contactNotification.seen == 0 ? ' class="highlightBackground"' : '') + '><img src="' + v.image + '"' + (v.imageList ? '' : ' class="mainBG" style="padding:0.6em;"') + '/><span>' + global.date.formatDate(v.contactNotification.createdAt) + ': ' + v.contactNotification.text + '</span></div>';
+						v.image = 'source="contacts" class="mainBG"';
+					s += '<div onclick="pageHome.clickNotification(' + v.contactNotification.id + ',&quot;' + v.contactNotification.action + '&quot;)" ' + (v.contactNotification.seen == 0 ? ' class="highlightBackground"' : '') + '><img ' + v.image + '/> <span>' + global.date.formatDate(v.contactNotification.createdAt) + ': ' + v.contactNotification.text + '</span></div > ';
 				}
 				e.innerHTML = s;
+				formFunc.svg.replaceAll();
 				if (ui.cssValue(e, 'display') == 'none')
 					e.removeAttribute('h');
 				pageHome.badge = ui.qa('notificationList .highlightBackground').length;

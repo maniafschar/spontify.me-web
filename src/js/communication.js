@@ -167,13 +167,20 @@ class communication {
 			if (global.isBrowser())
 				return;
 			window.cordova.plugins.firebase.messaging.requestPermission().then(function () {
-				window.cordova.plugins.firebase.messaging.getToken("apns-string").then(function (token) {
-					communication.notification.saveToken(token);
-				});
+				var f = function () {
+					window.cordova.plugins.firebase.messaging.getToken(global.getOS() == 'ios' ? 'apns-string' : null).then(function (token) {
+						if (token == null)
+							setTimeout(f, 1000);
+						else
+							communication.notification.saveToken(token);
+					});
+				}
+				f();
 			});
 			window.cordova.plugins.firebase.messaging.onTokenRefresh(function () {
 				window.cordova.plugins.firebase.messaging.getToken(global.getOS() == 'ios' ? 'apns-string' : null).then(function (token) {
-					communication.notification.saveToken(token);
+					if (token)
+						communication.notification.saveToken(token);
 				});
 			});
 			window.cordova.plugins.firebase.messaging.onMessage(communication.notification.open, communication.notification.onError);

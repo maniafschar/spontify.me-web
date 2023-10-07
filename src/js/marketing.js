@@ -168,7 +168,7 @@ b{
 					if (!isMarketingOpen())
 						ui.navigation.openHint({
 							desc: marketing.style + '<marketing>' + s + '</marketing>',
-							pos: '5%,5%', size: '90%,90%', onclick: 'return;'
+							pos: '5%,5%', size: '-5%,-4em', onclick: 'return;'
 						});
 				}, 2000);
 		}
