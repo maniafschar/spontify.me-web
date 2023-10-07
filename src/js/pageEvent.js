@@ -45,7 +45,7 @@ class pageEvent {
 		<label>${ui.l('type')}</label>
 		<value>
 			<input-checkbox type="radio" name="type" transient="true" value="0" label="events.location" onclick="pageEvent.setForm()" ${v.typeLocation}></input-checkbox>
-			<input-checkbox type="radio" name="type" transient="true" value="-1" label="events.newOnlineEvent" onclick="pageEvent.setForm()" ${v.typeOnlineEvent}></input-checkbox>
+			<input-checkbox type="radio" name="type" transient="true" value="-1" label="events.newOnlineEvent" onclick="pageEvent.setForm()" ${v.typeOnlineEvent} ${v.hideOnlineEvent}></input-checkbox>
 			<input-checkbox type="radio" name="type" transient="true" value="-2" label="events.newWithoutLocation" onclick="pageEvent.setForm()" ${v.typeWithoutLocation} ${v.hideWithoutLocation}></input-checkbox>
 		</value>
 	</field>
@@ -335,6 +335,8 @@ class pageEvent {
 			v.typeWithoutLocation = 'checked="true"';
 		else
 			v.typeLocation = 'checked="true"';
+		if (global.config.club)
+			v.hideOnlineEvent = 'class="hidden"';
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
 		if (id)
 			setTimeout(pageEvent.setForm, 400);
