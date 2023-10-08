@@ -126,6 +126,7 @@ module.exports = (env) => {
 							.replace('{placeholderClientId}', '' + Math.max(parseInt(client), 1))
 							.replace('{placeholderServer}', props.server)
 							.replace(/\{placeholderBundleID}/g, props.bundleId)
+							.replace(/\{placeholderAppConfig}/g, JSON.stringify(props.appConfig).replace(/\"/g, '\\"'))
 							.replace(/\{placeholderAppleID}/g, props.appleId));
 						var languages = ['de', 'en'];
 						for (var i = 0; i < languages.length; i++) {
@@ -187,10 +188,6 @@ module.exports = (env) => {
 							s = s.replace(regexs[i].pattern, regexs[i].replace);
 						}
 						fs.writeFileSync(file, s);
-						file = '../app/google-services.json';
-						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
-							.replace(/("package_name": ")([^"]+)/, '$1' + props.bundleId)
-							.replace(/("bundle_id": ")([^"]+)/, '$1' + props.bundleId));
 						file = 'dist/images/logo.svg';
 						s = fs.readFileSync(file, 'utf8')
 							.replace('{placeholderAppTitle}', props.nameShort);
