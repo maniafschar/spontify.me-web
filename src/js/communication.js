@@ -162,7 +162,7 @@ class communication {
 					pageChat.refresh();
 				else {
 					communication.ping();
-					ui.autoOpen(e.additionalData.exec);
+					ui.navigation.autoOpen(e.additionalData.exec);
 				}
 			}
 		},

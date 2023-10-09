@@ -282,20 +282,16 @@ button-image.right {
 		};
 		reader.readAsDataURL(f);
 	}
-	remove(t) {
-		t = t.getRootNode();
-		var e = t.querySelector('input');
-		if (e)
-			e.value = '';
-		var inputFile = t.querySelector('inputFile');
-		ui.html(inputFile, '<span>' + (t.host.getAttribute('hint') ? t.host.getAttribute('hint') : ui.l('fileUpload.select')) + '</span>');
+	remove() {
+		var inputFile = this._root.querySelector('inputFile');
+		ui.html(inputFile, '<span>' + (this.getAttribute('hint') ? this.getAttribute('hint') : ui.l('fileUpload.select')) + '</span>');
 		inputFile.style.zIndex = null;
 		inputFile.style.height = null;
-		t.querySelector('img.icon').style.display = '';
+		this._root.querySelector('img.icon').style.display = '';
 		ui.css('#popupSendImage', 'display', 'none');
-		t.host.removeAttribute('value');
+		this.removeAttribute('value');
 		if (!global.isBrowser()) {
-			t.querySelector('div').style.display = 'block';
+			this._root.querySelector('div').style.display = 'block';
 			inputFile.style.display = 'none';
 		}
 	}

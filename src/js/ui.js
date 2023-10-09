@@ -551,6 +551,8 @@ class ui {
 		if (!e)
 			e = customElements('input-hashtags');
 		if (!e)
+			e = customElements('input-image');
+		if (!e)
 			e = customElements('list-row');
 		if (!e)
 			e = customElements('content-admin-home');

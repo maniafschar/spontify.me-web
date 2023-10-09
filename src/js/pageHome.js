@@ -27,10 +27,6 @@ class pageHome {
 	</buttonIcon>
 </homeHeader>
 <homeBody>
-<teaser class="news">
-	<title>${ui.l('home.news')}</title>
-	<div></div>
-</teaser>
 <teaser class="events">
 	<title onclick="pageHome.filterOpen()" class="highlightColor" style="cursor:pointer;">${ui.l('events.title')}</title>
 	<div></div>
@@ -51,80 +47,51 @@ news {
 	margin: 0 -1em;
 }
 
-news tab {
-	width: 50%;
-}
 
-news tabBody {
-	width: 200%;
-	transition: all 0.4s ease-out;
-	height: 100%;
-}
-
-news tabBody>div {
-	width: 50%;
+news div {
+	width: 100%;
 	display: block;
-	float: left;
 	position: relative;
-	padding-bottom: 2em;
 	height: 100%;
 	overflow: auto;
 }
 
-news tabBody card {
+news card {
 	text-align: left;
 	position: relative;
 	display: block;
-	margin-bottom: 1em;
+	margin-bottom: 1.5em;
 }
 
-news tabBody card::after {
+news card::after {
 	content: ' ';
 	display: block;
 	clear: both;
 }
 
-news tabBody card p {
+news card p {
 	background: rgba(255, 0, 0, 0.1);
 	padding: 0.75em;
 	border-radius: 0 2em 0.5em 0;
 	width: 96%;
 }
 
-news tabBody card date {
+news card date {
 	font-size: 0.7em;
 	display: block;
 }
 
-news tabBody card img {
+news card img {
 	width: 96%;
 	margin-left: 4%;
 	position: relative;
-	margin-top: -1.5em;
+	float: right;
+	margin-top: -1em;
 	border-radius: 0.5em 0 0 3em;
 }
-
-news buttonIcon {
-	left: -0.5em;
-	box-shadow: none;
-	font-size: 3.2em;
-	top: -0.6em;
-	line-height: 1em;
-}
 </style><news>
-<buttonIcon onclick="pageHome.edit()"${v.hideEdit}>+</buttonIcon>
-<tabHeader>
-<tab onclick="pageHome.selectTab('news')" i="news" class="tabActive">
-${ui.l('home.news')}
-</tab>
-<tab onclick="pageHome.selectTab('events')" i="events">
-${ui.l('events.title')}
-</tab>
-</tabHeader>
-<tabBody>
 <div class="news">${v.news}</div>
-<div class="events">${v.events}</div>
-</tabBody></news>`;
+</news>`;
 	static templateNewsEdit = v =>
 		global.template`
 <input type="hidden" name="id" value="${v.id}"/>
@@ -279,14 +246,7 @@ ${ui.l('events.title')}
 			});
 	}
 	static init(force) {
-		document.addEventListener('Event', function () {
-			pageHome.teaserEvents();
-		});
-		document.addEventListener('Notification', function () { pageHome.teaserNews() });
-		document.addEventListener('Settings', function () {
-			pageHome.init(true);
-		});
-		var e = ui.q('home'), m = global.getParam('m');
+		var e = ui.q('home');
 		if (force || !ui.q('home teaser.events>div card')) {
 			var v = {
 				actionLogo: 'pageHome.openHint()'
@@ -300,15 +260,11 @@ ${ui.l('events.title')}
 				v.name = user.contact.pseudonym;
 				v.infoButton = ' hidden';
 				v.langButton = ' hidden';
-				v.actionLogo = 'ui.navigation.goTo(&quot;' + (user.contact.type == 'adminContent' ? 'content-admin-home' : 'settings') + '&quot;)';
+				v.actionLogo = global.config.club ? 'pageHome.openNews()' : 'ui.navigation.goTo(&quot;' + (user.contact.type == 'adminContent' ? 'content-admin-home' : 'settings') + '&quot;)';
 			} else {
 				v.dispProfile = 'class="hidden"';
 				v.lang = global.language;
 			}
-			if (global.config.club)
-				ui.classAdd('home', 'news');
-			else
-				ui.classRemove('home', 'news');
 			e.innerHTML = pageHome.template(v);
 			formFunc.svg.replaceAll();
 			initialisation.reposition();
@@ -321,16 +277,12 @@ ${ui.l('events.title')}
 			ui.html('home item.bluetooth text', ui.l(bluetooth.state == 'on' && user.contact.bluetooth ? 'bluetooth.activated' : 'bluetooth.deactivated'));
 		formFunc.svg.replaceAll();
 		if (user.contact) {
-			ui.q('home homeHeader svg image').setAttribute('x', 0);
-			if (global.config.club)
-				ui.q('home homeHeader svg image').setAttribute('width', 390);
-			else
-				ui.q('home homeHeader svg image').setAttribute('width', 400);
-			ui.q('home homeHeader svg text').setAttribute('style', 'display:none;');
+			ui.q('home homeHeader svg image').setAttribute('x', 40);
+			ui.q('home homeHeader svg image').setAttribute('width', 320);
+			ui.q('home homeHeader svg text').innerHTML = ui.l('home.news').toLowerCase();
 		} else {
 			ui.q('home homeHeader svg image').setAttribute('x', 40);
 			ui.q('home homeHeader svg image').setAttribute('width', 320);
-			ui.q('home homeHeader svg text').setAttribute('style', '');
 		}
 		pageHome.updateLocalisation();
 		ui.css('dialog-navigation item.search', 'display', user.contact ? '' : 'none');
@@ -395,12 +347,43 @@ ${ui.l('events.title')}
 	}
 	static openNews(id) {
 		communication.ajax({
-			url: global.serverApi + 'db/one?query=contact_listNews&search=' + encodeURIComponent('contactNews.id=' + id),
+			url: global.serverApi + 'db/list?query=contact_listNews&limit=25' + (user.contact.type == 'adminContent' && !user.appConfig.rss ? '' : '&search=' + encodeURIComponent('contactNews.publish<\'' + global.date.local2server(new Date()) + '\'')),
 			webCall: 'pageHome.openNews',
 			responseType: 'json',
-			success(r) {
-				if (r && r['contactNews.url'])
-					ui.navigation.openHTML(r['contactNews.url']);
+			success(l) {
+				pageHome.closeList();
+				var v = {}, s = '';
+				for (var i = 1; i < l.length; i++) {
+					var e = model.convert(new ContactNews(), l, i);
+					var oc = e.url ? 'onclick="ui.navigation.openHTML(&quot;' + e.url + '&quot;)"' : '';
+					s += oc ? '<card ' + oc + ' style="cursor:pointer;">' : '<card>';
+					s += '<p' + (e.image || e.imgUrl ? ' style="padding-bottom:1.25em;">' : '>');
+					if (global.date.server2local(e.publish) > new Date())
+						s += '<date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
+					else
+						s += '<date>' + global.date.formatDate(e.publish) + '</date>';
+					s += e.description;
+					s += '</p>'
+					if (e.image)
+						s += '<img src="' + global.serverImg + e.image + '"/>';
+					s += '</card>'
+				}
+				v.news = s ? s : '<card style="text-align:center;padding:0.5em;"><p>' + ui.l('home.noNews').replace('{0}', ui.l('home.news')) + '</p></card>';
+				s = '';
+				if (ui.q('dialog-hint news'))
+					ui.q('dialog-hint span').innerHTML = pageHome.templateNews(v);
+				else
+					ui.navigation.openHint({ desc: pageHome.templateNews(v), pos: '1em,1em', size: '-1em,-4em', onclick: 'return false' });
+				if (id)
+					communication.ajax({
+						url: global.serverApi + 'db/one?query=contact_listNews&search=' + encodeURIComponent('contactNews.id=' + id),
+						webCall: 'pageHome.openNews',
+						responseType: 'json',
+						success(r) {
+							if (r && r['contactNews.url'])
+								ui.navigation.openHTML(r['contactNews.url']);
+						}
+					});
 			}
 		});
 	}
@@ -516,7 +499,7 @@ ${ui.l('events.title')}
 		});
 	}
 	static teaserNews() {
-		if (global.config.club)
+		if (ui.q('home teaser.news'))
 			communication.ajax({
 				url: global.serverApi + 'action/teaser/news',
 				webCall: 'pageHome.teaserNews',
@@ -565,3 +548,6 @@ ${ui.l('events.title')}
 			ui.html('home svg text', geoData.current.town);
 	}
 }
+document.addEventListener('Event', pageHome.teaserEvents);
+document.addEventListener('Notification', pageHome.teaserNews);
+document.addEventListener('Settings', function () { pageHome.init(true); });

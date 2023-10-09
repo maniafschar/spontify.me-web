@@ -242,7 +242,7 @@ ${v.matchIndicatorHintDescription}
 		else if (user.contact.id == v.id)
 			v.hideMe = ' hidden';
 		if (v.image)
-			v.image = '<img src="' + global.serverImg + v.image + '" />';
+			v.image = '<img src="' + global.serverImg + v.image + '"/>';
 		else {
 			v.image = '<div class="mainBG" style="padding:8em;"><img source="contacts" ' + (preview ? 'class="fade"' : '') + '/></div>';
 			if (preview)

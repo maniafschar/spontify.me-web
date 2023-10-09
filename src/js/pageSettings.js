@@ -438,7 +438,7 @@ ${v.info}`;
 				ui.navigation.goTo(goToID, true);
 		}
 		ui.css('settings save', 'display', '');
-		if (ui.q('[name="image_disp"] img')) {
+		if (ui.q('settings input-image img.preview')) {
 			communication.ajax({
 				url: global.serverApi + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id),
 				webCall: 'pageSettings.postSave',
@@ -446,6 +446,8 @@ ${v.info}`;
 				success(r) {
 					user.contact.image = r['contact.image'];
 					user.contact.imageList = r['contact.imageList'];
+					ui.q('settings input-image img.icon').src = global.serverImg + user.contact.imageList;
+					ui.q('settings input-image').remove();
 					document.dispatchEvent(new CustomEvent('Settings', { detail: { action: 'save' } }));
 				}
 			});
