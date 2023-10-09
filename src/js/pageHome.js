@@ -246,7 +246,6 @@ news card img {
 			});
 	}
 	static init(force) {
-		var e = ui.q('home');
 		if (force || !ui.q('home teaser.events>div card')) {
 			var v = {
 				actionLogo: 'pageHome.openHint()'
@@ -265,25 +264,26 @@ news card img {
 				v.dispProfile = 'class="hidden"';
 				v.lang = global.language;
 			}
-			e.innerHTML = pageHome.template(v);
+			ui.q('home').innerHTML = pageHome.template(v);
 			formFunc.svg.replaceAll();
 			initialisation.reposition();
 			pageHome.teaserContacts();
 			pageHome.teaserEvents();
-			pageHome.teaserNews();
 		}
 		pageHome.initNotificationButton();
 		if (user.contact)
 			ui.html('home item.bluetooth text', ui.l(bluetooth.state == 'on' && user.contact.bluetooth ? 'bluetooth.activated' : 'bluetooth.deactivated'));
 		formFunc.svg.replaceAll();
-		if (user.contact) {
-			ui.q('home homeHeader svg image').setAttribute('x', 40);
-			ui.q('home homeHeader svg image').setAttribute('width', 320);
-			ui.q('home homeHeader svg text').innerHTML = ui.l('home.news').toLowerCase();
-		} else {
-			ui.q('home homeHeader svg image').setAttribute('x', 40);
-			ui.q('home homeHeader svg image').setAttribute('width', 320);
-		}
+		var e = ui.q('home homeHeader svg image');
+		if (e)
+			if (user.contact) {
+				e.setAttribute('x', 40);
+				e.setAttribute('width', 320);
+				ui.q('home homeHeader svg text').innerHTML = ui.l('home.news').toLowerCase();
+			} else {
+				e.setAttribute('x', 40);
+				e.setAttribute('width', 320);
+			}
 		pageHome.updateLocalisation();
 		ui.css('dialog-navigation item.search', 'display', user.contact ? '' : 'none');
 		ui.css('dialog-navigation item.info', 'display', user.contact ? 'none' : '');
@@ -304,6 +304,8 @@ news card img {
 					}
 					if (v.imageList)
 						v.image = 'src="' + global.serverImg + v.imageList + '"';
+					else if (v.contactNotification.action.indexOf('news=') == 0)
+						v.image = 'src="images/logo.png" class="mainBG"';
 					else
 						v.image = 'source="contacts" class="mainBG"';
 					s += '<div onclick="pageHome.clickNotification(' + v.contactNotification.id + ',&quot;' + v.contactNotification.action + '&quot;)" ' + (v.contactNotification.seen == 0 ? ' class="highlightBackground"' : '') + '><img ' + v.image + '/> <span>' + global.date.formatDate(v.contactNotification.createdAt) + ': ' + v.contactNotification.text + '</span></div > ';
@@ -399,7 +401,7 @@ news card img {
 	}
 	static saveNews() {
 		formFunc.resetError(ui.q('dialog-popup textarea'));
-		var v = formFunc.getForm('popup');
+		var v = formFunc.getForm('dialog-popup');
 		if (!ui.q('dialog-popup textarea').value)
 			formFunc.setError(ui.q('dialog-popup textarea'), 'error.description');
 		else
@@ -499,39 +501,6 @@ news card img {
 			}
 		});
 	}
-	static teaserNews() {
-		if (ui.q('home teaser.news'))
-			communication.ajax({
-				url: global.serverApi + 'action/teaser/news',
-				webCall: 'pageHome.teaserNews',
-				responseType: 'json',
-				success(l) {
-					var s = '';
-					for (var i = 1; i < l.length; i++) {
-						var e = model.convert(new ContactNews(), l, i);
-						var oc = !user.contact ? 'onclick="pageHome.openHintNews()"' : user.contact.type == 'adminContent' && !global.config.rss ?
-							'onclick="pageHome.editNews(' + e.id + ')"' :
-							e.url ? 'onclick="ui.navigation.openHTML(&quot;' + e.url + '&quot;)"' : '';
-						s += '<card ' + oc + '>';
-						s += '<text>' + global.date.formatDate(e.publish, 'noWeekday') + '<br/>' + e.description + '</text>';
-						s += '<img src="' + (e.image ? global.serverImg + e.image : 'images/add.svg') + '"/>';
-						s += '</card>'
-					}
-					e = ui.q('home teaser.news>div');
-					e.innerHTML = s;
-					ui.css('home teaser.news', 'display', '');
-					ui.css('home teaser.news', 'opacity', 1);
-					e.addEventListener("wheel", event => {
-						if (event.deltaY) {
-							e.scrollBy({ left: event.deltaY });
-							event.preventDefault();
-						}
-					});
-				}
-			});
-		else
-			ui.css('home teaser.news', 'display', 'none');
-	}
 	static toggleNotification() {
 		VideoCall.init();
 		if (!user.contact)
@@ -550,5 +519,4 @@ news card img {
 	}
 }
 document.addEventListener('Event', pageHome.teaserEvents);
-document.addEventListener('Notification', pageHome.teaserNews);
 document.addEventListener('Settings', function () { pageHome.init(true); });

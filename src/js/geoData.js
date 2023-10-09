@@ -83,7 +83,7 @@ class geoData {
 				if (status || global.getOS() == 'ios')
 					geoData.init2('granted');
 				else if (!geoData.localizationAsked) {
-					if (ui.cssValue('popup', 'display') == 'none') {
+					if (ui.cssValue('dialog-popup', 'display') == 'none') {
 						geoData.localizationAsked = true;
 						ui.navigation.openPopup(ui.l('attention'), ui.l('locations.permission') + '<br/><br/><button-text onclick="geoData.requestLocationAuthorization()" label="locations.permissionButton"></button-text>');
 					} else

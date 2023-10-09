@@ -204,7 +204,7 @@ class initialisation {
 				ui.navigation.goTo(ui.qa('detail card').length > 1 ? 'detail' : ui.q('detail').getAttribute('from'));
 			}
 		});
-		ui.on('popup', 'click', function (event) {
+		ui.on('dialog-popup', 'click', function (event) {
 			var e = event.target;
 			if (ui.parents(e, 'popupTitle') || !ui.q('dialog-popup input') && !ui.q('dialog-popup textarea') && !ui.q('dialog-popup input-rating') && !ui.q('dialog-popup mapPicker')) {
 				while (e && e.getAttribute) {
