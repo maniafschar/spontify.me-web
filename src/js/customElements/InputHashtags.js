@@ -74,7 +74,7 @@ hashtagButton::before {
 		element.setAttribute('name', 'hashtagsDisp');
 		element.setAttribute('maxlength', '250');
 		element.setAttribute('transient', 'true');
-		element.setAttribute('onkeyup', 'this.getRootNode().host.synchonizeTags(this.getRootNode())');
+		element.setAttribute('onkeyup', 'this.getRootNode().host.synchonizeTags()');
 		element.setAttribute('style', 'height:2em;');
 		this._root.appendChild(element);
 		element = document.createElement('hashtags');
@@ -91,8 +91,8 @@ hashtagButton::before {
 		if (e)
 			e.value = (InputHashtags.ids2Text(this.getAttribute('ids')) + (this.getAttribute('text') ? ' ' + this.getAttribute('text') : '')).trim();
 	}
-	add(root, tag) {
-		var e = root.querySelector('textarea');
+	add(tag) {
+		var e = this._root.querySelector('textarea');
 		var s = e.value;
 		if ((' ' + e.value + ' ').indexOf(' ' + tag + ' ') < 0)
 			s += ' ' + tag;
@@ -102,7 +102,7 @@ hashtagButton::before {
 			s = s.replace('  ', ' ');
 		e.value = s.trim();
 		ui.adjustTextarea(e);
-		this.synchonizeTags(root);
+		this.synchonizeTags();
 	}
 	convert(hashtags) {
 		var category = '';
@@ -155,24 +155,25 @@ hashtagButton::before {
 			s += '<div' + (i == 0 ? ' style="display:block;"' : '') + '>';
 			var subs = ui.categories[i].values.sort(function (a, b) { return a > b ? 1 : -1 });
 			for (var i2 = 0; i2 < subs.length; i2++)
-				s += '<label onclick="this.getRootNode().host.add(event.target.getRootNode(),&quot;' + subs[i2].split('|')[0] + '&quot;)">' + subs[i2].split('|')[0] + '</label>';
+				s += '<label onclick="this.getRootNode().host.add(&quot;' + subs[i2].split('|')[0] + '&quot;)">' + subs[i2].split('|')[0] + '</label>';
 			s += '</div>';
 		}
 		return s;
 	}
-	synchonizeTags(root) {
-		var textarea = root.querySelector('textarea');
-		var tags = root.querySelector('hashtags').querySelectorAll('div>label');
+	synchonizeTags() {
+		var textarea = this._root.querySelector('textarea');
+		var tags = this._root.querySelector('hashtags').querySelectorAll('div>label');
 		var s = textarea.value.toLowerCase();
 		for (var i = 0; i < tags.length; i++)
 			s.indexOf(tags[i].innerHTML.trim().toLowerCase()) < 0 ? ui.classRemove(tags[i], 'selected') : ui.classAdd(tags[i], 'selected');
 		ui.adjustTextarea(textarea);
 		var hts = this.convert(textarea.value);
-		root.host.setAttribute('ids', hts.ids);
-		root.host.setAttribute('text', hts.text);
+		this._root.host.setAttribute('ids', hts.ids);
+		this._root.host.setAttribute('text', hts.text);
 	}
 	toggle(event) {
 		ui.toggleHeight(event.target.getRootNode().querySelector('hashtags'));
+		this.synchonizeTags()
 	}
 	toggleSubCategories(e, i) {
 		e = e.getRootNode().querySelector('hashtags');

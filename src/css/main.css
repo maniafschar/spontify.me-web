@@ -459,6 +459,7 @@ settings save {
 settings paypalFees {
 	display: block;
 	padding-top: 2em;
+	display: none;
 }
 
 settings genderSelectHint {
