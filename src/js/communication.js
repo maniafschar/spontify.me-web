@@ -155,13 +155,16 @@ class communication {
 		},
 		open(e) {
 			communication.setApplicationIconBadgeNumber(e.count);
-			if (e.additionalData && e.additionalData.exec
-				&& e.additionalData.exec.indexOf('chat') == 0
-				&& ui.q('chat[i="' + e.additionalData.exec.substring(5) + '"]')
-				&& ui.cssValue('chat', 'display') != 'none')
-				pageChat.refresh();
-			else
-				communication.ping();
+			if (e.additionalData && e.additionalData.exec) {
+				if (e.additionalData.exec.indexOf('chat') == 0
+					&& ui.q('chat[i="' + e.additionalData.exec.substring(5) + '"]')
+					&& ui.cssValue('chat', 'display') != 'none')
+					pageChat.refresh();
+				else {
+					communication.ping();
+					ui.autoOpen(e.additionalData.exec);
+				}
+			}
 		},
 		register() {
 			if (global.isBrowser())
