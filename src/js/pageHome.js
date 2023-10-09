@@ -346,46 +346,47 @@ news card img {
 			'<button-text' + (global.language == 'EN' ? ' class="favorite"' : '') + ' onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN" label="English"></button-text></div>');
 	}
 	static openNews(id) {
-		communication.ajax({
-			url: global.serverApi + 'db/list?query=contact_listNews&limit=25' + (user.contact.type == 'adminContent' && !user.appConfig.rss ? '' : '&search=' + encodeURIComponent('contactNews.publish<\'' + global.date.local2server(new Date()) + '\'')),
-			webCall: 'pageHome.openNews',
-			responseType: 'json',
-			success(l) {
-				pageHome.closeList();
-				var v = {}, s = '';
-				for (var i = 1; i < l.length; i++) {
-					var e = model.convert(new ContactNews(), l, i);
-					var oc = e.url ? 'onclick="ui.navigation.openHTML(&quot;' + e.url + '&quot;)"' : '';
-					s += oc ? '<card ' + oc + ' style="cursor:pointer;">' : '<card>';
-					s += '<p' + (e.image || e.imgUrl ? ' style="padding-bottom:1.25em;">' : '>');
-					if (global.date.server2local(e.publish) > new Date())
-						s += '<date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
-					else
-						s += '<date>' + global.date.formatDate(e.publish) + '</date>';
-					s += e.description;
-					s += '</p>'
-					if (e.image)
-						s += '<img src="' + global.serverImg + e.image + '"/>';
-					s += '</card>'
+		if (id)
+			communication.ajax({
+				url: global.serverApi + 'db/one?query=contact_listNews&search=' + encodeURIComponent('contactNews.id=' + id),
+				webCall: 'pageHome.openNews',
+				responseType: 'json',
+				success(r) {
+					if (r && r['contactNews.url'])
+						ui.navigation.openHTML(r['contactNews.url']);
 				}
-				v.news = s ? s : '<card style="text-align:center;padding:0.5em;"><p>' + ui.l('home.noNews').replace('{0}', ui.l('home.news')) + '</p></card>';
-				s = '';
-				if (ui.q('dialog-hint news'))
-					ui.q('dialog-hint span').innerHTML = pageHome.templateNews(v);
-				else
-					ui.navigation.openHint({ desc: pageHome.templateNews(v), pos: '1em,1em', size: '-1em,-4em', onclick: 'return false' });
-				if (id)
-					communication.ajax({
-						url: global.serverApi + 'db/one?query=contact_listNews&search=' + encodeURIComponent('contactNews.id=' + id),
-						webCall: 'pageHome.openNews',
-						responseType: 'json',
-						success(r) {
-							if (r && r['contactNews.url'])
-								ui.navigation.openHTML(r['contactNews.url']);
-						}
-					});
-			}
-		});
+			});
+		else
+			communication.ajax({
+				url: global.serverApi + 'db/list?query=contact_listNews&limit=25' + (user.contact.type == 'adminContent' && !user.appConfig.rss ? '' : '&search=' + encodeURIComponent('contactNews.publish<\'' + global.date.local2server(new Date()) + '\'')),
+				webCall: 'pageHome.openNews',
+				responseType: 'json',
+				success(l) {
+					pageHome.closeList();
+					var v = {}, s = '';
+					for (var i = 1; i < l.length; i++) {
+						var e = model.convert(new ContactNews(), l, i);
+						var oc = e.url ? 'onclick="ui.navigation.openHTML(&quot;' + e.url + '&quot;)"' : '';
+						s += oc ? '<card ' + oc + ' style="cursor:pointer;">' : '<card>';
+						s += '<p' + (e.image || e.imgUrl ? ' style="padding-bottom:1.25em;">' : '>');
+						if (global.date.server2local(e.publish) > new Date())
+							s += '<date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
+						else
+							s += '<date>' + global.date.formatDate(e.publish) + '</date>';
+						s += e.description;
+						s += '</p>'
+						if (e.image)
+							s += '<img src="' + global.serverImg + e.image + '"/>';
+						s += '</card>'
+					}
+					v.news = s ? s : '<card style="text-align:center;padding:0.5em;"><p>' + ui.l('home.noNews').replace('{0}', ui.l('home.news')) + '</p></card>';
+					s = '';
+					if (ui.q('dialog-hint news'))
+						ui.q('dialog-hint span').innerHTML = pageHome.templateNews(v);
+					else
+						ui.navigation.openHint({ desc: pageHome.templateNews(v), pos: '1em,1em', size: '-1em,-4em', onclick: 'return false' });
+				}
+			});
 	}
 	static reset() {
 		pageHome.badge = -1;
