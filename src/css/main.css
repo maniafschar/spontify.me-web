@@ -204,7 +204,7 @@ homeHeader {
 }
 
 homeHeader>svg {
-	padding-top: 10%;
+	padding-top: 6%;
 	max-height: 90%;
 	cursor: pointer;
 }

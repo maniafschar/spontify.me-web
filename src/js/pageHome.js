@@ -4,7 +4,7 @@ import { VideoCall } from './customElements/VideoCall';
 import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './init';
-import { Contact, ContactNews, model } from './model';
+import { Contact, ClientNews, model } from './model';
 import { pageChat } from './pageChat';
 import { pageEvent } from './pageEvent';
 import { formFunc, ui } from './ui';
@@ -153,7 +153,7 @@ news card img {
 			communication.ajax({
 				url: global.serverApi + 'db/one',
 				body: {
-					classname: 'ContactNews',
+					classname: 'ClientNews',
 					id: id
 				},
 				webCall: 'pageHome.deleteNews',
@@ -187,11 +187,11 @@ news card img {
 		};
 		if (id)
 			communication.ajax({
-				url: global.serverApi + 'db/one?query=contact_listNews&search=' + encodeURIComponent('contactNews.id=' + id),
+				url: global.serverApi + 'db/one?query=misc_listNews&search=' + encodeURIComponent('clientNews.id=' + id),
 				webCall: 'pageHome.editNews',
 				responseType: 'json',
 				success(l) {
-					render(model.convert(new ContactNews(), l));
+					render(model.convert(new ClientNews(), l));
 				}
 			});
 		else
@@ -350,24 +350,24 @@ news card img {
 	static openNews(id) {
 		if (id)
 			communication.ajax({
-				url: global.serverApi + 'db/one?query=contact_listNews&search=' + encodeURIComponent('contactNews.id=' + id),
+				url: global.serverApi + 'db/one?query=misc_listNews&search=' + encodeURIComponent('clientNews.id=' + id),
 				webCall: 'pageHome.openNews',
 				responseType: 'json',
 				success(r) {
-					if (r && r['contactNews.url'])
-						ui.navigation.openHTML(r['contactNews.url']);
+					if (r && r['clientNews.url'])
+						ui.navigation.openHTML(r['clientNews.url']);
 				}
 			});
 		else
 			communication.ajax({
-				url: global.serverApi + 'db/list?query=contact_listNews&limit=25' + (user.contact.type == 'adminContent' && !user.appConfig.rss ? '' : '&search=' + encodeURIComponent('contactNews.publish<\'' + global.date.local2server(new Date()) + '\'')),
+				url: global.serverApi + 'db/list?query=misc_listNews&limit=25&search=' + encodeURIComponent('clientNews.publish<\'' + global.date.local2server(new Date()) + '\''),
 				webCall: 'pageHome.openNews',
 				responseType: 'json',
 				success(l) {
 					pageHome.closeList();
 					var v = {}, s = '';
 					for (var i = 1; i < l.length; i++) {
-						var e = model.convert(new ContactNews(), l, i);
+						var e = model.convert(new ClientNews(), l, i);
 						var oc = e.url ? 'onclick="ui.navigation.openHTML(&quot;' + e.url + '&quot;)"' : '';
 						s += oc ? '<card ' + oc + ' style="cursor:pointer;">' : '<card>';
 						s += '<p' + (e.image || e.imgUrl ? ' style="padding-bottom:1.25em;">' : '>');
@@ -410,7 +410,7 @@ news card img {
 			ui.q('dialog-popup popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });;
 			return;
 		}
-		v.classname = 'ContactNews';
+		v.classname = 'ClientNews';
 		if (ui.q('dialog-popup input[name="id"]').value)
 			v.id = ui.q('dialog-popup input[name="id"]').value;
 		communication.ajax({
