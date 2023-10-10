@@ -201,15 +201,11 @@ homeHeader {
 	text-align: center;
 	display: block;
 	height: 40%;
-	padding-top: 6%;
-}
-
-homeHeader.logoSmall {
-	padding-top: 0;
 }
 
 homeHeader>svg {
-	max-height: 100%;
+	padding-top: 10%;
+	max-height: 90%;
 	cursor: pointer;
 }
 
