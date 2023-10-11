@@ -73,11 +73,6 @@ index {
 	display: none;
 }
 
-b {
-	margin-bottom: 0.5em;
-	display: inline-block;
-}
-
 emphasis {
 	font-weight: bold;
 	color: var(--bg1start);

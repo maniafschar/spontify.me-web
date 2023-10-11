@@ -332,7 +332,7 @@ news card img {
 	static openHint() {
 		ui.navigation.openHint({
 			desc: ui.l('intro.description').replace(/\{0}/g, global.appTitle.substring(0, global.appTitle.indexOf(global.separator))),
-			pos: '5%,10.5em', size: '90%,auto', hinkyClass: 'top', hinky: 'left:50%;'
+			pos: '5%,8.5em', size: '90%,auto', hinkyClass: 'top', hinky: 'left:50%;'
 		});
 	}
 	static openHintNews() {

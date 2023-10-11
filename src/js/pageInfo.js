@@ -27,7 +27,7 @@ class pageInfo {
 	static templateCopyright = v =>
 		global.template`<div style="text-align:center;padding:2em 1em;clear:both;">${ui.l('info.infoOther')}<br/>© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>`;
 	static templateDesc = v =>
-		global.template`<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info4&quot;)" label="info.descLink"></button-text><br/>
+		global.template`<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info4&quot;)" label="${v.infoTitle}"></button-text><br/>
 <infoblock id="info4" style="display:none;">
 <div>
 	${v.description}
@@ -41,6 +41,7 @@ class pageInfo {
 		var e = ui.q('info');
 		if (!e.innerHTML) {
 			var render = function (v) {
+				v.infoTitle = ui.l('info.descLink').replace('{0}', global.appTitle.split(global.separator)[0]);
 				v.description = ui.l('info.description').replace('{0}', v.fee).replace(/\{1}/g, global.appTitle.indexOf(global.separator) > -1 ? global.appTitle.substring(0, global.appTitle.indexOf(global.separator)) : global.appTitle);
 				e.innerHTML = pageInfo.templateDesc(v) + pageInfo.template(v) + pageInfo.templateCopyright();
 				pageInfo.init();
