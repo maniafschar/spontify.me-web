@@ -150,6 +150,7 @@ class ContactMarketing extends BaseEntity {
 }
 
 class ClientNews extends BaseEntity {
+	clientId;
 	description;
 	image;
 	publish;

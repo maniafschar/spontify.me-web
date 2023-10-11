@@ -27,7 +27,7 @@ class pageInfo {
 	static templateCopyright = v =>
 		global.template`<div style="text-align:center;padding:2em 1em;clear:both;">${ui.l('info.infoOther')}<br/>© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>`;
 	static templateDesc = v =>
-		global.template`<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info4&quot;)" label="home.DescLink"></button-text><br/>
+		global.template`<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info4&quot;)" label="info.descLink"></button-text><br/>
 <infoblock id="info4" style="display:none;">
 <div>
 	${v.description}

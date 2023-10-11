@@ -230,8 +230,9 @@ homeHeader>text img {
 homeHeader.logoSmall>svg {
 	height: 15vh;
 	position: absolute;
-	right: 0;
+	right: -0.5em;
 	top: 0.5em;
+	padding-top: 0;
 }
 
 homeHeader name {
