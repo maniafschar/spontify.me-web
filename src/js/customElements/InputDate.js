@@ -193,22 +193,28 @@ class InputDate extends HTMLElement {
 	}
 	toggle(e, html, close) {
 		ui.navigation.openHint({
-			desc: '<div style="padding:1em 0.5em 0.5em 0.5em;max-height:22em;overflow-y:auto;">' + html + '</div>',
+			desc: '<div style="max-height:22em;overflow-y:auto;">' + html + '</div>',
 			onclose: 'ui.q(\'input-date[i="' + this.x + '"]\').select' + close + '()',
-			pos: (e.getBoundingClientRect().x - ui.q('main').getBoundingClientRect().x + ui.emInPX) + 'px,' + (e.getBoundingClientRect().y + e.getBoundingClientRect().height + ui.emInPX) + 'px', size: '55%,auto', hinkyClass: 'top', hinky: 'left:2em;',
+			pos: '2%,' + (e.getBoundingClientRect().y + e.getBoundingClientRect().height + ui.emInPX) + 'px', size: '96%,auto', hinkyClass: 'top', hinky: 'left:' + (e.getBoundingClientRect().x - ui.q('main').getBoundingClientRect().x + e.getBoundingClientRect().width / 2 - 6) + 'px;',
 			noLogin: true
 		});
 	}
 	toggleDay() {
-		var s = '', e = this.get('day'), m = this.get('month').getAttribute('value'), y = this.get('year').getAttribute('value'), max = 31;
+		var s = '<style>label{width:2.5em;text-align:center;padding:0.34em 0;}label.weekday{background:transparent;padding:0;cursor:default;}</style>', e = this.get('day'), m = this.get('month').getAttribute('value'), y = this.get('year').getAttribute('value'), max = 31;
 		if (m) {
-			if (m == '2')
-				max = y && new Date(parseInt(y), parseInt(m) - 1, 29).getDate() == 29 ? 29 : 28;
-			else if (m == '4' || m == '6' || m == '9' || m == '11')
+			if (m == '02')
+				max = y && new Date(parseInt(y), 1, 29).getDate() == 29 ? 29 : 28;
+			else if (m == '04' || m == '06' || m == '09' || m == '11')
 				max = 30;
 		}
-		for (var i = 1; i <= max; i++)
+		for (var i = 1; i < 7; i++)
+			s += `<label class="weekday">${ui.l('date.weekday' + i)}</label>`;
+		s += `<label class="weekday">${ui.l('date.weekday0')}</label><br/>`;
+		for (var i = 1; i <= max; i++) {
 			s += `<label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').selectDay(${i})">${i}</label>`;
+			if (i % 7 == 0)
+				s += '<br/>';
+		}
 		this.toggle(e, s, 'Day');
 	}
 	toggleHour() {
@@ -224,9 +230,12 @@ class InputDate extends HTMLElement {
 		this.toggle(e, s, 'Minute');
 	}
 	toggleMonth() {
-		var s = '', e = this.get('month');
-		for (var i = 1; i < 13; i++)
+		var s = '<style>label{padding:0.34em 0.75em;}</style>', e = this.get('month');
+		for (var i = 1; i < 13; i++) {
 			s += `<label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').selectMonth(${i})">${ui.l('date.month' + i)}</label>`;
+			if (i % 3 == 0)
+				s += '<br/>';
+		}
 		this.toggle(e, s, 'Month');
 	}
 	toggleSearch() {
@@ -240,7 +249,7 @@ class InputDate extends HTMLElement {
 <input onchange="ui.q('input-date[i=&quot;${this.x}&quot;]').select(e.target.value)" type="date" value="${this.getAttribute('value') && this.getAttribute('value').split('-').length == 3 ? this.getAttribute('value') : new Date().toISOString().substring(0, 10)}"/>`);
 	}
 	toggleYear() {
-		var s = '', e = this.get('year'), y = new Date().getFullYear();
+		var s = '<style>label{padding:0.34em 0;width:3.5em;text-align:center;}</style>', e = this.get('year'), y = new Date().getFullYear();
 		var birthday = this.getAttribute('type') == 'birthday';
 		for (var i = birthday ? 18 : y; i < (birthday ? 99 : y + 5); i++) {
 			var i2 = birthday ? y - i : i;
