@@ -14,16 +14,35 @@ class InputDate extends HTMLElement {
 	connectedCallback() {
 		const style = document.createElement('style');
 		style.textContent = `${initialisation.customElementsCss}
-label {
-	color: var(--popupText);
-}`;
+`;
 		this._root.appendChild(style);
-		this.setAttribute('onclick', 'this.toggle(event)');
-		this.setAttribute('i', '' + this.x);
 		var element = document.createElement('label');
-		element.innerText = ui.l('events.date');
-		this._root.appendChild(element);
+		if (this.getAttribute('type') == 'select') {
+			this.setAttribute('onclick', 'this.toggle(event)');
+			this.setAttribute('i', '' + this.x);
+			element.innerText = ui.l('events.date');
+			this._root.appendChild(element);
+		} else {
+			element.setAttribute('name', 'year');
+			this._root.appendChild(element);
+			element = document.createElement('label')
+			element.setAttribute('name', 'month');
+			this._root.appendChild(element);
+			element = document.createElement('label')
+			element.setAttribute('name', 'day');
+			this._root.appendChild(element);
+			if (type != 'date') {
+				element = document.createElement('label')
+				element.setAttribute('name', 'hour');
+				this._root.appendChild(element);
+				element = document.createElement('label')
+				element.setAttribute('name', 'minute');
+				this._root.appendChild(element);
+			}
+		}
+		this.removeAttribute('type');
 		this.tabIndex = 0;
+		select(this.getAttribute('value'));
 	}
 	toggle(event) {
 		var e = event.target;
@@ -45,7 +64,7 @@ label {
 		if (type == 'all') {
 			this._root.querySelector('label').innerHTML = ui.l('events.date');
 			this.removeAttribute('value');
-		} else {
+		} else if (type) {
 			this._root.querySelector('label').innerHTML = type.indexOf('-') < 0 ? ui.l('search.dateSelection' + type.substring(0, 1).toUpperCase() + type.substring(1)) : global.date.formatDate(type);
 			this.setAttribute('value', type);
 		}
