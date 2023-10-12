@@ -23,19 +23,24 @@ class InputDate extends HTMLElement {
 			element.innerText = ui.l('events.date');
 			this._root.appendChild(element);
 		} else {
+			element.setAttribute('onclick', 'this.selectYear()');
 			element.setAttribute('name', 'year');
 			this._root.appendChild(element);
 			element = document.createElement('label')
+			element.setAttribute('onclick', 'this.selectMonth()');
 			element.setAttribute('name', 'month');
 			this._root.appendChild(element);
 			element = document.createElement('label')
+			element.setAttribute('onclick', 'this.selectDay()');
 			element.setAttribute('name', 'day');
 			this._root.appendChild(element);
 			if (type != 'date') {
 				element = document.createElement('label')
+				element.setAttribute('onclick', 'this.selectHour()');
 				element.setAttribute('name', 'hour');
 				this._root.appendChild(element);
 				element = document.createElement('label')
+				element.setAttribute('onclick', 'this.selectMinute()');
 				element.setAttribute('name', 'minute');
 				this._root.appendChild(element);
 			}
@@ -44,21 +49,50 @@ class InputDate extends HTMLElement {
 		this.tabIndex = 0;
 		select(this.getAttribute('value'));
 	}
+	get(name) {
+		return this._root.querySelector('label[name="' + name + '"]');
+	}
 	toggle(event) {
-		var e = event.target;
-		ui.navigation.openHint({
-			desc: `
-<div style="padding:1em 0.5em 0.5em 0.5em;">
+		toggle(this, `
 <label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').select('all')">${ui.l('search.dateSelectionAll')}</label>
 <label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').select('today')">${ui.l('search.dateSelectionToday')}</label>
 <label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').select('tomorrow')">${ui.l('search.dateSelectionTomorrow')}</label>
 <label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').select('thisWeek')">${ui.l('search.dateSelectionThisWeek')}</label>
 <label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').select('thisWeekend')">${ui.l('search.dateSelectionThisWeekend')}</label>
 <label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').select('nextWeek')">${ui.l('search.dateSelectionNextWeek')}</label>
-<input onchange="ui.q('input-date[i=&quot;${this.x}&quot;]').select(event.target.value)" type="date" value="${this.getAttribute('value') && this.getAttribute('value').split('-').length == 3 ? this.getAttribute('value') : new Date().toISOString().substring(0, 10)}"/>
-</div>`,
-			pos: (this.getBoundingClientRect().x - ui.q('main').getBoundingClientRect().x + ui.emInPX) + 'px,' + (this.getBoundingClientRect().y + this.getBoundingClientRect().height + ui.emInPX) + 'px', size: '60%,auto', hinkyClass: 'top', hinky: 'left:2em;'
+<input onchange="ui.q('input-date[i=&quot;${this.x}&quot;]').select(event.target.value)" type="date" value="${this.getAttribute('value') && this.getAttribute('value').split('-').length == 3 ? this.getAttribute('value') : new Date().toISOString().substring(0, 10)}"/>`);
+	}
+	toggle(e, html) {
+		ui.navigation.openHint({
+			desc: '<div style="padding:1em 0.5em 0.5em 0.5em;">' + fields + '</div>',
+			pos: (e.getBoundingClientRect().x - ui.q('main').getBoundingClientRect().x + ui.emInPX) + 'px,' + (e.getBoundingClientRect().y + e.getBoundingClientRect().height + ui.emInPX) + 'px', size: '60%,auto', hinkyClass: 'top', hinky: 'left:2em;'
 		});
+	}
+	toggleDay() {
+		var s = '', e = this.get('day'), m = get('month').getAttribute('value'), y = get('year').getAttribute('value'), max = 31;
+		if (m) {
+			if (m % 2 == 0) {
+				if (m == 1)
+					max = new Date (y, m, 29).getDate() == 29 ? 29 : 28;
+				else
+					max = 30;
+			}
+		}
+		for (var i = 1; i <= max; i++)
+			s += `<label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').selectDay(${i})">${i}</label>`;
+		toggle(e, s);
+	}
+	toggleHour() {
+	}
+	toggleMinute() {
+	}
+	toggleMonth() {
+		var s = '', e = this.get('month');
+		for (var i = 0; i < 12; i++)
+			s += `<label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').selectMonth(${i})">${ui.l('month' + i)}</label>`;
+		toggle(e, s);
+	}
+	toggleYear() {
 	}
 	select(type) {
 		if (type == 'all') {
@@ -69,5 +103,15 @@ class InputDate extends HTMLElement {
 			this.setAttribute('value', type);
 		}
 		ui.navigation.closeHint();
+	}
+	selectDay() {
+	}
+	selectHour() {
+	}
+	selectMinute() {
+	}
+	selectMonth() {
+	}
+	selectYear() {
 	}
 }
