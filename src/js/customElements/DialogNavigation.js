@@ -76,6 +76,25 @@ buttonIcon.notifications {
 	border-radius: 50% 0 0 50% !important;
 	margin-top: -2em;
 	right: 0;
+}
+
+item.content-admin-home,
+item.content-admin-marketing,
+item.content-admin-invoice {
+	display: none;
+}
+
+:host(.contentAdmin) item.content-admin-home,
+:host(.contentAdmin) item.content-admin-marketing,
+:host(.contentAdmin) item.content-admin-invoice {
+	display: initial;
+}
+
+:host(.contentAdmin) item.search,
+:host(.contentAdmin) item.events,
+:host(.contentAdmin) item.contacts,
+:host(.contentAdmin) item.info {
+	display: none;
 }`;
 		this._root.appendChild(style);
 		var t = this;
@@ -117,12 +136,9 @@ buttonIcon.notifications {
 			ui.classRemove('dialog-navigation item', 'active');
 			ui.classAdd('dialog-navigation item.' + id, 'active');
 			if (id == 'home')
-				ui.classRemove('dialog-navigation item', 'hidden');
-			else if (id == 'content-admin-home') {
-				ui.classAdd('dialog-navigation item.search', 'hidden');
-				ui.classAdd('dialog-navigation item.events', 'hidden');
-				ui.classAdd('dialog-navigation item.contacts', 'hidden');
-			}
+				ui.classRemove('dialog-navigation', 'contentAdmin');
+			else if (id == 'content-admin-home')
+				ui.classAdd('dialog-navigation', 'contentAdmin');
 		}
 	}
 }

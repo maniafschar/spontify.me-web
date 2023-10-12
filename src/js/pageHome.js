@@ -17,6 +17,9 @@ class pageHome {
 	static teaserMeta;
 	static template = v =>
 		global.template`<homeHeader${v.logoSmall}>
+	<buttonIcon class="statistics bgColor${v.statsButton}" onclick="ui.navigation.goTo(&quot;content-admin-home&quot;)">
+		<img source="content-admin-home"/>
+	</buttonIcon>
 	<img onclick="${v.actionLogo}" source="logo"/>
 	<text onclick="ui.navigation.goTo(&quot;settings&quot;)" ${v.dispProfile}>
 		${v.imgProfile}<br/>
@@ -250,6 +253,7 @@ news card img {
 			var v = {
 				actionLogo: 'pageHome.openHint()'
 			};
+			v.statsButton = ' hidden';
 			if (user.contact) {
 				if (user.contact.imageList)
 					v.imgProfile = '<img src="' + global.serverImg + user.contact.imageList + '"/>';
@@ -260,6 +264,8 @@ news card img {
 				v.infoButton = ' hidden';
 				v.langButton = ' hidden';
 				v.actionLogo = global.config.club ? 'pageHome.openNews()' : 'ui.navigation.goTo(&quot;' + (user.contact.type == 'adminContent' ? 'content-admin-home' : 'settings') + '&quot;)';
+				if (user.contact.type == 'adminContent')
+					v.statsButton = '';
 			} else {
 				v.dispProfile = 'class="hidden"';
 				v.lang = global.language;
