@@ -834,6 +834,9 @@ class formFunc {
 		}
 		for (var k in cb)
 			d.values[k] = cb[k].length > 0 ? cb[k].substring(1) : '';
+		e = form.querySelectorAll('input-date:not([transient="true"])');
+		for (var i = 0; i < e.length; i++)
+			d.values[e[i].getAttribute('name')] = e[i].getAttribute('value');
 		e = form.querySelectorAll('input-slider:not([transient="true"])');
 		for (var i = 0; i < e.length; i++)
 			d.values[e[i].getAttribute('name')] = e[i].getAttribute('value');
@@ -974,9 +977,9 @@ class formFunc {
 
 		birthday(e) {
 			formFunc.resetError(e);
-			if (e.value.trim().length > 0) {
+			if (e.getAttribute('value')) {
 				try {
-					var n = new Date(), d = global.date.getDateFields(e.value);
+					var n = new Date(), d = global.date.getDateFields(e.getAttribute('value'));
 					var a = n.getFullYear() - d.year;
 					if (n.getMonth() + 1 < d.month || (n.getMonth() + 1 == d.month && n.getDate() < d.day))
 						a--;

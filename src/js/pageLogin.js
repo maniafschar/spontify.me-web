@@ -12,7 +12,6 @@ import { pageLocation } from './pageLocation';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 import { DialogPopup } from './customElements/DialogPopup';
-import { VideoCall } from './customElements/VideoCall';
 
 export { pageLogin };
 
@@ -104,7 +103,7 @@ class pageLogin {
     <field>
         <label>${ui.l('birthday')}</label>
         <value>
-            <input type="date" placeholder="TT.MM.JJJJ" name="birthday" value="${v.birthday}" />
+            <input-date name="birthday" type="birthday" value="${v.birthday}"></input-date>
         </value>
     </field>
     <field>
@@ -119,10 +118,7 @@ class pageLogin {
 		<button-text onclick="pageLogin.register()" class="defaultButton" label="login.register"></button-text>
         <br /><br />
         <button-text onclick="ui.navigation.openAGB()" style="margin-left: 0.5em;" label="${ui.l('info.legalTitle')}${global.separator}${ui.l('info.dsgvoTitle')}"></button-text>
-        <br /><br />
-        <button-text onclick="pageLogin.toggleRegistrationHints()" style="margin-left: 0.5em;" label="login.hintsTitle"></button-text>
     </dialogButtons>
-	<registerHint onclick="pageLogin.toggleRegistrationHints()">${ui.l('login.hints')}</registerHint>
 </form>
 </tabBody>`;
 	static autoLogin(exec) {
@@ -637,10 +633,6 @@ class pageLogin {
 			pageLogin.setTab1();
 		else
 			pageLogin.setTab2();
-	}
-	static toggleRegistrationHints() {
-		var e = ui.q('registerHint');
-		ui.css(e, 'transform', ui.cssValue(e, 'transform').indexOf('1') > -1 ? 'scale(0)' : 'scale(1)');
 	}
 	static verifyEmail(e, email) {
 		var x = 0;

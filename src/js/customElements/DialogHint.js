@@ -178,7 +178,7 @@ chart {
 		body = body.replace('<rating/>', '<br/><br/><input-rating name="rating"></input-rating><br/><br/><input type="email" name="email" placeholder="Email"></input><br/><br/><textarea name="feedback" maxlength="1000"></textarea><br/><br/><button-text onclick="ui.q(&quot;dialog-hint&quot;).save()" name="feedback" label="✓"></button-text>');
 		body = body.replace('<language/>', '<br/><br/><button-text ' + (global.language == 'DE' ? 'class="favorite"' : '') + ' onclick="ui.q(&quot;dialog-hint&quot;).language(&quot;DE&quot;)" l="DE" label="Deutsch"></button-text><button-text class="' + (global.language == 'EN' ? ' favorite' : '') + '" onclick="ui.q(&quot;dialog-hint&quot;).language(&quot;EN&quot;)" l="EN" label="English"></button-text>');
 		ui.css(e, 'display', 'block');
-		if (body.indexOf('<input') < 0)
+		if (body.indexOf('<input') < 0 && body.indexOf('class="selectable') < 0)
 			ui.attr(e, 'onclick', data.onclick ? data.onclick : DialogHint.currentStep > -1 ? 'ui.navigation.openIntro(event)' : 'ui.navigation.closeHint()');
 		else
 			e.removeAttribute('onclick');

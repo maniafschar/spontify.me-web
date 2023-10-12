@@ -69,13 +69,8 @@ class pageSettings {
 </field>
 <field>
 	<label>${ui.l('birthday')}</label>
-	<value class="checkbox">
-		<input type="date" placeholder="TT.MM.JJJJ" name="birthday" maxlength="10" id="bd"
-			value="${v.birthday}" style="margin-bottom:0.5em;" />
-		<input-checkbox type="radio" name="birthdayDisplay" value="2" label="settings.showBirthday"
-			${v.birthdayDisplay2} style="margin-top:0.5em;"></input-checkbox>
-		<input-checkbox type="radio" name="birthdayDisplay" value="1" label="settings.showAge"
-			${v.birthdayDisplay1}></input-checkbox>
+	<value>
+		<input-date type="birthday" name="birthday" value="${v.birthday}"></input-date>
 	</value>
 </field>
 <field>
@@ -254,8 +249,7 @@ ${v.info}`;
 		s += global.separatorTech + global.hash(ui.val('settings input-image[name="image"]'));
 		s += global.separatorTech + ui.val('settings textarea[name="description"]');
 		s += global.separatorTech + ui.val('settings textarea[name="urls"]');
-		s += global.separatorTech + ui.val('settings input[name="birthday"]');
-		s += global.separatorTech + ui.val('settings input-checkbox[name="birthdayDisplay"][checked="true"]');
+		s += global.separatorTech + ui.val('settings input-date[name="birthday"]');
 		s += global.separatorTech + ui.val('settings input-checkbox[name="gender"][checked="true"]');
 		s += global.separatorTech + ui.val('settings input-slider[name="ageFemale"]');
 		s += global.separatorTech + ui.val('settings input-slider[name="ageMale"]');
@@ -300,9 +294,6 @@ ${v.info}`;
 					if (v['contact.imageList'])
 						user.contact.imageList = v['contact.imageList'];
 					v.birthday = d;
-					v.birthdayDisplay2 = v['contact.birthdayDisplay'] == 2 ? ' checked="true"' : '';
-					v.birthdayDisplay1 = v['contact.birthdayDisplay'] == 1 ? ' checked="true"' : '';
-					v.birthdayDisplay0 = v['contact.birthdayDisplay'] == 0 ? ' checked="true"' : '';
 					v['contact.notificationChat'] = v['contact.notificationChat'] == 1 ? ' checked="true"' : '';
 					v['contact.notificationEngagement'] = v['contact.notificationEngagement'] == 1 ? ' checked="true"' : '';
 					v['contact.notificationFriendRequest'] = v['contact.notificationFriendRequest'] == 1 ? ' checked="true"' : '';
@@ -424,7 +415,7 @@ ${v.info}`;
 		user.contact.ageDivers = ui.val('settings input[name="ageDivers"]');
 		user.contact.pseudonym = ui.val('settings input[name="pseudonym"]');
 		user.contact.gender = ui.val('settings input-checkbox[name="gender"][checked="true"]');
-		user.contact.birthday = ui.val('settings input[name="birthday"]');
+		user.contact.birthday = ui.val('settings input-date[name="birthday"]');
 		user.contact.skills = ui.q('settings input-hashtags').getAttribute('ids');
 		user.contact.skillsText = ui.q('settings input-hashtags').getAttribute('text');
 		user.contact.skills = user.contact.skills.category;
@@ -457,8 +448,8 @@ ${v.info}`;
 	static reset() {
 		formFunc.resetError(ui.q('input[name="pseudonym"]'));
 		formFunc.resetError(ui.q('input[name="email"]'));
-		formFunc.resetError(ui.q('input[name="image"]'));
-		formFunc.resetError(ui.q('input[name="birthday"]'));
+		formFunc.resetError(ui.q('input-image[name="image"]'));
+		formFunc.resetError(ui.q('input-date[name="birthday"]'));
 		formFunc.resetError(ui.q('input[name="gender"]'));
 		formFunc.resetError(ui.q('textarea[name="description"]'));
 		formFunc.resetError(ui.q('textarea[name="urls"]'));
@@ -476,8 +467,7 @@ ${v.info}`;
 		pageSettings.reset();
 		if (!user.contact || pageSettings.currentSettings == pageSettings.getCurrentSettings())
 			return true;
-		if (ui.q('settings [name="birthday"]').parentNode.lastChild.tagName != 'ERRORHINT')
-			formFunc.validation.birthday(ui.q('input[name="birthday"]'));
+		formFunc.validation.birthday(ui.q('input-date[name="birthday"]'));
 		if (ui.q('input-checkbox[name="guide"][checked="true"]') && !ui.val('textarea[name="description"]'))
 			formFunc.setError(ui.q('textarea[name="description"]'), 'settings.descriptionEmpty');
 		else if (ui.val('textarea[name="description"]'))
@@ -514,7 +504,7 @@ ${v.info}`;
 				return false;
 			}
 		}
-		var x = ui.q('settings input-checkbox[name="gender"][checked="true"]') && ui.q('settings input[name="birthday"]').value;
+		var x = ui.q('settings input-checkbox[name="gender"][checked="true"]') && ui.val('settings input-date[name="birthday"]');
 		if (!x || !ui.q('input-checkbox[name="genderInterest1"][checked="true"]'))
 			ui.q('settings [name="ageMale"]').value = '';
 		if (!x || !ui.q('input-checkbox[name="genderInterest2"][checked="true"]'))
@@ -531,7 +521,7 @@ ${v.info}`;
 		ui.classRemove('settings tab', 'tabActive');
 		ui.classAdd(ui.qa('settings tab')[i], 'tabActive');
 		ui.q('settings tabBody').style.marginLeft = i * -100 + '%';
-		ui.css('settings genderSelectHint', 'display', ui.q('settings input-checkbox[name="gender"][checked="true"]') && ui.q('settings input[name="birthday"]').value ? 'none' : 'block');
+		ui.css('settings genderSelectHint', 'display', ui.q('settings input-checkbox[name="gender"][checked="true"]') && ui.val('settings input-date[name="birthday"]') ? 'none' : 'block');
 	}
 	static swipeLeft() {
 		var m = ui.q('settings tabBody').style.marginLeft;

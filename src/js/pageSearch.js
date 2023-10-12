@@ -113,7 +113,7 @@ class pageSearch {
 		fieldValues: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
-<input-date name="date" type="select" value="${v.date}"></input-date>
+<input-date name="date" type="search" value="${v.date}"></input-date>
 <label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${geoData.getCurrent().town}</label>
 ${v.keywords}
 <explain class="searchKeywordHint">${ui.l('search.hintEvent')}</explain>
