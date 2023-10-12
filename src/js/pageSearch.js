@@ -113,7 +113,7 @@ class pageSearch {
 		fieldValues: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
-<input-date name="date" ${v.matches}></input-date>
+<input-date name="date" type="select" value="${v.date}"></input-date>
 <label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${geoData.getCurrent().town}</label>
 ${v.keywords}
 <explain class="searchKeywordHint">${ui.l('search.hintEvent')}</explain>
@@ -128,8 +128,7 @@ ${v.keywords}
 				v.keywords = '<input value="' + (pageSearch.events.fieldValues.keywords ? pageSearch.events.fieldValues.keywords : '') + '" name="keywords"></input>'
 			else
 				v.keywords = '<input-hashtags ids="' + pageSearch.events.fieldValues.keywords + '" text="' + pageSearch.events.fieldValues.keywordsText + '" name="keywords"></input-hashtags>'
-			if (pageSearch.events.fieldValues.matches == 'true')
-				v.matches = ' checked="true"';
+			v.date = pageSearch.events.fieldValues.date;
 			return pageSearch.events.template(v);
 		},
 		getSearch() {
