@@ -193,28 +193,40 @@ class InputDate extends HTMLElement {
 	}
 	toggle(e, html, close) {
 		ui.navigation.openHint({
-			desc: '<div style="max-height:22em;overflow-y:auto;">' + html + '</div>',
+			desc: '<div style="max-height:22em;overflow-y:auto;white-space:nowrap;">' + html + '</div>',
 			onclose: 'ui.q(\'input-date[i="' + this.x + '"]\').select' + close + '()',
 			pos: '2%,' + (e.getBoundingClientRect().y + e.getBoundingClientRect().height + ui.emInPX) + 'px', size: '96%,auto', hinkyClass: 'top', hinky: 'left:' + (e.getBoundingClientRect().x - ui.q('main').getBoundingClientRect().x + e.getBoundingClientRect().width / 2 - 6) + 'px;',
 			noLogin: true
 		});
 	}
 	toggleDay() {
-		var s = '<style>label{width:2.5em;text-align:center;padding:0.34em 0;}label.weekday{background:transparent;padding:0;cursor:default;}</style>', e = this.get('day'), m = this.get('month').getAttribute('value'), y = this.get('year').getAttribute('value'), max = 31;
+		var s = '<style>label{width:2.5em;text-align:center;padding:0.34em 0;}label.weekday{background:transparent;padding:0;cursor:default;}label.weekend{color:rgb(0,0,100);}</style>', e = this.get('day'), m = this.get('month').getAttribute('value'), y = this.get('year').getAttribute('value'), max = 31;
+		if (!y) {
+			this.toggleYear();
+			return;
+		}
 		if (m) {
 			if (m == '02')
 				max = y && new Date(parseInt(y), 1, 29).getDate() == 29 ? 29 : 28;
 			else if (m == '04' || m == '06' || m == '09' || m == '11')
 				max = 30;
+		} else {
+			this.toggleMonth();
+			return;
 		}
 		for (var i = 1; i < 7; i++)
-			s += `<label class="weekday">${ui.l('date.weekday' + i)}</label>`;
-		s += `<label class="weekday">${ui.l('date.weekday0')}</label><br/>`;
+			s += `<label class="weekday${i < 6 ? '' : ' weekend'}">${ui.l('date.weekday' + i)}</label>`;
+		s += `<label class="weekday weekend">${ui.l('date.weekday0')}</label><br/>`;
+		var offset = (new Date(parseInt(y), parseInt(m) - 1, 1).getDay() + 6) % 7;
+		for (var i = 0; i < offset; i++)
+			s += `<label class="weekday">&nbsp;</label>`;
 		for (var i = 1; i <= max; i++) {
-			s += `<label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').selectDay(${i})">${i}</label>`;
-			if (i % 7 == 0)
+			s += `<label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').selectDay(${i})" ${(i + offset) % 7 > 0 && (i + offset) % 7 < 6 ? '' : ' class="weekend"'}">${i}</label>`;
+			if ((i + offset) % 7 == 0)
 				s += '<br/>';
 		}
+		for (var i = (new Date(parseInt(y), parseInt(m) - 1, max).getDay() + 6) % 7; i < 6; i++)
+			s += `<label class="weekday">&nbsp;</label>`;
 		this.toggle(e, s, 'Day');
 	}
 	toggleHour() {
