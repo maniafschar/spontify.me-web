@@ -166,8 +166,8 @@ questions value .answerMultiSelect {
 <field>
 	<label>Zeitraum</label>
 	<value class="marketingPeriod">
-		<input name="startDate" type="datetime-local" value="${v.startDateField}"></input>
-		<input name="endDate" type="datetime-local" value="${v.endDateField}"></input>
+		<input-date name="startDate" value="${v.startDateField}"></input-date>
+		<input-date name="endDate" value="${v.endDateField}"></input-date>
 		<explain>Achtung: Nach Beginn der Umfrage sind die Daten hier nicht mehr änderbar.</explain>
 	</value>
 </field>

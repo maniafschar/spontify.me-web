@@ -813,9 +813,7 @@ class formFunc {
 		}
 		e = form.querySelectorAll('input:not([transient="true"])');
 		for (var i = 0; i < e.length; i++) {
-			if (e[i].type == 'datetime-local')
-				d.values[e[i].name] = global.date.local2server(e[i].value);
-			else if (e[i].name)
+			if (e[i].name)
 				d.values[e[i].name] = e[i].value.replace(/\"/g, '&quot;').replace(/</g, '&lt;');
 		}
 		e = form.querySelectorAll('input-checkbox:not([transient="true"])');

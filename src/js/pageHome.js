@@ -119,7 +119,7 @@ news card img {
 <field>
 	<label>${ui.l('home.publish')}</label>
 	<value>
-		<input name="publish" type="datetime-local" placeholder="TT.MM.JJJJ HH:MM" value="${v.publish}" step="900" min="${v.today}" />
+		<input-date name="publish" value="${v.publish}"></input-date>
 	</value>
 </field>
 <dialogButtons style="margin-bottom:0;">

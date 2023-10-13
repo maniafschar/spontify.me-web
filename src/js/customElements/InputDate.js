@@ -9,12 +9,22 @@ class InputDate extends HTMLElement {
 	constructor() {
 		super();
 		this._root = this.attachShadow({ mode: 'closed' });
-		this.x = new Date().getTime() + Math.random();
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = initialisation.customElementsCss;
+		style.textContent = `${initialisation.customElementsCss}
+:host(*) {
+	white-space: nowrap;
+	overflow-x: auto;
+	width: 100%;
+	display: block;
+}
+
+label {
+	margin-bottom:0;
+}`;
 		this._root.appendChild(style);
+		this.x = new Date().getTime() + Math.random();
 		this.setAttribute('i', '' + this.x);
 		var element = document.createElement('label');
 		if (this.getAttribute('type') == 'search') {
@@ -37,6 +47,7 @@ class InputDate extends HTMLElement {
 				element = document.createElement('label')
 				element.setAttribute('onclick', 'this.getRootNode().host.toggleHour()');
 				element.setAttribute('name', 'hour');
+				element.setAttribute('style', 'margin-left:1em;');
 				this._root.appendChild(element);
 				element = document.createElement('label')
 				element.setAttribute('onclick', 'this.getRootNode().host.toggleMinute()');
@@ -49,6 +60,12 @@ class InputDate extends HTMLElement {
 	}
 	get(name) {
 		return this._root.querySelector('label[name="' + name + '"]');
+	}
+	static getField(id) {
+		var e = ui.q('dialog-popup input-date[i="' + id + '"]');
+		if (e)
+			return e;
+		return ui.q('input-date[i="' + id + '"]');
 	}
 	select(type) {
 		if (type == 'all') {
@@ -92,7 +109,7 @@ class InputDate extends HTMLElement {
 					}
 					e = this.get('minute');
 					if (d.minute) {
-						e.innerHTML = '' + parseInt(d.minute);
+						e.innerHTML = d.minute;
 						e.setAttribute('value', d.minute);
 					} else {
 						e.innerHTML = ui.l('date.labelMinute');
@@ -134,8 +151,9 @@ class InputDate extends HTMLElement {
 	selectMinute(i) {
 		var e = this.get('minute');
 		if (i > -1) {
+			i = ('0' + i).slice(-2);
 			e.innerHTML = i;
-			e.setAttribute('value', ('0' + i).slice(-2));
+			e.setAttribute('value', i);
 		} else {
 			e.innerHTML = ui.l('date.labelMinute');
 			e.setAttribute('value', '');
@@ -193,8 +211,8 @@ class InputDate extends HTMLElement {
 	}
 	toggle(e, html, close) {
 		ui.navigation.openHint({
-			desc: '<div style="max-height:22em;overflow-y:auto;white-space:nowrap;">' + html + '</div>',
-			onclose: 'ui.q(\'input-date[i="' + this.x + '"]\').select' + close + '()',
+			desc: '<style>label{z-index:2;position:relative;}</style><div style="max-height:22em;overflow-y:auto;' + (close == 'Day' ? 'white-space:nowrap;' : '') + (global.getDevice() == 'phone' ? 'font-size:0.8em;' : '') + '">' + html + '</div>',
+			onclose: 'InputDate.getField(' + this.x + ').select' + close + '()',
 			pos: '2%,' + (e.getBoundingClientRect().y + e.getBoundingClientRect().height + ui.emInPX) + 'px', size: '96%,auto', hinkyClass: 'top', hinky: 'left:' + (e.getBoundingClientRect().x - ui.q('main').getBoundingClientRect().x + e.getBoundingClientRect().width / 2 - 6) + 'px;',
 			noLogin: true
 		});
@@ -221,7 +239,7 @@ class InputDate extends HTMLElement {
 		for (var i = 0; i < offset; i++)
 			s += `<label class="weekday">&nbsp;</label>`;
 		for (var i = 1; i <= max; i++) {
-			s += `<label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').selectDay(${i})" ${(i + offset) % 7 > 0 && (i + offset) % 7 < 6 ? '' : ' class="weekend"'}">${i}</label>`;
+			s += `<label onclick="InputDate.getField(${this.x}).selectDay(${i})" ${(i + offset) % 7 > 0 && (i + offset) % 7 < 6 ? '' : ' class="weekend"'}">${i}</label>`;
 			if ((i + offset) % 7 == 0)
 				s += '<br/>';
 		}
@@ -232,19 +250,19 @@ class InputDate extends HTMLElement {
 	toggleHour() {
 		var s = '', e = this.get('hour');
 		for (var i = 0; i < 24; i++)
-			s += `<label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').selectHour(${i})">${i}</label>`;
+			s += `<label onclick="InputDate.getField(${this.x}).selectHour(${i})">${i}</label>`;
 		this.toggle(e, s, 'Hour');
 	}
 	toggleMinute() {
 		var s = '', e = this.get('minute');
 		for (var i = 0; i < 60; i += 5)
-			s += `<label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').selectMinute(${i})">${i}</label>`;
+			s += `<label onclick="InputDate.getField(${this.x}).selectMinute(${i})">${i}</label>`;
 		this.toggle(e, s, 'Minute');
 	}
 	toggleMonth() {
 		var s = '<style>label{padding:0.34em 0.75em;}</style>', e = this.get('month');
 		for (var i = 1; i < 13; i++) {
-			s += `<label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').selectMonth(${i})">${ui.l('date.month' + i)}</label>`;
+			s += `<label onclick="InputDate.getField(${this.x}).selectMonth(${i})">${ui.l('date.month' + i)}</label>`;
 			if (i % 3 == 0)
 				s += '<br/>';
 		}
@@ -252,20 +270,20 @@ class InputDate extends HTMLElement {
 	}
 	toggleSearch() {
 		this.toggle(this, `
-<label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').select('all')">${ui.l('search.dateSelectionAll')}</label>
-<label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').select('today')">${ui.l('search.dateSelectionToday')}</label>
-<label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').select('tomorrow')">${ui.l('search.dateSelectionTomorrow')}</label>
-<label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').select('thisWeek')">${ui.l('search.dateSelectionThisWeek')}</label>
-<label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').select('thisWeekend')">${ui.l('search.dateSelectionThisWeekend')}</label>
-<label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').select('nextWeek')">${ui.l('search.dateSelectionNextWeek')}</label>
-<input onchange="ui.q('input-date[i=&quot;${this.x}&quot;]').select(e.target.value)" type="date" value="${this.getAttribute('value') && this.getAttribute('value').split('-').length == 3 ? this.getAttribute('value') : new Date().toISOString().substring(0, 10)}"/>`);
+<label onclick="InputDate.getField(${this.x}).select('all')">${ui.l('search.dateSelectionAll')}</label>
+<label onclick="InputDate.getField(${this.x}).select('today')">${ui.l('search.dateSelectionToday')}</label>
+<label onclick="InputDate.getField(${this.x}).select('tomorrow')">${ui.l('search.dateSelectionTomorrow')}</label>
+<label onclick="InputDate.getField(${this.x}).select('thisWeek')">${ui.l('search.dateSelectionThisWeek')}</label>
+<label onclick="InputDate.getField(${this.x}).select('thisWeekend')">${ui.l('search.dateSelectionThisWeekend')}</label>
+<label onclick="InputDate.getField(${this.x}).select('nextWeek')">${ui.l('search.dateSelectionNextWeek')}</label>
+<input onchange="InputDate.getField(${this.x}).select(event.target.value)" type="date" value="${this.getAttribute('value') && this.getAttribute('value').split('-').length == 3 ? this.getAttribute('value') : new Date().toISOString().substring(0, 10)}"/>`);
 	}
 	toggleYear() {
 		var s = '<style>label{padding:0.34em 0;width:3.5em;text-align:center;}</style>', e = this.get('year'), y = new Date().getFullYear();
 		var birthday = this.getAttribute('type') == 'birthday';
 		for (var i = birthday ? 18 : y; i < (birthday ? 99 : y + 5); i++) {
 			var i2 = birthday ? y - i : i;
-			s += `<label onclick="ui.q('input-date[i=&quot;${this.x}&quot;]').selectYear(${i2})">${i2}</label>`;
+			s += `<label onclick="InputDate.getField(${this.x}).selectYear(${i2})">${i2}</label>`;
 		}
 		this.toggle(e, s, 'Year');
 	}

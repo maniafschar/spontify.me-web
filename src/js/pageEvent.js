@@ -68,13 +68,13 @@ class pageEvent {
 	<field>
 		<label name="startDate">${ui.l('events.start')}</label>
 		<value>
-			<input type="datetime-local" name="startDate" placeholder="TT.MM.JJJJ HH:MM" value="${v.startDate}" step="900" min="${v.today}T00:00:00" />
+			<input-date name="startDate" value="${v.startDate}"></input-date>
 		</value>
 	</field>
 	<field class="noWTDField" name="endDate" style="display:none;">
 		<label>${ui.l('events.end')}</label>
 		<value>
-			<input type="date" name="endDate" placeholder="TT.MM.JJJJ" value="${v.endDate}" min="${v.today}" />
+			<input-date type="date" name="endDate" value="${v.endDate}" min="${v.today}"></input--date>
 		</value>
 	</field>
 	<field>

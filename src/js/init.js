@@ -449,3 +449,4 @@ window.Strings = Strings;
 window.groups = groups;
 window.VideoCall = VideoCall;
 window.marketing = marketing;
+window.InputDate = InputDate;
