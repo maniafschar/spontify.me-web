@@ -3,6 +3,7 @@ import { communication } from '../communication';
 import { pageChat } from '../pageChat';
 import { ui, formFunc } from '../ui';
 import { initialisation } from '../init';
+import { DialogHint } from './DialogHint';
 
 export { DialogPopup }
 
@@ -218,6 +219,7 @@ mapButton::before {
 		e.removeAttribute('error');
 		if (ui.cssValue(e, 'display') != 'none' && e.getAttribute('modal') != 'true') {
 			ui.navigation.animation(e, 'popupSlideOut', e.closeHard);
+			DialogHint.close();
 			DialogPopup.lastPopup = null;
 			return true;
 		}

@@ -21,7 +21,12 @@ class InputDate extends HTMLElement {
 }
 
 label {
-	margin-bottom:0;
+	margin-bottom: 0;
+	color: var(--popupText);
+}
+
+label.filled {
+	opacity: 1;
 }`;
 		this._root.appendChild(style);
 		this.x = new Date().getTime() + Math.random();
@@ -67,6 +72,15 @@ label {
 			return e;
 		return ui.q('input-date[i="' + id + '"]');
 	}
+	resetDay(y, m) {
+		var e = this.get('day');
+		var d = parseInt(e.getAttribute('value'));
+		if (new Date(parseInt(y ? y : this.get('year').getAttribute('value')), (m ? m : parseInt(this.get('month').getAttribute('value'))) - 1, d).getDate() != d) {
+			e.innerHTML = ui.l('date.labelDay');
+			e.setAttribute('value', '');
+			ui.classRemove(e, 'filled');
+		}
+	}
 	select(type) {
 		if (type == 'all') {
 			this._root.querySelector('label').innerHTML = ui.l('events.date');
@@ -78,6 +92,7 @@ label {
 				if (d.year) {
 					e.innerHTML = d.year;
 					e.setAttribute('value', d.year);
+					ui.classAdd(e, 'filled');
 				} else {
 					e.innerHTML = ui.l('date.labelYear');
 					e.setAttribute('value', '');
@@ -86,6 +101,7 @@ label {
 				if (d.month) {
 					e.innerHTML = ui.l('date.month' + parseInt(d.month));
 					e.setAttribute('value', d.month);
+					ui.classAdd(e, 'filled');
 				} else {
 					e.innerHTML = ui.l('date.labelMonth');
 					e.setAttribute('value', '');
@@ -94,6 +110,7 @@ label {
 				if (d.day) {
 					e.innerHTML = '' + parseInt(d.day);
 					e.setAttribute('value', d.day);
+					ui.classAdd(e, 'filled');
 				} else {
 					e.innerHTML = ui.l('date.labelDay');
 					e.setAttribute('value', '');
@@ -103,6 +120,7 @@ label {
 					if (d.hour) {
 						e.innerHTML = '' + parseInt(d.hour);
 						e.setAttribute('value', d.hour);
+						ui.classAdd(e, 'filled');
 					} else {
 						e.innerHTML = ui.l('date.labelHour');
 						e.setAttribute('value', '');
@@ -111,6 +129,7 @@ label {
 					if (d.minute) {
 						e.innerHTML = d.minute;
 						e.setAttribute('value', d.minute);
+						ui.classAdd(e, 'filled');
 					} else {
 						e.innerHTML = ui.l('date.labelMinute');
 						e.setAttribute('value', '');
@@ -123,82 +142,49 @@ label {
 		ui.navigation.closeHint();
 	}
 	selectDay(i) {
-		var e = this.get('day');
-		if (i) {
-			e.innerHTML = i;
-			e.setAttribute('value', ('0' + i).slice(-2));
-			if (this.get('hour') && !this.get('hour').getAttribute('value'))
-				this.toggleHour();
-		} else {
-			e.innerHTML = ui.l('date.labelDay');
-			e.setAttribute('value', '');
-		}
-		this.setValue();
+		this.setValue('Day', i ? ('0' + i).slice(-2) : null, i);
 	}
 	selectHour(i) {
-		var e = this.get('hour');
-		if (i) {
-			e.innerHTML = i;
-			e.setAttribute('value', ('0' + i).slice(-2));
-			if (!this.get('minute').getAttribute('value'))
-				this.toggleMinute();
-		} else {
-			e.innerHTML = ui.l('date.labelHour');
-			e.setAttribute('value', '');
-		}
-		this.setValue();
+		this.setValue('Hour', i ? ('0' + i).slice(-2) : null, i);
 	}
 	selectMinute(i) {
-		var e = this.get('minute');
-		if (i > -1) {
-			i = ('0' + i).slice(-2);
-			e.innerHTML = i;
-			e.setAttribute('value', i);
-		} else {
-			e.innerHTML = ui.l('date.labelMinute');
-			e.setAttribute('value', '');
-		}
-		this.setValue();
+		this.setValue('Minute', i ? ('0' + i).slice(-2) : null);
 	}
 	selectMonth(i) {
-		var e = this.get('day');
-		var d = parseInt(e.getAttribute('value'));
-		if (new Date(parseInt(this.get('year').getAttribute('value')), i - 1, d).getDate() != d) {
-			e.innerHTML = ui.l('date.labelDay');
-			e.setAttribute('value', '');
-		}
-		e = this.get('month');
-		if (i) {
-			e.innerHTML = ui.l('date.month' + i);
-			e.setAttribute('value', ('0' + i).slice(-2));
-			if (!this.get('day').getAttribute('value'))
-				this.toggleDay();
-		} else {
-			e.innerHTML = ui.l('date.labelMonth');
-			e.setAttribute('value', '');
-		}
-		this.setValue();
+		this.resetDay(null, i);
+		this.setValue('Month', i ? ('0' + i).slice(-2) : null, ui.l('date.month' + i));
 	}
 	selectYear(i) {
-		var e = this.get('day');
-		var d = parseInt(e.getAttribute('value'));
-		if (new Date(i, parseInt(this.get('month').getAttribute('value')) - 1, d).getDate() != d) {
-			e.innerHTML = ui.l('date.labelDay');
-			e.setAttribute('value', '');
-		}
-		e = this.get('year');
-		if (i) {
-			e.innerHTML = i;
-			e.setAttribute('value', i);
-			if (!this.get('month').getAttribute('value'))
-				this.toggleMonth();
-		} else {
-			e.innerHTML = ui.l('date.labelYear');
-			e.setAttribute('value', '');
-		}
-		this.setValue();
+		this.resetDay(i);
+		this.setValue('Year', i);
 	}
-	setValue() {
+	setValue(field, value, label) {
+		var e = this.get(field.toLowerCase());
+		if (value) {
+			e.innerHTML = label ? label : value;
+			e.setAttribute('value', value);
+			ui.classAdd(e, 'filled');
+			var next, exec;
+			if (field == 'Year') {
+				next = 'month';
+				exec = this.toggleMonth;
+			} else if (field == 'Month') {
+				next = 'day';
+				exec = this.toggleDay;
+			} else if (field == 'Day') {
+				next = 'hour';
+				exec = this.toggleHour;
+			} else if (field == 'Hour') {
+				next = 'minute';
+				exec = this.toggleMinute;
+			}
+			if (exec && !this.get(next).getAttribute('value'))
+				exec.call(this);
+		} else {
+			e.innerHTML = ui.l('date.label' + field);
+			e.setAttribute('value', '');
+			ui.classRemove(e, 'filled');
+		}
 		var s = this.get('year').getAttribute('value');
 		s += '-' + this.get('month').getAttribute('value');
 		s += '-' + this.get('day').getAttribute('value');
@@ -208,17 +194,18 @@ label {
 			s += ':00';
 		}
 		this.setAttribute('value', s);
+		this.setAttribute('complete', '' + (s.length == 10 || s.length == 19));
 	}
 	toggle(e, html, close) {
 		ui.navigation.openHint({
-			desc: '<style>label{z-index:2;position:relative;}</style><div style="max-height:22em;overflow-y:auto;' + (close == 'Day' ? 'white-space:nowrap;' : '') + (global.getDevice() == 'phone' ? 'font-size:0.8em;' : '') + '">' + html + '</div>',
+			desc: '<style>label{z-index:2;position:relative;}label.time{width:4em;text-align:center;}</style><div style="max-height:22em;overflow-y:auto;' + (close == 'Day' ? 'white-space:nowrap;' : '') + (global.getDevice() == 'phone' ? 'font-size:0.8em;' : '') + '">' + html + '</div>',
 			onclose: 'InputDate.getField(' + this.x + ').select' + close + '()',
 			pos: '2%,' + (e.getBoundingClientRect().y + e.getBoundingClientRect().height + ui.emInPX) + 'px', size: '96%,auto', hinkyClass: 'top', hinky: 'left:' + (e.getBoundingClientRect().x - ui.q('main').getBoundingClientRect().x + e.getBoundingClientRect().width / 2 - 6) + 'px;',
 			noLogin: true
 		});
 	}
 	toggleDay() {
-		var s = '<style>label{width:2.5em;text-align:center;padding:0.34em 0;}label.weekday{background:transparent;padding:0;cursor:default;}label.weekend{color:rgb(0,0,100);}</style>', e = this.get('day'), m = this.get('month').getAttribute('value'), y = this.get('year').getAttribute('value'), max = 31;
+		var s = '<style>label{width:2.5em;text-align:center;padding:0.34em 0;}label.weekday{background:transparent;padding:0;cursor:default;}label.weekend{color:rgb(0,0,100);}label.outdated{opacity:0.5;cursor:default;}</style>', e = this.get('day'), m = this.get('month').getAttribute('value'), y = this.get('year').getAttribute('value'), max = 31;
 		if (!y) {
 			this.toggleYear();
 			return;
@@ -235,11 +222,12 @@ label {
 		for (var i = 1; i < 7; i++)
 			s += `<label class="weekday${i < 6 ? '' : ' weekend'}">${ui.l('date.weekday' + i)}</label>`;
 		s += `<label class="weekday weekend">${ui.l('date.weekday0')}</label><br/>`;
-		var offset = (new Date(parseInt(y), parseInt(m) - 1, 1).getDay() + 6) % 7;
+		var offset = (new Date(parseInt(y), parseInt(m) - 1, 1).getDay() + 6) % 7, today = new Date();
 		for (var i = 0; i < offset; i++)
 			s += `<label class="weekday">&nbsp;</label>`;
 		for (var i = 1; i <= max; i++) {
-			s += `<label onclick="InputDate.getField(${this.x}).selectDay(${i})" ${(i + offset) % 7 > 0 && (i + offset) % 7 < 6 ? '' : ' class="weekend"'}">${i}</label>`;
+			var outdated = parseInt(y) == today.getFullYear() && parseInt(m) == today.getMonth() + 1 && i < today.getDate();
+			s += `<label ${outdated ? 'class="outdated"' : `onclick="InputDate.getField(${this.x}).selectDay(${i})"`} ${!outdated && (i + offset) % 7 > 0 && (i + offset) % 7 < 6 ? '' : ' class="weekend"'}">${i}</label>`;
 			if ((i + offset) % 7 == 0)
 				s += '<br/>';
 		}
@@ -249,19 +237,31 @@ label {
 	}
 	toggleHour() {
 		var s = '', e = this.get('hour');
-		for (var i = 0; i < 24; i++)
-			s += `<label onclick="InputDate.getField(${this.x}).selectHour(${i})">${i}</label>`;
+		for (var i = 0; i < 24; i++) {
+			s += `<label onclick="InputDate.getField(${this.x}).selectHour(${i})" class="time">${i}</label>`;
+			if ((i + 1) % 6 == 0)
+				s += '<br/>';
+		}
 		this.toggle(e, s, 'Hour');
 	}
 	toggleMinute() {
 		var s = '', e = this.get('minute');
-		for (var i = 0; i < 60; i += 5)
-			s += `<label onclick="InputDate.getField(${this.x}).selectMinute(${i})">${i}</label>`;
+		for (var i = 0; i < 60; i += 5) {
+			s += `<label onclick="InputDate.getField(${this.x}).selectMinute(${i})" class="time">${i}</label>`;
+			if ((i / 5 + 1) % 4 == 0)
+				s += '<br/>';
+		}
 		this.toggle(e, s, 'Minute');
 	}
 	toggleMonth() {
+		var y = this.get('year').getAttribute('value');
+		if (!y) {
+			this.toggleYear();
+			return;
+		}
 		var s = '<style>label{padding:0.34em 0.75em;}</style>', e = this.get('month');
-		for (var i = 1; i < 13; i++) {
+		var i = parseInt(y) == new Date().getFullYear() ? new Date().getMonth() + 1 : 1;
+		for (; i < 13; i++) {
 			s += `<label onclick="InputDate.getField(${this.x}).selectMonth(${i})">${ui.l('date.month' + i)}</label>`;
 			if (i % 3 == 0)
 				s += '<br/>';

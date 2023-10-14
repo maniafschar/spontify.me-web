@@ -549,6 +549,8 @@ class ui {
 		if (!e)
 			e = customElements('video-call');
 		if (!e)
+			e = customElements('input-date');
+		if (!e)
 			e = customElements('input-hashtags');
 		if (!e)
 			e = customElements('input-image');
@@ -801,7 +803,7 @@ class formFunc {
 	static getForm(id) {
 		var form = typeof id == 'string' ? ui.q(id) : id;
 		var d = { values: {} }, cb = {};
-		var e = form.querySelectorAll(' textarea:not([transient="true"])');
+		var e = form.querySelectorAll('textarea:not([transient="true"])');
 		for (var i = 0; i < e.length; i++) {
 			if (e[i].name)
 				d.values[e[i].name] = e[i].value.replace(/\"/g, '&quot;').replace(/</g, '&lt;');
@@ -834,7 +836,7 @@ class formFunc {
 			d.values[k] = cb[k].length > 0 ? cb[k].substring(1) : '';
 		e = form.querySelectorAll('input-date:not([transient="true"])');
 		for (var i = 0; i < e.length; i++)
-			d.values[e[i].getAttribute('name')] = global.date.local2server(e[i].getAttribute('value'));
+			d.values[e[i].getAttribute('name')] = e[i].getAttribute('complete') == 'true' ? global.date.local2server(e[i].getAttribute('value')) : null;
 		e = form.querySelectorAll('input-slider:not([transient="true"])');
 		for (var i = 0; i < e.length; i++)
 			d.values[e[i].getAttribute('name')] = e[i].getAttribute('value');
