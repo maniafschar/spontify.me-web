@@ -940,10 +940,7 @@ class formFunc {
 		if (e) {
 			ui.classAdd(e, 'dialogFieldError');
 			var e2 = e.parentNode;
-			for (var i = 0; i < e2.children.length; i++) {
-				if (e2.children[i].nodeName == 'ERRORHINT')
-					ui.html(e2.children[i], '');
-			}
+			formFunc.resetError(e);
 			if (t) {
 				var s = ui.l(t);
 				if (v) {

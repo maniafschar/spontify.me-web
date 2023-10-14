@@ -901,19 +901,8 @@ field.checkbox {
 			formFunc.setError(text, 'error.description');
 		else
 			formFunc.validation.filterWords(text);
-		if (!ui.val(start))
+		if (start.getAttribute('complete') == 'false')
 			formFunc.setError(start, 'events.errorDate');
-		else {
-			try {
-				if (ui.val(start).indexOf(':') < 0)
-					throw 'NaN';
-				d1 = global.date.local2server(ui.val(start));
-				if (!id && d1 < new Date())
-					formFunc.setError(start, 'events.errorDateTooSmall');
-			} catch (e) {
-				formFunc.setError(start, 'events.errorDateFormat');
-			}
-		}
 		if (price.value > 0 && !user.contact.authenticate)
 			formFunc.setError(price, 'events.errorAuthenticate');
 		if (!price.value || price.value == 0) {
@@ -921,17 +910,8 @@ field.checkbox {
 			ui.q('dialog-popup input[name="url"]').value = '';
 		}
 		if (ui.q('dialog-popup [name="repetition"][checked="true"]')) {
-			if (!ui.val(end))
+			if (end.getAttribute('complete') == 'false')
 				formFunc.setError(end, 'events.errorDateNoEnd');
-			else {
-				try {
-					d2 = global.date.local2server(ui.val(end));
-					if (d1 && d1 > d2)
-						formFunc.setError(end, 'events.errorDateEndTooSmall');
-				} catch (e) {
-					formFunc.setError(end, 'events.errorDateEndFormat');
-				}
-			}
 		} else
 			end.setAttribute('value', ui.val(start).substring(0, ui.val(start).lastIndexOf(' ')));
 		var v = formFunc.getForm('dialog-popup form');

@@ -199,10 +199,10 @@ chart {
 			e._root.appendChild(element);
 			if (!user.contact && data.noLogin != true && DialogHint.currentStep < 0 && (location.pathname.length < 2 || location.pathname.indexOf('index.html') > 0)) {
 				e._root.appendChild(document.createElement('br'));
-				e._root.appendChild(document.createElement('br'));
 				element = document.createElement('button-text');
 				element.setAttribute('label', 'login.action');
 				element.setAttribute('onclick', 'ui.navigation.goTo("login")');
+				element.setAttribute('style', 'padding-top:0.5em;display:block;')
 				e._root.appendChild(element);
 			}
 		} else {
