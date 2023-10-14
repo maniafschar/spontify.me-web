@@ -33,6 +33,9 @@ class pageEvent {
     right: 0.75em;
     transform: rotate(80deg);
 }
+field.checkbox {
+	margin-bottom: -0.5em;
+}
 </style>
 <form name="editElement" onsubmit="return false">
 <input type="hidden" name="id" value="${v.id}"/>
@@ -41,7 +44,7 @@ class pageEvent {
 <input type="hidden" name="skillsText" value="${v.skillsText}" />
 <div class="event">
 	<div class="locationName" style="color:white;cursor:pointer;" onclick="pageEvent.selectLocation()">${v.locationName}</div>
-	<field>
+	<field class="checkbox">
 		<label>${ui.l('type')}</label>
 		<value>
 			<input-checkbox type="radio" name="type" transient="true" value="0" label="events.location" onclick="pageEvent.setForm()" ${v.typeLocation}></input-checkbox>
@@ -51,12 +54,12 @@ class pageEvent {
 	</field>
 	<explain class="newWithoutLocation" style="display:none;">${ui.l('events.newWithoutLocationDescription')}</explain>
 	<field${v.eventNoHashtags}>
-		<label style="padding-top:0;">${ui.l('events.hashtags')}</label>
+		<label>${ui.l('events.hashtags')}</label>
 		<value>
 			<input-hashtags ids="${v.skills}" text="${v.skillsText}" transient="true"></input-hashtags>
 		</value>
 	</field>
-	<field class="noWTDField">
+	<field class="noWTDField checkbox">
 		<label>${ui.l('events.repetition')}</label>
 		<value>
 			<input-checkbox type="radio" deselect="true" name="repetition" value="w1" label="events.repetition_w1" onclick="pageEvent.setForm()" ${v.repetition_w1}></input-checkbox>
@@ -874,12 +877,12 @@ class pageEvent {
 	}
 	static save() {
 		var d1, d2;
-		var start = ui.q('dialog-popup input[name="startDate"]');
-		var end = ui.q('dialog-popup input[name="endDate"]');
+		var start = ui.q('dialog-popup input-date[name="startDate"]');
+		var end = ui.q('dialog-popup input-date[name="endDate"]');
 		var price = ui.q('dialog-popup [name="price"]');
 		var text = ui.q('dialog-popup [name="description"]');
 		var tags = ui.q('dialog-popup input-hashtags');
-		var id = ui.q('dialog-popup [name="id"]').value;
+		var id = ui.val('dialog-popup [name="id"]');
 		DialogPopup.setHint('');
 		formFunc.resetError(start);
 		formFunc.resetError(end);
@@ -898,13 +901,13 @@ class pageEvent {
 			formFunc.setError(text, 'error.description');
 		else
 			formFunc.validation.filterWords(text);
-		if (!start.value)
+		if (!ui.val(start))
 			formFunc.setError(start, 'events.errorDate');
 		else {
 			try {
-				if (start.value.indexOf(':') < 0)
+				if (ui.val(start).indexOf(':') < 0)
 					throw 'NaN';
-				d1 = global.date.local2server(start.value);
+				d1 = global.date.local2server(ui.val(start));
 				if (!id && d1 < new Date())
 					formFunc.setError(start, 'events.errorDateTooSmall');
 			} catch (e) {
@@ -918,11 +921,11 @@ class pageEvent {
 			ui.q('dialog-popup input[name="url"]').value = '';
 		}
 		if (ui.q('dialog-popup [name="repetition"][checked="true"]')) {
-			if (!end.value)
+			if (!ui.val(end))
 				formFunc.setError(end, 'events.errorDateNoEnd');
 			else {
 				try {
-					d2 = global.date.local2server(end.value);
+					d2 = global.date.local2server(ui.val(end));
 					if (d1 && d1 > d2)
 						formFunc.setError(end, 'events.errorDateEndTooSmall');
 				} catch (e) {
@@ -930,11 +933,11 @@ class pageEvent {
 				}
 			}
 		} else
-			end.value = start.value.substring(0, start.value.lastIndexOf('T'));
+			end.setAttribute('value', ui.val(start).substring(0, ui.val(start).lastIndexOf(' ')));
 		var v = formFunc.getForm('dialog-popup form');
 		if (!v.values.price)
 			v.values.price = 0;
-		if (ui.val('dialog-popup input-checkbox[name="type"][checked="true"]') < 0)
+		if (parseInt(ui.val('dialog-popup input-checkbox[name="type"][checked="true"]')) < 0)
 			v.values.locationId = ui.val('dialog-popup input-checkbox[name="type"][checked="true"]');
 		if (ui.q('dialog-popup errorHint')) {
 			ui.q('dialog-popup popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });;

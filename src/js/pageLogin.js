@@ -443,7 +443,6 @@ class pageLogin {
 		formFunc.validation.email(ui.q('input[name="email"]'));
 		pageLogin.validatePseudonym();
 		pageLogin.validateAGB();
-		formFunc.validation.birthday(ui.q('input[name="birthday"]'));
 		if (!ui.q('form[name=loginRegister] errorHint')) {
 			var e = ui.q('input[name="name"]');
 			if (e)

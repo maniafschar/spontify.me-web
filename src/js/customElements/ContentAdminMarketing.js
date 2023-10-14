@@ -346,7 +346,7 @@ questions value .answerMultiSelect {
 		}
 		if (v.startDate) {
 			var d = global.date.getDateFields(global.date.server2local(v.startDate));
-			v.startDateField = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute;
+			v.startDateField = d.year + '-' + d.month + '-' + d.day + ' ' + d.hour + ':' + d.minute;
 		}
 		if (v.endDate) {
 			var d = global.date.getDateFields(global.date.server2local(v.endDate));
@@ -380,8 +380,8 @@ questions value .answerMultiSelect {
 				for (var i = 0; i < e2.length; i++)
 					s += e2[i].value;
 				o[label] = s;
-			} else if (e2.value) {
-				if (e2.type && e2.type.indexOf('date') > -1)
+			} else if (ui.val(e2)) {
+				if (e2.nodeName == 'INPUT-DATE')
 					o[label] = global.date.local2server(e2.value);
 				else
 					o[label] = e2.value;

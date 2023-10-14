@@ -751,17 +751,12 @@ class ui {
 			}, 10);
 		});
 	}
-	static val(id) {
-		var e = ui.qa(id);
-		if (e) {
-			if (e.length == 1)
-				return e[0].nodeName == 'INPUT' || e[0].nodeName == 'TEXTAREA' ? e[0].value : e[0].getAttribute('value');
-			var s = '';
-			for (var i = 0; i < e.length; i++)
-				s += global.separatorTech + e[i].getAttribute('value');
-			return s.substring(1);
-		}
-		return '';
+	static val(e) {
+		var value = '';
+		ui.x(e, function (e2) {
+			value += global.separatorTech + (e2.nodeName == 'INPUT' || e2.nodeName == 'TEXTAREA' ? e2.value : e2.getAttribute('value'));
+		});
+		return value ? value.substring(1) : value;
 	}
 	static x(e, f) {
 		if (typeof e == 'string')
@@ -977,7 +972,7 @@ class formFunc {
 
 		birthday(e) {
 			formFunc.resetError(e);
-			if (e.getAttribute('value')) {
+			if (e.getAttribute('complete') == 'true') {
 				try {
 					var n = new Date(), d = global.date.getDateFields(e.getAttribute('value'));
 					var a = n.getFullYear() - d.year;

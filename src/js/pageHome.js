@@ -407,7 +407,7 @@ news card img {
 	}
 	static saveNews() {
 		formFunc.resetError(ui.q('dialog-popup textarea'));
-		var v = formFunc.getForm('dialog-popup');
+		var v = formFunc.getForm('dialog-popup popupContent');
 		if (!ui.q('dialog-popup textarea').value)
 			formFunc.setError(ui.q('dialog-popup textarea'), 'error.description');
 		else
