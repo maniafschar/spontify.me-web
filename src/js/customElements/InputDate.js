@@ -17,8 +17,7 @@ class InputDate extends HTMLElement {
 :host(*) {
 	white-space: nowrap;
 	overflow-x: auto;
-	width: 100%;
-	display: block;
+	display: inline-block;
 }
 
 label {
@@ -175,8 +174,8 @@ label.filled {
 	}
 	toggle(e, html, close) {
 		ui.navigation.openHint({
-			desc: '<style>label{z-index:2;position:relative;}label.time{width:4em;text-align:center;}</style><div style="max-height:22em;overflow-y:auto;' + (close == 'Year' ? '' : 'white-space:nowrap;') + (global.getDevice() == 'phone' ? 'font-size:0.8em;' : '') + '">' + html + '</div>',
-			onclose: 'InputDate.getField(' + this.x + ').select' + close + '()',
+			desc: '<style>label{z-index:2;position:relative;}label.time{width:4em;text-align:center;}</style><div style="max-height:22em;overflow-y:auto;' + (!close || close == 'Year' ? '' : 'white-space:nowrap;') + (global.getDevice() == 'phone' ? 'font-size:0.8em;' : '') + '">' + html + '</div>',
+			onclose: close ? 'InputDate.getField(' + this.x + ').select' + close + '()' : null,
 			pos: '2%,' + (e.getBoundingClientRect().y + e.getBoundingClientRect().height + ui.emInPX) + 'px', size: '96%,auto', hinkyClass: 'top', hinky: 'left:' + (e.getBoundingClientRect().x - ui.q('main').getBoundingClientRect().x + e.getBoundingClientRect().width / 2 - 6) + 'px;',
 			noLogin: true
 		});
@@ -253,7 +252,7 @@ label.filled {
 <label onclick="InputDate.getField(${this.x}).select('thisWeek')">${ui.l('search.dateSelectionThisWeek')}</label>
 <label onclick="InputDate.getField(${this.x}).select('thisWeekend')">${ui.l('search.dateSelectionThisWeekend')}</label>
 <label onclick="InputDate.getField(${this.x}).select('nextWeek')">${ui.l('search.dateSelectionNextWeek')}</label>
-<input onchange="InputDate.getField(${this.x}).select(event.target.value)" type="date" value="${this.getAttribute('value') && this.getAttribute('value').split('-').length == 3 ? this.getAttribute('value') : new Date().toISOString().substring(0, 10)}"/>`);
+<input onchange="InputDate.getField(${this.x}).select(event.target.value)" type="date" value="${this.getAttribute('value') && this.getAttribute('value').split('-').length == 3 ? this.getAttribute('value') : new Date().toISOString().substring(0, 10)} style="width:10em;"/>`);
 	}
 	toggleYear() {
 		var s = '<style>label{padding:0.34em 0;width:3.5em;text-align:center;}</style>', e = this.get('year'), y = new Date().getFullYear();

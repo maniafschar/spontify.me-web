@@ -16,7 +16,7 @@ class pageHome {
 	static badge = -1;
 	static teaserMeta;
 	static template = v =>
-		global.template`<homeHeader${v.logoSmall}>
+		global.template`<homeHeader onclick="pageHome.openHint()">
 	<buttonIcon class="statistics bgColor${v.statsButton}" onclick="ui.navigation.goTo(&quot;content-admin-home&quot;)">
 		<img source="content-admin-home"/>
 	</buttonIcon>
@@ -251,7 +251,9 @@ news card img {
 	static init(force) {
 		if (force || !ui.q('home teaser.events>div card')) {
 			var v = {
-				actionLogo: 'pageHome.openHint()'
+				actionLogo: global.config.club ? 'pageHome.openNews(null,event)' :
+					user.contact ? 'ui.navigation.goTo(&quot;settings&quot;)' :
+						'pageHome.openHint()'
 			};
 			v.statsButton = ' hidden';
 			if (user.contact) {
@@ -259,11 +261,9 @@ news card img {
 					v.imgProfile = '<img src="' + global.serverImg + user.contact.imageList + '"/>';
 				else
 					v.imgProfile = '<img source="contacts" style="box-shadow:none;"/>';
-				v.logoSmall = ' class="logoSmall"';
 				v.name = user.contact.pseudonym;
 				v.infoButton = ' hidden';
 				v.langButton = ' hidden';
-				v.actionLogo = global.config.club ? 'pageHome.openNews()' : 'ui.navigation.goTo(&quot;' + (user.contact.type == 'adminContent' ? 'content-admin-home' : 'settings') + '&quot;)';
 				if (user.contact.type == 'adminContent')
 					v.statsButton = '';
 			} else {
@@ -275,21 +275,19 @@ news card img {
 			initialisation.reposition();
 			pageHome.teaserContacts();
 			pageHome.teaserEvents();
+			var f = function () {
+				var e = ui.q('home homeHeader svg text');
+				if (e)
+					e.innerHTML = ui.l('home.news').toLowerCase();
+				else
+					setTimeout(f, 100);
+			}
+			f();
 		}
 		pageHome.initNotificationButton();
 		if (user.contact)
 			ui.html('home item.bluetooth text', ui.l(bluetooth.state == 'on' && user.contact.bluetooth ? 'bluetooth.activated' : 'bluetooth.deactivated'));
 		formFunc.svg.replaceAll();
-		var e = ui.q('home homeHeader svg image');
-		if (e)
-			if (user.contact) {
-				e.setAttribute('x', 40);
-				e.setAttribute('width', 320);
-				ui.q('home homeHeader svg text').innerHTML = ui.l('home.news').toLowerCase();
-			} else {
-				e.setAttribute('x', 40);
-				e.setAttribute('width', 320);
-			}
 		pageHome.updateLocalisation();
 		ui.css('dialog-navigation item.search', 'display', user.contact ? '' : 'none');
 		ui.css('dialog-navigation item.info', 'display', user.contact ? 'none' : '');
@@ -353,7 +351,11 @@ news card img {
 			'<div style="padding:1em 0;"><button-text' + (global.language == 'DE' ? ' class="favorite"' : '') + ' onclick="initialisation.setLanguage(&quot;DE&quot;)" l="DE" label="Deutsch"></button-text>' +
 			'<button-text' + (global.language == 'EN' ? ' class="favorite"' : '') + ' onclick="initialisation.setLanguage(&quot;EN&quot;)" l="EN" label="English"></button-text></div>');
 	}
-	static openNews(id) {
+	static openNews(id, event) {
+		if (event) {
+			event.stopPropagation();
+			event.preventDefault();
+		}
 		if (id)
 			communication.ajax({
 				url: global.serverApi + 'db/one?query=misc_listNews&search=' + encodeURIComponent('clientNews.id=' + id),
@@ -366,7 +368,7 @@ news card img {
 			});
 		else
 			communication.ajax({
-				url: global.serverApi + 'db/list?query=misc_listNews&limit=25&search=' + encodeURIComponent('clientNews.publish<\'' + global.date.local2server(new Date()) + '\''),
+				url: global.serverApi + 'action/news',
 				webCall: 'pageHome.openNews',
 				responseType: 'json',
 				success(l) {
@@ -392,7 +394,7 @@ news card img {
 					if (ui.q('dialog-hint news'))
 						ui.q('dialog-hint span').innerHTML = pageHome.templateNews(v);
 					else
-						ui.navigation.openHint({ desc: pageHome.templateNews(v), pos: '1em,1em', size: '-1em,-4em', onclick: 'return false' });
+						ui.navigation.openHint({ desc: pageHome.templateNews(v), pos: '1em,1em', size: '-1em,-4em', onclick: 'return false', noLogin: true });
 				}
 			});
 	}
@@ -430,11 +432,6 @@ news card img {
 			}
 		});
 
-	}
-	static selectTab(id) {
-		ui.q('dialog-hint tabBody').style.marginLeft = (id == 'news' ? 0 : '-100%');
-		ui.classRemove('dialog-hint tab', 'tabActive');
-		ui.classAdd('dialog-hint tab[i="' + id + '"]', 'tabActive');
 	}
 	static teaserContacts() {
 		communication.ajax({
