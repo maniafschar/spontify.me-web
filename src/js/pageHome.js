@@ -45,15 +45,15 @@ news {
 	position: relative;
 	display: block;
 	overflow: hidden;
- 	padding-top: 1em;
 	height: 100%;
-	margin: 0 -1em;
+	border-radius: 0.5em;
 }
 
 
 news div {
 	width: 100%;
 	display: block;
+	padding-top: 1.5em;
 	position: relative;
 	height: 100%;
 	overflow: auto;
@@ -74,9 +74,10 @@ news card::after {
 
 news card p {
 	background: rgba(255, 0, 0, 0.1);
-	padding: 0.75em;
+	padding: 0.75em 6% 0.75em  4%;
 	border-radius: 0 2em 0.5em 0;
-	width: 96%;
+	max-width: 96%;
+	display: inline-block
 }
 
 news card date {
@@ -148,6 +149,12 @@ news card img {
 		var e = ui.q('notificationList');
 		if (ui.cssValue(e, 'display') != 'none')
 			ui.toggleHeight(e);
+	}
+	static closeNews() {
+		if (user.contact)
+			ui.navigation.closeHint();
+		else
+			ui.navigation.openHint({ desc: 'closeNews', pos: '2em,10em', size: '-2em,auto' });
 	}
 	static deleteNews(id) {
 		if (ui.q('dialog-popup button-text.deleteButton').innerText != ui.l('confirmDelete'))
@@ -394,7 +401,7 @@ news card img {
 					if (ui.q('dialog-hint news'))
 						ui.q('dialog-hint span').innerHTML = pageHome.templateNews(v);
 					else
-						ui.navigation.openHint({ desc: pageHome.templateNews(v), pos: '1em,1em', size: '-1em,-4em', onclick: 'return false', noLogin: true });
+						ui.navigation.openHint({ desc: pageHome.templateNews(v), pos: '1em,1em', size: '-1em,-4em', onclick: 'return false', noLogin: true, onclose: 'pageHome.closeNews()', class: 'nopadding' });
 				}
 			});
 	}

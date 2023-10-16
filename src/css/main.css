@@ -127,6 +127,10 @@ dialog-hint {
 	padding: 1em;
 }
 
+dialog-hint.nopadding {
+	padding: 0;
+}
+
 alert close {
 	position: absolute;
 	right: 0;

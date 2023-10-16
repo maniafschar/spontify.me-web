@@ -449,6 +449,7 @@
 			"chatAi": "Artificial intelligence supports you in finding out your strengths and how you can develop them. Ask questions about this, the more precise, the better the answer. For example:<ul><li>How can I build a community around painting, dancing, cooking, hiking, etc.?</li><li>Which philosopher is suitable for thinking about life?</li></ul>",
 			"chatDescription": "<title>Chats</title>After logging in, you will see the list of ${buddies} with whom you have already <b>chatted</b>.",
 			"chatEmpty": "You don't have started any chats with other ${buddies} yet. Click on <b>Chat</b> in a ${buddies}'s profile.",
+			"closeNews": "<title>Log in</title>then you can:<ul style=\"margin-top:0.5em;\"><li>Receive push notifications about our news</li><li>Get to know other FCB fans, for example to watch the games together</ li><li>Participate in cool events </li></ul>",
 			"contacts": "<title>${buddies}</title>You can find your friends as well as <b>profile visitors</b> in this area after logging in.",
 			"description": "${introDescription}",
 			"descriptionNews": "Sign up to get the latest articles pushed to your phone.",

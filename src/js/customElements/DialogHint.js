@@ -168,6 +168,7 @@ chart {
 		if (data && data.action)
 			eval(data.action);
 		var e = ui.q('dialog-hint');
+		ui.attr(e, 'class', '');
 		if (e != ui.q('dialog-hint'))
 			ui.q('dialog-hint').style.display = '';
 		if (global.hash(data.desc) == e.getAttribute('i')) {
@@ -250,6 +251,8 @@ chart {
 		else
 			ui.css(e, 'height', data.size.split(',')[1]);
 		ui.attr(ui.q('dialog-hint'), 'i', global.hash(data.desc));
+		if (data.class)
+			ui.classAdd(ui.q('dialog-hint'), data.class);
 		formFunc.initFields(element);
 		setTimeout(function () { ui.css('dialog-hint', 'opacity', 1) }, 10);
 	}
