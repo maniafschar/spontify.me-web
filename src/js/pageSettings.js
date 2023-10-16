@@ -138,6 +138,8 @@ class pageSettings {
 	static templateSettings3 = v =>
 		global.template`<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;settings tabBody .notification&quot;)" label="settings.myNotifications"></button-text><br/>
 <div class="notification" class="notifications" style="display:none;padding:0.5em 1em 1em 1em;">
+	<input-checkbox value="true" name="notificationNews" label="notification.news" ${v['contact.notificationNews']} ${v.hideNotificationNews}></input-checkbox>
+	<br />
 	<input-checkbox value="true" name="notificationChat" label="notification.chat" ${v['contact.notificationChat']}></input-checkbox>
 	<br />
 	<input-checkbox value="true" name="notificationFriendRequest" label="notification.friendRequest" ${v['contact.notificationFriendRequest']}></input-checkbox>
@@ -264,6 +266,7 @@ ${v.info}`;
 		s += global.separatorTech + (ui.q('settings input-checkbox[name="genderInterest1"][checked="true"]') ? 1 : 0);
 		s += global.separatorTech + (ui.q('settings input-checkbox[name="genderInterest2"][checked="true"]') ? 1 : 0);
 		s += global.separatorTech + (ui.q('settings input-checkbox[name="genderInterest3"][checked="true"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings input-checkbox[name="notificationNews"][checked="true"]') ? 1 : 0);
 		s += global.separatorTech + (ui.q('settings input-checkbox[name="notificationChat"][checked="true"]') ? 1 : 0);
 		s += global.separatorTech + (ui.q('settings input-checkbox[name="notificationEngagement"][checked="true"]') ? 1 : 0);
 		s += global.separatorTech + (ui.q('settings input-checkbox[name="notificationFriendRequest"][checked="true"]') ? 1 : 0);
@@ -294,6 +297,8 @@ ${v.info}`;
 					if (v['contact.imageList'])
 						user.contact.imageList = v['contact.imageList'];
 					v.birthday = d;
+					v.hideNotificationNews = global.config.club ? '' : ' class="hidden"';
+					v['contact.notificationNews'] = v['contact.notificationNews'] == 1 ? ' checked="true"' : '';
 					v['contact.notificationChat'] = v['contact.notificationChat'] == 1 ? ' checked="true"' : '';
 					v['contact.notificationEngagement'] = v['contact.notificationEngagement'] == 1 ? ' checked="true"' : '';
 					v['contact.notificationFriendRequest'] = v['contact.notificationFriendRequest'] == 1 ? ' checked="true"' : '';

@@ -585,6 +585,7 @@
 			"engagement": "Location/${buddy} recomendations",
 			"friendRequest": "For a new friend request",
 			"markEvent": "If someone participates in one of your event",
+			"news": "When a new article is published",
 			"newChatAlert": "You have a new chat from {0}.",
 			"noNewsYet": "You have not yet received any notifications<br/>Here you can see the last 100 notifications that you have received.",
 			"visitLocation": "If your favorised location is opened and the ${buddy} fits you",
