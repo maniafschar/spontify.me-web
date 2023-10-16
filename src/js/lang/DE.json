@@ -449,7 +449,7 @@
 			"chatAi": "Künstliche Intelligenz unterstützt Dich beim herausfinden Deiner Stärekn und wie Du sie ausbauen kannst. Stelle Fragen diesbezüglich, je präziser Deine Frage, umso besser die Antwort. Beispiele:<ul><li>Wie kann ich eine Community rund ums Malen, Tanzen, Kochen, Wandern, etc. aufbauen?</li><li>Welcher Philosoph eignet sich um über das Leben nachzudenken?</li></ul>",
 			"chatDescription": "<title>Chats</title>Nach dem Einloggen siehst Du hier die Liste der ${buddies}, mit denen Du bereits <b>gechattet</b> hast.",
 			"chatEmpty": "Du hast noch keine Chats mit anderen ${buddies} angefangen. Klicke im Profil eines ${buddies} auf <b>Chat</b>.",
-			"closeNews": "<title>Logge Dich ein</title>dann kannst Du:<ul style=\"margin-top:0.5em;\"><li>Push-Benachrichtigungen zu unseren News erhalten</li><li>andere FCB Fans kenenlernen, um z.B. gemeinsam die Spiele anzuschauen</li><li>an coolen Events teilnehmen</li></ul>",
+			"closeNews": "<title>Logge Dich ein</title>dann kannst Du:<ul style=\"margin-top:0.5em;\"><li><b>Push</b>-Benachrichtigungen zu unseren News erhalten.</li><li>Coole <b>Events</b> von Fans für Fans, z.B. gemeinsam die Spiele anschauen, einen <b>Frühschoppen</b> vor dem Spiel, ein regelmäßiger <b>Stammtisch</b>, etc.</li><li><b>Matching</b> der Fans mit ähnlichen Interessen über verschiedene Kriterien.</li></ul>",
 			"contacts": "<title>${buddies}</title>Deine Freunde sowie <b>Profilbesucher</b> findest Du nach dem Einloggen in diesem Bereich.",
 			"description": "${introDescription}",
 			"descriptionNews": "Melde Dich an, um die neuesten Artikel auf Dein Handy gepusht zu bekommen.",
