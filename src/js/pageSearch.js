@@ -76,25 +76,24 @@ class pageSearch {
 			return search;
 		},
 		getSearch() {
-			var s = '', s2 = '';
+			var s = '', s2 = '', s3 = '';
 			if (ui.q('search tabBody div.contacts [name="matches"][checked="true"]'))
 				s = ' and ' + pageSearch.contacts.getMatches();
 			var v = ui.q('search tabBody div.contacts input-hashtags').getAttribute('text');
 			if (v) {
 				v = v.replace(/'/g, '\'\'').split('|');
-				s += ' and (';
 				for (var i = 0; i < v.length; i++) {
 					if (v[i]) {
 						s2 = v[i].trim().toLowerCase();
-						s += 'contact.idDisplay=\'' + s2 + '\' or (contact.search=true and (LOWER(contact.description) like \'%' + s2 + '%\' or LOWER(contact.pseudonym) like \'%' + s2 + '%\' or LOWER(contact.skillsText) like \'%' + s2 + '%\')) or ';
+						s3 += 'contact.idDisplay=\'' + s2 + '\' or (contact.search=true and (LOWER(contact.description) like \'%' + s2 + '%\' or LOWER(contact.pseudonym) like \'%' + s2 + '%\' or LOWER(contact.skillsText) like \'%' + s2 + '%\')) or ';
 					}
 				}
-				s = s.substring(0, s.length - 4) + ')';
+				s3 = s3.substring(0, s3.length - 4);
 			}
 			v = ui.q('search tabBody div.contacts input-hashtags').getAttribute('ids');
 			if (v)
-				s += (s ? ' or ' : '') + global.getRegEx('contact.skills', v);
-			return 'contact.id<>' + user.contact.id + s;
+				s3 += (s3 ? ' or ' : '') + global.getRegEx('contact.skills', v);
+			return 'contact.id<>' + user.contact.id + s + (s3 ? ' and (' + s3 + ')' : '');
 		},
 		search() {
 			pageSearch.contacts.fieldValues = formFunc.getForm('search tabBody div.contacts form').values;
