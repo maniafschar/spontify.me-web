@@ -651,8 +651,8 @@ class pageLogin {
 					pageLogin.login(r[0], r[1], global.getDevice() != 'computer', pageLogin.passwordDialog);
 				} else {
 					setTimeout(function () {
-						ui.navigation.openPopup(ui.l('attention'), ui.l('login.failedOutdated') + '<br/><br/><input' + (email ? ' value="' + email + '"' : '') + '/><br/><br/><button-text onclick="pageLogin.sendVerificationEmail()" label="login.failedNotVerifiedButton"></button-text>');
-					}, 2000);
+						ui.navigation.openPopup(ui.l('attention'), ui.l('login.failedOutdated') + '<br/><br/><input placeholder="' + ui.l('email') + '"' + (email ? ' value="' + email + '"' : '') + '/><br/><br/><button-text onclick="pageLogin.sendVerificationEmail()" label="login.failedNotVerifiedButton"></button-text>');
+					}, 500);
 				}
 			}
 		});

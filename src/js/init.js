@@ -126,8 +126,13 @@ class initialisation {
 		}
 		initialisation.statusBar();
 		universalLinks.subscribe(null, function (e) {
-			if (e.url.indexOf('?') > -1)
-				ui.navigation.autoOpen(e.url.substring(e.url.indexOf('?') + 1));
+			if (e.url.indexOf('?') > -1) {
+				var r = global.getParam('r', e.url.substring(e.url.indexOf('?')));
+				if (r)
+					initialisation.recoverPassword(r);
+				else
+					ui.navigation.autoOpen(e.url.substring(e.url.indexOf('?') + 1));
+			}
 		});
 		universalLinks.subscribe('fb', function (e) {
 			FB.oauthCallback(e.url)
@@ -170,7 +175,7 @@ class initialisation {
 				communication.ping();
 				geoData.init();
 			} else if (global.getParam('r'))
-				initialisation.recoverPassword();
+				initialisation.recoverPassword(global.getParam('r'));
 		});
 	}
 	static initPostProcessor() {
@@ -180,7 +185,7 @@ class initialisation {
 		ui.html('head title', global.appTitle);
 		if (global.getParam('r')) {
 			pageLogin.removeCredentials();
-			initialisation.recoverPassword();
+			initialisation.recoverPassword(global.getParam('r'));
 		} else
 			pageLogin.autoLogin(initialisation.showStartDialogs);
 		window.onresize = initialisation.reposition;
@@ -389,13 +394,13 @@ class initialisation {
 			user.save({ webCall: 'init.setLanguageInternal', language: lang });
 		ui.navigation.closePopup();
 	}
-	static recoverPassword() {
+	static recoverPassword(r) {
 		if (user.contact || initialisation.recoverInvoked == true)
 			return;
 		initialisation.recoverInvoked = true;
 		var e = pageLogin.getDraft() || {};
 		pageLogin.removeCredentials();
-		pageLogin.verifyEmail(global.getParam('r'), e.email ? e.email : '');
+		pageLogin.verifyEmail(r, e.email ? e.email : '');
 		if (global.isBrowser())
 			history.pushState(null, null, window.location.origin);
 	}

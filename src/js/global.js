@@ -20,7 +20,6 @@ class global {
 	static serverImg = global.server + 'med/';
 	static separator = ' · ';
 	static separatorTech = '\u0015';
-	static url = '';
 
 	static date = {
 		formatDate(d, type) {
@@ -205,12 +204,10 @@ class global {
 			return 'web';
 		return /Android/i.test(navigator.userAgent) || /amazon-fireos/i.test(navigator.userAgent) ? 'android' : 'ios';
 	}
-	static getParam(n) {
-		var v;
-		if (window.location && window.location.search)
+	static getParam(n, url) {
+		var v = url;
+		if (!v && window.location && window.location.search)
 			v = window.location.search;
-		if (!v || v.indexOf('?') < 0)
-			v = global.url;
 		if (v) {
 			if (v.indexOf('?') == 0)
 				v = v.substring(1);
