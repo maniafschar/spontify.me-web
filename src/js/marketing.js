@@ -14,10 +14,12 @@ class marketing {
 	static style = `<style>
 marketing {
 	padding: 2em 1em;
-	height: 100%;
-	width: 100%;
-	z-index: 4;
+	position: absolute;
 	text-align: center;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
 }
 
 marketing>div {
@@ -70,7 +72,9 @@ b{
 	static close() {
 		if (ui.q('marketing').innerHTML) {
 			pageHome.init(true);
-			ui.q('marketing').outerHTML = '';
+			var e = ui.q('marketing');
+			e.innerHTML = '';
+			e.style.display = 'none';
 		} else
 			ui.navigation.closeHint();
 	}

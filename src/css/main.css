@@ -73,6 +73,7 @@ body.app>main dialog-hint,
 body.app>main dialog-menu,
 body.app>main dialog-popup,
 body.app>main dialog-location-picker,
+body.app>main marketing,
 body.app>main progressbar {
 	margin-top: constant(safe-area-inset-top);
 	margin-top: env(safe-area-inset-top);
@@ -328,7 +329,7 @@ home {
 
 main>marketing {
 	display: none;
-	position: absolute;
+	z-index: 4;
 }
 
 content {

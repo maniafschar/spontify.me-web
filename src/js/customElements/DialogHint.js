@@ -168,9 +168,6 @@ chart {
 		if (data && data.action)
 			eval(data.action);
 		var e = ui.q('dialog-hint');
-		ui.attr(e, 'class', '');
-		if (e != ui.q('dialog-hint'))
-			ui.q('dialog-hint').style.display = '';
 		if (global.hash(data.desc) == e.getAttribute('i')) {
 			DialogHint.close();
 			return;
@@ -216,6 +213,7 @@ chart {
 			ui.css(e, 'bottom', 0);
 			e = element;
 		}
+		ui.attr(ui.q('dialog-hint'), 'class', '');
 		ui.css(e, 'width', null);
 		ui.classAdd(e, 'body');
 		if (data.hinky) {
@@ -251,10 +249,12 @@ chart {
 		else
 			ui.css(e, 'height', data.size.split(',')[1]);
 		ui.attr(ui.q('dialog-hint'), 'i', global.hash(data.desc));
-		if (data.class)
-			ui.classAdd(ui.q('dialog-hint'), data.class);
 		formFunc.initFields(element);
-		setTimeout(function () { ui.css('dialog-hint', 'opacity', 1) }, 10);
+		setTimeout(function () {
+			if (data.class)
+				ui.classAdd(ui.q('dialog-hint'), data.class);
+			ui.css('dialog-hint', 'opacity', 1);
+		}, 10);
 	}
 	static openIntro() {
 		if (DialogHint.steps.length == 0) {
