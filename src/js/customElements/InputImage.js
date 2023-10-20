@@ -219,7 +219,7 @@ button-image.right {
 					img.getRootNode().host.zoomDist = d;
 			});
 			t.previewInternal(file);
-			ui.css('#popupSendImage', 'display', '');
+			ui.css('dialog-popup #popupSendImage', 'display', '');
 		} else
 			t.remove(t);
 	}
@@ -288,7 +288,7 @@ button-image.right {
 		inputFile.style.zIndex = null;
 		inputFile.style.height = null;
 		this._root.querySelector('img.icon').style.display = '';
-		ui.css('#popupSendImage', 'display', 'none');
+		ui.css('dialog-popup #popupSendImage', 'display', 'none');
 		this.removeAttribute('value');
 		if (!global.isBrowser()) {
 			this._root.querySelector('div').style.display = 'block';

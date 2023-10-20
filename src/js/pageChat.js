@@ -13,6 +13,7 @@ import { ui, formFunc } from './ui';
 import { user } from './user';
 import { VideoCall } from './customElements/VideoCall';
 import { DialogPopup } from './customElements/DialogPopup';
+import { InputImage } from './customElements/InputImage';
 
 export { pageChat };
 
@@ -106,7 +107,7 @@ class pageChat {
 		if (document.activeElement)
 			document.activeElement.blur();
 		var popupVisible = ui.q('dialog-popup popupContent');
-		ui.navigation.openPopup(ui.l('chat.sendImg'), '<form style="padding:0 2em;"><input type="hidden" name="contactId2" value="' + ui.q('chat').getAttribute('i') + '"><div style="margin:1em;"><input-image></input-image></div></form><div style="text-align:center;margin-bottom:1em;"><button-text onclick="pageChat.sendChatImage()" id="popupSendImage" style="display:none;" label="chat.send"></button-text></div>');
+		ui.navigation.openPopup(ui.l('chat.sendImg'), '<form style="padding:0 2em;"><input type="hidden" name="contactId2" value="' + ui.q('chat').getAttribute('i') + '"><div style="margin:1em;"><input-image name="image"></input-image></div></form><div style="text-align:center;margin-bottom:1em;"><button-text onclick="pageChat.sendChatImage()" id="popupSendImage" style="display:none;" label="chat.send"></button-text></div>');
 		if (!popupVisible && global.isBrowser()) {
 			var e = ui.q('[name="image"]');
 			if (e)
@@ -328,7 +329,7 @@ class pageChat {
 					if (v.imageList)
 						v.image = 'src="' + global.serverImg + v.imageList + '"';
 					else
-						v.image = 'source="contacts" class="bgColor"';
+						v.image = 'source="contacts" class="mainBG"';
 					if (v._maxDate.indexOf('.') > 0)
 						v._maxDate = v._maxDate.substring(0, v._maxDate.indexOf('.'));
 					s += '<div onclick="pageChat.open(' + v.id + ')" i="' + v.id + '"' + (v._unseen > 0 ? ' class="highlightBackground"' : v._unseen2 > 0 ? ' class="unseen"' : '') + '><img ' + v.image + '/><span>' + v.pseudonym
@@ -444,7 +445,7 @@ class pageChat {
 	}
 	static postSendChatImage(r) {
 		if (ui.q('chat').getAttribute('i') == r.contactId) {
-			ui.q('[name="image"]').value = '';
+			ui.q('dialog-popup [name="image"]').value = '';
 			ui.navigation.closePopup();
 			setTimeout(function () {
 				if (ui.q('chat[i="' + r.contactId + '"] chatConversation')) {
@@ -640,7 +641,7 @@ class pageChat {
 			DialogPopup.setHint(ui.l('chat.groupNoInput'));
 	}
 	static sendChatImage() {
-		if (formFunc.svg.hasImage()) {
+		if (ui.q('dialog-popup input-image').hasImage()) {
 			var id = ui.q('chat').getAttribute('i');
 			var v = formFunc.getForm('dialog-popup form');
 			v.classname = 'ContactChat';

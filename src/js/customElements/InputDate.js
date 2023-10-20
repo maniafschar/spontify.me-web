@@ -173,10 +173,13 @@ label.filled {
 		this.setAttribute('complete', '' + (s.length == 10 || s.length == 19));
 	}
 	toggle(e, html, close) {
+		var m = parseInt(ui.cssValue('dialog-hint', 'margin-top'));
+		if (isNaN(m))
+			m = 0;
 		ui.navigation.openHint({
 			desc: '<style>label{z-index:2;position:relative;}label.time{width:4em;text-align:center;}</style><div style="max-height:22em;overflow-y:auto;' + (!close || close == 'Year' ? '' : 'white-space:nowrap;') + (global.getDevice() == 'phone' ? 'font-size:0.8em;' : '') + '">' + html + '</div>',
 			onclose: close ? 'InputDate.getField(' + this.x + ').select' + close + '()' : null,
-			pos: '2%,' + (e.getBoundingClientRect().y + e.getBoundingClientRect().height + ui.emInPX) + 'px', size: '96%,auto', hinkyClass: 'top', hinky: 'left:' + (e.getBoundingClientRect().x - ui.q('main').getBoundingClientRect().x + e.getBoundingClientRect().width / 2 - 6) + 'px;',
+			pos: '2%,' + (e.getBoundingClientRect().y + e.getBoundingClientRect().height + ui.emInPX - m) + 'px', size: '96%,auto', hinkyClass: 'top', hinky: 'left:' + (e.getBoundingClientRect().x - ui.q('main').getBoundingClientRect().x + e.getBoundingClientRect().width / 2 - 6) + 'px;',
 			noLogin: true
 		});
 	}

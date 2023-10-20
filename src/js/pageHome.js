@@ -22,8 +22,7 @@ class pageHome {
 	</buttonIcon>
 	<img onclick="${v.actionLogo}" source="logo"/>
 	<text onclick="ui.navigation.goTo(&quot;settings&quot;)" ${v.dispProfile}>
-		${v.imgProfile}<br/>
-		<name>${v.name}</name>
+		${v.imgProfile}
 	</text>
 	<buttonIcon class="language${v.langButton}" onclick="pageHome.openLanguage(event)">
 		<span>${v.lang}</span>
@@ -267,8 +266,7 @@ news card img {
 				if (user.contact.imageList)
 					v.imgProfile = '<img src="' + global.serverImg + user.contact.imageList + '"/>';
 				else
-					v.imgProfile = '<img source="contacts" style="box-shadow:none;"/>';
-				v.name = user.contact.pseudonym;
+					v.imgProfile = '<name>' + user.contact.pseudonym + '</name>';
 				v.infoButton = ' hidden';
 				v.langButton = ' hidden';
 				if (user.contact.type == 'adminContent')
