@@ -761,7 +761,8 @@ chatList svg:not(.mainBG) {
 	bottom: 0.5em;
 }
 
-chatList>div.unseen svg(.mainBG) {
+chatList>div.unseen svg:not(.mainBG),
+chat time.unseen {
 	opacity: 0.3;
 }
 

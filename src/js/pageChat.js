@@ -496,7 +496,7 @@ class pageChat {
 	static refreshActiveChat(unseen) {
 		var e = ui.q('chat[i]');
 		if (e && !unseen[e.getAttribute('i')])
-			ui.classRemove('chat[i="' + e.getAttribute('i') + '"] .highlightColor', 'highlightColor');
+			ui.classRemove('chat[i="' + e.getAttribute('i') + '"] .unseen', 'unseen');
 	}
 	static renderMsg(v) {
 		var date = global.date.formatDate(v.createdAt);
@@ -505,7 +505,7 @@ class pageChat {
 		if (v.contactId == user.contact.id) {
 			v.class = ' class="me"';
 			if (!v.seen)
-				v.classUnseen = ' class="highlightColor"';
+				v.classUnseen = ' class="unseen"';
 		} else if (v._pseudonym) {
 			v.oc = ' onclick="ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.contactId) + '&quot;,event)"';
 			v.time = '<span' + v.oc + '>' + v._pseudonym + ' ' + v.time + '</span>';
