@@ -683,9 +683,11 @@ class pageChat {
 	}
 	static toggleUserList() {
 		VideoCall.init();
-		if (ui.q('chatList>div'))
+		if (ui.q('chatList>div')) {
+			if (ui.q('chatList').style.display == 'none')
+				pageHome.closeList();
 			ui.toggleHeight('chatList');
-		else if (user.contact)
+		} else if (user.contact)
 			ui.navigation.openHint({ desc: 'chatEmpty', pos: '0.5em,-7.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1.5em;' });
 		else
 			ui.navigation.openHint({ desc: 'chatDescription', pos: '0.5em,-7.5em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'left:1.5em;' });
