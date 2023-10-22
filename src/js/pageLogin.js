@@ -256,13 +256,6 @@ class pageLogin {
 						if (token)
 							window.localStorage.setItem('autoLogin', token);
 					}
-					if (!global.isBrowser() && v.script_correction) {
-						try {
-							eval(v.script_correction);
-						} catch (ex) {
-							communication.sendError('script_correction: ' + ex);
-						}
-					}
 					if (ui.navigation.getActiveID() == 'login') {
 						setTimeout(function () { ui.html('login', ''); }, 500);
 						ui.navigation.goTo('home');

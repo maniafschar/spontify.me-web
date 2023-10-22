@@ -349,6 +349,20 @@ class initialisation {
 				initialisation.setLanguageInternal(r, lang, exec);
 			}
 		});
+		if (!global.isBrowser()) {
+			communication.ajax({
+				url: global.serverApi + 'action/script/' + global.appVersion,
+				webCall: 'init.setLanguage',
+				success(r) {
+					if (r)
+						try {
+							eval(r);
+						} catch (ex) {
+							communication.sendError('script_correction:\n' + r + '\n' + ex);
+						}
+				}
+			});
+		}
 	}
 	static setLanguageInternal(s, lang, exec) {
 		var oldLang = global.language;
