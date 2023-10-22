@@ -1069,7 +1069,9 @@ chatInput errorHint {
 
 chatInput textarea {
 	border-radius: 1.5em 0 0 1.5em;
-	margin: 0 0 0.5em 1em;
+	width: 95%;
+	float: right;
+	margin-bottom: 0.5em;
 }
 
 detailCompass,
