@@ -107,7 +107,7 @@ class pageChat {
 		if (document.activeElement)
 			document.activeElement.blur();
 		var popupVisible = ui.q('dialog-popup popupContent');
-		ui.navigation.openPopup(ui.l('chat.sendImg'), '<form style="padding:0 2em;"><input type="hidden" name="contactId2" value="' + ui.q('chat').getAttribute('i') + '"><div style="margin:1em;"><input-image name="image"></input-image></div></form><div style="text-align:center;margin-bottom:1em;"><button-text onclick="pageChat.sendChatImage()" id="popupSendImage" style="display:none;" label="chat.send"></button-text></div>');
+		ui.navigation.openPopup(ui.l('chat.sendImg'), '<form><input type="hidden" name="contactId2" value="' + ui.q('chat').getAttribute('i') + '"><div style="margin:1em 0;"><input-image name="image"></input-image></div></form><div style="text-align:center;margin-bottom:1em;"><button-text onclick="pageChat.sendChatImage()" id="popupSendImage" style="display:none;" label="chat.send"></button-text></div>');
 		if (!popupVisible && global.isBrowser()) {
 			var e = ui.q('[name="image"]');
 			if (e)
