@@ -467,7 +467,7 @@ settings paypalFees {
 
 settings genderSelectHint {
 	left: -0.5em;
-	background: rgba(0, 0, 0, 0.2);
+	background: rgba(0, 0, 0, 0.6);
 	position: absolute;
 	right: -0.5em;
 	top: 0.5em;
@@ -477,6 +477,7 @@ settings genderSelectHint {
 	font-size: 1.3em;
 	line-height: 1.8;
 	display: none;
+	cursor: pointer;
 }
 
 #info6 {

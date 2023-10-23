@@ -128,7 +128,7 @@ class pageSettings {
 			onclick="pageSettings.toggleGenderSlider(this)" ${v.genderInterest3} transient="true"></input-checkbox>
 		<input-slider type="range" min="18" max="99" value="${v['contact.ageDivers']}" name="ageDivers"></input-slider>
 	</value>
-	<genderSelectHint>${ui.l('settings.genderSelectHint')}</genderSelectHint>
+	<genderSelectHint onclick="pageSettings.selectTab(0)">${ui.l('settings.genderSelectHint')}</genderSelectHint>
 </field>
 <paypalFees></paypalFees>
 <br/>
@@ -204,7 +204,7 @@ ${v.info}`;
 	}
 	static deleteProfile() {
 		ui.html('errorHint', '');
-		var reasons = ui.qa('input-checkbox[name="deletionReason"][checked="true]');
+		var reasons = ui.qa('input-checkbox[name="deletionReason"][checked="true"]');
 		if (!reasons.length) {
 			ui.q('errorHint.checkbox').innerHTML = ui.l('settings.deleteChooseReason');
 			return;
