@@ -160,32 +160,32 @@ class pageSettings {
 <div id="delete" style="display:none;margin:0 1em 1em 1em;">
 <div style="margin:0.25em 0 0.5em 0.5em;">${ui.l('settings.deleteProfileHint')}</div>
 <div>
-<input-checkbox name="deletionReason" label="settings.deleteReason1" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint1&quot;)"></input-checkbox>
-<hintDelete class="hint1" style="display:none;">${ui.l('settings.hintDeleteReason1')}</hintDelete>
+<input-checkbox name="deletionReason" label="settings.deleteReasonTechnical" value="technical" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint1&quot;)"></input-checkbox>
+<hintDelete class="hint1" style="display:none;">${ui.l('settings.hintDeleteReasonTechnical')}</hintDelete>
 </div>
 <div>
-<input-checkbox name="deletionReason" label="settings.deleteReason2" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint2&quot;)"></input-checkbox>
-<hintDelete class="hint2" style="display:none;">${ui.l('settings.hintDeleteReason2')}</hintDelete>
+<input-checkbox name="deletionReason" label="settings.deleteReasonComplex" value="complex" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint2&quot;)"></input-checkbox>
+<hintDelete class="hint2" style="display:none;">${ui.l('settings.hintDeleteReasonComplex')}</hintDelete>
 </div>
 <div>
-<input-checkbox name="deletionReason" label="settings.deleteReason3" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint3&quot;)"></input-checkbox>
-<hintDelete class="hint3" style="display:none;">${ui.l('settings.hintDeleteReason3')}</hintDelete>
+<input-checkbox name="deletionReason" label="settings.deleteReasonMessages" value="messages" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint3&quot;)"></input-checkbox>
+<hintDelete class="hint3" style="display:none;">${ui.l('settings.hintDeleteReasonMessages')}</hintDelete>
 </div>
 <div>
-<input-checkbox name="deletionReason" label="settings.deleteReason4" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint4&quot;)"></input-checkbox>
-<hintDelete class="hint4" style="display:none;">${ui.l('settings.hintDeleteReason4')}</hintDelete>
+<input-checkbox name="deletionReason" label="settings.deleteReasonMolested" value="molested" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint4&quot;)"></input-checkbox>
+<hintDelete class="hint4" style="display:none;">${ui.l('settings.hintDeleteReasonMolested')}</hintDelete>
 </div>
 <div>
-<input-checkbox name="deletionReason" label="settings.deleteReason5" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint5&quot;)"></input-checkbox>
-<hintDelete class="hint5" style="display:none;">${ui.l('settings.hintDeleteReason5')}</hintDelete>
+<input-checkbox name="deletionReason" label="settings.deleteReasonExpectation" value="expectation" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint5&quot;)"></input-checkbox>
+<hintDelete class="hint5" style="display:none;">${ui.l('settings.hintDeleteReasonExpectation')}</hintDelete>
 </div>
 <div>
-<input-checkbox name="deletionReason" label="settings.deleteReason6" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint6&quot;)"></input-checkbox>
-<hintDelete class="hint6" style="display:none;">${ui.l('settings.hintDeleteReason6')}</hintDelete>
+<input-checkbox name="deletionReason" label="settings.deleteReasonBenefit" value="benefit" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint6&quot;)"></input-checkbox>
+<hintDelete class="hint6" style="display:none;">${ui.l('settings.hintDeleteReasonBenefit')}</hintDelete>
 </div>
 <div>
-<input-checkbox name="deletionReason" label="settings.deleteReason7" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint7&quot;)"></input-checkbox>
-<hintDelete class="hint7" style="display:none;">${ui.l('settings.hintDeleteReason7')}</hintDelete>
+<input-checkbox name="deletionReason" label="settings.deleteReasonNothing" value="nothing" transient="true" onclick="ui.toggleHeight(&quot;hintDelete.hint7&quot;)"></input-checkbox>
+<hintDelete class="hint7" style="display:none;">${ui.l('settings.hintDeleteReasonNothing')}</hintDelete>
 </div>
 <errorHint class="checkbox"></errorHint>
 <textarea id="deleteAccountFeedback" placeholder="${ui.l('settings.deleteProfileFeedbackHint')}" maxlength="2000"></textarea>
@@ -216,12 +216,8 @@ ${v.info}`;
 			ui.q('errorHint.textarea').innerHTML = s ? ui.l('settings.deleteExplainMoreWords') : ui.l('settings.deleteExplain');
 			return;
 		}
-		s = '\n' + ui.val('#deleteAccountFeedback').trim();
-		while (s.indexOf('  ') > -1)
-			s = s.replace(/  /g, ' ');
-		var reasons = ui.qa('input-checkbox[name="deletionReason"][checked="true"]');
 		for (var i = 0; i < reasons.length; i++)
-			s = reasons[i].getAttribute('label') + '\n' + s;
+			s = reasons[i].getAttribute('value') + '\n' + s;
 		communication.ajax({
 			url: global.serverApi + 'db/one',
 			webCall: 'pageSettings.deleteProfile',
