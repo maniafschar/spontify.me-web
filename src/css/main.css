@@ -67,7 +67,6 @@ body.app>main {
 	padding-top: env(safe-area-inset-top);
 }
 
-body.app>main alert,
 body.app>main content,
 body.app>main dialog-hint,
 body.app>main dialog-menu,
@@ -130,20 +129,6 @@ dialog-hint {
 
 dialog-hint.nopadding {
 	padding: 0;
-}
-
-alert close {
-	position: absolute;
-	right: 0;
-	top: 0;
-	width: 6em;
-	height: 2.75em;
-	text-align: right;
-	padding: 0.25em 0.75em;
-	cursor: pointer;
-	font-weight: bold;
-	z-index: 1;
-	color: rgba(0, 0, 0, 0.2);
 }
 
 previewHint {
@@ -852,28 +837,6 @@ chatMoreButton {
 	transition: all .4s ease-out;
 }
 
-alert {
-	position: absolute;
-	top: 1em;
-	right: 1em;
-	left: 1em;
-	text-align: center;
-	z-index: 6;
-	border-radius: 1em;
-	background-color: rgba(255, 255, 255, 0.95);
-	box-shadow: 0 0 2em rgba(0, 0, 0, 0.3);
-	color: black;
-}
-
-alert>div {
-	z-index: 1;
-	position: relative;
-	padding: 1.5em;
-	text-overflow: ellipsis;
-	overflow: hidden;
-	cursor: pointer;
-}
-
 chatConversation {
 	top: 4em;
 	left: 0;
@@ -1155,6 +1118,10 @@ buttonIcon.statistics {
 	left: 1em;
 	font-size: 0.77em;
 	padding: 1em;
+}
+
+buttonIcon.statistics svg {
+	stroke: var(--text);
 }
 
 buttonIcon.language {

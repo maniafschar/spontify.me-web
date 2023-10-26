@@ -274,7 +274,6 @@ mapButton::before {
 			};
 			ui.navigation.closeHint();
 			pageChat.closeList();
-			communication.notification.close();
 			if (!visible)
 				f.call();
 			else

@@ -394,7 +394,6 @@ class pageChat {
 							}
 						}
 					});
-					communication.notification.close();
 					ui.navigation.hideMenu();
 					ui.navigation.closePopup();
 					pageChat.closeList();

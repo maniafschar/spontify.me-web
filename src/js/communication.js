@@ -1,6 +1,6 @@
 import JSEncrypt from 'jsencrypt';
 import { geoData } from './geoData';
-import { global } from './global';
+import { Strings, global } from './global';
 import { pageChat } from './pageChat';
 import { pageLogin } from './pageLogin';
 import { ui } from './ui';
@@ -141,30 +141,23 @@ class communication {
 		}
 	}
 	static notification = {
-		close() {
-			if (ui.cssValue('alert', 'display') != 'none') {
-				ui.navigation.animation('alert', 'homeSlideOut',
-					function () {
-						ui.css('alert', 'display', 'none');
-						ui.html('alert>div', '');
-					});
-			}
-		},
 		onError(e) {
 			ui.navigation.openPopup(ui.l('attention'), ui.l('pushTokenError').replace('{0}', e.message));
 		},
 		open(e) {
 			communication.setApplicationIconBadgeNumber(e.count);
-			if (e.additionalData && e.additionalData.exec) {
-				if (e.additionalData.exec.indexOf('chat') == 0
-					&& ui.q('chat[i="' + e.additionalData.exec.substring(5) + '"]')
+			if (e.exec) {
+				if (e.exec.indexOf('chat') == 0
+					&& ui.q('chat[i="' + e.exec.substring(5) + '"]')
 					&& ui.cssValue('chat', 'display') != 'none')
 					pageChat.refresh();
-				else {
+				else
 					communication.ping();
-					ui.navigation.autoOpen(e.additionalData.exec);
-				}
 			}
+		},
+		openBackground(e) {
+			communication.setApplicationIconBadgeNumber(e.count);
+			ui.navigation.autoOpen(e.exec);
 		},
 		register() {
 			if (global.isBrowser())
@@ -187,6 +180,7 @@ class communication {
 				});
 			});
 			window.cordova.plugins.firebase.messaging.onMessage(communication.notification.open, communication.notification.onError);
+			window.cordova.plugins.firebase.messaging.onBackgroundMessage(communication.notification.openBackground, communication.notification.onError);
 		},
 		saveToken(e) {
 			user.save({ webCall: 'communication.notification.saveToken', pushSystem: global.getOS(), pushToken: e });
@@ -239,9 +233,9 @@ class communication {
 	}
 	static ping() {
 		clearTimeout(communication.pingExec);
+		communication.pingExec = -1;
 		if (!user.contact || !user.contact.id || global.paused)
 			return;
-		communication.pingExec = -1;
 		communication.ajax({
 			url: global.serverApi + 'action/ping',
 			progressBar: false,

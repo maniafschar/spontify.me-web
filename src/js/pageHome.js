@@ -17,7 +17,7 @@ class pageHome {
 	static teaserMeta;
 	static template = v =>
 		global.template`<homeHeader onclick="pageHome.openHint()">
-	<buttonIcon class="statistics bgColor${v.statsButton}" onclick="ui.navigation.goTo(&quot;content-admin-home&quot;)">
+	<buttonIcon class="statistics mainBG${v.statsButton}" onclick="ui.navigation.goTo(&quot;content-admin-home&quot;)">
 		<img source="content-admin-home"/>
 	</buttonIcon>
 	<img onclick="${v.actionLogo}" source="logo"/>
@@ -38,111 +38,25 @@ class pageHome {
 	<div></div>
 </teaser>
 </homeBody>`;
-	static templateNews = v =>
-		global.template`<style>
-news {
-	position: relative;
-	display: block;
-	overflow: hidden;
-	height: 100%;
-	border-radius: 0.5em;
-}
-
-
-news div {
-	width: 100%;
-	display: block;
-	padding-top: 1.5em;
-	position: relative;
-	height: 100%;
-	overflow: auto;
-}
-
-news card {
-	text-align: left;
-	position: relative;
-	display: block;
-	margin-bottom: 1.5em;
-}
-
-news card::after {
-	content: ' ';
-	display: block;
-	clear: both;
-}
-
-news card p {
-	background: rgba(255, 0, 0, 0.1);
-	padding: 0.75em 6% 0.75em  4%;
-	border-radius: 0 2em 0.5em 0;
-	max-width: 96%;
-	display: inline-block
-}
-
-news card date {
-	font-size: 0.7em;
-	display: block;
-}
-
-news card img {
-	width: 96%;
-	margin-left: 4%;
-	position: relative;
-	float: right;
-	margin-top: -1em;
-	border-radius: 0.5em 0 0 3em;
-}
-</style><news>
-<div class="news">${v.news}</div>
-</news>`;
-	static templateNewsEdit = v =>
-		global.template`
-<input type="hidden" name="id" value="${v.id}"/>
-<field>
-	<label style="padding-top:0;">${ui.l('home.news')}</label>
-	<value>
-		<textarea name="description">${v.description}</textarea>
-	</value>
-</field>
-<field>
-	<label>${ui.l('picture')}</label>
-	<value>
-		<input-image src="${v.image}"></input-image>
-	</value>
-</field>
-<field>
-	<label>${ui.l('home.url')}</label>
-	<value>
-		<input name="url" value="${v.url}"/>
-	</value>
-</field>
-<field>
-	<label>${ui.l('home.publish')}</label>
-	<value>
-		<input-date name="publish" value="${v.publish}"></input-date>
-	</value>
-</field>
-<dialogButtons style="margin-bottom:0;">
-	<button-text onclick="pageHome.saveNews()" label="save"></button-text>
-	<button-text onclick="pageHome.deleteNews(${v.id})" class="deleteButton${v.hideDelete}" label="delete"></button-text>
-</dialogButtons>
-<popupHint></popupHint>`;
 	static clickNotification(id, action) {
-		communication.ajax({
-			url: global.serverApi + 'db/one',
-			webCall: 'pageHome.clickNotification',
-			method: 'PUT',
-			body: {
-				classname: 'ContactNotification',
-				id: id,
-				values: { seen: true }
-			},
-			success() {
-				ui.navigation.autoOpen(action);
-				communication.notification.close();
-				communication.ping();
-			}
-		});
+		if (id) {
+			communication.ajax({
+				url: global.serverApi + 'db/one',
+				webCall: 'pageHome.clickNotification',
+				method: 'PUT',
+				body: {
+					classname: 'ContactNotification',
+					id: id,
+					values: { seen: true }
+				},
+				success() {
+					communication.ping();
+				}
+			});
+		}
+		ui.navigation.autoOpen(action);
+		if (action.indexOf('news=') != 0)
+			pageHome.closeList();
 	}
 	static closeList() {
 		var e = ui.q('notificationList');
@@ -154,57 +68,6 @@ news card img {
 			ui.navigation.closeHint();
 		else
 			ui.navigation.openHint({ desc: 'closeNews', pos: '2em,10em', size: '-2em,auto' });
-	}
-	static deleteNews(id) {
-		if (ui.q('dialog-popup button-text.deleteButton').innerText != ui.l('confirmDelete'))
-			ui.q('dialog-popup button-text.deleteButton').innerText = ui.l('confirmDelete');
-		else
-			communication.ajax({
-				url: global.serverApi + 'db/one',
-				body: {
-					classname: 'ClientNews',
-					id: id
-				},
-				webCall: 'pageHome.deleteNews',
-				method: 'DELETE',
-				success(r) {
-					ui.navigation.closePopup();
-				}
-			});
-	}
-	static edit() {
-		if (ui.q('dialog-hint tab.tabActive[i="news"]'))
-			pageHome.editNews();
-		else
-			pageEvent.edit();
-	}
-	static editNews(id) {
-		var render = function (v) {
-			if (!v.id)
-				v.hideDelete = ' hidden';
-			var d = global.date.getDateFields(new Date());
-			v.today = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute + ':00';
-			if (v.publish) {
-				d = global.date.getDateFields(global.date.server2local(v.publish));
-				v.publish = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute;
-			} else
-				v.publish = v.today;
-			v.publish = v.publish.substring(0, 16);
-			if (v.image)
-				v.image = global.serverImg + v.image;
-			ui.navigation.openPopup(ui.l('home.news'), pageHome.templateNewsEdit(v));
-		};
-		if (id)
-			communication.ajax({
-				url: global.serverApi + 'db/one?query=misc_listNews&search=' + encodeURIComponent('clientNews.id=' + id),
-				webCall: 'pageHome.editNews',
-				responseType: 'json',
-				success(l) {
-					render(model.convert(new ClientNews(), l));
-				}
-			});
-		else
-			render({});
 	}
 	static filterClose() {
 		if (ui.q('dialog-hint input-checkbox[checked="true"]')) {
@@ -317,7 +180,7 @@ news card img {
 						v.image = 'src="images/logo.png" class="mainBG"';
 					else
 						v.image = 'source="contacts" class="mainBG"';
-					s += '<div onclick="pageHome.clickNotification(' + v.contactNotification.id + ',&quot;' + v.contactNotification.action + '&quot;)" ' + (v.contactNotification.seen == 0 ? ' class="highlightBackground"' : '') + '><img ' + v.image + '/> <span>' + global.date.formatDate(v.contactNotification.createdAt) + ': ' + v.contactNotification.text + '</span></div > ';
+					s += '<div onclick="pageHome.clickNotification(' + (v.contactNotification.seen ? 0 : v.contactNotification.id) + ',&quot;' + v.contactNotification.action + '&quot;)" ' + (v.contactNotification.seen == 0 ? ' class="highlightBackground"' : '') + '><img ' + v.image + '/> <span>' + global.date.formatDate(v.contactNotification.createdAt) + ': ' + v.contactNotification.text + '</span></div > ';
 				}
 				e.innerHTML = s;
 				formFunc.svg.replaceAll();
@@ -344,12 +207,6 @@ news card img {
 				desc: ui.l('intro.description').replace(/\{0}/g, global.appTitle.substring(0, global.appTitle.indexOf(global.separator))),
 				pos: '5%,8.5em', size: '90%,auto', hinkyClass: 'top', hinky: 'left:50%;'
 			});
-	}
-	static openHintNews() {
-		ui.navigation.openHint({
-			desc: ui.l('intro.descriptionNews').replace(/\{0}/g, global.appTitle.substring(0, global.appTitle.indexOf(global.separator))),
-			pos: '5%,18em', size: '90%,auto', hinkyClass: 'top', hinky: 'left:50%;'
-		});
 	}
 	static openLanguage(event) {
 		event.stopPropagation();
@@ -413,32 +270,6 @@ news card img {
 		ui.q('dialog-navigation badgeChats').innerHTML = '';
 		ui.q('dialog-navigation badgeNotifications').innerHTML = 0;
 	}
-	static saveNews() {
-		formFunc.resetError(ui.q('dialog-popup textarea'));
-		var v = formFunc.getForm('dialog-popup popupContent');
-		if (!ui.q('dialog-popup textarea').value)
-			formFunc.setError(ui.q('dialog-popup textarea'), 'error.description');
-		else
-			formFunc.validation.filterWords(ui.q('dialog-popup textarea'));
-		if (ui.q('dialog-popup errorHint')) {
-			ui.q('dialog-popup popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });;
-			return;
-		}
-		v.classname = 'ClientNews';
-		if (ui.q('dialog-popup input[name="id"]').value)
-			v.id = ui.q('dialog-popup input[name="id"]').value;
-		communication.ajax({
-			url: global.serverApi + 'db/one',
-			method: v.id ? 'PUT' : 'POST',
-			webCall: 'pageHome.saveNews',
-			body: v,
-			success(r) {
-				ui.navigation.closePopup();
-				user.remove('news');
-			}
-		});
-
-	}
 	static teaserContacts() {
 		communication.ajax({
 			url: global.serverApi + 'action/teaser/contacts',
@@ -465,7 +296,7 @@ news card img {
 	}
 	static teaserEvents(search) {
 		communication.ajax({
-			url: global.serverApi + 'action/teaser/events' + (search ? '?search=' + encodeURIComponent(search) : ''),
+			url: global.serverApi + 'action/teaser/events' + (typeof search == 'string' ? '?search=' + encodeURIComponent(search) : ''),
 			webCall: 'pageHome.teaserEvents',
 			responseType: 'json',
 			error(e) {
