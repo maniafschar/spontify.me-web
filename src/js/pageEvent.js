@@ -6,7 +6,6 @@ import { global, Strings } from './global';
 import { lists } from './lists';
 import { Contact, EventParticipate, Location, model } from './model';
 import { pageContact } from './pageContact';
-import { pageHome } from './pageHome';
 import { pageLocation } from './pageLocation';
 import { formFunc, ui } from './ui';
 import { user } from './user';
@@ -269,15 +268,15 @@ field.checkbox {
 				}
 			});
 		}
-		ui.navigation.hideMenu();
+		ui.navigation.closeMenu();
 		if (id)
 			pageEvent.editInternal(locationID, id, JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).event);
 		else
 			pageEvent.editInternal(locationID);
 	}
 	static editInternal(locationID, id, v) {
-		if (!id && (locationID && user.get('event' + locationID) || !locationID && user.get('event'))) {
-			v = user.get('event' + (locationID ? locationID : '')).values;
+		if (!id && user.get('event')) {
+			v = user.get('event').values;
 			if (v.startDate &&
 				global.date.server2local(v.startDate).getTime() < new Date().getTime())
 				v.startDate = null;
@@ -341,8 +340,7 @@ field.checkbox {
 		if (global.config.club)
 			v.hideOnlineEvent = 'class="hidden"';
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
-		if (id)
-			setTimeout(pageEvent.setForm, 400);
+		setTimeout(pageEvent.setForm, 400);
 	}
 	static getCalendarList(data) {
 		if (!data || data.length < 2)
@@ -411,7 +409,7 @@ field.checkbox {
 		if (v.eventParticipate.state == -1)
 			return '';
 		var futureEvent = pageEvent.getDate(v) > new Date();
-		var text = '<div style="margin:1em 0;">';
+		var text = '<detailButtons style="margin:1em 0;">';
 		if (futureEvent) {
 			if (false && v.event.locationId > 0 && (v.event.contactId == user.contact.id || v.eventParticipate.state == 1))
 				text += '<button-text onclick="pageEvent.qrcode(' + (v.event.contactId == user.contact.id) + ')" label="events.qrcodeButton"></button-text><br/><br/>';
@@ -423,13 +421,13 @@ field.checkbox {
 		}
 		if (participantCount > 0 || futureEvent)
 			text += '<button-text onclick="pageEvent.toggleParticipants(event)"><participantCount>' + (participantCount > 0 ? participantCount + '&nbsp;' : '') + '</participantCount>' + ui.l('events.participants') + '</button-text>';
-		text += '</div><text name="participants" style="margin:0 -1em;display:none;"></text>';
+		text += '</detailButtons><text name="participants" style="margin:0 -1em;display:none;"></text>';
 		return text;
 	}
 	static init() {
 		if (!ui.q('events').innerHTML)
 			ui.q('events').innerHTML = '<list-body></list-body>';
-		if (!ui.q('events listResults list-row'))
+		if (!ui.q('events listResults list-row') && ui.navigation.getActiveID() != 'events')
 			setTimeout(ui.navigation.toggleMenu, 500);
 		if (!pageLocation.map.svgLocation)
 			communication.ajax({
@@ -550,7 +548,7 @@ field.checkbox {
 			if (events != null && participations != null) {
 				if (menuIndex > -1)
 					ui.attr(divID, 'menuIndex', menuIndex);
-				ui.navigation.hideMenu();
+				ui.navigation.closeMenu();
 				var participate = {};
 				for (var i = 1; i < participations.length; i++) {
 					var e = model.convert(new EventParticipate(), participations, i);

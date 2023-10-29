@@ -13,7 +13,7 @@ import { ui, formFunc } from './ui';
 import { user } from './user';
 import { VideoCall } from './customElements/VideoCall';
 import { DialogPopup } from './customElements/DialogPopup';
-import { InputImage } from './customElements/InputImage';
+import { DialogMenu } from './customElements/DialogMenu';
 
 export { pageChat };
 
@@ -21,7 +21,6 @@ class pageChat {
 	static copyLink = '';
 	static lastScroll = 0;
 	static oldCleverTip = '';
-	static admin = { id: 3, image: '', ai: 0, pseudonym: null };
 
 	static template = v =>
 		global.template`<listHeader>
@@ -53,23 +52,6 @@ class pageChat {
 		ui.adjustTextarea(e);
 		ui.navigation.closeHint();
 		ui.css('chatConversation', 'bottom', ui.q('chatInput').clientHeight + 'px');
-	}
-	static aiEnabled(id, l) {
-		if (pageChat.admin.id == id) {
-			pageChat.admin.ai = 0;
-			for (var i = l.length - 1; i > 0; i--) {
-				var v = model.convert(new ContactChat(), l, i);
-				if (v.textId == 'engagement_ai')
-					pageChat.admin.ai++;
-			}
-			return pageChat.admin.ai <= 40;
-		}
-	}
-	static aiHint() {
-		if (ui.q('chatInput input-checkbox[checked="true"]'))
-			ui.navigation.openHint({ desc: 'chatAi', pos: '5%,-10.5em', size: '90%,auto', hinkyClass: 'bottom', hinky: 'left:50%;' });
-		else
-			ui.navigation.closeHint();
 	}
 	static askLocation() {
 		if (document.activeElement)
@@ -241,20 +223,7 @@ class pageChat {
 		}
 		return 0;
 	}
-	static init() {
-	}
 	static initActiveChats() {
-		if (!pageChat.admin.image) {
-			communication.ajax({
-				url: global.serverApi + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=3'),
-				responseType: 'json',
-				webCall: 'pageChat.initActiveChats',
-				success(r) {
-					pageChat.admin.image = r['contact.imageList'];
-					pageChat.admin.pseudonym = r['contact.pseudonym'];
-				}
-			});
-		}
 		communication.ajax({
 			url: global.serverApi + 'db/list?query=contact_listChat&limit=0',
 			responseType: 'json',
@@ -369,7 +338,6 @@ class pageChat {
 					ui.html('chat', pageChat.template({
 						id: id,
 						draft: user.get('chat' + id),
-						ai: pageChat.aiEnabled(id, r) ? '' : ' class="hidden"',
 						action: global.getDevice() == 'computer' ? 'onclick' : 'onmousedown'
 					}));
 					formFunc.initFields(ui.q('chatInput'));
@@ -394,10 +362,9 @@ class pageChat {
 							}
 						}
 					});
-					ui.navigation.hideMenu();
+					ui.navigation.closeMenu();
 					ui.navigation.closePopup();
 					pageChat.closeList();
-					pageChat.init();
 					ui.off('chatConversation', 'scroll', pageChat.reposition);
 					pageChat.detailChat(r, id);
 					ui.on('chatConversation', 'scroll', pageChat.reposition);
@@ -412,7 +379,7 @@ class pageChat {
 						});
 				}
 				if (ui.cssValue('chat', 'display') == 'none')
-					f.call();
+					f();
 				else
 					pageChat.close(null, f);
 			}
@@ -424,7 +391,7 @@ class pageChat {
 			return;
 		}
 		if (user.contact.groups) {
-			ui.navigation.hideMenu();
+			ui.navigation.closeMenu();
 			var s = '<div class="smilyBox" style="margin-bottom:1em;"><button-text onclick="pageChat.insertLinkInGroup()" style="margin:1em;" label="chat.share"></button-text><button-text onclick="pageChat.sendChatGroup()" label="chat.send"></button-text></div>';
 			var v = user.contact.chatTextGroups;
 			if (!v) {
@@ -576,8 +543,6 @@ class pageChat {
 				note: msg.replace(/</g, '&lt;'),
 				contactId2: id
 			};
-			if (ui.q('chatInput input-checkbox[checked="true"]'))
-				v.textId = 'engagement_ai';
 			communication.ajax({
 				url: global.serverApi + 'db/one',
 				method: 'POST',
@@ -607,11 +572,6 @@ class pageChat {
 							ui.q('#chatText').value = '';
 							pageChat.adjustTextarea(ui.q('#chatText'));
 							user.remove('chat' + id);
-							if (v.textId) {
-								pageChat.admin.ai += 2;
-								if (pageChat.admin.ai > 40)
-									ui.classAdd('chatInput input', 'hidden');
-							}
 						}
 					}
 					pageChat.initActiveChats();

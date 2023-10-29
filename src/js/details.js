@@ -47,7 +47,7 @@ class details {
 			responseType: 'json',
 			webCall: wc,
 			success(r) {
-				ui.navigation.hideMenu();
+				ui.navigation.closeMenu();
 				if (!r || Object.keys(r).length < 1) {
 					ui.navigation.openPopup(ui.l('attention'), ui.l('error.detailNotFound'));
 					lists.removeListEntry(id, data.query.indexOf('location_') > -1 ? 'locations' : 'contacts');

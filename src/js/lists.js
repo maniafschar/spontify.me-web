@@ -48,7 +48,7 @@ class lists {
 				var s = callback(r);
 				if (menuIndex > -1)
 					ui.attr(divID, 'menuIndex', menuIndex);
-				ui.navigation.hideMenu();
+				ui.navigation.closeMenu();
 				ui.navigation.closePopup();
 				if (divID) {
 					if (!s)

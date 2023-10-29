@@ -235,6 +235,9 @@ class ui {
 		closeLocationPicker() {
 			DialogLocationPicker.close();
 		},
+		closeMenu(exec) {
+			DialogMenu.close(exec);
+		},
 		closePopup() {
 			return DialogPopup.close();
 		},
@@ -329,8 +332,6 @@ class ui {
 				pageSearch.init();
 			else if (id == 'events')
 				pageEvent.init();
-			else if (id == 'chat')
-				pageChat.init();
 			else if (id == 'content-admin-home')
 				ContentAdminHome.init();
 			else if (id == 'content-admin-marketing')
@@ -378,12 +379,9 @@ class ui {
 					ui.attr(id, 'from', currentID);
 				ui.navigation.closeLocationPicker();
 				ui.navigation.fade(id, back);
-				ui.navigation.hideMenu();
+				ui.navigation.closeMenu();
 				DialogNavigation.highlight(id);
 			}
-		},
-		hideMenu(exec) {
-			DialogMenu.close(exec);
 		},
 		openAGB() {
 			pageInfo.openSection = 1;
@@ -727,13 +725,13 @@ class ui {
 			var o = e2.style.overflow;
 			var t = e2.style.transition;
 			e2.style.overflow = 'hidden';
-			var expand = ui.cssValue(e2, 'display').indexOf('none') > -1;
+			var expand = ui.cssValue(e2, 'display') == 'none';
 			e2.style.height = (expand ? 0 : e2.offsetHeight) + 'px';
-			e2.style.transition = 'height .4s ease-' + (expand ? 'in' : 'out');
 			if (expand)
 				e2.style.display = 'block';
 			setTimeout(function () {
 				var h = parseInt(e2.style.height);
+				e2.style.transition = 'height .4s ease-' + (expand ? 'in' : 'out');
 				ui.on(e2, 'transitionend', function () {
 					e2.style.overflow = o;
 					e2.style.transition = t;

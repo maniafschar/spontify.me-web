@@ -301,7 +301,7 @@ ${v.matchIndicatorHintDescription}
 	static init() {
 		if (!ui.q('contacts').innerHTML)
 			ui.q('contacts').innerHTML = '<list-body></list-body>';
-		if (!ui.q('contacts listResults list-row'))
+		if (!ui.q('contacts listResults list-row') && ui.navigation.getActiveID() != 'contacts')
 			setTimeout(ui.navigation.toggleMenu, 500);
 	}
 	static listContacts(l) {
@@ -528,7 +528,7 @@ class groups {
 			}
 			ui.q('[name="groupdialog"]').setAttribute('checked', 'false');
 			ui.css(e, 'display', '');
-			ui.navigation.hideMenu();
+			ui.navigation.closeMenu();
 		} else {
 			ui.html(activeID + ' listResults', lists.getListNoResults(activeID, 'noGroups'));
 			lists.setListHint('contacts');

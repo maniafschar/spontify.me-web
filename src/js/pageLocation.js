@@ -145,7 +145,7 @@ ${v.rating}
 <field>
 	<label>${ui.l('picture')}</label>
 	<value>
-		<input-image name="image" src="${v.image}"></input-image>
+		<input-image name="image" ${v.image}></input-image>
 	</value>
 </field>
 <dialogButtons>
@@ -336,7 +336,7 @@ ${v.rating}
 		return pageLocation.templateDetail(v);
 	}
 	static edit(id) {
-		ui.navigation.hideMenu();
+		ui.navigation.closeMenu();
 		pageLocation.reopenEvent = false;
 		if (id) {
 			var v = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
@@ -482,16 +482,16 @@ ${v.rating}
 	static save() {
 		DialogPopup.setHint('');
 		var name = ui.q('dialog-popup [name="name"]');
-		var address = ui.q('[name="address"]');
+		var address = ui.q('dialog-popup [name="address"]');
 		formFunc.resetError(name);
 		formFunc.resetError(address);
 		if (!name.value)
 			formFunc.setError(name, 'locations.errorName');
 		else
 			formFunc.validation.filterWords(name);
-		if (!ui.val('[name="description"]'))
-			formFunc.validation.filterWords(ui.q('[name="description"]'));
-		if (!ui.val('[name="address"]'))
+		if (!ui.val('dialog-popup [name="description"]'))
+			formFunc.validation.filterWords(ui.q('dialog-popup [name="description"]'));
+		if (!address.value)
 			formFunc.setError(address, 'locations.errorAddress');
 		else if (address.value.indexOf('\n') < 0) {
 			if (address.value.indexOf(',') < 0)
@@ -503,7 +503,7 @@ ${v.rating}
 			ui.scrollTo('popupContent', 0);
 			return;
 		}
-		var id = ui.val('[name="id"]');
+		var id = ui.val('dialog-popup [name="id"]');
 		var v = formFunc.getForm('dialog-popup form');
 		v.classname = 'Location';
 		if (id)

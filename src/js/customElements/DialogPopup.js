@@ -9,6 +9,7 @@ export { DialogPopup }
 
 class DialogPopup extends HTMLElement {
 	static lastPopup = null;
+	static closingExec = null;
 
 	constructor() {
 		super();
@@ -238,10 +239,11 @@ mapButton::before {
 		var e = ui.q('dialog-popup'), visible = e.style.display != 'none';
 		if (visible && e.getAttribute('modal') == 'true')
 			return false;
+		clearTimeout(this.closingExec);
 		if (global.isBrowser() && location.href.indexOf('#') < 0)
 			history.pushState(null, null, '#x');
 		if (!data || visible && ui.navigation.lastPopup == title + global.separatorTech + data)
-			ui.navigation.closePopup();
+			ui.q('dialog-popup popupTitle').click();
 		else {
 			ui.navigation.lastPopup = title + global.separatorTech + data;
 			var f = function () {
@@ -274,10 +276,18 @@ mapButton::before {
 			};
 			ui.navigation.closeHint();
 			pageChat.closeList();
-			if (!visible)
-				f.call();
-			else
-				ui.navigation.animation(e, 'slideUp', f);
+			if (visible) {
+				ui.q('dialog-popup popupTitle').click();
+				var count = 0;
+				var f2 = function () {
+					if (e.style.display == 'none')
+						f();
+					else if (count++ < 20)
+						this.closingExec = setTimeout(f2, 50);
+				}
+				this.closingExec = setTimeout(f2, 450);
+			} else
+				f();
 		}
 		return true;
 	}
