@@ -83,7 +83,7 @@ class pageChat {
 			ui.navigation.openPopup(ui.l('chat.askInsertCopyLink' + (c > 1 ? 's' : '')), '<div style="text-align:center;margin:1em 0;">' + (c > 1 ? '<div id="askInsertCopyLinkHint">' + ui.l('chat.askInsertCopyLinksBody') + '</div>' : '') + '<div style="text-align:center;margin:1em 0;">' + s2 + '</div><button-text onclick="pageChat.insertLink(&quot;pressed&quot;)" label="chat.send"></button-text></div>');
 			ui.classAdd('dialog-popup .chatLinks', 'pressed');
 		} else
-			ui.navigation.openPopup(ui.l('attention'), ui.l('link.sendError').replace('{0}', '<br/><button-text style="margin:1em;" label="chat.share"></button-text><br/>'));
+			ui.navigation.openPopup(ui.l('attention'), ui.l('link.sendError').replace('{0}', '<br/><br/><button-text style="margin:1em;" label="chat.share"></button-text><br/><br/>'));
 	}
 	static askImage() {
 		if (document.activeElement)

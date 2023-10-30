@@ -211,7 +211,7 @@ class initialisation {
 		});
 		ui.on('dialog-popup', 'click', function (event) {
 			var e = event.target;
-			if (ui.parents(e, 'popupTitle') || !ui.q('dialog-popup input') && !ui.q('dialog-popup textarea') && !ui.q('dialog-popup input-rating') && !ui.q('dialog-popup mapPicker')) {
+			if (ui.parents(e, 'popupTitle') || !ui.q('dialog-popup input') && !ui.q('dialog-popup textarea') && !ui.q('dialog-popup input-rating') && !ui.q('dialog-popup mapPicker') && !ui.q('dialog-popup .selectable')) {
 				while (e && e.getAttribute) {
 					if (e.getAttribute('onclick') || ui.classContains(e, 'selectable'))
 						return;

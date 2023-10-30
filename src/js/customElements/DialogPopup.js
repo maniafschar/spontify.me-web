@@ -1,5 +1,4 @@
 import { global } from '../global';
-import { communication } from '../communication';
 import { pageChat } from '../pageChat';
 import { ui, formFunc } from '../ui';
 import { initialisation } from '../init';
