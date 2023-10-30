@@ -460,12 +460,12 @@ field.checkbox {
 		var today = global.date.getToday();
 		var s = '', v;
 		var current = '';
+		var name, text, flag1, flag2, flag3, image, clazz;
 		for (var i = 0; i < as.length; i++) {
 			if (as[i] == 'outdated')
 				s += '<listSeparator class="highlightColor strong">' + ui.l('events.outdated') + '</listSeparator>';
 			else {
 				v = as[i];
-				var name, text, flag1, flag2, flag3 = '', image, clazz;
 				var startDate = global.date.server2local(v.event.startDate);
 				var s2 = global.date.formatDate(startDate, 'weekdayLong');
 				var s3 = s2.substring(0, s2.lastIndexOf(' '));
@@ -479,8 +479,7 @@ field.checkbox {
 					t = t.substring(t.lastIndexOf(' ') + 1);
 				var skills = ui.getSkills(v.event.id ? v.event : v.contact, 'list');
 				flag1 = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 || !v.id ? 0 : 1).replace('.', ',') : '';
-				if (skills.total && skills.totalMatch / skills.total > 0)
-					flag2 = parseInt('' + (skills.totalMatch / skills.total * 100 + 0.5)) + '%';
+				flag2 = skills.total && skills.totalMatch ? parseInt('' + (skills.totalMatch / skills.total * 100 + 0.5)) + '%' : '';
 				if (v._geolocationDistance && v.latitude)
 					flag3 = '<compass style="transform:rotate('
 						+ geoData.getAngel(geoData.current, { lat: v.latitude, lon: v.longitude }) + 'deg);"></compass>';

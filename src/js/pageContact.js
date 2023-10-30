@@ -306,23 +306,25 @@ ${v.matchIndicatorHintDescription}
 	}
 	static listContacts(l) {
 		var s = '', activeID = ui.navigation.getActiveID();
+		var image, text, flag1, flag2, flag3, birth;
 		for (var i = 1; i < l.length; i++) {
 			var v = model.convert(new Contact(), l, i);
-			var image, text, flag1, flag2, flag3, birth = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
 			if (v.imageList)
 				image = v.imageList;
 			else
 				image = 'contacts';
+			birth = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
 			var skills = ui.getSkills(v, 'list');
 			flag1 = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
-			if (skills.total && skills.totalMatch / skills.total > 0)
-				flag2 = parseInt('' + (skills.totalMatch / skills.total * 100 + 0.5)) + '%';
+			console.log(skills);
+			flag2 = skills.total && skills.totalMatch ? parseInt('' + (skills.totalMatch / skills.total * 100 + 0.5)) + '%' : '';
 			flag3 = v.gender ? '<img source="gender' + v.gender + '"/>' : '';
 			if (!v._message1)
 				v._message1 = skills.text();
 			if (!v._message2)
 				v._message2 = v.description;
-			text = v._message1 ? v._message1 + '<br/>' : '';
+			text = v._message1 ? v._message1 : '';
+			text += '<br/>';
 			text += v._message2 ? v._message2 : '';
 			var oc;
 			if (activeID == 'detail')

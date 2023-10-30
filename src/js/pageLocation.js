@@ -395,15 +395,14 @@ ${v.rating}
 		if (ui.q('locations button-text.map'))
 			ui.q('locations button-text.map').style.display = null;
 		var s = '';
+		var text, image, flag1, flag2, flag3;
 		for (var i = 1; i < l.length; i++) {
 			var v = model.convert(new Location(), l, i);
-			var text = '', image, flag1, flag2, flag3 = '';
 			flag1 = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 || !v.id ? 0 : 1).replace('.', ',') : '';
-			if (v._geolocationDistance && v.latitude)
-				flag3 = '<compass style="transform:rotate('
-					+ geoData.getAngel(geoData.current, { lat: v.latitude, lon: v.longitude }) + 'deg);"></compass>';
-			if (v.description)
-				text = v.description + '<br/>';
+			flag3 = v._geolocationDistance && v.latitude ? '<compass style="transform:rotate('
+				+ geoData.getAngel(geoData.current, { lat: v.latitude, lon: v.longitude }) + 'deg);"></compass>' : '';
+			text = v.description ? v.description : '';
+			text += '<br/>';
 			if (v.address)
 				text += v.address;
 			if (v.imageList)

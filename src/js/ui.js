@@ -656,6 +656,8 @@ class ui {
 	static scrollTo(e, position, exec) {
 		if (typeof e == 'string')
 			e = ui.q(e);
+		if (!e)
+			return;
 		var scrollTopOrg = e.scrollTop;
 		if (scrollTopOrg == position)
 			return;
@@ -895,6 +897,8 @@ class formFunc {
 							e.firstChild.onclick = imgs[i].onclick;
 							if (imgs[i].getAttribute('class'))
 								e.firstChild.setAttribute('class', imgs[i].getAttribute('class'));
+							if (imgs[i].getAttribute('style'))
+								e.firstChild.setAttribute('style', imgs[i].getAttribute('style'));
 							imgs[i].parentNode.replaceChild(e.firstChild, imgs[i]);
 						}
 					} else

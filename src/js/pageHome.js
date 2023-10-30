@@ -278,12 +278,12 @@ border-radius: 0.5em 0 0 3em;
 		}
 		if (id)
 			communication.ajax({
-				url: global.serverApi + 'db/one?query=misc_listNews&search=' + encodeURIComponent('clientNews.id=' + id),
+				url: global.serverApi + 'action/news?id=' + id,
 				webCall: 'pageHome.openNews',
 				responseType: 'json',
 				success(r) {
-					if (r && r['clientNews.url'])
-						ui.navigation.openHTML(r['clientNews.url']);
+					if (r && r.length > 1)
+						ui.navigation.openHTML(model.convert(new ClientNews(), r, 1).url);
 				}
 			});
 		else
