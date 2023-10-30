@@ -316,7 +316,6 @@ ${v.matchIndicatorHintDescription}
 			birth = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
 			var skills = ui.getSkills(v, 'list');
 			flag1 = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
-			console.log(skills);
 			flag2 = skills.total && skills.totalMatch ? parseInt('' + (skills.totalMatch / skills.total * 100 + 0.5)) + '%' : '';
 			flag3 = v.gender ? '<img source="gender' + v.gender + '"/>' : '';
 			if (!v._message1)
