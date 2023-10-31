@@ -148,6 +148,11 @@ input-image {
 	display: block;
 }
 
+input-date {
+	overflow-x: auto;
+	max-width: 100%;
+}
+
 .hidden {
 	display: none !important;
 }
