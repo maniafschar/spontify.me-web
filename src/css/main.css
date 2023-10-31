@@ -582,17 +582,6 @@ qrCheck.negative {
 	margin-bottom: 1em;
 }
 
-.chatLinks.pressed::before {
-	display: block;
-	content: '✓';
-	position: absolute;
-	right: 0;
-	top: 0;
-	font-weight: bold;
-	font-size: 3em;
-	color: rgba(0, 0, 0, 0.3);
-}
-
 chat {
 	z-index: 3;
 }
@@ -889,15 +878,6 @@ emoji {
 	z-index: 2;
 }
 
-.chatLinks {
-	text-align: center;
-	display: inline-block;
-	white-space: nowrap;
-	margin: 0 0.5em;
-	cursor: pointer;
-	position: relative;
-}
-
 chat .chatLinks {
 	padding-top: 0.5em;
 }
@@ -969,16 +949,6 @@ chatMessage.me time {
 
 chatMessage time {
 	right: 1em;
-}
-
-.chatLinks img {
-	border-radius: 2.4em;
-	height: 4.8em;
-}
-
-.chatLinks.pressed::before {
-	right: 0.4em;
-	top: 0.5em;
 }
 
 .chatImg {

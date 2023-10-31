@@ -315,7 +315,7 @@ class Strings {
 				distance: -1,
 				search: encodeURIComponent('(' + search.substring(4) + ')')
 			}, function (l) {
-				var s, e, processed = [], t = l[0][0].substring(0, l[0][0].indexOf('.'));
+				var s, e, processed = [], t = l[0][0].substring(0, l[0][0].indexOf('.')), select;
 				for (var i = 1; i < l.length; i++) {
 					var v = model.convert(t == 'contact' ? new Contact() : new Location(), l, i);
 					var img = v.imageList;
@@ -324,7 +324,10 @@ class Strings {
 					if (img)
 						img = global.serverImg + img;
 					s = t == 'contact' ? v.pseudonym : t == 'location' ? v.name : v.description;
-					e = ui.qa('[name="autoOpen' + (t == 'contact' ? 'p' : t == 'event' ? 'e' : 'l') + '_' + v.id + '"] > img');
+					select = '[name="autoOpen' + (t == 'contact' ? 'p' : t == 'event' ? 'e' : 'l') + '_' + v.id + '"] > img';
+					e = ui.qa(select);
+					if (e.length == 0)
+						e = ui.qa('dialog-popup ' + select);
 					processed[v.id] = 1;
 					if (img) {
 						ui.attr(e, 'src', img);
@@ -362,7 +365,7 @@ class Strings {
 						progressBar: false,
 						webCall: 'global.replaceInternalLinks',
 						success(r) {
-							ui.attr('img[l="' + imgId + '"]', 'src', 'data:image/png;base64,' + r);
+							ui.attr('dialog-popup img[l="' + imgId + '"]', 'src', 'data:image/png;base64,' + r);
 						}
 					});
 				}
