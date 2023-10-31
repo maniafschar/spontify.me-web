@@ -2,7 +2,7 @@ import { communication } from './communication';
 import { geoData } from './geoData';
 import { lists } from './lists';
 import { Contact, Location, model } from './model';
-import { ui } from './ui';
+import { formFunc, ui } from './ui';
 import { user } from './user';
 
 export { global, Strings };
@@ -300,7 +300,7 @@ class Strings {
 						if (!load[table])
 							load[table] = [];
 						load[table].push(id.substring(2));
-						s = s.substring(0, p + 1) + '<span class="chatLinks" name="autoOpen' + id.replace('=', '_') + '" onclick="ui.navigation.autoOpen(&quot;' + s.substring(p + 7, p2) + '&quot;,event);"><img src="images/' + table + '.svg" class="bgColor"/><br/></span>' + s.substring(p2 + 3);
+						s = s.substring(0, p + 1) + '<span class="chatLinks" name="autoOpen' + id.replace('=', '_') + '" onclick="ui.navigation.autoOpen(&quot;' + s.substring(p + 7, p2) + '&quot;,event);"><img/><br/></span>' + s.substring(p2 + 3);
 					}
 				}
 			}
@@ -321,23 +321,25 @@ class Strings {
 					var img = v.imageList;
 					if (!img && t == 'event')
 						img = v.event.imageList;
-					if (img)
-						img = global.serverImg + img;
-					s = t == 'contact' ? v.pseudonym : t == 'location' ? v.name : v.description;
-					select = '[name="autoOpen' + (t == 'contact' ? 'p' : t == 'event' ? 'e' : 'l') + '_' + v.id + '"] > img';
+					s = t == 'contact' ? v.pseudonym : t == 'location' ? v.name : v.event.description;
+					select = '[name="autoOpen' + (t == 'contact' ? 'p' : t == 'event' ? 'e' : 'l') + '_' + (t == 'event' ? v.event.id : v.id) + '"] > img';
 					e = ui.qa(select);
 					if (e.length == 0)
 						e = ui.qa('dialog-popup ' + select);
 					processed[v.id] = 1;
-					if (img) {
-						ui.attr(e, 'src', img);
-						ui.classRemove(e, 'bgColor');
+					if (img)
+						ui.attr(e, 'src', global.serverImg + img);
+					else {
+						ui.attr(e, 'source', t + 's');
+						ui.classAdd(e, 'bgColor');
 					}
 					for (var i2 = 0; i2 < e.length; i2++) {
 						e[i2].parentNode.removeAttribute('name');
-						e[i2].nextSibling.outerHTML = '<br/>' + s;
+						e[i2].nextSibling.outerHTML = '<name>' + s + '</name>';
 					}
 				}
+				formFunc.svg.replaceAll(ui.qa('dialog-popup img[source]'));
+				formFunc.svg.replaceAll(ui.qa('img[source]'));
 				s = search.substring(search.indexOf('(') + 1, search.indexOf(')')).split(t + '.id=');
 				for (var i = 0; i < s.length; i++) {
 					if (s[i].indexOf(' ') > 0)

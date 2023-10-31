@@ -319,9 +319,22 @@ tabBody {
 	}
 }
 
-.chatLinks img {
+.chatLinks name {
+	max-width: 4.8em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: block;
+}
+
+.chatLinks img,
+.chatLinks svg {
 	border-radius: 2.4em;
 	height: 4.8em;
+}
+
+.chatLinks svg {
+	padding: 0.75em;
+	fill: var(--navigation);
 }
 
 .chatLinks.pressed::before {
