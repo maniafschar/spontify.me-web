@@ -103,7 +103,7 @@ class pageLogin {
     <field>
         <label>${ui.l('birthday')}</label>
         <value>
-            <input-date name="birthday" type="birthday" value="${v.birthday}"></input-date>
+            <input-date name="birthday" type="date" min="${v.birthdayMin}" max="${v.birthdayMax}" value="${v.birthday}"></input-date>
         </value>
     </field>
     <field>
@@ -217,6 +217,9 @@ class pageLogin {
 				v.keepLoggedIn = ' checked="true"';
 			if (global.getOS() != 'ios')
 				v.hideApple = ' class="hidden"';
+			var d = new Date();
+			v.birthdayMax = (d = new Date(d.setFullYear(d.getFullYear() - 18))).toISOString().substring(0, 10);
+			v.birthdayMin = new Date(d.setFullYear(d.getFullYear() - 81)).toISOString().substring(0, 10);
 			ui.q('login').innerHTML = pageLogin.template(v);
 			formFunc.initFields(ui.q('login'));
 		}
@@ -604,9 +607,11 @@ class pageLogin {
 		ui.classRemove('login tab', 'tabActive');
 		ui.classAdd(ui.qa('login tab')[2], 'tabActive');
 		ui.css('login tabBody', 'margin-left', '-200%');
-		ui.css('login input[name="name"]', 'position', 'absolute');
-		ui.css('login input[name="name"]', 'right', '200%');
-		ui.qa('login input[name="email"]')[2].value = pageLogin.getDraft().email;
+		if (ui.qa('login input[name="email"]').length > 2) {
+			ui.css('login input[name="name"]', 'position', 'absolute');
+			ui.css('login input[name="name"]', 'right', '200%');
+			ui.qa('login input[name="email"]')[2].value = pageLogin.getDraft().email;
+		}
 	}
 	static swipeLeft() {
 		var x = parseInt(ui.q('login tabBody').style.marginLeft) || 0;

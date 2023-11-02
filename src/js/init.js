@@ -44,7 +44,7 @@ class initialisation {
 	static recoverInvoked = false;
 	static init() {
 		communication.ajax({
-			url: (window.location && window.location.href && window.location.href.indexOf(global.server) == 0 ? '/' : '') + 'css/customElements.css',
+			url: 'css/customElements.css',
 			webCall: 'init.init',
 			success(r) {
 				initialisation.customElementsCss = r;
@@ -338,7 +338,7 @@ class initialisation {
 		ui.classRemove('.langSelectImg', 'pressed');
 		ui.classAdd('.langSelectImg[l="' + lang + '"]', 'pressed');
 		communication.ajax({
-			url: (window.location && window.location.href && window.location.href.indexOf(global.server) == 0 ? '/' : '') + 'js/lang/' + lang + '.json',
+			url: 'js/lang/' + lang + '.json',
 			responseType: 'json',
 			webCall: 'init.setLanguage',
 			error(r) {
@@ -388,7 +388,7 @@ class initialisation {
 		ui.categories = s.categories;
 		ui.labels = s.labels;
 		communication.ajax({
-			url: (window.location && window.location.href && window.location.href.indexOf(global.server) == 0 ? '/' : '') + 'js/lang/' + lang + '.html',
+			url: 'js/lang/' + lang + '.html',
 			webCall: 'init.setLanguageInternal',
 			success(r) {
 				r = r.split('\n\n');

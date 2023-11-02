@@ -1,7 +1,6 @@
 import { bluetooth } from './bluetooth';
 import { communication } from './communication';
 import { global } from './global';
-import { initialisation } from './init';
 import { Contact, Location, model } from './model';
 import { pageContact } from './pageContact';
 import { ui, formFunc } from './ui';
@@ -9,11 +8,10 @@ import { user } from './user';
 import { details } from './details';
 import { pageLocation } from './pageLocation';
 import { pageInfo } from './pageInfo';
-import QRCodeStyling from 'qr-code-styling';
 import { pageLogin } from './pageLogin';
 import { lists } from './lists';
-import { pageHome } from './pageHome';
 import { pageEvent } from './pageEvent';
+import QRCodeStyling from 'qr-code-styling';
 
 export { pageSettings };
 
@@ -70,7 +68,7 @@ class pageSettings {
 <field>
 	<label>${ui.l('birthday')}</label>
 	<value>
-		<input-date type="birthday" name="birthday" value="${v.birthday}"></input-date>
+		<input-date type="date" name="data" value="${v.birthday}" min="${v.birthdayMin}" max="${v.birthdayMax}"></input-date>
 	</value>
 </field>
 <field>
@@ -293,6 +291,9 @@ ${v.info}`;
 					if (v['contact.imageList'])
 						user.contact.imageList = v['contact.imageList'];
 					v.birthday = d;
+					d = new Date();
+					v.birthdayMax = (d = new Date(d.setFullYear(d.getFullYear() - 18))).toISOString().substring(0, 10);
+					v.birthdayMin = new Date(d.setFullYear(d.getFullYear() - 81)).toISOString().substring(0, 10);
 					v.hideNotificationNews = global.config.club ? '' : ' class="hidden"';
 					v['contact.notificationNews'] = v['contact.notificationNews'] == 1 ? ' checked="true"' : '';
 					v['contact.notificationChat'] = v['contact.notificationChat'] == 1 ? ' checked="true"' : '';

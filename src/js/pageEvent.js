@@ -70,13 +70,13 @@ field.checkbox {
 	<field>
 		<label name="startDate">${ui.l('events.start')}</label>
 		<value>
-			<input-date name="startDate" value="${v.startDate}"></input-date>
+			<input-date name="startDate" value="${v.startDate}" min="${v.dateMin}" max="${v.dateMax}"></input-date>
 		</value>
 	</field>
 	<field class="noWTDField" name="endDate" style="display:none;">
 		<label>${ui.l('events.end')}</label>
 		<value>
-			<input-date type="date" name="endDate" value="${v.endDate}" min="${v.today}"></input--date>
+			<input-date type="date" name="endDate" value="${v.endDate}"></input--date>
 		</value>
 	</field>
 	<field>
@@ -316,6 +316,9 @@ field.checkbox {
 			d = global.date.getDateFields(d);
 			v.endDate = d.year + '-' + d.month + '-' + d.day;
 		}
+		d = new Date();
+		v.dateMin = d.toISOString().substring(0, 10);
+		v.dateMax = new Date(d.setFullYear(d.getFullYear() + 5)).toISOString().substring(0, 10);
 		if (id || locationID > 0) {
 			if (locationID > 0) {
 				var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')))
@@ -873,7 +876,6 @@ field.checkbox {
 		}
 	}
 	static save() {
-		var d1, d2;
 		var start = ui.q('dialog-popup input-date[name="startDate"]');
 		var end = ui.q('dialog-popup input-date[name="endDate"]');
 		var price = ui.q('dialog-popup [name="price"]');
@@ -909,7 +911,7 @@ field.checkbox {
 		if (ui.q('dialog-popup [name="repetition"][checked="true"]')) {
 			if (end.getAttribute('complete') == 'false')
 				formFunc.setError(end, 'events.errorDateNoEnd');
-		} else
+		} else if (start.getAttribute('complete') == 'true')
 			end.setAttribute('value', ui.val(start).substring(0, ui.val(start).lastIndexOf(' ')));
 		var v = formFunc.getForm('dialog-popup form');
 		if (!v.values.price)
