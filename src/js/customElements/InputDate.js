@@ -119,7 +119,7 @@ label.filled {
 		if (!e)
 			return;
 		if (value) {
-			e.innerHTML = label ? label : value;
+			e.innerHTML = label || label == 0 ? label : value;
 			e.setAttribute('value', value);
 			ui.classAdd(e, 'filled');
 			if (!this.nowizard) {
@@ -220,14 +220,18 @@ label.filled {
 		this.toggle(e, s);
 	}
 	toggleMonth() {
+		var min = new Date(this.getAttribute('min'));
+		var max = new Date(this.getAttribute('max'));
 		var y = this.get('year').getAttribute('value');
 		if (!y) {
-			var min = new Date(this.getAttribute('min'));
-			var max = new Date(this.getAttribute('max'));
+			this.nowizard = true;
 			this.selectYear((max < new Date() ? max : min).getFullYear());
+			y = this.get('year').getAttribute('value');
+			this.nowizard = false;
 		}
 		var s = '<style>label{padding:0.34em 0.75em;}</style>', e = this.get('month');
-		var i = parseInt(y) == new Date().getFullYear() ? new Date().getMonth() + 1 : 1;
+		var date = max < new Date() ? max : min;
+		var i = parseInt(y) == date.getFullYear() ? date.getMonth() + 1 : 1;
 		for (; i < 13; i++) {
 			s += `<label onclick="InputDate.getField(${this.x}).selectMonth(${i})">${ui.l('date.month' + i)}</label>`;
 			if (i % 3 == 0)
