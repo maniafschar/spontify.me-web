@@ -218,7 +218,7 @@ label.filled {
 		var s = '', e = this.get('hour');
 		for (var i = 0; i < 24; i++) {
 			s += `<label onclick="InputDate.getField(${this.x}).selectHour(${i})" class="time">${i}</label>`;
-			if ((i + 1) % 6 == 0)
+			if ((i + 1) % 4 == 0)
 				s += '<br/>';
 		}
 		this.toggle(e, s, 'Hour');
