@@ -73,6 +73,17 @@ label.filled {
 			return e;
 		return ui.q('input-date[i="' + id + '"]');
 	}
+	resetDay(y, m) {
+		var e = this.get('day');
+		if (e.getAttribute('value')) {
+			var d = parseInt(e.getAttribute('value'));
+			if (new Date(parseInt(y ? y : this.get('year').getAttribute('value')), (m ? m : parseInt(this.get('month').getAttribute('value'))) - 1, d).getDate() != d) {
+				e.innerHTML = ui.l('date.labelDay');
+				e.setAttribute('value', '');
+				ui.classRemove(e, 'filled');
+			}
+		}
+	}
 	select(type) {
 		if (type == 'all') {
 			this._root.querySelector('label').innerHTML = ui.l('events.date');
@@ -95,23 +106,23 @@ label.filled {
 		ui.navigation.closeHint();
 	}
 	selectDay(i) {
-		if (!isNaN(i))
-			this.setValue('Day', i ? ('0' + i).slice(-2) : null, parseInt(i));
+		this.setValue('Day', i ? ('0' + i).slice(-2) : null, parseInt(i));
 	}
 	selectHour(i) {
-		if (!isNaN(i))
-			this.setValue('Hour', i >= 0 ? ('0' + i).slice(-2) : null, parseInt(i));
+		this.setValue('Hour', i >= 0 ? ('0' + i).slice(-2) : null, parseInt(i));
 	}
 	selectMinute(i) {
 		this.setValue('Minute', i >= 0 ? ('0' + i).slice(-2) : null);
 	}
 	selectMonth(i) {
+		this.resetDay(null, i);
 		if (i)
 			this.setValue('Month', ('0' + i).slice(-2), ui.l('date.month' + parseInt(i)).substring(0, 3));
 		else
 			this.setValue('Month', null);
 	}
 	selectYear(i) {
+		this.resetDay(i);
 		this.setValue('Year', i);
 	}
 	setValue(field, value, label) {
