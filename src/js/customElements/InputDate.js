@@ -105,29 +105,18 @@ label.filled {
 		ui.navigation.closeHint();
 	}
 	selectDay(i) {
-		if (i)
-			this.setValue('Day', ('0' + i).slice(-2), parseInt(i));
-		else
-			this.setValue('Day', null);
+		this.setValue('Day', ('0' + i).slice(-2), parseInt(i));
 	}
 	selectHour(i) {
-		if (i)
-			this.setValue('Hour', ('0' + i).slice(-2), parseInt(i));
-		else
-			this.setValue('Hour', null);
+		this.setValue('Hour', ('0' + i).slice(-2), parseInt(i));
 	}
 	selectMinute(i) {
-		this.setValue('Minute', i ? ('0' + i).slice(-2) : null);
+		this.setValue('Minute', ('0' + i).slice(-2));
 	}
 	selectMonth(i) {
-		this.resetDay(null, i);
-		if (i)
-			this.setValue('Month', ('0' + i).slice(-2), ui.l('date.month' + parseInt(i)));
-		else
-			this.setValue('Month', null);
+		this.setValue('Month', ('0' + i).slice(-2), ui.l('date.month' + parseInt(i)));
 	}
 	selectYear(i) {
-		this.resetDay(i);
 		this.setValue('Year', i);
 	}
 	setValue(field, value, label) {
@@ -172,32 +161,28 @@ label.filled {
 		this.setAttribute('value', s);
 		this.setAttribute('complete', '' + (s.length == 10 || s.length == 19));
 	}
-	toggle(e, html, close) {
+	toggle(e, html) {
 		var m = parseInt(ui.cssValue('dialog-hint', 'margin-top'));
 		if (isNaN(m))
 			m = 0;
 		ui.navigation.openHint({
 			desc: '<style>label{z-index:2;position:relative;}label.time{width:4em;text-align:center;}</style><div style="max-height:22em;overflow-y:auto;' + (!close || close == 'Year' ? '' : 'white-space:nowrap;') + (global.getDevice() == 'phone' ? 'font-size:0.8em;' : '') + '">' + html + '</div>',
-			onclose: close ? 'InputDate.getField(' + this.x + ').select' + close + '()' : null,
 			pos: '2%,' + (e.getBoundingClientRect().y + e.getBoundingClientRect().height + ui.emInPX - m) + 'px', size: '96%,auto', hinkyClass: 'top', hinky: 'left:' + (e.getBoundingClientRect().x - ui.q('main').getBoundingClientRect().x + e.getBoundingClientRect().width / 2 - 6) + 'px;',
 			noLogin: true
 		});
 	}
 	toggleDay() {
-		var s = '<style>label{width:2.5em;text-align:center;padding:0.34em 0;}label.weekday{background:transparent;padding:0;cursor:default;}label.weekend{color:rgb(0,0,100);}label.outdated{opacity:0.5;cursor:default;}</style>', e = this.get('day'), m = this.get('month').getAttribute('value'), y = this.get('year').getAttribute('value'), max = 31;
-		if (!y) {
-			this.toggleYear();
-			return;
-		}
+		var s = '<style>label{width:2.5em;text-align:center;padding:0.34em 0;}label.weekday{background:transparent;padding:0;cursor:default;}label.weekend{color:rgb(0,0,100);}label.outdated{opacity:0.5;cursor:default;}</style>';
+		var e = this.get('day'), m = this.get('month').getAttribute('value'), y = this.get('year').getAttribute('value'), max = 31;
+		if (!y)
+			this.selectYear(new Date().getFullYear());
 		if (m) {
 			if (m == '02')
 				max = y && new Date(parseInt(y), 1, 29).getDate() == 29 ? 29 : 28;
 			else if (m == '04' || m == '06' || m == '09' || m == '11')
 				max = 30;
-		} else {
-			this.toggleMonth();
-			return;
-		}
+		} else
+			this.selectMonth(new Date().getMonth() + 1);
 		for (var i = 1; i < 7; i++)
 			s += `<label class="weekday${i < 6 ? '' : ' weekend'}">${ui.l('date.weekday' + i)}</label>`;
 		s += `<label class="weekday weekend">${ui.l('date.weekday0')}</label><br/>`;
@@ -212,7 +197,7 @@ label.filled {
 		}
 		for (var i = (new Date(parseInt(y), parseInt(m) - 1, max).getDay() + 6) % 7; i < 6; i++)
 			s += `<label class="weekday">&nbsp;</label>`;
-		this.toggle(e, s, 'Day');
+		this.toggle(e, s);
 	}
 	toggleHour() {
 		var s = '', e = this.get('hour');
@@ -221,7 +206,7 @@ label.filled {
 			if ((i + 1) % 4 == 0)
 				s += '<br/>';
 		}
-		this.toggle(e, s, 'Hour');
+		this.toggle(e, s);
 	}
 	toggleMinute() {
 		var s = '', e = this.get('minute');
@@ -230,7 +215,7 @@ label.filled {
 			if ((i / 5 + 1) % 4 == 0)
 				s += '<br/>';
 		}
-		this.toggle(e, s, 'Minute');
+		this.toggle(e, s);
 	}
 	toggleMonth() {
 		var y = this.get('year').getAttribute('value');
@@ -245,7 +230,7 @@ label.filled {
 			if (i % 3 == 0)
 				s += '<br/>';
 		}
-		this.toggle(e, s, 'Month');
+		this.toggle(e, s);
 	}
 	toggleSearch() {
 		this.toggle(this, `
@@ -264,6 +249,6 @@ label.filled {
 			var i2 = birthday ? y - i : i;
 			s += `<label onclick="InputDate.getField(${this.x}).selectYear(${i2})">${i2}</label>`;
 		}
-		this.toggle(e, s, 'Year');
+		this.toggle(e, s);
 	}
 }
