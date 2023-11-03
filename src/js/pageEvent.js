@@ -76,7 +76,7 @@ field.checkbox {
 	<field class="noWTDField" name="endDate" style="display:none;">
 		<label>${ui.l('events.end')}</label>
 		<value>
-			<input-date type="date" name="endDate" value="${v.endDate}"></input--date>
+			<input-date type="date" name="endDate" value="${v.endDate}" min="${v.dateMin}" max="${v.dateMax}"></input--date>
 		</value>
 	</field>
 	<field>
@@ -344,6 +344,20 @@ field.checkbox {
 			v.hideOnlineEvent = 'class="hidden"';
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
 		setTimeout(pageEvent.setForm, 400);
+		ui.q('dialog-popup input-checkbox[name="repetition"]').addEventListener('Checkbox', function(event) {
+			var e = ui.q('dialog-popup input-date[name="endDate"]');
+			if (event.detail.value) {
+				e.setAttribute('filter', 'x');
+			} else
+				e.removeAttribute('filter');
+		});
+		ui.q('dialog-popup input-date[name="startDate"]').addEventListener('Date', function(event) {
+			if (event.detail.complete == 'true') {
+				var e = ui.q('dialog-popup input-date[name="endDate"]');
+				var d = new Date(event.detail.value);
+				e.setAttribute('min', new Date(d.setDate(d.getDate() + 1)).toISOString().substring(0, 10));
+			}
+		});
 	}
 	static getCalendarList(data) {
 		if (!data || data.length < 2)
