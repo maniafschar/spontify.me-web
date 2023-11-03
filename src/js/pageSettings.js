@@ -68,7 +68,7 @@ class pageSettings {
 <field>
 	<label>${ui.l('birthday')}</label>
 	<value>
-		<input-date type="date" name="data" value="${v.birthday}" min="${v.birthdayMin}" max="${v.birthdayMax}"></input-date>
+		<input-date type="date" name="birthday" value="${v.birthday}" min="${v.birthdayMin}" max="${v.birthdayMax}"></input-date>
 	</value>
 </field>
 <field>
