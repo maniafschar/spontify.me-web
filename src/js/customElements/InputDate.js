@@ -166,7 +166,7 @@ label.filled {
 		}
 		this.setAttribute('value', s);
 		this.setAttribute('complete', '' + (s.length == 10 || s.length == 19));
-		this.dispatchEvent(new CustomEvent('Date', { detail: { id: this.x, value: s } }));
+		this.dispatchEvent(new CustomEvent('Date', { detail: { id: this.x, value: s, complete: this.getAttribute('complete') } }));
 	}
 	toggle(e, html) {
 		var m = parseInt(ui.cssValue('dialog-hint', 'margin-top'));
