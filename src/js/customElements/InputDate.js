@@ -203,11 +203,13 @@ label.filled {
 		var offset = (new Date(parseInt(y), parseInt(m) - 1, 1).getDay() + 6) % 7, today = new Date();
 		for (var i = 0; i < offset; i++)
 			s += `<label class="weekday">&nbsp;</label>`;
-		var outdated;
+		var outdated, selectable = this.getAttribute('selectable');
 		var maxMonth = parseInt(y) == max.getFullYear() && parseInt(m) == max.getMonth() + 1;
 		var minMonth = parseInt(y) == min.getFullYear() && parseInt(m) == min.getMonth() + 1;
 		for (var i = 1; i <= maxDays; i++) {
 			outdated = maxMonth ? i > max.getDate() : minMonth ? i < min.getDate() : false;
+			if (!outdated && selectable)
+				outdated = selectable.indexOf(new Date(y + '-' + m + '-' + i).toISOString().substring(0, 10)) < 0;
 			s += `<label ${outdated ? 'class="outdated"' : `onclick="InputDate.getField(${this.x}).selectDay(${i})"`} ${!outdated && (i + offset) % 7 > 0 && (i + offset) % 7 < 6 ? '' : ' class="weekend"'}">${i}</label>`;
 			if ((i + offset) % 7 == 0)
 				s += '<br/>';
