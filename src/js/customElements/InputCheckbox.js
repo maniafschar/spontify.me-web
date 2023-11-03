@@ -53,7 +53,9 @@ label {
 				return;
 			ui.attr(e.parentElement.querySelectorAll('input-checkbox[name="' + e.getAttribute('name') + '"][type="radio"]'), 'checked', 'false');
 		}
-		if (alterState)
+		if (alterState) {
 			e.setAttribute('checked', e.getAttribute('checked') == 'true' ? 'false' : 'true');
+			this.dispatchEvent(new CustomEvent('Checkbox', { detail: { value: e.getAttribute('value') } }));
+		}
 	}
 }
