@@ -202,8 +202,11 @@ label.filled {
 		var offset = (new Date(parseInt(y), parseInt(m) - 1, 1).getDay() + 6) % 7, today = new Date();
 		for (var i = 0; i < offset; i++)
 			s += `<label class="weekday">&nbsp;</label>`;
+		var outdated;
+		var maxMonth = parseInt(y) == max.getFullYear() && parseInt(m) == max.getMonth() + 1;
+		var minMonth = parseInt(y) == min.getFullYear() && parseInt(m) == min.getMonth() + 1;
 		for (var i = 1; i <= maxDays; i++) {
-			var outdated = parseInt(y) == today.getFullYear() && parseInt(m) == today.getMonth() + 1 && i < today.getDate();
+			outdated = maxMonth ? i > max.getDate() : minMonth ? i < min.getDate() : false;
 			s += `<label ${outdated ? 'class="outdated"' : `onclick="InputDate.getField(${this.x}).selectDay(${i})"`} ${!outdated && (i + offset) % 7 > 0 && (i + offset) % 7 < 6 ? '' : ' class="weekend"'}">${i}</label>`;
 			if ((i + offset) % 7 == 0)
 				s += '<br/>';
@@ -241,9 +244,8 @@ label.filled {
 			this.nowizard = false;
 		}
 		var s = '<style>label{padding:0.34em 0.75em;}</style>', e = this.get('month');
-		var date = max < new Date() ? max : min;
-		var i = parseInt(y) == date.getFullYear() ? date.getMonth() + 1 : 1;
-		for (; i < 13; i++) {
+		for (var i = parseInt(y) == min.getFullYear() ? date.getMonth() + 1 : 1;
+			i < parseInt(y) == min.getFullYear() ? 13 : date.getMonth() + 1; i++) {
 			s += `<label onclick="InputDate.getField(${this.x}).selectMonth(${i})">${ui.l('date.month' + i)}</label>`;
 			if (i % 3 == 0)
 				s += '<br/>';
