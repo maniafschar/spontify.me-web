@@ -346,10 +346,12 @@ field.checkbox {
 		setTimeout(pageEvent.setForm, 400);
 		ui.q('dialog-popup input-checkbox[name="repetition"]').addEventListener('Checkbox', function(event) {
 			var e = ui.q('dialog-popup input-date[name="endDate"]');
-			if (event.detail.value) {
-				e.setAttribute('filter', 'x');
+			var startDate = ui.q('dialog-popup input-date[name="startDate"]');
+			if (event.detail.value && startDate.getAttribute('complete') == 'true) {
+				var d = new Date(startDate.getAttribute('value'));
+				e.setAttribute('selectable', 'x');
 			} else
-				e.removeAttribute('filter');
+				e.removeAttribute('selectable');
 		});
 		ui.q('dialog-popup input-date[name="startDate"]').addEventListener('Date', function(event) {
 			if (event.detail.complete == 'true') {
