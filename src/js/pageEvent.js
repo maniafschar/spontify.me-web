@@ -344,10 +344,10 @@ field.checkbox {
 			v.hideOnlineEvent = 'class="hidden"';
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
 		setTimeout(pageEvent.setForm, 400);
-		ui.q('dialog-popup input-checkbox[name="repetition"]').addEventListener('Checkbox', function(event) {
+		ui.q('dialog-popup input-checkbox[name="repetition"]').addEventListener('Checkbox', function (event) {
 			var e = ui.q('dialog-popup input-date[name="endDate"]');
 			var startDate = ui.q('dialog-popup input-date[name="startDate"]');
-			if (event.detail.value && startDate.getAttribute('complete') == 'true) {
+			if (event.detail.value && startDate.getAttribute('complete') == 'true') {
 				var d = new Date(startDate.getAttribute('value')), s = '', maxDate = new Date(startDate.getAttribute('max'));
 				while (true) {
 					if (event.detail.value == 'w1')
@@ -357,16 +357,16 @@ field.checkbox {
 					else if (event.detail.value == 'm')
 						d.setMonth(d.getMonth() + 1);
 					else
-						d.setYear(d.getYear() + 1);
+						d.setFullYear(d.getFullYear() + 1);
 					if (d > maxDate)
 						break;
-					s += d.toISOString();
+					s += d.toISOString().substring(0, 10);
 				}
 				e.setAttribute('selectable', s);
 			} else
 				e.removeAttribute('selectable');
 		});
-		ui.q('dialog-popup input-date[name="startDate"]').addEventListener('Date', function(event) {
+		ui.q('dialog-popup input-date[name="startDate"]').addEventListener('Date', function (event) {
 			if (event.detail.complete == 'true') {
 				var e = ui.q('dialog-popup input-date[name="endDate"]');
 				var d = new Date(event.detail.value);

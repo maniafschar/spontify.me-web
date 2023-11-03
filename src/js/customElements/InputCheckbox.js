@@ -55,7 +55,7 @@ label {
 		}
 		if (alterState) {
 			e.setAttribute('checked', e.getAttribute('checked') == 'true' ? 'false' : 'true');
-			this.dispatchEvent(new CustomEvent('Checkbox', { detail: { value: e.getAttribute('value') } }));
+			this.dispatchEvent(new CustomEvent('Checkbox', { detail: { value: e.getAttribute('checked') == 'true' ? e.getAttribute('value') : '' } }));
 		}
 	}
 }

@@ -209,7 +209,7 @@ label.filled {
 		for (var i = 1; i <= maxDays; i++) {
 			outdated = maxMonth ? i > max.getDate() : minMonth ? i < min.getDate() : false;
 			if (!outdated && selectable)
-				outdated = selectable.indexOf(new Date(y + '-' + m + '-' + i).toISOString().substring(0, 10)) < 0;
+				outdated = selectable.indexOf(y + '-' + m + '-' + ('0' + i).slice(-2)) < 0;
 			s += `<label ${outdated ? 'class="outdated"' : `onclick="InputDate.getField(${this.x}).selectDay(${i})"`} ${!outdated && (i + offset) % 7 > 0 && (i + offset) % 7 < 6 ? '' : ' class="weekend"'}">${i}</label>`;
 			if ((i + offset) % 7 == 0)
 				s += '<br/>';
@@ -247,8 +247,8 @@ label.filled {
 			this.nowizard = false;
 		}
 		var s = '<style>label{padding:0.34em 0.75em;}</style>', e = this.get('month');
-		for (var i = parseInt(y) == min.getFullYear() ? date.getMonth() + 1 : 1;
-			i < parseInt(y) == min.getFullYear() ? 13 : date.getMonth() + 1; i++) {
+		for (var i = parseInt(y) == min.getFullYear() ? min.getMonth() + 1 : 1;
+			i < (parseInt(y) == min.getFullYear() ? 13 : min.getMonth() + 1); i++) {
 			s += `<label onclick="InputDate.getField(${this.x}).selectMonth(${i})">${ui.l('date.month' + i)}</label>`;
 			if (i % 3 == 0)
 				s += '<br/>';
