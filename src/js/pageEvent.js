@@ -348,8 +348,21 @@ field.checkbox {
 			var e = ui.q('dialog-popup input-date[name="endDate"]');
 			var startDate = ui.q('dialog-popup input-date[name="startDate"]');
 			if (event.detail.value && startDate.getAttribute('complete') == 'true) {
-				var d = new Date(startDate.getAttribute('value'));
-				e.setAttribute('selectable', 'x');
+				var d = new Date(startDate.getAttribute('value')), s = '', maxDate = new Date(startDate.getAttribute('max'));
+				while (true) {
+					if (event.detail.value == 'w1')
+						d.setDate(d.getDate() + 7);
+					else if (event.detail.value == 'w2')
+						d.setDate(d.getDate() + 14);
+					else if (event.detail.value == 'm')
+						d.setMonth(d.getMonth() + 1);
+					else
+						d.setYear(d.getYear() + 1);
+					if (d > maxDate)
+						break;
+					s += d.toISOString();
+				}
+				e.setAttribute('selectable', s);
 			} else
 				e.removeAttribute('selectable');
 		});
@@ -357,7 +370,8 @@ field.checkbox {
 			if (event.detail.complete == 'true') {
 				var e = ui.q('dialog-popup input-date[name="endDate"]');
 				var d = new Date(event.detail.value);
-				e.setAttribute('min', new Date(d.setDate(d.getDate() + 1)).toISOString().substring(0, 10));
+				d.setDate(d.getDate() + 1);
+				e.setAttribute('min', d.toISOString().substring(0, 10));
 			}
 		});
 	}
