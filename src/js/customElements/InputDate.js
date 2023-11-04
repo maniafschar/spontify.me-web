@@ -67,11 +67,126 @@ label.filled {
 	get(name) {
 		return this._root.querySelector('label[name="' + name + '"]');
 	}
+	getCalendar() {
+		var s = `<style>
+label {
+	width: 2.5em;
+	text-align: center;
+	padding: 0.34em 0;
+}
+label.weekday {
+	background: transparent;
+	padding: 0;
+	cursor: default;
+}
+label.weekend {
+	color: rgb(0,0,100);
+}
+label.outdated {
+	opacity: 0.5;
+	cursor: default;
+}
+prev,
+next {
+	position: absolute;
+	width: 1.5em;
+	font-size: 2em;
+	height: 85%;
+	top: 15%;
+	padding-top: 2em;
+	opacity: 0.15;
+	cursor: pointer;
+}
+prev {
+	left: 0;
+}
+prev::after {
+	content: '<';
+}
+next {
+	right: 0;
+}
+next::after {
+	content: '>';
+}
+</style>`;
+		var m = this.get('month').getAttribute('value'), y = this.get('year').getAttribute('value'), maxDays = 31;
+		var min = new Date(this.getAttribute('min'));
+		var max = new Date(this.getAttribute('max'));
+		this.nowizard = true;
+		if (!y) {
+			this.selectYear((max < new Date() ? max : min).getFullYear());
+			y = this.get('year').getAttribute('value');
+		}
+		if (!m) {
+			this.selectMonth((max < new Date() ? max : min).getMonth() + 1);
+			m = this.get('month').getAttribute('value');
+		}
+		this.nowizard = false;
+		if (m == '02')
+			maxDays = y && new Date(parseInt(y), 1, 29).getDate() == 29 ? 29 : 28;
+		else if (m == '04' || m == '06' || m == '09' || m == '11')
+			maxDays = 30;
+		for (var i = 1; i < 7; i++)
+			s += `<label class="weekday${i < 6 ? '' : ' weekend'}">${ui.l('date.weekday' + i)}</label>`;
+		s += `<label class="weekday weekend">${ui.l('date.weekday0')}</label><br/>`;
+		var offset = (new Date(parseInt(y), parseInt(m) - 1, 1).getDay() + 6) % 7, today = new Date();
+		for (var i = 0; i < offset; i++)
+			s += `<label class="weekday">&nbsp;</label>`;
+		var outdated, selectable = this.getAttribute('selectable');
+		var maxMonth = parseInt(y) == max.getFullYear() && parseInt(m) == max.getMonth() + 1;
+		var minMonth = parseInt(y) == min.getFullYear() && parseInt(m) == min.getMonth() + 1;
+		for (var i = 1; i <= maxDays; i++) {
+			outdated = maxMonth ? i > max.getDate() : minMonth ? i < min.getDate() : false;
+			if (!outdated && selectable)
+				outdated = selectable.indexOf(y + '-' + m + '-' + ('0' + i).slice(-2)) < 0;
+			s += `<label ${outdated ? 'class="outdated"' : `onclick="InputDate.getField(${this.x}).selectDay(${i})"`} ${!outdated && (i + offset) % 7 > 0 && (i + offset) % 7 < 6 ? '' : ' class="weekend"'}">${i}</label>`;
+			if ((i + offset) % 7 == 0)
+				s += '<br/>';
+		}
+		for (var i = (new Date(parseInt(y), parseInt(m) - 1, maxDays).getDay() + 6) % 7; i < 6; i++)
+			s += `<label class="weekday">&nbsp;</label>`;
+		s += `<prev onclick="InputDate.getField(${this.x}).prevMonth(event)"></prev>`;
+		s += `<next onclick="InputDate.getField(${this.x}).nextMonth(event)"></next>`;
+		return s;
+	}
 	static getField(id) {
 		var e = ui.q('dialog-popup input-date[i="' + id + '"]');
 		if (e)
 			return e;
 		return ui.q('input-date[i="' + id + '"]');
+	}
+	nextMonth(event) {
+		event.preventDefault();
+		event.stopPropagation();
+		var m = parseInt(this.get('month').getAttribute('value')) + 1;
+		var y = parseInt(this.get('year').getAttribute('value'));
+		if (m > 12) {
+			++y;
+			m = 1;
+		}
+		var max = new Date(this.getAttribute('max'));
+		if (y <= max.getFullYear() && (y != max.getFullYear() || m <= max.getMonth() + 1)) {
+			this.selectYear(y);
+			this.selectMonth(m);
+			ui.q('dialog-hint span>div').innerHTML = this.getCalendar();
+		}
+	}
+	prevMonth(event) {
+		event.preventDefault();
+		event.stopPropagation();
+		var m = parseInt(this.get('month').getAttribute('value')) - 1;
+		var y = parseInt(this.get('year').getAttribute('value'));
+		if (m < 1) {
+			--y;
+			m = 12;
+		}
+		var min = new Date(this.getAttribute('min'));
+		if (y >= min.getFullYear() && (y != min.getFullYear() || m >= min.getMonth() + 1)) {
+			this.selectYear(y);
+			this.selectMonth(m);
+			ui.q('dialog-hint span>div').innerHTML = this.getCalendar();
+		}
 	}
 	resetDay(y, m) {
 		var e = this.get('day');
@@ -179,44 +294,7 @@ label.filled {
 		});
 	}
 	toggleDay() {
-		var s = '<style>label{width:2.5em;text-align:center;padding:0.34em 0;}label.weekday{background:transparent;padding:0;cursor:default;}label.weekend{color:rgb(0,0,100);}label.outdated{opacity:0.5;cursor:default;}</style>';
-		var e = this.get('day'), m = this.get('month').getAttribute('value'), y = this.get('year').getAttribute('value'), maxDays = 31;
-		var min = new Date(this.getAttribute('min'));
-		var max = new Date(this.getAttribute('max'));
-		this.nowizard = true;
-		if (!y) {
-			this.selectYear((max < new Date() ? max : min).getFullYear());
-			y = this.get('year').getAttribute('value');
-		}
-		if (!m) {
-			this.selectMonth((max < new Date() ? max : min).getMonth() + 1);
-			m = this.get('month').getAttribute('value');
-		}
-		this.nowizard = false;
-		if (m == '02')
-			maxDays = y && new Date(parseInt(y), 1, 29).getDate() == 29 ? 29 : 28;
-		else if (m == '04' || m == '06' || m == '09' || m == '11')
-			maxDays = 30;
-		for (var i = 1; i < 7; i++)
-			s += `<label class="weekday${i < 6 ? '' : ' weekend'}">${ui.l('date.weekday' + i)}</label>`;
-		s += `<label class="weekday weekend">${ui.l('date.weekday0')}</label><br/>`;
-		var offset = (new Date(parseInt(y), parseInt(m) - 1, 1).getDay() + 6) % 7, today = new Date();
-		for (var i = 0; i < offset; i++)
-			s += `<label class="weekday">&nbsp;</label>`;
-		var outdated, selectable = this.getAttribute('selectable');
-		var maxMonth = parseInt(y) == max.getFullYear() && parseInt(m) == max.getMonth() + 1;
-		var minMonth = parseInt(y) == min.getFullYear() && parseInt(m) == min.getMonth() + 1;
-		for (var i = 1; i <= maxDays; i++) {
-			outdated = maxMonth ? i > max.getDate() : minMonth ? i < min.getDate() : false;
-			if (!outdated && selectable)
-				outdated = selectable.indexOf(y + '-' + m + '-' + ('0' + i).slice(-2)) < 0;
-			s += `<label ${outdated ? 'class="outdated"' : `onclick="InputDate.getField(${this.x}).selectDay(${i})"`} ${!outdated && (i + offset) % 7 > 0 && (i + offset) % 7 < 6 ? '' : ' class="weekend"'}">${i}</label>`;
-			if ((i + offset) % 7 == 0)
-				s += '<br/>';
-		}
-		for (var i = (new Date(parseInt(y), parseInt(m) - 1, maxDays).getDay() + 6) % 7; i < 6; i++)
-			s += `<label class="weekday">&nbsp;</label>`;
-		this.toggle(e, s);
+		this.toggle(this.get('day'), this.getCalendar());
 	}
 	toggleHour() {
 		var s = '', e = this.get('hour');
