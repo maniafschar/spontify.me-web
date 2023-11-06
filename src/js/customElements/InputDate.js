@@ -5,8 +5,8 @@ import { ui } from '../ui';
 export { InputDate }
 
 class InputDate extends HTMLElement {
-	x = 0;
 	nowizard = false;
+	x = 0;
 	constructor() {
 		super();
 		this._root = this.attachShadow({ mode: 'closed' });
@@ -60,6 +60,8 @@ label.filled {
 				element.setAttribute('name', 'minute');
 				this._root.appendChild(element);
 			}
+			if (this.getAttribute('scroll'))
+				ui.on(this.getAttribute('scroll'), 'scroll', this.scroll);
 		}
 		this.tabIndex = 0;
 		this.select(this.getAttribute('value'));
@@ -198,6 +200,12 @@ next::after {
 				ui.classRemove(e, 'filled');
 			}
 		}
+	}
+	scroll() {
+		var m = parseInt(ui.cssValue('dialog-hint', 'margin-top'));
+		if (isNaN(m))
+			m = 0;
+		ui.q('dialog-hint').style.top = this.getBoundingClientRect().y + this.getBoundingClientRect().height + ui.emInPX - m;
 	}
 	select(type) {
 		if (type == 'all') {
