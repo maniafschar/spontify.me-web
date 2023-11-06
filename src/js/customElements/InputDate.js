@@ -67,6 +67,12 @@ label.filled {
 		this.tabIndex = 0;
 		this.select(this.getAttribute('value'));
 	}
+	static get observedAttributes() { return ['min', 'max']; }
+	attributeChangedCallback(name, oldValue, newValue) {
+		this.resetYear();
+		this.resetMonth();
+		this.resetDay();
+	}
 	get(name) {
 		return this._root.querySelector('label[name="' + name + '"]');
 	}
@@ -191,16 +197,20 @@ next::after {
 			ui.q('dialog-hint span>div').innerHTML = this.getCalendar();
 		}
 	}
-	resetDay(y, m) {
-		var e = this.get('day');
-		if (e.getAttribute('value')) {
-			var d = parseInt(e.getAttribute('value'));
-			if (new Date(parseInt(y ? y : this.get('year').getAttribute('value')), (m ? m : parseInt(this.get('month').getAttribute('value'))) - 1, d).getDate() != d) {
-				e.innerHTML = ui.l('date.labelDay');
-				e.setAttribute('value', '');
-				ui.classRemove(e, 'filled');
-			}
-		}
+	resetDay() {
+		var min = new Date(this.getAttribute('min')), max = new Date(this.getAttribute('max'));
+		var d = new Date(this.get('year').getAttribute('value') + '-' + this.get('month').getAttribute('value') + '-' + this.get('day').getAttribute('value'));
+		this.selectDay(min > d ? min.getDate() : d > max ? max.getDate() : d.getDate() != parseInt(this.get('day').getAttribute('value')) ? 1 : d.getDate());
+	}
+	resetMonth() {
+		var min = new Date(this.getAttribute('min')), max = new Date(this.getAttribute('max'));
+		var d = new Date(this.get('year').getAttribute('value') + '-' + this.get('month').getAttribute('value') + '-' + this.get('day').getAttribute('value'));
+		this.selectMonth((min > d ? min.getMonth() : d > max ? max.getMonth() : d.getMonth()) + 1);
+	}
+	resetYear() {
+		var min = new Date(this.getAttribute('min')), max = new Date(this.getAttribute('max'));
+		var d = new Date(this.get('year').getAttribute('value') + '-' + this.get('month').getAttribute('value') + '-' + this.get('day').getAttribute('value'));
+		this.selectYear(min > d ? min.getFullYear() : d > max ? max.getFullYear() : d.getFullYear());
 	}
 	scroll() {
 		var e = ui.q('dialog-hint span>style[i^="calendar"]');
@@ -246,15 +256,16 @@ next::after {
 		this.setValue('Minute', i >= 0 ? ('0' + i).slice(-2) : null);
 	}
 	selectMonth(i) {
-		this.resetDay(null, i);
 		if (i)
 			this.setValue('Month', ('0' + i).slice(-2), ui.l('date.month' + parseInt(i)).substring(0, 3));
 		else
 			this.setValue('Month', null);
+		this.resetDay();
 	}
 	selectYear(i) {
-		this.resetDay(i);
 		this.setValue('Year', i);
+		this.resetMonth();
+		this.resetDay();
 	}
 	setValue(field, value, label) {
 		var e = this.get(field.toLowerCase());
@@ -343,7 +354,7 @@ next::after {
 		}
 		var s = '<style>label{padding:0.34em 0.75em;}</style>', e = this.get('month');
 		for (var i = parseInt(y) == min.getFullYear() ? min.getMonth() + 1 : 1;
-			i < (parseInt(y) == min.getFullYear() ? 13 : min.getMonth() + 1); i++) {
+			i < (parseInt(y) == max.getFullYear() ? max.getMonth() + 1 : 13); i++) {
 			s += `<label onclick="InputDate.getField(${this.x}).selectMonth(${i})">${ui.l('date.month' + i)}</label>`;
 			if (i % 3 == 0)
 				s += '<br/>';
