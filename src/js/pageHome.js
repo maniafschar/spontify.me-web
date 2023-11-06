@@ -178,8 +178,7 @@ border-radius: 0.5em 0 0 3em;
 		if (force || !ui.q('home teaser.events>div card')) {
 			var v = {
 				actionLogo: global.config.club ? 'pageHome.openNews(null,event)' :
-					user.contact ? 'ui.navigation.goTo(&quot;settings&quot;)' :
-						'pageHome.openHint()'
+					user.contact ? 'ui.navigation.goTo(&quot;settings&quot;)' : ''
 			};
 			v.statsButton = ' hidden';
 			if (user.contact) {
