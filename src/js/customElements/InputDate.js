@@ -38,16 +38,16 @@ label.filled {
 			element.innerText = ui.l('events.date');
 			this._root.appendChild(element);
 		} else {
-			element.setAttribute('onclick', 'this.getRootNode().host.toggleYear()');
-			element.setAttribute('name', 'year');
+			element.setAttribute('onclick', 'this.getRootNode().host.toggleDay()');
+			element.setAttribute('name', 'day');
 			this._root.appendChild(element);
 			element = document.createElement('label')
 			element.setAttribute('onclick', 'this.getRootNode().host.toggleMonth()');
 			element.setAttribute('name', 'month');
 			this._root.appendChild(element);
 			element = document.createElement('label')
-			element.setAttribute('onclick', 'this.getRootNode().host.toggleDay()');
-			element.setAttribute('name', 'day');
+			element.setAttribute('onclick', 'this.getRootNode().host.toggleYear()');
+			element.setAttribute('name', 'year');
 			this._root.appendChild(element);
 			if (this.getAttribute('type') != 'date') {
 				element = document.createElement('label')
@@ -60,8 +60,9 @@ label.filled {
 				element.setAttribute('name', 'minute');
 				this._root.appendChild(element);
 			}
-			if (this.getAttribute('scroll'))
+			if (this.getAttribute('scroll')) {
 				ui.on(this.getAttribute('scroll'), 'scroll', this.scroll);
+			}
 		}
 		this.tabIndex = 0;
 		this.select(this.getAttribute('value'));
@@ -202,11 +203,16 @@ next::after {
 		}
 	}
 	scroll() {
-		if (ui.q('dialog-hint style[i="calendar"]')) {
+		var e = ui.q('dialog-hint span>style[i^="calendar"]');
+		if (e) {
+			var selector = 'input-date[i="' + e.getAttribute('i').substring(8) + '"]';
+			e = ui.q('dialog-popup ' + selector);
+			if (!e)
+				e = ui.q(selector);
 			var m = parseInt(ui.cssValue('dialog-hint', 'margin-top'));
 			if (isNaN(m))
 				m = 0;
-			ui.q('dialog-hint').style.top = this.getBoundingClientRect().y + this.getBoundingClientRect().height + ui.emInPX - m;
+			ui.q('dialog-hint').style.top = (e.getBoundingClientRect().y + e.getBoundingClientRect().height + ui.emInPX - m) + 'px';
 		}
 	}
 	select(type) {
@@ -297,9 +303,10 @@ next::after {
 		var m = parseInt(ui.cssValue('dialog-hint', 'margin-top'));
 		if (isNaN(m))
 			m = 0;
+		var hinkyX = Math.max(e.getBoundingClientRect().x - ui.q('main').getBoundingClientRect().x + e.getBoundingClientRect().width / 2 - 6, ui.emInPX * 1.5);
 		ui.navigation.openHint({
-			desc: '<style i="calendar">label{z-index:2;position:relative;}label.time{width:4em;text-align:center;}</style><div style="max-height:22em;overflow-y:auto;' + (global.getDevice() == 'phone' ? 'font-size:0.8em;' : '') + '">' + html + '</div>',
-			pos: '2%,' + (e.getBoundingClientRect().y + e.getBoundingClientRect().height + ui.emInPX - m) + 'px', size: '96%,auto', hinkyClass: 'top', hinky: 'left:' + (e.getBoundingClientRect().x - ui.q('main').getBoundingClientRect().x + e.getBoundingClientRect().width / 2 - 6) + 'px;',
+			desc: '<style i="calendar' + this.x + '">label{z-index:2;position:relative;}label.time{width:4em;text-align:center;}</style><div style="max-height:22em;overflow-y:auto;' + (global.getDevice() == 'phone' ? 'font-size:0.8em;' : '') + '">' + html + '</div>',
+			pos: '2%,' + (e.getBoundingClientRect().y + e.getBoundingClientRect().height + ui.emInPX - m) + 'px', size: '96%,auto', hinkyClass: 'top', hinky: 'left:' + hinkyX + 'px;',
 			noLogin: true
 		});
 	}

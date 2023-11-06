@@ -10,6 +10,7 @@ import { pageLocation } from './pageLocation';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 import { DialogPopup } from './customElements/DialogPopup';
+import { DialogHint } from './customElements/DialogHint';
 
 export { pageEvent };
 
@@ -76,7 +77,7 @@ field.checkbox {
 	<field class="noWTDField" name="endDate" style="display:none;">
 		<label>${ui.l('events.end')}</label>
 		<value>
-			<input-date type="date" name="endDate" value="${v.endDate}" min="${v.dateMin}" max="${v.dateMax}" scroll="dialog-popup popupContent div"></input--date>
+			<input-date type="date" name="endDate" value="${v.endDate}" min="${v.dateMin}" max="${v.dateMax}"></input--date>
 		</value>
 	</field>
 	<field>
@@ -344,17 +345,17 @@ field.checkbox {
 			v.hideOnlineEvent = 'class="hidden"';
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
 		setTimeout(pageEvent.setForm, 400);
-		ui.q('dialog-popup input-checkbox[name="repetition"]').addEventListener('Checkbox', function (event) {
+		var selectable = function (value) {
 			var e = ui.q('dialog-popup input-date[name="endDate"]');
 			var startDate = ui.q('dialog-popup input-date[name="startDate"]');
-			if (event.detail.value && startDate.getAttribute('complete') == 'true') {
+			if (value && startDate.getAttribute('complete') == 'true') {
 				var d = new Date(startDate.getAttribute('value')), s = '', maxDate = new Date(startDate.getAttribute('max'));
 				while (true) {
-					if (event.detail.value == 'w1')
+					if (value == 'w1')
 						d.setDate(d.getDate() + 7);
-					else if (event.detail.value == 'w2')
+					else if (value == 'w2')
 						d.setDate(d.getDate() + 14);
-					else if (event.detail.value == 'm')
+					else if (value == 'm')
 						d.setMonth(d.getMonth() + 1);
 					else
 						d.setFullYear(d.getFullYear() + 1);
@@ -365,6 +366,10 @@ field.checkbox {
 				e.setAttribute('selectable', s);
 			} else
 				e.removeAttribute('selectable');
+		}
+		ui.on('dialog-popup input-checkbox[name="repetition"]', 'Checkbox', function (event) {
+			DialogHint.close();
+			selectable(event.detail.value);
 		});
 		ui.q('dialog-popup input-date[name="startDate"]').addEventListener('Date', function (event) {
 			if (event.detail.complete == 'true') {
@@ -374,6 +379,7 @@ field.checkbox {
 				e.setAttribute('min', d.toISOString().substring(0, 10));
 			}
 		});
+		selectable(v.repetition);
 	}
 	static getCalendarList(data) {
 		if (!data || data.length < 2)
