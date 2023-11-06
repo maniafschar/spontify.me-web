@@ -202,10 +202,12 @@ next::after {
 		}
 	}
 	scroll() {
-		var m = parseInt(ui.cssValue('dialog-hint', 'margin-top'));
-		if (isNaN(m))
-			m = 0;
-		ui.q('dialog-hint').style.top = this.getBoundingClientRect().y + this.getBoundingClientRect().height + ui.emInPX - m;
+		if (ui.q('dialog-hint style[i="calendar"]')) {
+			var m = parseInt(ui.cssValue('dialog-hint', 'margin-top'));
+			if (isNaN(m))
+				m = 0;
+			ui.q('dialog-hint').style.top = this.getBoundingClientRect().y + this.getBoundingClientRect().height + ui.emInPX - m;
+		}
 	}
 	select(type) {
 		if (type == 'all') {
@@ -296,7 +298,7 @@ next::after {
 		if (isNaN(m))
 			m = 0;
 		ui.navigation.openHint({
-			desc: '<style>label{z-index:2;position:relative;}label.time{width:4em;text-align:center;}</style><div style="max-height:22em;overflow-y:auto;' + (global.getDevice() == 'phone' ? 'font-size:0.8em;' : '') + '">' + html + '</div>',
+			desc: '<style i="calendar">label{z-index:2;position:relative;}label.time{width:4em;text-align:center;}</style><div style="max-height:22em;overflow-y:auto;' + (global.getDevice() == 'phone' ? 'font-size:0.8em;' : '') + '">' + html + '</div>',
 			pos: '2%,' + (e.getBoundingClientRect().y + e.getBoundingClientRect().height + ui.emInPX - m) + 'px', size: '96%,auto', hinkyClass: 'top', hinky: 'left:' + (e.getBoundingClientRect().x - ui.q('main').getBoundingClientRect().x + e.getBoundingClientRect().width / 2 - 6) + 'px;',
 			noLogin: true
 		});
