@@ -70,13 +70,13 @@ field.checkbox {
 	<field>
 		<label name="startDate">${ui.l('events.start')}</label>
 		<value>
-			<input-date name="startDate" value="${v.startDate}" min="${v.dateMin}" max="${v.dateMax}"></input-date>
+			<input-date name="startDate" value="${v.startDate}" min="${v.dateMin}" max="${v.dateMax}" scroll="dialog-popup popupContent div"></input-date>
 		</value>
 	</field>
 	<field class="noWTDField" name="endDate" style="display:none;">
 		<label>${ui.l('events.end')}</label>
 		<value>
-			<input-date type="date" name="endDate" value="${v.endDate}" min="${v.dateMin}" max="${v.dateMax}"></input--date>
+			<input-date type="date" name="endDate" value="${v.endDate}" min="${v.dateMin}" max="${v.dateMax}" scroll="dialog-popup popupContent div"></input--date>
 		</value>
 	</field>
 	<field>
