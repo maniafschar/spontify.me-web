@@ -5,8 +5,10 @@
         if (window.opener && window.opener.FB) {
             window.opener.FB.oauthCallback(window.location.href);
             window.close();
-        } else
-            window.location = 'fcbayerntotal.fan-club://?' + window.location.hash;
+        } else {
+            var s = document.querySelector('head>link[rel="canonical"]').getAttribute('href');
+            window.location = s.substring(s.indexOf('://') + 3, s.lastIndexOf('.')) + '://?' + window.location.hash;
+        }
     </script>
 </body>
 
