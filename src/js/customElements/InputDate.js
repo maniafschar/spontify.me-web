@@ -160,13 +160,20 @@ next::after {
 		return s;
 	}
 	static getField(id) {
-		var e = ui.q('dialog-popup input-date[i="' + id + '"]');
-		if (e)
-			return e;
-		return ui.q('input-date[i="' + id + '"]');
+		var e;
+		if (!id) {
+			e = ui.q('dialog-hint span>style[i^="calendar"]');
+			if (e)
+				id = e.getAttribute('i').substring(8);
+		}
+		if (id) {
+			e = ui.q('dialog-popup input-date[i="' + id + '"]');
+			if (e)
+				return e;
+			return ui.q('input-date[i="' + id + '"]');
+		}
 	}
 	nextMonth(event) {
-		event.preventDefault();
 		event.stopPropagation();
 		var m = parseInt(this.get('month').getAttribute('value')) + 1;
 		var y = parseInt(this.get('year').getAttribute('value'));
@@ -182,7 +189,6 @@ next::after {
 		}
 	}
 	prevMonth(event) {
-		event.preventDefault();
 		event.stopPropagation();
 		var m = parseInt(this.get('month').getAttribute('value')) - 1;
 		var y = parseInt(this.get('year').getAttribute('value'));
@@ -198,27 +204,29 @@ next::after {
 		}
 	}
 	resetDay() {
-		var min = new Date(this.getAttribute('min')), max = new Date(this.getAttribute('max'));
-		var d = new Date(this.get('year').getAttribute('value') + '-' + this.get('month').getAttribute('value') + '-' + this.get('day').getAttribute('value'));
-		this.selectDay(min > d ? min.getDate() : d > max ? max.getDate() : d.getDate() != parseInt(this.get('day').getAttribute('value')) ? 1 : d.getDate());
+		if (this.get('year')) {
+			var min = new Date(this.getAttribute('min')), max = new Date(this.getAttribute('max'));
+			var d = new Date(this.get('year').getAttribute('value') + '-' + this.get('month').getAttribute('value') + '-' + this.get('day').getAttribute('value'));
+			this.selectDay(min > d ? min.getDate() : d > max ? max.getDate() : d.getDate() != parseInt(this.get('day').getAttribute('value')) ? 1 : d.getDate());
+		}
 	}
 	resetMonth() {
-		var min = new Date(this.getAttribute('min')), max = new Date(this.getAttribute('max'));
-		var d = new Date(this.get('year').getAttribute('value') + '-' + this.get('month').getAttribute('value') + '-' + this.get('day').getAttribute('value'));
-		this.selectMonth((min > d ? min.getMonth() : d > max ? max.getMonth() : d.getMonth()) + 1);
+		if (this.get('year')) {
+			var min = new Date(this.getAttribute('min')), max = new Date(this.getAttribute('max'));
+			var d = new Date(this.get('year').getAttribute('value') + '-' + this.get('month').getAttribute('value') + '-' + this.get('day').getAttribute('value'));
+			this.selectMonth((min > d ? min.getMonth() : d > max ? max.getMonth() : d.getMonth()) + 1);
+		}
 	}
 	resetYear() {
-		var min = new Date(this.getAttribute('min')), max = new Date(this.getAttribute('max'));
-		var d = new Date(this.get('year').getAttribute('value') + '-' + this.get('month').getAttribute('value') + '-' + this.get('day').getAttribute('value'));
-		this.selectYear(min > d ? min.getFullYear() : d > max ? max.getFullYear() : d.getFullYear());
+		if (this.get('year')) {
+			var min = new Date(this.getAttribute('min')), max = new Date(this.getAttribute('max'));
+			var d = new Date(this.get('year').getAttribute('value') + '-' + this.get('month').getAttribute('value') + '-' + this.get('day').getAttribute('value'));
+			this.selectYear(min > d ? min.getFullYear() : d > max ? max.getFullYear() : d.getFullYear());
+		}
 	}
 	scroll() {
-		var e = ui.q('dialog-hint span>style[i^="calendar"]');
+		var e = InputDate.getField();
 		if (e) {
-			var selector = 'input-date[i="' + e.getAttribute('i').substring(8) + '"]';
-			e = ui.q('dialog-popup ' + selector);
-			if (!e)
-				e = ui.q(selector);
 			var m = parseInt(ui.cssValue('dialog-hint', 'margin-top'));
 			if (isNaN(m))
 				m = 0;
@@ -316,9 +324,19 @@ next::after {
 			m = 0;
 		var hinkyX = Math.max(e.getBoundingClientRect().x - ui.q('main').getBoundingClientRect().x + e.getBoundingClientRect().width / 2 - 6, ui.emInPX * 1.5);
 		ui.navigation.openHint({
+			onclick: 'return',
 			desc: '<style i="calendar' + this.x + '">label{z-index:2;position:relative;}label.time{width:4em;text-align:center;}</style><div style="max-height:22em;overflow-y:auto;' + (global.getDevice() == 'phone' ? 'font-size:0.8em;' : '') + '">' + html + '</div>',
 			pos: '2%,' + (e.getBoundingClientRect().y + e.getBoundingClientRect().height + ui.emInPX - m) + 'px', size: '96%,auto', hinkyClass: 'top', hinky: 'left:' + hinkyX + 'px;',
 			noLogin: true
+		});
+		ui.swipe('dialog-hint div', function (dir, event) {
+			var e = InputDate.getField();
+			if (e) {
+				if (dir == 'left')
+					e.nextMonth(event);
+				else if (dir == 'right')
+					e.prevMonth(event);
+			}
 		});
 	}
 	toggleDay() {
