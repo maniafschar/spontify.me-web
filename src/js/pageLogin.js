@@ -265,7 +265,6 @@ class pageLogin {
 					}
 					pageHome.init(true);
 					communication.afterLogin();
-					setTimeout(communication.notification.register, 100);
 					pageChat.initActiveChats();
 					geoData.init();
 					bluetooth.init();

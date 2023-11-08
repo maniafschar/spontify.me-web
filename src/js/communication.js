@@ -23,6 +23,8 @@ class communication {
 	static afterLogin() {
 		communication.ping();
 		WebSocket.connect();
+		if (!global.isBrowser())
+			setTimeout(communication.notification.register, 100);
 	}
 	static ajax(param) {
 		for (var i = 0; i < communication.currentCalls.length; i++) {
@@ -160,8 +162,6 @@ class communication {
 			ui.navigation.autoOpen(e.exec);
 		},
 		register() {
-			if (global.isBrowser())
-				return;
 			window.cordova.plugins.firebase.messaging.requestPermission().then(function () {
 				var f = function () {
 					window.cordova.plugins.firebase.messaging.getToken(global.getOS() == 'ios' ? 'apns-string' : null).then(function (token) {
