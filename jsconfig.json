@@ -3,6 +3,8 @@
 		"target": "es2017",
 		"module": "commonjs",
 		"baseUrl": "./src",
+                "noImplicitAny": true,
+		"esModuleInterop": true,
 		"checkJs": true
 	}
 }
