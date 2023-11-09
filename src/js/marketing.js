@@ -182,7 +182,7 @@ b{
 		var q = marketing.data.storage.questions[index];
 		var s = q.question + '<br/><answers' + (q.textField ? ' style="width:100%;"' : '') + '>';
 		for (var i = 0; i < q.answers.length; i++)
-			s += '<br/><input-checkbox' + (q.multiple ? '' : ' type="radio" next="' + q.answers[i].next + '"') + ' name="answers" value="' + i + '" label="' + q.answers[i].answer + '" checked="' + (marketing.answers['q' + index]?.a.includes(i) ? true : false) + '"></input-checkbox>';
+			s += '<br/><input-checkbox' + (q.multiple ? '' : ' type="radio" next="' + (q.answers[i].next ? q.answers[i].next : '') + '"') + ' name="answers" value="' + i + '" label="' + q.answers[i].answer + '" checked="' + (marketing.answers['q' + index]?.a.includes(i) ? true : false) + '"></input-checkbox>';
 		s += '</answers>';
 		if (q.textField) {
 			var v = marketing.answers['q' + index]?.t;
