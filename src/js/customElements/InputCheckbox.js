@@ -25,6 +25,10 @@ class InputCheckbox extends HTMLElement {
 }
 label {
 	color: var(--popupText);
+}
+explain {
+	padding: 0.4em 0;
+    text-align: left;
 }`;
 		this._root.appendChild(style);
 		this.setAttribute('onclick', 'this.toggleCheckbox(event)' + (this.getAttribute('onclick') ? ';' + this.getAttribute('onclick') : ''));
@@ -41,7 +45,7 @@ label {
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (name == 'label' && newValue && this._root.querySelector('label')) {
 			var s = ui.l(newValue, true);
-			this._root.querySelector('label').textContent = s ? s : newValue;
+			this._root.querySelector('label').innerHTML = s ? s : newValue;
 			this.removeAttribute('label');
 		}
 	}

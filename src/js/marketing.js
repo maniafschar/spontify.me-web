@@ -61,7 +61,7 @@ marketing buttons button-text.right {
 answers {
 	text-align: left;
 	display: inline-block;
-	max-height: 60vh;
+	max-height: fit-content;
     overflow-y: auto;
 }
 
