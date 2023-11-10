@@ -546,9 +546,6 @@ class FB {
 		if (params.tokenStore)
 			FB.tokenStore = params.tokenStore;
 	}
-	static isLoggedIn() {
-		return FB.tokenStore['fbtoken'];
-	}
 	static login(callback, options) {
 		if (FB.tokenStore['fbtoken']) {
 			FB.api({

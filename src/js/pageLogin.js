@@ -362,7 +362,7 @@ class pageLogin {
 			appId: '672104933632183',
 			accessToken: 'cb406e0fe7fd07415c7bea50e86ed3f6',
 			xfbml: true,
-			version: 'v13.0'
+			version: 'v18.0'
 		});
 		FB.login(
 			function (response) {
