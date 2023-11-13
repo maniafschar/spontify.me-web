@@ -172,6 +172,22 @@ class ui {
 				if (ui.q('#preloader') && id.indexOf('m=') != 0)
 					setTimeout(f, 100);
 				else {
+					var e = ui.q('notificationlist div.highlightBackground[onclick*="' + id + '"]');
+					if (e)
+						communication.ajax({
+							url: global.serverApi + 'db/one',
+							webCall: 'ui.navigation.autoOpen',
+							method: 'PUT',
+							body: {
+								classname: 'ContactNotification',
+								id: e.getAttribute('i'),
+								values: { seen: true }
+							},
+							success() {
+								ui.classRemove(e, 'highlightBackground');
+								communication.ping();
+							}
+						});
 					if (id.indexOf('https://') == 0) {
 						ui.navigation.openHTML(id);
 						return;

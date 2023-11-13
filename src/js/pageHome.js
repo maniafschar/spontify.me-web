@@ -95,22 +95,7 @@ border-radius: 0.5em 0 0 3em;
 </style><news>
 <div class="news">${v.news}</div>
 </news>`;
-	static clickNotification(id, action) {
-		if (id) {
-			communication.ajax({
-				url: global.serverApi + 'db/one',
-				webCall: 'pageHome.clickNotification',
-				method: 'PUT',
-				body: {
-					classname: 'ContactNotification',
-					id: id,
-					values: { seen: true }
-				},
-				success() {
-					communication.ping();
-				}
-			});
-		}
+	static clickNotification(action) {
 		ui.navigation.autoOpen(action);
 		if (action.indexOf('news=') != 0)
 			pageHome.closeList();
@@ -236,7 +221,7 @@ border-radius: 0.5em 0 0 3em;
 						v.image = 'src="images/logo.png" class="mainBG"';
 					else
 						v.image = 'source="contacts" class="mainBG"';
-					s += '<div onclick="pageHome.clickNotification(' + (v.contactNotification.seen ? 0 : v.contactNotification.id) + ',&quot;' + v.contactNotification.action + '&quot;)" ' + (v.contactNotification.seen == 0 ? ' class="highlightBackground"' : '') + '><img ' + v.image + '/> <span>' + global.date.formatDate(v.contactNotification.createdAt) + ': ' + v.contactNotification.text + '</span></div > ';
+					s += '<div i="' + v.contactNotification.id + '" onclick="pageHome.clickNotification(&quot;' + v.contactNotification.action + '&quot;)" ' + (v.contactNotification.seen == 0 ? ' class="highlightBackground"' : '') + '><img ' + v.image + '/> <span>' + global.date.formatDate(v.contactNotification.createdAt) + ': ' + v.contactNotification.text + '</span></div > ';
 				}
 				e.innerHTML = s;
 				formFunc.svg.replaceAll();
