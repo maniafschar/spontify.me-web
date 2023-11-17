@@ -126,14 +126,7 @@ class initialisation {
 		}
 		initialisation.statusBar();
 		universalLinks.subscribe(null, function (e) {
-			if (e.url.indexOf('?') > -1) {
-				var r = global.getParam('r', e.url.substring(e.url.indexOf('?')));
-				if (r)
-					initialisation.recoverPassword(r);
-				else
-					ui.navigation.autoOpen(e.url.substring(e.url.indexOf('?') + 1));
-			} else if (e.url.match(/\/marketing\/(\d*)\/init/))
-				ui.navigation.autoOpen('m=' + e.url.match(/\/marketing\/(\d*)\/init/)[1]);
+			ui.navigation.autoOpen(global.getParam(e.url));
 		});
 		universalLinks.subscribe('fb', function (e) {
 			FB.oauthCallback(e.url)
@@ -175,8 +168,8 @@ class initialisation {
 				WebSocket.connect();
 				communication.ping();
 				geoData.init();
-			} else if (global.getParam('r'))
-				initialisation.recoverPassword(global.getParam('r'));
+			} else
+				initialisation.showStartDialogs();
 		});
 	}
 	static initPostProcessor() {
@@ -184,11 +177,7 @@ class initialisation {
 		if (!global.isBrowser())
 			initialisation.initApp();
 		ui.html('head title', global.appTitle);
-		if (global.getParam('r')) {
-			pageLogin.removeCredentials();
-			initialisation.recoverPassword(global.getParam('r'));
-		} else
-			pageLogin.autoLogin(initialisation.showStartDialogs);
+		pageLogin.autoLogin(initialisation.showStartDialogs);
 		window.onresize = initialisation.reposition;
 		ui.on(window, 'orientationchange', initialisation.reposition);
 		ui.on(window, 'popstate', ui.navigation.goBack);

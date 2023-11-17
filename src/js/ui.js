@@ -26,6 +26,7 @@ import { ContentAdminMarketing } from './customElements/ContentAdminMarketing';
 import { ContentAdminInvoice } from './customElements/ContentAdminInvoice';
 import { marketing } from './marketing';
 import { ClientMarketing, model } from './model';
+import { initialisation } from './init';
 
 export { ui, formFunc, DragObject };
 
@@ -172,6 +173,11 @@ class ui {
 				if (ui.q('#preloader') && id.indexOf('m=') != 0)
 					setTimeout(f, 100);
 				else {
+					if (id.indexOf('r=') == 0) {
+						pageLogin.removeCredentials();
+						initialisation.recoverPassword(id.substring(2));
+						return;
+					}
 					var e = ui.q('notificationlist div.highlightBackground[onclick*="' + id + '"]');
 					if (e)
 						communication.ajax({

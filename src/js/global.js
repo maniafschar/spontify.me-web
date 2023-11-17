@@ -204,22 +204,16 @@ class global {
 			return 'web';
 		return /Android/i.test(navigator.userAgent) || /amazon-fireos/i.test(navigator.userAgent) ? 'android' : 'ios';
 	}
-	static getParam(n, url) {
+	static getParam(url) {
 		var v = url;
-		if (!v && window.location && window.location.search)
-			v = window.location.search;
+		if (!v && window.location && window.location.href)
+			v = window.location.href;
 		if (v) {
-			if (v.indexOf('?') == 0)
-				v = v.substring(1);
-			if (!n)
-				return v;
-			v = v.split('&');
-			for (var i = 0; i < v.length; i++) {
-				var p = v[i].split('=');
-				if (p[0] == n)
-					return decodeURI(p[1]);
-			}
+			if (v.match(/\/marketing\/init\/(\d*)/))
+				v = 'm=' + v.match(/\/marketing\/init\/(\d*)/)[1];
+			return v.indexOf('?') == 0 ? v.substring(1) : v;
 		}
+		return '';
 	}
 	static getRegEx(field, value) {
 		if (value)

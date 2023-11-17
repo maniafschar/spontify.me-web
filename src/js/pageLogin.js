@@ -123,7 +123,7 @@ class pageLogin {
 </tabBody>`;
 	static autoLogin(exec) {
 		var token = window.localStorage && window.localStorage.getItem('autoLogin');
-		if (token) {
+		if (token && global.getParam().indexOf('r=') != 0) {
 			communication.ajax({
 				url: global.serverApi + 'authentication/loginAuto?token=' + encodeURIComponent(Encryption.encPUB(token)) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
 				webCall: 'pageLogin.autoLogin',
