@@ -132,7 +132,8 @@ class initialisation {
 					initialisation.recoverPassword(r);
 				else
 					ui.navigation.autoOpen(e.url.substring(e.url.indexOf('?') + 1));
-			}
+			} else if (e.url.match(/\/marketing\/(\d*)\/init/))
+				ui.navigation.autoOpen('m=' + e.url.match(/\/marketing\/(\d*)\/init/)[1]);
 		});
 		universalLinks.subscribe('fb', function (e) {
 			FB.oauthCallback(e.url)
