@@ -137,7 +137,7 @@ class initialisation {
 				try {
 					event.preventDefault();
 				} catch (e) { }
-				initialisation.statusBar();
+				initialisation.statusBar(true);
 			}
 		});
 		ui.on(window, 'keyboardDidShow', function (e) {
@@ -164,6 +164,7 @@ class initialisation {
 		});
 		ui.on(document, 'resume', function () {
 			global.paused = false;
+			initialisation.statusBar();
 			if (user.contact && user.contact.id) {
 				WebSocket.connect();
 				communication.ping();
@@ -421,12 +422,12 @@ class initialisation {
 		if (global.isBrowser())
 			history.pushState(null, null, window.location.origin);
 	}
-	static statusBar() {
+	static statusBar(toggle) {
 		if (!global.isBrowser()) {
 			try {
 				if (StatusBar.isVisible)
 					StatusBar.hide();
-				else
+				else if (toggle)
 					StatusBar.show();
 			} catch (e) {
 			}

@@ -16,7 +16,7 @@ class pageHome {
 	static badge = -1;
 	static teaserMeta;
 	static template = v =>
-		global.template`<homeHeader onclick="pageHome.openHint()">
+		global.template`<homeHeader>
 	<buttonIcon class="statistics mainBG${v.statsButton}" onclick="ui.navigation.goTo(&quot;content-admin-home&quot;)">
 		<img source="content-admin-home"/>
 	</buttonIcon>
@@ -163,7 +163,7 @@ border-radius: 0.5em 0 0 3em;
 		if (force || !ui.q('home teaser.events>div card')) {
 			var v = {
 				actionLogo: global.config.club ? 'pageHome.openNews(null,event)' :
-					user.contact ? 'ui.navigation.goTo(&quot;settings&quot;)' : ''
+					user.contact ? 'ui.navigation.goTo(&quot;settings&quot;)' : 'pageHome.openHint()'
 			};
 			v.statsButton = ' hidden';
 			if (user.contact) {
@@ -184,14 +184,16 @@ border-radius: 0.5em 0 0 3em;
 			initialisation.reposition();
 			pageHome.teaserContacts();
 			pageHome.teaserEvents();
-			var f = function () {
-				var e = ui.q('home homeHeader svg text');
-				if (e)
-					e.innerHTML = ui.l('home.news').toLowerCase();
-				else
-					setTimeout(f, 100);
+			if (global.config.club) {
+				var f = function () {
+					var e = ui.q('home homeHeader svg text');
+					if (e)
+						e.innerHTML = ui.l('home.news').toLowerCase();
+					else
+						setTimeout(f, 100);
+				}
+				f();
 			}
-			f();
 		}
 		pageHome.initNotificationButton();
 		if (user.contact)

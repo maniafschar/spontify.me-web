@@ -9,7 +9,7 @@ export { global, Strings };
 
 class global {
 	static appTitle = '{placeholderAppTitle}';
-	static appVersion = '0.6.3';
+	static appVersion = '0.6.4';
 	static config = JSON.parse('{placeholderAppConfig}');
 	static imprintCustom = '{imprintCustom}';
 	static language = null;
@@ -210,8 +210,9 @@ class global {
 			v = window.location.href;
 		if (v) {
 			if (v.match(/\/marketing\/init\/(\d*)/))
-				v = 'm=' + v.match(/\/marketing\/init\/(\d*)/)[1];
-			return v.indexOf('?') == 0 ? v.substring(1) : v;
+				return 'm=' + v.match(/\/marketing\/init\/(\d*)/)[1];
+			if (v.indexOf('?') > 0)
+				return v.substring(v.indexOf('?') + 1);
 		}
 		return '';
 	}
