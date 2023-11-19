@@ -171,7 +171,8 @@ img.result {
 				if (marketing.data.clientMarketingResult.image)
 					ui.on(document, 'Preloader', function () {
 						ui.navigation.openHint({
-							desc: marketing.style + '<img class="result" src="' + global.serverImg + marketing.data.clientMarketingResult.image + '" /><div>' + marketing.data.storage.epilog + '</div>',
+							desc: marketing.style + '<img class="result" src="' + global.serverImg + marketing.data.clientMarketingResult.image + '" />' + (marketing.data.storage.epilog ? '<div>'
+								+ marketing.data.storage.epilog.replace(/\n/g, '<br/>') + '</div>' : ''),
 							pos: '5%,5%', size: '-5%,auto', onclick: 'return;'
 						});
 					}, true);
