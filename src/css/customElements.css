@@ -51,7 +51,7 @@ input {
 	font-size: 1em;
 	font-weight: normal;
 	width: 100%;
-	outline: none !important;
+	outline-color: transparent !important;
 	font-family: Comfortaa, Verdana, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 	height: 2em;
 	padding: 0em 0.75em;
@@ -64,7 +64,7 @@ input {
 
 input-checkbox,
 button-text {
-	outline: none !important;
+	outline-color: transparent !important;
 	appearance: none !important;
 }
 
