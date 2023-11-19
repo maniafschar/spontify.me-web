@@ -169,10 +169,12 @@ img.result {
 		if (marketing.data && !isMarketingOpen()) {
 			if (marketing.data.clientMarketingResult.id) {
 				if (marketing.data.clientMarketingResult.image)
-					ui.navigation.openHint({
-						desc: marketing.style + '<img class="result" src="' + global.serverImg + marketing.data.clientMarketingResult.image + '" /><div>' + marketing.data.storage.epilog + '</div>',
-						pos: '5%,5%', size: '-5%,auto', onclick: 'return;'
-					});
+					ui.on(document, 'Preloader', function () {
+						ui.navigation.openHint({
+							desc: marketing.style + '<img class="result" src="' + global.serverImg + marketing.data.clientMarketingResult.image + '" /><div>' + marketing.data.storage.epilog + '</div>',
+							pos: '5%,5%', size: '-5%,auto', onclick: 'return;'
+						});
+					}, true);
 				return;
 			}
 			if (!marketing.answers)
