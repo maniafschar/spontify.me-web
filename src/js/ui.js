@@ -217,7 +217,10 @@ class ui {
 							success(r) {
 								if (r && r.length > 1) {
 									marketing.data = model.convert(new ClientMarketing(), r, 1);
-									marketing.data.storage = JSON.parse(marketing.data.storage);
+									if (marketing.data.storage)
+										marketing.data.storage = JSON.parse(marketing.data.storage);
+									if (marketing.data.clientMarketingResult.storage)
+										marketing.data.clientMarketingResult.storage = JSON.parse(marketing.data.clientMarketingResult.storage);
 									marketing.open(!user.contact);
 								}
 							}

@@ -68,6 +68,13 @@ class ClientMarketing extends BaseEntity {
 	language;
 	region;
 	storage;
+
+	clientMarketingResult = new ClientMarketingResult();
+}
+
+class ClientMarketingResult extends BaseEntity {
+	image;
+	storage;
 }
 
 class Contact extends BaseEntity {

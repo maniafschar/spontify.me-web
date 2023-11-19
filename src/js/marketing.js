@@ -1,4 +1,5 @@
 import { communication } from './communication';
+import { DialogHint } from './customElements/DialogHint';
 import { global } from './global';
 import { ClientMarketing, model } from './model';
 import { pageHome } from './pageHome';
@@ -68,6 +69,10 @@ answers {
 b{
 	margin-bottom: 0;
 }
+
+img.result {
+	width: 100%;
+}
 </style>`;
 	static close() {
 		if (ui.q('marketing').innerHTML) {
@@ -86,7 +91,10 @@ b{
 			success(r) {
 				if (r.length > 1) {
 					marketing.data = model.convert(new ClientMarketing(), r, 1);
-					marketing.data.storage = JSON.parse(marketing.data.storage);
+					if (marketing.data.storage)
+						marketing.data.storage = JSON.parse(marketing.data.storage);
+					if (marketing.data.clientMarketingResult.storage)
+						marketing.data.clientMarketingResult.storage = JSON.parse(marketing.data.clientMarketingResult.storage);
 					marketing.open();
 				} else
 					marketing.data = null;
@@ -159,6 +167,14 @@ b{
 			return (ui.q('dialog-hint marketing') && ui.q('dialog-hint marketing').innerHTML) || ui.q('marketing').innerHTML;
 		}
 		if (marketing.data && !isMarketingOpen()) {
+			if (marketing.data.clientMarketingResult.id) {
+				if (marketing.data.clientMarketingResult.image)
+					ui.navigation.openHint({
+						desc: marketing.style + '<img class="result" src="' + global.serverImg + marketing.data.clientMarketingResult.image + '" /><div>' + marketing.data.storage.epilog + '</div>',
+						pos: '5%,5%', size: '-5%,auto', onclick: 'return;'
+					});
+				return;
+			}
 			if (!marketing.answers)
 				marketing.answers = {};
 			marketing.index.push(-1);
