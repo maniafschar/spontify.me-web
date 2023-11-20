@@ -434,7 +434,7 @@
 			"like": "I like it",
 			"link2blog": "More about this in our blog",
 			"localized": "You current position:",
-			"notLocalized": "Localisation service has been turned off.",
+			"notLocalized": "You turned off your localisation service.",
 			"post": "Post to Facebook",
 			"promoSender": "This link is you sent by {0}",
 			"recommend": "Would you recommend ${appTitle} to your friends?",

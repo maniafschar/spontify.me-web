@@ -12,6 +12,7 @@ import { pageLogin } from './pageLogin';
 import { lists } from './lists';
 import { pageEvent } from './pageEvent';
 import QRCodeStyling from 'qr-code-styling';
+import { geoData } from './geoData';
 
 export { pageSettings };
 
@@ -348,6 +349,22 @@ ${v.info}`;
 					if (!v['contact.ageDivers'])
 						ui.css(ui.q('settings [name="ageDivers"]'), 'display', 'none');
 					pageSettings.currentSettings = pageSettings.getCurrentSettings();
+					var localisation = function () {
+						var s = '';
+						if (geoData.localized) {
+							if (geoData.current.street)
+								s = geoData.current.street + '<br/>';
+							if (geoData.current.town)
+								s += geoData.current.town;
+							s = ui.l('info.localized') + '<br/>' + s;
+						} else if (user.contact)
+							s = ui.l('info.notLocalized') + '<br/>' + (geoData.current.street ? geoData.current.street : '');
+						ui.q('settings localisation').innerHTML = s;
+						if (ui.q('settings localisation'))
+							ui.q('settings localisation').innerHTML = s;
+					};
+					document.addEventListener('GeoLocation', localisation);
+					localisation();
 					if (exec)
 						exec()
 					var x = Math.min(300, ui.q('settings').offsetWidth - 2 * ui.emInPX);

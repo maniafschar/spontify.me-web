@@ -179,11 +179,6 @@ border-radius: 0.5em 0 0 3em;
 				v.dispProfile = 'class="hidden"';
 				v.lang = global.language;
 			}
-			if (!ui.q('home').innerHTML)
-				document.addEventListener('GeoLocation', function (event) {
-					if (user.contact && !global.config.club)
-						ui.html('home svg text', geoData.current.town);
-				});
 			ui.q('home').innerHTML = pageHome.template(v);
 			formFunc.svg.replaceAll();
 			initialisation.reposition();
