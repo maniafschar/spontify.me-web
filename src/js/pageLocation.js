@@ -27,6 +27,7 @@ class pageLocation {
 		svgMe: null,
 		timeout: null
 	};
+	static mapEdit;
 	static reopenEvent;
 	static templateDetail = v =>
 		global.template`<detailHeader idFav="${v.locationFavorite.id}" data="${v.data}">
@@ -134,6 +135,7 @@ ${v.rating}
 	<label>${ui.l('locations.address')}</label>
 	<value>
 		<textarea name="address" maxlength="250">${v.address}</textarea>
+  		<mapEdit></mapEdit>
 	</value>
 </field>
 <field>
@@ -373,6 +375,30 @@ ${v.rating}
 		if (id)
 			v.backToEventDisplay = ' class="hidden"';
 		ui.navigation.openPopup(ui.l('locations.' + (id ? 'edit' : 'new')).replace('{0}', v.name), pageLocation.templateEdit(v), id ? '' : 'pageLocation.saveDraft()');
+		pageLocation.mapEdit = new google.maps.Map(ui.q('dialog-popup mapEdit'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, center: new google.maps.LatLng(geoData.getCurrent().lat, geoData.getCurrent().lon), zoom: 9 });
+		pageLocation.mapEdit.addEventListener('center_changed', function(event) {
+			communication.ajax({
+				url: global.serverApi + 'action/google?param=' + encodeURIComponent('latlng=' + pageLocation.mapEdit.getCenter().lat() + ',' + pageLocation.mapEdit.getCenter().lon()),
+				webCall: 'pageLocation.editInternal',
+				responseType: 'json',
+				success(r) {
+					if (r.formatted)
+						ui.q('dialog-popup [name="address"]').innerHTML = r.formatted;
+				}
+			});
+		});
+		ui.on('dialog-popup [name="address"]', 'blur', function(event) {
+			if (ui.q('dialog-popup [name="address"]').innerHTML)
+				communication.ajax({
+					url: global.serverApi + 'action/google?param=' + encodeURIComponent('town=' + ui.q('dialog-popup [name="address"]').innerHTML),
+					webCall: 'pageLocation.editInternal',
+					responseType: 'json',
+					success(r) {
+						if (r && r.length)
+							pageLocation.mapEdit.setCenter({ lat: r[0].latitude, lng: r[0].longitude });
+					}
+				});
+		});
 	}
 	static hasCategory(cats, catString) {
 		catString = '' + catString;
