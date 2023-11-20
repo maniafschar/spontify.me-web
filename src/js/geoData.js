@@ -161,13 +161,9 @@ class geoData {
 							if (e.length > 5)
 								e.splice(0, e.length - 5);
 							user.set('locationPicker', e);
-						} else {
+						} else
 							geoData.current = { lat: position.latitude, lon: position.longitude, street: r.street, town: r.town };
-							geoData.current.town = r.town;
-							geoData.current.street = r.street;
-						}
-						pageHome.updateLocalisation();
-						pageSearch.updateLocalisation();
+						document.dispatchEvent(new CustomEvent('GeoLocation', { detail: { type: 'update', ...geoData.current } }));
 						if (ui.q('dialog-popup mapPicker'))
 							ui.navigation.closePopup();
 						ui.navigation.closeLocationPicker();
