@@ -392,7 +392,7 @@ mapEdit {
 			setTimeout(pageLocation.editMap, 100);
 			return;
 		}
-		pageLocation.mapEdit.canvas = new google.maps.Map(ui.q('dialog-popup mapEdit'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, center: new google.maps.LatLng(geoData.getCurrent().lat, geoData.getCurrent().lon), zoom: 16 });
+		pageLocation.mapEdit.canvas = new google.maps.Map(ui.q('dialog-popup mapEdit'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, center: new google.maps.LatLng(parseFloat(ui.val('dialog-popup [name="latitude"]')), parseFloat(ui.val('dialog-popup [name="longitude"]'))), zoom: 17 });
 		pageLocation.mapEdit.canvas.addListener('center_changed', function () {
 			clearTimeout(pageLocation.mapEdit.load);
 			pageLocation.mapEdit.load = setTimeout(function () {
