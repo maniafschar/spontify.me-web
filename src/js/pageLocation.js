@@ -402,7 +402,7 @@ mapEdit {
 					responseType: 'json',
 					success(r) {
 						if (r.formatted) {
-							ui.q('dialog-popup [name="address"]').innerHTML = r.formatted;
+							ui.q('dialog-popup [name="address"]').value = r.formatted;
 							ui.q('dialog-popup [name="latitude"]').value = pageLocation.mapEdit.canvas.getCenter().lat();
 							ui.q('dialog-popup [name="longitude"]').value = pageLocation.mapEdit.canvas.getCenter().lng();
 						}
