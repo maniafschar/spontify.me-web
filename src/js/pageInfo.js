@@ -25,7 +25,7 @@ class pageInfo {
 	${ui.l('info.imprint')}${pageInfo.getImprintCustom()}
 </infoblock>`;
 	static templateCopyright = v =>
-		global.template`<div style="text-align:center;padding:2em 1em;clear:both;">${ui.l('info.infoOther')}<br/>© ${new Date().getFullYear()} ${ui.l('info.copyright')}</div>`;
+		global.template`<div style="text-align:center;padding:2em 1em;clear:both;" onclick="pageInfo.openMap()">${ui.l('info.infoOther')}<br/>© ${new Date().getFullYear()} ${ui.l('info.copyright')}<br/><localisation></localisation></div>`;
 	static templateDesc = v =>
 		global.template`<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;#info4&quot;)" label="${v.infoTitle}"></button-text><br/>
 <infoblock id="info4" style="display:none;">
@@ -40,11 +40,25 @@ class pageInfo {
 	static init() {
 		var e = ui.q('info');
 		if (!e.innerHTML) {
+			var localisation = function(event) {
+				var s = '';
+				if (geoData.localized) {
+					if (geoData.current.street)
+						s = geoData.current.street + '<br/>;
+					if (geoData.current.town)
+						s += geoData.current.town;
+					s = ui.l('info.localized') + '<br/>' + s;
+				} else
+					s = ui.l('info.notLocalized') + '<br/>' + (geoData.current.street ? geoData.current.street : '');
+				ui.q('info localisation').innerHTML = s;
+			};
+			document.addEventListener('GeoLocation', localisation);
 			var render = function (v) {
 				v.infoTitle = ui.l('info.descLink').replace('{0}', global.appTitle.split(global.separator)[0]);
 				v.description = ui.l('info.description').replace('{0}', v.fee).replace(/\{1}/g, global.appTitle.indexOf(global.separator) > -1 ? global.appTitle.substring(0, global.appTitle.indexOf(global.separator)) : global.appTitle);
 				e.innerHTML = pageInfo.templateDesc(v) + pageInfo.template(v) + pageInfo.templateCopyright();
 				pageInfo.init();
+				localisation();
 			}
 			communication.ajax({
 				url: global.serverApi + 'action/paypalKey',
