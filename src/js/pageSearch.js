@@ -43,8 +43,10 @@ class pageSearch {
 </form>`,
 		getFields() {
 			var v = {};
-			v.keywords = pageSearch.contacts.fieldValues.keywords;
-			v.keywordsText = pageSearch.contacts.fieldValues.keywordsText;
+			if (!pageSearch.contacts.fieldValues.keywords)
+				v.keywords = pageSearch.contacts.fieldValues.keywords;
+			if (!pageSearch.contacts.fieldValues.keywordsText)
+				v.keywordsText = pageSearch.contacts.fieldValues.keywordsText;
 			if (pageSearch.contacts.fieldValues.matches == 'true')
 				v.matches = ' checked="true"';
 			return pageSearch.contacts.template(v);
@@ -123,10 +125,15 @@ ${v.keywords}
 </form>`,
 		getFields() {
 			var v = {};
+			if (!pageSearch.events.fieldValues.keywords)
+				pageSearch.events.fieldValues.keywords = '';
 			if (global.config.eventNoHashtags)
-				v.keywords = '<input value="' + (pageSearch.events.fieldValues.keywords ? pageSearch.events.fieldValues.keywords : '') + '" name="keywords"></input>'
-			else
+				v.keywords = '<input value="' + pageSearch.events.fieldValues.keywords + '" name="keywords"></input>'
+			else {
+				if (!pageSearch.events.fieldValues.keywordsText)
+					pageSearch.events.fieldValues.keywordsText = '';
 				v.keywords = '<input-hashtags ids="' + pageSearch.events.fieldValues.keywords + '" text="' + pageSearch.events.fieldValues.keywordsText + '" name="keywords"></input-hashtags>'
+			}
 			v.date = pageSearch.events.fieldValues.date;
 			return pageSearch.events.template(v);
 		},
@@ -331,7 +338,7 @@ ${v.keywords}
 		}
 	}
 	static init() {
-		document.addEventListener('GeoLocation', function(event) {
+		document.addEventListener('GeoLocation', function (event) {
 			ui.html('search label.locationPicker', geoData.getCurrent().town);
 		});
 		if (!pageSearch.contacts.fieldValues)
