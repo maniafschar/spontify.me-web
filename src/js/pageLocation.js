@@ -382,8 +382,11 @@ ${v.rating}
 				webCall: 'pageLocation.editInternal',
 				responseType: 'json',
 				success(r) {
-					if (r.formatted)
+					if (r.formatted) {
 						ui.q('dialog-popup [name="address"]').innerHTML = r.formatted;
+						ui.q('dialog-popup [name="latitude"]').value = pageLocation.mapEdit.getCenter().lat();
+						ui.q('dialog-popup [name="longitude"]').value = pageLocation.mapEdit.getCenter().lon();
+					}
 				}
 			});
 		});
@@ -394,8 +397,11 @@ ${v.rating}
 					webCall: 'pageLocation.editInternal',
 					responseType: 'json',
 					success(r) {
-						if (r && r.length)
+						if (r && r.length) {
 							pageLocation.mapEdit.setCenter({ lat: r[0].latitude, lng: r[0].longitude });
+							ui.q('dialog-popup [name="latitude"]').value = r[0].latitude;
+							ui.q('dialog-popup [name="longitude"]').value = r[0].longitude;
+						}
 					}
 				});
 		});
