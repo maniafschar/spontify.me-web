@@ -331,6 +331,9 @@ ${v.keywords}
 		}
 	}
 	static init() {
+		document.addEventListener('GeoLocation', function(event) {
+			ui.html('search label.locationPicker', geoData.getCurrent().town);
+		});
 		if (!pageSearch.contacts.fieldValues)
 			pageSearch.contacts.fieldValues = user.get('searchContacts') || {};
 		if (!pageSearch.events.fieldValues)
@@ -380,8 +383,5 @@ ${v.keywords}
 			pageSearch.selectTab('events');
 		else
 			pageSearch.selectTab('contacts');
-	}
-	static updateLocalisation() {
-		ui.html('search label.locationPicker', geoData.getCurrent().town);
 	}
 }
