@@ -377,7 +377,8 @@ field.checkbox {
 				var d = new Date(event.detail.value);
 				d.setDate(d.getDate() + 1);
 				e.setAttribute('min', d.toISOString().substring(0, 10));
-				selectable(ui.q('dialog-popup input-checkbox[name="repetition"][checked="true"]').getAttribute('value'));
+				e = ui.q('dialog-popup input-checkbox[name="repetition"][checked="true"]');
+				selectable(e ? e.getAttribute('value') : null);
 			}
 		});
 		selectable(v.repetition);

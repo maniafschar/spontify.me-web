@@ -9,7 +9,7 @@ export { global, Strings };
 
 class global {
 	static appTitle = '{placeholderAppTitle}';
-	static appVersion = '0.6.4';
+	static appVersion = '0.6.5';
 	static config = JSON.parse('{placeholderAppConfig}');
 	static imprintCustom = '{imprintCustom}';
 	static language = null;

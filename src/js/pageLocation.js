@@ -504,7 +504,7 @@ mapEdit {
 	}
 	static showLocationsNearby(event) {
 		communication.ajax({
-			url: global.serverApi + 'action/google?param=' + encodeURIComponent('place/nearbysearch/json?radius=100&sensor=false&location=' + geoData.current.lat + ',' + geoData.current.lon),
+			url: global.serverApi + 'action/google?param=' + encodeURIComponent('place/nearbysearch/json?radius=100&sensor=false&location=' + ui.val('dialog-popup [name="latitude"]') + ',' + ui.val('dialog-popup [name="longitude"]')),
 			webCall: 'pageLocation.showLocationsNearby',
 			responseType: 'json',
 			success(r) {
