@@ -180,8 +180,8 @@ border-radius: 0.5em 0 0 3em;
 				v.lang = global.language;
 			}
 			if (!ui.q('home').innerHTML)
-				document.addEventListener('GeoLocation', function(event) {
-					if (user.contact && user.clientId == 1)
+				document.addEventListener('GeoLocation', function (event) {
+					if (user.contact && !global.config.club)
 						ui.html('home svg text', geoData.current.town);
 				});
 			ui.q('home').innerHTML = pageHome.template(v);
@@ -204,7 +204,6 @@ border-radius: 0.5em 0 0 3em;
 		if (user.contact)
 			ui.html('home item.bluetooth text', ui.l(bluetooth.state == 'on' && user.contact.bluetooth ? 'bluetooth.activated' : 'bluetooth.deactivated'));
 		formFunc.svg.replaceAll();
-		pageHome.updateLocalisation();
 		ui.css('dialog-navigation item.search', 'display', user.contact ? '' : 'none');
 		ui.css('dialog-navigation item.info', 'display', user.contact ? 'none' : '');
 	}

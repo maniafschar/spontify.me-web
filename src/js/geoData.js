@@ -118,8 +118,6 @@ class geoData {
 		window.cordova.plugins.diagnostic.requestLocationAuthorization(geoData.init2, null, cordova.plugins.diagnostic.locationAuthorizationMode.WHEN_IN_USE);
 	}
 	static reset() {
-		pageHome.updateLocalisation();
-		pageSearch.updateLocalisation();
 		geoData.init();
 		ui.navigation.closePopup();
 		user.save({ webCall: 'geoData.reset', latitude: geoData.current.lat, longitude: geoData.current.lon });
@@ -144,8 +142,7 @@ class geoData {
 				responseType: 'json',
 				error(r) {
 					geoData.current.street = r.status + ' ' + r.responseText;
-					pageSearch.updateLocalisation();
-					pageHome.updateLocalisation();
+					document.dispatchEvent(new CustomEvent('GeoLocation', { detail: { type: 'update', ...geoData.current } }));
 				},
 				success(r) {
 					if (r && r.town) {

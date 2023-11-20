@@ -27,7 +27,10 @@ class pageLocation {
 		svgMe: null,
 		timeout: null
 	};
-	static mapEdit;
+	static mapEdit = {
+		canvas: null,
+		load: null
+	};
 	static reopenEvent;
 	static templateDetail = v =>
 		global.template`<detailHeader idFav="${v.locationFavorite.id}" data="${v.data}">
@@ -108,7 +111,14 @@ ${v.rating}
 	<detailTogglePanel></detailTogglePanel>
 </text>`;
 	static templateEdit = v =>
-		global.template`<form name="editElement" onsubmit="return false">
+		global.template`<style>
+mapEdit {
+	display: block;
+    height: 20em;
+    margin-top: 0.5em;
+}
+</style>
+<form name="editElement" onsubmit="return false">
 <input type="hidden" name="id" transient="true" value="${v.id}" />
 <input type="hidden" name="latitude" value="${v.latitude}" />
 <input type="hidden" name="longitude" value="${v.longitude}" />
@@ -375,35 +385,49 @@ ${v.rating}
 		if (id)
 			v.backToEventDisplay = ' class="hidden"';
 		ui.navigation.openPopup(ui.l('locations.' + (id ? 'edit' : 'new')).replace('{0}', v.name), pageLocation.templateEdit(v), id ? '' : 'pageLocation.saveDraft()');
-		pageLocation.mapEdit = new google.maps.Map(ui.q('dialog-popup mapEdit'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, center: new google.maps.LatLng(geoData.getCurrent().lat, geoData.getCurrent().lon), zoom: 9 });
-		pageLocation.mapEdit.addEventListener('center_changed', function(event) {
-			communication.ajax({
-				url: global.serverApi + 'action/google?param=' + encodeURIComponent('latlng=' + pageLocation.mapEdit.getCenter().lat() + ',' + pageLocation.mapEdit.getCenter().lon()),
-				webCall: 'pageLocation.editInternal',
-				responseType: 'json',
-				success(r) {
-					if (r.formatted) {
-						ui.q('dialog-popup [name="address"]').innerHTML = r.formatted;
-						ui.q('dialog-popup [name="latitude"]').value = pageLocation.mapEdit.getCenter().lat();
-						ui.q('dialog-popup [name="longitude"]').value = pageLocation.mapEdit.getCenter().lon();
-					}
-				}
-			});
-		});
-		ui.on('dialog-popup [name="address"]', 'blur', function(event) {
-			if (ui.q('dialog-popup [name="address"]').innerHTML)
+		communication.loadMap('pageLocation.editMap');
+	}
+	static editMap() {
+		if (!ui.q('dialog-popup mapEdit')) {
+			setTimeout(pageLocation.editMap, 100);
+			return;
+		}
+		pageLocation.mapEdit.canvas = new google.maps.Map(ui.q('dialog-popup mapEdit'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, center: new google.maps.LatLng(geoData.getCurrent().lat, geoData.getCurrent().lon), zoom: 16 });
+		pageLocation.mapEdit.canvas.addListener('center_changed', function () {
+			clearTimeout(pageLocation.mapEdit.load);
+			pageLocation.mapEdit.load = setTimeout(function () {
 				communication.ajax({
-					url: global.serverApi + 'action/google?param=' + encodeURIComponent('town=' + ui.q('dialog-popup [name="address"]').innerHTML),
-					webCall: 'pageLocation.editInternal',
+					url: global.serverApi + 'action/google?param=' + encodeURIComponent('latlng=' + pageLocation.mapEdit.canvas.getCenter().lat() + ',' + pageLocation.mapEdit.canvas.getCenter().lng()),
+					webCall: 'pageLocation.editMap',
 					responseType: 'json',
 					success(r) {
-						if (r && r.length) {
-							pageLocation.mapEdit.setCenter({ lat: r[0].latitude, lng: r[0].longitude });
-							ui.q('dialog-popup [name="latitude"]').value = r[0].latitude;
-							ui.q('dialog-popup [name="longitude"]').value = r[0].longitude;
+						if (r.formatted) {
+							ui.q('dialog-popup [name="address"]').innerHTML = r.formatted;
+							ui.q('dialog-popup [name="latitude"]').value = pageLocation.mapEdit.canvas.getCenter().lat();
+							ui.q('dialog-popup [name="longitude"]').value = pageLocation.mapEdit.canvas.getCenter().lng();
 						}
 					}
 				});
+			}, 2000);
+		});
+		ui.on('dialog-popup [name="address"]', 'keyup', function () {
+			clearTimeout(pageLocation.mapEdit.load);
+			if (ui.val('dialog-popup [name="address"]')) {
+				pageLocation.mapEdit.load = setTimeout(function () {
+					communication.ajax({
+						url: global.serverApi + 'action/google?param=' + encodeURIComponent('town=' + ui.val('dialog-popup [name="address"]').trim()),
+						webCall: 'pageLocation.editMap',
+						responseType: 'json',
+						success(r) {
+							if (r && r.length) {
+								pageLocation.mapEdit.canvas.setCenter({ lat: r[0].latitude, lng: r[0].longitude });
+								ui.q('dialog-popup [name="latitude"]').value = r[0].latitude;
+								ui.q('dialog-popup [name="longitude"]').value = r[0].longitude;
+							}
+						}
+					});
+				}, 2000);
+			}
 		});
 	}
 	static hasCategory(cats, catString) {

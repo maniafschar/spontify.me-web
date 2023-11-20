@@ -40,11 +40,11 @@ class pageInfo {
 	static init() {
 		var e = ui.q('info');
 		if (!e.innerHTML) {
-			var localisation = function(event) {
+			var localisation = function (event) {
 				var s = '';
 				if (geoData.localized) {
 					if (geoData.current.street)
-						s = geoData.current.street + '<br/>;
+						s = geoData.current.street + '<br/>';
 					if (geoData.current.town)
 						s += geoData.current.town;
 					s = ui.l('info.localized') + '<br/>' + s;
