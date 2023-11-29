@@ -114,6 +114,12 @@ field.checkbox {
 			<input name="url" value="${v.url}" />
 		</value>
 	</field>
+	<field name="publish"${v.publish}>
+		<label>${ui.l('events.publish')}</label>
+		<value>
+			<input-checkbox name="publish" label="events.publishCheckbox"></input-checkbox>
+		</value>
+	</field>
 	<dialogButtons>
 		<button-text onclick="pageEvent.selectLocation()" label="events.selectLocation" class="selectLocation"></button-text>
 		<button-text onclick="pageEvent.save()" label="save" class="save hidden"></button-text>
@@ -343,6 +349,7 @@ field.checkbox {
 			v.typeLocation = 'checked="true"';
 		if (global.config.club)
 			v.hideOnlineEvent = 'class="hidden"';
+		v.publish = global.config.publishingWall ? '' : ' class="hidden"';
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
 		setTimeout(pageEvent.setForm, 400);
 		var selectable = function (value) {

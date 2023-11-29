@@ -20,6 +20,7 @@
 	"url": "https://fcbayerntotal.fan-club.online",
 	"appConfig": {
 		"club": true,
-		"eventNoHashtags": true
+		"eventNoHashtags": true,
+		"publishingWall": true
 	}
 }

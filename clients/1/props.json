@@ -17,5 +17,7 @@
 	"name": "afterwork",
 	"server": "https://after-work.events",
 	"url": "https://after-work.events",
-	"appConfig": {}
+	"appConfig": {
+		"publishingWall": true
+	}
 }
