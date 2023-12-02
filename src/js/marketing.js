@@ -115,7 +115,7 @@ img.result {
 				marketing.answers['q' + index].a.push(parseInt(answers[i].getAttribute('value')));
 			if (ui.q(prefix + 'textarea')) {
 				if (ui.q(prefix + 'textarea').value)
-					marketing.answers['q' + index].t = ui.q(prefix + 'textarea').value.trim();
+					marketing.answers['q' + index].t = ui.q(prefix + 'textarea').value.trim().replace(/</g, '&lt;');
 				else if (!back && ui.q(prefix + 'input-checkbox:last-child').getAttribute('checked') == 'true')
 					return;
 			}
