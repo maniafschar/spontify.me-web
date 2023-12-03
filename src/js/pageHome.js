@@ -353,7 +353,7 @@ border-radius: 0.5em 0 0 3em;
 	}
 	static teaserEvents(search) {
 		communication.ajax({
-			url: global.serverApi + 'action/teaser/events' + (search ? '?search=' + encodeURIComponent(search) : ''),
+			url: global.serverApi + 'action/teaser/events' + (search && typeof search == 'string' ? '?search=' + encodeURIComponent(search) : ''),
 			webCall: 'pageHome.teaserEvents',
 			responseType: 'json',
 			error(e) {

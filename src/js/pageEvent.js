@@ -117,7 +117,7 @@ field.checkbox {
 	<field name="publish"${v.publish}>
 		<label>${ui.l('events.publish')}</label>
 		<value>
-			<input-checkbox name="publish" label="events.publishCheckbox"></input-checkbox>
+			<input-checkbox name="publish" label="events.publishCheckbox" value="true"></input-checkbox>
 		</value>
 	</field>
 	<dialogButtons>
