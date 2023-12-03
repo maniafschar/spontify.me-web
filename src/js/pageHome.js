@@ -1,10 +1,9 @@
 import { bluetooth } from './bluetooth';
 import { communication } from './communication';
 import { VideoCall } from './customElements/VideoCall';
-import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './init';
-import { Contact, ClientNews, model } from './model';
+import { ClientNews, Contact, model } from './model';
 import { pageChat } from './pageChat';
 import { pageEvent } from './pageEvent';
 import { formFunc, ui } from './ui';
@@ -122,7 +121,19 @@ border-radius: 0.5em 0 0 3em;
 		var search = '', e = ui.qa('dialog-hint eventFilter:first-child input-checkbox[checked="true"]');
 		for (var i = 0; i < e.length; i++)
 			search += ' or location.town=\'' + e[i].getAttribute('value') + '\'';
-		pageHome.teaserEvents(search ? search.substring(4) : null);
+		if (search)
+			search = search.substring(4);
+		e = ui.qa('dialog-hint eventFilter:last-child input-checkbox[checked="true"]');
+		if (e.length) {
+			search = search ? '(' + search + ') and (' : '(';
+			for (var i = 0; i < e.length; i++) {
+				var d = new Date(e[i].getAttribute('value'));
+				d.setDate(d.getDate() + 1);
+				search += 'event.startDate<=\'' + d.toISOString().substring(0, 10) + '\' and event.endDate>=\'' + e[i].getAttribute('value') + '\' or ';
+			}
+			search = search.substring(0, search.length - 4) + ')';
+		}
+		pageHome.teaserEvents(search);
 	}
 	static filterOpen() {
 		var render = function () {
@@ -130,10 +141,10 @@ border-radius: 0.5em 0 0 3em;
 			for (var i = 0; i < pageHome.teaserMeta.length; i++) {
 				if (pageHome.teaserMeta[i].town && towns.indexOf('"' + pageHome.teaserMeta[i].town + '"') < 0)
 					towns += '<input-checkbox onclick="pageHome.filterEvents()" value="' + pageHome.teaserMeta[i].town + '" label="' + pageHome.teaserMeta[i].town + '"></input-checkbox>';
-				if (dates.indexOf('"' + pageHome.teaserMeta[i].date + '"') < 0) {
-					var d = global.date.formatDate(pageHome.teaserMeta[i].date);
-					dates += '<input-checkbox onclick="pageHome.filterEvents()" value="' + global.date.local2server(pageHome.teaserMeta[i].date).substring(0, 10) + '" label="' + d.substring(0, d.lastIndexOf(' ')) + '"></input-checkbox>';
-				}
+				var d = global.date.formatDate(pageHome.teaserMeta[i].date);
+				d = d.substring(0, d.lastIndexOf(' '));
+				if (dates.indexOf('"' + d + '"') < 0)
+					dates += '<input-checkbox onclick="pageHome.filterEvents()" value="' + global.date.local2server(pageHome.teaserMeta[i].date).substring(0, 10) + '" label="' + d + '"></input-checkbox>';
 			}
 			ui.navigation.openHint({
 				desc: '<eventFilter style="margin-bottom:1em;">' + towns + '</eventFilter><eventFilter>' + dates + '</eventFilter>',
@@ -153,8 +164,12 @@ border-radius: 0.5em 0 0 3em;
 				success(l) {
 					pageHome.teaserMeta = [];
 					l = pageEvent.getCalendarList(l);
-					for (var i = 0; i < l.length; i++)
-						pageHome.teaserMeta.push({ town: l[i].town, date: l[i].event.startDate });
+					var d = new Date();
+					d.setDate(d.getDate() + 14);
+					for (var i = 0; i < l.length; i++) {
+						if (l[i].event.startDate < d)
+							pageHome.teaserMeta.push({ town: l[i].town, date: l[i].event.startDate });
+					}
 					render();
 				}
 			});
@@ -338,7 +353,7 @@ border-radius: 0.5em 0 0 3em;
 	}
 	static teaserEvents(search) {
 		communication.ajax({
-			url: global.serverApi + 'action/teaser/events' + (typeof search == 'string' ? '?search=' + encodeURIComponent(search) : ''),
+			url: global.serverApi + 'action/teaser/events' + (search ? '?search=' + encodeURIComponent(search) : ''),
 			webCall: 'pageHome.teaserEvents',
 			responseType: 'json',
 			error(e) {
