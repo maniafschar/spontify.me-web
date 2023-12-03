@@ -1,5 +1,7 @@
 import QRCodeStyling from 'qr-code-styling';
 import { communication } from './communication';
+import { DialogHint } from './customElements/DialogHint';
+import { DialogPopup } from './customElements/DialogPopup';
 import { details } from './details';
 import { geoData } from './geoData';
 import { global, Strings } from './global';
@@ -9,8 +11,6 @@ import { pageContact } from './pageContact';
 import { pageLocation } from './pageLocation';
 import { formFunc, ui } from './ui';
 import { user } from './user';
-import { DialogPopup } from './customElements/DialogPopup';
-import { DialogHint } from './customElements/DialogHint';
 
 export { pageEvent };
 
@@ -543,7 +543,7 @@ field.checkbox {
 				if (global.date.local2server(v.event.startDate).indexOf(v.eventParticipate.eventDate) == 0)
 					clazz = v.eventParticipate.state == -1 ? ' canceled' : ' participate';
 				if (v.event.imageList)
-					image = global.serverImg + v.event.imageList;
+					image = v.event.imageList;
 				else if (v.imageList)
 					image = v.imageList;
 				else if (v.contact.imageList)
@@ -1059,7 +1059,7 @@ field.checkbox {
 				title = global.date.getDateHint(v.event.startDate).replace('{0}', title);
 				var image;
 				if (v.event.imageList || v.imageList || v.event.locationId == -2 && v.contact.imageList)
-					image = global.serverImg + (v.event.imageList ? v.event.imageList : v.imageList ? v.imageList : v.contact.imageList);
+					image = v.event.imageList ? v.event.imageList : v.imageList ? v.imageList : v.contact.imageList;
 				else
 					image = 'images/events.svg';
 				text = '';

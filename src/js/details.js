@@ -4,7 +4,7 @@ import { global } from './global';
 import { lists } from './lists';
 import { pageChat } from './pageChat';
 import { pageLocation } from './pageLocation';
-import { ui, formFunc } from './ui';
+import { formFunc, ui } from './ui';
 import { user } from './user';
 
 export { details };
@@ -166,6 +166,7 @@ class details {
 			if (e.scrollTop < b && !ui.classContains(divID, 'popup'))
 				ui.scrollTo(e, b);
 			ui.classRemove(divID, 'collapsed');
+			formFunc.svg.replaceAll(ui.qa('list-row img[source]'));
 		}
 	}
 }

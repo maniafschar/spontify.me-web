@@ -1,34 +1,34 @@
 import { communication } from './communication';
+import { ContentAdminHome } from './customElements/ContentAdminHome';
+import { ContentAdminInvoice } from './customElements/ContentAdminInvoice';
+import { ContentAdminMarketing } from './customElements/ContentAdminMarketing';
+import { DialogHint } from './customElements/DialogHint';
+import { DialogLocationPicker } from './customElements/DialogLocationPicker';
+import { DialogMenu } from './customElements/DialogMenu';
+import { DialogNavigation } from './customElements/DialogNavigation';
+import { DialogPopup } from './customElements/DialogPopup';
+import { InputHashtags } from './customElements/InputHashtags';
+import { InputRating } from './customElements/InputRating';
+import { VideoCall } from './customElements/VideoCall';
 import { details } from './details';
 import { geoData } from './geoData';
 import { global } from './global';
+import { initialisation } from './init';
+import { lists } from './lists';
+import { marketing } from './marketing';
+import { ClientMarketing, model } from './model';
 import { pageChat } from './pageChat';
+import { pageContact } from './pageContact';
+import { pageEvent } from './pageEvent';
+import { pageHome } from './pageHome';
 import { pageInfo } from './pageInfo';
 import { pageLocation } from './pageLocation';
 import { pageLogin } from './pageLogin';
-import { pageContact } from './pageContact';
+import { pageSearch } from './pageSearch';
 import { pageSettings } from './pageSettings';
 import { user } from './user';
-import { pageHome } from './pageHome';
-import { lists } from './lists';
-import { pageEvent } from './pageEvent';
-import { pageSearch } from './pageSearch';
-import { DialogPopup } from './customElements/DialogPopup';
-import { InputHashtags } from './customElements/InputHashtags';
-import { DialogHint } from './customElements/DialogHint';
-import { InputRating } from './customElements/InputRating';
-import { DialogMenu } from './customElements/DialogMenu';
-import { DialogLocationPicker } from './customElements/DialogLocationPicker';
-import { VideoCall } from './customElements/VideoCall';
-import { ContentAdminHome } from './customElements/ContentAdminHome';
-import { DialogNavigation } from './customElements/DialogNavigation';
-import { ContentAdminMarketing } from './customElements/ContentAdminMarketing';
-import { ContentAdminInvoice } from './customElements/ContentAdminInvoice';
-import { marketing } from './marketing';
-import { ClientMarketing, model } from './model';
-import { initialisation } from './init';
 
-export { ui, formFunc, DragObject };
+export { DragObject, formFunc, ui };
 
 class ui {
 	static attributes = [];
@@ -778,7 +778,9 @@ class ui {
 	static val(e) {
 		var value = '';
 		ui.x(e, function (e2) {
-			value += global.separatorTech + (e2.nodeName == 'INPUT' || e2.nodeName == 'TEXTAREA' ? e2.value : e2.getAttribute('value'));
+			var s = e2.nodeName == 'INPUT' || e2.nodeName == 'TEXTAREA' ? e2.value : e2.getAttribute('value');
+			if (s)
+				value += global.separatorTech + s;
 		});
 		return value ? value.substring(1) : value;
 	}
