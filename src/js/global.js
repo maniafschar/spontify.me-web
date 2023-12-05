@@ -5,7 +5,7 @@ import { Contact, Location, model } from './model';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 
-export { global, Strings };
+export { Strings, global };
 
 class global {
 	static appTitle = '{placeholderAppTitle}';
@@ -211,6 +211,8 @@ class global {
 		if (v) {
 			if (v.match(/\/marketing\/init\/(\d*)/) || v.match(/\/marketing\/result\/(\d*)/))
 				return 'm=' + v.match(/\/marketing\/.+\/(\d*)/)[1];
+			if (v.match(/\/marketing\/event\/(\d*)/))
+				return global.encParam('e=' + v.match(/\/marketing\/.+\/(\d*)/)[1]);
 			if (v.indexOf('?') > 0)
 				return v.substring(v.indexOf('?') + 1);
 		}
