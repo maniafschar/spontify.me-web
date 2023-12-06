@@ -5,9 +5,9 @@
 	--bg2stop: rgb(255, 220, 70);
 	--bg3start: rgb(209, 130, 60, 0.95);
 	--bg3stop: rgb(250, 175, 100, 0.95);
-	--buttonText: black;
-	--popupText: black;
+	--buttonText: rgb(0, 0, 0);
+	--popupText: rgb(0, 0, 0);
 	--bgHint: rgb(255, 190, 40);
-	--text: white;
-	--navigation: white;
+	--text: rgb(255, 255, 255);
+	--navigation: rgb(255, 255, 255);
 }

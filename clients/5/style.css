@@ -3,5 +3,5 @@
 	--bg1stop: rgb(205, 23, 25);
 	--bg2start: rgb(0, 40, 5);
 	--bg2stop: rgb(5, 96, 60);
-	--buttonText: white;
+	--buttonText: rgb(255, 255, 255);
 }
