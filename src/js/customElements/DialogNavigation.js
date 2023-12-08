@@ -1,7 +1,7 @@
 import { initialisation } from '../init';
 import { formFunc, ui } from '../ui';
 
-export { DialogNavigation }
+export { DialogNavigation };
 
 class DialogNavigation extends HTMLElement {
 	static lastPopup = null;
@@ -70,6 +70,7 @@ badgeNotifications {
 buttonIcon.chats {
 	border-radius: 0 50% 50% 0 !important;
 	margin-top: -2em;
+	left: 0;
 }
 
 buttonIcon.notifications {

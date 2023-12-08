@@ -416,14 +416,16 @@ class ui {
 		},
 		openHTML(url, name) {
 			if (!name)
-				name = global.appTitle;
-			var e = window.open(url, name, 'location=no,hardwareback=no,toolbar=yes,closebuttoncaption=' + ui.l('back'));
-			if (e && e.focus) {
-				try {
-					e.focus();
-				} catch (e2) {
+				name = 'abcdefghi';
+			setTimeout(function () {
+				var e = window.open(url, name, 'location=no,hardwareback=no,toolbar=yes,closebuttoncaption=' + ui.l('back'));
+				if (e && e.focus) {
+					try {
+						e.focus();
+					} catch (e2) {
+					}
 				}
-			}
+			}, 100);
 			return e;
 		},
 		openLocationPicker(event, noSelection) {
