@@ -252,7 +252,7 @@ homeBody teaser div {
 	overflow-x: auto;
 	overflow-y: hidden;
 	white-space: nowrap;
-	padding: 2em 0.5em 0.5em 0.5em;
+	padding: 0.5em;
 	position: absolute;
 	height: 100%;
 	width: 100%;
@@ -1084,15 +1084,16 @@ buttonIcon.right {
 }
 
 buttonIcon.statistics {
-	top: 1em;
-	left: 1em;
-	font-size: 0.77em;
-	padding: 1em;
+	top: 0;
+	left: 0;
+	margin: 1em;
 	box-shadow: none;
 }
 
 buttonIcon.statistics svg {
 	stroke: var(--text);
+	width: 3em;
+	height: 3em;
 }
 
 buttonIcon.language {

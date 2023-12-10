@@ -9,6 +9,7 @@
 			}
 		</style>
 	</defs>
-	<image width="320" x="0" />
-	<text x="160" y="380" font-size="65" font-family="Adelina" text-anchor="middle" fill="var(--text)">{placeholderAppTitle}</text>
+	<image width="280" x="20" />
+	<text x="160" y="335" font-size="65" font-family="Adelina" text-anchor="middle" fill="var(--text)">{placeholderAppTitle}</text>
+	<text x="160" y="380" font-size="35" font-family="Adelina" text-anchor="middle" fill="var(--text)" class="town"></text>
 </svg>

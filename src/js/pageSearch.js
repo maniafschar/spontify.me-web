@@ -1,12 +1,12 @@
+import { DialogHint } from './customElements/DialogHint';
 import { geoData } from './geoData';
 import { global } from './global';
-import { pageContact } from './pageContact';
-import { formFunc, ui } from './ui';
-import { user } from './user';
 import { lists } from './lists';
+import { pageContact } from './pageContact';
 import { pageEvent } from './pageEvent';
 import { pageLocation } from './pageLocation';
-import { DialogHint } from './customElements/DialogHint';
+import { formFunc, ui } from './ui';
+import { user } from './user';
 
 export { pageSearch };
 
@@ -201,14 +201,15 @@ ${v.keywords}
 				webCall: 'pageSearch.events.search',
 				latitude: geoData.getCurrent().lat,
 				longitude: geoData.getCurrent().lon,
-				distance: -1,
+				distance: 100,
+				limit: -1,
 				query: 'event_list',
 				search: encodeURIComponent(pageSearch.events.getSearch())
 			}, function (events) {
 				var type = ui.val('search tabBody div.events input-date');
-				if (!type)
-					return;
 				var d = new Date();
+				var twoWeeks = new Date();
+				twoWeeks.setDate(twoWeeks.getDate() + 14);
 				var today = d.toISOString().substring(0, 10);
 				d.setDate(d.getDate() + 1);
 				var tomorrow = d.toISOString().substring(0, 10);
@@ -243,10 +244,11 @@ ${v.keywords}
 					} else if (type == 'nextWeek') {
 						if (events[i].event.startDate < sunday || events[i].event.startDate > sundayNextWeek)
 							events.splice(i, 1);
-					} else {
+					} else if (type) {
 						if (global.date.local2server(events[i].event.startDate).indexOf(type) != 0)
 							events.splice(i, 1);
-					}
+					} else if (events[i].event.startDate > twoWeeks)
+						events.splice(i, 1);
 				}
 			});
 			user.set('searchEvents', pageSearch.events.fieldValues);

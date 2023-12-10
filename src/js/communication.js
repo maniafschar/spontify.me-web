@@ -1,18 +1,18 @@
+import { Stomp } from '@stomp/stompjs';
 import JSEncrypt from 'jsencrypt';
+import SockJS from 'sockjs-client';
+import { DialogPopup } from './customElements/DialogPopup';
+import { VideoCall } from './customElements/VideoCall';
 import { geoData } from './geoData';
-import { Strings, global } from './global';
+import { global } from './global';
 import { pageChat } from './pageChat';
+import { pageHome } from './pageHome';
+import { pageInfo } from './pageInfo';
 import { pageLogin } from './pageLogin';
 import { ui } from './ui';
 import { user } from './user';
-import { pageHome } from './pageHome';
-import { pageInfo } from './pageInfo';
-import SockJS from 'sockjs-client';
-import { Stomp } from '@stomp/stompjs';
-import { VideoCall } from './customElements/VideoCall';
-import { DialogPopup } from './customElements/DialogPopup';
 
-export { communication, FB, Encryption, WebSocket };
+export { Encryption, FB, WebSocket, communication };
 
 class communication {
 	static currentCalls = [];
@@ -577,31 +577,37 @@ class FB {
 			scope = options.scope;
 		FB.loginCallback = callback;
 		var openInAppBrowser = function () {
-			var loginWindow = ui.navigation.openHTML(FB.FB_LOGIN_URL + '?client_id=' + FB.fbAppId +
+			ui.navigation.openHTML(FB.FB_LOGIN_URL + '?client_id=' + FB.fbAppId +
 				'&redirect_uri=' + (global.isBrowser() ? FB.oauthRedirectURL : 'https://www.facebook.com/connect/login_success.html') +
-				'&response_type=token&scope=' + scope);
-			if (window.cordova)
-				ui.on(loginWindow, 'loadstart', event => {
-					if (event.url.indexOf("access_token=") > 0 || event.url.indexOf("error=") > 0) {
-						setTimeout(loginWindow.close, 100);
-						FB.oauthCallback(event.url);
-					}
-				}, true);
+				'&response_type=token&scope=' + scope, 'fb_login');
+			if (window.cordova) {
+				var f = function () {
+					if (ui.navigation.openWindows['fb_login'])
+						ui.on(ui.navigation.openWindows['fb_login'], 'loadstart', event => {
+							if (event.url.indexOf("access_token=") > 0 || event.url.indexOf("error=") > 0) {
+								setTimeout(ui.navigation.openWindows['fb_login'].close, 100);
+								FB.oauthCallback(event.url);
+							}
+						}, true);
+					else
+						setTimeout(f, 100);
+				};
+				setTimeout(f, 100);
+			}
 		};
 		if (global.getOS() == 'android' && window.SafariViewController)
-			window.SafariViewController.show(
-				{
-					url: FB.FB_LOGIN_URL + '?client_id=' + FB.fbAppId +
-						'&redirect_uri=' + global.serverApi.substring(0, global.serverApi.lastIndexOf('/', global.serverApi.length - 2)) + '/oauthcallback.html' +
-						'&response_type=token&scope=' + scope,
-					hidden: false, // default false. You can use this to load cookies etc in the background (see issue #1 for details).
-					animated: false, // default true, note that 'hide' will reuse this preference (the 'Done' button will always animate though)
-					transition: null, // (this only works in iOS 9.1/9.2 and lower) unless animated is false you can choose from: curl, flip, fade, slide (default)
-					enterReaderModeIfAvailable: false, // default false
-					tintColor: "#00ffff", // default is ios blue
-					barColor: "#0000ff", // on iOS 10+ you can change the background color as well
-					controlTintColor: "#ffffff" // on iOS 10+ you can override the default tintColor
-				},
+			window.SafariViewController.show({
+				url: FB.FB_LOGIN_URL + '?client_id=' + FB.fbAppId +
+					'&redirect_uri=' + global.serverApi.substring(0, global.serverApi.lastIndexOf('/', global.serverApi.length - 2)) + '/oauthcallback.html' +
+					'&response_type=token&scope=' + scope,
+				hidden: false, // default false. You can use this to load cookies etc in the background (see issue #1 for details).
+				animated: false, // default true, note that 'hide' will reuse this preference (the 'Done' button will always animate though)
+				transition: null, // (this only works in iOS 9.1/9.2 and lower) unless animated is false you can choose from: curl, flip, fade, slide (default)
+				enterReaderModeIfAvailable: false, // default false
+				tintColor: "#00ffff", // default is ios blue
+				barColor: "#0000ff", // on iOS 10+ you can change the background color as well
+				controlTintColor: "#ffffff" // on iOS 10+ you can override the default tintColor
+			},
 				null,
 				openInAppBrowser
 			);
@@ -629,10 +635,12 @@ class FB {
 			token = FB.tokenStore['fbtoken'];
 		FB.tokenStore.removeItem('fbtoken');
 		if (token) {
-			logoutWindow = ui.navigation.openHTML(FB.FB_LOGOUT_URL + '?access_token=' + token + '&next=' + FB.logoutRedirectURL);
+			logoutWindow = ui.navigation.openHTML(FB.FB_LOGOUT_URL + '?access_token=' + token + '&next=' + FB.logoutRedirectURL, 'fb_logout');
 			if (window.cordova) {
 				setTimeout(function () {
-					logoutWindow.close();
+					try {
+						ui.navigation.openWindows['fb_logout'].close();
+					} catch (e) { }
 				}, 700);
 			}
 		}

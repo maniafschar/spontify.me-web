@@ -1,6 +1,7 @@
 import { bluetooth } from './bluetooth';
 import { communication } from './communication';
 import { VideoCall } from './customElements/VideoCall';
+import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './init';
 import { ClientNews, Contact, model } from './model';
@@ -16,8 +17,8 @@ class pageHome {
 	static teaserMeta;
 	static template = v =>
 		global.template`<homeHeader>
-	<buttonIcon class="statistics mainBG${v.statsButton}" onclick="ui.navigation.goTo(&quot;content-admin-home&quot;)">
-		<img source="content-admin-home"/>
+	<buttonIcon class="statistics mainBG${v.statsButton}" onclick="${v.statsOnclick}">
+		<img source="${v.statsImg}"/>
 	</buttonIcon>
 	<img onclick="${v.actionLogo}" source="logo"/>
 	<text onclick="ui.navigation.goTo(&quot;settings&quot;)" ${v.dispProfile}>
@@ -29,11 +30,9 @@ class pageHome {
 </homeHeader>
 <homeBody>
 <teaser class="events">
-	<title onclick="pageHome.filterOpen()" class="highlightColor" style="cursor:pointer;">${ui.l('events.title')}</title>
 	<div></div>
 </teaser>
 <teaser class="contacts">
-	<title>${ui.l('contacts.title')}</title>
 	<div></div>
 </teaser>
 </homeBody>`;
@@ -178,7 +177,8 @@ border-radius: 0.5em 0 0 3em;
 		if (force || !ui.q('home teaser.events>div card')) {
 			var v = {
 				actionLogo: global.config.club ? 'pageHome.openNews(null,event)' :
-					user.contact ? 'ui.navigation.goTo(&quot;settings&quot;)' : 'pageHome.openHint()'
+					user.contact ? (global.config.news ? 'ui.navigation.openLocationPicker(event,true)'
+						: 'ui.navigation.goTo(&quot;settings&quot;)') : 'pageHome.openHint()'
 			};
 			v.statsButton = ' hidden';
 			if (user.contact) {
@@ -188,11 +188,19 @@ border-radius: 0.5em 0 0 3em;
 					v.imgProfile = '<name>' + user.contact.pseudonym + '</name>';
 				v.infoButton = ' hidden';
 				v.langButton = ' hidden';
-				if (user.contact.type == 'adminContent')
+				if (user.contact.type == 'adminContent') {
 					v.statsButton = '';
+					v.statsOnclick = 'ui.navigation.goTo(&quot;content-admin-home&quot;)';
+					v.statsImg = 'content-admin-home';
+				}
 			} else {
 				v.dispProfile = 'class="hidden"';
 				v.lang = global.language;
+			}
+			if (global.config.news) {
+				v.statsButton = '';
+				v.statsOnclick = 'pageHome.openNews()';
+				v.statsImg = 'news';
 			}
 			ui.q('home').innerHTML = pageHome.template(v);
 			formFunc.svg.replaceAll();
@@ -214,6 +222,7 @@ border-radius: 0.5em 0 0 3em;
 		if (user.contact)
 			ui.html('home item.bluetooth text', ui.l(bluetooth.state == 'on' && user.contact.bluetooth ? 'bluetooth.activated' : 'bluetooth.deactivated'));
 		formFunc.svg.replaceAll();
+		pageHome.setLogoTown();
 		ui.css('dialog-navigation item.search', 'display', user.contact ? '' : 'none');
 		ui.css('dialog-navigation item.info', 'display', user.contact ? 'none' : '');
 	}
@@ -327,6 +336,11 @@ border-radius: 0.5em 0 0 3em;
 		ui.q('dialog-navigation badgeChats').innerHTML = '';
 		ui.q('dialog-navigation badgeNotifications').innerHTML = 0;
 	}
+	static setLogoTown() {
+		var e = ui.q('home text.town');
+		if (e)
+			e.innerHTML = geoData.getCurrent().town.toLowerCase();
+	}
 	static teaserContacts() {
 		communication.ajax({
 			url: global.serverApi + 'action/teaser/contacts',
@@ -412,4 +426,5 @@ border-radius: 0.5em 0 0 3em;
 	}
 }
 document.addEventListener('Event', pageHome.teaserEvents);
+document.addEventListener('GeoLocation', pageHome.setLogoTown);
 document.addEventListener('Settings', function () { pageHome.init(true); });

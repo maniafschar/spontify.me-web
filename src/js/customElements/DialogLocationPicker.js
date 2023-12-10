@@ -1,12 +1,11 @@
-import { user } from '../user';
-import { ui } from '../ui';
-import { geoData } from '../geoData';
 import { communication } from '../communication';
-import { pageHome } from '../pageHome';
+import { geoData } from '../geoData';
 import { global } from '../global';
 import { initialisation } from '../init';
+import { ui } from '../ui';
+import { user } from '../user';
 
-export { DialogLocationPicker }
+export { DialogLocationPicker };
 
 class DialogLocationPicker extends HTMLElement {
 	static map;
@@ -74,13 +73,20 @@ label {
 		ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
 			'<mapPicker></mapPicker><br/>' +
 			'<input name="town" maxlength="20" placeholder="' + ui.l('home.locationPickerInput') + '" onkeydown="ui.q(&quot;dialog-location-picker&quot;).setButtonLabel(event)"/><br/><br/>' +
-			'<button-text onclick="ui.q(&quot;dialog-location-picker&quot;).save()" label="home.locationPickerButtonSet"></button-text><errorHint></errorHint>', null, null,
+			'<button-text onclick="ui.q(&quot;dialog-location-picker&quot;).save()" label="home.locationPickerButtonSet"></button-text>' +
+			(geoData.localized ? '<button-text onclick="ui.q(&quot;dialog-location-picker&quot;).reset()" label="home.locationPickerButtonReset"></button-text>' : '') +
+			'<errorHint></errorHint>', null, null,
 			function () {
 				setTimeout(function () {
 					ui.navigation.closeLocationPicker();
 					DialogLocationPicker.map = new google.maps.Map(ui.q('dialog-popup mapPicker'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 12, center: new google.maps.LatLng(geoData.getCurrent().lat, geoData.getCurrent().lon), zoom: 9 });
 				}, 500);
 			});
+	}
+	reset() {
+		geoData.currentManual = {};
+		ui.html('.locationPicker', geoData.getCurrent().town);
+		ui.navigation.closePopup();
 	}
 	save(e) {
 		if (ui.q('dialog-popup input') && ui.q('dialog-popup input').value) {
@@ -103,6 +109,6 @@ label {
 		if (event && event.keyCode == 13)
 			this.save();
 		else
-			ui.attr('dialog-popup button-text', 'label', ui.q('dialog-popup input').value ? 'home.locationPickerButtonLookup' : 'home.locationPickerButtonSet');
+			ui.q('dialog-popup button-text').setAttribute('label', ui.q('dialog-popup input').value ? 'home.locationPickerButtonLookup' : 'home.locationPickerButtonSet');
 	}
 }

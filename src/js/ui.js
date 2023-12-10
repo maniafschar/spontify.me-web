@@ -145,6 +145,7 @@ class ui {
 	}
 	static navigation = {
 		animationEvent: null,
+		openWindows: {},
 
 		animation(e, animation, exec) {
 			if (typeof e == 'string')
@@ -419,14 +420,15 @@ class ui {
 				name = 'abcdefghi';
 			setTimeout(function () {
 				var e = window.open(url, name, 'location=no,hardwareback=no,toolbar=yes,closebuttoncaption=' + ui.l('back'));
-				if (e && e.focus) {
-					try {
-						e.focus();
-					} catch (e2) {
-					}
+				if (e) {
+					ui.navigation.openWindows[name] = e;
+					if (e.focus)
+						try {
+							e.focus();
+						} catch (e2) {
+						}
 				}
-			}, 100);
-			return e;
+			}, 50);
 		},
 		openLocationPicker(event, noSelection) {
 			DialogLocationPicker.open(event, noSelection);

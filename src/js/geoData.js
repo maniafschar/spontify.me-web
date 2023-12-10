@@ -1,7 +1,5 @@
 import { communication } from './communication';
 import { global } from './global';
-import { pageHome } from './pageHome';
-import { pageSearch } from './pageSearch';
 import { ui } from './ui';
 import { user } from './user';
 
@@ -132,7 +130,7 @@ class geoData {
 			geoData.current.lon = position.longitude;
 		}
 		if (user.contact && user.contact.id && new Date().getTime() - geoData.lastSave > 5000 &&
-			(!geoData.localized || d > 0.05 && position.manual)) {
+			(!geoData.localized || d > 0.05 || position.manual)) {
 			communication.ajax({
 				url: global.serverApi + 'action/position',
 				progressBar: false,
@@ -147,19 +145,19 @@ class geoData {
 				success(r) {
 					if (r && r.town) {
 						geoData.lastSave = new Date().getTime();
-						if (position.manual) {
+						if (position.manual)
 							geoData.currentManual = { lat: position.latitude, lon: position.longitude, street: r.street, town: r.town };
-							var e = user.get('locationPicker') || [];
-							for (var i = e.length - 1; i >= 0; i--) {
-								if (e[i].town == r.town)
-									e.splice(i, 1);
-							}
-							e.push({ lat: position.latitude, lon: position.longitude, town: r.town, street: r.street });
-							if (e.length > 5)
-								e.splice(0, e.length - 5);
-							user.set('locationPicker', e);
-						} else
+						else
 							geoData.current = { lat: position.latitude, lon: position.longitude, street: r.street, town: r.town };
+						var e = user.get('locationPicker') || [];
+						for (var i = e.length - 1; i >= 0; i--) {
+							if (e[i].town == r.town)
+								e.splice(i, 1);
+						}
+						e.push({ lat: position.latitude, lon: position.longitude, town: r.town, street: r.street });
+						if (e.length > 5)
+							e.splice(0, e.length - 5);
+						user.set('locationPicker', e);
 						document.dispatchEvent(new CustomEvent('GeoLocation', { detail: { type: 'update', ...geoData.current } }));
 						if (ui.q('dialog-popup mapPicker'))
 							ui.navigation.closePopup();
@@ -171,7 +169,8 @@ class geoData {
 				}
 			});
 		}
-		geoData.localized = true;
+		if (!position.manual)
+			geoData.localized = true;
 		geoData.updateCompass();
 	}
 	static updateCompass(angle) {
