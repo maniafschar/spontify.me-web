@@ -346,22 +346,27 @@ border-radius: 0.5em 0 0 3em;
 			url: global.serverApi + 'action/teaser/contacts',
 			webCall: 'pageHome.teaserContacts',
 			responseType: 'json',
-			error() { },
-			success(l) {
-				var s = '';
-				for (var i = 1; i < l.length; i++) {
-					var e = model.convert(new Contact(), l, i);
-					s += '<card onclick="details.open(' + e.id + ',' + JSON.stringify({ webCall: 'pageHome.teaserContacts', query: 'contact_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('contact.id=' + e.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)"><img src="' + global.serverImg + e.imageList + '"/><text>' + e.pseudonym + '</text></card>';
-				}
-				var e = ui.q('home teaser.contacts>div');
-				e.innerHTML = s;
+			error() {
+				ui.q('home teaser.contacts>div').innerHTML = ui.l('error.noNetworkConnection');
 				ui.css('home teaser.contacts', 'opacity', 1);
-				e.addEventListener("wheel", event => {
-					if (event.deltaY) {
-						e.scrollBy({ left: event.deltaY });
-						event.preventDefault();
+			},
+			success(l) {
+				if (l) {
+					var s = '';
+					for (var i = 1; i < l.length; i++) {
+						var e = model.convert(new Contact(), l, i);
+						s += '<card onclick="details.open(' + e.id + ',' + JSON.stringify({ webCall: 'pageHome.teaserContacts', query: 'contact_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('contact.id=' + e.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)"><img src="' + global.serverImg + e.imageList + '"/><text>' + e.pseudonym + '</text></card>';
 					}
-				});
+					var e = ui.q('home teaser.contacts>div');
+					e.innerHTML = s;
+					ui.css('home teaser.contacts', 'opacity', 1);
+					e.addEventListener("wheel", event => {
+						if (event.deltaY) {
+							e.scrollBy({ left: event.deltaY });
+							event.preventDefault();
+						}
+					});
+				}
 			}
 		});
 	}
@@ -370,11 +375,10 @@ border-radius: 0.5em 0 0 3em;
 			url: global.serverApi + 'action/teaser/events' + (search && typeof search == 'string' ? '?search=' + encodeURIComponent(search) : ''),
 			webCall: 'pageHome.teaserEvents',
 			responseType: 'json',
-			error(e) {
-				ui.q('home teaser.events>div').innerHTML = ui.l('error.noNetworkConnection');
-				ui.css('home teaser.events', 'opacity', 1);
-			},
+			error(e) { },
 			success(l) {
+				if (!l)
+					return;
 				var e, s = '';
 				if (user.contact)
 					s = '<card onclick="pageEvent.edit()" class="mainBG" style="color:var(--text)"><img source="add"/><text>' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>';
