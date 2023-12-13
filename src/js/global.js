@@ -213,6 +213,10 @@ class global {
 				return 'm=' + v.match(/\/marketing\/.+\/(\d*)/)[1];
 			if (v.match(/\/marketing\/event\/(\d*)/))
 				return global.encParam('e=' + v.match(/\/marketing\/.+\/(\d*)/)[1]);
+			if (v.match(/\/marketing\/location\/(\d*)/))
+				return global.encParam('l=' + v.match(/\/marketing\/.+\/(\d*)/)[1]);
+			if (v.match(/\/marketing\/news\/(\d*)/))
+				return 'news=' + v.match(/\/marketing\/.+\/(\d*)/)[1];
 			if (v.indexOf('?') > 0)
 				return v.substring(v.indexOf('?') + 1);
 		}

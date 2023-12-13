@@ -180,32 +180,33 @@ field.checkbox {
 		if (user.contact) {
 			if (v.event.contactId == user.contact.id && d >= global.date.getToday())
 				v.hideMePotentialParticipants = '';
-			communication.ajax({
-				url: global.serverApi + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + v.event.id + ' and eventParticipate.eventDate=\'' + v.id.split('_')[1] + '\''),
-				webCall: 'pageEvent.detail',
-				responseType: 'json',
-				success(r) {
-					var count = 0;
-					for (var i = 1; i < r.length; i++) {
-						var e = model.convert(new EventParticipate(), r, i);
-						if (e.contactId == user.contact.id)
-							v.eventParticipate = e;
-						if (e.state == 1)
-							count++;
-					}
-					ui.q('detail card[i="' + v.id + '"] detailHeader').setAttribute('data', encodeURIComponent(JSON.stringify(v)));
-					if (ui.q('detail card[i="' + v.id + '"]')) {
-						ui.q('detail card[i="' + v.id + '"] .eventParticipationButtons').innerHTML = pageEvent.getParticipateButton(v, count);
-						if (v.eventParticipate.state == 1) {
-							ui.classAdd('detail card[i="' + v.id + '"] text.description.event', 'participate');
-							ui.classRemove('detail  card[i="' + v.id + '"] div.ratingButton', 'hidden');
-						} else if (v.eventParticipate.state == -1) {
-							ui.classAdd('detail card[i="' + v.id + '"] text.description.event', 'canceled');
-							ui.q('detail card[i="' + v.id + '"] .reason').innerHTML = ui.l('events.canceled') + (v.eventParticipate.reason ? ':<br/>' + v.eventParticipate.reason : '');
+			if (v.id.split('_').length > 1)
+				communication.ajax({
+					url: global.serverApi + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + v.event.id + ' and eventParticipate.eventDate=\'' + v.id.split('_')[1] + '\''),
+					webCall: 'pageEvent.detail',
+					responseType: 'json',
+					success(r) {
+						var count = 0;
+						for (var i = 1; i < r.length; i++) {
+							var e = model.convert(new EventParticipate(), r, i);
+							if (e.contactId == user.contact.id)
+								v.eventParticipate = e;
+							if (e.state == 1)
+								count++;
+						}
+						ui.q('detail card[i="' + v.id + '"] detailHeader').setAttribute('data', encodeURIComponent(JSON.stringify(v)));
+						if (ui.q('detail card[i="' + v.id + '"]')) {
+							ui.q('detail card[i="' + v.id + '"] .eventParticipationButtons').innerHTML = pageEvent.getParticipateButton(v, count);
+							if (v.eventParticipate.state == 1) {
+								ui.classAdd('detail card[i="' + v.id + '"] text.description.event', 'participate');
+								ui.classRemove('detail  card[i="' + v.id + '"] div.ratingButton', 'hidden');
+							} else if (v.eventParticipate.state == -1) {
+								ui.classAdd('detail card[i="' + v.id + '"] text.description.event', 'canceled');
+								ui.q('detail card[i="' + v.id + '"] .reason').innerHTML = ui.l('events.canceled') + (v.eventParticipate.reason ? ':<br/>' + v.eventParticipate.reason : '');
+							}
 						}
 					}
-				}
-			});
+				});
 		}
 		if (v.event.price > 0)
 			v.eventPrice = ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2).replace('.', ','));
