@@ -107,7 +107,7 @@ border-radius: 0.5em 0 0 3em;
 		if (user.contact)
 			ui.navigation.closeHint();
 		else
-			ui.navigation.openHint({ desc: 'closeNews', pos: '2em,10em', size: '-2em,auto' });
+			ui.navigation.openHint({ desc: 'closeNews' + (global.config.club ? 'Club' : ''), pos: '2em,10em', size: '-2em,auto' });
 	}
 	static filterClose() {
 		if (ui.q('dialog-hint input-checkbox[checked="true"]')) {
