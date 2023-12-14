@@ -318,7 +318,7 @@ border-radius: 0.5em 0 0 3em;
 							s += '<img src="' + global.serverImg + e.image + '"/>';
 						s += '</card>'
 					}
-					v.news = s ? s : '<card><p>' + ui.l('home.noNews').replace('{0}', ui.l('home.news')) + '</p></card>';
+					v.news = s ? s : '<card><p>' + ui.l('home.noNews' + (global.config.club ? 'Club' : '')).replace('{0}', geoData.getCurrent().town) + '</p></card>';
 					s = '';
 					if (ui.q('dialog-hint news'))
 						ui.q('dialog-hint span').innerHTML = pageHome.templateNews(v);
