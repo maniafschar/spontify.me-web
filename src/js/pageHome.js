@@ -379,9 +379,7 @@ border-radius: 0.5em 0 0 3em;
 			success(l) {
 				if (!l)
 					return;
-				var e, s = '';
-				if (user.contact)
-					s = '<card onclick="pageEvent.edit()" class="mainBG" style="color:var(--text)"><img source="add"/><text>' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>';
+				var e, s = '<card onclick="pageEvent.edit()" class="mainBG" style="color:var(--text)"><img source="add"/><text>' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>';
 				e = pageEvent.getCalendarList(l);
 				if (e.length > 20)
 					e.splice(20, e.length);
