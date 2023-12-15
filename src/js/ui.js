@@ -240,7 +240,7 @@ class ui {
 					}
 					var idIntern = id.indexOf('&') > 0 ? id.substring(0, id.indexOf('&')) : id;
 					ui.navigation.closePopup();
-					if (idIntern.indexOf('l=') == 0 && user.contact)
+					if (idIntern.indexOf('l=') == 0)
 						details.open(idIntern.substring(2), { webCall: 'ui.navigation.autoOpen', query: 'location_list', search: encodeURIComponent('location.id=' + idIntern.substring(2)) }, pageLocation.detailLocationEvent);
 					else if (idIntern.indexOf('e=') == 0)
 						details.open(idIntern.substring(2), { webCall: 'ui.navigation.autoOpen', query: 'event_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('event.id=' + idIntern.substring(2, idIntern.indexOf('_') > 0 ? idIntern.indexOf('_') : idIntern.length)) }, pageLocation.detailLocationEvent);
