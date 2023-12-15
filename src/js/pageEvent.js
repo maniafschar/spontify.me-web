@@ -236,7 +236,7 @@ field.checkbox {
 	}
 	static edit(locationID, id) {
 		if (!user.contact) {
-			ui.navigation.openHint({ desc: 'teaserEvents', pos: '-0.5em,-35%', size: '95%,auto', hinkyClass: 'bottom', hinky: 'left:4.5em;' });
+			ui.navigation.openHint({ desc: 'teaserEvents', pos: '5%,-35%', size: '90%,auto', hinkyClass: 'bottom', hinky: 'left:4.5em;' });
 			return;
 		}
 		if (!pageEvent.paypal.fee) {
