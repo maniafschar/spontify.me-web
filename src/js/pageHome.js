@@ -361,10 +361,8 @@ border-radius: 0.5em 0 0 3em;
 					e.innerHTML = s;
 					ui.css('home teaser.contacts', 'opacity', 1);
 					e.addEventListener('wheel', event => {
-						if (event.deltaY) {
+						if (event.deltaY)
 							e.scrollBy({ left: event.deltaY });
-							event.preventDefault();
-						}
 					}, { passive: true });
 				}
 			}
@@ -406,10 +404,8 @@ border-radius: 0.5em 0 0 3em;
 				ui.css('home teaser.events', 'opacity', 1);
 				formFunc.svg.replaceAll();
 				e.addEventListener('wheel', event => {
-					if (event.deltaY) {
+					if (event.deltaY)
 						e.scrollBy({ left: event.deltaY });
-						event.preventDefault();
-					}
 				}, { passive: true });
 			}
 		});
