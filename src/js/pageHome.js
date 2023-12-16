@@ -377,10 +377,9 @@ border-radius: 0.5em 0 0 3em;
 			success(l) {
 				if (!l)
 					return;
-				var e, s = '<card onclick="pageEvent.edit()" class="mainBG" style="color:var(--text)"><img source="add"/><text>' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>';
-				e = pageEvent.getCalendarList(l);
-				if (e.length > 20)
-					e.splice(20, e.length);
+				var e = pageEvent.getCalendarList(l), s = '<card onclick="pageEvent.edit()" class="mainBG" style="color:var(--text)"><img source="add"/><text>' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>';
+				if (e.length > 25)
+					e.splice(25, e.length);
 				var dates = ui.qa('dialog-hint eventFilter:last-child input-checkbox[checked="true"]');
 				var dateFiltered = function (e2) {
 					if ('outdated' == e2)
