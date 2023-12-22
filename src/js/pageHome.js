@@ -216,6 +216,7 @@ border-radius: 0.5em 0 0 3em;
 						setTimeout(f, 100);
 				}
 				f();
+				ui.q('home text.town').style.display = 'none';
 			}
 		}
 		pageHome.initNotificationButton();

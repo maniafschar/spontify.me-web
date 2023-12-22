@@ -1,12 +1,10 @@
 import { communication } from './communication';
-import { DialogHint } from './customElements/DialogHint';
 import { global } from './global';
 import { ClientMarketing, model } from './model';
 import { pageHome } from './pageHome';
 import { formFunc, ui } from './ui';
-import { user } from './user';
 
-export { marketing }
+export { marketing };
 
 class marketing {
 	static data;
@@ -168,14 +166,19 @@ img.result {
 		}
 		if (marketing.data && !isMarketingOpen()) {
 			if (marketing.data.clientMarketingResult.id) {
-				if (marketing.data.clientMarketingResult.image)
-					ui.on(document, 'Preloader', function () {
+				if (marketing.data.clientMarketingResult.image) {
+					var f = function () {
 						ui.navigation.openHint({
 							desc: marketing.style + '<img class="result" src="' + global.serverImg + marketing.data.clientMarketingResult.image + '" />' + (marketing.data.storage.epilog ? '<div>'
 								+ marketing.data.storage.epilog.replace(/\n/g, '<br/>') + '</div>' : ''),
 							pos: '5%,5%', size: '-5%,auto', onclick: 'return;'
 						});
-					}, true);
+					};
+					if (ui.q('preloader'))
+						ui.on(document, 'Preloader', f, true);
+					else
+						f();
+				}
 				return;
 			}
 			if (!marketing.answers)
