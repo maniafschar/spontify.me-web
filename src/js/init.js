@@ -1,5 +1,23 @@
 import { bluetooth } from './bluetooth';
 import { communication, FB, WebSocket } from './communication';
+import { ButtonText } from './customElements/ButtonText';
+import { ContentAdminHome } from './customElements/ContentAdminHome';
+import { ContentAdminInvoice } from './customElements/ContentAdminInvoice';
+import { ContentAdminMarketing } from './customElements/ContentAdminMarketing';
+import { DialogHint } from './customElements/DialogHint';
+import { DialogLocationPicker } from './customElements/DialogLocationPicker';
+import { DialogMenu } from './customElements/DialogMenu';
+import { DialogNavigation } from './customElements/DialogNavigation';
+import { DialogPopup } from './customElements/DialogPopup';
+import { InputCheckbox } from './customElements/InputCheckbox';
+import { InputDate } from './customElements/InputDate';
+import { InputHashtags } from './customElements/InputHashtags';
+import { InputImage } from './customElements/InputImage';
+import { InputRating } from './customElements/InputRating';
+import { InputSlider } from './customElements/InputSlider';
+import { ListBody } from './customElements/ListBody';
+import { ListRow } from './customElements/ListRow';
+import { VideoCall } from './customElements/VideoCall';
 import { details } from './details';
 import { geoData } from './geoData';
 import { global, Strings } from './global';
@@ -15,26 +33,8 @@ import { pageLocation } from './pageLocation';
 import { pageLogin } from './pageLogin';
 import { pageSearch } from './pageSearch';
 import { pageSettings } from './pageSettings';
-import { ui, formFunc } from './ui';
+import { formFunc, ui } from './ui';
 import { user } from './user';
-import { VideoCall } from './customElements/VideoCall';
-import { ButtonText } from './customElements/ButtonText';
-import { DialogHint } from './customElements/DialogHint';
-import { DialogLocationPicker } from './customElements/DialogLocationPicker';
-import { DialogMenu } from './customElements/DialogMenu';
-import { DialogNavigation } from './customElements/DialogNavigation';
-import { DialogPopup } from './customElements/DialogPopup';
-import { InputCheckbox } from './customElements/InputCheckbox';
-import { InputHashtags } from './customElements/InputHashtags';
-import { InputImage } from './customElements/InputImage';
-import { InputRating } from './customElements/InputRating';
-import { InputSlider } from './customElements/InputSlider';
-import { ListBody } from './customElements/ListBody';
-import { ListRow } from './customElements/ListRow';
-import { ContentAdminHome } from './customElements/ContentAdminHome';
-import { InputDate } from './customElements/InputDate';
-import { ContentAdminMarketing } from './customElements/ContentAdminMarketing';
-import { ContentAdminInvoice } from './customElements/ContentAdminInvoice';
 
 export { initialisation };
 
@@ -420,8 +420,6 @@ class initialisation {
 		}
 		if (!user.contact && user.clientId == 7 && !p)
 			setTimeout(ui.navigation.openIntro, 2000);
-		if (global.isBrowser())
-			history.pushState(null, null, window.location.origin);
 	}
 	static statusBar(toggle) {
 		if (!global.isBrowser()) {

@@ -304,23 +304,24 @@ border-radius: 0.5em 0 0 3em;
 				success(l) {
 					pageHome.closeList();
 					var v = {}, s = '';
-					for (var i = 1; i < l.length; i++) {
-						var e = model.convert(new ClientNews(), l, i);
-						var oc = e.url ? 'onclick="ui.navigation.openHTML(&quot;' + e.url + '&quot;)"' : '';
-						s += oc ? '<card ' + oc + ' style="cursor:pointer;">' : '<card>';
-						s += '<p' + (e.image || e.imgUrl ? ' style="padding-bottom:1.25em;">' : '>');
-						if (global.date.server2local(e.publish) > new Date())
-							s += '<date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
-						else
-							s += '<date>' + global.date.formatDate(e.publish) + '</date>';
-						s += e.description;
-						s += '</p>'
-						if (e.image)
-							s += '<img src="' + global.serverImg + e.image + '"/>';
-						s += '</card>'
+					if (l) {
+						for (var i = 1; i < l.length; i++) {
+							var e = model.convert(new ClientNews(), l, i);
+							var oc = e.url ? 'onclick="ui.navigation.openHTML(&quot;' + e.url + '&quot;)"' : '';
+							s += oc ? '<card ' + oc + ' style="cursor:pointer;">' : '<card>';
+							s += '<p' + (e.image || e.imgUrl ? ' style="padding-bottom:1.25em;">' : '>');
+							if (global.date.server2local(e.publish) > new Date())
+								s += '<date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
+							else
+								s += '<date>' + global.date.formatDate(e.publish) + '</date>';
+							s += e.description;
+							s += '</p>'
+							if (e.image)
+								s += '<img src="' + global.serverImg + e.image + '"/>';
+							s += '</card>'
+						}
 					}
 					v.news = s ? s : '<card><p>' + ui.l('home.noNews' + (global.config.club ? 'Club' : '')).replace('{0}', geoData.getCurrent().town) + '</p></card>';
-					s = '';
 					if (ui.q('dialog-hint news'))
 						ui.q('dialog-hint span').innerHTML = pageHome.templateNews(v);
 					else

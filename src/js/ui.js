@@ -170,15 +170,17 @@ class ui {
 				return false;
 			if (event)
 				event.stopPropagation();
-			if (id.indexOf('r=') == 0) {
-				pageLogin.removeCredentials();
-				initialisation.recoverPassword(id.substring(2));
-				return;
-			}
 			var f = function () {
 				if (ui.q('#preloader') && id.indexOf('m=') != 0)
 					setTimeout(f, 100);
 				else {
+					if (global.isBrowser())
+						history.pushState(null, null, window.location.origin);
+					if (id.indexOf('r=') == 0) {
+						pageLogin.removeCredentials();
+						initialisation.recoverPassword(id.substring(2));
+						return;
+					}
 					var e = ui.q('notificationlist div.highlightBackground[onclick*="' + id + '"]');
 					if (e)
 						communication.ajax({
