@@ -1,8 +1,8 @@
+import { communication } from '../communication';
 import { global } from '../global';
+import { initialisation } from '../init';
 import { formFunc, ui } from '../ui';
 import { user } from '../user';
-import { communication } from '../communication';
-import { initialisation } from '../init';
 
 export { VideoCall };
 
@@ -473,7 +473,7 @@ streams {
 	}
 	static startAdminCall() {
 		communication.ajax({
-			url: global.serverApi + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contactVideoCall.time>\'' + global.date.local2server(global.date.getToday()) + '\' and contactVideoCall.contactId=' + user.contact.id),
+			url: global.serverApi + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contactVideoCall.time>cast(\'' + global.date.local2server(global.date.getToday()) + '\' as timestamp) and contactVideoCall.contactId=' + user.contact.id),
 			webCall: 'VideoCall.startAdminCall',
 			responseType: 'json',
 			success(r) {

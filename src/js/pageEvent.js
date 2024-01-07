@@ -182,7 +182,7 @@ field.checkbox {
 				v.hideMePotentialParticipants = '';
 			if (v.id.split('_').length > 1)
 				communication.ajax({
-					url: global.serverApi + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + v.event.id + ' and eventParticipate.eventDate=\'' + v.id.split('_')[1] + '\''),
+					url: global.serverApi + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + v.event.id + ' and eventParticipate.eventDate=cast(\'' + v.id.split('_')[1] + '\' as timestamp)'),
 					webCall: 'pageEvent.detail',
 					responseType: 'json',
 					success(r) {
@@ -258,7 +258,7 @@ field.checkbox {
 			var d = global.date.getToday();
 			d.setDate(d.getDate() + 1);
 			communication.ajax({
-				url: global.serverApi + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contactVideoCall.time>\'' + global.date.local2server(d) + '\''),
+				url: global.serverApi + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contactVideoCall.time>cast(\'' + global.date.local2server(d) + '\' as timestamp)'),
 				webCall: 'pageEvent.edit',
 				responseType: 'json',
 				success(r) {
@@ -1105,7 +1105,7 @@ field.checkbox {
 					longitude: geoData.current.lon,
 					distance: -1,
 					limit: 0,
-					search: encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\' and eventParticipate.contactId=contact.id')
+					search: encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=cast(\'' + id[1] + '\' as timestamp) and eventParticipate.contactId=contact.id')
 				}, function (l) {
 					e.innerHTML = l.length < 2 ? '<div style="margin-bottom:1em;">' + ui.l('events.noParticipant') + '</div>' : pageContact.listContacts(l);
 					ui.toggleHeight(e);
@@ -1123,7 +1123,7 @@ field.checkbox {
 			u = u[1];
 		}
 		communication.ajax({
-			url: global.serverApi + 'db/list?query=event_listParticipate&search=' + encodeURIComponent('eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=\'' + id[1] + '\' and eventParticipate.contactId=' + u + ' and eventParticipate.contactId=contact.id'),
+			url: global.serverApi + 'db/list?query=event_listParticipate&search=' + encodeURIComponent('eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=cast(\'' + id[1] + '\' as timestamp) and eventParticipate.contactId=' + u + ' and eventParticipate.contactId=contact.id'),
 			webCall: 'pageEvent.verifyParticipation',
 			responseType: 'json',
 			success(r) {

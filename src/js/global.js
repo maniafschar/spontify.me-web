@@ -224,7 +224,7 @@ class global {
 	}
 	static getRegEx(field, value) {
 		if (value)
-			return 'REGEXP_LIKE(' + field + ',\'' + value + '\')=true';
+			return 'cast(REGEXP_LIKE(' + field + ',\'' + value + '\') as integer)=true';
 		return '1=0';
 	}
 	static hash(s) {

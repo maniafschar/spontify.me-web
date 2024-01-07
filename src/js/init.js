@@ -178,7 +178,6 @@ class initialisation {
 		ui.css('main', 'display', '');
 		if (!global.isBrowser())
 			initialisation.initApp();
-		ui.html('head title', global.appTitle);
 		pageLogin.autoLogin(initialisation.showStartDialogs);
 		window.onresize = initialisation.reposition;
 		ui.on(window, 'orientationchange', initialisation.reposition);
@@ -417,7 +416,8 @@ class initialisation {
 			setTimeout(function () {
 				ui.navigation.autoOpen(p);
 			}, 100);
-		}
+		} else
+			ui.html('head title', global.appTitle);
 		if (!user.contact && user.clientId == 7 && !p)
 			setTimeout(ui.navigation.openIntro, 2000);
 	}

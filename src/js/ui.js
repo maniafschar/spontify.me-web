@@ -174,8 +174,11 @@ class ui {
 				if (ui.q('#preloader') && id.indexOf('m=') != 0)
 					setTimeout(f, 100);
 				else {
-					if (global.isBrowser())
+					if (global.isBrowser()) {
 						history.pushState(null, null, window.location.origin);
+						if (!ui.q('head title').innerHTML)
+							ui.html('head title', global.appTitle);
+					}
 					if (id.indexOf('r=') == 0) {
 						pageLogin.removeCredentials();
 						initialisation.recoverPassword(id.substring(2));

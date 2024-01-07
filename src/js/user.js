@@ -99,7 +99,7 @@ class user {
 		v.appointmentDay3 = v.appointmentDay3.substring(0, v.appointmentDay3.lastIndexOf(' '));
 		v.appointmentDay3Raw = global.date.local2server(d).substring(0, 10);
 		communication.ajax({
-			url: global.serverApi + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contactVideoCall.time>\'' + global.date.local2server(d) + '\''),
+			url: global.serverApi + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contactVideoCall.time>cast(\'' + global.date.local2server(d) + '\' as timestamp)'),
 			webCall: 'user.getAppointmentTemplate',
 			responseType: 'json',
 			success(r) {
