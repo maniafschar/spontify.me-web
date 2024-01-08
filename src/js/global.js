@@ -209,8 +209,8 @@ class global {
 		if (!v && window.location && window.location.href)
 			v = window.location.href;
 		if (v) {
-			if (v.match(/\/marketing\/init\/(\d*)/) || v.match(/\/marketing\/result\/(\d*)/))
-				return 'm=' + v.match(/\/marketing\/.+\/(\d*)/)[1];
+			if (v.match(/\/marketing\/(\d*)/))
+				return 'm=' + v.match(/\/marketing\/(\d*)/)[1];
 			if (v.match(/\/marketing\/event\/(\d*)/))
 				return global.encParam('e=' + v.match(/\/marketing\/.+\/(\d*)/)[1]);
 			if (v.match(/\/marketing\/location\/(\d*)/))
