@@ -887,7 +887,7 @@ class formFunc {
 	static svg = {
 		data: {},
 		fetch(id, img) {
-			if (!formFunc.svg.data[id]) {
+			if (id && !formFunc.svg.data[id]) {
 				formFunc.svg.data[id] = 1;
 				var exec = function (r) {
 					var parser = new DOMParser();
@@ -936,7 +936,7 @@ class formFunc {
 								e.firstChild.setAttribute('style', imgs[i].getAttribute('style'));
 							imgs[i].parentNode.replaceChild(e.firstChild, imgs[i]);
 						}
-					} else
+					} else if (id)
 						formFunc.svg.fetch(id, imgs[i]);
 				}
 			}
