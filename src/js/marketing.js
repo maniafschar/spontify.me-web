@@ -83,7 +83,7 @@ img.result {
 	}
 	static init() {
 		communication.ajax({
-			url: global.serverApi + 'action/marketing',
+			url: global.serverApi + 'marketing',
 			responseType: 'json',
 			webCall: 'marketing.init',
 			success(r) {
@@ -149,7 +149,7 @@ img.result {
 			next();
 		else
 			communication.ajax({
-				url: global.serverApi + 'action/marketing',
+				url: global.serverApi + 'marketing',
 				webCall: 'marketing.next',
 				body: { classname: 'ContactMarketing', id: marketing.data.answerId, values: { clientMarketingId: marketing.data.id, storage: JSON.stringify(marketing.answers), finished: back || marketing.data.storage.questions[index] ? false : true } },
 				method: marketing.data.answerId ? 'PUT' : 'POST',
