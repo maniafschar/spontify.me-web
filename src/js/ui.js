@@ -216,7 +216,7 @@ class ui {
 					}
 					if (id.indexOf('m=') == 0) {
 						communication.ajax({
-							url: global.serverApi + 'action/marketing?' + id,
+							url: global.serverApi + 'marketing?' + id,
 							webCall: 'ui.navigation.autoOpen',
 							responseType: 'json',
 							error() { },
