@@ -178,137 +178,16 @@ ol li {
 	list-style-type: decimal;
 }
 
+home {
+	z-index: 1;
+}
+
 subCatTitle {
 	padding-top: 0.38em;
 	margin-bottom: 0.5em;
 	text-align: center;
 	border-bottom: solid 0.06em rgba(255, 255, 255, 0.1);
 	display: block;
-}
-
-homeHeader {
-	position: relative;
-	text-align: center;
-	display: block;
-	height: 40%;
-}
-
-homeHeader>svg {
-	margin-top: 6%;
-	max-height: 90%;
-	cursor: pointer;
-}
-
-homeHeader svg {
-	fill: var(--text);
-}
-
-homeHeader>text {
-	margin: 0.5em;
-	cursor: pointer;
-	height: 3.5em;
-	width: 3.5em;
-	position: absolute;
-	right: 0;
-	top: 0;
-	overflow: visible;
-	font-size: 1.3em;
-}
-
-homeHeader>text name {
-	max-width: 7em;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	position: absolute;
-	right: 0;
-}
-
-homeHeader>text img {
-	height: 100%;
-	border-radius: 50%;
-	box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
-}
-
-homeBody {
-	position: relative;
-	width: 100%;
-	display: block;
-	height: 60%;
-	overflow: hidden;
-}
-
-homeBody teaser {
-	position: absolute;
-	width: 100%;
-	left: 0;
-	opacity: 0;
-	transition: all 0.4s ease-out;
-	height: 38%;
-	display: block;
-}
-
-homeBody teaser div {
-	overflow-x: auto;
-	overflow-y: hidden;
-	white-space: nowrap;
-	padding: 0.5em;
-	position: absolute;
-	height: 100%;
-	width: 100%;
-	top: 0;
-}
-
-homeBody teaser.contacts {
-	top: 2em;
-}
-
-homeBody teaser.events {
-	bottom: 2.2em;
-}
-
-homeBody teaser card {
-	margin: 0 0.5em;
-	border-radius: 1em;
-	overflow: hidden;
-	position: relative;
-	display: inline-block;
-	cursor: pointer;
-	height: 100%;
-	color: white;
-	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
-}
-
-homeBody teaser card img {
-	height: 100%;
-}
-
-homeBody teaser card svg {
-	height: 100%;
-	padding: 1.6em;
-	margin-top: -1.1em;
-}
-
-homeBody teaser card text {
-	position: absolute;
-	width: 100%;
-	bottom: 0.25em;
-	border-right: solid 0.5em transparent;
-	border-left: solid 0.5em transparent;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	line-height: 1.2;
-}
-
-homeBody teaser title {
-	margin-bottom: 0.25em;
-	font-size: 1.3em;
-	position: relative;
-	z-index: 1;
-}
-
-home {
-	z-index: 1;
 }
 
 main>marketing {
@@ -1078,53 +957,12 @@ notifications listBody {
 	padding: 0;
 }
 
-buttonIcon.right {
-	top: 0.5em;
-	right: 0.5em;
-}
-
-buttonIcon.statistics {
-	top: 0;
-	left: 0;
-	margin: 1em;
-	box-shadow: none;
-}
-
-buttonIcon.statistics svg {
-	stroke: var(--text);
-	width: 3em;
-	height: 3em;
-}
-
-buttonIcon.language {
-	top: 0;
-	right: 0;
-	box-shadow: none;
-	font-size: 1.4em;
-	padding: 0.5em;
-}
-
-buttonIcon.language span {
-	line-height: 1.5;
-}
-
-buttonIcon span {
-	width: 2em;
-	height: 2em;
-	line-height: 2;
-}
-
-buttonIcon.jpg {
-	padding: 0;
-}
-
-buttonIcon.jpg img {
-	width: 2.6em;
-	height: 2.6em;
+buttonIcon img {
+	width: 3.5em;
+	height: 3.5em;
 	border-radius: 50%;
 }
 
-buttonIcon img,
 buttonIcon svg {
 	width: 2em;
 	height: 2em;
@@ -1156,10 +994,6 @@ add button-text {
 	bottom: -1em;
 	left: 50%;
 	margin-left: -5.5em;
-}
-
-homeImage img {
-	height: 100%;
 }
 
 list-row {

@@ -16,15 +16,133 @@ class pageHome {
 	static badge = -1;
 	static teaserMeta;
 	static template = v =>
-		global.template`<homeHeader>
-	<buttonIcon class="statistics mainBG${v.statsButton}" onclick="${v.statsOnclick}">
-		<img source="${v.statsImg}"/>
-	</buttonIcon>
+		global.template`<style>
+homeHeader {
+	position: relative;
+	text-align: center;
+	display: block;
+	height: 45%;
+}
+
+homeHeader>svg {
+	top: 20%;
+	height: 80%;
+	cursor: pointer;
+	position: relative;
+	display: inline-block;
+}
+
+homeHeader svg {
+	fill: var(--text);
+}
+
+homeHeader>buttonIcon.left {
+	left: 0;
+}
+
+homeHeader>buttonIcon.right {
+	right: 0;
+}
+
+buttonIcon {
+	top: 0;
+	box-shadow: none;
+	font-size: 1.4em;
+}
+
+buttonIcon span {
+	line-height: 1.3;
+	max-width: 4em;
+	max-height: 4em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-align: right;
+}
+
+homeBody {
+	position: relative;
+	width: 100%;
+	display: block;
+	height: 55%;
+	overflow: hidden;
+}
+
+teaser {
+	position: absolute;
+	width: 100%;
+	left: 0;
+	opacity: 0;
+	transition: all 0.4s ease-out;
+	height: 38%;
+	display: block;
+}
+
+teaser div {
+	overflow-x: auto;
+	overflow-y: hidden;
+	white-space: nowrap;
+	padding: 0.5em;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	top: 0;
+}
+
+teaser.contacts {
+	top: 1em;
+}
+
+teaser.events {
+	bottom: 2.2em;
+}
+
+teaser card {
+	margin: 0 0.5em;
+	border-radius: 0.5em;
+	overflow: hidden;
+	position: relative;
+	display: inline-block;
+	cursor: pointer;
+	height: 100%;
+	color: white;
+	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
+}
+
+teaser card img {
+	height: 100%;
+}
+
+teaser card svg {
+	height: 100%;
+	padding: 1.6em;
+	margin-top: -1.1em;
+}
+
+teaser card text {
+	position: absolute;
+	width: 100%;
+	bottom: 0.25em;
+	border-right: solid 0.5em transparent;
+	border-left: solid 0.5em transparent;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 1.2;
+}
+
+teaser title {
+	margin-bottom: 0.25em;
+	font-size: 1.3em;
+	position: relative;
+	z-index: 1;
+}
+</style>
+<homeHeader>
+	<buttonIcon class="statistics left${v.statsButton}" onclick="${v.statsOnclick}"><span>${v.statsLabel}</span></buttonIcon>
 	<img onclick="${v.actionLogo}" source="logo"/>
-	<text onclick="ui.navigation.goTo(&quot;settings&quot;)" ${v.dispProfile}>
+	<buttonIcon onclick="ui.navigation.goTo(&quot;settings&quot;)" class="right${v.dispProfile}">
 		${v.imgProfile}
-	</text>
-	<buttonIcon class="language${v.langButton}" onclick="pageHome.openLanguage(event)">
+	</buttonIcon>
+	<buttonIcon class="right${v.langButton}" onclick="pageHome.openLanguage(event)">
 		<span>${v.lang}</span>
 	</buttonIcon>
 </homeHeader>
@@ -185,22 +303,22 @@ border-radius: 0.5em 0 0 3em;
 				if (user.contact.imageList)
 					v.imgProfile = '<img src="' + global.serverImg + user.contact.imageList + '"/>';
 				else
-					v.imgProfile = '<name>' + user.contact.pseudonym + '</name>';
+					v.imgProfile = '<span>' + user.contact.pseudonym + '</span>';
 				v.infoButton = ' hidden';
 				v.langButton = ' hidden';
 				if (user.contact.type == 'adminContent') {
 					v.statsButton = '';
 					v.statsOnclick = 'ui.navigation.goTo(&quot;content-admin-home&quot;)';
-					v.statsImg = 'content-admin-home';
+					v.statsLabel = 'content-admin-home';
 				}
 			} else {
-				v.dispProfile = 'class="hidden"';
+				v.dispProfile = ' hidden';
 				v.lang = global.language;
 			}
 			if (global.config.news) {
 				v.statsButton = '';
 				v.statsOnclick = 'pageHome.openNews()';
-				v.statsImg = 'news';
+				v.statsLabel = ui.l('home.news');
 			}
 			ui.q('home').innerHTML = pageHome.template(v);
 			formFunc.svg.replaceAll();

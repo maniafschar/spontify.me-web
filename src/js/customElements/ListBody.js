@@ -1,6 +1,6 @@
 import { formFunc, ui } from '../ui';
 
-export { ListBody }
+export { ListBody };
 
 class ListBody extends HTMLElement {
 	constructor() {
@@ -10,7 +10,7 @@ class ListBody extends HTMLElement {
 		if (!this.innerHTML) {
 			var id = ui.parents(this, 'contacts') ? 'contacts' : ui.parents(this, 'events') ? 'events' : '';
 			var element = document.createElement('listHeader');
-			element.innerHTML = '<buttonicon class="right bgColor" onclick="ui.navigation.toggleMenu()"><img source="menu"/></buttonicon><listTitle>' + ui.l(id + '.title').toLowerCase() + '</listTitle>'
+			element.innerHTML = '<buttonicon class="bgColor" style="top:0.5em;right:0.5em;" onclick="ui.navigation.toggleMenu()"><img source="menu"/></buttonicon><listTitle>' + ui.l(id + '.title').toLowerCase() + '</listTitle>'
 				+ (id == 'contacts' ? '' : '<map style="display:none;"></map><button-text class="map" onclick="pageLocation.searchFromMap()" label="search.map"></button-text>');
 			this.appendChild(element);
 			var element = document.createElement('listBody');
