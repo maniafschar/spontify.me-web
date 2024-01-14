@@ -2,7 +2,7 @@ import { initialisation } from '../init';
 import { ui } from '../ui';
 import { DialogHint } from './DialogHint';
 
-export { DialogMenu }
+export { DialogMenu };
 
 class DialogMenu extends HTMLElement {
 	constructor() {
@@ -39,7 +39,7 @@ a {
 
 a:hover,
 a.highlight {
-	color: var(--bgHint);
+	color: var(--text);
 }
 
 title {

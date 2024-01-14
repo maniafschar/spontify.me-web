@@ -309,7 +309,7 @@ border-radius: 0.5em 0 0 3em;
 				if (user.contact.type == 'adminContent') {
 					v.statsButton = '';
 					v.statsOnclick = 'ui.navigation.goTo(&quot;content-admin-home&quot;)';
-					v.statsLabel = 'content-admin-home';
+					v.statsLabel = 'Stats';
 				}
 			} else {
 				v.dispProfile = ' hidden';
