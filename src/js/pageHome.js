@@ -432,7 +432,7 @@ border-radius: 0.5em 0 0 3em;
 								s += '<date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
 							else
 								s += '<date>' + global.date.formatDate(e.publish) + '</date>';
-							s += e.description;
+							s += e.description.replace(/\n/g, '<br/>');
 							s += '</p>'
 							if (e.image)
 								s += '<img src="' + global.serverImg + e.image + '"/>';
