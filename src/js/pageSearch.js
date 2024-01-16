@@ -163,7 +163,7 @@ ${v.keywords}
 			}
 			if (s)
 				s = '(' + s + ') and ';
-			return s + 'event.endDate>=\'' + global.date.local2server(new Date()).substring(0, 10) + '\'';
+			return s + 'event.endDate>=cast(\'' + global.date.local2server(new Date()).substring(0, 10) + '\' as timestamp)';
 		},
 		getSearch1(bounds) {
 			var s = '';
