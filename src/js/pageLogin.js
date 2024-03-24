@@ -1,5 +1,6 @@
 import { bluetooth } from './bluetooth';
 import { communication, Encryption, FB } from './communication';
+import { DialogPopup } from './customElements/DialogPopup';
 import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './init';
@@ -11,7 +12,6 @@ import { pageHome } from './pageHome';
 import { pageLocation } from './pageLocation';
 import { formFunc, ui } from './ui';
 import { user } from './user';
-import { DialogPopup } from './customElements/DialogPopup';
 
 export { pageLogin };
 
@@ -359,10 +359,9 @@ class pageLogin {
 	}
 	static openFB(exec) {
 		FB.init({
-			appId: '672104933632183',
-			accessToken: 'cb406e0fe7fd07415c7bea50e86ed3f6',
+			appId: '{placeholderFacebookId}',
 			xfbml: true,
-			version: 'v18.0'
+			version: 'v19.0'
 		});
 		FB.login(
 			function (response) {

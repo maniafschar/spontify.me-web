@@ -33,7 +33,6 @@ module.exports = (env) => {
 				return middlewares;
 			},
 			devMiddleware: {
-
 				writeToDisk: true
 			}
 		},
@@ -125,6 +124,7 @@ module.exports = (env) => {
 							.replace('{placeholderAppTitle}', props.name)
 							.replace('{placeholderClientId}', '' + Math.max(parseInt(client), 1))
 							.replace('{placeholderServer}', props.server)
+							.replace('{placeholderFacebookId}', props.facebookId)
 							.replace(/\{placeholderBundleID}/g, props.bundleId)
 							.replace(/\{placeholderAppConfig}/g, JSON.stringify(props.appConfig).replace(/\"/g, '\\"'))
 							.replace(/\{placeholderAppleID}/g, props.appleId));
@@ -178,7 +178,7 @@ module.exports = (env) => {
 								replace: '$1' + props.url.substring(8, props.url.lastIndexOf('.')) + '$3'
 							}
 						];
-						file = '../app/config.xml';
+						file = '../spontify.me-app/config.xml';
 						var s = fs.readFileSync(file, 'utf8');
 						for (var i = 0; i < regexs.length; i++) {
 							if (!regexs[i].pattern.test(s)) {

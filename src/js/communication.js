@@ -526,11 +526,11 @@ class sha256 {
 }
 
 class FB {
-	static FB_LOGIN_URL = 'https://www.facebook.com/dialog/oauth';
+	static FB_LOGIN_URL = 'https://www.facebook.com/{version}/dialog/oauth';
 	static FB_LOGOUT_URL = 'https://www.facebook.com/logout.php';
 	static tokenStore = window.sessionStorage;
 	static fbAppId;
-	static fbAccessToken = '';
+	static version;
 	static baseURL = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
 	static oauthRedirectURL = FB.baseURL + '/oauthcallback.html';
 	static logoutRedirectURL = FB.baseURL + '/logoutcallback.html';
@@ -541,10 +541,9 @@ class FB {
 			FB.fbAppId = params.appId;
 		else
 			throw 'appId parameter not set in init()';
-		if (params.accessToken)
-			FB.fbAccessToken = params.accessToken;
 		if (params.tokenStore)
 			FB.tokenStore = params.tokenStore;
+		FB.version = params.version;
 	}
 	static login(callback, options) {
 		if (FB.tokenStore['fbtoken']) {
@@ -577,7 +576,7 @@ class FB {
 			scope = options.scope;
 		FB.loginCallback = callback;
 		var openInAppBrowser = function () {
-			ui.navigation.openHTML(FB.FB_LOGIN_URL + '?client_id=' + FB.fbAppId +
+			ui.navigation.openHTML(FB.FB_LOGIN_URL.replace('{version}', FB.version) + '?client_id=' + FB.fbAppId +
 				'&redirect_uri=' + (global.isBrowser() ? FB.oauthRedirectURL : 'https://www.facebook.com/connect/login_success.html') +
 				'&response_type=token&scope=' + scope, 'fb_login');
 			if (window.cordova) {
