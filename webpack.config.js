@@ -27,7 +27,8 @@ module.exports = (env) => {
 			compress: true,
 			port: 9000,
 			webSocketServer: 'ws',
-			liveReload: true,
+			hot: false,
+			liveReload: false,
 			setupMiddlewares: (middlewares, devServer) => {
 				devServer.app.use('/', express.static(path.resolve(__dirname, 'dist')));
 				return middlewares;
@@ -91,7 +92,10 @@ module.exports = (env) => {
 				apply: compiler => {
 					compiler.hooks.afterEmit.tap('client', () => {
 						var fs = require('fs'), file, client = env && env.client && !isNaN(env.client) ? env.client : '1';
+						console.log(client);
 						var props = JSON.parse(fs.readFileSync('clients/' + client + '/props.json', 'utf8'));
+						if (!props)
+							throw 'client ' + client + ' does not exists!';
 						props.nameShort = props.name.indexOf(' · ') > -1 ? props.name.substring(props.name.indexOf(' · ') + 3) : props.name;
 						fs.mkdirSync('dist/audio');
 						fs.mkdirSync('dist/css');
