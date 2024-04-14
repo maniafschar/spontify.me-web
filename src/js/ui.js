@@ -546,55 +546,54 @@ class ui {
 	}
 	static q(path) {
 		var e = ui.qa(path);
-		return e.length ? e[0] : null;
+		return e && e.length ? e[0] : null;
 	}
 	static qa(path) {
-		var customElements = function (p) {
-			if (path.indexOf(',') < 0) {
-				var i = path.indexOf(p);
-				if (i > -1 && path.indexOf(' ', i) > -1) {
-					i = path.indexOf(' ', i);
-					var path1 = path.substring(0, i);
-					var path2 = path.substring(i).trim();
+		var customElements = function (e, p, match) {
+			if (p.indexOf(',') < 0) {
+				var x = p.indexOf(match);
+				if (x > -1 && p.indexOf(' ', x) > -1) {
+					x = p.indexOf(' ', x);
 					var result = [];
-					var e = document.querySelectorAll(path1);
-					for (i = 0; i < e.length; i++) {
-						var e2 = e[i]._root.querySelectorAll(path2);
-						for (var i2 = 0; i2 < e2.length; i2++)
-							result.push(e2[i2]);
+					var e2 = e.querySelectorAll(p.substring(0, x));
+					for (var i2 = 0; i2 < e2.length; i2++) {
+						var e3 = detectCustomElement(e2[i2]._root, p.substring(x).trim());
+						for (var i3 = 0; i3 < e3.length; i3++)
+							result.push(e3[i3]);
 					}
 					return result;
 				}
 			}
 		}
-		var e = customElements('dialog-popup');
-		if (!e)
-			e = customElements('dialog-navigation');
-		if (!e)
-			e = customElements('button-text');
-		if (!e)
-			e = customElements('dialog-hint');
-		if (!e)
-			e = customElements('dialog-menu');
-		if (!e)
-			e = customElements('video-call');
-		if (!e)
-			e = customElements('input-date');
-		if (!e)
-			e = customElements('input-hashtags');
-		if (!e)
-			e = customElements('input-image');
-		if (!e)
-			e = customElements('list-row');
-		if (!e)
-			e = customElements('content-admin-home');
-		if (!e)
-			e = customElements('content-admin-marketing');
-		if (!e)
-			e = customElements('content-admin-invoice');
-		if (!e)
-			e = document.querySelectorAll(path);
-		return e;
+		var detectCustomElement = function (e, p) {
+			var e2 = customElements(e, p, 'dialog-popup');
+			if (!e2)
+				e2 = customElements(e, p, 'dialog-navigation');
+			if (!e2)
+				e2 = customElements(e, p, 'button-text');
+			if (!e2)
+				e2 = customElements(e, p, 'dialog-hint');
+			if (!e2)
+				e2 = customElements(e, p, 'dialog-menu');
+			if (!e2)
+				e2 = customElements(e, p, 'video-call');
+			if (!e2)
+				e2 = customElements(e, p, 'input-date');
+			if (!e2)
+				e2 = customElements(e, p, 'input-hashtags');
+			if (!e2)
+				e2 = customElements(e, p, 'input-image');
+			if (!e2)
+				e2 = customElements(e, p, 'list-row');
+			if (!e2)
+				e2 = customElements(e, p, 'content-admin-home');
+			if (!e2)
+				e2 = customElements(e, p, 'content-admin-marketing');
+			if (!e2)
+				e2 = customElements(e, p, 'content-admin-invoice');
+			return e2 && e2.length ? e2 : e.querySelectorAll(p);
+		};
+		return detectCustomElement(document, path);
 	}
 	static attr(e, name, value) {
 		var b = value || typeof value == 'string' || value == 0;

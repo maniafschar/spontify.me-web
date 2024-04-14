@@ -387,7 +387,7 @@ class initialisation {
 				ui.labels['infoLegal'] = r[1];
 			}
 		});
-		ui.q('#addLeft > button-text').setAttribute('label', global.appTitle + ' blog');
+		ui.attr('#addLeft > button-text', 'label', global.appTitle + ' blog');
 		ui.html('info', '');
 		ui.html('settings', '');
 		ui.html('login', '');
