@@ -578,6 +578,8 @@ class ui {
 			if (!e2)
 				e2 = customElements(e, p, 'video-call');
 			if (!e2)
+				e2 = customElements(e, p, 'input-rating');
+			if (!e2)
 				e2 = customElements(e, p, 'input-date');
 			if (!e2)
 				e2 = customElements(e, p, 'input-hashtags');
