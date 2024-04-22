@@ -1,7 +1,9 @@
 {
 	"categories": [
+		"{skills}",
 		{
 			"label": "Knowledge",
+			"key": 0,
 			"values": [
 				"Architecture|01",
 				"Geography|02",
@@ -27,6 +29,7 @@
 		},
 		{
 			"label": "Culture",
+			"key": 1,
 			"values": [
 				"Exhibitions|01",
 				"Ancient|02",
@@ -52,6 +55,7 @@
 		},
 		{
 			"label": "Culinary",
+			"key": 2,
 			"values": [
 				"Afghan|01",
 				"Bavarian|02",
@@ -86,6 +90,7 @@
 		},
 		{
 			"label": "Character",
+			"key": 3,
 			"values": [
 				"Persistent|01",
 				"Resilient|02",
@@ -114,6 +119,7 @@
 		},
 		{
 			"label": "Sport",
+			"key": 4,
 			"values": [
 				"Basketball|01",
 				"Bowling|02",
@@ -146,6 +152,7 @@
 		},
 		{
 			"label": "Hobby",
+			"key": 5,
 			"values": [
 				"Go out|28",
 				"Baking|01",
@@ -232,12 +239,12 @@
 			"fbShowLink": "Show link",
 			"friendshipTitle": "My ${buddies}",
 			"friendsOfFriends": "${buddies} of my ${buddies}",
-			"matchIndicatorHint": "{0} of your {1} specified skills match. That's a {2}% match.",
+			"matchIndicatorHint": "{0} of your {1} specified interests match. That's a {2}% match.",
 			"matchIndicatorHintPulse": "The indicator is pulsing, your <b>Prefered from</b> settings also match!",
-			"matchIndicatorHintDescription1": "common skill",
-			"matchIndicatorHintDescription2": "${buddies} skill",
-			"matchIndicatorHintDescription3": "your skill",
-			"matchIndicatorHintDescription4": "Event skill",
+			"matchIndicatorHintDescription1": "common interests",
+			"matchIndicatorHintDescription2": "${buddies} interests",
+			"matchIndicatorHintDescription3": "your interests",
+			"matchIndicatorHintDescription4": "Event suited for these interests",
 			"relation": "Relation",
 			"requestFriendship": "Send friendship request!",
 			"requestFriendshipAlreadySent": "Friendship request sent, wait for confirmance!",
@@ -310,7 +317,7 @@
 		"error": {
 			"description": "Please enter a description.",
 			"detailNotFound": "The entry could not be found.",
-			"hashtags": "Choose at least one skill.",
+			"hashtags": "Choose at least one interest.",
 			"noNetworkConnection": "The server is unreachable,<br/>are you connected to the Internet?",
 			"open": "Note: The data could not be retrieved. Please check your Internet connection.",
 			"save": "Sorry, your data could not be saved. We take care of the problem.",
@@ -333,12 +340,12 @@
 			"errorDateTooSmall": "The date is in the past.",
 			"errorLocation": "Please choose a Location.",
 			"errorVisibility": "You have not stored any attributes in your profile. This way, the event cannot be suggested to anyone. Select attributes in your profile or select \"All\".",
-			"hashtags": "Skills",
+			"hashtags": "Interests",
 			"location": "Location",
 			"locationInputHint": "For searching enter 4 characters of the name or address of the Location.",
 			"locationInputHintCreateNew": "Location not found? No problem, create a",
 			"locationInputNoHit": "No hit",
-			"matchIndicatorHint": "{0} of your {1} specified skills match. That's a {2}% match.",
+			"matchIndicatorHint": "{0} of your {1} specified interests match. That's a {2}% match.",
 			"maxParticipants": "Max. Participants",
 			"myEvents": "which I created",
 			"myTickets": "in which I participate",
@@ -387,7 +394,7 @@
 			"stopParticipateText": "Cancellations cannot be revised. Do you wish to continue? If Yes, then enter a reason for your cancellation:",
 			"this": "This {0}",
 			"ticketCurrent": "Actual tickets",
-			"ticketInteresst": "Tickets fitting your skills",
+			"ticketInteresst": "Tickets fitting your interests",
 			"ticketPast": "Past tickets",
 			"title": "Events",
 			"today": "Today, {0}",
@@ -401,7 +408,7 @@
 			"yesterday": "Yesterday, {0}"
 		},
 		"home": {
-			"labelSkill": "I am looking for following skills",
+			"labelSkill": "I am looking for following interests",
 			"labelTime": "Today from",
 			"locationNotSetable": "There's no town at this point.",
 			"locationPickerInput": "search location here or on the map",
@@ -630,12 +637,12 @@
 			"dateSelectionToday": "today",
 			"dateSelectionTomorrow": "tomorrow",
 			"favorites": "my favorites",
-			"hintContact": "Skills, name, description are searched.",
+			"hintContact": "Interests, name, description are searched.",
 			"hintEvent": "Name/address/phone number of the location, description event/location/creator are searched.",
 			"hintLocation": "Name, address (including district name), phone number, description are searched.",
 			"map": "search in this area",
 			"matches": "with similar interests",
-			"matchesEvent": "fitting to my skills",
+			"matchesEvent": "fitting to my interests",
 			"results": "{0} hits in",
 			"title": "Search",
 			"type": "Search in"
@@ -717,12 +724,12 @@
 			"showAge": "Only show the age",
 			"showBirthday": "Show birthday",
 			"showNoAge": "Don't show",
-			"skills": "My skills",
-			"skillDialog": "Which skills do you have?",
+			"skills": "My interests",
+			"skillDialog": "Which interests do you have?",
 			"socialShare": "Invite friends",
 			"tabLegal": "Legal",
 			"tabProfile": "Profile",
-			"tabSkills": "Skills",
+			"tabSkills": "Interests",
 			"teaser": "My profile and my events may be",
 			"teaserLabel": "shown to not logged in ${buddies} on the home page",
 			"urls": "Links to LinkedIn, Instagram...",

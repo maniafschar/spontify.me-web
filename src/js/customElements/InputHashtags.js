@@ -1,7 +1,7 @@
 import { initialisation } from '../init';
 import { ui } from '../ui';
 
-export { InputHashtags }
+export { InputHashtags };
 
 class InputHashtags extends HTMLElement {
 	constructor() {
@@ -13,6 +13,8 @@ class InputHashtags extends HTMLElement {
 		style.textContent = `${initialisation.customElementsCss}
 hashtags {
 	position: relative;
+	overflow: hidden;
+	margin-top: 0.25em;
 }
 
 hashtags category {
@@ -112,7 +114,7 @@ hashtagButton::before {
 				var t = ui.categories[i].values[i2].split('|');
 				var i3 = hashtags.toLowerCase().indexOf(t[0].toLowerCase());
 				if (i3 > -1) {
-					category += '|' + i + '.' + t[1];
+					category += '|' + ui.categories[i].key + '.' + t[1];
 					hashtags = hashtags.substring(0, i3) + hashtags.substring(i3 + t[0].length);
 				}
 			}
@@ -131,14 +133,16 @@ hashtagButton::before {
 	static ids2Text(ids) {
 		if (!ids)
 			return '';
-		var a = [];
+		var a = [], cats = {};
 		ids = ids.split('|');
+		for (var i = 0; i < ui.categories.length; i++)
+			cats['cat' + ui.categories[i].key] = ui.categories[i].values;
 		for (var i = 0; i < ids.length; i++) {
 			var id = ids[i].split('\.');
-			if (ui.categories[id[0]])
-				for (var i2 = 0; i2 < ui.categories[id[0]].values.length; i2++) {
-					if (ui.categories[id[0]].values[i2].split('|')[1] == id[1]) {
-						a.push(ui.categories[id[0]].values[i2].split('|')[0]);
+			if (cats['cat' + id[0]])
+				for (var i2 = 0; i2 < cats['cat' + id[0]].length; i2++) {
+					if (cats['cat' + id[0]][i2].split('|')[1] == id[1]) {
+						a.push(cats['cat' + id[0]][i2].split('|')[0]);
 						break;
 					}
 				}
@@ -183,7 +187,7 @@ hashtagButton::before {
 		ui.classRemove(e.querySelectorAll('category label.selected'), 'selected');
 		ui.classAdd(e.querySelectorAll('category label')[i], 'selected');
 		var a = e.querySelectorAll('div')[i];
-		e.style.minHeight = '14em';
+		e.style.minHeight = (2.4 * ui.categories.length) + 'em';
 		var f = function () { ui.toggleHeight(a, function () { e.style.minHeight = null; }); };
 		if (visibleBlock && visibleBlock != a)
 			ui.toggleHeight(visibleBlock, f);

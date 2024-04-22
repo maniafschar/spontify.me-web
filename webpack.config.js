@@ -142,7 +142,8 @@ module.exports = (env) => {
 								.replace(/\${infoDescription}/g, props[languages[i]].infoDescription.replace(/"/g, '\\"'))
 								.replace(/\${introDescription}/g, props[languages[i]].introDescription.replace(/"/g, '\\"'))
 								.replace(/\${buddy}/g, props[languages[i]].buddy)
-								.replace(/\${buddies}/g, props[languages[i]].buddies));
+								.replace(/\${buddies}/g, props[languages[i]].buddies)
+								.replace('"{skills}",', props[languages[i]].skills ? JSON.stringify(props[languages[i]].skills) + ',' : ''));
 						}
 						var regexs = [
 							{

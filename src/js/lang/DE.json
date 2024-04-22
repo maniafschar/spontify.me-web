@@ -1,7 +1,9 @@
 {
 	"categories": [
+		"{skills}",
 		{
 			"label": "Wissen",
+			"key": 0,
 			"values": [
 				"Architektur|01",
 				"Erdkunde|02",
@@ -27,6 +29,7 @@
 		},
 		{
 			"label": "Kultur",
+			"key": 1,
 			"values": [
 				"Ausstellungen|01",
 				"Antike|02",
@@ -52,6 +55,7 @@
 		},
 		{
 			"label": "Kulinarik",
+			"key": 2,
 			"values": [
 				"Afghanisch|01",
 				"Bayerisch|02",
@@ -86,6 +90,7 @@
 		},
 		{
 			"label": "Charakter",
+			"key": 3,
 			"values": [
 				"Ausdauernd|01",
 				"Belastbar|02",
@@ -114,6 +119,7 @@
 		},
 		{
 			"label": "Sport",
+			"key": 4,
 			"values": [
 				"Basketball|01",
 				"Bowling|02",
@@ -146,6 +152,7 @@
 		},
 		{
 			"label": "Hobby",
+			"key": 5,
 			"values": [
 				"Ausgehen|28",
 				"Backen|01",
@@ -232,12 +239,12 @@
 			"fbShowLink": "Link anzeigen",
 			"friendshipTitle": "meine ${buddies}",
 			"friendsOfFriends": "${buddies} meiner ${buddies}",
-			"matchIndicatorHint": "{0} Deiner {1} angegebenen Skills stimmen überein, eine Übereinstimmung von {2}%.",
+			"matchIndicatorHint": "{0} Deiner {1} angegebenen Interessen stimmen überein, eine Übereinstimmung von {2}%.",
 			"matchIndicatorHintPulse": "Der Indikator pulsiert, d.h. Deine <b>Bevorzugt von</b> Angaben stimmen mit dem ${buddy} überein!",
-			"matchIndicatorHintDescription1": "gemeinsamer Skill",
-			"matchIndicatorHintDescription2": "${buddies} Skill",
-			"matchIndicatorHintDescription3": "Dein Skill",
-			"matchIndicatorHintDescription4": "Events Skill",
+			"matchIndicatorHintDescription1": "gemeinsame Interessen",
+			"matchIndicatorHintDescription2": "${buddies} Interessen",
+			"matchIndicatorHintDescription3": "Deine Interessen",
+			"matchIndicatorHintDescription4": "Events geeignet für diese Interessen",
 			"relation": "Verbindung",
 			"requestFriendship": "Freundschaftsanfrage senden",
 			"requestFriendshipAlreadySent": "Freundschaftsanfrage versendet, warte auf Bestätigung.",
@@ -310,7 +317,7 @@
 		"error": {
 			"description": "Bitte gib eine Beschreibung an.",
 			"detailNotFound": "Der Eintrag konnte nicht gefunden werden.",
-			"hashtags": "Wähle mindestens einen Skill aus.",
+			"hashtags": "Wähle mindestens ein Interesse aus.",
 			"noNetworkConnection": "Der Server ist nicht erreichbar.<br/>Bist Du mit dem Internet verbunden?",
 			"open": "Achtung: Die Daten konnten nicht ermittelt werden. Bitte überprüfe Deine Internet Verbindung.",
 			"save": "Sorry, Deine Daten konnten leider nicht gespeichert werden. Wir kümmern uns um das Problem.",
@@ -333,12 +340,12 @@
 			"errorDateTooSmall": "Der Termin liegt in der Vergangenheit.",
 			"errorLocation": "Bitte wähle eine Location aus.",
 			"errorVisibility": "Du hast in Deinem Profil keine Attribute hinterlegt, so kann das Event niemanden vorgeschalgen werden. Wähle in Deinem Profil Attribute aus oder selektiere \"Alle\".",
-			"hashtags": "Skills",
+			"hashtags": "Interessen",
 			"location": "Location",
 			"locationInputHint": "Zum suchen 4 Buchstaben des Namens oder der Adresse der Location eingeben.",
 			"locationInputHintCreateNew": "Location nicht gefunden? Kein Problem, erstelle eine",
 			"locationInputNoHit": "Keine Treffer",
-			"matchIndicatorHint": "{0} Deiner {1} angegebenen Skills stimmen überein, eine Übereinstimmung von {2}%.",
+			"matchIndicatorHint": "{0} Deiner {1} angegebenen Interessen stimmen überein, eine Übereinstimmung von {2}%.",
 			"maxParticipants": "Max. Teilnehmer",
 			"myEvents": "die ich erstellt habe",
 			"myTickets": "an denen ich teilnehme",
@@ -387,7 +394,7 @@
 			"stopParticipateText": "Absagen können nicht revidiert werden. Möchtest Du fortfahren? Wenn Ja, dann gib eine Begründung für Deine Absage an:",
 			"this": "Diesen {0}",
 			"ticketCurrent": "Aktuelle Tickets",
-			"ticketInteresst": "Tickets passend zu Deinen Skills",
+			"ticketInteresst": "Tickets passend zu Deinen Interessen",
 			"ticketPast": "Vergangene Tickets",
 			"title": "Events",
 			"today": "Heute, {0}",
@@ -401,7 +408,7 @@
 			"yesterday": "Gestern, {0}"
 		},
 		"home": {
-			"labelSkill": "suche ich folgende Skills",
+			"labelSkill": "suche ich folgende Interessen",
 			"labelTime": "Heute ab",
 			"locationNotSetable": "An dieser Stelle existiert kein Ort.",
 			"locationPickerInput": "Ort hier eingeben oder auf der Karte suchen",
@@ -630,12 +637,12 @@
 			"dateSelectionToday": "heute",
 			"dateSelectionTomorrow": "morgen",
 			"favorites": "meine Favoriten",
-			"hintContact": "Skills, Name, Beschreibung werden durchsucht.",
+			"hintContact": "Interessen, Name, Beschreibung werden durchsucht.",
 			"hintEvent": "Name/Adresse/Telefonnummer der Location, Beschreibung Event/Location/Ersteller werden durchsucht.",
 			"hintLocation": "Name, Adresse (inklusive Stadtteilname), Telefonnummer, Beschreibung werden durchsucht.",
 			"map": "in diesem Bereich suchen",
-			"matches": "mit gem. Skills",
-			"matchesEvent": "passend zu meinen Skills",
+			"matches": "mit gem. Interessen",
+			"matchesEvent": "passend zu meinen Interessen",
 			"results": "{0} Treffer in",
 			"title": "Suche",
 			"type": "Suchen in"
@@ -717,12 +724,12 @@
 			"showAge": "Nur das Alter anzeigen",
 			"showBirthday": "Geburtstag anzeigen",
 			"showNoAge": "Nicht anzeigen",
-			"skills": "Meine Skills",
-			"skillDialog": "Welche Skills hast Du?",
+			"skills": "Meine Interessen",
+			"skillDialog": "Welche Interessen hast Du?",
 			"socialShare": "Freunde einladen",
 			"tabLegal": "Rechtliches",
 			"tabProfile": "Profil",
-			"tabSkills": "Skills",
+			"tabSkills": "Interessen",
 			"teaser": "Mein Profil und meine Events dürfen",
 			"teaserLabel": "auf der Startseite nichteingeloggten ${buddies} angezeigt werden",
 			"urls": "Links zu LinkedIn, Instagram, etc.",
