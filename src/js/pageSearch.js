@@ -47,7 +47,7 @@ class pageSearch {
 				v.keywords = pageSearch.contacts.fieldValues.keywords;
 			if (!pageSearch.contacts.fieldValues.keywordsText)
 				v.keywordsText = pageSearch.contacts.fieldValues.keywordsText;
-			if (pageSearch.contacts.fieldValues.matches == 'true')
+			if (pageSearch.contacts.fieldValues.matches != 'false')
 				v.matches = ' checked="true"';
 			return pageSearch.contacts.template(v);
 		},
