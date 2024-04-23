@@ -857,7 +857,7 @@ class formFunc {
 				if (!cb[e[i].getAttribute('name')])
 					cb[e[i].getAttribute('name')] = '';
 				if (e[i].getAttribute('checked') == 'true')
-					cb[e[i].getAttribute('name')] += global.separatorTech + e[i].getAttribute('value');
+					cb[e[i].getAttribute('name')] += global.separatorTech + (e[i].getAttribute('value') ? e[i].getAttribute('value') : true);
 				else if (e[i].getAttribute('value') == 'true')
 					cb[e[i].getAttribute('name')] += global.separatorTech + false;
 			}
