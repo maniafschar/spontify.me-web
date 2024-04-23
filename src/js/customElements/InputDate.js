@@ -5,7 +5,7 @@ import { ui } from '../ui';
 export { InputDate }
 
 class InputDate extends HTMLElement {
-	nowizard = false;
+	wizard = true;
 	x = 0;
 	constructor() {
 		super();
@@ -122,7 +122,7 @@ next::after {
 		var m = this.get('month').getAttribute('value'), y = this.get('year').getAttribute('value'), maxDays = 31;
 		var min = new Date(this.getAttribute('min'));
 		var max = new Date(this.getAttribute('max'));
-		this.nowizard = true;
+		this.wizard = false;
 		if (!y) {
 			this.selectYear((max < new Date() ? max : min).getFullYear());
 			y = this.get('year').getAttribute('value');
@@ -131,7 +131,7 @@ next::after {
 			this.selectMonth((max < new Date() ? max : min).getMonth() + 1);
 			m = this.get('month').getAttribute('value');
 		}
-		this.nowizard = false;
+		this.wizard = true;
 		if (m == '02')
 			maxDays = y && new Date(parseInt(y), 1, 29).getDate() == 29 ? 29 : 28;
 		else if (m == '04' || m == '06' || m == '09' || m == '11')
@@ -241,13 +241,13 @@ next::after {
 			var e = this.get('year');
 			if (e) {
 				var d = global.date.getDateFields(type || '');
-				this.nowizard = true;
+				this.wizard = false;
 				this.selectYear(d.year);
 				this.selectMonth(d.month);
 				this.selectDay(d.day);
 				this.selectHour(d.hour);
 				this.selectMinute(d.minute);
-				this.nowizard = false;
+				this.wizard = true;
 			} else if (type)
 				this._root.querySelector('label').innerHTML = type.indexOf('-') < 0 ? ui.l('search.dateSelection' + type.substring(0, 1).toUpperCase() + type.substring(1)) : global.date.formatDate(type);
 			this.setAttribute('value', type);
@@ -283,23 +283,15 @@ next::after {
 			e.innerHTML = label || label == 0 ? label : value;
 			e.setAttribute('value', value);
 			ui.classAdd(e, 'filled');
-			if (!this.nowizard) {
-				var next, exec;
-				if (field == 'Year') {
-					next = 'month';
-					exec = this.toggleMonth;
-				} else if (field == 'Month') {
-					next = 'day';
-					exec = this.toggleDay;
-				} else if (field == 'Day') {
-					next = 'hour';
-					exec = this.toggleHour;
-				} else if (field == 'Hour') {
-					next = 'minute';
-					exec = this.toggleMinute;
-				}
-				if (exec && this.get(next) && !this.get(next).getAttribute('value'))
-					exec.call(this);
+			if (this.wizard) {
+				if (field == 'Year')
+					this.toggleMonth(this);
+				else if (field == 'Month')
+					this.toggleDay(this);
+				else if (field == 'Day')
+					this.toggleHour(this);
+				else if (field == 'Hour')
+					this.toggleMinute(this);
 			}
 		} else {
 			e.innerHTML = ui.l('date.label' + field);
@@ -365,10 +357,10 @@ next::after {
 		var max = new Date(this.getAttribute('max'));
 		var y = this.get('year').getAttribute('value');
 		if (!y) {
-			this.nowizard = true;
+			this.wizard = false;
 			this.selectYear((max < new Date() ? max : min).getFullYear());
 			y = this.get('year').getAttribute('value');
-			this.nowizard = false;
+			this.wizard = true;
 		}
 		var s = '<style>label{padding:0.34em 0.75em;}</style>', e = this.get('month');
 		for (var i = parseInt(y) == min.getFullYear() ? min.getMonth() + 1 : 1;
