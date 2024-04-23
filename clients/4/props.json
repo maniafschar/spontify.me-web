@@ -8,14 +8,15 @@
 			"label": "Vereine",
 			"key": 9,
 			"values": [
-				"FC Bayern München|01",
-				"Borussia Dortmund|02",
-				"Bayer 04 Leverkusen|03",
-				"VfB Stuttgart|04",
-				"RB Leipzig|05",
-				"Eintracht Frankfurt|06",
-				"SC Freiburg|07",
-				"FC Augsburg|08"
+				"FC Bayern München|157",
+				"Borussia Dortmund|163",
+				"Bayer 04 Leverkusen|168",
+				"VfB Stuttgart|172",
+				"RB Leipzig|173",
+				"Eintracht Frankfurt|169",
+				"SC Freiburg|160",
+				"FC Augsburg|170",
+				"TSV 1860 München|786"
 			]
 		}
 	},
@@ -28,14 +29,15 @@
 			"label": "Clubs",
 			"key": 9,
 			"values": [
-				"FC Bayern Munich|01",
-				"Borussia Dortmund|02",
-				"Bayer 04 Leverkusen|03",
-				"VfB Stuttgart|04",
-				"RB Leipzig|05",
-				"Eintracht Frankfurt|06",
-				"SC Freiburg|07",
-				"FC Augsburg|08"
+				"FC Bayern Munich|157",
+				"Borussia Dortmund|163",
+				"Bayer 04 Leverkusen|168",
+				"VfB Stuttgart|172",
+				"RB Leipzig|173",
+				"Eintracht Frankfurt|169",
+				"SC Freiburg|160",
+				"FC Augsburg|170",
+				"TSV 1860 Munich|786"
 			]
 		}
 	},
