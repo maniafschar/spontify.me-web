@@ -32,7 +32,7 @@ class pageSearch {
 		fieldValues: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
-<input-checkbox label="search.matches" name="matches" ${v.matches}></input-checkbox>
+<input-checkbox label="search.matches" name="matches" value="true" ${v.matches}></input-checkbox>
 <label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${geoData.getCurrent().town}</label>
 <input-hashtags ids="${v.keywords}" text="${v.keywordsText}" name="keywords"></input-hashtags>
 <explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
@@ -258,7 +258,7 @@ ${v.keywords}
 		fieldValues: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
-<input-checkbox label="search.favorites" name="favorites" ${v.favorites}></input-checkbox>
+<input-checkbox label="search.favorites" name="favorites" value="true" ${v.favorites}></input-checkbox>
 <label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${geoData.getCurrent().town}</label>
 <input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" value="${v.keywords}"/>
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
