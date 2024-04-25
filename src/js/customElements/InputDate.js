@@ -285,11 +285,11 @@ next::after {
 			ui.classAdd(e, 'filled');
 			if (this.wizard) {
 				if (field == 'Year')
-					this.toggleMonth(this);
-				else if (field == 'Month')
-					this.toggleDay(this);
-				else if (field == 'Day')
 					this.toggleHour(this);
+				else if (field == 'Month')
+					this.toggleYear(this);
+				else if (field == 'Day')
+					this.toggleMonth(this);
 				else if (field == 'Hour')
 					this.toggleMinute(this);
 			}
