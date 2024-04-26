@@ -51,6 +51,7 @@
 	"appConfig": {
 		"news": true,
 		"eventNoHashtags": true,
-		"publishingWall": true
+		"publishingWall": true,
+		"searchMandatory": "9."
 	}
 }
