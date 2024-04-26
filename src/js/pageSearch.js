@@ -52,7 +52,7 @@ class pageSearch {
 			return pageSearch.contacts.template(v);
 		},
 		getMatches() {
-			var search += '(' + global.getRegEx("contact.skills", user.contact.skills) + ' or ' + global.getRegEx('contact.skillsText', user.contact.skillsText) + ')';
+			var search = '(' + global.getRegEx("contact.skills", user.contact.skills) + ' or ' + global.getRegEx('contact.skillsText', user.contact.skillsText) + ')';
 			if (global.config.searchMandatory && user.contact.skills && user.contact.skills.indexOf(global.config.searchMandatory) > -1) {
 				search += ' and (';
 				var s = user.contact.skills.split('|');
