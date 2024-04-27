@@ -2,10 +2,9 @@ import { global } from '../global';
 import { initialisation } from '../init';
 import { ui } from '../ui';
 
-export { InputDate }
+export { InputDate };
 
 class InputDate extends HTMLElement {
-	wizard = true;
 	x = 0;
 	constructor() {
 		super();
@@ -122,7 +121,6 @@ next::after {
 		var m = this.get('month').getAttribute('value'), y = this.get('year').getAttribute('value'), maxDays = 31;
 		var min = new Date(this.getAttribute('min'));
 		var max = new Date(this.getAttribute('max'));
-		this.wizard = false;
 		if (!y) {
 			this.selectYear((max < new Date() ? max : min).getFullYear());
 			y = this.get('year').getAttribute('value');
@@ -131,7 +129,6 @@ next::after {
 			this.selectMonth((max < new Date() ? max : min).getMonth() + 1);
 			m = this.get('month').getAttribute('value');
 		}
-		this.wizard = true;
 		if (m == '02')
 			maxDays = y && new Date(parseInt(y), 1, 29).getDate() == 29 ? 29 : 28;
 		else if (m == '04' || m == '06' || m == '09' || m == '11')
@@ -149,7 +146,7 @@ next::after {
 			outdated = maxMonth ? i > max.getDate() : minMonth ? i < min.getDate() : false;
 			if (!outdated && selectable)
 				outdated = selectable.indexOf(y + '-' + m + '-' + ('0' + i).slice(-2)) < 0;
-			s += `<label ${outdated ? 'class="outdated"' : `onclick="InputDate.getField(${this.x}).selectDay(${i})"`} ${!outdated && (i + offset) % 7 > 0 && (i + offset) % 7 < 6 ? '' : ' class="weekend"'}">${i}</label>`;
+			s += `<label ${outdated ? 'class="outdated"' : `onclick="InputDate.getField(${this.x}).selectDay(${i},true)"`} ${!outdated && (i + offset) % 7 > 0 && (i + offset) % 7 < 6 ? '' : ' class="weekend"'}">${i}</label>`;
 			if ((i + offset) % 7 == 0)
 				s += '<br/>';
 		}
@@ -241,39 +238,47 @@ next::after {
 			var e = this.get('year');
 			if (e) {
 				var d = global.date.getDateFields(type || '');
-				this.wizard = false;
 				this.selectYear(d.year);
 				this.selectMonth(d.month);
 				this.selectDay(d.day);
 				this.selectHour(d.hour);
 				this.selectMinute(d.minute);
-				this.wizard = true;
 			} else if (type)
 				this._root.querySelector('label').innerHTML = type.indexOf('-') < 0 ? ui.l('search.dateSelection' + type.substring(0, 1).toUpperCase() + type.substring(1)) : global.date.formatDate(type);
 			this.setAttribute('value', type);
 		}
 		ui.navigation.closeHint();
 	}
-	selectDay(i) {
+	selectDay(i, next) {
 		this.setValue('Day', i ? ('0' + i).slice(-2) : null, parseInt(i));
+		if (next)
+			this.toggleMonth();
 	}
-	selectHour(i) {
+	selectHour(i, next) {
 		this.setValue('Hour', i >= 0 ? ('0' + i).slice(-2) : null, parseInt(i));
+		if (next)
+			this.toggleMinute();
 	}
-	selectMinute(i) {
+	selectMinute(i, next) {
 		this.setValue('Minute', i >= 0 ? ('0' + i).slice(-2) : null);
+		if (next)
+			ui.navigation.closeHint();
 	}
-	selectMonth(i) {
+	selectMonth(i, next) {
 		if (i)
 			this.setValue('Month', ('0' + i).slice(-2), ui.l('date.month' + parseInt(i)).substring(0, 3));
 		else
 			this.setValue('Month', null);
 		this.resetDay();
+		if (next)
+			this.toggleYear();
 	}
-	selectYear(i) {
+	selectYear(i, next) {
 		this.setValue('Year', i);
 		this.resetMonth();
 		this.resetDay();
+		if (next)
+			this.toggleHour();
 	}
 	setValue(field, value, label) {
 		var e = this.get(field.toLowerCase());
@@ -283,16 +288,6 @@ next::after {
 			e.innerHTML = label || label == 0 ? label : value;
 			e.setAttribute('value', value);
 			ui.classAdd(e, 'filled');
-			if (this.wizard) {
-				if (field == 'Year')
-					this.toggleHour(this);
-				else if (field == 'Month')
-					this.toggleYear(this);
-				else if (field == 'Day')
-					this.toggleMonth(this);
-				else if (field == 'Hour')
-					this.toggleMinute(this);
-			}
 		} else {
 			e.innerHTML = ui.l('date.label' + field);
 			e.setAttribute('value', '');
@@ -331,7 +326,8 @@ next::after {
 						e.prevMonth(event);
 				}
 			});
-		}
+		} else
+			ui.navigation.closeHint();
 	}
 	toggleDay() {
 		this.toggle(this.get('day'), this.getCalendar());
@@ -339,7 +335,7 @@ next::after {
 	toggleHour() {
 		var s = '', e = this.get('hour');
 		for (var i = 0; i < 24; i++) {
-			s += `<label onclick="InputDate.getField(${this.x}).selectHour(${i})" class="time">${i}</label>`;
+			s += `<label onclick="InputDate.getField(${this.x}).selectHour(${i},true)" class="time">${i}</label>`;
 			if ((i + 1) % 4 == 0)
 				s += '<br/>';
 		}
@@ -348,7 +344,7 @@ next::after {
 	toggleMinute() {
 		var s = '', e = this.get('minute');
 		for (var i = 0; i < 60; i += 5) {
-			s += `<label onclick="InputDate.getField(${this.x}).selectMinute(${i})" class="time">${i}</label>`;
+			s += `<label onclick="InputDate.getField(${this.x}).selectMinute(${i},true)" class="time">${i}</label>`;
 			if ((i / 5 + 1) % 4 == 0)
 				s += '<br/>';
 		}
@@ -359,15 +355,13 @@ next::after {
 		var max = new Date(this.getAttribute('max'));
 		var y = this.get('year').getAttribute('value');
 		if (!y) {
-			this.wizard = false;
 			this.selectYear((max < new Date() ? max : min).getFullYear());
 			y = this.get('year').getAttribute('value');
-			this.wizard = true;
 		}
 		var s = '<style>label{padding:0.34em 0.75em;}</style>', e = this.get('month');
 		for (var i = parseInt(y) == min.getFullYear() ? min.getMonth() + 1 : 1;
 			i < (parseInt(y) == max.getFullYear() ? max.getMonth() + 1 : 13); i++) {
-			s += `<label onclick="InputDate.getField(${this.x}).selectMonth(${i})">${ui.l('date.month' + i)}</label>`;
+			s += `<label onclick="InputDate.getField(${this.x}).selectMonth(${i},true)">${ui.l('date.month' + i)}</label>`;
 			if (i % 3 == 0)
 				s += '<br/>';
 		}
@@ -389,7 +383,7 @@ next::after {
 		var desc = min < new Date().getFullYear();
 		for (var i = 0; i <= max - min; i++) {
 			var i2 = desc ? max - i : min + i;
-			s += `<label onclick="InputDate.getField(${this.x}).selectYear(${i2})">${i2}</label>`;
+			s += `<label onclick="InputDate.getField(${this.x}).selectYear(${i2},true)">${i2}</label>`;
 		}
 		this.toggle(e, s);
 	}
