@@ -56,7 +56,7 @@ hashtags label.selected {
 hashtags category label.selected::after {
 	content: '>';
 	position: absolute;
-	right: 1em;
+	right: 0.25em;
 	top: 0.25em;
 }
 

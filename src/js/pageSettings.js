@@ -1,18 +1,18 @@
+import QRCodeStyling from 'qr-code-styling';
 import { bluetooth } from './bluetooth';
 import { communication } from './communication';
+import { details } from './details';
+import { geoData } from './geoData';
 import { global } from './global';
+import { lists } from './lists';
 import { Contact, Location, model } from './model';
 import { pageContact } from './pageContact';
-import { ui, formFunc } from './ui';
-import { user } from './user';
-import { details } from './details';
-import { pageLocation } from './pageLocation';
-import { pageInfo } from './pageInfo';
-import { pageLogin } from './pageLogin';
-import { lists } from './lists';
 import { pageEvent } from './pageEvent';
-import QRCodeStyling from 'qr-code-styling';
-import { geoData } from './geoData';
+import { pageInfo } from './pageInfo';
+import { pageLocation } from './pageLocation';
+import { pageLogin } from './pageLogin';
+import { formFunc, ui } from './ui';
+import { user } from './user';
 
 export { pageSettings };
 
@@ -429,15 +429,14 @@ ${v.info}`;
 			pageLogin.logoff();
 			return;
 		}
-		user.contact.ageFemale = ui.val('settings input[name="ageFemale"]');
-		user.contact.ageMale = ui.val('settings input[name="ageMale"]');
-		user.contact.ageDivers = ui.val('settings input[name="ageDivers"]');
+		user.contact.ageFemale = ui.val('settings input-slider[name="ageFemale"]');
+		user.contact.ageMale = ui.val('settings input-slider[name="ageMale"]');
+		user.contact.ageDivers = ui.val('settings input-slider[name="ageDivers"]');
 		user.contact.pseudonym = ui.val('settings input[name="pseudonym"]');
 		user.contact.gender = ui.val('settings input-checkbox[name="gender"][checked="true"]');
 		user.contact.birthday = ui.val('settings input-date[name="birthday"]');
 		user.contact.skills = ui.q('settings input-hashtags').getAttribute('ids');
 		user.contact.skillsText = ui.q('settings input-hashtags').getAttribute('text');
-		user.contact.skills = user.contact.skills.category;
 		user.contact.age = user.contact.birthday ? pageContact.getBirthday(user.contact.birthday).age : null;
 		pageSettings.currentSettings = pageSettings.getCurrentSettings();
 		bluetooth.reset();
@@ -525,11 +524,11 @@ ${v.info}`;
 		}
 		var x = ui.q('settings input-checkbox[name="gender"][checked="true"]') && ui.val('settings input-date[name="birthday"]');
 		if (!x || !ui.q('input-checkbox[name="genderInterest1"][checked="true"]'))
-			ui.q('settings [name="ageMale"]').value = '';
+			ui.q('settings [name="ageMale"]').setAttribute('value', '');
 		if (!x || !ui.q('input-checkbox[name="genderInterest2"][checked="true"]'))
-			ui.q('settings [name="ageFemale"]').value = '';
+			ui.q('settings [name="ageFemale"]').setAttribute('value', '');
 		if (!x || !ui.q('input-checkbox[name="genderInterest3"][checked="true"]'))
-			ui.q('settings [name="ageDivers"]').value = '';
+			ui.q('settings [name="ageDivers"]').setAttribute('value', '');
 		ui.q('textarea[name="description"]').value = ui.val('textarea[name="description"]').replace(/</g, '&lt;');
 		ui.q('input[name="email"]').value = ui.val('input[name="email"]').trim().toLowerCase();
 		ui.q('settings input[name="skills"]').value = ui.q('settings input-hashtags').getAttribute('ids');
