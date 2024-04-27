@@ -14,16 +14,18 @@ class InputHashtags extends HTMLElement {
 hashtags {
 	position: relative;
 	overflow: hidden;
-	margin-top: 0.25em;
+	margin-top: 0.5em;
+	height: 17em;
 }
 
 hashtags category {
 	width: 30%;
 	position: absolute;
 	left: 0;
+	height: 100%;
 }
 
-hashtags label {
+hashtags category label {
 	cursor: pointer;
 	display: block;
 	position: relative;
@@ -36,11 +38,15 @@ hashtags label {
 	color: var(--text);
 }
 
+hashtags div label {
+	background: rgba(255, 255, 255, 0.5);
+}
+
 hashtags>div {
 	margin-left: 30%;
 	display: none;
 	overflow-y: auto;
-	max-height: 17em;
+	height: 100%;
 }
 
 hashtags label.selected {
@@ -50,7 +56,7 @@ hashtags label.selected {
 hashtags category label.selected::after {
 	content: '>';
 	position: absolute;
-	right: 0;
+	right: 1em;
 	top: 0.25em;
 }
 
