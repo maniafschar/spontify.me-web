@@ -189,7 +189,7 @@ clear: both;
 }
 
 news card p {
-background: rgba(255, 0, 0, 0.1);
+background: rgba(255, 255, 255, 0.6);
 padding: 0.75em 6% 0.75em  4%;
 border-radius: 0 2em 0.5em 0;
 max-width: 96%;
