@@ -522,18 +522,19 @@ ${v.info}`;
 				return false;
 			}
 		}
-		var x = ui.q('settings input-checkbox[name="gender"][checked="true"]') && ui.val('settings input-date[name="birthday"]');
-		if (!x || !ui.q('input-checkbox[name="genderInterest1"][checked="true"]'))
-			ui.q('settings [name="ageMale"]').setAttribute('value', '');
-		if (!x || !ui.q('input-checkbox[name="genderInterest2"][checked="true"]'))
-			ui.q('settings [name="ageFemale"]').setAttribute('value', '');
-		if (!x || !ui.q('input-checkbox[name="genderInterest3"][checked="true"]'))
-			ui.q('settings [name="ageDivers"]').setAttribute('value', '');
 		ui.q('textarea[name="description"]').value = ui.val('textarea[name="description"]').replace(/</g, '&lt;');
 		ui.q('input[name="email"]').value = ui.val('input[name="email"]').trim().toLowerCase();
 		ui.q('settings input[name="skills"]').value = ui.q('settings input-hashtags').getAttribute('ids');
 		ui.q('settings input[name="skillsText"]').value = ui.q('settings input-hashtags').getAttribute('text');
-		user.save({ webCall: 'pageSettings.save', ...formFunc.getForm('settings tabBody') }, () => pageSettings.postSave(goToID));
+		var values = formFunc.getForm('settings tabBody');
+		var x = ui.q('settings input-checkbox[name="gender"][checked="true"]') && ui.val('settings input-date[name="birthday"]');
+		if (!x || !ui.q('input-checkbox[name="genderInterest1"][checked="true"]'))
+			values.values.ageMale = '';
+		if (!x || !ui.q('input-checkbox[name="genderInterest2"][checked="true"]'))
+			values.values.ageFemale = '';
+		if (!x || !ui.q('input-checkbox[name="genderInterest3"][checked="true"]'))
+			values.values.ageDivers = '';
+		user.save({ webCall: 'pageSettings.save', ...values }, () => pageSettings.postSave(goToID));
 	}
 	static selectTab(i) {
 		ui.classRemove('settings tab', 'tabActive');
