@@ -219,8 +219,6 @@ class pageLogin {
 				v.hideApple = ' class="hidden"';
 			var d = new Date();
 			v.birthdayMax = (d = new Date(d.setFullYear(d.getFullYear() - 18))).toISOString().substring(0, 10);
-			if (!v.birthday)
-				v.birthday = new Date(d.setFullYear(d.getFullYear() - 2)).toISOString().substring(0, 10);
 			v.birthdayMin = new Date(d.setFullYear(d.getFullYear() - 81)).toISOString().substring(0, 10);
 			ui.q('login').innerHTML = pageLogin.template(v);
 			formFunc.initFields(ui.q('login'));

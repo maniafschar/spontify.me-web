@@ -122,7 +122,10 @@ next::after {
 		var min = new Date(this.getAttribute('min'));
 		var max = new Date(this.getAttribute('max'));
 		if (!y) {
-			this.selectYear((max < new Date() ? max : min).getFullYear());
+			if (max < new Date())
+				this.selectYear(max.getFullYear() - 1);
+			else
+				this.selectYear(min.getFullYear());
 			y = this.get('year').getAttribute('value');
 		}
 		if (!m) {

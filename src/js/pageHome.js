@@ -1,5 +1,6 @@
 import { bluetooth } from './bluetooth';
 import { communication } from './communication';
+import { InputHashtags } from './customElements/InputHashtags';
 import { VideoCall } from './customElements/VideoCall';
 import { geoData } from './geoData';
 import { global } from './global';
@@ -431,7 +432,7 @@ border-radius: 0.5em 0 0 3em;
 							if (global.date.server2local(e.publish) > new Date())
 								s += '<date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
 							else
-								s += '<date>' + global.date.formatDate(e.publish) + '</date>';
+								s += '<date>' + global.date.formatDate(e.publish) + (e.category ? global.separator + InputHashtags.ids2Text(e.category) : '') + (e.source ? global.separator + e.source : '') + '</date>';
 							s += e.description.replace(/\n/g, '<br/>');
 							s += '</p>'
 							if (e.image)
