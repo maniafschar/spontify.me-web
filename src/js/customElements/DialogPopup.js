@@ -1,10 +1,10 @@
 import { global } from '../global';
-import { pageChat } from '../pageChat';
-import { ui, formFunc } from '../ui';
 import { initialisation } from '../init';
+import { pageChat } from '../pages/chat';
+import { formFunc, ui } from '../ui';
 import { DialogHint } from './DialogHint';
 
-export { DialogPopup }
+export { DialogPopup };
 
 class DialogPopup extends HTMLElement {
 	static lastPopup = null;

@@ -1,11 +1,11 @@
-import { global } from '../global';
 import { communication } from '../communication';
-import { pageLogin } from '../pageLogin';
+import { global } from '../global';
+import { initialisation } from '../init';
+import { pageLogin } from '../pages/login';
 import { formFunc, ui } from '../ui';
 import { user } from '../user';
-import { initialisation } from '../init';
 
-export { DialogHint }
+export { DialogHint };
 
 class DialogHint extends HTMLElement {
 	static currentStep = -1;

@@ -5,10 +5,10 @@ import { DialogPopup } from './customElements/DialogPopup';
 import { VideoCall } from './customElements/VideoCall';
 import { geoData } from './geoData';
 import { global } from './global';
-import { pageChat } from './pageChat';
-import { pageHome } from './pageHome';
-import { pageInfo } from './pageInfo';
-import { pageLogin } from './pageLogin';
+import { pageChat } from './pages/chat';
+import { pageHome } from './pages/home';
+import { pageInfo } from './pages/info';
+import { pageLogin } from './pages/login';
 import { ui } from './ui';
 import { user } from './user';
 

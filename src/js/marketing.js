@@ -1,7 +1,7 @@
 import { communication } from './communication';
 import { global } from './global';
 import { ClientMarketing, model } from './model';
-import { pageHome } from './pageHome';
+import { pageHome } from './pages/home';
 import { formFunc, ui } from './ui';
 
 export { marketing };

@@ -1,14 +1,14 @@
-import { communication } from './communication';
-import { DialogPopup } from './customElements/DialogPopup';
-import { details } from './details';
-import { geoData } from './geoData';
-import { global, Strings } from './global';
-import { lists } from './lists';
-import { Location, model } from './model';
-import { pageChat } from './pageChat';
-import { pageEvent } from './pageEvent';
-import { formFunc, ui } from './ui';
-import { user } from './user';
+import { communication } from '../communication';
+import { DialogPopup } from '../customElements/DialogPopup';
+import { details } from '../details';
+import { geoData } from '../geoData';
+import { global, Strings } from '../global';
+import { lists } from '../lists';
+import { Location, model } from '../model';
+import { formFunc, ui } from '../ui';
+import { user } from '../user';
+import { pageChat } from './chat';
+import { pageEvent } from './event';
 
 export { pageLocation };
 

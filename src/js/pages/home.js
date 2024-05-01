@@ -1,15 +1,15 @@
-import { bluetooth } from './bluetooth';
-import { communication } from './communication';
-import { InputHashtags } from './customElements/InputHashtags';
-import { VideoCall } from './customElements/VideoCall';
-import { geoData } from './geoData';
-import { global } from './global';
-import { initialisation } from './init';
-import { ClientNews, Contact, model } from './model';
-import { pageChat } from './pageChat';
-import { pageEvent } from './pageEvent';
-import { formFunc, ui } from './ui';
-import { user } from './user';
+import { bluetooth } from '../bluetooth';
+import { communication } from '../communication';
+import { InputHashtags } from '../customElements/InputHashtags';
+import { VideoCall } from '../customElements/VideoCall';
+import { geoData } from '../geoData';
+import { global } from '../global';
+import { initialisation } from '../init';
+import { ClientNews, Contact, model } from '../model';
+import { formFunc, ui } from '../ui';
+import { user } from '../user';
+import { pageChat } from './chat';
+import { pageEvent } from './event';
 
 export { pageHome };
 

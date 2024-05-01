@@ -1,18 +1,18 @@
 import QRCodeStyling from 'qr-code-styling';
-import { bluetooth } from './bluetooth';
-import { communication } from './communication';
-import { details } from './details';
-import { geoData } from './geoData';
-import { global } from './global';
-import { lists } from './lists';
-import { Contact, Location, model } from './model';
-import { pageContact } from './pageContact';
-import { pageEvent } from './pageEvent';
-import { pageInfo } from './pageInfo';
-import { pageLocation } from './pageLocation';
-import { pageLogin } from './pageLogin';
-import { formFunc, ui } from './ui';
-import { user } from './user';
+import { bluetooth } from '../bluetooth';
+import { communication } from '../communication';
+import { details } from '../details';
+import { geoData } from '../geoData';
+import { global } from '../global';
+import { lists } from '../lists';
+import { Contact, Location, model } from '../model';
+import { formFunc, ui } from '../ui';
+import { user } from '../user';
+import { pageContact } from './contact';
+import { pageEvent } from './event';
+import { pageInfo } from './info';
+import { pageLocation } from './location';
+import { pageLogin } from './login';
 
 export { pageSettings };
 

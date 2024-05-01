@@ -1,12 +1,12 @@
-import { DialogHint } from './customElements/DialogHint';
-import { geoData } from './geoData';
-import { global } from './global';
-import { lists } from './lists';
-import { pageContact } from './pageContact';
-import { pageEvent } from './pageEvent';
-import { pageLocation } from './pageLocation';
-import { formFunc, ui } from './ui';
-import { user } from './user';
+import { DialogHint } from '../customElements/DialogHint';
+import { geoData } from '../geoData';
+import { global } from '../global';
+import { lists } from '../lists';
+import { formFunc, ui } from '../ui';
+import { user } from '../user';
+import { pageContact } from './contact';
+import { pageEvent } from './event';
+import { pageLocation } from './location';
 
 export { pageSearch };
 

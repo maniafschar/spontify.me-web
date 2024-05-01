@@ -2,8 +2,8 @@ import { communication } from './communication';
 import { geoData } from './geoData';
 import { global } from './global';
 import { lists } from './lists';
-import { pageChat } from './pageChat';
-import { pageLocation } from './pageLocation';
+import { pageChat } from './pages/chat';
+import { pageLocation } from './pages/location';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 

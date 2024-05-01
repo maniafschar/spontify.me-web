@@ -1,19 +1,18 @@
-import { communication } from './communication';
-import { details } from './details';
-import { geoData } from './geoData';
-import { global, Strings } from './global';
-import { lists } from './lists';
-import { Contact, ContactChat, model } from './model';
-import { groups, pageContact } from './pageContact';
-import { pageEvent } from './pageEvent';
-import { pageHome } from './pageHome';
-import { pageInfo } from './pageInfo';
+import { communication } from '../communication';
+import { DialogPopup } from '../customElements/DialogPopup';
+import { VideoCall } from '../customElements/VideoCall';
+import { details } from '../details';
+import { geoData } from '../geoData';
+import { global, Strings } from '../global';
+import { lists } from '../lists';
+import { Contact, ContactChat, model } from '../model';
+import { formFunc, ui } from '../ui';
+import { user } from '../user';
+import { groups, pageContact } from './contact';
+import { pageEvent } from './event';
+import { pageHome } from './home';
+import { pageInfo } from './info';
 import { pageSettings } from './pageSettings';
-import { ui, formFunc } from './ui';
-import { user } from './user';
-import { VideoCall } from './customElements/VideoCall';
-import { DialogPopup } from './customElements/DialogPopup';
-import { DialogMenu } from './customElements/DialogMenu';
 
 export { pageChat };
 

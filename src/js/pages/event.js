@@ -1,16 +1,16 @@
 import QRCodeStyling from 'qr-code-styling';
-import { communication } from './communication';
-import { DialogHint } from './customElements/DialogHint';
-import { DialogPopup } from './customElements/DialogPopup';
-import { details } from './details';
-import { geoData } from './geoData';
-import { global, Strings } from './global';
-import { lists } from './lists';
-import { Contact, EventParticipate, Location, model } from './model';
-import { pageContact } from './pageContact';
-import { pageLocation } from './pageLocation';
-import { formFunc, ui } from './ui';
-import { user } from './user';
+import { communication } from '../communication';
+import { DialogHint } from '../customElements/DialogHint';
+import { DialogPopup } from '../customElements/DialogPopup';
+import { details } from '../details';
+import { geoData } from '../geoData';
+import { global, Strings } from '../global';
+import { lists } from '../lists';
+import { Contact, EventParticipate, Location, model } from '../model';
+import { formFunc, ui } from '../ui';
+import { user } from '../user';
+import { pageContact } from './contact';
+import { pageLocation } from './location';
 
 export { pageEvent };
 
@@ -972,6 +972,7 @@ field.checkbox {
 			v.values.repetition = 'o';
 		v.classname = 'Event';
 		v.id = id;
+		v.publishId = null;
 		communication.ajax({
 			url: global.serverApi + 'db/one',
 			method: id ? 'PUT' : 'POST',

@@ -1,12 +1,12 @@
-import { global } from '../global';
 import { communication } from '../communication';
+import { global } from '../global';
+import { initialisation } from '../init';
+import { Contact, model } from '../model';
+import { pageEvent } from '../pages/event';
 import { formFunc, ui } from '../ui';
 import { user } from '../user';
-import { pageEvent } from '../pageEvent';
-import { Contact, model } from '../model';
-import { initialisation } from '../init';
 
-export { InputRating }
+export { InputRating };
 
 class InputRating extends HTMLElement {
 	rating = `<ratingSelection style="font-size:2em;margin-top:0.5em;">

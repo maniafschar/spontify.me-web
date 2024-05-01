@@ -1,17 +1,17 @@
-import { bluetooth } from './bluetooth';
-import { communication, Encryption, FB } from './communication';
-import { DialogPopup } from './customElements/DialogPopup';
-import { geoData } from './geoData';
-import { global } from './global';
-import { initialisation } from './init';
-import { marketing } from './marketing';
-import { Contact } from './model';
-import { pageChat } from './pageChat';
-import { pageEvent } from './pageEvent';
-import { pageHome } from './pageHome';
-import { pageLocation } from './pageLocation';
-import { formFunc, ui } from './ui';
-import { user } from './user';
+import { bluetooth } from '../bluetooth';
+import { communication, Encryption, FB } from '../communication';
+import { DialogPopup } from '../customElements/DialogPopup';
+import { geoData } from '../geoData';
+import { global } from '../global';
+import { initialisation } from '../init';
+import { marketing } from '../marketing';
+import { Contact } from '../model';
+import { formFunc, ui } from '../ui';
+import { user } from '../user';
+import { pageChat } from './chat';
+import { pageEvent } from './event';
+import { pageHome } from './home';
+import { pageLocation } from './location';
 
 export { pageLogin };
 

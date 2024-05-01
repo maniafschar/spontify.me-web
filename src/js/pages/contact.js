@@ -1,14 +1,14 @@
-import { details } from './details';
-import { communication } from './communication';
-import { geoData } from './geoData';
-import { global, Strings } from './global';
-import { lists } from './lists';
-import { pageLocation } from './pageLocation';
-import { formFunc, ui } from './ui';
-import { user } from './user';
-import { model, Contact, ContactGroup } from './model';
+import { communication } from '../communication';
+import { details } from '../details';
+import { geoData } from '../geoData';
+import { global, Strings } from '../global';
+import { lists } from '../lists';
+import { Contact, ContactGroup, model } from '../model';
+import { formFunc, ui } from '../ui';
+import { user } from '../user';
+import { pageLocation } from './location';
 
-export { pageContact, groups };
+export { groups, pageContact };
 
 class pageContact {
 	static filter = null;

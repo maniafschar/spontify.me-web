@@ -1,10 +1,10 @@
-import { communication } from './communication';
-import { geoData } from './geoData';
-import { global } from './global';
-import { initialisation } from './init';
-import { pageLogin } from './pageLogin';
-import { ui } from './ui';
-import { user } from './user';
+import { communication } from '../communication';
+import { geoData } from '../geoData';
+import { global } from '../global';
+import { initialisation } from '../init';
+import { ui } from '../ui';
+import { user } from '../user';
+import { pageLogin } from './login';
 
 export { pageInfo };
 
