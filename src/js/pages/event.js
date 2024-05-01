@@ -117,7 +117,7 @@ field.checkbox {
 	<field name="publish"${v.publish}>
 		<label>${ui.l('events.publish')}</label>
 		<value>
-			<input-checkbox name="publish" label="events.publishCheckbox" value="true"></input-checkbox>
+			<input-checkbox name="publish" label="events.publishCheckbox" value="true" ${v.publishValue}></input-checkbox>
 		</value>
 	</field>
 	<dialogButtons>
@@ -296,6 +296,8 @@ field.checkbox {
 			d = global.date.getDateFields(global.date.server2local(v.startDate));
 			v.startDate = d.year + '-' + d.month + '-' + d.day + 'T' + d.hour + ':' + d.minute;
 		}
+		if (v.publish)
+			v.publishValue = ' checked="true"';
 		if (!id || v.price > 0 && ui.q('detail card:last-child button-text participantCount')?.innerText.length)
 			v.hideDelete = 'class="hidden"';
 		d = global.date.getDateFields(new Date());
@@ -972,7 +974,7 @@ field.checkbox {
 			v.values.repetition = 'o';
 		v.classname = 'Event';
 		v.id = id;
-		v.publishId = null;
+		v.values.publishId = null;
 		communication.ajax({
 			url: global.serverApi + 'db/one',
 			method: id ? 'PUT' : 'POST',
