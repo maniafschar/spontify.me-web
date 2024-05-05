@@ -427,6 +427,7 @@ dialog-location-picker {
 	right: 0;
 	top: 6em;
 	z-index: 1;
+	padding: 0 0 1em 1em;
 }
 
 img.qrVerification {
@@ -589,7 +590,7 @@ notificationList img {
 	height: 100%;
 	box-shadow: 0 0 0.25em rgb(0, 0, 0, 0.3);
 	margin-top: -0.25em;
-	
+
 }
 
 chatList svg.mainBG,
@@ -601,7 +602,6 @@ notificationList svg,
 notificationList img {
 	border-radius: 2em 0 0 2em;
 	right: 0;
-	padding: 0.25em;
 }
 
 chatList svg.mainBG,

@@ -27,6 +27,7 @@ label {
 	margin: 0.25em -0.25em 0.25em 0;
 	clear: both;
 	float: right;
+	opacity: 1;
 	box-shadow: 0 0 0.5em rgb(0, 0, 0, 0.3);
 }`;
 		this._root.appendChild(style);

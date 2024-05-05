@@ -293,6 +293,10 @@ border-radius: 0.5em 0 0 3em;
 			});
 	}
 	static init(force) {
+		if (!ui.q('home')) {
+			setTimeout(function () { pageHome.init(force) }, 100);
+			return;
+		}
 		if (force || !ui.q('home teaser.events>div card')) {
 			var v = {
 				actionLogo: global.config.club ? 'pageHome.openNews(null,event)' :
@@ -363,7 +367,7 @@ border-radius: 0.5em 0 0 3em;
 					if (v.imageList)
 						v.image = 'src="' + global.serverImg + v.imageList + '"';
 					else if (v.contactNotification.action.indexOf('news=') == 0)
-						v.image = 'src="images/logo.png" class="mainBG"';
+						v.image = 'style="padding:0.25em;" src="images/logo.png" class="mainBG"';
 					else
 						v.image = 'source="contacts" class="mainBG"';
 					s += '<div i="' + v.contactNotification.id + '" onclick="pageHome.clickNotification(&quot;' + v.contactNotification.action + '&quot;)" ' + (v.contactNotification.seen == 0 ? ' class="highlightBackground"' : '') + '><img ' + v.image + '/> <span>' + global.date.formatDate(v.contactNotification.createdAt) + ': ' + v.contactNotification.text + '</span></div > ';

@@ -163,9 +163,9 @@ chart {
 		initialisation.setLanguage(lang);
 	}
 	static open(data) {
-		if (new Date().getTime() / 60000 - DialogHint.lastHint < 4)
+		if (!data || new Date().getTime() / 60000 - DialogHint.lastHint < 4)
 			return;
-		if (data && data.action)
+		if (data.action)
 			eval(data.action);
 		var e = ui.q('dialog-hint');
 		if (global.hash(data.desc) == e.getAttribute('i')) {

@@ -61,12 +61,11 @@ class user {
 			var t = ui.q('dialog-popup appointment hour.selected');
 			if (t) {
 				t = global.date.local2server(ui.parents(t, 'day').getAttribute('d') + ' ' + t.getAttribute('class').replace(/[a-z ]/gi, '') + ':00:00');
-				var d = ui.q('dialog-popup input');
 				communication.ajax({
 					url: global.serverApi + 'action/appointment',
 					webCall: 'user.appointment',
 					method: 'POST',
-					body: { description: d.value, type: ui.q('dialog-popup .paypal') ? 'AUTHENTICATE' : 'OTHER', time: t },
+					body: { description: ui.q('dialog-popup input').value, type: ui.q('dialog-popup .paypal') ? 'AUTHENTICATE' : 'OTHER', time: t },
 					responseType: 'json',
 					success(r) {
 						if (ui.q('dialog-popup div.paypal')) {
