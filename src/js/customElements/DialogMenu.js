@@ -39,7 +39,7 @@ a {
 
 a:hover,
 a.highlight {
-	color: var(--text);
+	font-weight: bold;
 }
 
 title {

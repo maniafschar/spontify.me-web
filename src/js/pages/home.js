@@ -367,7 +367,7 @@ border-radius: 0.5em 0 0 3em;
 					if (v.imageList)
 						v.image = 'src="' + global.serverImg + v.imageList + '"';
 					else if (v.contactNotification.action.indexOf('news=') == 0)
-						v.image = 'style="padding:0.25em;" src="images/logo.png" class="mainBG"';
+						v.image = 'style="padding:0.4em;" src="images/logo.png" class="mainBG"';
 					else
 						v.image = 'source="contacts" class="mainBG"';
 					s += '<div i="' + v.contactNotification.id + '" onclick="pageHome.clickNotification(&quot;' + v.contactNotification.action + '&quot;)" ' + (v.contactNotification.seen == 0 ? ' class="highlightBackground"' : '') + '><img ' + v.image + '/> <span>' + global.date.formatDate(v.contactNotification.createdAt) + ': ' + v.contactNotification.text + '</span></div > ';
