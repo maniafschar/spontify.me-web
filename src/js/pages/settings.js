@@ -109,7 +109,7 @@ class pageSettings {
 		global.template`<field>
 	<label>${ui.l('settings.skills')}</label>
 	<value>
-		<input-hashtags ids="${v.skills}" text="${v.skillsText}" transient="true"></input-hashtags>
+		<input-hashtags ids="${v.skills}" text="${v.skillsText}" name="skills"></input-hashtags>
 	</value>
 </field>
 <field>
@@ -521,8 +521,6 @@ ${v.info}`;
 		}
 		ui.q('textarea[name="description"]').value = ui.val('textarea[name="description"]').replace(/</g, '&lt;');
 		ui.q('input[name="email"]').value = ui.val('input[name="email"]').trim().toLowerCase();
-		ui.q('settings input[name="skills"]').value = ui.q('settings input-hashtags').getAttribute('ids');
-		ui.q('settings input[name="skillsText"]').value = ui.q('settings input-hashtags').getAttribute('text');
 		var x = ui.q('settings input-checkbox[name="gender"][checked="true"]') && ui.val('settings input-date[name="birthday"]');
 		if (!x || !ui.q('input-checkbox[name="ageMale"][checked="true"]'))
 			ui.attr('input-slider[name="ageMale"]', 'value', '');

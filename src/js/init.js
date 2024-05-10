@@ -48,24 +48,26 @@ class initialisation {
 			webCall: 'init.init',
 			success(r) {
 				initialisation.elementsCss = r;
-				customElements.define('button-text', ButtonText);
-				customElements.define('content-admin-home', ContentAdminHome);
-				customElements.define('content-admin-marketing', ContentAdminMarketing);
-				customElements.define('content-admin-invoice', ContentAdminInvoice);
-				customElements.define('dialog-hint', DialogHint);
-				customElements.define('dialog-location-picker', DialogLocationPicker);
-				customElements.define('dialog-menu', DialogMenu);
-				customElements.define('dialog-navigation', DialogNavigation);
-				customElements.define('dialog-popup', DialogPopup);
-				customElements.define('input-checkbox', InputCheckbox);
-				customElements.define('input-date', InputDate);
-				customElements.define('input-hashtags', InputHashtags);
-				customElements.define('input-image', InputImage);
-				customElements.define('input-rating', InputRating);
-				customElements.define('input-slider', InputSlider);
-				customElements.define('list-body', ListBody);
-				customElements.define('list-row', ListRow);
-				customElements.define('video-call', VideoCall);
+				if (!customElements.get('button-text')) {
+					customElements.define('button-text', ButtonText);
+					customElements.define('content-admin-home', ContentAdminHome);
+					customElements.define('content-admin-marketing', ContentAdminMarketing);
+					customElements.define('content-admin-invoice', ContentAdminInvoice);
+					customElements.define('dialog-hint', DialogHint);
+					customElements.define('dialog-location-picker', DialogLocationPicker);
+					customElements.define('dialog-menu', DialogMenu);
+					customElements.define('dialog-navigation', DialogNavigation);
+					customElements.define('dialog-popup', DialogPopup);
+					customElements.define('input-checkbox', InputCheckbox);
+					customElements.define('input-date', InputDate);
+					customElements.define('input-hashtags', InputHashtags);
+					customElements.define('input-image', InputImage);
+					customElements.define('input-rating', InputRating);
+					customElements.define('input-slider', InputSlider);
+					customElements.define('list-body', ListBody);
+					customElements.define('list-row', ListRow);
+					customElements.define('video-call', VideoCall);
+				}
 				formFunc.svg.replaceAll();
 				var f = function () {
 					if (ui.cssValue('content > *', 'display')) {
