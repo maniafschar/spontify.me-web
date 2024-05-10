@@ -16,7 +16,7 @@ class DialogPopup extends HTMLElement {
 	}
 	addStyle() {
 		const style = document.createElement('style');
-		style.textContent = `${initialisation.customElementsCss}
+		style.textContent = `${initialisation.elementsCss}
 input:checked+label {
 	background: var(--bg1stop) !important;
 	color: black;

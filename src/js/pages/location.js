@@ -1,6 +1,6 @@
 import { communication } from '../communication';
-import { DialogPopup } from '../customElements/DialogPopup';
 import { details } from '../details';
+import { DialogPopup } from '../elements/DialogPopup';
 import { geoData } from '../geoData';
 import { global, Strings } from '../global';
 import { lists } from '../lists';

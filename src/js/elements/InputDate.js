@@ -12,7 +12,7 @@ class InputDate extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = `${initialisation.customElementsCss}
+		style.textContent = `${initialisation.elementsCss}
 :host(*) {
 	white-space: nowrap;
 	overflow-x: auto;

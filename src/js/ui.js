@@ -1,16 +1,16 @@
 import { communication } from './communication';
-import { ContentAdminHome } from './customElements/ContentAdminHome';
-import { ContentAdminInvoice } from './customElements/ContentAdminInvoice';
-import { ContentAdminMarketing } from './customElements/ContentAdminMarketing';
-import { DialogHint } from './customElements/DialogHint';
-import { DialogLocationPicker } from './customElements/DialogLocationPicker';
-import { DialogMenu } from './customElements/DialogMenu';
-import { DialogNavigation } from './customElements/DialogNavigation';
-import { DialogPopup } from './customElements/DialogPopup';
-import { InputHashtags } from './customElements/InputHashtags';
-import { InputRating } from './customElements/InputRating';
-import { VideoCall } from './customElements/VideoCall';
 import { details } from './details';
+import { ContentAdminHome } from './elements/ContentAdminHome';
+import { ContentAdminInvoice } from './elements/ContentAdminInvoice';
+import { ContentAdminMarketing } from './elements/ContentAdminMarketing';
+import { DialogHint } from './elements/DialogHint';
+import { DialogLocationPicker } from './elements/DialogLocationPicker';
+import { DialogMenu } from './elements/DialogMenu';
+import { DialogNavigation } from './elements/DialogNavigation';
+import { DialogPopup } from './elements/DialogPopup';
+import { InputHashtags } from './elements/InputHashtags';
+import { InputRating } from './elements/InputRating';
+import { VideoCall } from './elements/VideoCall';
 import { geoData } from './geoData';
 import { global } from './global';
 import { initialisation } from './init';
@@ -24,8 +24,8 @@ import { pageHome } from './pages/home';
 import { pageInfo } from './pages/info';
 import { pageLocation } from './pages/location';
 import { pageLogin } from './pages/login';
-import { pageSettings } from './pages/pageSettings';
 import { pageSearch } from './pages/search';
+import { pageSettings } from './pages/settings';
 import { user } from './user';
 
 export { DragObject, formFunc, ui };
@@ -549,7 +549,7 @@ class ui {
 		return e && e.length ? e[0] : null;
 	}
 	static qa(path) {
-		var customElements = function (e, p, match) {
+		var elements = function (e, p, match) {
 			if (p.indexOf(',') < 0) {
 				var x = p.indexOf(match);
 				if (x > -1 && p.indexOf(' ', x) > -1) {
@@ -566,33 +566,33 @@ class ui {
 			}
 		}
 		var detectCustomElement = function (e, p) {
-			var e2 = customElements(e, p, 'dialog-popup');
+			var e2 = elements(e, p, 'dialog-popup');
 			if (!e2)
-				e2 = customElements(e, p, 'dialog-navigation');
+				e2 = elements(e, p, 'dialog-navigation');
 			if (!e2)
-				e2 = customElements(e, p, 'button-text');
+				e2 = elements(e, p, 'button-text');
 			if (!e2)
-				e2 = customElements(e, p, 'dialog-hint');
+				e2 = elements(e, p, 'dialog-hint');
 			if (!e2)
-				e2 = customElements(e, p, 'dialog-menu');
+				e2 = elements(e, p, 'dialog-menu');
 			if (!e2)
-				e2 = customElements(e, p, 'video-call');
+				e2 = elements(e, p, 'video-call');
 			if (!e2)
-				e2 = customElements(e, p, 'input-rating');
+				e2 = elements(e, p, 'input-rating');
 			if (!e2)
-				e2 = customElements(e, p, 'input-date');
+				e2 = elements(e, p, 'input-date');
 			if (!e2)
-				e2 = customElements(e, p, 'input-hashtags');
+				e2 = elements(e, p, 'input-hashtags');
 			if (!e2)
-				e2 = customElements(e, p, 'input-image');
+				e2 = elements(e, p, 'input-image');
 			if (!e2)
-				e2 = customElements(e, p, 'list-row');
+				e2 = elements(e, p, 'list-row');
 			if (!e2)
-				e2 = customElements(e, p, 'content-admin-home');
+				e2 = elements(e, p, 'content-admin-home');
 			if (!e2)
-				e2 = customElements(e, p, 'content-admin-marketing');
+				e2 = elements(e, p, 'content-admin-marketing');
 			if (!e2)
-				e2 = customElements(e, p, 'content-admin-invoice');
+				e2 = elements(e, p, 'content-admin-invoice');
 			return e2 && e2.length ? e2 : e.querySelectorAll(p);
 		};
 		return detectCustomElement(document, path);

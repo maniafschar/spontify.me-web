@@ -19,7 +19,7 @@ class DialogHint extends HTMLElement {
 	connectedCallback() {
 		const style = document.createElement('style');
 		style.setAttribute('css', 'true');
-		style.textContent = `${initialisation.customElementsCss}
+		style.textContent = `${initialisation.elementsCss}
 .body,
 :host(.body) {
 	position: absolute;

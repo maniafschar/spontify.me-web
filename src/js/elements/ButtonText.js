@@ -1,7 +1,7 @@
 import { initialisation } from '../init';
 import { ui } from '../ui';
 
-export { ButtonText }
+export { ButtonText };
 
 class ButtonText extends HTMLElement {
 	constructor() {
@@ -10,7 +10,7 @@ class ButtonText extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = `${initialisation.customElementsCss}
+		style.textContent = `${initialisation.elementsCss}
 span {
 	background: linear-gradient(var(--bg2stop) 0%, var(--bg2start) 100%) center center / 100% no-repeat;
 	outline: none !important;

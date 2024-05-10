@@ -10,7 +10,7 @@ class InputHashtags extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = `${initialisation.customElementsCss}
+		style.textContent = `${initialisation.elementsCss}
 hashtags {
 	position: relative;
 	overflow: hidden;

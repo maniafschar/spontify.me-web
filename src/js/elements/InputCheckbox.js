@@ -1,7 +1,7 @@
 import { initialisation } from '../init';
 import { ui } from '../ui';
 
-export { InputCheckbox }
+export { InputCheckbox };
 
 class InputCheckbox extends HTMLElement {
 	constructor() {
@@ -10,7 +10,7 @@ class InputCheckbox extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = `${initialisation.customElementsCss}
+		style.textContent = `${initialisation.elementsCss}
 :host([checked="true"]) label {
 	padding-left: 1.75em;
 	padding-right: 0.75em;

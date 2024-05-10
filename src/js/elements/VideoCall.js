@@ -22,7 +22,7 @@ class VideoCall extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = `${initialisation.customElementsCss}
+		style.textContent = `${initialisation.elementsCss}
 call {
 	display: flex;
 	flex-direction: column;

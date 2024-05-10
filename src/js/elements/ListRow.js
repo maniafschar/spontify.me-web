@@ -1,7 +1,7 @@
-import { initialisation } from '../init';
 import { global } from '../global';
+import { initialisation } from '../init';
 
-export { ListRow }
+export { ListRow };
 
 class ListRow extends HTMLElement {
 	constructor() {
@@ -10,7 +10,7 @@ class ListRow extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = `${initialisation.customElementsCss}
+		style.textContent = `${initialisation.elementsCss}
 div {
 	text-align: left;
 	overflow: hidden;

@@ -1,7 +1,7 @@
 import { initialisation } from '../init';
 import { DragObject, ui } from '../ui';
 
-export { InputSlider }
+export { InputSlider };
 
 class InputSlider extends HTMLElement {
 	constructor() {
@@ -10,7 +10,7 @@ class InputSlider extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = `${initialisation.customElementsCss}
+		style.textContent = `${initialisation.elementsCss}
 * {
 	transform: translate3d(0, 0, 0);
 }
@@ -117,6 +117,10 @@ thumb val {
 			s[1] = '' + v;
 		else
 			s[0] = '' + v;
+		if (!s[0])
+			s[0] = min;
+		if (!s[1])
+			s[1] = max;
 		e.querySelector('val').innerText = v;
 		h.setAttribute('value', s.join(','));
 		if (h.getAttribute('callback'))

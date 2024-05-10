@@ -13,7 +13,7 @@ class DialogNavigation extends HTMLElement {
 	connectedCallback() {
 		this.setAttribute('class', 'bgColor');
 		const style = document.createElement('style');
-		style.textContent = `${initialisation.customElementsCss}
+		style.textContent = `${initialisation.elementsCss}
 item {
 	width: 25%;
 	position: relative;

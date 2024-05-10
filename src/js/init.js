@@ -1,24 +1,24 @@
 import { bluetooth } from './bluetooth';
 import { communication, FB, WebSocket } from './communication';
-import { ButtonText } from './customElements/ButtonText';
-import { ContentAdminHome } from './customElements/ContentAdminHome';
-import { ContentAdminInvoice } from './customElements/ContentAdminInvoice';
-import { ContentAdminMarketing } from './customElements/ContentAdminMarketing';
-import { DialogHint } from './customElements/DialogHint';
-import { DialogLocationPicker } from './customElements/DialogLocationPicker';
-import { DialogMenu } from './customElements/DialogMenu';
-import { DialogNavigation } from './customElements/DialogNavigation';
-import { DialogPopup } from './customElements/DialogPopup';
-import { InputCheckbox } from './customElements/InputCheckbox';
-import { InputDate } from './customElements/InputDate';
-import { InputHashtags } from './customElements/InputHashtags';
-import { InputImage } from './customElements/InputImage';
-import { InputRating } from './customElements/InputRating';
-import { InputSlider } from './customElements/InputSlider';
-import { ListBody } from './customElements/ListBody';
-import { ListRow } from './customElements/ListRow';
-import { VideoCall } from './customElements/VideoCall';
 import { details } from './details';
+import { ButtonText } from './elements/ButtonText';
+import { ContentAdminHome } from './elements/ContentAdminHome';
+import { ContentAdminInvoice } from './elements/ContentAdminInvoice';
+import { ContentAdminMarketing } from './elements/ContentAdminMarketing';
+import { DialogHint } from './elements/DialogHint';
+import { DialogLocationPicker } from './elements/DialogLocationPicker';
+import { DialogMenu } from './elements/DialogMenu';
+import { DialogNavigation } from './elements/DialogNavigation';
+import { DialogPopup } from './elements/DialogPopup';
+import { InputCheckbox } from './elements/InputCheckbox';
+import { InputDate } from './elements/InputDate';
+import { InputHashtags } from './elements/InputHashtags';
+import { InputImage } from './elements/InputImage';
+import { InputRating } from './elements/InputRating';
+import { InputSlider } from './elements/InputSlider';
+import { ListBody } from './elements/ListBody';
+import { ListRow } from './elements/ListRow';
+import { VideoCall } from './elements/VideoCall';
 import { geoData } from './geoData';
 import { global, Strings } from './global';
 import { lists } from './lists';
@@ -31,23 +31,23 @@ import { pageHome } from './pages/home';
 import { pageInfo } from './pages/info';
 import { pageLocation } from './pages/location';
 import { pageLogin } from './pages/login';
-import { pageSettings } from './pages/pageSettings';
 import { pageSearch } from './pages/search';
+import { pageSettings } from './pages/settings';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 
 export { initialisation };
 
 class initialisation {
-	static customElementsCss;
+	static elementsCss;
 	static execLocation = null;
 	static recoverInvoked = false;
 	static init() {
 		communication.ajax({
-			url: 'css/customElements.css',
+			url: 'css/elements.css',
 			webCall: 'init.init',
 			success(r) {
-				initialisation.customElementsCss = r;
+				initialisation.elementsCss = r;
 				customElements.define('button-text', ButtonText);
 				customElements.define('content-admin-home', ContentAdminHome);
 				customElements.define('content-admin-marketing', ContentAdminMarketing);

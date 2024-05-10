@@ -1,4 +1,4 @@
-import { DialogHint } from '../customElements/DialogHint';
+import { DialogHint } from '../elements/DialogHint';
 import { geoData } from '../geoData';
 import { global } from '../global';
 import { lists } from '../lists';

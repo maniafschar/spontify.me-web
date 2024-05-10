@@ -12,7 +12,7 @@ class DialogMenu extends HTMLElement {
 	connectedCallback() {
 		ui.classAdd(this, 'bgColor');
 		const style = document.createElement('style');
-		style.textContent = `${initialisation.customElementsCss}
+		style.textContent = `${initialisation.elementsCss}
 div{
 	position: relative;
 	z-index: 1;

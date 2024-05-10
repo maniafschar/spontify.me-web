@@ -1,7 +1,7 @@
 import { communication } from '../communication';
-import { DialogPopup } from '../customElements/DialogPopup';
-import { VideoCall } from '../customElements/VideoCall';
 import { details } from '../details';
+import { DialogPopup } from '../elements/DialogPopup';
+import { VideoCall } from '../elements/VideoCall';
 import { geoData } from '../geoData';
 import { global, Strings } from '../global';
 import { lists } from '../lists';
@@ -12,7 +12,7 @@ import { groups, pageContact } from './contact';
 import { pageEvent } from './event';
 import { pageHome } from './home';
 import { pageInfo } from './info';
-import { pageSettings } from './pageSettings';
+import { pageSettings } from './settings';
 
 export { pageChat };
 

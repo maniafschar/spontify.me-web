@@ -15,7 +15,7 @@ class DialogLocationPicker extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = `${initialisation.customElementsCss}
+		style.textContent = `${initialisation.elementsCss}
 label {
 	display: inline;
 	color: black;

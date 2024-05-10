@@ -1,7 +1,7 @@
 import { bluetooth } from '../bluetooth';
 import { communication } from '../communication';
-import { InputHashtags } from '../customElements/InputHashtags';
-import { VideoCall } from '../customElements/VideoCall';
+import { InputHashtags } from '../elements/InputHashtags';
+import { VideoCall } from '../elements/VideoCall';
 import { geoData } from '../geoData';
 import { global } from '../global';
 import { initialisation } from '../init';

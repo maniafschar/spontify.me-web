@@ -1,7 +1,7 @@
-import { ui } from '../ui';
 import { initialisation } from '../init';
+import { ui } from '../ui';
 
-export { ContentAdminInvoice }
+export { ContentAdminInvoice };
 
 class ContentAdminInvoice extends HTMLElement {
 	constructor() {
@@ -10,7 +10,7 @@ class ContentAdminInvoice extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = `${initialisation.customElementsCss}
+		style.textContent = `${initialisation.elementsCss}
 h1 {
 	font-size: 1.3em;
 	margin-top: 0.5em;

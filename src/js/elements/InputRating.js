@@ -23,7 +23,7 @@ class InputRating extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = `${initialisation.customElementsCss}
+		style.textContent = `${initialisation.elementsCss}
 detailRating {
 	font-size: 1.5em;
 	margin: 1em 0 0.75em 0;

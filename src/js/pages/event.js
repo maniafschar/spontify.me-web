@@ -1,8 +1,8 @@
 import QRCodeStyling from 'qr-code-styling';
 import { communication } from '../communication';
-import { DialogHint } from '../customElements/DialogHint';
-import { DialogPopup } from '../customElements/DialogPopup';
 import { details } from '../details';
+import { DialogHint } from '../elements/DialogHint';
+import { DialogPopup } from '../elements/DialogPopup';
 import { geoData } from '../geoData';
 import { global, Strings } from '../global';
 import { lists } from '../lists';

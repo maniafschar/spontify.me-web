@@ -1,9 +1,9 @@
-import { formFunc, ui } from '../ui';
-import { initialisation } from '../init';
 import { communication } from '../communication';
 import { global } from '../global';
+import { initialisation } from '../init';
+import { formFunc, ui } from '../ui';
 
-export { ContentAdminHome }
+export { ContentAdminHome };
 
 class ContentAdminHome extends HTMLElement {
 	constructor() {
@@ -12,7 +12,7 @@ class ContentAdminHome extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = `${initialisation.customElementsCss}
+		style.textContent = `${initialisation.elementsCss}
 card {
 	width: 6em;
 	height: 8em;

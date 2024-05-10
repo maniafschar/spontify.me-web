@@ -1,8 +1,8 @@
-import { initialisation } from '../init';
 import { global } from '../global';
-import { ui, DragObject } from '../ui';
+import { initialisation } from '../init';
+import { DragObject, ui } from '../ui';
 
-export { InputImage }
+export { InputImage };
 
 class InputImage extends HTMLElement {
 	constructor() {
@@ -11,7 +11,7 @@ class InputImage extends HTMLElement {
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
-		style.textContent = `${initialisation.customElementsCss}
+		style.textContent = `${initialisation.elementsCss}
 inputFile {
 	position: relative;
 	min-height: 2em;

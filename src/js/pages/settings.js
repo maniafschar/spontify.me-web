@@ -115,16 +115,16 @@ class pageSettings {
 <field>
 	<label>${ui.l('settings.genderInterest')}</label>
 	<value>
-		<input-checkbox name="genderInterest2" label="settings.genderInterestFemale"
-			onclick="pageSettings.toggleGenderSlider(this)" ${v.genderInterest2} transient="true"></input-checkbox>
+		<input-checkbox name="ageFemale" label="settings.genderInterestFemale"
+			onclick="pageSettings.toggleGenderSlider(this)" ${v.ageFemaleCheck} transient="true"></input-checkbox>
 		<input-slider type="range" min="18" max="99" value="${v['contact.ageFemale']}" name="ageFemale"></input-slider>
 		<br />
-		<input-checkbox name="genderInterest1" label="settings.genderInterestMale"
-			onclick="pageSettings.toggleGenderSlider(this)" ${v.genderInterest1} transient="true"></input-checkbox>
+		<input-checkbox name="ageMale" label="settings.genderInterestMale"
+			onclick="pageSettings.toggleGenderSlider(this)" ${v.ageMaleCheck} transient="true"></input-checkbox>
 		<input-slider type="range" min="18" max="99" value="${v['contact.ageMale']}" name="ageMale"></input-slider>
 		<br />
-		<input-checkbox name="genderInterest3" label="settings.genderInterestDivers"
-			onclick="pageSettings.toggleGenderSlider(this)" ${v.genderInterest3} transient="true"></input-checkbox>
+		<input-checkbox name="ageDivers" label="settings.genderInterestDivers"
+			onclick="pageSettings.toggleGenderSlider(this)" ${v.ageDiversCheck} transient="true"></input-checkbox>
 		<input-slider type="range" min="18" max="99" value="${v['contact.ageDivers']}" name="ageDivers"></input-slider>
 	</value>
 	<genderSelectHint onclick="pageSettings.selectTab(0)">${ui.l('settings.genderSelectHint')}</genderSelectHint>
@@ -251,16 +251,13 @@ ${v.info}`;
 		s += global.separatorTech + ui.val('settings input-slider[name="ageFemale"]');
 		s += global.separatorTech + ui.val('settings input-slider[name="ageMale"]');
 		s += global.separatorTech + ui.val('settings input-slider[name="ageDivers"]');
-		s += global.separatorTech + (ui.q('settings input-checkbox[name="genderInterest1"][checked="true"]') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings input-checkbox[name="genderInterest2"][checked="true"]') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings input-checkbox[name="genderInterest3"][checked="true"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings input-checkbox[name="ageMale"][checked="true"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings input-checkbox[name="ageFemale"][checked="true"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings input-checkbox[name="ageDivers"][checked="true"]') ? 1 : 0);
 		s += global.separatorTech + ui.val('settings input-checkbox[name="language"][checked="true"]');
 		s += global.separatorTech + (ui.q('settings input-checkbox[name="teaser"][checked="true"]') ? 1 : 0);
 		s += global.separatorTech + (ui.q('settings input-checkbox[name="search"][checked="true"]') ? 1 : 0);
 		s += global.separatorTech + ui.val('settings input[name="pseudonym"]');
-		s += global.separatorTech + (ui.q('settings input-checkbox[name="genderInterest1"][checked="true"]') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings input-checkbox[name="genderInterest2"][checked="true"]') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings input-checkbox[name="genderInterest3"][checked="true"]') ? 1 : 0);
 		s += global.separatorTech + (ui.q('settings input-checkbox[name="notificationNews"][checked="true"]') ? 1 : 0);
 		s += global.separatorTech + (ui.q('settings input-checkbox[name="notificationChat"][checked="true"]') ? 1 : 0);
 		s += global.separatorTech + (ui.q('settings input-checkbox[name="notificationEngagement"][checked="true"]') ? 1 : 0);
@@ -319,11 +316,11 @@ ${v.info}`;
 						v.image = global.serverImg + user.contact.imageList;
 					v.settings1 = pageSettings.templateSettings1(v);
 					if (user.contact.ageMale)
-						v.genderInterest1 = 'checked="true"';
+						v.ageMaleCheck = 'checked="true"';
 					if (user.contact.ageFemale)
-						v.genderInterest2 = 'checked="true"';
+						v.ageFemaleCheck = 'checked="true"';
 					if (user.contact.ageDivers)
-						v.genderInterest3 = 'checked="true"';
+						v.ageDiversCheck = 'checked="true"';
 					v.settings2 = pageSettings.templateSettings2(v);
 					v.info = pageInfo.template()
 						+ '<button-text class="settingsButtonRight" onclick="pageLogin.logoff()" label="logoff.title"></button-text>'
@@ -343,11 +340,11 @@ ${v.info}`;
 					});
 					formFunc.initFields(ui.q('settings'));
 					if (!v['contact.ageFemale'])
-						ui.css(ui.q('settings [name="ageFemale"]'), 'display', 'none');
+						ui.css(ui.q('settings input-slider[name="ageFemale"]'), 'display', 'none');
 					if (!v['contact.ageMale'])
-						ui.css(ui.q('settings [name="ageMale"]'), 'display', 'none');
+						ui.css(ui.q('settings input-slider[name="ageMale"]'), 'display', 'none');
 					if (!v['contact.ageDivers'])
-						ui.css(ui.q('settings [name="ageDivers"]'), 'display', 'none');
+						ui.css(ui.q('settings input-slider[name="ageDivers"]'), 'display', 'none');
 					pageSettings.currentSettings = pageSettings.getCurrentSettings();
 					var localisation = function () {
 						var s = '';
@@ -526,15 +523,14 @@ ${v.info}`;
 		ui.q('input[name="email"]').value = ui.val('input[name="email"]').trim().toLowerCase();
 		ui.q('settings input[name="skills"]').value = ui.q('settings input-hashtags').getAttribute('ids');
 		ui.q('settings input[name="skillsText"]').value = ui.q('settings input-hashtags').getAttribute('text');
-		var values = formFunc.getForm('settings tabBody');
 		var x = ui.q('settings input-checkbox[name="gender"][checked="true"]') && ui.val('settings input-date[name="birthday"]');
-		if (!x || !ui.q('input-checkbox[name="genderInterest1"][checked="true"]'))
-			values.values.ageMale = '';
-		if (!x || !ui.q('input-checkbox[name="genderInterest2"][checked="true"]'))
-			values.values.ageFemale = '';
-		if (!x || !ui.q('input-checkbox[name="genderInterest3"][checked="true"]'))
-			values.values.ageDivers = '';
-		user.save({ webCall: 'pageSettings.save', ...values }, () => pageSettings.postSave(goToID));
+		if (!x || !ui.q('input-checkbox[name="ageMale"][checked="true"]'))
+			ui.attr('input-slider[name="ageMale"]', 'value', '');
+		if (!x || !ui.q('input-checkbox[name="ageFemale"][checked="true"]'))
+			ui.attr('input-slider[name="ageFemale"]', 'value', '');
+		if (!x || !ui.q('input-checkbox[name="ageDivers"][checked="true"]'))
+			ui.attr('input-slider[name="ageDivers"]', 'value', '');
+		user.save({ webCall: 'pageSettings.save', ...formFunc.getForm('settings tabBody') }, () => pageSettings.postSave(goToID));
 	}
 	static selectTab(i) {
 		ui.classRemove('settings tab', 'tabActive');

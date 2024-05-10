@@ -84,7 +84,7 @@ module.exports = (env) => {
 							}
 						};
 						processFiles(dir);
-						processFiles(dir + 'customElements/');
+						processFiles(dir + 'elements/');
 					})
 				}
 			},
@@ -106,13 +106,13 @@ module.exports = (env) => {
 						fs.cpSync('src/font/', 'dist/font', { recursive: true });
 						fs.cpSync('src/images/', 'dist/images', { recursive: true });
 						fs.cpSync('src/js/lang/', 'dist/js/lang', { recursive: true });
-						fs.cpSync('src/css/customElements.css', 'dist/css/customElements.css');
+						fs.cpSync('src/css/elements.css', 'dist/css/elements.css');
 						fs.cpSync('src/logoutcallback.html', 'dist/logoutcallback.html');
 						fs.cpSync('src/oauthcallback.html', 'dist/oauthcallback.html');
 						if (fs.existsSync('clients/' + client + '/images/favicon.ico'))
 							fs.cpSync('clients/' + client + '/images/favicon.ico', 'dist/favicon.ico');
 						file = '/css/main.css';
-						fs.writeFileSync('dist' + file, fs.readFileSync('clients/' + client + '/style.css', 'utf8') + '\n\n' + fs.readFileSync('src/css/customElements.css', 'utf8') + '\n\n' + fs.readFileSync('src' + file, 'utf8'));
+						fs.writeFileSync('dist' + file, fs.readFileSync('clients/' + client + '/style.css', 'utf8') + '\n\n' + fs.readFileSync('src/css/elements.css', 'utf8') + '\n\n' + fs.readFileSync('src' + file, 'utf8'));
 						fs.writeFileSync('dist/index.html', fs.readFileSync('src/index.html', 'utf8')
 							.replace(/\{placeholderAppleId}/g, props.appleId)
 							.replace(/\{placeholderEmail}/g, props.email)

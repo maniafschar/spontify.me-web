@@ -1,8 +1,8 @@
 import { Stomp } from '@stomp/stompjs';
 import JSEncrypt from 'jsencrypt';
 import SockJS from 'sockjs-client';
-import { DialogPopup } from './customElements/DialogPopup';
-import { VideoCall } from './customElements/VideoCall';
+import { DialogPopup } from './elements/DialogPopup';
+import { VideoCall } from './elements/VideoCall';
 import { geoData } from './geoData';
 import { global } from './global';
 import { pageChat } from './pages/chat';

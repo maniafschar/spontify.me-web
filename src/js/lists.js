@@ -1,8 +1,8 @@
 import { communication } from './communication';
-import { DialogPopup } from './customElements/DialogPopup';
+import { DialogPopup } from './elements/DialogPopup';
 import { geoData } from './geoData';
 import { global } from './global';
-import { ui, formFunc } from './ui';
+import { formFunc, ui } from './ui';
 
 export { lists };
 

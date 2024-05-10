@@ -1,6 +1,6 @@
 import { bluetooth } from '../bluetooth';
 import { communication, Encryption, FB } from '../communication';
-import { DialogPopup } from '../customElements/DialogPopup';
+import { DialogPopup } from '../elements/DialogPopup';
 import { geoData } from '../geoData';
 import { global } from '../global';
 import { initialisation } from '../init';
