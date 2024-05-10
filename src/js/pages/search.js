@@ -107,16 +107,21 @@ class pageSearch {
 			return 'contact.id<>' + user.contact.id + s + (s3 ? ' and (' + s3 + ')' : '');
 		},
 		search() {
-			pageSearch.contacts.fieldValues = formFunc.getForm('search tabBody div.contacts form').values;
-			lists.load({
-				webCall: 'pageSearch.contacts.search',
-				latitude: geoData.getCurrent().lat,
-				longitude: geoData.getCurrent().lon,
-				distance: -1,
-				query: 'contact_list',
-				search: encodeURIComponent(pageSearch.contacts.getSearch())
-			}, pageContact.listContacts, 'search tabBody>div.contacts', 'search');
-			user.set('searchContacts', pageSearch.contacts.fieldValues);
+			if (ui.q('search tabBody div.contacts [name="matches"][checked="true"]') && !user.contact.skills && !user.contact.skillsText)
+				ui.q('search tabBody div.contacts errorHint').html(ui.l('errorNoInterestText') + '<br/><br/><button-text onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('errorNoInterestButton') + '</button-text>');
+			else {
+				ui.q('search tabBody div.contacts errorHint').innerHTML = '';
+				pageSearch.contacts.fieldValues = formFunc.getForm('search tabBody div.contacts form').values;
+				lists.load({
+					webCall: 'pageSearch.contacts.search',
+					latitude: geoData.getCurrent().lat,
+					longitude: geoData.getCurrent().lon,
+					distance: -1,
+					query: 'contact_list',
+					search: encodeURIComponent(pageSearch.contacts.getSearch())
+				}, pageContact.listContacts, 'search tabBody>div.contacts', 'search');
+				user.set('searchContacts', pageSearch.contacts.fieldValues);
+			}
 		}
 	}
 	static events = {
