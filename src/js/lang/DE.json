@@ -636,6 +636,8 @@
 			"dateSelectionThisWeekend": "dieses Wochenende",
 			"dateSelectionToday": "heute",
 			"dateSelectionTomorrow": "morgen",
+			"errorNoInterestButton": "Interessen setzen",
+			"errorNoInterestText": "Du hast noch keine Interessen angegeben. Möchtest Du diese nun angeben?",
 			"favorites": "meine Favoriten",
 			"hintContact": "Interessen, Name, Beschreibung werden durchsucht.",
 			"hintEvent": "Name/Adresse/Telefonnummer der Location, Beschreibung Event/Location/Ersteller werden durchsucht.",
