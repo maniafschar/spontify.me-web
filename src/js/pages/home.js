@@ -293,7 +293,8 @@ border-radius: 0.5em 0 0 3em;
 			});
 	}
 	static init(force) {
-		if (!ui.q('home')) {
+		var e = ui.q('home');
+		if (!e) {
 			setTimeout(function () { pageHome.init(force) }, 100);
 			return;
 		}
@@ -325,7 +326,7 @@ border-radius: 0.5em 0 0 3em;
 				v.statsOnclick = 'pageHome.openNews()';
 				v.statsLabel = ui.l('home.news');
 			}
-			ui.q('home').innerHTML = pageHome.template(v);
+			e.innerHTML = pageHome.template(v);
 			formFunc.svg.replaceAll();
 			initialisation.reposition();
 			pageHome.teaserContacts();

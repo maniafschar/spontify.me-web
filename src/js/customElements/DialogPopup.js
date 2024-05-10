@@ -216,23 +216,27 @@ mapButton::before {
 	}
 	static close() {
 		var e = ui.q('dialog-popup');
-		e.removeAttribute('error');
-		if (ui.cssValue(e, 'display') != 'none' && e.getAttribute('modal') != 'true') {
-			ui.navigation.animation(e, 'popupSlideOut', e.closeHard);
-			DialogHint.close();
-			DialogPopup.lastPopup = null;
-			return true;
+		if (e) {
+			e.removeAttribute('error');
+			if (ui.cssValue(e, 'display') != 'none' && e.getAttribute('modal') != 'true') {
+				ui.navigation.animation(e, 'popupSlideOut', e.closeHard);
+				DialogHint.close();
+				DialogPopup.lastPopup = null;
+				return true;
+			}
 		}
 		return false;
 	}
 	closeHard() {
 		var e = ui.q('dialog-popup');
-		e.style.display = 'none';
-		e.removeAttribute('error');
-		e.removeAttribute('modal');
-		ui.classRemove(e, 'animated popupSlideIn popupSlideOut');
-		for (var i = e._root.children.length - 1; i >= 0; i--)
-			e._root.children[i].remove();
+		if (e) {
+			e.style.display = 'none';
+			e.removeAttribute('error');
+			e.removeAttribute('modal');
+			ui.classRemove(e, 'animated popupSlideIn popupSlideOut');
+			for (var i = e._root.children.length - 1; i >= 0; i--)
+				e._root.children[i].remove();
+		}
 	}
 	static open(title, data, closeAction, modal, exec) {
 		var e = ui.q('dialog-popup'), visible = e.style.display != 'none';

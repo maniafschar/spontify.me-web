@@ -334,12 +334,10 @@ settings genderSelectHint {
 	background: rgba(0, 0, 0, 0.6);
 	position: absolute;
 	right: -0.5em;
-	top: 0.5em;
-	bottom: -2em;
+	top: 1em;
+	bottom: 0;
 	color: white;
-	padding: 3em;
-	font-size: 1.3em;
-	line-height: 1.8;
+	padding: 2em;
 	display: none;
 	cursor: pointer;
 }

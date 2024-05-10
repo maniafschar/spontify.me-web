@@ -39,6 +39,10 @@ hashtags category label {
 }
 
 hashtags div label {
+	background: rgba(255, 255, 255, 0.2);
+}
+
+hashtags div label.selected {
 	background: rgba(255, 255, 255, 0.5);
 }
 

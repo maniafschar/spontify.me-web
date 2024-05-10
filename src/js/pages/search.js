@@ -108,9 +108,9 @@ class pageSearch {
 		},
 		search() {
 			if (ui.q('search tabBody div.contacts [name="matches"][checked="true"]') && !user.contact.skills && !user.contact.skillsText)
-				ui.q('search tabBody div.contacts errorHint').html(ui.l('errorNoInterestText') + '<br/><br/><button-text onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('errorNoInterestButton') + '</button-text>');
+				ui.html('search tabBody div.contacts errorHint', ui.l('search.errorNoInterestText') + '<br/><br/><button-text onclick="ui.navigation.goTo(&quot;settings&quot;)">' + ui.l('search.errorNoInterestButton') + '</button-text>');
 			else {
-				ui.q('search tabBody div.contacts errorHint').innerHTML = '';
+				ui.html('search tabBody div.contacts errorHint', '');
 				pageSearch.contacts.fieldValues = formFunc.getForm('search tabBody div.contacts form').values;
 				lists.load({
 					webCall: 'pageSearch.contacts.search',
