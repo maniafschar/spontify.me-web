@@ -210,7 +210,7 @@ field.checkbox {
 		}
 		if (v.event.price > 0)
 			v.eventPrice = ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2).replace('.', ','));
-		else if (v.event.locationId)
+		else if (v.event.locationId && v.event.locationId != -2)
 			v.eventPrice = ui.l('events.priceDisp0');
 		if (v.event.maxParticipants)
 			v.maxParticipants = ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
@@ -1025,6 +1025,11 @@ field.checkbox {
 			ui.classRemove('dialog-popup .event dialogButtons .save', 'hidden');
 			ui.classAdd('dialog-popup .event dialogButtons .selectLocation', 'hidden');
 		}
+		if (b == -2 && !geoData.localized) {
+			var e = ui.q('dialog-popup explain.newWithoutLocation');
+			e.innerHTML = e.innerHTML + '<br/><br/>' + ui.l('events.errorWithoutLocation');
+		}
+		ui.attr('dialog-popup textarea[name="description"]', 'placeholder', b == -2 ? ui.l('events.newWithoutLocationHint') : '');
 		pageEvent.checkPrice();
 	}
 	static toggle(id) {

@@ -503,9 +503,14 @@ border-radius: 0.5em 0 0 3em;
 			success(l) {
 				if (!l)
 					return;
-				var e = pageEvent.getCalendarList(l), s = '<card onclick="pageEvent.edit()" class="mainBG" style="color:var(--text)"><img source="add"/><text>' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>';
-				if (e.length > 25)
-					e.splice(25, e.length);
+				var e = pageEvent.getCalendarList(l), s = '<card onclick="pageEvent.edit()" class="mainBG" style="color:var(--text)"><img source="add"/><text>' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>', processedIds = [], e2 = [];
+				for (var i = 0; i < e.length; i++) {
+					if (processedIds.indexOf(e[i].event.id) < 0) {
+						processedIds.push(e[i].event.id);
+						e2.push(e[i]);
+					}
+				}
+				e = e2;
 				var dates = ui.qa('dialog-hint eventFilter:last-child input-checkbox[checked="true"]');
 				var dateFiltered = function (e2) {
 					if ('outdated' == e2)
@@ -524,13 +529,12 @@ border-radius: 0.5em 0 0 3em;
 							webCall: 'pageHome.teaserEvents', query: 'event_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('event.id=' + e[i].event.id)
 						}).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)"><img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList ? e[i].imageList : e[i].contact.imageList) + '"/><text>' + global.date.formatDate(e[i].event.startDate, 'noWeekday') + '<br/>' + e[i].event.description + '</text></card>';
 				}
-				e = ui.q('home teaser.events>div');
-				e.innerHTML = s;
+				ui.html('home teaser.events>div', s);
 				ui.css('home teaser.events', 'opacity', 1);
 				formFunc.svg.replaceAll();
-				e.addEventListener('wheel', event => {
+				ui.q('home teaser.events>div').addEventListener('wheel', event => {
 					if (event.deltaY)
-						e.scrollBy({ left: event.deltaY });
+						ui.q('home teaser.events>div').scrollBy({ left: event.deltaY });
 				}, { passive: true });
 			}
 		});
