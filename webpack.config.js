@@ -92,7 +92,6 @@ module.exports = (env) => {
 				apply: compiler => {
 					compiler.hooks.afterEmit.tap('client', () => {
 						var fs = require('fs'), file, client = env && env.client && !isNaN(env.client) ? env.client : '1';
-						console.log(client);
 						var props = JSON.parse(fs.readFileSync('clients/' + client + '/props.json', 'utf8'));
 						if (!props)
 							throw 'client ' + client + ' does not exists!';
@@ -192,6 +191,14 @@ module.exports = (env) => {
 							}
 							s = s.replace(regexs[i].pattern, regexs[i].replace);
 						}
+						fs.writeFileSync(file, s);
+						file = '../spontify.me-app/GoogleService-Info.plist';
+						s = fs.readFileSync(file, 'utf8');
+						s = s.replace(/(<string>com\.jq\.)([^<]+)/, '$1' + props.bundleId.substring(7));
+						fs.writeFileSync(file, s);
+						file = '../spontify.me-app/google-services.json';
+						s = fs.readFileSync(file, 'utf8');
+						s = s.replace(/("package_name": "com\.jq\.)([^"]+)/, '$1' + props.bundleId.substring(7));
 						fs.writeFileSync(file, s);
 						file = 'dist/images/logo.svg';
 						s = fs.readFileSync(file, 'utf8')
