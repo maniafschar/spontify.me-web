@@ -114,7 +114,7 @@ class pageSettings {
 </field>
 <field>
 	<label>${ui.l('settings.genderInterest')}</label>
-	<value>
+	<value style="padding-bottom:0.5em;">
 		<input-checkbox name="ageFemale" label="settings.genderInterestFemale"
 			onclick="pageSettings.toggleGenderSlider(this)" ${v.ageFemaleCheck} transient="true"></input-checkbox>
 		<input-slider type="range" min="18" max="99" value="${v['contact.ageFemale']}" name="ageFemale"></input-slider>

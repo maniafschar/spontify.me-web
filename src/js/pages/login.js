@@ -382,7 +382,7 @@ class pageLogin {
 							}
 						});
 				}
-			}, { scope: 'email' }
+			}
 		);
 	}
 	static passwordDialog() {

@@ -531,9 +531,8 @@ class FB {
 	static tokenStore = window.sessionStorage;
 	static fbAppId;
 	static version;
-	static baseURL = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
-	static oauthRedirectURL = FB.baseURL + '/oauthcallback.html';
-	static logoutRedirectURL = FB.baseURL + '/logoutcallback.html';
+	static oauthRedirectURL = global.server + 'oauthcallback.html';
+	static logoutRedirectURL = global.server + 'logoutcallback.html';
 	static loginCallback;
 
 	static init(params) {
@@ -545,7 +544,7 @@ class FB {
 			FB.tokenStore = params.tokenStore;
 		FB.version = params.version;
 	}
-	static login(callback, options) {
+	static login(callback) {
 		if (FB.tokenStore['fbtoken']) {
 			FB.api({
 				path: '/debug_token',
@@ -555,7 +554,7 @@ class FB {
 						callback({ status: 'connected', token: FB.tokenStore['fbtoken'] });
 					else {
 						FB.tokenStore['fbtoken'] = '';
-						FB.login(callback, options);
+						FB.login(callback);
 					}
 				},
 				error: function (data) {
@@ -564,21 +563,18 @@ class FB {
 						return;
 					}
 					FB.tokenStore['fbtoken'] = '';
-					FB.login(callback, options);
+					FB.login(callback);
 				}
 			});
 			return;
 		}
-		var scope = '';
 		if (!FB.fbAppId)
 			return callback({ status: 'unknown', error: 'Facebook App Id not set.' });
-		if (options && options.scope)
-			scope = options.scope;
 		FB.loginCallback = callback;
 		var openInAppBrowser = function () {
 			ui.navigation.openHTML(FB.FB_LOGIN_URL.replace('{version}', FB.version) + '?client_id=' + FB.fbAppId +
-				'&redirect_uri=' + (global.isBrowser() ? FB.oauthRedirectURL : 'https://www.facebook.com/connect/login_success.html') +
-				'&response_type=token&scope=' + scope, 'fb_login');
+				'&redirect_uri=' + FB.oauthRedirectURL +
+				'&response_type=token&scope=email', 'fb_login');
 			if (window.cordova) {
 				var f = function () {
 					if (ui.navigation.openWindows['fb_login'])
@@ -597,8 +593,8 @@ class FB {
 		if (global.getOS() == 'android' && window.SafariViewController)
 			window.SafariViewController.show({
 				url: FB.FB_LOGIN_URL + '?client_id=' + FB.fbAppId +
-					'&redirect_uri=' + global.serverApi.substring(0, global.serverApi.lastIndexOf('/', global.serverApi.length - 2)) + '/oauthcallback.html' +
-					'&response_type=token&scope=' + scope,
+					'&redirect_uri=' + FB.oauthRedirectURL +
+					'&response_type=token&scope=email',
 				hidden: false, // default false. You can use this to load cookies etc in the background (see issue #1 for details).
 				animated: false, // default true, note that 'hide' will reuse this preference (the 'Done' button will always animate though)
 				transition: null, // (this only works in iOS 9.1/9.2 and lower) unless animated is false you can choose from: curl, flip, fade, slide (default)
