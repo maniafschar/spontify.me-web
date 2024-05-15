@@ -378,13 +378,19 @@ ${v.keywords}
 		pageSearch[type].search();
 	}
 	static selectTab(id) {
+		if (id == ui.q('search tabHeader tab.tabActive').getAttribute('i'))
+			return;
+		var animation = ui.q('search tabBody').getAttribute('animation');
+		if (animation && new Date().getTime() - animation < 500)
+			return;
 		if (DialogHint.currentStep < 0)
 			ui.navigation.closeHint();
 		ui.css('search tabBody>div', 'opacity', 1);
+		ui.q('search tabBody').style.marginLeft = ((id == 'locations' ? 2 : id == 'contacts' ? 1 : 0) * -100) + '%';
+		ui.attr('search tabBody', 'animation', new Date().getTime());
 		ui.on('search tabBody', 'transitionend', function () {
 			ui.css('search tabBody>div:not(.' + id + ')', 'opacity', 0);
 		}, true);
-		ui.q('search tabBody').style.marginLeft = ((id == 'locations' ? 2 : id == 'contacts' ? 1 : 0) * -100) + '%';
 		ui.classRemove('search tab', 'tabActive');
 		ui.classAdd('search tab[i="' + (id ? id : 'events') + '"]', 'tabActive');
 		ui.navigation.closeLocationPicker();
