@@ -531,9 +531,15 @@ ${v.info}`;
 		user.save({ webCall: 'pageSettings.save', ...formFunc.getForm('settings tabBody') }, () => pageSettings.postSave(goToID));
 	}
 	static selectTab(i) {
+		if (ui.q('settings tabHeader tab.tabActive').getAttribute('onclick').indexOf(i) > 0)
+			return;
+		var animation = ui.q('settings tabBody').getAttribute('animation');
+		if (animation && new Date().getTime() - animation < 500)
+			return;
 		ui.classRemove('settings tab', 'tabActive');
 		ui.classAdd(ui.qa('settings tab')[i], 'tabActive');
 		ui.q('settings tabBody').style.marginLeft = i * -100 + '%';
+		ui.attr('settings tabBody', 'animation', new Date().getTime());
 		ui.css('settings genderSelectHint', 'display', ui.q('settings input-checkbox[name="gender"][checked="true"]') && ui.val('settings input-date[name="birthday"]') ? 'none' : 'block');
 	}
 	static swipeLeft() {

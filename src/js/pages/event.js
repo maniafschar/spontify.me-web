@@ -59,6 +59,12 @@ field.checkbox {
 			<input-hashtags ids="${v.skills}" text="${v.skillsText}" transient="true"></input-hashtags>
 		</value>
 	</field>
+	<field>
+		<label name="startDate">${ui.l('events.start')}</label>
+		<value>
+			<input-date name="startDate" value="${v.startDate}" min="${v.dateMin}" max="${v.dateMax}" scroll="dialog-popup popupContent div"></input-date>
+		</value>
+	</field>
 	<field class="noWTDField checkbox">
 		<label>${ui.l('events.repetition')}</label>
 		<value>
@@ -66,12 +72,6 @@ field.checkbox {
 			<input-checkbox type="radio" deselect="true" name="repetition" value="w2" label="events.repetition_w2" onclick="pageEvent.setForm()" ${v.repetition_w2}></input-checkbox>
 			<input-checkbox type="radio" deselect="true" name="repetition" value="m" label="events.repetition_m" onclick="pageEvent.setForm()" ${v.repetition_m}></input-checkbox>
 			<input-checkbox type="radio" deselect="true" name="repetition" value="y" label="events.repetition_y" onclick="pageEvent.setForm()" ${v.repetition_y}></input-checkbox>
-		</value>
-	</field>
-	<field>
-		<label name="startDate">${ui.l('events.start')}</label>
-		<value>
-			<input-date name="startDate" value="${v.startDate}" min="${v.dateMin}" max="${v.dateMax}" scroll="dialog-popup popupContent div"></input-date>
 		</value>
 	</field>
 	<field class="noWTDField" name="endDate" style="display:none;">
