@@ -258,6 +258,7 @@
 			"requestFriendshipRestart": "Freundschaft wiederherstellen",
 			"requestFriendshipSent": "Freundschaftsanfrage versendet!",
 			"requestFriendshipTerminated": "Freundschaft beendet!",
+			"scoringPoints": "Punktesystem:\nEvent einstellen und mindestens ein Teilnehmer außer Dir: 3 Punkte\nUmfrage einstellen: 2 Punkte\nEvent/Umfrage teilnehmen oder pro Teilnehmer an Deinem Event/Umfrage: 1 Punkt",
 			"terminateFriendship": "Freundschaft beenden",
 			"terminateFriendshipConfirm": "Bestätige die Aufhebung der Freundschaft",
 			"title": "${buddies}",
