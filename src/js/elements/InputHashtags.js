@@ -117,12 +117,16 @@ hashtagButton::before {
 		this.synchonizeTags();
 	}
 	convert(hashtags) {
-		var category = '';
+		var category = '', i3;
 		hashtags = hashtags.replace(/\n|\t|\r/g, ' ');
+		if ((i3 = hashtags.indexOf(ui.l('locations.attributeSportsbar'))) > -1) {
+			category += '|x.1';
+			hashtags = hashtags.substring(0, i3) + hashtags.substring(i3 + t[0].length);
+		}
 		for (var i = 0; i < ui.categories.length; i++) {
 			for (var i2 = 0; i2 < ui.categories[i].values.length; i2++) {
 				var t = ui.categories[i].values[i2].split('|');
-				var i3 = hashtags.toLowerCase().indexOf(t[0].toLowerCase());
+				i3 = hashtags.toLowerCase().indexOf(t[0].toLowerCase());
 				if (i3 > -1) {
 					category += '|' + ui.categories[i].key + '.' + t[1];
 					hashtags = hashtags.substring(0, i3) + hashtags.substring(i3 + t[0].length);
@@ -156,38 +160,41 @@ hashtagButton::before {
 						break;
 					}
 				}
+			else if (ids[i] == 'x.1')
+				a.push(ui.l('locations.attributeSportsbar'));
 		}
 		a.sort(function (a, b) { return a.toLowerCase() > b.toLowerCase() ? 1 : -1 });
 		return a.join(' ').trim();
 	}
 	selection() {
+		var s = '';
 		if (this.getAttribute('type') == 'location') {
-			var s = '';
+			s = '<div>';
 			for (var i = 0; i < ui.categories.length; i++) {
 				if (ui.categories[i].key == 2) {
 					var subs = [...ui.categories[i].values];
-					for (var i2 = 0; i2 < subs.length; i2++)
-						subs[i] = subs[i].replace('|', '|2.');
-					subs.push(ui.l('locations.attributeMuseum') + '|1.01');
-					subs.push(ui.l('locations.attributeCinema') + '|1.09');
-					subs.push(ui.l('locations.attributeSportsbar') + '|x.1');
+					subs.push(ui.l('locations.attributeMuseum') + '|');
+					subs.push(ui.l('locations.attributeCinema') + '|');
+					subs.push(ui.l('locations.attributeSportsbar') + '|');
 					subs = subs.sort(function (a, b) { return a > b ? 1 : -1 });
 					for (var i2 = 0; i2 < subs.length; i2++)
 						s += '<label onclick="this.getRootNode().host.add(&quot;' + subs[i2].split('|')[0] + '&quot;)">' + subs[i2].split('|')[0] + '</label>';
+					break;
 				}
 			}
-			return s;
-		}
-		s = '<category>';
-		for (var i = 0; i < ui.categories.length; i++)
-			s += '<label ' + (i == 0 ? ' class="selected"' : '') + 'onclick="this.getRootNode().host.toggleSubCategories(this,' + i + ')">' + ui.categories[i].label + '</label>';
-		s += '</category>';
-		for (var i = 0; i < ui.categories.length; i++) {
-			s += '<div' + (i == 0 ? ' style="display:block;"' : '') + '>';
-			subs = ui.categories[i].values.sort(function (a, b) { return a > b ? 1 : -1 });
-			for (var i2 = 0; i2 < subs.length; i2++)
-				s += '<label onclick="this.getRootNode().host.add(&quot;' + subs[i2].split('|')[0] + '&quot;)">' + subs[i2].split('|')[0] + '</label>';
 			s += '</div>';
+		} else {
+			s = '<category>';
+			for (var i = 0; i < ui.categories.length; i++)
+				s += '<label ' + (i == 0 ? ' class="selected"' : '') + 'onclick="this.getRootNode().host.toggleSubCategories(this,' + i + ')">' + ui.categories[i].label + '</label>';
+			s += '</category>';
+			for (var i = 0; i < ui.categories.length; i++) {
+				s += '<div' + (i == 0 ? ' style="display:block;"' : '') + '>';
+				subs = ui.categories[i].values.sort(function (a, b) { return a > b ? 1 : -1 });
+				for (var i2 = 0; i2 < subs.length; i2++)
+					s += '<label onclick="this.getRootNode().host.add(&quot;' + subs[i2].split('|')[0] + '&quot;)">' + subs[i2].split('|')[0] + '</label>';
+				s += '</div>';
+			}
 		}
 		return s;
 	}
