@@ -141,6 +141,12 @@ mapEdit {
 	</value>
 </field>
 <field>
+	<label>${ui.l('location.hashtags')}</label>
+	<value>
+		<input-hashtags ids="${v.skills}" type="location"></input-hashtags>
+	</value>
+</field>
+<field>
 	<label>${ui.l('locations.address')}</label>
 	<value>
 		<textarea name="address" maxlength="250">${v.address}</textarea>
