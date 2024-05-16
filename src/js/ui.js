@@ -60,9 +60,9 @@ class ui {
 				s += '<matchIndicatorHint><span><label class="multipleLabel skillsFade">' + ui.l('contacts.matchIndicatorHintDescription3') + '</label></span></matchIndicatorHint>';
 				return '<text class="popup matchIndicatorAttributesHint" style="display:none;" onclick="ui.toggleHeight(this)"><div>' + s + '</div></text>';
 			},
-			text() {
-				var s = this.skills.toString(style);
-				var s2 = this.skillsText.toString(style);
+			text(type) {
+				var s = this.skills.toString(style, type);
+				var s2 = this.skillsText.toString(style, type);
 				if (s2)
 					s += (s && style == 'list' ? ', ' : '') + s2;
 				return s;
@@ -808,15 +808,15 @@ class ui {
 
 class Skills {
 	list = [];
-	toString(style) {
+	toString(style, type) {
 		var s = '';
 		this.list.sort(function (a, b) { return a.label > b.label ? 1 : -1 });
 		for (var i = 0; i < this.list.length; i++) {
 			if (style == 'list') {
 				if (this.list[i].class == 'highlightBackground')
 					s += ', ' + this.list[i].label;
-			} else
-				s += '<label class="multipleLabel' + (this.list[i].class ? ' ' + this.list[i].class : '') + '">' + this.list[i].label + '</label>';
+			} else if (type != 'location' || !this.list[i].class || this.list[i].class.indexOf('skillsFade') < 0)
+				s += '<label class="multipleLabel' + (type != 'location' && this.list[i].class ? ' ' + this.list[i].class : '') + '">' + this.list[i].label + '</label>';
 		}
 		if (s) {
 			if (style == 'list')

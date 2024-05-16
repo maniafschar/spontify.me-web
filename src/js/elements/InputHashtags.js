@@ -38,6 +38,12 @@ hashtags category label {
 	color: var(--text);
 }
 
+:host(.location) hashtags div {
+	display: block;
+    margin-left: 0;
+    text-align: center;
+}
+
 hashtags div label {
 	background: rgba(255, 255, 255, 0.2);
 }
@@ -121,7 +127,7 @@ hashtagButton::before {
 		hashtags = hashtags.replace(/\n|\t|\r/g, ' ');
 		if ((i3 = hashtags.indexOf(ui.l('locations.attributeSportsbar'))) > -1) {
 			category += '|x.1';
-			hashtags = hashtags.substring(0, i3) + hashtags.substring(i3 + t[0].length);
+			hashtags = hashtags.substring(0, i3) + hashtags.substring(i3 + ui.l('locations.attributeSportsbar').length);
 		}
 		for (var i = 0; i < ui.categories.length; i++) {
 			for (var i2 = 0; i2 < ui.categories[i].values.length; i2++) {
@@ -168,7 +174,7 @@ hashtagButton::before {
 	}
 	selection() {
 		var s = '';
-		if (this.getAttribute('type') == 'location') {
+		if (this.classList.contains('location')) {
 			s = '<div>';
 			for (var i = 0; i < ui.categories.length; i++) {
 				if (ui.categories[i].key == 2) {

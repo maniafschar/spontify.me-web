@@ -141,9 +141,9 @@ mapEdit {
 	</value>
 </field>
 <field>
-	<label>${ui.l('location.hashtags')}</label>
+	<label>${ui.l('locations.hashtags')}</label>
 	<value>
-		<input-hashtags ids="${v.skills}" type="location"></input-hashtags>
+		<input-hashtags ids="${v.skills}" text="${v.skillsText}" class="location" name="skills"></input-hashtags>
 	</value>
 </field>
 <field>
@@ -281,6 +281,8 @@ mapEdit {
 				}
 			}
 		} else {
+			var skills = ui.getSkills(v, 'detail');
+			v.skills = skills.text('location');
 			v.hideBlockUser = ' style="display:none;"';
 			if (global.isBrowser())
 				v.copyLinkHint = ui.l('copyLinkHint.location');

@@ -274,7 +274,7 @@ ${v.keywords}
 			global.template`<form onsubmit="return false">
 <input-checkbox label="search.favorites" name="favorites" value="true" ${v.favorites}></input-checkbox>
 <label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${geoData.getCurrent().town}</label>
-<input-hashtags ids="${v.keywords}" text="${v.keywordsText}" name="keywords"></input-hashtags>
+<input-hashtags ids="${v.keywords}" text="${v.keywordsText}" name="keywords" class="location"></input-hashtags>
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
 <errorHint></errorHint>
 <dialogButtons>
