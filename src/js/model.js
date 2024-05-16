@@ -225,6 +225,7 @@ class Location extends BaseEntity {
 	longitude;
 	name;
 	rating;
+	skills;
 	telephone;
 	town;
 
