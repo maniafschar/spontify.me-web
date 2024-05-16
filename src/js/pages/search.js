@@ -274,7 +274,7 @@ ${v.keywords}
 			global.template`<form onsubmit="return false">
 <input-checkbox label="search.favorites" name="favorites" value="true" ${v.favorites}></input-checkbox>
 <label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${geoData.getCurrent().town}</label>
-<input type="text" name="keywords" maxlength="50" placeholder="${ui.l('keywords')}" value="${v.keywords}"/>
+<input-hashtags ids="${v.keywords}" text="${v.keywordsText}" name="keywords"></input-hashtags>
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
 <errorHint></errorHint>
 <dialogButtons>
@@ -287,15 +287,17 @@ ${v.keywords}
 				v.favorites = ' checked="true"';
 			if (pageSearch.locations.fieldValues.keywords)
 				v.keywords = pageSearch.locations.fieldValues.keywords;
+			if (!pageSearch.contacts.fieldValues.keywordsText)
+				v.keywordsText = pageSearch.contacts.fieldValues.keywordsText;
 			return pageSearch.locations.template(v);
 		},
 		getSearch() {
 			var s = '';
-			var v = ui.val('search tabBody div.locations [name="keywords"]').trim();
+			var v = ui.q('search tabBody div.locations input-hashtags').getAttribute('text');
 			if (v) {
-				v = v.replace(/'/g, '\'\'').split(' ');
+				v = v.replace(/'/g, '\'\'').split('|');
 				for (var i = 0; i < v.length; i++) {
-					if (v[i].trim()) {
+					if (v[i]) {
 						var l = ') like \'%' + v[i].trim().toLowerCase() + '%\' or LOWER(';
 						s += '(LOWER(location.name' + l + 'location.description' + l + 'location.address' + l + 'location.address2' + l + 'location.telephone' + l;
 						s = s.substring(0, s.lastIndexOf(' or LOWER')) + ') or ';
@@ -304,6 +306,9 @@ ${v.keywords}
 				if (s)
 					s = '(' + s.substring(0, s.length - 4) + ')';
 			}
+			v = ui.q('search tabBody div.locations input-hashtags').getAttribute('ids');
+			if (v)
+				s += (s ? ' or ' : '') + global.getRegEx('location.skills', v);
 			if (ui.q('search tabBody div.locations [name="favorites"][checked="true"]'))
 				s += (s ? ' and ' : '') + 'locationFavorite.favorite=true';
 			return s;
