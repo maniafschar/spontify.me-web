@@ -50,7 +50,7 @@ field.checkbox {
 			<input-checkbox type="radio" name="type" transient="true" value="0" label="events.location" onclick="pageEvent.setForm()" ${v.typeLocation}></input-checkbox>
 			<input-checkbox type="radio" name="type" transient="true" value="-1" label="events.newOnlineEvent" onclick="pageEvent.setForm()" ${v.typeOnlineEvent} ${v.hideOnlineEvent}></input-checkbox>
 			<input-checkbox type="radio" name="type" transient="true" value="-2" label="events.newWithoutLocation" onclick="pageEvent.setForm()" ${v.typeWithoutLocation} ${v.hideWithoutLocation}></input-checkbox>
-			<input-checkbox type="radio" name="type" transient="true" value="-3" label="events.newQuestionaire" onclick="pageEvent.setForm()" ${v.typeQuestionaire}></input-checkbox>
+			<input-checkbox type="radio" name="type" transient="true" value="-3" label="events.newPoll" onclick="pageEvent.setForm()" ${v.typePoll}></input-checkbox>
 		</value>
 	</field>
 	<explain class="newWithoutLocation" style="display:none;">${ui.l('events.newWithoutLocationDescription')}</explain>
@@ -103,6 +103,11 @@ field.checkbox {
 			</div>
 		</value>
 	</field>
+	<field class="poll">
+		<label>${ui.l('events.price')}</label>
+		<value>
+		</value>
+	</field>
 	<field class="picture" style="display:none;" name="image">
 		<label>${ui.l('picture')}</label>
 		<value>
@@ -115,7 +120,7 @@ field.checkbox {
 			<input name="url" value="${v.url}" />
 		</value>
 	</field>
-	<field name="publish"${v.publish}>
+	<field${v.publish}>
 		<label>${ui.l('events.publish')}</label>
 		<value>
 			<input-checkbox name="publish" label="events.publishCheckbox" value="true" ${v.publishValue}></input-checkbox>
@@ -350,7 +355,7 @@ field.checkbox {
 		else if (v.locationId == -2)
 			v.typeWithoutLocation = 'checked="true"';
 		else if (v.locationId == -3)
-			v.typeQuestionaire = 'checked="true"';
+			v.typePoll = 'checked="true"';
 		else
 			v.typeLocation = 'checked="true"';
 		if (global.config.club)
@@ -1015,12 +1020,13 @@ field.checkbox {
 		b = ui.val('dialog-popup input-checkbox[name="type"][checked="true"]');
 		var es = ui.qa('dialog-popup .noWTDField:not(field[name="endDate"])');
 		for (var i = 0; i < es.length; i++)
-			pageEvent.openSection(es[i], b != -2);
+			pageEvent.openSection(es[i], b > -2);
 		pageEvent.openSection('dialog-popup field[name="endDate"]', b != -2 && ui.q('dialog-popup [name="repetition"][checked="true"]') != null);
 		ui.q('dialog-popup .url label').innerText = ui.l(b == -1 ? 'events.urlOnlineEvent' : 'events.url');
 		pageEvent.openSection('dialog-popup .url', b == -1);
 		pageEvent.openSection('dialog-popup .newWithoutLocation', b == -2);
 		pageEvent.openSection('dialog-popup .locationName', b == 0);
+		pageEvent.openSection('dialog-popup .poll', b == -3);
 		if (b == 0 && !ui.val('dialog-popup [name="id"]') && !ui.q('dialog-popup .event .locationName').innerText) {
 			ui.classRemove('dialog-popup .event dialogButtons .selectLocation', 'hidden');
 			ui.classAdd('dialog-popup .event dialogButtons .save', 'hidden');
