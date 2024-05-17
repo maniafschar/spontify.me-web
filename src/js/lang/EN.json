@@ -353,6 +353,7 @@
 			"myTickets": "in which I participate",
 			"new": "new event",
 			"newOnlineEvent": "Online",
+			"newPoll": "Poll",
 			"newWithoutLocation": "Search request",
 			"newWithoutLocationDescription": "With a search query you inform ${buddies} in a 20km radius that you would like to do something at that time. If someone gets in touch, you can agree on the exact place and time.",
 			"newWithoutLocationHint": "Approximatly where and what do you want to do?",
