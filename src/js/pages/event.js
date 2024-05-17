@@ -50,6 +50,7 @@ field.checkbox {
 			<input-checkbox type="radio" name="type" transient="true" value="0" label="events.location" onclick="pageEvent.setForm()" ${v.typeLocation}></input-checkbox>
 			<input-checkbox type="radio" name="type" transient="true" value="-1" label="events.newOnlineEvent" onclick="pageEvent.setForm()" ${v.typeOnlineEvent} ${v.hideOnlineEvent}></input-checkbox>
 			<input-checkbox type="radio" name="type" transient="true" value="-2" label="events.newWithoutLocation" onclick="pageEvent.setForm()" ${v.typeWithoutLocation} ${v.hideWithoutLocation}></input-checkbox>
+			<input-checkbox type="radio" name="type" transient="true" value="-3" label="events.newQuestionaire" onclick="pageEvent.setForm()" ${v.typeQuestionaire}></input-checkbox>
 		</value>
 	</field>
 	<explain class="newWithoutLocation" style="display:none;">${ui.l('events.newWithoutLocationDescription')}</explain>
@@ -348,6 +349,8 @@ field.checkbox {
 			v.typeOnlineEvent = 'checked="true"';
 		else if (v.locationId == -2)
 			v.typeWithoutLocation = 'checked="true"';
+		else if (v.locationId == -3)
+			v.typeQuestionaire = 'checked="true"';
 		else
 			v.typeLocation = 'checked="true"';
 		if (global.config.club)
