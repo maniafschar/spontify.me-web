@@ -1010,12 +1010,13 @@ field.checkbox {
 			v.values.repetition = 'o';
 		if (type == 'Poll') {
 			v.values.endDate = v.values.startDate;
-			v.values.startDate = global.date.getToday().toISOString();
-			v.values.description = { q: v.values.description, a: [] };
+			v.values.startDate = global.date.local2server(new Date());
+			var d = { q: v.values.description, a: [] };
 			for (var i = 0; i < answers.length; i++) {
 				if (answers[i].value)
-					v.values.description.a.push(answers[i].value);
+					d.a.push(answers[i].value);
 			}
+			v.values.description = JSON.stringify(d);
 		}
 		v.classname = 'Event';
 		v.id = id;

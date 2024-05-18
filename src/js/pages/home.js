@@ -130,6 +130,16 @@ teaser card text {
 	line-height: 1.2;
 }
 
+teaser card poll {
+	width: 10em;
+	height: 100%;
+	overflow: hidden;
+	display: block;
+	text-overflow: ellipsis;
+	white-space: break-spaces;
+	padding: 1em;
+}
+	
 teaser title {
 	margin-bottom: 0.25em;
 	font-size: 1.3em;
@@ -505,6 +515,8 @@ border-radius: 0.5em 0 0 3em;
 					return;
 				var e = pageEvent.getCalendarList(l), s = '<card onclick="pageEvent.edit()" class="mainBG" style="color:var(--text)"><img source="add"/><text>' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>', processedIds = [], e2 = [];
 				for (var i = 0; i < e.length; i++) {
+					if ('outdated' == e[i])
+						break;
 					if (processedIds.indexOf(e[i].event.id) < 0) {
 						processedIds.push(e[i].event.id);
 						e2.push(e[i]);
@@ -513,8 +525,6 @@ border-radius: 0.5em 0 0 3em;
 				e = e2;
 				var dates = ui.qa('dialog-hint eventFilter:last-child input-checkbox[checked="true"]');
 				var dateFiltered = function (e2) {
-					if ('outdated' == e2)
-						return true;
 					if (!dates.length)
 						return false;
 					for (var i = 0; i < dates.length; i++) {
@@ -524,10 +534,17 @@ border-radius: 0.5em 0 0 3em;
 					return true;
 				}
 				for (var i = 0; i < e.length; i++) {
-					if (!dateFiltered(e[i]))
+					if (!dateFiltered(e[i])) {
+						var s2;
+						if (e[i].event.type == 'Poll')
+							s2 = '<poll class="bgColor">' + JSON.parse(e[i].event.description).q + '</poll>';
+						else
+							s2 = '<img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList ? e[i].imageList : e[i].contact.imageList) + '"/><text>'
+								+ global.date.formatDate(e[i].event.startDate, 'noWeekday') + '<br/>' + e[i].event.description + '</text>';
 						s += '<card onclick="details.open(&quot;' + pageEvent.getId(e[i]) + '&quot;,' + JSON.stringify({
 							webCall: 'pageHome.teaserEvents', query: 'event_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('event.id=' + e[i].event.id)
-						}).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)"><img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList ? e[i].imageList : e[i].contact.imageList) + '"/><text>' + global.date.formatDate(e[i].event.startDate, 'noWeekday') + '<br/>' + e[i].event.description + '</text></card>';
+						}).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)">' + s2 + '</card>';
+					}
 				}
 				ui.html('home teaser.events>div', s);
 				ui.css('home teaser.events', 'opacity', 1);
