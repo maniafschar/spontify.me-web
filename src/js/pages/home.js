@@ -367,7 +367,7 @@ border-radius: 0.5em 0 0 3em;
 					}
 					if (v.imageList)
 						v.image = 'src="' + global.serverImg + v.imageList + '"';
-					else if (v.contactNotification.action.indexOf('news=') == 0)
+					else if (v.contactNotification.action.indexOf('news=') == 0 || v.contactNotification.action.indexOf('m=') == 0)
 						v.image = 'style="padding:0.4em;" src="images/logo.png" class="mainBG"';
 					else
 						v.image = 'source="contacts" class="mainBG"';

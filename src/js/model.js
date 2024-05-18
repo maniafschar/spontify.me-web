@@ -196,6 +196,7 @@ class Event extends BaseEntity {
 	startDate;
 	skills;
 	skillsText;
+	type;
 	url;
 }
 

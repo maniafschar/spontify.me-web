@@ -36,6 +36,16 @@ class pageEvent {
 field.checkbox {
 	margin-bottom: -0.5em;
 }
+.answerPlus {
+    text-align: right;
+    font-size: 2em;
+    position: absolute;
+    width: 50%;
+    padding: 0.1em;
+	cursor: pointer;
+	z-index: 1;
+	margin-left: 50%;
+}
 </style>
 <form name="editElement" onsubmit="return false">
 <input type="hidden" name="id" value="${v.id}"/>
@@ -47,13 +57,13 @@ field.checkbox {
 	<field class="checkbox">
 		<label>${ui.l('type')}</label>
 		<value>
-			<input-checkbox type="radio" name="type" transient="true" value="0" label="events.location" onclick="pageEvent.setForm()" ${v.typeLocation}></input-checkbox>
-			<input-checkbox type="radio" name="type" transient="true" value="-1" label="events.newOnlineEvent" onclick="pageEvent.setForm()" ${v.typeOnlineEvent} ${v.hideOnlineEvent}></input-checkbox>
-			<input-checkbox type="radio" name="type" transient="true" value="-2" label="events.newWithoutLocation" onclick="pageEvent.setForm()" ${v.typeWithoutLocation} ${v.hideWithoutLocation}></input-checkbox>
-			<input-checkbox type="radio" name="type" transient="true" value="-3" label="events.newPoll" onclick="pageEvent.setForm()" ${v.typePoll}></input-checkbox>
+			<input-checkbox type="radio" name="type" value="Location" label="events.location" onclick="pageEvent.setForm()" ${v.typeLocation}></input-checkbox>
+			<input-checkbox type="radio" name="type" value="Online" label="events.newOnlineEvent" onclick="pageEvent.setForm()" ${v.typeOnlineEvent} ${v.hideOnlineEvent}></input-checkbox>
+			<input-checkbox type="radio" name="type" value="Inquiry" label="events.newInquiry" onclick="pageEvent.setForm()" ${v.typeInquiry} ${v.hideInquiry}></input-checkbox>
+			<input-checkbox type="radio" name="type" value="Poll" label="events.newPoll" onclick="pageEvent.setForm()" ${v.typePoll}></input-checkbox>
 		</value>
 	</field>
-	<explain class="newWithoutLocation" style="display:none;">${ui.l('events.newWithoutLocationDescription')}</explain>
+	<explain class="newInquiry" style="display:none;">${ui.l('events.newInquiryDescription')}</explain>
 	<field${v.eventNoHashtags}>
 		<label>${ui.l('events.hashtags')}</label>
 		<value>
@@ -61,7 +71,7 @@ field.checkbox {
 		</value>
 	</field>
 	<field>
-		<label name="startDate">${ui.l('events.start')}</label>
+		<label class="date">${ui.l('events.start')}</label>
 		<value>
 			<input-date name="startDate" value="${v.startDate}" min="${v.dateMin}" max="${v.dateMax}" scroll="dialog-popup popupContent div"></input-date>
 		</value>
@@ -82,7 +92,7 @@ field.checkbox {
 		</value>
 	</field>
 	<field>
-		<label>${ui.l('description')}</label>
+		<label class="description">${ui.l('description')}</label>
 		<value>
 			<textarea name="description" maxlength="1000">${v.description}</textarea>
 		</value>
@@ -104,8 +114,10 @@ field.checkbox {
 		</value>
 	</field>
 	<field class="poll">
-		<label>${ui.l('events.price')}</label>
+		<label>${ui.l('events.answers')}</label>
 		<value>
+			<input type="text" maxlength="250" />
+			<div onclick="pageEvent.addAnswer()" class="answerPlus">+</div>
 		</value>
 	</field>
 	<field class="picture" style="display:none;" name="image">
@@ -159,6 +171,13 @@ field.checkbox {
 <div class="reason eventMargin"></div>
 <span class="eventParticipationButtons eventMargin"></span>
 </text>`;
+	static addAnswer() {
+		var inputs = ui.qa('dialog-popup field.poll input');
+		var e = document.createElement('input');
+		e.style.marginTop = '0.5em';
+		e.maxLength = inputs[0].maxLength;
+		inputs[inputs.length - 1].after(e);
+	}
 	static checkPrice() {
 		if (ui.q('dialog-popup [name="price"]').value > 0) {
 			pageEvent.openSection('dialog-popup .paypal', !user.contact.authenticate);
@@ -167,7 +186,7 @@ field.checkbox {
 		} else {
 			pageEvent.openSection('dialog-popup .paypal', false);
 			pageEvent.openSection('dialog-popup .picture', false);
-			pageEvent.openSection('dialog-popup .url', ui.val('dialog-popup [name="type"][checked="true"]') == -1);
+			pageEvent.openSection('dialog-popup .url', ui.val('dialog-popup [name="type"][checked="true"]') == 'Online');
 		}
 	}
 	static detail(v) {
@@ -216,7 +235,7 @@ field.checkbox {
 		}
 		if (v.event.price > 0)
 			v.eventPrice = ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2).replace('.', ','));
-		else if (v.event.locationId && v.event.locationId != -2)
+		else if (v.event.type == 'Online' || v.event.type == 'Location')
 			v.eventPrice = ui.l('events.priceDisp0');
 		if (v.event.maxParticipants)
 			v.maxParticipants = ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
@@ -232,7 +251,7 @@ field.checkbox {
 			var h = new URL(v.event.url).hostname;
 			while (h.indexOf('.') != h.lastIndexOf('.'))
 				h = h.substring(h.indexOf('.') + 1);
-			v.url = '<label class="multipleLabel" onclick="ui.navigation.openHTML(&quot;' + v.event.url + '&quot;)">' + (v.event.locationId == -1 ? ui.l('events.newOnlineEvent') + ': ' : '') + h.toLowerCase() + '</label>';
+			v.url = '<label class="multipleLabel" onclick="ui.navigation.openHTML(&quot;' + v.event.url + '&quot;)">' + (v.event.type == 'Online' ? ui.l('events.newOnlineEvent') + ': ' : '') + h.toLowerCase() + '</label>';
 		}
 		if (user.contact && user.contact.id == v.event.contactId)
 			v.editAction = 'pageEvent.edit(' + v.locID + ',' + v.event.id + ')';
@@ -343,18 +362,18 @@ field.checkbox {
 		} else
 			pageEvent.locationsOfPastEvents();
 		if (user.contact.type && user.contact.type.indexOf('admin') > -1)
-			v.hideWithoutLocation = 'class="hidden"';
+			v.hideInquiry = 'class="hidden"';
 		v.payplaSignUpHint = ui.l('events.paypalSignUpHint').replace('{0}', pageEvent.paypal.feeDate ?
 			ui.l('events.paypalSignUpHintFee').replace('{0}', pageEvent.paypal.fee).replace('{1}', global.date.formatDate(pageEvent.paypal.feeDate)).replace('{2}', pageEvent.paypal.feeAfter)
 			: pageEvent.paypal.fee);
 		v.appointment = user.getAppointmentTemplate('authenticate');
 		if (global.config.eventNoHashtags)
 			v.eventNoHashtags = ' class="hidden"';
-		if (v.locationId == -1)
+		if (v.type == 'Online')
 			v.typeOnlineEvent = 'checked="true"';
-		else if (v.locationId == -2)
-			v.typeWithoutLocation = 'checked="true"';
-		else if (v.locationId == -3)
+		else if (v.type == 'Inquiry')
+			v.typeInquiry = 'checked="true"';
+		else if (v.type == 'Poll')
 			v.typePoll = 'checked="true"';
 		else
 			v.typeLocation = 'checked="true"';
@@ -938,6 +957,7 @@ field.checkbox {
 		var text = ui.q('dialog-popup [name="description"]');
 		var tags = ui.q('dialog-popup input-hashtags');
 		var id = ui.val('dialog-popup [name="id"]');
+		var type = ui.val('dialog-popup input-checkbox[name="type"][checked="true"]');
 		DialogPopup.setHint('');
 		formFunc.resetError(start);
 		formFunc.resetError(end);
@@ -962,7 +982,8 @@ field.checkbox {
 			formFunc.setError(price, 'events.errorAuthenticate');
 		if (!price.value || price.value == 0) {
 			ui.q('dialog-popup input-image').removeAttribute('value');
-			ui.q('dialog-popup input[name="url"]').value = '';
+			if (type != 'Online')
+				ui.q('dialog-popup input[name="url"]').value = '';
 		}
 		if (ui.q('dialog-popup [name="repetition"][checked="true"]')) {
 			if (end.getAttribute('complete') == 'false')
@@ -974,12 +995,28 @@ field.checkbox {
 			v.values.price = 0;
 		if (parseInt(ui.val('dialog-popup input-checkbox[name="type"][checked="true"]')) < 0)
 			v.values.locationId = ui.val('dialog-popup input-checkbox[name="type"][checked="true"]');
+		var answers = ui.qa('dialog-popup field.poll input');
+		if (type == 'Poll') {
+			if (!ui.val('dialog-popup field.poll input'))
+				formFunc.setError(answers[answers.length - 1], 'events.errorAnswer');
+			for (var i = 0; i < answers.length; i++)
+				formFunc.validation.filterWords(answers[i]);
+		}
 		if (ui.q('dialog-popup errorHint')) {
 			ui.q('dialog-popup popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });;
 			return;
 		}
 		if (!ui.q('dialog-popup [name="repetition"][checked="true"]'))
 			v.values.repetition = 'o';
+		if (type == 'Poll') {
+			v.values.endDate = v.values.startDate;
+			v.values.startDate = global.date.getToday().toISOString();
+			v.values.description = { q: v.values.description, a: [] };
+			for (var i = 0; i < answers.length; i++) {
+				if (answers[i].value)
+					v.values.description.a.push(answers[i].value);
+			}
+		}
 		v.classname = 'Event';
 		v.id = id;
 		v.values.publishId = null;
@@ -1015,30 +1052,31 @@ field.checkbox {
 			ui.classAdd(e, 'selected');
 	}
 	static setForm() {
-		var b = ui.q('dialog-popup [name="repetition"][checked="true"]');
-		ui.q('dialog-popup label[name="startDate"]').innerText = ui.l('events.' + (b ? 'start' : 'date'));
-		b = ui.val('dialog-popup input-checkbox[name="type"][checked="true"]');
+		var b = ui.val('dialog-popup input-checkbox[name="type"][checked="true"]');
 		var es = ui.qa('dialog-popup .noWTDField:not(field[name="endDate"])');
 		for (var i = 0; i < es.length; i++)
-			pageEvent.openSection(es[i], b > -2);
-		pageEvent.openSection('dialog-popup field[name="endDate"]', b != -2 && ui.q('dialog-popup [name="repetition"][checked="true"]') != null);
-		ui.q('dialog-popup .url label').innerText = ui.l(b == -1 ? 'events.urlOnlineEvent' : 'events.url');
-		pageEvent.openSection('dialog-popup .url', b == -1);
-		pageEvent.openSection('dialog-popup .newWithoutLocation', b == -2);
-		pageEvent.openSection('dialog-popup .locationName', b == 0);
-		pageEvent.openSection('dialog-popup .poll', b == -3);
-		if (b == 0 && !ui.val('dialog-popup [name="id"]') && !ui.q('dialog-popup .event .locationName').innerText) {
+			pageEvent.openSection(es[i], b == 'Online' || b == 'Location');
+		pageEvent.openSection('dialog-popup field[name="endDate"]', (b == 'Online' || b != 'Location') && ui.q('dialog-popup [name="repetition"][checked="true"]') != null);
+		ui.q('dialog-popup .url label').innerText = ui.l(b == 'Online' ? 'events.urlOnlineEvent' : 'events.url');
+		pageEvent.openSection('dialog-popup .url', b == 'Online');
+		pageEvent.openSection('dialog-popup .newInquiry', b == 'Inquiry');
+		pageEvent.openSection('dialog-popup .locationName', b == 'Location');
+		pageEvent.openSection('dialog-popup .poll', b == 'Poll');
+		if (b == 'Location' && !ui.val('dialog-popup [name="id"]') && !ui.q('dialog-popup .event .locationName').innerText) {
 			ui.classRemove('dialog-popup .event dialogButtons .selectLocation', 'hidden');
 			ui.classAdd('dialog-popup .event dialogButtons .save', 'hidden');
 		} else {
 			ui.classRemove('dialog-popup .event dialogButtons .save', 'hidden');
 			ui.classAdd('dialog-popup .event dialogButtons .selectLocation', 'hidden');
 		}
-		if (b == -2 && !geoData.localized) {
-			var e = ui.q('dialog-popup explain.newWithoutLocation');
-			e.innerHTML = e.innerHTML + '<br/><br/>' + ui.l('events.errorWithoutLocation');
+		if (b == 'Inquiry' && !geoData.localized) {
+			var e = ui.q('dialog-popup explain.newInquiry');
+			e.innerHTML = e.innerHTML + '<br/><br/>' + ui.l('events.errorInquiry');
 		}
-		ui.attr('dialog-popup textarea[name="description"]', 'placeholder', b == -2 ? ui.l('events.newWithoutLocationHint') : '');
+		ui.q('dialog-popup label.date').innerText = ui.l();
+		ui.html('dialog-popup label.date', ui.l('events.' + (b == 'Poll' ? 'end' : b ? 'start' : 'date')));
+		ui.html('dialog-popup label.description', ui.l(b == 'Poll' ? 'events.descriptionPoll' : 'description'));
+		ui.attr('dialog-popup textarea[name="description"]', 'placeholder', b == 'Inquiry' ? ui.l('events.newInquiryHint') : '');
 		pageEvent.checkPrice();
 	}
 	static toggle(id) {
@@ -1076,7 +1114,7 @@ field.checkbox {
 				var idIntern = v.event.id + '_' + date;
 				title = global.date.getDateHint(v.event.startDate).replace('{0}', title);
 				var image;
-				if (v.event.imageList || v.imageList || v.event.locationId == -2 && v.contact.imageList)
+				if (v.event.imageList || v.imageList || v.event.type == 'Inquiry' && v.contact.imageList)
 					image = v.event.imageList ? v.event.imageList : v.imageList ? v.imageList : v.contact.imageList;
 				else
 					image = 'images/events.svg';
