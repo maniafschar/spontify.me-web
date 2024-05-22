@@ -335,7 +335,7 @@ mapEdit {
 		v.pressedCopyButton = pageChat.copyLink.indexOf(global.encParam(v.event.id ? 'e=' + v.event.id : 'l=' + v.id)) > -1 ? ' buttonPressed' : '';
 		if (v.address && user.contact)
 			communication.ajax({
-				url: global.serverApi + 'action/map?source=' + geoData.current.lat + ',' + geoData.current.lon + '&destination=' + v.latitude + ',' + v.longitude,
+				url: global.serverApi + 'action/map?source=' + geoData.getCurrent().lat + ',' + geoData.getCurrent().lon + '&destination=' + v.latitude + ',' + v.longitude,
 				webCall: 'pageLocation.detailLocationEvent',
 				progressBar: false,
 				success(r) {
