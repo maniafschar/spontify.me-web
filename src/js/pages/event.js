@@ -25,26 +25,28 @@ class pageEvent {
 }
 .locationName::after {
 	content: '✎';
-    height: 2em;
-    display: inline-block;
-    position: absolute;
-    bottom: -0.25em;
-    font-size: 2em;
-    right: 0.75em;
-    transform: rotate(80deg);
+	height: 2em;
+	display: inline-block;
+	position: absolute;
+	bottom: -0.25em;
+	font-size: 2em;
+	right: 0.75em;
+	transform: rotate(80deg);
 }
 field.checkbox {
 	margin-bottom: -0.5em;
 }
 .answerPlus {
-    text-align: right;
-    font-size: 2em;
-    position: absolute;
-    width: 50%;
-    padding: 0.1em;
+	text-align: right;
+	font-size: 2em;
+	position: absolute;
+	width: 1.5em;
 	cursor: pointer;
 	z-index: 1;
-	margin-left: 50%;
+	top: 0;
+	padding: 0.2em;
+	right: 0;
+	height: 2em;
 }
 </style>
 <form name="editElement" onsubmit="return false">
