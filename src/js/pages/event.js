@@ -205,7 +205,7 @@ field.checkbox {
 			v[v.endDate ? 'endDate' : 'date'] += '</eventOutdated>';
 		}
 		if (user.contact) {
-			if (v.event.contactId == user.contact.id && d >= global.date.getToday())
+			if (v.event.contactId == user.contact.id && d >= global.date.getToday() && v.event.type != 'Poll')
 				v.hideMePotentialParticipants = '';
 			if (v.id.split('_').length > 1)
 				communication.ajax({
@@ -486,7 +486,7 @@ field.checkbox {
 		return id + global.date.local2server(v.event.startDate).substring(0, 10);
 	}
 	static getParticipateButton(v, participantCount) {
-		if (v.eventParticipate.state == -1)
+		if (v.eventParticipate.state == -1 || v.event.type == 'Poll')
 			return '';
 		var futureEvent = pageEvent.getDate(v) > new Date();
 		var text = '<detailButtons style="margin:1em 0;">';

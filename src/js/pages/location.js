@@ -254,7 +254,7 @@ mapEdit {
 		if (!v.id)
 			v.name = v.contact.pseudonym + (v.contact.age ? ' (' + v.contact.age + ')' : '');
 		v.id = id;
-		v.hideMePotentialParticipants = ' hidden';
+		v.hideMePotentialParticipants = 'hidden';
 		v.data = encodeURIComponent(JSON.stringify(v));
 		v.distance = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 ? 0 : 1).replace('.', ',') : '';
 		v.classBGImg = 'class="mainBG"';
