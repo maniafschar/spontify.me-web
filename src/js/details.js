@@ -40,8 +40,8 @@ class details {
 		var wc = data.webCall;
 		delete data.webCall;
 		data.distance = -1;
-		data.latitude = geoData.current.lat;
-		data.longitude = geoData.current.lon;
+		data.latitude = geoData.getCurrent().lat;
+		data.longitude = geoData.getCurrent().lon;
 		communication.ajax({
 			url: global.serverApi + 'action/one?' + Object.keys(data).map(key => key + '=' + data[key]).join('&'),
 			responseType: 'json',
