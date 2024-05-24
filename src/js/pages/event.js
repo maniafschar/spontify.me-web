@@ -43,10 +43,11 @@ field.checkbox {
 	width: 1.5em;
 	cursor: pointer;
 	z-index: 1;
-	top: 0;
-	padding: 0.2em;
+	bottom: 0;
+	padding-right: 0.2em;
 	right: 0;
-	height: 2em;
+	height: 1.2em;
+	line-height: 1.6;
 }
 </style>
 <form name="editElement" onsubmit="return false">
