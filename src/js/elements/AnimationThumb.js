@@ -1,4 +1,5 @@
 https://codepen.io/dzuncoi/pen/pbQojj
+https://www.sliderrevolution.com/resources/css-animation-examples/
 <div class="icon-wrapper">
 	<span class="icon"><i class="fa fa-thumbs-up"></i></span>
 	<div class="border"><span></span></div>
