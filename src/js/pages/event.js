@@ -562,7 +562,7 @@ field.checkbox {
 				flag2 = skills.total && skills.totalMatch ? parseInt('' + (skills.totalMatch / skills.total * 100 + 0.5)) + '%' : '';
 				if (v._geolocationDistance && v.latitude)
 					flag3 = '<compass style="transform:rotate('
-						+ geoData.getAngel(geoData.current, { lat: v.latitude, lon: v.longitude }) + 'deg);"></compass>';
+						+ geoData.getAngel(geoData.getCurrent(), { lat: v.latitude, lon: v.longitude }) + 'deg);"></compass>';
 				else if (v.contact.gender)
 					flag3 = '<img source="gender' + v.contact.gender + '" />';
 				if (v.name)
@@ -677,8 +677,8 @@ field.checkbox {
 			webCall: 'pageEvent.loadPotentialParticipants',
 			query: 'contact_list',
 			distance: 50,
-			latitude: geoData.current.lat,
-			longitude: geoData.current.lon,
+			latitude: geoData.getCurrent().lat,
+			longitude: geoData.getCurrent().lon,
 			search: encodeURIComponent(search)
 		}, function (r) {
 			var s = pageContact.listContacts(r);
@@ -1159,8 +1159,8 @@ field.checkbox {
 				lists.load({
 					webCall: 'pageEvent.toggleParticipants',
 					query: 'event_listParticipate',
-					latitude: geoData.current.lat,
-					longitude: geoData.current.lon,
+					latitude: geoData.getCurrent().lat,
+					longitude: geoData.getCurrent().lon,
 					distance: -1,
 					limit: 0,
 					search: encodeURIComponent('eventParticipate.state=1 and eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=cast(\'' + id[1] + '\' as timestamp) and eventParticipate.contactId=contact.id')
