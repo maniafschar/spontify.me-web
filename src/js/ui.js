@@ -464,8 +464,8 @@ class ui {
 				query: 'contact_list',
 				distance: -1,
 				limit: 0,
-				latitude: geoData.current.lat,
-				longitude: geoData.current.lon,
+				latitude: geoData.getCurrent().lat,
+				longitude: geoData.getCurrent().lon,
 				search: encodeURIComponent('contactLink.status=\'Friends\'')
 			}, pageContact.listContacts, 'contacts', 'friends');
 		},
@@ -475,8 +475,8 @@ class ui {
 				query: 'contact_listVisit',
 				distance: -1,
 				sort: false,
-				latitude: geoData.current.lat,
-				longitude: geoData.current.lon,
+				latitude: geoData.getCurrent().lat,
+				longitude: geoData.getCurrent().lon,
 				search: encodeURIComponent('contactVisit.contactId2=contact.id and contactVisit.contactId=' + user.contact.id)
 			}, pageContact.listContacts, 'contacts', 'visits');
 		},
@@ -492,8 +492,8 @@ class ui {
 				query: 'contact_listVisit',
 				distance: -1,
 				sort: false,
-				latitude: geoData.current.lat,
-				longitude: geoData.current.lon,
+				latitude: geoData.getCurrent().lat,
+				longitude: geoData.getCurrent().lon,
 				search: encodeURIComponent('contactVisit.contactId=contact.id and contactVisit.contactId2=' + user.contact.id)
 			}, pageContact.listContacts, 'contacts', 'profile');
 		},
@@ -502,8 +502,8 @@ class ui {
 				webCall: 'ui.query.eventMy',
 				query: 'event_list',
 				distance: -1,
-				latitude: geoData.current.lat,
-				longitude: geoData.current.lon,
+				latitude: geoData.getCurrent().lat,
+				longitude: geoData.getCurrent().lon,
 				search: encodeURIComponent('event.contactId=' + user.contact.id)
 			});
 		},
@@ -512,8 +512,8 @@ class ui {
 				webCall: 'ui.query.eventTickets',
 				query: 'event_listParticipate',
 				distance: -1,
-				latitude: geoData.current.lat,
-				longitude: geoData.current.lon,
+				latitude: geoData.getCurrent().lat,
+				longitude: geoData.getCurrent().lon,
 				search: encodeURIComponent('eventParticipate.contactId=' + user.contact.id + ' and event.contactId=contact.id and contact.clientId=' + user.clientId)
 			}, pageEvent.listTickets, 'events', 'eventsTicket');
 		}
