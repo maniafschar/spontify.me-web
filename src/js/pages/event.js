@@ -214,23 +214,31 @@ field.checkbox {
 					webCall: 'pageEvent.detail',
 					responseType: 'json',
 					success(r) {
-						var count = 0;
-						for (var i = 1; i < r.length; i++) {
-							var e = model.convert(new EventParticipate(), r, i);
-							if (e.contactId == user.contact.id)
-								v.eventParticipate = e;
-							if (e.state == 1)
-								count++;
-						}
-						ui.q('detail card[i="' + v.id + '"] detailHeader').setAttribute('data', encodeURIComponent(JSON.stringify(v)));
 						if (ui.q('detail card[i="' + v.id + '"]')) {
-							ui.q('detail card[i="' + v.id + '"] .eventParticipationButtons').innerHTML = pageEvent.getParticipateButton(v, count);
-							if (v.eventParticipate.state == 1) {
-								ui.classAdd('detail card[i="' + v.id + '"] text.description.event', 'participate');
-								ui.classRemove('detail  card[i="' + v.id + '"] div.ratingButton', 'hidden');
-							} else if (v.eventParticipate.state == -1) {
-								ui.classAdd('detail card[i="' + v.id + '"] text.description.event', 'canceled');
-								ui.q('detail card[i="' + v.id + '"] .reason').innerHTML = ui.l('events.canceled') + (v.eventParticipate.reason ? ':<br/>' + v.eventParticipate.reason : '');
+							var count = {}, max = 0;
+							for (var i = 1; i < r.length; i++) {
+								var e = model.convert(new EventParticipate(), r, i);
+								if (e.contactId == user.contact.id)
+									v.eventParticipate = e;
+								if (!count['state' + e.state])
+									count['state' + e.state] = 0;
+								if (++count['state' + e.state] > max)
+									max = count['state' + e.state];
+							}
+							ui.q('detail card[i="' + v.id + '"] detailHeader').setAttribute('data', encodeURIComponent(JSON.stringify(v)));
+							if (v.event.type == 'Poll') {
+								ui.q('detail card[i="' + v.id + '"] explain.main').innerHTML = r.length + ' ' + ui.l('events.participants');
+								for (var k in count)
+									ui.q('detail card[i="' + v.id + '"] explain.' + k).innerHTML = parseInt(count[k] / max * 100 + 0.5) + '%';
+							} else {
+								ui.q('detail card[i="' + v.id + '"] .eventParticipationButtons').innerHTML = pageEvent.getParticipateButton(v, count['state1']);
+								if (v.eventParticipate.state == 1) {
+									ui.classAdd('detail card[i="' + v.id + '"] text.description.event', 'participate');
+									ui.classRemove('detail  card[i="' + v.id + '"] div.ratingButton', 'hidden');
+								} else if (v.eventParticipate.state == -1) {
+									ui.classAdd('detail card[i="' + v.id + '"] text.description.event', 'canceled');
+									ui.q('detail card[i="' + v.id + '"] .reason').innerHTML = ui.l('events.canceled') + (v.eventParticipate.reason ? ':<br/>' + v.eventParticipate.reason : '');
+								}
 							}
 						}
 					}
@@ -248,9 +256,9 @@ field.checkbox {
 			v.imageEventOwner = 'source="contacts" style="padding:1em;"';
 		if (v.event.type == 'Poll') {
 			var data = JSON.parse(v.event.description);
-			v.text = data.q.replace(/\n/g, '<br/>') + '<div>';
+			v.text = data.q.replace(/\n/g, '<br/>') + '<div class="poll"><explain class="main"></explain>';
 			for (var i = 0; i < data.a.length; i++)
-				v.text += '<input-checkbox type="radio" onclick="pageEvent.pollAnswer(' + i + ')" label="' + data.a[i] + '"></input-checkbox>';
+				v.text += '<input-checkbox type="radio" onclick="pageEvent.pollAnswer(' + i + ')" label="' + data.a[i] + '"></input-checkbox><explain class="state' + i + '"></explain>';
 			v.text += '</div>';
 		} else
 			v.text = Strings.replaceLinks(v.event.description).replace(/\n/g, '<br/>');
