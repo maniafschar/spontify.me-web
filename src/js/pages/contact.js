@@ -397,8 +397,8 @@ ${v.matchIndicatorHintDescription}
 		if (!e.innerHTML) {
 			lists.load({
 				webCall: 'pageContact.toggleLocation',
-				latitude: geoData.current.lat,
-				longitude: geoData.current.lon,
+				latitude: geoData.getCurrent().lat,
+				longitude: geoData.getCurrent().lon,
 				distance: -1,
 				query: 'location_list',
 				search: encodeURIComponent('location.contactId=' + id)
@@ -496,8 +496,8 @@ class groups {
 			return;
 		lists.load({
 			webCall: 'pageContact.loadListGroups',
-			latitude: geoData.current.lat,
-			longitude: geoData.current.lon,
+			latitude: geoData.getCurrent().lat,
+			longitude: geoData.getCurrent().lon,
 			query: 'contact_listGroupLink',
 			search: encodeURIComponent('contactGroupLink.contactGroupId=' + v)
 		}, pageContact.listContacts, 'contacts', 'groups');
