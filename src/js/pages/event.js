@@ -862,9 +862,10 @@ field.checkbox {
 	}
 	static pollAnswer(i) {
 		communication.ajax({
-			url: global.serverApi + 'db/list?query=event_list&search=' + encodeURIComponent('event.' + field + 'Id=' + id),
-			webCall: 'pageEvent.toggle',
-			responseType: 'json',
+			url: global.serverApi + 'db/one',
+			webCall: 'pageEvent.pollAnswer',
+			method: e.eventParticipate.id ? 'PUT' : 'POST',
+			body: { classname: 'EventParticipate', values: { state: i } },
 			success(r) {
 			}
 		});
