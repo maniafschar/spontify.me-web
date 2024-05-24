@@ -246,7 +246,14 @@ field.checkbox {
 			v.imageEventOwner = 'src="' + global.serverImg + v.contact.imageList + '"';
 		else
 			v.imageEventOwner = 'source="contacts" style="padding:1em;"';
-		v.text = Strings.replaceLinks(v.event.description).replace(/\n/g, '<br/>');
+		if (v.event.type == 'Poll') {
+			var data = JSON.parse(v.event.description);
+			v.text = data.q.replace(/\n/g, '<br/>') + '<div>';
+			for (var i = 0; i < data.a.length; i++)
+				v.text += '<input-checkbox type="radio" onclick="pageEvent.pollAnswer(' + i + ')" label="' + data.a[i] + '"></input-checkbox>';
+			v.text += '</div>';
+		} else
+			v.text = Strings.replaceLinks(v.event.description).replace(/\n/g, '<br/>');
 		v.hideMeFavorite = ' hidden';
 		v.hideMeEvents = ' hidden';
 		v.hideMeMarketing = ' hidden';
@@ -850,6 +857,15 @@ field.checkbox {
 					f.call();
 				else
 					ui.toggleHeight(e, f);
+			}
+		});
+	}
+	static pollAnswer(i) {
+		communication.ajax({
+			url: global.serverApi + 'db/list?query=event_list&search=' + encodeURIComponent('event.' + field + 'Id=' + id),
+			webCall: 'pageEvent.toggle',
+			responseType: 'json',
+			success(r) {
 			}
 		});
 	}
