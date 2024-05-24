@@ -164,7 +164,14 @@ field.checkbox {
 </field>
 </form>`;
 	static templateDetail = v =>
-		global.template`<text class="description event" ${v.oc}>
+		global.template`<style>
+detail text.description.event poll {
+	display: block;
+	margin-top: 0.75em;
+	position: relative;
+}
+</style>
+<text class="description event" ${v.oc}>
 <div><span class="chatLinks" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;),event)"><img ${v.imageEventOwner}/><br>${v.contact.pseudonym}</span></div>
 <div class="date eventMargin">${v.date}${v.endDate}</div>
 <div class="eventMargin">${v.text}</div>
@@ -218,8 +225,12 @@ field.checkbox {
 							var count = {}, max = 0;
 							for (var i = 1; i < r.length; i++) {
 								var e = model.convert(new EventParticipate(), r, i);
-								if (e.contactId == user.contact.id)
+								if (e.contactId == user.contact.id) {
 									v.eventParticipate = e;
+									if (v.event.type == 'Poll') {
+
+									}
+								}
 								if (!count['state' + e.state])
 									count['state' + e.state] = 0;
 								if (++count['state' + e.state] > max)
@@ -227,7 +238,8 @@ field.checkbox {
 							}
 							ui.q('detail card[i="' + v.id + '"] detailHeader').setAttribute('data', encodeURIComponent(JSON.stringify(v)));
 							if (v.event.type == 'Poll') {
-								ui.q('detail card[i="' + v.id + '"] explain.main').innerHTML = r.length + ' ' + ui.l('events.participants');
+								if (r.length > 1)
+									ui.q('detail card[i="' + v.id + '"] participantCount').innerHTML = ' (' + (r.length - 1) + ' ' + ui.l('events.participants') + ')';
 								for (var k in count)
 									ui.q('detail card[i="' + v.id + '"] explain.' + k).innerHTML = parseInt(count[k] / max * 100 + 0.5) + '%';
 							} else {
@@ -256,10 +268,10 @@ field.checkbox {
 			v.imageEventOwner = 'source="contacts" style="padding:1em;"';
 		if (v.event.type == 'Poll') {
 			var data = JSON.parse(v.event.description);
-			v.text = data.q.replace(/\n/g, '<br/>') + '<div class="poll"><explain class="main"></explain>';
+			v.text = '<b>' + ui.l('events.newPoll') + '</b><br/>' + data.q.replace(/\n/g, '<br/>') + '<participantCount></participantCount><poll>';
 			for (var i = 0; i < data.a.length; i++)
-				v.text += '<input-checkbox type="radio" onclick="pageEvent.pollAnswer(' + i + ')" label="' + data.a[i] + '"></input-checkbox><explain class="state' + i + '"></explain>';
-			v.text += '</div>';
+				v.text += '<input-checkbox name="poll' + v.id + '" onclick="pageEvent.pollAnswer(' + i + ')" label="' + data.a[i] + '"></input-checkbox>';
+			v.text += '</poll>';
 		} else
 			v.text = Strings.replaceLinks(v.event.description).replace(/\n/g, '<br/>');
 		v.hideMeFavorite = ' hidden';
@@ -869,11 +881,12 @@ field.checkbox {
 		});
 	}
 	static pollAnswer(i) {
+		var eventParticipate = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).event;
 		communication.ajax({
 			url: global.serverApi + 'db/one',
 			webCall: 'pageEvent.pollAnswer',
-			method: e.eventParticipate.id ? 'PUT' : 'POST',
-			body: { classname: 'EventParticipate', values: { state: i } },
+			method: eventParticipate.id ? 'PUT' : 'POST',
+			body: { classname: 'EventParticipate', id: eventParticipate.id, values: { state: i } },
 			success(r) {
 			}
 		});

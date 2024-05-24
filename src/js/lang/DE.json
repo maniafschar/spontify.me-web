@@ -334,6 +334,7 @@
 			"descriptionPoll": "Deine Frage",
 			"edit": "Event editieren",
 			"end": "Endtermin",
+			"errorAnswer": "Du musst mindestens 2 Antwortmöglichkeiten eingeben.",
 			"errorAuthenticate": "Für kostenpflichtige Events musst Du Dich authentifizieren.",
 			"errorDate": "Bitte gib den Termin an.",
 			"errorDateEndFormat": "Bitte gib ein korrektes Enddatum an.",

@@ -137,7 +137,7 @@ teaser card poll {
 	display: block;
 	text-overflow: ellipsis;
 	white-space: break-spaces;
-	padding: 1em;
+	padding: .5em .75em;
 }
 	
 teaser title {

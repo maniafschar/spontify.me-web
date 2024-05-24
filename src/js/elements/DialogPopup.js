@@ -263,6 +263,7 @@ mapButton::before {
 					element.appendChild(element2);
 					e._root.appendChild(element);
 				}
+				e.removeAttribute('error');
 				element = document.createElement('popupContent');
 				var element2 = document.createElement('div');
 				element2.innerHTML = data;
@@ -270,7 +271,6 @@ mapButton::before {
 				e._root.appendChild(element);
 				ui.css(e, 'display', 'none');
 				formFunc.initFields(e);
-				e.removeAttribute('error');
 
 				ui.navigation.animation(e, visible ? 'slideDown' : 'popupSlideIn');
 				element.style.maxHeight = (ui.q('content').clientHeight - (title ? ui.q('dialog-popup popupTitle').clientHeight : 0) - 2 * ui.emInPX) + 'px';
