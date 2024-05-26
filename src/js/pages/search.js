@@ -283,7 +283,7 @@ ${v.keywords}
 </form>`,
 		getFields() {
 			var v = {};
-			if (pageSearch.locations.fieldValues.favorites)
+			if (pageSearch.locations.fieldValues.favorites != 'false')
 				v.favorites = ' checked="true"';
 			if (pageSearch.locations.fieldValues.keywords)
 				v.keywords = pageSearch.locations.fieldValues.keywords;

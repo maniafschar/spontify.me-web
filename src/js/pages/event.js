@@ -115,10 +115,11 @@ field.checkbox {
 			</div>
 		</value>
 	</field>
-	<field class="poll">
+	<field class="poll"${v.pollDisplay}>
 		<label>${ui.l('events.answers')}</label>
 		<value>
-			<input type="text" maxlength="250" />
+			<input type="text" maxlength="250"${v.pollValue} />
+			${v.pollInput}
 			<div onclick="pageEvent.addAnswer()" class="answerPlus">+</div>
 		</value>
 	</field>
@@ -403,9 +404,18 @@ detail text.description.event poll {
 			v.typeOnlineEvent = 'checked="true"';
 		else if (v.type == 'Inquiry')
 			v.typeInquiry = 'checked="true"';
-		else if (v.type == 'Poll')
+		else if (v.type == 'Poll') {
 			v.typePoll = 'checked="true"';
-		else
+			if (v.description) {
+				var d = JSON.parse(v.description);
+				v.description = d.q;
+				v.pollDisplay = ' style="display:block;"';
+				v.pollValue = ' value="' + d.a[0] + '"';
+				v.pollInput = '';
+				for (var i = 1; i < d.a.length; i++)
+					v.pollInput += '<input type="text" maxlength="250" value="' + d.a[i] + '" style="margin-top:0.5em;"/>';
+			}
+		} else
 			v.typeLocation = 'checked="true"';
 		if (global.config.club)
 			v.hideOnlineEvent = 'class="hidden"';
@@ -880,15 +890,19 @@ detail text.description.event poll {
 			}
 		});
 	}
-	static pollAnswer(i) {
-		var eventParticipate = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).event;
+	static pollAnswer() {
+		var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
+		var value = ui.val('detail card:last-child poll input-checkbox[checked="true"]');
 		communication.ajax({
 			url: global.serverApi + 'db/one',
 			webCall: 'pageEvent.pollAnswer',
-			method: eventParticipate.id ? 'PUT' : 'POST',
-			body: { classname: 'EventParticipate', id: eventParticipate.id, values: { state: i } },
+			method: e.eventParticipate.id ? 'PUT' : 'POST',
+			body: { classname: 'EventParticipate', id: e.eventParticipate.id, values: { state: value } },
 			success(r) {
+				if (r)
+					console.log(r);
 			}
+
 		});
 	}
 	static qrcode(location) {
