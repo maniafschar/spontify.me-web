@@ -407,13 +407,15 @@ detail text.description.event poll {
 		else if (v.type == 'Poll') {
 			v.typePoll = 'checked="true"';
 			if (v.description) {
-				var d = JSON.parse(v.description);
-				v.description = d.q;
-				v.pollDisplay = ' style="display:block;"';
-				v.pollValue = ' value="' + d.a[0] + '"';
-				v.pollInput = '';
-				for (var i = 1; i < d.a.length; i++)
-					v.pollInput += '<input type="text" maxlength="250" value="' + d.a[i] + '" style="margin-top:0.5em;"/>';
+				try {
+					var d = JSON.parse(v.description);
+					v.description = d.q;
+					v.pollDisplay = ' style="display:block;"';
+					v.pollValue = ' value="' + d.a[0] + '"';
+					v.pollInput = '';
+					for (var i = 1; i < d.a.length; i++)
+						v.pollInput += '<input type="text" maxlength="250" value="' + d.a[i] + '" style="margin-top:0.5em;"/>';
+				} catch (e) { }
 			}
 		} else
 			v.typeLocation = 'checked="true"';
