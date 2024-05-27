@@ -125,9 +125,17 @@ class geoData {
 		if (position.manual) {
 			geoData.currentManual.lat = position.latitude;
 			geoData.currentManual.lon = position.longitude;
+			if (d > 10) {
+				geoData.currentManual.town = '';
+				geoData.currentManual.street = '';
+			}
 		} else {
 			geoData.current.lat = position.latitude;
 			geoData.current.lon = position.longitude;
+			if (d > 10) {
+				geoData.current.town = '';
+				geoData.current.street = '';
+			}
 		}
 		if (user.contact && user.contact.id && new Date().getTime() - geoData.lastSave > 5000 &&
 			(!geoData.localized || d > 0.05 || position.manual)) {
