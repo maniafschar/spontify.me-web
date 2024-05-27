@@ -361,7 +361,7 @@ ${v.keywords}
 	static getTown() {
 		if (geoData.getCurrent().town)
 			return geoData.getCurrent().town;
-		return ui.l('');
+		return ui.l('search.unknownTown');
 	}
 	static init() {
 		document.addEventListener('GeoLocation', function (event) {
