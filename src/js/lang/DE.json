@@ -658,7 +658,8 @@
 			"matchesEvent": "passend zu meinen Interessen",
 			"results": "{0} Treffer in",
 			"title": "Suche",
-			"type": "Suchen in"
+			"type": "Suchen in",
+			"unknownTown": "unbekannter Ort"
 		},
 		"settings": {
 			"bdayNotBorn": "Sorry, Du bist noch nicht auf der Welt. Nur bereits geborene ${buddies} können sich in ${appTitle} registrieren.",
