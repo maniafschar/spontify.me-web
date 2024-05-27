@@ -33,7 +33,7 @@ class pageSearch {
 		template: v =>
 			global.template`<form onsubmit="return false">
 <input-checkbox label="search.matches" name="matches" value="true" ${v.matches}></input-checkbox>
-<label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${geoData.getCurrent().town}</label>
+<label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${pageSearch.getTown()}</label>
 <input-hashtags ids="${v.keywords}" text="${v.keywordsText}" name="keywords"></input-hashtags>
 <explain class="searchKeywordHint">${ui.l('search.hintContact')}</explain>
 <errorHint></errorHint>
@@ -129,7 +129,7 @@ class pageSearch {
 		template: v =>
 			global.template`<form onsubmit="return false">
 <input-date name="date" type="search" value="${v.date}" style="margin-bottom:0.5em;"></input-date>
-<label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${geoData.getCurrent().town}</label>
+<label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${pageSearch.getTown()}</label>
 ${v.keywords}
 <explain class="searchKeywordHint">${ui.l('search.hintEvent')}</explain>
 <errorHint></errorHint>
@@ -273,7 +273,7 @@ ${v.keywords}
 		template: v =>
 			global.template`<form onsubmit="return false">
 <input-checkbox label="search.favorites" name="favorites" value="true" ${v.favorites}></input-checkbox>
-<label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${geoData.getCurrent().town}</label>
+<label class="locationPicker" onclick="ui.navigation.openLocationPicker(event)">${pageSearch.getTown()}</label>
 <input-hashtags ids="${v.keywords}" text="${v.keywordsText}" name="keywords" class="location"></input-hashtags>
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
 <errorHint></errorHint>
@@ -358,9 +358,14 @@ ${v.keywords}
 			user.set('searchLocations', pageSearch.locations.fieldValues);
 		}
 	}
+	static getTown() {
+		if (geoData.getCurrent().town)
+			return geoData.getCurrent().town;
+		return ui.l('');
+	}
 	static init() {
 		document.addEventListener('GeoLocation', function (event) {
-			ui.html('search label.locationPicker', geoData.getCurrent().town);
+			ui.html('search label.locationPicker', pageSearch.getTown());
 		});
 		if (!pageSearch.contacts.fieldValues)
 			pageSearch.contacts.fieldValues = user.get('searchContacts') || {};
