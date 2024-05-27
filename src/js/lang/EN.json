@@ -658,7 +658,8 @@
 			"matchesEvent": "fitting to my interests",
 			"results": "{0} hits in",
 			"title": "Search",
-			"type": "Search in"
+			"type": "Search in",
+			"unknownTown": "unknown town"
 		},
 		"settings": {
 			"bdayNotBorn": "Sorry, you're not even in the world. Only already born ${buddies} can register here in ${appTitle}.",
