@@ -65,7 +65,7 @@ field.checkbox {
 			<input-checkbox type="radio" name="type" value="Poll" label="events.newPoll" onclick="pageEvent.setForm()" ${v.typePoll}></input-checkbox>
 		</value>
 	</field>
-	<explain class="newInquiry" style="display:none;">${ui.l('events.newInquiryDescription')}</explain>
+	<explain class="type" style="display:none;"></explain>
 	<field${v.eventNoHashtags}>
 		<label>${ui.l('events.hashtags')}</label>
 		<value>
@@ -1114,10 +1114,11 @@ detail text.description.event poll {
 		var es = ui.qa('dialog-popup .noWTDField:not(field[name="endDate"])');
 		for (var i = 0; i < es.length; i++)
 			pageEvent.openSection(es[i], b == 'Online' || b == 'Location');
+		ui.html('dialog-popup explain.type', b == 'Inquiry' ? ui.l('events.newInquiryDescription') : b == 'Poll' ? ui.l('events.newPollDescription') : '');
 		pageEvent.openSection('dialog-popup field[name="endDate"]', (b == 'Online' || b != 'Location') && ui.q('dialog-popup [name="repetition"][checked="true"]') != null);
 		ui.q('dialog-popup .url label').innerText = ui.l(b == 'Online' ? 'events.urlOnlineEvent' : 'events.url');
 		pageEvent.openSection('dialog-popup .url', b == 'Online');
-		pageEvent.openSection('dialog-popup .newInquiry', b == 'Inquiry');
+		pageEvent.openSection('dialog-popup explain.type', b == 'Inquiry' || b == 'Poll');
 		pageEvent.openSection('dialog-popup .locationName', b == 'Location');
 		pageEvent.openSection('dialog-popup .poll', b == 'Poll');
 		if (b == 'Location' && !ui.val('dialog-popup [name="id"]') && !ui.q('dialog-popup .event .locationName').innerText) {
@@ -1128,13 +1129,13 @@ detail text.description.event poll {
 			ui.classAdd('dialog-popup .event dialogButtons .selectLocation', 'hidden');
 		}
 		if (b == 'Inquiry' && !geoData.localized) {
-			var e = ui.q('dialog-popup explain.newInquiry');
+			var e = ui.q('dialog-popup explain.type');
 			e.innerHTML = e.innerHTML + '<br/><br/>' + ui.l('events.errorInquiry');
 		}
 		ui.q('dialog-popup label.date').innerText = ui.l();
 		ui.html('dialog-popup label.date', ui.l('events.' + (b == 'Poll' ? 'end' : b ? 'start' : 'date')));
 		ui.html('dialog-popup label.description', ui.l(b == 'Poll' ? 'events.descriptionPoll' : 'description'));
-		ui.attr('dialog-popup textarea[name="description"]', 'placeholder', b == 'Inquiry' ? ui.l('events.newInquiryHint') : '');
+		ui.attr('dialog-popup textarea[name="description"]', 'placeholder', b == 'Inquiry' ? ui.l('events.newInquiryHint') : b == 'Poll' ? ui.l('events.newPollHint') : '');
 		pageEvent.checkPrice();
 	}
 	static toggle(id) {
