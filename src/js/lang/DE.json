@@ -358,7 +358,7 @@
 			"newInquiry": "Suchanfrage",
 			"newInquiryDescription": "Mit einer Suchanfrage informierst Du ${buddies} in 20km Umkreis, dass Du gerne zu der Zeit etwas unternehmen möchtest. Meldet sich jemand, könnt Ihr genauen Ort und Uhrzeit vereinbaren.",
 			"newInquiryHint": "Wo ungefähr und was möchtest Du machen?",
-			"newPollDescription": "Eine Umfrage kann dazu dienen, einen passenden Termin zu fidnen, an dem die meisten  ${buddies} auch teilnehmen können. Du kannst aber auch selbstverständlich andere Fragen an die Runde stellen.",
+			"newPollDescription": "Eine Umfrage kann dazu dienen, einen passenden Termin zu finden, an dem die meisten  ${buddies} auch teilnehmen können. Du kannst aber auch selbstverständlich andere Fragen an die Runde stellen.",
 			"newPollHint": "Welche Frage möchtest Du anderen ${buddies} stellen?",
 			"newOnlineEvent": "Online",
 			"newPoll": "Umfrage",
