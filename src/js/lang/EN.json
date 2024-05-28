@@ -358,7 +358,7 @@
 			"newInquiry": "Search request",
 			"newInquiryDescription": "With a search query you inform ${buddies} in a 20km radius that you would like to do something at that time. If someone gets in touch, you can agree on the exact place and time.",
 			"newInquiryHint": "Approximatly where and what do you want to do?",
-			"newPollDescription": "A poll can be used to find a suitable date that most ${buddies} can take part in. Of course, you can also ask other questions to the group.",
+			"newPollDescription": "A poll can be used to find a suitable date that most ${buddies} can take part in. Of course, you may also ask other questions to the group.",
 			"newPollHint": "Which question would you like to ask other ${buddies}?",
 			"newOnlineEvent": "Online",
 			"newPoll": "Poll",

@@ -11,7 +11,6 @@ import { user } from '../user';
 import { pageChat } from './chat';
 import { pageEvent } from './event';
 import { pageHome } from './home';
-import { pageLocation } from './location';
 
 export { pageLogin };
 
@@ -268,7 +267,6 @@ class pageLogin {
 					pageChat.initActiveChats();
 					geoData.init();
 					bluetooth.init();
-					pageLocation.locationsAdded = v.location_added;
 					marketing.init();
 					document.dispatchEvent(new CustomEvent('User', { detail: { action: 'login' } }));
 					if (exec)
@@ -472,7 +470,6 @@ class pageLogin {
 		bluetooth.stop();
 		initialisation.reset();
 		pageHome.reset();
-		pageLocation.reset();
 		pageChat.reset();
 		geoData.reset();
 		communication.reset();

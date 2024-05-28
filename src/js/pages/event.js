@@ -65,7 +65,7 @@ field.checkbox {
 			<input-checkbox type="radio" name="type" value="Poll" label="events.newPoll" onclick="pageEvent.setForm()" ${v.typePoll}></input-checkbox>
 		</value>
 	</field>
-	<explain class="type" style="display:none;"></explain>
+	<explain class="type" style="display:none;">${ui.l('events.newInquiryDescription')}</explain>
 	<field${v.eventNoHashtags}>
 		<label>${ui.l('events.hashtags')}</label>
 		<value>
@@ -1114,7 +1114,8 @@ detail text.description.event poll {
 		var es = ui.qa('dialog-popup .noWTDField:not(field[name="endDate"])');
 		for (var i = 0; i < es.length; i++)
 			pageEvent.openSection(es[i], b == 'Online' || b == 'Location');
-		ui.html('dialog-popup explain.type', b == 'Inquiry' ? ui.l('events.newInquiryDescription') : b == 'Poll' ? ui.l('events.newPollDescription') : '');
+		if (b == 'Inquiry' || b == 'Poll')
+			ui.html('dialog-popup explain.type', b == 'Inquiry' ? ui.l('events.newInquiryDescription') : ui.l('events.newPollDescription'));
 		pageEvent.openSection('dialog-popup field[name="endDate"]', (b == 'Online' || b != 'Location') && ui.q('dialog-popup [name="repetition"][checked="true"]') != null);
 		ui.q('dialog-popup .url label').innerText = ui.l(b == 'Online' ? 'events.urlOnlineEvent' : 'events.url');
 		pageEvent.openSection('dialog-popup .url', b == 'Online');

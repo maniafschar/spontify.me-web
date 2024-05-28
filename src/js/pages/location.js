@@ -13,7 +13,6 @@ import { pageEvent } from './event';
 export { pageLocation };
 
 class pageLocation {
-	static locationsAdded = null;
 	static map = {
 		canvas: null,
 		id: null,
@@ -362,7 +361,7 @@ mapEdit {
 			if (v.contactId == user.contact.id)
 				pageLocation.editInternal(id, v);
 			else {
-				if (pageLocation.locationsAdded <= global.minLocations)
+				if (user.authority.indexOf('editLocation') < 0)
 					ui.navigation.openPopup(ui.l('attention'), ui.l('locations.editHint').replace('{0}', pageLocation.locationsAdded) + '<br/><br/><button-text onclick="pageLocation.edit()" label="locations.new"></button-text>');
 				else
 					pageLocation.editInternal(id, v);
@@ -537,9 +536,6 @@ mapEdit {
 		if (!s)
 			return '';
 		return s.replace(/'/g, '&#39;').replace(/"/g, '&#34;').replace(/\n/g, global.separatorTech).replace(/\r/g, '');
-	}
-	static reset() {
-		pageLocation.locationsAdded = null;
 	}
 	static save() {
 		DialogPopup.setHint('');

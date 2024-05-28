@@ -6,6 +6,7 @@ import { ui } from './ui';
 export { user };
 
 class user {
+	static authority;
 	static clientId = parseInt('{placeholderClientId}');
 	static contact;
 	static email;
@@ -117,6 +118,7 @@ class user {
 			if (user.contact.hasOwnProperty(k.replace('contact.', '')))
 				user.contact[k.replace('contact.', '')] = v[k];
 		}
+		user.authority = v.authority;
 		user.contact.filter = user.contact.filter ? JSON.parse(user.contact.filter) : {};
 		try {
 			user.contact.storage = user.contact.storage ? JSON.parse(user.contact.storage) : {};
@@ -141,6 +143,7 @@ class user {
 		user.contact = null;
 		user.password = null;
 		user.email = null;
+		user.authority = null;
 	}
 	static save(data, success) {
 		if (user.contact && user.contact.id) {
