@@ -780,6 +780,8 @@ detail text.description.event poll {
 	static locationSelected(e) {
 		ui.q('dialog-popup input[name="locationId"]').value = e.getAttribute('i');
 		ui.q('dialog-popup .locationName').innerHTML = e.innerHTML;
+		ui.css('dialog-popup .locationName', 'display', 'block');
+		ui.css('dialog-popup .locationName', 'height', '');
 		ui.toggleHeight('dialog-popup .location', function () {
 			ui.toggleHeight('dialog-popup .event');
 			pageEvent.setForm();
