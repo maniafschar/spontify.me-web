@@ -141,7 +141,7 @@ field.checkbox {
 			<input-checkbox name="publish" label="events.publishCheckbox" value="true" ${v.publishValue}></input-checkbox>
 		</value>
 	</field>
-	<div class="locationName" style="color:white;cursor:pointer;" onclick="pageEvent.selectLocation()">${v.locationName}</div>
+	<div class="locationName" style="color:white;cursor:pointer;display:none;" onclick="pageEvent.selectLocation()">${v.locationName}</div>
 	<dialogButtons>
 		<button-text onclick="pageEvent.selectLocation()" label="events.selectLocation" class="selectLocation"></button-text>
 		<button-text onclick="pageEvent.save()" label="save" class="save hidden"></button-text>
