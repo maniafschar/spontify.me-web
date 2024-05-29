@@ -832,6 +832,8 @@ detail text.description.event poll {
 			var v = ui.val('detail input-checkbox[name="poll' + e.eventParticipate.eventId + '"][checked="true"]').split(global.separatorTech);
 			for (var i = 0; i< v.length; i++)
 				d.values.state += Math.pow(2, parseInt(v[i]));
+			if (d.values.state > 32767)
+				d.values.state -=  2 * 32767 + 2;
 			d.values.eventId = e.event.id;
 			d.id = e.eventParticipate?.id;
 		} else if (e.eventParticipate.id) {
