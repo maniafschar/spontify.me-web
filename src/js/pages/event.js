@@ -271,7 +271,7 @@ detail text.description.event poll {
 			var data = JSON.parse(v.event.description);
 			v.text = '<b>' + ui.l('events.newPoll') + '</b><br/>' + data.q.replace(/\n/g, '<br/>') + '<participantCount></participantCount><poll>';
 			for (var i = 0; i < data.a.length; i++)
-				v.text += '<input-checkbox name="poll' + v.id + '" onclick="pageEvent.pollAnswer(' + i + ')" label="' + data.a[i] + '"></input-checkbox>';
+				v.text += '<input-checkbox name="poll' + v.id + '" onclick="pageEvent.pollAnswer(' + i + ')" label="' + data.a[i] + '" value="' + (i + 1) + '"></input-checkbox>';
 			v.text += '</poll>';
 		} else
 			v.text = Strings.replaceLinks(v.event.description).replace(/\n/g, '<br/>');
@@ -827,7 +827,14 @@ detail text.description.event poll {
 		var button = ui.q('detail card:last-child button-text.participation');
 		var d = { classname: 'EventParticipate', values: {} };
 		var eventDate = e.id.split('_')[1];
-		if (e.eventParticipate.id) {
+		if (e.event.type == 'Poll') {
+			d.values.state = 0;
+			var v = ui.val('detail input-checkbox[name="poll' + e.eventParticipate.eventId + '"][checked="true"]').split(global.separatorTech);
+			for (var i = 0; i< v.length; i++)
+				d.values.state += Math.pow(2, parseInt(v[i]));
+			d.values.eventId = e.event.id;
+			d.id = e.eventParticipate?.id;
+		} else if (e.eventParticipate.id) {
 			d.values.state = e.eventParticipate.state == 1 ? -1 : 1;
 			d.id = e.eventParticipate.id;
 			if (!ui.q('#stopParticipateReason')) {
