@@ -69,7 +69,7 @@ field.checkbox {
 	<field${v.eventNoHashtags}>
 		<label>${ui.l('events.hashtags')}</label>
 		<value>
-			<input-hashtags ids="${v.skills}" text="${v.skillsText}" transient="true"></input-hashtags>
+			<input-hashtags ids="${v.skills}" text="${v.skillsText}" name="skills"></input-hashtags>
 		</value>
 	</field>
 	<field>
@@ -1028,8 +1028,6 @@ detail text.description.event poll {
 				formFunc.setError(tags, 'error.hashtags');
 			else
 				formFunc.validation.filterWords(tags);
-			ui.q('dialog-popup input[name="skills"]').value = ui.q('dialog-popup input-hashtags').getAttribute('ids');
-			ui.q('dialog-popup input[name="skillsText"]').value = ui.q('dialog-popup input-hashtags').getAttribute('text');
 		}
 		if (!text.value)
 			formFunc.setError(text, 'error.description');
@@ -1097,8 +1095,6 @@ detail text.description.event poll {
 		});
 	}
 	static saveDraft() {
-		ui.q('dialog-popup input[name="skills"]').value = ui.q('dialog-popup input-hashtags').getAttribute('ids');
-		ui.q('dialog-popup input[name="skillsText"]').value = ui.q('dialog-popup input-hashtags').getAttribute('text');
 		user.set('event', formFunc.getForm('dialog-popup form'));
 	}
 	static selectLocation() {
