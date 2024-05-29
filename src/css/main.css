@@ -1368,7 +1368,7 @@ infoblock {
 	position: relative;
 	width: 96%;
 	display: block;
-	background: rgba(0, 0, 0, 0.1);
+	background: rgba(255, 255, 255, 0.4);
 	border: solid 1em transparent;
 	border-radius: 0.5em;
 	margin: -0.5em 0 1em 2%;

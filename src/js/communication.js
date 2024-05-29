@@ -592,7 +592,7 @@ class FB {
 		};
 		if (global.getOS() == 'android' && window.SafariViewController)
 			window.SafariViewController.show({
-				url: FB.FB_LOGIN_URL + '?client_id=' + FB.fbAppId +
+				url: FB.FB_LOGIN_URL.replace('{version}', FB.version) + '?client_id=' + FB.fbAppId +
 					'&redirect_uri=' + FB.oauthRedirectURL +
 					'&response_type=token&scope=email',
 				hidden: false, // default false. You can use this to load cookies etc in the background (see issue #1 for details).

@@ -131,6 +131,9 @@ module.exports = (env) => {
 							.replace(/\{placeholderBundleID}/g, props.bundleId)
 							.replace(/\{placeholderAppConfig}/g, JSON.stringify(props.appConfig).replace(/\"/g, '\\"'))
 							.replace(/\{placeholderAppleID}/g, props.appleId));
+						file = 'dist/oauthcallback.html';
+						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
+							.replace('{protocol}', props.url.substring(8, props.url.lastIndexOf('.'))));
 						var languages = ['de', 'en'];
 						for (var i = 0; i < languages.length; i++) {
 							file = 'dist/js/lang/' + languages[i].toUpperCase() + '.html';
