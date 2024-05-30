@@ -171,6 +171,29 @@ detail text.description.event poll {
 	margin-top: 0.75em;
 	position: relative;
 }
+poll result {
+	display: block;
+	text-align: left;
+}
+poll result div indicator {
+	background: var(--bg1start);
+	opacity: 0.7;
+	height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: inline-block;
+	border-radius: 0.5em;
+}
+poll result value {
+	z-index: 2;
+    position: relative;
+}
+poll result div {
+	position: relative;
+	padding: 0.25em 0.5em;
+    margin-top: 0.5em;
+}
 </style>
 <text class="description event" ${v.oc}>
 <div><span class="chatLinks" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;),event)"><img ${v.imageEventOwner}/><br>${v.contact.pseudonym}</span></div>
@@ -218,7 +241,8 @@ detail text.description.event poll {
 				v.hideMePotentialParticipants = '';
 			if (v.id.split('_').length > 1)
 				communication.ajax({
-					url: global.serverApi + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + v.event.id + ' and eventParticipate.eventDate=cast(\'' + v.id.split('_')[1] + '\' as timestamp)'),
+					url: global.serverApi + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + v.event.id
+						+ (v.event.repetition == 'o' ? '' : ' and eventParticipate.eventDate=cast(\'' + v.id.split('_')[1] + '\' as timestamp)')),
 					webCall: 'pageEvent.detail',
 					responseType: 'json',
 					success(r) {
@@ -229,7 +253,12 @@ detail text.description.event poll {
 								if (e.contactId == user.contact.id) {
 									v.eventParticipate = e;
 									if (v.event.type == 'Poll') {
-
+										if (v.eventParticipate.state < 0)
+											v.eventParticipate.state += 2 * 2147483647 - 2;
+										for (var i2 = 0; Math.pow(2, i2) <= v.eventParticipate.state; i2++) {
+											if ((v.eventParticipate.state & Math.pow(2, i2)) > 0)
+												ui.attr('detail input-checkbox[name="poll' + v.id + '"][value="' + i2 + '"]', 'checked', 'true');
+										}
 									}
 								}
 								if (!count['state' + e.state])
@@ -241,8 +270,7 @@ detail text.description.event poll {
 							if (v.event.type == 'Poll') {
 								if (r.length > 1)
 									ui.q('detail card[i="' + v.id + '"] participantCount').innerHTML = ' (' + (r.length - 1) + ' ' + ui.l('events.participants') + ')';
-								for (var k in count)
-									ui.q('detail card[i="' + v.id + '"] explain.' + k).innerHTML = parseInt(count[k] / max * 100 + 0.5) + '%';
+								pageEvent.openPollResult(r, v.id);
 							} else {
 								ui.q('detail card[i="' + v.id + '"] .eventParticipationButtons').innerHTML = pageEvent.getParticipateButton(v, count['state1']);
 								if (v.eventParticipate.state == 1) {
@@ -271,8 +299,8 @@ detail text.description.event poll {
 			var data = JSON.parse(v.event.description);
 			v.text = '<b>' + ui.l('events.newPoll') + '</b><br/>' + data.q.replace(/\n/g, '<br/>') + '<participantCount></participantCount><poll>';
 			for (var i = 0; i < data.a.length; i++)
-				v.text += '<input-checkbox name="poll' + v.id + '" onclick="pageEvent.pollAnswer(' + i + ')" label="' + data.a[i] + '" value="' + (i + 1) + '"></input-checkbox>';
-			v.text += '</poll>';
+				v.text += '<input-checkbox name="poll' + v.id + '" onclick="pageEvent.saveParticipation()" label="' + data.a[i] + '" value="' + (i + 1) + '"></input-checkbox>';
+			v.text += '<result></result></poll>';
 		} else
 			v.text = Strings.replaceLinks(v.event.description).replace(/\n/g, '<br/>');
 		v.hideMeFavorite = ' hidden';
@@ -537,7 +565,7 @@ detail text.description.event poll {
 				if (!v.eventParticipate.state && v.contact.authenticate)
 					text += '<button-text class="participation" onclick="pageLogin.paypal(' + v.contact.id + ')" label="events.participante"></button-text>';
 			} else if (v.eventParticipate.state == 1 || !v.event.maxParticipants || participantCount < v.event.maxParticipants)
-				text += '<button-text class="participation" onclick="pageEvent.participate()" label="events.participante' + (v.eventParticipate.state == 1 ? 'Stop' : '') + '"></button-text>';
+				text += '<button-text class="participation" onclick="pageEvent.saveParticipation()" label="events.participante' + (v.eventParticipate.state == 1 ? 'Stop' : '') + '"></button-text>';
 		}
 		if (participantCount > 0 || futureEvent)
 			text += '<button-text onclick="pageEvent.toggleParticipants(event)"><participantCount>' + (participantCount > 0 ? participantCount + '&nbsp;' : '') + '</participantCount>' + ui.l('events.participants') + '</button-text>';
@@ -809,114 +837,50 @@ detail text.description.event poll {
 			onApprove: function (data, actions) {
 				actions.order.capture().then(function (orderData) {
 					if (orderData.status == 'COMPLETED')
-						pageEvent.participate(JSON.stringify(orderData));
+						pageEvent.saveParticipation(JSON.stringify(orderData));
 				});
 			}
 		}).render('#paypal-button-container');
 	}
+	static openPollResult(r, id) {
+		var render = function (r2) {
+			if (ui.q('detail card[i="' + id + '"]')) {
+				var count = [], votes = 0, labels = [];
+				for (var i = 1; i < r2.length; i++) {
+					var e = model.convert(new EventParticipate(), r2, i);
+					for (var i2 = 0; Math.pow(2, i2) <= e.state; i2++) {
+						if (e.state < 0)
+							e.state += 2 * 2147483647 - 2;
+						if ((e.state & Math.pow(2, i2)) > 0) {
+							var key = ui.q('detail input-checkbox[name="poll' + id + '"][value="' + i2 + '"] label').innerText;
+							count[key] = count[key] > 0 ? count[key] + 1 : 1;
+							labels.push(key);
+							votes++;
+						}
+					}
+				}
+				labels.sort();
+				var s = '';
+				for (var i = 0; i < labels.length; i++) {
+					var x = parseInt(count[labels[i]] / votes * 100 + 0.5);
+					s += '<div><indicator style="width:' + x + '%;"></indicator><value>' + x + '%' + global.separator + labels[i] + '</value></div>';
+				}
+				ui.q('detail card[i="' + id + '"] poll>result').innerHTML = s;
+			}
+		};
+		if (r)
+			render(r);
+		else
+			communication.ajax({
+				url: global.serverApi + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + id.split('_')[0]),
+				webCall: 'pageEvent.detail',
+				responseType: 'json',
+				success: render
+			});
+	}
 	static openSection(e, open) {
 		if (!open && ui.cssValue(e, 'display').indexOf('none') < 0 || open && ui.cssValue(e, 'display').indexOf('none') > -1)
 			ui.toggleHeight(e);
-	}
-	static participate(order) {
-		var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
-		if (e.event.price > 0 && !user.contact.image) {
-			ui.navigation.openPopup(ui.l('attention'), ui.l('events.participationNoImage') + '<br/><br/><button-text onclick="ui.navigation.goTo(&quot;settings&quot;)" label="settings.editProfile"></button-text > ');
-			return;
-		}
-		var button = ui.q('detail card:last-child button-text.participation');
-		var d = { classname: 'EventParticipate', values: {} };
-		var eventDate = e.id.split('_')[1];
-		if (e.event.type == 'Poll') {
-			d.values.state = 0;
-			var v = ui.val('detail input-checkbox[name="poll' + e.eventParticipate.eventId + '"][checked="true"]').split(global.separatorTech);
-			for (var i = 0; i< v.length; i++)
-				d.values.state += Math.pow(2, parseInt(v[i]));
-			if (d.values.state > 32767)
-				d.values.state -=  2 * 32767 + 2;
-			d.values.eventId = e.event.id;
-			d.id = e.eventParticipate?.id;
-		} else if (e.eventParticipate.id) {
-			d.values.state = e.eventParticipate.state == 1 ? -1 : 1;
-			d.id = e.eventParticipate.id;
-			if (!ui.q('#stopParticipateReason')) {
-				ui.navigation.openPopup(ui.l('events.stopParticipate'), ui.l('events.stopParticipateText') + '<br/><textarea id="stopParticipateReason" placeholder="' + ui.l('events.stopParticipateHint') + '" style="margin-top:0.5em;"></textarea><br/><br/><button-text style="margin-top:1em;" onclick="pageEvent.participate()" label="events.stopParticipateButton"></button-text>');
-				return;
-			}
-			if (!ui.q('#stopParticipateReason').value)
-				return;
-			d.values.reason = ui.q('#stopParticipateReason').value;
-		} else {
-			d.values.state = 1;
-			d.values.eventId = e.event.id;
-			d.values.eventDate = eventDate;
-			d.values.payment = order;
-		}
-		communication.ajax({
-			url: global.serverApi + 'db/one',
-			webCall: 'pageEvent.participate',
-			method: e.eventParticipate.id ? 'PUT' : 'POST',
-			body: d,
-			success(r) {
-				e.eventParticipate.state = d.values.state;
-				if (r) {
-					e.eventParticipate.eventId = d.values.eventId;
-					e.eventParticipate.eventDate = d.values.eventDate;
-					e.eventParticipate.id = r;
-				}
-				ui.q('detail card:last-child detailHeader').setAttribute('data', encodeURIComponent(JSON.stringify(e)));
-				var e2 = ui.q('detail card[i="' + e.event.id + '_' + eventDate + '"] button-text participantCount');
-				if (e.eventParticipate.state == '1') {
-					ui.classRemove('detail card:last-child .event', 'canceled');
-					ui.classRemove('row[i="' + e.event.id + '_' + eventDate + '"]', 'canceled');
-					ui.classRemove('row[i="' + e.event.id + '_' + eventDate + '"] badge', 'hidden');
-					ui.classAdd('detail card:last-child .event', 'participate');
-					ui.classAdd('row[i="' + e.event.id + '_' + eventDate + '"]', 'participate');
-					ui.q('detail card:last-child .event .reason').innerHTML = '';
-					button.outerHTML = '';
-					e2.innerHTML = e2.innerHTML ? (parseInt(e2.innerHTML) + 1) + ' ' : '1 ';
-				} else {
-					ui.classRemove('detail card:last-child .event', 'participate');
-					ui.classRemove('row[i="' + e.event.id + '_' + eventDate + '"]', 'participate');
-					ui.attr(button, 's', '1');
-					button.innerText = ui.l('events.participante');
-					ui.classAdd('detail card:last-child .event', 'canceled');
-					ui.classAdd('row[i="' + e.event.id + '_' + eventDate + '"]', 'canceled');
-					ui.q('detail card:last-child .event .reason').innerHTML = ui.l('events.canceled') + (d.values.reason ? ':<br/>' + d.values.reason : '');
-					e2.innerHTML = e2.innerHTML && parseInt(e2.innerHTML) > 1 ? (parseInt(e2.innerHTML) - 1) + ' ' : '';
-				}
-				ui.navigation.closePopup();
-				if (order) {
-					ui.navigation.closeHint();
-					ui.q('detail .eventParticipationButtons button-text.participation').outerHTML = '';
-				}
-				e = ui.q('detail card:last-child[i="' + e.event.id + '_' + eventDate + '"] [name="participants"]');
-				var f = function () {
-					e.innerHTML = '';
-					e.style.display = 'none';
-					e.removeAttribute('h');
-				};
-				if (e.style.display == 'none')
-					f.call();
-				else
-					ui.toggleHeight(e, f);
-			}
-		});
-	}
-	static pollAnswer() {
-		var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
-		var value = ui.val('detail card:last-child poll input-checkbox[checked="true"]');
-		communication.ajax({
-			url: global.serverApi + 'db/one',
-			webCall: 'pageEvent.pollAnswer',
-			method: e.eventParticipate.id ? 'PUT' : 'POST',
-			body: { classname: 'EventParticipate', id: e.eventParticipate.id, values: { state: value } },
-			success(r) {
-				if (r)
-					console.log(r);
-			}
-
-		});
 	}
 	static qrcode(location) {
 		var id = ui.q('detail card:last-child').getAttribute('i');
@@ -1072,7 +1036,7 @@ detail text.description.event poll {
 			ui.q('dialog-popup popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });;
 			return;
 		}
-		if (!ui.q('dialog-popup [name="repetition"][checked="true"]'))
+		if (!ui.q('dialog-popup [name="repetition"][checked="true"]') || v.values.type == 'Inquiry' || v.values.type == 'Poll')
 			v.values.repetition = 'o';
 		if (type == 'Poll') {
 			v.values.endDate = v.values.startDate;
@@ -1106,6 +1070,101 @@ detail text.description.event poll {
 	static saveDraft() {
 		user.set('event', formFunc.getForm('dialog-popup form'));
 	}
+	static saveParticipation(order) {
+		var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
+		if (e.event.price > 0 && !user.contact.image) {
+			ui.navigation.openPopup(ui.l('attention'), ui.l('events.participationNoImage') + '<br/><br/><button-text onclick="ui.navigation.goTo(&quot;settings&quot;)" label="settings.editProfile"></button-text > ');
+			return;
+		}
+		var button = ui.q('detail card:last-child button-text.participation');
+		var d = { classname: 'EventParticipate', values: {} };
+		var eventDate = e.id.split('_')[1];
+		if (e.event.type == 'Poll') {
+			d.values.state = 0;
+			var v = ui.val('detail input-checkbox[name="poll' + e.id + '"][checked="true"]').split(global.separatorTech);
+			for (var i = 0; i < v.length; i++) {
+				if (v[i])
+					d.values.state += Math.pow(2, parseInt(v[i]));
+			}
+			if (d.values.state > 2147483647)
+				d.values.state -= 2 * 2147483647 + 2;
+			d.values.eventId = e.event.id;
+			d.id = e.eventParticipate?.id;
+		} else if (e.eventParticipate.id) {
+			d.values.state = e.eventParticipate.state == 1 ? -1 : 1;
+			d.id = e.eventParticipate.id;
+			if (!ui.q('#stopParticipateReason')) {
+				ui.navigation.openPopup(ui.l('events.stopParticipate'), ui.l('events.stopParticipateText') + '<br/><textarea id="stopParticipateReason" placeholder="' + ui.l('events.stopParticipateHint') + '" style="margin-top:0.5em;"></textarea><br/><br/><button-text style="margin-top:1em;" onclick="pageEvent.saveParticipation()" label="events.stopParticipateButton"></button-text>');
+				return;
+			}
+			if (!ui.q('#stopParticipateReason').value)
+				return;
+			d.values.reason = ui.q('#stopParticipateReason').value;
+		} else {
+			d.values.state = 1;
+			d.values.eventId = e.event.id;
+			d.values.eventDate = eventDate;
+			d.values.payment = order;
+		}
+		communication.ajax({
+			url: global.serverApi + 'db/one',
+			webCall: 'pageEvent.participate',
+			method: e.eventParticipate.id ? 'PUT' : 'POST',
+			body: d,
+			success(r) {
+				e.eventParticipate.state = d.values.state;
+				if (r) {
+					e.eventParticipate.eventId = d.values.eventId;
+					e.eventParticipate.eventDate = d.values.eventDate;
+					e.eventParticipate.id = r;
+				}
+				ui.q('detail card:last-child detailHeader').setAttribute('data', encodeURIComponent(JSON.stringify(e)));
+				var e2 = ui.q('detail card[i="' + e.event.id + '_' + eventDate + '"] button-text participantCount');
+				if (e.event.type == 'Poll')
+					pageEvent.openPollResult(null, e.event.id + '_' + eventDate);
+				else {
+					if (e.eventParticipate.state == '1') {
+						ui.classRemove('detail card:last-child .event', 'canceled');
+						ui.classRemove('row[i="' + e.event.id + '_' + eventDate + '"]', 'canceled');
+						ui.classRemove('row[i="' + e.event.id + '_' + eventDate + '"] badge', 'hidden');
+						ui.classAdd('detail card:last-child .event', 'participate');
+						ui.classAdd('row[i="' + e.event.id + '_' + eventDate + '"]', 'participate');
+						ui.q('detail card:last-child .event .reason').innerHTML = '';
+						button.outerHTML = '';
+						e2.innerHTML = e2.innerHTML ? (parseInt(e2.innerHTML) + 1) + ' ' : '1 ';
+					} else {
+						ui.classRemove('detail card:last-child .event', 'participate');
+						ui.classRemove('row[i="' + e.event.id + '_' + eventDate + '"]', 'participate');
+						ui.attr(button, 's', '1');
+						button.innerText = ui.l('events.participante');
+						ui.classAdd('detail card:last-child .event', 'canceled');
+						ui.classAdd('row[i="' + e.event.id + '_' + eventDate + '"]', 'canceled');
+						ui.q('detail card:last-child .event .reason').innerHTML = ui.l('events.canceled') + (d.values.reason ? ':<br/>' + d.values.reason : '');
+						e2.innerHTML = e2.innerHTML && parseInt(e2.innerHTML) > 1 ? (parseInt(e2.innerHTML) - 1) + ' ' : '';
+					}
+				}
+				ui.navigation.closePopup();
+				if (order) {
+					ui.navigation.closeHint();
+					ui.q('detail .eventParticipationButtons button-text.participation').outerHTML = '';
+				}
+				if (e.event.type == 'Poll') {
+					;
+				} else {
+					e = ui.q('detail card:last-child[i="' + e.event.id + '_' + eventDate + '"] [name="participants"]');
+					var f = function () {
+						e.innerHTML = '';
+						e.style.display = 'none';
+						e.removeAttribute('h');
+					};
+					if (e.style.display == 'none')
+						f.call();
+					else
+						ui.toggleHeight(e, f);
+				}
+			}
+		});
+	}
 	static selectLocation() {
 		ui.toggleHeight('dialog-popup .event', function () {
 			ui.toggleHeight('dialog-popup .location');
@@ -1123,7 +1182,7 @@ detail text.description.event poll {
 			pageEvent.openSection(es[i], b == 'Online' || b == 'Location');
 		if (b == 'Inquiry' || b == 'Poll')
 			ui.html('dialog-popup explain.type', b == 'Inquiry' ? ui.l('events.newInquiryDescription') : ui.l('events.newPollDescription'));
-		pageEvent.openSection('dialog-popup field[name="endDate"]', (b == 'Online' || b != 'Location') && ui.q('dialog-popup [name="repetition"][checked="true"]') != null);
+		pageEvent.openSection('dialog-popup field[name="endDate"]', (b == 'Online' || b == 'Location') && ui.q('dialog-popup [name="repetition"][checked="true"]') != null);
 		ui.q('dialog-popup .url label').innerText = ui.l(b == 'Online' ? 'events.urlOnlineEvent' : 'events.url');
 		pageEvent.openSection('dialog-popup .url', b == 'Online');
 		pageEvent.openSection('dialog-popup explain.type', b == 'Inquiry' || b == 'Poll');

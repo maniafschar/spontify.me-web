@@ -580,6 +580,8 @@ class ui {
 			if (!e2)
 				e2 = elements(e, p, 'input-rating');
 			if (!e2)
+				e2 = elements(e, p, 'input-checkbox');
+			if (!e2)
 				e2 = elements(e, p, 'input-date');
 			if (!e2)
 				e2 = elements(e, p, 'input-hashtags');
@@ -857,13 +859,22 @@ class formFunc {
 				if (!cb[e[i].getAttribute('name')])
 					cb[e[i].getAttribute('name')] = '';
 				if (e[i].getAttribute('checked') == 'true')
-					cb[e[i].getAttribute('name')] += global.separatorTech + (e[i].getAttribute('value') ? e[i].getAttribute('value') : true);
+					cb[e[i].getAttribute('name')] += (cb[e[i].getAttribute('name')] ? global.separatorTech : '') + (e[i].getAttribute('value') ? e[i].getAttribute('value') : true);
 				else if (e[i].getAttribute('value') == 'true')
-					cb[e[i].getAttribute('name')] += global.separatorTech + false;
+					cb[e[i].getAttribute('name')] += (cb[e[i].getAttribute('name')] ? global.separatorTech : '') + false;
 			}
 		}
-		for (var k in cb)
-			d.values[k] = cb[k].length > 0 ? cb[k].substring(1) : '';
+		for (var k in cb) {
+			if (cb[k].length > 0) {
+				if (cb[k] == 'true')
+					d.values[k] = true;
+				else if (cb[k] == 'false')
+					d.values[k] = false;
+				else
+					d.values[k] = cb[k];
+			} else
+				d.values[k] = '';
+		}
 		e = form.querySelectorAll('input-date:not([transient="true"])');
 		for (var i = 0; i < e.length; i++)
 			d.values[e[i].getAttribute('name')] = e[i].getAttribute('complete') == 'true' ? global.date.local2server(e[i].getAttribute('value')) : null;
