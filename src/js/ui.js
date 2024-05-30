@@ -435,11 +435,8 @@ class ui {
 				}
 			}, 50);
 		},
-		openLocationPicker(event, noSelection) {
-			DialogLocationPicker.open(event, noSelection);
-		},
-		openLocationPickerDialog() {
-			DialogLocationPicker.openDialog();
+		openLocationPicker(event) {
+			DialogLocationPicker.open(event);
 		},
 		openIntro(event) {
 			if (event) {

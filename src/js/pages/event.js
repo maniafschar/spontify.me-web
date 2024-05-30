@@ -43,11 +43,11 @@ field.checkbox {
 	width: 1.5em;
 	cursor: pointer;
 	z-index: 1;
-	bottom: 0;
+	top: 0;
 	padding-right: 0.2em;
 	right: 0;
 	height: 1.2em;
-	line-height: 1.6;
+	line-height: 1.2;
 }
 </style>
 <form name="editElement" onsubmit="return false">
@@ -442,7 +442,7 @@ poll result div {
 					v.pollValue = ' value="' + d.a[0] + '"';
 					v.pollInput = '';
 					for (var i = 1; i < d.a.length; i++)
-						v.pollInput += '<input type="text" maxlength="250" value="' + d.a[i] + '" style="margin-top:0.5em;"/>';
+						v.pollInput += '<input type="text" maxlength="250" value="' + (d.a[i] ? d.a[i] : '') + '" style="margin-top:0.5em;"/>';
 				} catch (e) { }
 			}
 		} else
@@ -1027,26 +1027,25 @@ poll result div {
 			v.values.locationId = ui.val('dialog-popup input-checkbox[name="type"][checked="true"]');
 		var answers = ui.qa('dialog-popup field.poll input');
 		if (type == 'Poll') {
-			if (!ui.val('dialog-popup field.poll input'))
-				formFunc.setError(answers[answers.length - 1], 'events.errorAnswer');
 			for (var i = 0; i < answers.length; i++)
 				formFunc.validation.filterWords(answers[i]);
-		}
-		if (ui.q('dialog-popup errorHint')) {
-			ui.q('dialog-popup popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });;
-			return;
 		}
 		if (!ui.q('dialog-popup [name="repetition"][checked="true"]') || v.values.type == 'Inquiry' || v.values.type == 'Poll')
 			v.values.repetition = 'o';
 		if (type == 'Poll') {
-			v.values.endDate = v.values.startDate;
-			v.values.startDate = global.date.local2server(new Date());
 			var d = { q: v.values.description, a: [] };
 			for (var i = 0; i < answers.length; i++) {
 				if (answers[i].value)
 					d.a.push(answers[i].value);
 			}
-			v.values.description = JSON.stringify(d);
+			if (d.a.length < 2)
+				formFunc.setError(answers[answers.length - 1], 'events.errorAnswer');
+			else
+				v.values.description = JSON.stringify(d);
+		}
+		if (ui.q('dialog-popup errorHint')) {
+			ui.q('dialog-popup popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });;
+			return;
 		}
 		v.classname = 'Event';
 		v.id = id;

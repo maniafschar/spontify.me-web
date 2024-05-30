@@ -311,7 +311,7 @@ border-radius: 0.5em 0 0 3em;
 		if (force || !ui.q('home teaser.events>div card')) {
 			var v = {
 				actionLogo: global.config.club ? 'pageHome.openNews(null,event)' :
-					user.contact ? (global.config.news ? 'ui.navigation.openLocationPicker(event,true)'
+					user.contact ? (global.config.news ? 'ui.navigation.openLocationPicker(event)'
 						: 'ui.navigation.goTo(&quot;settings&quot;)') : 'pageHome.openHint()'
 			};
 			v.statsButton = ' hidden';
@@ -474,8 +474,14 @@ border-radius: 0.5em 0 0 3em;
 	}
 	static setLogoTown() {
 		var e = ui.q('home text.town');
-		if (e)
-			e.innerHTML = geoData.getCurrent().town.toLowerCase();
+		if (e) {
+			var s = geoData.getCurrent().town.toLowerCase();
+			if (e.innerText != s) {
+				pageHome.teaserContacts();
+				pageHome.teaserEvents();
+			}
+			e.innerHTML = s;
+		}
 	}
 	static teaserContacts() {
 		communication.ajax({
@@ -533,11 +539,12 @@ border-radius: 0.5em 0 0 3em;
 					}
 					return true;
 				}
+				var widthPoll = ui.q('home teaser').clientHeight - parseFloat(ui.cssValue('home teaser div', 'padding')) * 2;
 				for (var i = 0; i < e.length; i++) {
 					if (!dateFiltered(e[i])) {
 						var s2;
 						if (e[i].event.type == 'Poll')
-							s2 = '<poll class="bgColor">' + JSON.parse(e[i].event.description).q + '</poll>';
+							s2 = '<poll class="bgColor" style="width:' + widthPoll + 'px;">' + JSON.parse(e[i].event.description).q + '</poll>';
 						else
 							s2 = '<img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList ? e[i].imageList : e[i].contact.imageList) + '"/><text>'
 								+ global.date.formatDate(e[i].event.startDate, 'noWeekday') + '<br/>' + e[i].event.description + '</text>';

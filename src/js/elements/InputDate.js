@@ -213,7 +213,7 @@ next::after {
 	resetMonth() {
 		if (this.get('year')) {
 			var min = new Date(this.getAttribute('min')), max = new Date(this.getAttribute('max'));
-			var d = new Date(this.get('year').getAttribute('value') + '-' + this.get('month').getAttribute('value') + '-' + this.get('day').getAttribute('value'));
+			var d = new Date(this.get('year').getAttribute('value') + '-' + (this.get('month').getAttribute('value') ? this.get('month').getAttribute('value') : '01') + '-' + this.get('day').getAttribute('value'));
 			this.selectMonth((min > d ? min.getMonth() : d > max ? max.getMonth() : d.getMonth()) + 1);
 		}
 	}
@@ -254,13 +254,21 @@ next::after {
 	}
 	selectDay(i, next) {
 		this.setValue('Day', i ? ('0' + i).slice(-2) : null, parseInt(i));
-		if (next)
-			this.toggleMonth();
+		if (next) {
+			if (this.get('hour').getAttribute('value'))
+				ui.navigation.closeHint();
+			else
+				this.toggleHour();
+		}
 	}
 	selectHour(i, next) {
 		this.setValue('Hour', i >= 0 ? ('0' + i).slice(-2) : null, parseInt(i));
-		if (next)
-			this.toggleMinute();
+		if (next) {
+			if (this.get('minute').getAttribute('value'))
+				ui.navigation.closeHint();
+			else
+				this.toggleMinute();
+		}
 	}
 	selectMinute(i, next) {
 		this.setValue('Minute', i >= 0 ? ('0' + i).slice(-2) : null);
@@ -273,15 +281,23 @@ next::after {
 		else
 			this.setValue('Month', null);
 		this.resetDay();
-		if (next)
-			this.toggleYear();
+		if (next) {
+			if (this.get('hour').getAttribute('value'))
+				ui.navigation.closeHint();
+			else
+				this.toggleHour();
+		}
 	}
 	selectYear(i, next) {
 		this.setValue('Year', i);
 		this.resetMonth();
 		this.resetDay();
-		if (next)
-			this.toggleHour();
+		if (next) {
+			if (this.get('hour').getAttribute('value'))
+				ui.navigation.closeHint();
+			else
+				this.toggleHour();
+		}
 	}
 	setValue(field, value, label) {
 		var e = this.get(field.toLowerCase());

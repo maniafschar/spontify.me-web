@@ -42,11 +42,13 @@ label {
 					e._root.children[i].remove();
 			});
 	}
-	static open(event, noSelection) {
-		event.preventDefault();
-		event.stopPropagation();
+	static open(event) {
+		if (event) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
 		var l = user.get('locationPicker'), e = ui.q('dialog-location-picker'), element;
-		if (l && l.length > 1 && !noSelection) {
+		if (l && l.length > 1) {
 			if (ui.q('dialog-location-picker').style.display == 'none') {
 				var s = '';
 				for (var i = l.length - 1; i >= 0; i--) {
@@ -58,7 +60,7 @@ label {
 					}
 				}
 				element = document.createElement('label');
-				element.setAttribute('onclick', 'ui.navigation.openLocationPicker(event,true)');
+				element.setAttribute('onclick', 'ui.navigation.openLocationPicker(event)');
 				element.setAttribute('style', 'color:var(--buttonText)');
 				element.setAttribute('class', 'bgColor');
 				element.innerText = ui.l('home.locationPickerTitle');
