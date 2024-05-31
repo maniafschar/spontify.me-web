@@ -637,8 +637,12 @@ poll result div {
 					name = t + ' ' + v.name;
 				else
 					name = t + ' ' + v.contact.pseudonym + (v.contact.age ? ' (' + v.contact.age + ')' : '');
-				text = v.event.description + '<br/>';
-				text += v.event.id && v.address ? v.address : skills.text();
+				if (v.event.type == 'Poll') {
+					var json = JSON.parse(v.event.description);
+					text = json.q + ' ' + json.a[0] + '...';
+				} else
+					text = v.event.description;
+				text += '<br/>' + (v.event.id && v.address ? v.address : skills.text());
 				clazz = v.locationFavorite.favorite ? ' favorite' : '';
 				if (global.date.local2server(v.event.startDate).indexOf(v.eventParticipate.eventDate) == 0)
 					clazz = v.eventParticipate.state == -1 ? ' canceled' : ' participate';
