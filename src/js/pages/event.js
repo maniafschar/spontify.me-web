@@ -639,7 +639,9 @@ poll result div {
 					name = t + ' ' + v.contact.pseudonym + (v.contact.age ? ' (' + v.contact.age + ')' : '');
 				if (v.event.type == 'Poll') {
 					var json = JSON.parse(v.event.description);
-					text = json.q + ' ' + json.a[0] + '...';
+					text = json.q;
+					for (var i = 0; i < json.a.length; i++)
+						text += ' ' + json.a[i];
 				} else
 					text = v.event.description;
 				text += '<br/>' + (v.event.id && v.address ? v.address : skills.text());
@@ -1074,6 +1076,8 @@ poll result div {
 		user.set('event', formFunc.getForm('dialog-popup form'));
 	}
 	static saveParticipation(order) {
+		if (!user.contact)
+			return;
 		var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
 		if (e.event.price > 0 && !user.contact.image) {
 			ui.navigation.openPopup(ui.l('attention'), ui.l('events.participationNoImage') + '<br/><br/><button-text onclick="ui.navigation.goTo(&quot;settings&quot;)" label="settings.editProfile"></button-text > ');

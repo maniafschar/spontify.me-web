@@ -438,6 +438,9 @@ class ui {
 		openLocationPicker(event) {
 			DialogLocationPicker.open(event);
 		},
+		openLocationPickerDialog() {
+			DialogLocationPicker.openDialog();
+		},
 		openIntro(event) {
 			if (event) {
 				event.preventDefault();
