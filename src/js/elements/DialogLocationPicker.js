@@ -17,7 +17,7 @@ class DialogLocationPicker extends HTMLElement {
 		const style = document.createElement('style');
 		style.textContent = `${initialisation.elementsCss}
 label {
-	display: inline;
+	display: inline-block;
 	color: black;
 	background: white;
 	cursor: pointer;
@@ -29,6 +29,11 @@ label {
 	float: right;
 	opacity: 1;
 	box-shadow: 0 0 0.5em rgb(0, 0, 0, 0.3);
+}
+:host(.home)>label {
+	border-radius: 1em;
+	margin: 0.25em 0;
+	float: initial;
 }`;
 		this._root.appendChild(style);
 		this.setAttribute('style', 'display:none');
@@ -50,6 +55,10 @@ label {
 		var l = user.get('locationPicker'), e = ui.q('dialog-location-picker'), element;
 		if (l && l.length > 1) {
 			if (ui.q('dialog-location-picker').style.display == 'none') {
+				if (ui.navigation.getActiveID() == 'home')
+					ui.classAdd(e, 'home');
+				else
+					ui.classRemove(e, 'home');
 				var s = '';
 				for (var i = l.length - 1; i >= 0; i--) {
 					if (l[i].town != geoData.getCurrent().town) {
@@ -57,6 +66,7 @@ label {
 						element.setAttribute('onclick', 'ui.q("dialog-location-picker").save(' + JSON.stringify(l[i]).replace(/"/g, '\'') + ')');
 						element.innerText = l[i].town;
 						e._root.appendChild(element);
+						e._root.appendChild(document.createElement('br'));
 					}
 				}
 				element = document.createElement('label');

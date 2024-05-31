@@ -428,6 +428,13 @@ dialog-location-picker {
 	padding: 0 0 1em 1em;
 }
 
+dialog-location-picker.home {
+	top: 36vh;
+	padding: 0;
+	width: 100%;
+	text-align: center;
+}
+
 img.qrVerification {
 	width: 20em;
 	border-radius: 1em;
