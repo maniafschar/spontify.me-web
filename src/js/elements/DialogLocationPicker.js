@@ -52,9 +52,10 @@ label {
 			event.preventDefault();
 			event.stopPropagation();
 		}
-		var l = user.get('locationPicker'), e = ui.q('dialog-location-picker'), element;
-		if (l && l.length > 1) {
+		var l = user.get('locationPicker'), e = ui.q('dialog-location-picker');
+		if (l && l.length > 1 && ui.cssValue(e, 'display') == 'none') {
 			if (ui.q('dialog-location-picker').style.display == 'none') {
+				var element;
 				if (ui.navigation.getActiveID() == 'home')
 					ui.classAdd(e, 'home');
 				else
