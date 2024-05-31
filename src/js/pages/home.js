@@ -341,17 +341,6 @@ border-radius: 0.5em 0 0 3em;
 			initialisation.reposition();
 			pageHome.teaserContacts();
 			pageHome.teaserEvents();
-			if (global.config.club) {
-				var f = function () {
-					var e = ui.q('home homeHeader svg text');
-					if (e)
-						e.innerHTML = ui.l('home.news').toLowerCase();
-					else
-						setTimeout(f, 100);
-				}
-				f();
-				ui.css('home text.town', 'display', 'none');
-			}
 		}
 		pageHome.initNotificationButton();
 		if (user.contact)

@@ -640,8 +640,8 @@ poll result div {
 				if (v.event.type == 'Poll') {
 					var json = JSON.parse(v.event.description);
 					text = json.q;
-					for (var i = 0; i < json.a.length; i++)
-						text += ' ' + json.a[i];
+					for (var i2 = 0; i2 < json.a.length; i2++)
+						text += ' ' + json.a[i2];
 				} else
 					text = v.event.description;
 				text += '<br/>' + (v.event.id && v.address ? v.address : skills.text());
