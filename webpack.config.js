@@ -143,6 +143,7 @@ module.exports = (env) => {
 							fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
 								.replace(/\${infoDescription}/g, props[languages[i]].infoDescription.replace(/"/g, '\\"'))
 								.replace(/\${introDescription}/g, props[languages[i]].introDescription.replace(/"/g, '\\"'))
+								.replace(/\${marketingOpenArticleText}/g, props[languages[i]].marketingOpenArticleText)
 								.replace(/\${buddy}/g, props[languages[i]].buddy)
 								.replace(/\${buddies}/g, props[languages[i]].buddies)
 								.replace('"{skills}",', props[languages[i]].skills ? JSON.stringify(props[languages[i]].skills) + ',' : ''));

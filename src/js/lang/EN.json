@@ -425,6 +425,8 @@
 			"locationPickerButtonReset": "Reset",
 			"locationPickerButtonSet": "Fix location",
 			"locationPickerTitle": "Choose location",
+			"marketingOpenArticleButton": "Open article",
+			"marketingOpenArticleText": "${marketingOpenArticleText}",
 			"news": "News",
 			"noNews": "Currently no News in and arround {0}.",
 			"noNewsClub": "No News yet from your club.",

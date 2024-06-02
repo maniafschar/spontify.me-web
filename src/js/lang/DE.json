@@ -425,6 +425,8 @@
 			"locationPickerButtonReset": "aktueller Standort",
 			"locationPickerButtonSet": "Standort festlegen",
 			"locationPickerTitle": "Standort wählen",
+			"marketingOpenArticleButton": "Artikel öffnen",
+			"marketingOpenArticleText": "${marketingOpenArticleText}",
 			"news": "News",
 			"noNews": "Noch gibt es hier keine News in und um {0}.",
 			"noNewsClub": "Noch gibt es keine News von Deinem Verein.",

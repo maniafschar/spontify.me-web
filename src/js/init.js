@@ -416,12 +416,13 @@ class initialisation {
 		var p = global.getParam();
 		if (p) {
 			setTimeout(function () {
-				ui.navigation.autoOpen(p);
-			}, 100);
+				if (ui.q('head link[rel="canonical"]').getAttribute('href').split('/').length > 4)
+					ui.navigation.openHint({ desc: '<div style="width:100%;max-height:80vh;overflow-y:auto;">' + ui.l('home.marketingOpenArticleText') + '<br/><br/><button-text onclick="ui.navigation.autoOpen(&quot;' + p + '&quot;)" label="home.marketingOpenArticleButton"></button-text></div>', pos: '5%,2em', size: '90%,auto', onclick: 'return false;' });
+				else
+					ui.navigation.autoOpen(p);
+			}, 2500);
 		} else
 			ui.html('head title', global.appTitle);
-		if (!user.contact && user.clientId == 7 && !p)
-			setTimeout(ui.navigation.openIntro, 2000);
 	}
 	static statusBar(toggle) {
 		if (!global.isBrowser()) {
