@@ -3,8 +3,9 @@
 	--bg1stop: rgb(245, 239, 232);
 	--bg2start: rgb(20, 20, 40);
 	--bg2stop: rgb(67, 67, 107);
-	--bg3start: rgb(130, 209, 60, 0.95);
-	--bg3stop: rgb(175, 250, 100, 0.95);
+	--bg3start: rgba(130, 209, 60, 0.95);
+	--bg3stop: rgba(175, 250, 100, 0.95);
+	--bgText: rgba(255, 255, 255, 0.4);
 	--buttonText: rgb(255, 255, 255);
 	--popupText: rgb(0, 0, 0);
 	--bgHint: rgb(170, 255, 255);
