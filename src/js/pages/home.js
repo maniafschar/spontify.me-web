@@ -465,11 +465,11 @@ border-radius: 0.5em 0 0 3em;
 		var e = ui.q('home text.town');
 		if (e) {
 			var s = geoData.getCurrent().town.toLowerCase();
-			if (e.innerText != s) {
+			if (e.innerHTML.trim() != s) {
 				pageHome.teaserContacts();
 				pageHome.teaserEvents();
+				e.innerHTML = s;
 			}
-			e.innerHTML = s;
 		}
 	}
 	static teaserContacts() {
