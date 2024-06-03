@@ -163,11 +163,11 @@ chart {
 		initialisation.setLanguage(lang);
 	}
 	static open(data) {
-		if (!data || new Date().getTime() / 60000 - DialogHint.lastHint < 4)
+		var e = ui.q('dialog-hint');
+		if (!e || !data || new Date().getTime() / 60000 - DialogHint.lastHint < 4)
 			return;
 		if (data.action)
 			eval(data.action);
-		var e = ui.q('dialog-hint');
 		if (global.hash(data.desc) == e.getAttribute('i')) {
 			DialogHint.close();
 			return;

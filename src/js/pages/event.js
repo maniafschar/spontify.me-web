@@ -478,7 +478,7 @@ poll result div {
 			DialogHint.close();
 			selectable(event.detail.value);
 		});
-		ui.q('dialog-popup input-date[name="startDate"]').addEventListener('Date', function (event) {
+		ui.on('dialog-popup input-date[name="startDate"]', 'Date', function (event) {
 			if (event.detail.complete == 'true') {
 				var e = ui.q('dialog-popup input-date[name="endDate"]');
 				var d = new Date(event.detail.value);
