@@ -293,7 +293,7 @@ mapEdit {
 		if (v.image)
 			v.image = '<img src="' + global.serverImg + v.image + '" />';
 		else
-			v.image = '<div class="mainBG" style="padding:8em;"><img source="' + (v.event.id ? 'events' : 'locations') + '" /></div>';
+			v.image = '<div class="mainBG" style="padding:20%;"><img source="' + (v.event.id ? 'events' : 'locations') + '" /></div>';
 		var r = v.event.id ? v.event.rating : eventWithLocation ? v.rating : v.contact.rating;
 		if (r > 0) {
 			if (v.event.id)
