@@ -244,7 +244,7 @@ ${v.matchIndicatorHintDescription}
 		if (v.image)
 			v.image = '<img src="' + global.serverImg + v.image + '"/>';
 		else {
-			v.image = '<div class="mainBG" style="padding:8em;"><img source="contacts" ' + (preview ? 'class="fade"' : '') + '/></div>';
+			v.image = '<div class="mainBG" style="padding:20%;"><img source="contacts" ' + (preview ? 'class="fade"' : '') + '/></div>';
 			if (preview)
 				v.previewHintImage = '<previewHint class="image">' + ui.l('settings.previewHintImage') + '</previewHint>';
 		}
