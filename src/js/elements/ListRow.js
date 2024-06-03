@@ -39,7 +39,10 @@ text {
 text title {
 	padding-right: 1em;
 	position: relative;
-    display: block;
+	display: block;
+ 	white-space: nowrap;
+	text-overflow: ellipsis;
+ 	overflow: hidden;
 }
 
 flag {
