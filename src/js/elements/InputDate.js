@@ -254,7 +254,7 @@ next::after {
 	}
 	selectDay(i, next) {
 		this.setValue('Day', i ? ('0' + i).slice(-2) : null, parseInt(i));
-		if (next) {
+		if (next && this.get('hour')) {
 			if (this.get('hour').getAttribute('value'))
 				ui.navigation.closeHint();
 			else
@@ -281,7 +281,7 @@ next::after {
 		else
 			this.setValue('Month', null);
 		this.resetDay();
-		if (next) {
+		if (next && this.get('hour')) {
 			if (this.get('hour').getAttribute('value'))
 				ui.navigation.closeHint();
 			else
@@ -292,7 +292,7 @@ next::after {
 		this.setValue('Year', i);
 		this.resetMonth();
 		this.resetDay();
-		if (next) {
+		if (next && this.get('hour')) {
 			if (this.get('hour').getAttribute('value'))
 				ui.navigation.closeHint();
 			else
