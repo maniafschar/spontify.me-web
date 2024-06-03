@@ -15,7 +15,7 @@ div {
 	text-align: left;
 	overflow: hidden;
 	cursor: pointer;
-	background: rgba(255, 255, 255, 0.4);
+	background: var(--bgText);
 	margin: 1em 0 0.5em 0;
 	height: 6em;
 	transition: all 0.4s ease-out;
