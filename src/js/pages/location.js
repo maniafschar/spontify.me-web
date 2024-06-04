@@ -728,10 +728,10 @@ mapEdit {
 				}
 				if (v.values.favorite) {
 					ui.classAdd('detail card:last-child button-text[name="buttonFavorite"]', 'favorite');
-					ui.classAdd('row.location[i="' + id + '"]', 'favorite');
+					ui.classAdd('list-row.location[i="' + id + '"]', 'favorite');
 				} else {
 					ui.classRemove('detail card:last-child button-text.favorite', 'favorite');
-					ui.classRemove('row.location[i="' + id + '"]', 'favorite');
+					ui.classRemove('list-row.location[i="' + id + '"]', 'favorite');
 				}
 			}
 		});
