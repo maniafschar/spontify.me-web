@@ -25,7 +25,7 @@ class pageContact {
 				${v.idDisplay}
 			</subtitle>
 		</detailTitle>
-		<detailDistance>
+		<detailDistance${v.distanceClass}>
 			${v.gender}
 			<km>${v.distance}</km>
 		</detailDistance>
@@ -244,6 +244,11 @@ ${v.matchIndicatorHintDescription}
 		if (v.id == user.clientId) {
 			v.image = '<img source="images/admin.svg"/>';
 			v.hideAdmin = ' hidden';
+			v.urls = null;
+			v.rating = 0;
+			v.skills = '';
+			v.matchIndicatorClass = ' class="hidden"';
+			v.distanceClass = ' class="hidden"';
 		} else if (v.image)
 			v.image = '<img src="' + global.serverImg + v.image + '"/>';
 		else {
