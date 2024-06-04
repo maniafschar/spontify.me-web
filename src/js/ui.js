@@ -233,16 +233,14 @@ class ui {
 						});
 						return true;
 					}
-					if (id.indexOf('chat=') != 0 && id.indexOf('m=') != 0) {
-						id = global.decParam(id);
-						if (!id)
-							return false;
-					}
 					if (id.indexOf('chat=') == 0) {
 						if (user.contact)
 							pageChat.open(id.substring(5));
 						return;
 					}
+					id = global.decParam(id);
+					if (!id)
+						return false;
 					var idIntern = id.indexOf('&') > 0 ? id.substring(0, id.indexOf('&')) : id;
 					ui.navigation.closePopup();
 					if (idIntern.indexOf('l=') == 0)
