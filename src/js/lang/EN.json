@@ -219,6 +219,7 @@
 			"videoPermissionHintPending": "You already have sent a friends request to the ${buddy}, he is allowed to call you."
 		},
 		"contacts": {
+			"adminDescription": "If you need help with ${appTitle}, you can always contact me.\nFrom time to time I'll also get in touch to give you a tip or two.",
 			"age": "{0} years old",
 			"bday": "Born on {0}",
 			"birthdayToday": "has birthday today",
