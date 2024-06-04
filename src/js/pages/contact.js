@@ -59,17 +59,17 @@ ${v.matchIndicatorHintDescription}
 		onclick="ui.navigation.goTo(&quot;login&quot;)" label="login.action"></button-text>
 	<button-text class="${v.blocked}${v.hideMe}"
 		onclick="pageChat.open(${v.id})" label="chat.title"></button-text>
-	<button-text class="${v.blocked}${v.hideMe}" name="buttonFriend"
+	<button-text class="${v.blocked}${v.hideMe}${v.hideAdmin}" name="buttonFriend"
 		onclick="pageContact.toggleFriend(${v.id})" label="${v.labelFriend}"></button-text>
-	<button-text class="${v.blocked}${v.hideMe}" name="buttonCopy"
+	<button-text class="${v.blocked}${v.hideMe}${v.hideAdmin}" name="buttonCopy"
 		onclick="pageChat.doCopyLink(event,&quot;p=${v.id}&quot;)" label="chat.share"></button-text>
-	<button-text class="${v.blocked}${v.hideMe}" name="buttonGroups"
+	<button-text class="${v.blocked}${v.hideMe}${v.hideAdmin}" name="buttonGroups"
 		onclick="groups.toggleGroups(${v.id},&quot;${v.contactLinkStatus}&quot;)" label="group.action"></button-text>
-	<button-text class="${v.blocked}" name="buttonEvents"
+	<button-text class="${v.blocked}${v.hideAdmin}" name="buttonEvents"
 		onclick="pageEvent.toggle(${v.id})" label="events.title"></button-text>
-	<button-text class="${v.blocked}" name="buttonLocation"
+	<button-text class="${v.blocked}${v.hideAdmin}" name="buttonLocation"
 		onclick="pageContact.toggleLocation(${v.id})" label="locations.title"></button-text>
-	<button-text class="${v.blocked}${v.hideMe}" name="buttonBlock"
+	<button-text class="${v.blocked}${v.hideMe}${v.hideAdmin}" name="buttonBlock"
 		onclick="pageContact.toggleBlockUser(${v.id})" label="contacts.blockAction"></button-text>
 </detailButtons>
 <text name="friend" class="collapsed">
@@ -241,7 +241,10 @@ ${v.matchIndicatorHintDescription}
 			v.blocked = 'hidden';
 		else if (user.contact.id == v.id)
 			v.hideMe = ' hidden';
-		if (v.image)
+		if (v.id == user.clientId) {
+			v.image = '<img source="images/admin.svg"/>';
+			v.hideAdmin = ' hidden';
+		} else if (v.image)
 			v.image = '<img src="' + global.serverImg + v.image + '"/>';
 		else {
 			v.image = '<div class="mainBG" style="padding:20%;"><img source="contacts" ' + (preview ? 'class="fade"' : '') + '/></div>';
