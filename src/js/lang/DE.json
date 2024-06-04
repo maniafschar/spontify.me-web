@@ -219,6 +219,7 @@
 			"videoPermissionHintPending": "Du hast bereits eine Freundschaftsanfrage dem ${buddy} gesendet, er kann Dich anrufen."
 		},
 		"contacts": {
+			"adminDescription": "Für Hilfe rund um ${appTitle} kannst Du mich jederzeit anschreiben.\nAb und an melde ich mich auch, um Dir den einen oder anderen Hinweis zu geben.",
 			"age": "{0} Jahre jung",
 			"bday": "Geboren am {0}",
 			"birthdayToday": "hat heute Geburtstag",
