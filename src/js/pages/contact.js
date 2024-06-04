@@ -249,6 +249,7 @@ ${v.matchIndicatorHintDescription}
 			v.skills = '';
 			v.matchIndicatorClass = ' class="hidden"';
 			v.distanceClass = ' class="hidden"';
+			v.description = ui.l('contacts.adminDescription');
 		} else if (v.image)
 			v.image = '<img src="' + global.serverImg + v.image + '"/>';
 		else {
