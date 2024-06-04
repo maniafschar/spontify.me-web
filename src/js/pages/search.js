@@ -104,7 +104,7 @@ class pageSearch {
 			v = ui.q('search tabBody div.contacts input-hashtags').getAttribute('ids');
 			if (v)
 				s3 += (s3 ? ' or ' : '') + global.getRegEx('contact.skills', v);
-			return 'contact.id<>' + user.contact.id + s + (s3 ? ' and (' + s3 + ')' : '');
+			return 'contact.id<>' + user.clientId + ' and contact.id<>' + user.contact.id + s + (s3 ? ' and (' + s3 + ')' : '');
 		},
 		search() {
 			if (ui.q('search tabBody div.contacts [name="matches"][checked="true"]') && !user.contact.skills && !user.contact.skillsText)
