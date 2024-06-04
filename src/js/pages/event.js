@@ -196,7 +196,7 @@ poll result div {
 }
 </style>
 <text class="description event" ${v.oc}>
-<div><span class="chatLinks" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;),event)"><img ${v.imageEventOwner}/><br>${v.contact.pseudonym}</span></div>
+<div><span class="chatLinks${v.hideOwner}" onclick="ui.navigation.autoOpen(global.encParam(&quot;p=${v.event.contactId}&quot;),event)"><img ${v.imageEventOwner}/><br>${v.contact.pseudonym}</span></div>
 <div class="date eventMargin">${v.date}${v.endDate}</div>
 <div class="eventMargin">${v.text}</div>
 <div class="eventMargin">${v.maxParticipants}</div>
@@ -291,7 +291,9 @@ poll result div {
 			v.eventPrice = ui.l('events.priceDisp0');
 		if (v.event.maxParticipants)
 			v.maxParticipants = ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
-		if (v.contact.imageList)
+		if (e.event.contactId == user.clientId)
+			v.hideOwner = ' hidden';
+		else if (v.contact.imageList)
 			v.imageEventOwner = 'src="' + global.serverImg + v.contact.imageList + '"';
 		else
 			v.imageEventOwner = 'source="contacts" style="padding:1em;"';
