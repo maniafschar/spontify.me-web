@@ -197,7 +197,7 @@ mapEdit {
 			v.values.locationId = id;
 		communication.ajax({
 			url: global.serverApi + 'db/one',
-			webCall: 'pageLocation.block',
+			webCall: 'location.block',
 			method: v.id ? 'PUT' : 'POST',
 			body: v,
 			success() {
@@ -223,7 +223,7 @@ mapEdit {
 			}
 			communication.ajax({
 				url: global.serverApi + 'db/one',
-				webCall: 'pageLocation.deleteElement',
+				webCall: 'location.deleteElement',
 				method: 'DELETE',
 				body: { classname: classname, id: id },
 				success(r) {
@@ -335,7 +335,7 @@ mapEdit {
 		if (v.address && user.contact)
 			communication.ajax({
 				url: global.serverApi + 'action/map?source=' + geoData.getCurrent().lat + ',' + geoData.getCurrent().lon + '&destination=' + v.latitude + ',' + v.longitude,
-				webCall: 'pageLocation.detailLocationEvent',
+				webCall: 'location.detailLocationEvent',
 				progressBar: false,
 				success(r) {
 					var x = 0, f = function () {
@@ -404,7 +404,7 @@ mapEdit {
 			pageLocation.mapEdit.load = setTimeout(function () {
 				communication.ajax({
 					url: global.serverApi + 'action/google?param=' + encodeURIComponent('latlng=' + pageLocation.mapEdit.canvas.getCenter().lat() + ',' + pageLocation.mapEdit.canvas.getCenter().lng()),
-					webCall: 'pageLocation.editMap',
+					webCall: 'location.editMap',
 					responseType: 'json',
 					success(r) {
 						if (r.formatted) {
@@ -422,7 +422,7 @@ mapEdit {
 				pageLocation.mapEdit.load = setTimeout(function () {
 					communication.ajax({
 						url: global.serverApi + 'action/google?param=' + encodeURIComponent('town=' + ui.val('dialog-popup [name="address"]').trim()),
-						webCall: 'pageLocation.editMap',
+						webCall: 'location.editMap',
 						responseType: 'json',
 						success(r) {
 							if (r && r.length) {
@@ -476,7 +476,7 @@ mapEdit {
 				oc = 'pageSettings.unblock(' + v.id + ',' + v.block.id + ')';
 			else
 				oc = 'details.open(&quot;' + v.id + '&quot;,' + JSON.stringify({
-					webCall: 'pageLocation.listLocation', query: 'location_list', search: encodeURIComponent('location.id=' + v.id)
+					webCall: 'location.listLocation', query: 'location_list', search: encodeURIComponent('location.id=' + v.id)
 				}).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)';
 			s += global.template`<list-row onclick="${oc}" i="${v.id}" class="location${v.locationFavorite.favorite ? ' favorite' : ''}"
 					title="${encodeURIComponent(v.name)}"
@@ -499,7 +499,7 @@ mapEdit {
 		if (geoData.localized && ui.q('input[name="name"]') && !ui.val('[name="address"]')) {
 			communication.ajax({
 				url: global.serverApi + 'action/google?param=' + encodeURIComponent('latlng=' + geoData.getCurrent().lat + ',' + geoData.getCurrent().lon),
-				webCall: 'pageLocation.prefillAddress',
+				webCall: 'location.prefillAddress',
 				responseType: 'json',
 				success(r) {
 					if (r.formatted && !ui.val('[name="address"]'))
@@ -511,7 +511,7 @@ mapEdit {
 	static showLocationsNearby(event) {
 		communication.ajax({
 			url: global.serverApi + 'action/google?param=' + encodeURIComponent('place/nearbysearch/json?radius=100&sensor=false&location=' + ui.val('dialog-popup [name="latitude"]') + ',' + ui.val('dialog-popup [name="longitude"]')),
-			webCall: 'pageLocation.showLocationsNearby',
+			webCall: 'location.showLocationsNearby',
 			responseType: 'json',
 			success(r) {
 				if (r.status == 'OK') {
@@ -568,7 +568,7 @@ mapEdit {
 			v.id = id;
 		communication.ajax({
 			url: global.serverApi + 'db/one',
-			webCall: 'pageLocation.save',
+			webCall: 'location.save',
 			method: id ? 'PUT' : 'POST',
 			body: v,
 			error(e) {
@@ -584,7 +584,7 @@ mapEdit {
 				user.remove('location');
 				if (!r)
 					r = id;
-				details.open(r, { webCall: 'pageLocation.save', query: 'location_list', search: encodeURIComponent('location.id=' + r) }, id ? function (l, id) {
+				details.open(r, { webCall: 'location.save', query: 'location_list', search: encodeURIComponent('location.id=' + r) }, id ? function (l, id) {
 					ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id);
 					formFunc.svg.replaceAll();
 				} : pageLocation.detailLocationEvent);
@@ -692,7 +692,7 @@ mapEdit {
 		if (!e.getAttribute('blockID')) {
 			communication.ajax({
 				url: global.serverApi + 'db/one?query=misc_block&search=' + encodeURIComponent('block.contactId=' + user.contact.id + ' and ' + (id.indexOf && id.indexOf('_') > 0 ? 'block.eventId=' + id.substring(0, id.indexOf('_')) : 'block.locationId=' + id)),
-				webCall: 'pageLocation.toggleBlock',
+				webCall: 'location.toggleBlock',
 				success(r) {
 					if (r) {
 						var v = JSON.parse(r);
@@ -718,7 +718,7 @@ mapEdit {
 			v.values = { locationId: id };
 		communication.ajax({
 			url: global.serverApi + 'db/one',
-			webCall: 'pageLocation.toggleFavorite',
+			webCall: 'location.toggleFavorite',
 			method: idFav ? 'PUT' : 'POST',
 			body: v,
 			success(r) {

@@ -243,7 +243,7 @@ poll result div {
 				communication.ajax({
 					url: global.serverApi + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + v.event.id
 						+ (v.event.repetition == 'o' ? '' : ' and eventParticipate.eventDate=cast(\'' + v.id.split('_')[1] + '\' as timestamp)')),
-					webCall: 'pageEvent.detail',
+					webCall: 'event.detail',
 					responseType: 'json',
 					success(r) {
 						if (ui.q('detail card[i="' + v.id + '"]')) {
@@ -328,7 +328,7 @@ poll result div {
 		if (!pageEvent.paypal.fee) {
 			communication.ajax({
 				url: global.serverApi + 'action/paypalKey',
-				webCall: 'pageEvent.edit',
+				webCall: 'event.edit',
 				responseType: 'json',
 				success(r) {
 					pageEvent.paypal.fee = r.fee;
@@ -345,7 +345,7 @@ poll result div {
 			d.setDate(d.getDate() + 1);
 			communication.ajax({
 				url: global.serverApi + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contactVideoCall.time>cast(\'' + global.date.local2server(d) + '\' as timestamp)'),
-				webCall: 'pageEvent.edit',
+				webCall: 'event.edit',
 				responseType: 'json',
 				success(r) {
 					for (var i = 1; i < r.length; i++) {
@@ -582,7 +582,7 @@ poll result div {
 		if (!pageLocation.map.svgLocation)
 			communication.ajax({
 				url: '/images/locations.svg',
-				webCall: 'pageEvent.init',
+				webCall: 'event.init',
 				success(r) {
 					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
 					e.setAttribute('fill', 'black');
@@ -594,7 +594,7 @@ poll result div {
 		if (!pageLocation.map.svgMe)
 			communication.ajax({
 				url: '/images/contacts.svg',
-				webCall: 'pageEvent.init',
+				webCall: 'event.init',
 				success(r) {
 					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
 					e.setAttribute('fill', 'black');
@@ -665,7 +665,7 @@ poll result div {
 				if (ui.navigation.getActiveID() == 'settings')
 					oc = 'pageSettings.unblock(&quot;' + v.id + '&quot;,' + v.block.id + ')';
 				else
-					oc = 'details.open(&quot;' + v.idDate + '&quot;,' + JSON.stringify({ webCall: 'pageEvent.listEvents', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)';
+					oc = 'details.open(&quot;' + v.idDate + '&quot;,' + JSON.stringify({ webCall: 'event.listEvents', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)';
 				s += global.template`<list-row onclick="${oc}" i="${v.idDate}" class="event${clazz ? ' ' + clazz : ''}"
 					title="${encodeURIComponent(name)}"
 					text="${encodeURIComponent(text)}"
@@ -733,7 +733,7 @@ poll result div {
 				render();
 			});
 		lists.load({
-			webCall: 'pageEvent.loadEvents',
+			webCall: 'event.loadEvents',
 			query: 'event_listParticipateRaw',
 			search: encodeURIComponent('eventParticipate.contactId=' + user.contact.id)
 		}, function (l) {
@@ -750,7 +750,7 @@ poll result div {
 		var e = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
 		var search = global.getRegEx('contact.skills', e.event.skills) + ' or ' + global.getRegEx('contact.skillsText', e.event.skillsText) + ' and contact.id<>' + user.contact.id;
 		lists.load({
-			webCall: 'pageEvent.loadPotentialParticipants',
+			webCall: 'event.loadPotentialParticipants',
 			query: 'contact_list',
 			distance: 50,
 			latitude: geoData.getCurrent().lat,
@@ -771,7 +771,7 @@ poll result div {
 			pageEvent.nearByExec = setTimeout(function () {
 				communication.ajax({
 					url: global.serverApi + 'action/searchLocation?search=' + encodeURIComponent(s),
-					webCall: 'pageEvent.locations',
+					webCall: 'event.locations',
 					responseType: 'json',
 					success(r) {
 						var s = '', e = ui.q('dialog-popup eventLocationInputHelper ul');
@@ -787,7 +787,7 @@ poll result div {
 	static locationsOfPastEvents() {
 		communication.ajax({
 			url: global.serverApi + 'db/list?query=event_list&search=' + encodeURIComponent('length(location.name)>0 and event.contactId=' + user.contact.id),
-			webCall: 'pageEvent.locationsOfPastEvents',
+			webCall: 'event.locationsOfPastEvents',
 			responseType: 'json',
 			success(r) {
 				var s = '', processed = {};
@@ -881,7 +881,7 @@ poll result div {
 		else
 			communication.ajax({
 				url: global.serverApi + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + id.split('_')[0]),
-				webCall: 'pageEvent.detail',
+				webCall: 'event.openPollResult',
 				responseType: 'json',
 				success: render
 			});
@@ -1061,13 +1061,13 @@ poll result div {
 		communication.ajax({
 			url: global.serverApi + 'db/one',
 			method: id ? 'PUT' : 'POST',
-			webCall: 'pageEvent.save',
+			webCall: 'event.save',
 			body: v,
 			success(r) {
 				ui.navigation.closePopup();
 				user.remove('event');
 				details.open(id ? ui.q('detail card:last-child').getAttribute('i') : r + '_' + global.date.local2server(v.values.startDate).substring(0, 10),
-					{ webCall: 'pageEvent.save', query: 'event_list', search: encodeURIComponent('event.id=' + (id ? id : r)) },
+					{ webCall: 'event.save', query: 'event_list', search: encodeURIComponent('event.id=' + (id ? id : r)) },
 					id ? function (l, id) { ui.q('detail card:last-child').innerHTML = pageLocation.detailLocationEvent(l, id); } : pageLocation.detailLocationEvent);
 				pageEvent.refreshToggle();
 				document.dispatchEvent(new CustomEvent('Event', { detail: { action: 'save', ...v } }));
@@ -1117,7 +1117,7 @@ poll result div {
 		}
 		communication.ajax({
 			url: global.serverApi + 'db/one',
-			webCall: 'pageEvent.participate',
+			webCall: 'event.saveParticipation',
 			method: e.eventParticipate.id ? 'PUT' : 'POST',
 			body: d,
 			success(r) {
@@ -1221,7 +1221,7 @@ poll result div {
 				var field = ui.q('detail card:last-child').getAttribute('type');
 				communication.ajax({
 					url: global.serverApi + 'db/list?query=event_list&search=' + encodeURIComponent('event.' + field + 'Id=' + id),
-					webCall: 'pageEvent.toggle',
+					webCall: 'event.toggle',
 					responseType: 'json',
 					success(r) {
 						pageEvent.toggleInternal(r, id, field);
@@ -1265,7 +1265,7 @@ poll result div {
 					text = '<br/>' + v.name + text;
 				s += global.template`<list-row
 					${v.eventParticipate.state == 1 ? ' class="participate"' : v.eventParticipate.state == -1 ? ' class="canceled"' : ''}
-					onclick="details.open(&quot;${idIntern}&quot;,${JSON.stringify({ webCall: 'pageEvent.toggleInternal', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;')},pageLocation.detailLocationEvent)"
+					onclick="details.open(&quot;${idIntern}&quot;,${JSON.stringify({ webCall: 'event.toggleInternal', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;')},pageLocation.detailLocationEvent)"
 					title="${encodeURIComponent(title)}"
 					text="${encodeURIComponent(text)}"
 					image="${image}">
@@ -1289,7 +1289,7 @@ poll result div {
 			else {
 				var id = decodeURIComponent(ui.q('detail card:last-child').getAttribute('i')).split('_');
 				lists.load({
-					webCall: 'pageEvent.toggleParticipants',
+					webCall: 'event.toggleParticipants',
 					query: 'event_listParticipate',
 					latitude: geoData.getCurrent().lat,
 					longitude: geoData.getCurrent().lon,
@@ -1314,7 +1314,7 @@ poll result div {
 		}
 		communication.ajax({
 			url: global.serverApi + 'db/list?query=event_listParticipate&search=' + encodeURIComponent('eventParticipate.eventId=' + id[0] + ' and eventParticipate.eventDate=cast(\'' + id[1] + '\' as timestamp) and eventParticipate.contactId=' + u + ' and eventParticipate.contactId=contact.id'),
-			webCall: 'pageEvent.verifyParticipation',
+			webCall: 'event.verifyParticipation',
 			responseType: 'json',
 			success(r) {
 				if (r.length > 1) {

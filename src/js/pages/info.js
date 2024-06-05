@@ -48,7 +48,7 @@ class pageInfo {
 			}
 			communication.ajax({
 				url: global.serverApi + 'action/paypalKey',
-				webCall: 'pageInfo.init',
+				webCall: 'info.init',
 				responseType: 'json',
 				success(r) {
 					render(r);
@@ -91,7 +91,7 @@ class pageInfo {
 				ui.navigation.openHint({ desc: '<div style="margin:0 0.5em 1em 0.5em;">' + ui.l('info.recommend') + '</div><button-text style="margin-top:0.5em;" onclick="pageInfo.socialShare()" label="Yes"></button-text>', pos: '15%,20vh', size: '70%,auto' });
 				setTimeout(function () {
 					if (ui.q('dialog-hint button-text[onclick*="socialShare"]'))
-						user.save({ webCall: 'pageInfo.socialShareDialog', recommend: global.date.local2server(new Date()) });
+						user.save({ webCall: 'info.socialShareDialog', recommend: global.date.local2server(new Date()) });
 				}, 1500);
 			} else
 				setTimeout(pageInfo.socialShareDialog, 2000);

@@ -85,6 +85,7 @@ module.exports = (env) => {
 						};
 						processFiles(dir);
 						processFiles(dir + 'elements/');
+						processFiles(dir + 'pages/');
 					})
 				}
 			},

@@ -138,7 +138,7 @@ ${v.matchIndicatorHintDescription}
 		communication.ajax({
 			url: global.serverApi + 'db/one',
 			method: v.id ? 'PUT' : 'POST',
-			webCall: 'pageContact.block',
+			webCall: 'contact.block',
 			body: v,
 			success() {
 				var e = ui.q('contacts [i="' + id + '"]');
@@ -153,7 +153,7 @@ ${v.matchIndicatorHintDescription}
 	static confirmFriendship(linkId, status, id) {
 		communication.ajax({
 			url: global.serverApi + 'db/one',
-			webCall: 'pageContact.confirmFriendship',
+			webCall: 'contact.confirmFriendship',
 			method: 'PUT',
 			body: { classname: 'ContactLink', id: linkId, values: { status: status } },
 			success() {
@@ -355,9 +355,9 @@ ${v.matchIndicatorHintDescription}
 			else if (activeID == 'info')
 				oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)';
 			else if (v.contactNotification.id)
-				oc = 'details.open(' + v.id + ',' + JSON.stringify({ webCall: 'pageContact.listContacts', query: 'contact_listNotification', search: encodeURIComponent('contactNotification.id=' + v.contactNotification.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)';
+				oc = 'details.open(' + v.id + ',' + JSON.stringify({ webCall: 'contact.listContacts', query: 'contact_listNotification', search: encodeURIComponent('contactNotification.id=' + v.contactNotification.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)';
 			else
-				oc = 'details.open(' + v.id + ',' + JSON.stringify({ webCall: 'pageContact.listContacts', query: 'contact_list', search: encodeURIComponent('contact.id=' + v.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)';
+				oc = 'details.open(' + v.id + ',' + JSON.stringify({ webCall: 'contact.listContacts', query: 'contact_list', search: encodeURIComponent('contact.id=' + v.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)';
 			s += global.template`<list-row onclick="${oc}" i="${v.id}" class="contact${v.contactLink.status == 'Friends' ? ' favorite' : ''}"
 				title="${encodeURIComponent(v.pseudonym + (birth.age ? ' (' + birth.age + ')' : ''))}"
 				text="${encodeURIComponent(text)}"
@@ -374,7 +374,7 @@ ${v.matchIndicatorHintDescription}
 			return;
 		communication.ajax({
 			url: global.serverApi + 'db/one',
-			webCall: 'pageContact.sendRequestForFriendship',
+			webCall: 'contact.sendRequestForFriendship',
 			method: 'POST',
 			body: { classname: 'ContactLink', values: { contactId2: id } },
 			success(r) {
@@ -409,7 +409,7 @@ ${v.matchIndicatorHintDescription}
 		if (!e.getAttribute('blockID')) {
 			communication.ajax({
 				url: global.serverApi + 'db/one?query=misc_block&search=' + encodeURIComponent('block.contactId=' + user.contact.id + ' and block.contactId2=' + id),
-				webCall: 'pageContact.toggleBlockUser',
+				webCall: 'contact.toggleBlockUser',
 				success(r) {
 					if (r) {
 						var v = JSON.parse(r);
@@ -429,7 +429,7 @@ ${v.matchIndicatorHintDescription}
 		var e = ui.q('detail card:last-child[i="' + id + '"] [name="location"]');
 		if (!e.innerHTML) {
 			lists.load({
-				webCall: 'pageContact.toggleLocation',
+				webCall: 'contact.toggleLocation',
 				latitude: geoData.getCurrent().lat,
 				longitude: geoData.getCurrent().lon,
 				distance: -1,
@@ -474,7 +474,7 @@ class groups {
 			communication.ajax({
 				url: global.serverApi + 'db/one',
 				body: d,
-				webCall: 'pageContact.addToGroup',
+				webCall: 'contact.addToGroup',
 				method: d.id ? 'DELETE' : 'POST',
 				pos: e.getAttribute('value'),
 				success(r) {
@@ -496,7 +496,7 @@ class groups {
 		communication.ajax({
 			url: global.serverApi + 'db/one',
 			method: 'DELETE',
-			webCall: 'pageContact.delete',
+			webCall: 'contact.delete',
 			body: { classname: 'ContactGroup', id: ui.q('input-checkbox[name="groupdialog"][checked="true"]').getAttribute('value') },
 			success() {
 				groups.getGroups(function () {
@@ -514,7 +514,7 @@ class groups {
 	static getGroups(exec) {
 		communication.ajax({
 			url: global.serverApi + 'db/list?query=contact_listGroup&search=' + encodeURIComponent('contactGroup.contactId=' + user.contact.id),
-			webCall: 'pageContact.getGroups',
+			webCall: 'contact.getGroups',
 			responseType: 'json',
 			success(r) {
 				groups.setGroups(r);
@@ -528,7 +528,7 @@ class groups {
 		if (!v)
 			return;
 		lists.load({
-			webCall: 'pageContact.loadListGroups',
+			webCall: 'contact.loadListGroups',
 			latitude: geoData.getCurrent().lat,
 			longitude: geoData.getCurrent().lon,
 			query: 'contact_listGroupLink',
@@ -579,7 +579,7 @@ class groups {
 		communication.ajax({
 			url: global.serverApi + 'db/one',
 			responseType: 'json',
-			webCall: 'pageContact.rename',
+			webCall: 'contact.rename',
 			method: 'PUT',
 			body: { classname: 'ContactGroup', id: ui.q('input-checkbox[name="groupdialog"][checked="true"]').getAttribute('value'), values: { name: s } },
 			success(r) {
@@ -599,7 +599,7 @@ class groups {
 		communication.ajax({
 			url: global.serverApi + 'db/one',
 			method: 'POST',
-			webCall: 'pageContact.saveGroup',
+			webCall: 'contact.saveGroup',
 			body: { classname: 'ContactGroup', values: { name: e.value.replace(/</g, '&lt;') } },
 			success() {
 				ui.navigation.closePopup();
@@ -660,7 +660,7 @@ class groups {
 			formFunc.initFields(ui.q(path));
 			communication.ajax({
 				url: global.serverApi + 'db/list?query=contact_listGroupLink&search=' + encodeURIComponent('contactGroupLink.contactId2=' + id),
-				webCall: 'pageContact.toggleGroups',
+				webCall: 'contact.toggleGroups',
 				responseType: 'json',
 				success(r) {
 					for (var i = 1; i < r.length; i++) {

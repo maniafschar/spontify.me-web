@@ -227,7 +227,7 @@ class pageChat {
 			url: global.serverApi + 'db/list?query=contact_listChat&limit=0',
 			responseType: 'json',
 			progressBar: false,
-			webCall: 'pageChat.initActiveChats',
+			webCall: 'chat.initActiveChats',
 			success(r) {
 				pageChat.listActiveChats(r);
 			}
@@ -240,7 +240,7 @@ class pageChat {
 		} catch (e) { }
 		communication.ajax({
 			url: global.serverApi + 'action/quotation',
-			webCall: 'pageChat.insertQuote',
+			webCall: 'chat.insertQuote',
 			success(r) {
 				var e = ui.q('#chatText');
 				var p = pageChat.getSelectionBoundary(e, false);
@@ -327,7 +327,7 @@ class pageChat {
 		communication.ajax({
 			url: global.serverApi + 'action/chat/' + id + '/true',
 			responseType: 'json',
-			webCall: 'pageChat.open',
+			webCall: 'chat.open',
 			success(r) {
 				if (!r || r.length < 1)
 					return;
@@ -343,7 +343,7 @@ class pageChat {
 					communication.ajax({
 						url: global.serverApi + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + id),
 						responseType: 'json',
-						webCall: 'pageChat.open',
+						webCall: 'chat.open',
 						success(r2) {
 							ui.attr('chat[i="' + id + '"] listHeader chatName', 'onclick', 'ui.navigation.autoOpen("' + global.encParam('p=' + id) + '",event)');
 							ui.html('chat[i="' + id + '"] listHeader chatName span', r2['contact.pseudonym']);
@@ -418,7 +418,7 @@ class pageChat {
 					communication.ajax({
 						url: global.serverApi + 'db/one?query=contact_chat&search=' + encodeURIComponent('contactChat.id=' + r.chatId),
 						responseType: 'json',
-						webCall: 'pageChat.postSendChatImage',
+						webCall: 'chat.postSendChatImage',
 						success(r2) {
 							var e = document.createElement('div');
 							e.innerHTML = pageChat.renderMsg(model.convert(new ContactChat(), r2));
@@ -438,7 +438,7 @@ class pageChat {
 			communication.ajax({
 				url: global.serverApi + 'action/chat/' + id + '/false',
 				responseType: 'json',
-				webCall: 'pageChat.refresh',
+				webCall: 'chat.refresh',
 				success(r) {
 					var e = ui.q('chat[i="' + id + '"] chatConversation');
 					if (e) {
@@ -546,7 +546,7 @@ class pageChat {
 			communication.ajax({
 				url: global.serverApi + 'db/one',
 				method: 'POST',
-				webCall: 'pageChat.sendChat',
+				webCall: 'chat.sendChat',
 				body: {
 					classname: 'ContactChat',
 					values: v
@@ -588,7 +588,7 @@ class pageChat {
 			communication.ajax({
 				url: global.serverApi + 'action/chatGroups',
 				method: 'POST',
-				webCall: 'pageChat.sendChatGroup',
+				webCall: 'chat.sendChatGroup',
 				body: 'groups=' + s.substring(1) + '&text=' + encodeURIComponent(ui.val('#groupChatText')),
 				success() {
 					ui.navigation.closePopup();
@@ -607,7 +607,7 @@ class pageChat {
 			communication.ajax({
 				url: global.serverApi + 'db/one',
 				method: 'POST',
-				webCall: 'pageChat.sendChatImage',
+				webCall: 'chat.sendChatImage',
 				body: v,
 				error(r) {
 					r = JSON.parse(r.response);
@@ -656,7 +656,7 @@ class pageChat {
 		communication.ajax({
 			url: global.serverApi + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + id),
 			responseType: 'json',
-			webCall: 'pageChat.video',
+			webCall: 'chat.video',
 			success(r) {
 				if (r && (r['contactLink.status'] == 'Friends' || r['contactLink.status'] == 'Pending' && r['contactLink.contactId'] != user.contact.id))
 					ui.startVideoCall(id);

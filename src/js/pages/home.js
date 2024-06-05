@@ -286,7 +286,7 @@ border-radius: 0.5em 0 0 3em;
 		else
 			communication.ajax({
 				url: global.serverApi + 'action/teaser/meta',
-				webCall: 'pageHome.filterOpen',
+				webCall: 'home.filterOpen',
 				responseType: 'json',
 				error() { },
 				success(l) {
@@ -412,7 +412,7 @@ border-radius: 0.5em 0 0 3em;
 		if (id)
 			communication.ajax({
 				url: global.serverApi + 'action/news?id=' + id,
-				webCall: 'pageHome.openNews',
+				webCall: 'home.openNews',
 				responseType: 'json',
 				success(r) {
 					if (r && r.length > 1)
@@ -422,7 +422,7 @@ border-radius: 0.5em 0 0 3em;
 		else
 			communication.ajax({
 				url: global.serverApi + 'action/news' + (global.config.news && geoData.getCurrent().lon ? '?latitude=' + geoData.getCurrent().lat + '&longitude=' + geoData.getCurrent().lon : ''),
-				webCall: 'pageHome.openNews',
+				webCall: 'home.openNews',
 				responseType: 'json',
 				success(l) {
 					pageHome.closeList();
@@ -475,7 +475,7 @@ border-radius: 0.5em 0 0 3em;
 	static teaserContacts() {
 		communication.ajax({
 			url: global.serverApi + 'action/teaser/contacts',
-			webCall: 'pageHome.teaserContacts',
+			webCall: 'home.teaserContacts',
 			responseType: 'json',
 			error() {
 				ui.q('home teaser.contacts>div').innerHTML = ui.l('error.noNetworkConnection');
@@ -486,7 +486,7 @@ border-radius: 0.5em 0 0 3em;
 					var s = '';
 					for (var i = 1; i < l.length; i++) {
 						var e = model.convert(new Contact(), l, i);
-						s += '<card onclick="details.open(' + e.id + ',' + JSON.stringify({ webCall: 'pageHome.teaserContacts', query: 'contact_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('contact.id=' + e.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)"><img src="' + global.serverImg + e.imageList + '"/><text>' + e.pseudonym + '</text></card>';
+						s += '<card onclick="details.open(' + e.id + ',' + JSON.stringify({ webCall: 'home.teaserContacts', query: 'contact_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('contact.id=' + e.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)"><img src="' + global.serverImg + e.imageList + '"/><text>' + e.pseudonym + '</text></card>';
 					}
 					var e = ui.q('home teaser.contacts>div');
 					e.innerHTML = s;
@@ -502,7 +502,7 @@ border-radius: 0.5em 0 0 3em;
 	static teaserEvents(search) {
 		communication.ajax({
 			url: global.serverApi + 'action/teaser/events' + (search && typeof search == 'string' ? '?search=' + encodeURIComponent(search) : ''),
-			webCall: 'pageHome.teaserEvents',
+			webCall: 'home.teaserEvents',
 			responseType: 'json',
 			error(e) { },
 			success(l) {
@@ -538,7 +538,7 @@ border-radius: 0.5em 0 0 3em;
 							s2 = '<img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList ? e[i].imageList : e[i].contact.imageList) + '"/><text>'
 								+ global.date.formatDate(e[i].event.startDate, 'noWeekday') + '<br/>' + e[i].event.description + '</text>';
 						s += '<card onclick="details.open(&quot;' + pageEvent.getId(e[i]) + '&quot;,' + JSON.stringify({
-							webCall: 'pageHome.teaserEvents', query: 'event_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('event.id=' + e[i].event.id)
+							webCall: 'home.teaserEvents', query: 'event_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('event.id=' + e[i].event.id)
 						}).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)">' + s2 + '</card>';
 					}
 				}

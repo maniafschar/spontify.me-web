@@ -113,7 +113,7 @@ class pageSearch {
 				ui.html('search tabBody div.contacts errorHint', '');
 				pageSearch.contacts.fieldValues = formFunc.getForm('search tabBody div.contacts form').values;
 				lists.load({
-					webCall: 'pageSearch.contacts.search',
+					webCall: 'search.contacts.search',
 					latitude: geoData.getCurrent().lat,
 					longitude: geoData.getCurrent().lon,
 					distance: -1,
@@ -212,7 +212,7 @@ ${v.keywords}
 		search() {
 			pageSearch.events.fieldValues = formFunc.getForm('search tabBody div.events form').values;
 			pageEvent.loadEvents({
-				webCall: 'pageSearch.events.search',
+				webCall: 'search.events.search',
 				latitude: geoData.getCurrent().lat,
 				longitude: geoData.getCurrent().lon,
 				distance: 100,
@@ -348,7 +348,7 @@ ${v.keywords}
 		search() {
 			pageSearch.locations.fieldValues = formFunc.getForm('search tabBody div.locations form').values;
 			lists.load({
-				webCall: 'pageSearch.locations.search',
+				webCall: 'search.locations.search',
 				latitude: geoData.getCurrent().lat,
 				longitude: geoData.getCurrent().lon,
 				distance: -1,
