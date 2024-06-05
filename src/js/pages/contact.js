@@ -357,6 +357,8 @@ ${v.matchIndicatorHintDescription}
 		return s;
 	}
 	static sendRequestForFriendship(id) {
+		if (id == user.contact.id)
+			return;
 		communication.ajax({
 			url: global.serverApi + 'db/one',
 			webCall: 'pageContact.sendRequestForFriendship',
