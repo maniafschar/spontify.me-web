@@ -432,7 +432,7 @@ ${v.info}`;
 		user.contact.pseudonym = ui.val('settings input[name="pseudonym"]');
 		user.contact.gender = ui.val('settings input-checkbox[name="gender"][checked="true"]');
 		user.contact.birthday = ui.val('settings input-date[name="birthday"]');
-		user.contact.birthday = ui.val('settings input-checkbox[name="language"][checked="true"]');
+		user.contact.language = ui.val('settings input-checkbox[name="language"][checked="true"]');
 		user.contact.skills = ui.q('settings input-hashtags').getAttribute('ids');
 		user.contact.skillsText = ui.q('settings input-hashtags').getAttribute('text');
 		user.contact.age = user.contact.birthday ? pageContact.getBirthday(user.contact.birthday).age : null;
