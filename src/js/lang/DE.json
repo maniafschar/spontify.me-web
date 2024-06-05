@@ -254,6 +254,7 @@
 			"requestFriendshipConfirm": "Bestätigen",
 			"requestFriendshipFriends": "Freundschaft bestätigt!",
 			"requestFriendshipHint": "Bitte bestätige nur ${buddies}, die Du tatsächlich kennst und mit denen Du auch gerne etwas unternimmst! Im Zweifel, lehne die Anfrage ab!",
+			"requestFriendshipQRAccept": "Ihr seid jetzt befreundet.",
 			"requestFriendshipReject": "Ablehnen",
 			"requestFriendshipRejected": "Freundschaft abgelehnt!",
 			"requestFriendshipRestart": "Freundschaft wiederherstellen",
