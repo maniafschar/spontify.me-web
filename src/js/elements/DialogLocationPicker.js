@@ -81,9 +81,9 @@ label {
 					ui.toggleHeight('dialog-location-picker');
 				} else
 					ui.navigation.closeLocationPicker();
-			}
-		} else if (user.contact)
-			communication.loadMap('ui.navigation.openLocationPickerDialog');
+			} else if (user.contact)
+				communication.loadMap('ui.navigation.openLocationPickerDialog');
+		}
 	}
 	static openDialog() {
 		ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
