@@ -541,6 +541,7 @@ ${v.info}`;
 		var animation = ui.q('settings tabBody').getAttribute('animation');
 		if (animation && new Date().getTime() - animation < 500)
 			return;
+		user.save({ webCall: 'bluetooth.toggle', acceptFriendship: i == 0 });
 		ui.classRemove('settings tab', 'tabActive');
 		ui.classAdd(ui.qa('settings tab')[i], 'tabActive');
 		ui.q('settings tabBody').style.marginLeft = i * -100 + '%';
