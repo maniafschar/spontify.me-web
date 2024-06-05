@@ -29,6 +29,7 @@ class details {
 		}
 	}
 	static init() {
+		formFunc.svg.replaceAll();
 	}
 	static open(id, data, callback) {
 		if (ui.navigation.getActiveID() == 'chat' && ui.q('detail:not([style*="none"])[i="' + id + '"]')) {

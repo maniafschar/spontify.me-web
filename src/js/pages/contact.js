@@ -242,7 +242,7 @@ ${v.matchIndicatorHintDescription}
 		else if (user.contact.id == v.id)
 			v.hideMe = ' hidden';
 		if (v.id == user.clientId) {
-			v.image = '<img source="images/admin.svg"/>';
+			v.image = '<img source="admin"/>';
 			v.hideAdmin = ' hidden';
 			v.urls = null;
 			v.rating = 0;
@@ -250,6 +250,10 @@ ${v.matchIndicatorHintDescription}
 			v.matchIndicatorClass = ' class="hidden"';
 			v.distanceClass = ' class="hidden"';
 			v.description = ui.l('contacts.adminDescription');
+			v.ageDisplay = '';
+			v.birthday = '';
+			v.birthdayClass = '';
+			v.idDisplay = '';
 		} else if (v.image)
 			v.image = '<img src="' + global.serverImg + v.image + '"/>';
 		else {
@@ -318,22 +322,31 @@ ${v.matchIndicatorHintDescription}
 		var image, text, flag1, flag2, flag3, birth;
 		for (var i = 1; i < l.length; i++) {
 			var v = model.convert(new Contact(), l, i);
-			if (v.imageList)
-				image = v.imageList;
-			else
-				image = 'contacts';
-			birth = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
-			var skills = ui.getSkills(v, 'list');
-			flag1 = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
-			flag2 = skills.total && skills.totalMatch ? parseInt('' + (skills.totalMatch / skills.total * 100 + 0.5)) + '%' : '';
-			flag3 = v.gender ? '<img source="gender' + v.gender + '"/>' : '';
-			if (!v._message1)
-				v._message1 = skills.text();
-			if (!v._message2)
-				v._message2 = v.description;
-			text = v._message1 ? v._message1 : '';
-			text += '<br/>';
-			text += v._message2 ? v._message2 : '';
+			if (v.id == user.clientId) {
+				flag1 = '';
+				flag2 = '';
+				flag3 = '';
+				image = 'admin';
+				text = ui.l('contacts.adminDescription');
+				birth = {};
+			} else {
+				if (v.imageList)
+					image = v.imageList;
+				else
+					image = 'contacts';
+				birth = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
+				var skills = ui.getSkills(v, 'list');
+				flag1 = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(0) : '';
+				flag2 = skills.total && skills.totalMatch ? parseInt('' + (skills.totalMatch / skills.total * 100 + 0.5)) + '%' : '';
+				flag3 = v.gender ? '<img source="gender' + v.gender + '"/>' : '';
+				if (!v._message1)
+					v._message1 = skills.text();
+				if (!v._message2)
+					v._message2 = v.description;
+				text = v._message1 ? v._message1 : '';
+				text += '<br/>';
+				text += v._message2 ? v._message2 : '';
+			}
 			var oc;
 			if (activeID == 'detail')
 				oc = 'ui.navigation.autoOpen(&quot;' + global.encParam('p=' + v.id) + '&quot;,event)';
@@ -377,9 +390,9 @@ ${v.matchIndicatorHintDescription}
 							url: global.serverApi + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + id),
 							responseType: 'json',
 							success(r2) {
-								vat contact = model.convert(new Contact(), r2, 1);
+								var c = model.convert(new Contact(), r2, 1);
 								ui.navigation.openPopup(ui.l('contacts.requestFriendshipButton'),
-										ui.l(c.contactLink.status == 'Friends' ? 'contacts.requestFriendshipSent' : 'contacts.requestFriendshipQRAccept'));
+									ui.l(c.contactLink.status == 'Friends' ? 'contacts.requestFriendshipSent' : 'contacts.requestFriendshipQRAccept'));
 							}
 						});
 					}

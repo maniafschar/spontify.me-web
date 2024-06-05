@@ -43,11 +43,11 @@ class pageSearch {
 </form>`,
 		getFields() {
 			var v = {};
-			if (!pageSearch.contacts.fieldValues.keywords)
+			if (pageSearch.contacts.fieldValues.keywords)
 				v.keywords = pageSearch.contacts.fieldValues.keywords;
-			if (!pageSearch.contacts.fieldValues.keywordsText)
+			if (pageSearch.contacts.fieldValues.keywordsText)
 				v.keywordsText = pageSearch.contacts.fieldValues.keywordsText;
-			if (pageSearch.contacts.fieldValues.matches != false)
+			if (pageSearch.contacts.fieldValues.matches)
 				v.matches = ' checked="true"';
 			return pageSearch.contacts.template(v);
 		},
@@ -96,7 +96,7 @@ class pageSearch {
 				for (var i = 0; i < v.length; i++) {
 					if (v[i]) {
 						s2 = v[i].trim().toLowerCase();
-						s3 += 'contact.idDisplay=\'' + s2 + '\' or (contact.search=true and (LOWER(contact.description) like \'%' + s2 + '%\' or LOWER(contact.pseudonym) like \'%' + s2 + '%\' or LOWER(contact.skillsText) like \'%' + s2 + '%\')) or ';
+						s3 += 'contact.idDisplay=\'' + v[i].trim() + '\' or (contact.search=true and (LOWER(contact.description) like \'%' + s2 + '%\' or LOWER(contact.pseudonym) like \'%' + s2 + '%\' or LOWER(contact.skillsText) like \'%' + s2 + '%\')) or ';
 					}
 				}
 				s3 = s3.substring(0, s3.length - 4);
@@ -104,7 +104,7 @@ class pageSearch {
 			v = ui.q('search tabBody div.contacts input-hashtags').getAttribute('ids');
 			if (v)
 				s3 += (s3 ? ' or ' : '') + global.getRegEx('contact.skills', v);
-			return 'contact.id<>' + user.clientId + ' and contact.id<>' + user.contact.id + s + (s3 ? ' and (' + s3 + ')' : '');
+			return (s3.indexOf('contact.idDisplay') > -1 ? '' : 'contact.id<>' + user.clientId + ' and ') + 'contact.id<>' + user.contact.id + s + (s3 ? ' and (' + s3 + ')' : '');
 		},
 		search() {
 			if (ui.q('search tabBody div.contacts [name="matches"][checked="true"]') && !user.contact.skills && !user.contact.skillsText)
@@ -283,12 +283,12 @@ ${v.keywords}
 </form>`,
 		getFields() {
 			var v = {};
-			if (pageSearch.locations.fieldValues.favorites != false)
+			if (pageSearch.locations.fieldValues.favorites)
 				v.favorites = ' checked="true"';
 			if (pageSearch.locations.fieldValues.keywords)
 				v.keywords = pageSearch.locations.fieldValues.keywords;
-			if (!pageSearch.contacts.fieldValues.keywordsText)
-				v.keywordsText = pageSearch.contacts.fieldValues.keywordsText;
+			if (pageSearch.locations.fieldValues.keywordsText)
+				v.keywordsText = pageSearch.locations.fieldValues.keywordsText;
 			return pageSearch.locations.template(v);
 		},
 		getSearch() {

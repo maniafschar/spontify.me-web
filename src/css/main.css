@@ -475,15 +475,19 @@ chat listHeader svg,
 chat listHeader img {
 	position: relative;
 	width: 4em;
+	height: auto;
 	border-radius: 0 0 1em 0;
 	box-shadow: 0 0 0.5em rgb(0, 0, 0, 0.3);
 	margin-right: 0.4em;
 }
 
 chat listHeader svg {
-	padding: 0.6em;
 	fill: var(--navigation);
 	vertical-align: middle;
+}
+
+chat listHeader svg:not(.admin) {
+	padding: 0.6em;
 }
 
 chat .sendButton {
@@ -1199,9 +1203,12 @@ detail detailImg {
 	box-shadow: 0 0 1em rgb(0, 0, 0, 0.3);
 }
 
-detail detailImg img {
+detail detailImg img,
+detail detailImg svg {
 	width: 100%;
+	height: auto;
 	border-radius: 0.25em;
+	display: block;
 }
 
 detail>div>text.highlightBackground {

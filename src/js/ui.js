@@ -340,7 +340,7 @@ class ui {
 				ui.navigation.openHint({ desc: id, pos: '15%,-6em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:' + (id == 'contacts' ? 9.375 : 40.625) + '%;margin-right:-1.5em;' });
 				return;
 			}
-			user.save({ webCall: 'bluetooth.toggle', acceptFriendship: id == 'settings' });
+			user.save({ webCall: 'ui.navigation.goTo', acceptFriendship: id == 'settings' });
 			geoData.headingClear();
 			if (document.activeElement)
 				document.activeElement.blur();
@@ -437,8 +437,8 @@ class ui {
 				}
 			}, 50);
 		},
-		openLocationPicker(event) {
-			DialogLocationPicker.open(event);
+		openLocationPicker(event, force) {
+			DialogLocationPicker.open(event, force);
 		},
 		openLocationPickerDialog() {
 			DialogLocationPicker.openDialog();

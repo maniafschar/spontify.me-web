@@ -4,7 +4,7 @@ import { communication } from '../communication';
 import { details } from '../details';
 import { geoData } from '../geoData';
 import { global } from '../global';
-import { initialisation } from './init';
+import { initialisation } from '../init';
 import { lists } from '../lists';
 import { Contact, Location, model } from '../model';
 import { formFunc, ui } from '../ui';
@@ -427,14 +427,12 @@ ${v.info}`;
 			pageLogin.logoff();
 			return;
 		}
-		var lang = user.contact.language;
 		user.contact.ageFemale = ui.val('settings input-slider[name="ageFemale"]');
 		user.contact.ageMale = ui.val('settings input-slider[name="ageMale"]');
 		user.contact.ageDivers = ui.val('settings input-slider[name="ageDivers"]');
 		user.contact.pseudonym = ui.val('settings input[name="pseudonym"]');
 		user.contact.gender = ui.val('settings input-checkbox[name="gender"][checked="true"]');
 		user.contact.birthday = ui.val('settings input-date[name="birthday"]');
-		user.contact.language = ui.val('settings input-checkbox[name="language"][checked="true"]');
 		user.contact.skills = ui.q('settings input-hashtags').getAttribute('ids');
 		user.contact.skillsText = ui.q('settings input-hashtags').getAttribute('text');
 		user.contact.age = user.contact.birthday ? pageContact.getBirthday(user.contact.birthday).age : null;
@@ -462,8 +460,7 @@ ${v.info}`;
 			});
 		} else
 			document.dispatchEvent(new CustomEvent('Settings', { detail: { action: 'save' } }));
-		if (lang != user.contact.language)
-			init.setLanguage(user.contact.language);
+		initialisation.setLanguage(ui.val('settings input-checkbox[name="language"][checked="true"]'));
 	}
 	static reset() {
 		formFunc.resetError(ui.q('input[name="pseudonym"]'));

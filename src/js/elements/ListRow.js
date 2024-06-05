@@ -164,7 +164,7 @@ compass::after {
 	${this.getAttribute('flag3') ? decodeURIComponent(this.getAttribute('flag3')) : ''}
 </flag>
 <imagelist>
-	<img ${(this.getAttribute('image').indexOf('/') > 0 ? 'src="' + global.serverImg : 'source="') + this.getAttribute('image')}" class="${!this.getAttribute('image') || this.getAttribute('image').indexOf('/') < 0 ? 'mainBG default' : ''}" />
+	<img ${(this.getAttribute('image').indexOf('/') > 0 ? 'src="' + global.serverImg : 'source="') + this.getAttribute('image')}" class="${(!this.getAttribute('image') || this.getAttribute('image').indexOf('/') < 0) && this.getAttribute('image') != 'admin' ? 'mainBG default' : ''}" />
 	<img source="favorite" class="favorite" />
 </imagelist>`;
 		this._root.appendChild(element);
