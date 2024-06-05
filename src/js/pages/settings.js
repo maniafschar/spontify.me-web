@@ -4,6 +4,7 @@ import { communication } from '../communication';
 import { details } from '../details';
 import { geoData } from '../geoData';
 import { global } from '../global';
+import { initialisation } from './init';
 import { lists } from '../lists';
 import { Contact, Location, model } from '../model';
 import { formFunc, ui } from '../ui';
@@ -426,6 +427,7 @@ ${v.info}`;
 			pageLogin.logoff();
 			return;
 		}
+		var lang = user.contact.language;
 		user.contact.ageFemale = ui.val('settings input-slider[name="ageFemale"]');
 		user.contact.ageMale = ui.val('settings input-slider[name="ageMale"]');
 		user.contact.ageDivers = ui.val('settings input-slider[name="ageDivers"]');
@@ -460,6 +462,8 @@ ${v.info}`;
 			});
 		} else
 			document.dispatchEvent(new CustomEvent('Settings', { detail: { action: 'save' } }));
+		if (lang != user.contact.language)
+			init.setLanguage(user.contact.language);
 	}
 	static reset() {
 		formFunc.resetError(ui.q('input[name="pseudonym"]'));
