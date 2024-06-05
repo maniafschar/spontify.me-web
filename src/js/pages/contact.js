@@ -364,7 +364,7 @@ ${v.matchIndicatorHintDescription}
 			webCall: 'pageContact.sendRequestForFriendship',
 			method: 'POST',
 			body: { classname: 'ContactLink', values: { contactId2: id } },
-			success() {
+			success(r) {
 				if (ui.q('dialog-popup popupContent'))
 					ui.navigation.closePopup();
 				else {
@@ -372,8 +372,17 @@ ${v.matchIndicatorHintDescription}
 					var e = ui.q('detail card:last-child[i="' + id + '"] [name="friend"] button-text');
 					if (e)
 						e.outerHTML = '<span style="text-align:center;">' + ui.l('contacts.requestFriendshipAlreadySent') + '</span>';
-					else
-						ui.navigation.openPopup(ui.l('contacts.requestFriendshipButton'), ui.l('contacts.requestFriendshipSent'));
+					else {
+						communication.ajax({
+							url: global.serverApi + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + id),
+							responseType: 'json',
+							success(r2) {
+								vat contact = model.convert(new Contact(), r2, 1);
+								ui.navigation.openPopup(ui.l('contacts.requestFriendshipButton'),
+										ui.l(c.contactLink.status == 'Friends' ? 'contacts.requestFriendshipSent' : 'contacts.requestFriendshipQRAccept'));
+							}
+						});
+					}
 				}
 			}
 		});
