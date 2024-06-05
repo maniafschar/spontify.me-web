@@ -244,18 +244,10 @@ class ui {
 						else {
 							initialisation.contactReferer = parseInt(id.substring(2));
 							communication.ajax({
-								url: global.serverApi + 'db/one',
+								url: global.serverApi + 'action/referer?contactId=' + initialisation.contactReferer + '&screen=' + window.outerWidth + 'x' + window.outerHeight,
 								webCall: 'ui.navigation.autoOpen',
-								method: 'POST',
-								body: {
-									classname: 'ContactReferer',
-									values: {
-										contactId2: initialisation.contactReferer,
-										screen: window.outerWidth + ':' + window.outerHeight
-									}
-								}
+								method: 'POST'
 							});
-
 						}
 					}
 					id = global.decParam(id);
