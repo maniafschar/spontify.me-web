@@ -48,42 +48,40 @@ label {
 					e._root.children[i].remove();
 			});
 	}
-	static open(event) {
-		if (event) {
-			event.preventDefault();
-			event.stopPropagation();
-			var l = user.get('locationPicker');
-			if (l && l.length > 1) {
-				var e = ui.q('dialog-location-picker');
-				if (ui.cssValue(e, 'display') == 'none') {
-					var element;
-					if (ui.navigation.getActiveID() == 'home')
-						ui.classAdd(e, 'home');
-					else
-						ui.classRemove(e, 'home');
-					var s = '';
-					for (var i = l.length - 1; i >= 0; i--) {
-						if (l[i].town != geoData.getCurrent().town) {
-							element = document.createElement('label');
-							element.setAttribute('onclick', 'ui.q("dialog-location-picker").save(' + JSON.stringify(l[i]).replace(/"/g, '\'') + ')');
-							element.innerText = l[i].town;
-							e._root.appendChild(element);
-							e._root.appendChild(document.createElement('br'));
-						}
+	static open(event, force) {
+		event.preventDefault();
+		event.stopPropagation();
+		var l = user.get('locationPicker');
+		if (!force && l && l.length > 1) {
+			var e = ui.q('dialog-location-picker');
+			if (ui.cssValue(e, 'display') == 'none') {
+				var element;
+				if (ui.navigation.getActiveID() == 'home')
+					ui.classAdd(e, 'home');
+				else
+					ui.classRemove(e, 'home');
+				var s = '';
+				for (var i = l.length - 1; i >= 0; i--) {
+					if (l[i].town != geoData.getCurrent().town) {
+						element = document.createElement('label');
+						element.setAttribute('onclick', 'ui.q("dialog-location-picker").save(' + JSON.stringify(l[i]).replace(/"/g, '\'') + ')');
+						element.innerText = l[i].town;
+						e._root.appendChild(element);
+						e._root.appendChild(document.createElement('br'));
 					}
-					element = document.createElement('label');
-					element.setAttribute('onclick', 'ui.navigation.openLocationPicker(event)');
-					element.setAttribute('style', 'color:var(--buttonText)');
-					element.setAttribute('class', 'bgColor');
-					element.innerText = ui.l('home.locationPickerTitle');
-					e._root.appendChild(element);
-					e.removeAttribute('h');
-					ui.toggleHeight('dialog-location-picker');
-				} else
-					ui.navigation.closeLocationPicker();
-			} else if (user.contact)
-				communication.loadMap('ui.navigation.openLocationPickerDialog');
-		}
+				}
+				element = document.createElement('label');
+				element.setAttribute('onclick', 'ui.navigation.openLocationPicker(event, true)');
+				element.setAttribute('style', 'color:var(--buttonText)');
+				element.setAttribute('class', 'bgColor');
+				element.innerText = ui.l('home.locationPickerTitle');
+				e._root.appendChild(element);
+				e.removeAttribute('h');
+				ui.toggleHeight('dialog-location-picker');
+			} else
+				ui.navigation.closeLocationPicker();
+		} else if (user.contact)
+			communication.loadMap('ui.navigation.openLocationPickerDialog');
 	}
 	static openDialog() {
 		ui.navigation.openPopup(ui.l('home.locationPickerTitle'),
