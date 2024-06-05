@@ -331,7 +331,7 @@ settings paypalFees {
 
 settings genderSelectHint {
 	left: -0.5em;
-	background: rgba(0, 0, 0, 0.6);
+	background: var(--bg3start);
 	position: absolute;
 	right: -0.5em;
 	top: 1em;

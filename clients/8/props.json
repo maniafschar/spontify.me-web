@@ -12,6 +12,7 @@
 		"introDescription": "introDescription"
 	},
 	"name": "test",
+	"bundleId": "com.jq.spontifyme",
 	"facebookId": "",
 	"server": "http://localhost:9001",
 	"url": "http://localhost:9000",
