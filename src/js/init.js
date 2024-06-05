@@ -40,7 +40,7 @@ export { initialisation };
 
 class initialisation {
 	static elementsCss;
-	static execLocation = null;
+	static contactReferer = null;
 	static recoverInvoked = false;
 	static init() {
 		communication.ajax({
