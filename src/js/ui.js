@@ -247,9 +247,12 @@ class ui {
 						details.open(idIntern.substring(2), { webCall: 'ui.navigation.autoOpen', query: 'location_list', search: encodeURIComponent('location.id=' + idIntern.substring(2)) }, pageLocation.detailLocationEvent);
 					else if (idIntern.indexOf('e=') == 0)
 						details.open(idIntern.substring(2), { webCall: 'ui.navigation.autoOpen', query: 'event_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('event.id=' + idIntern.substring(2, idIntern.indexOf('_') > 0 ? idIntern.indexOf('_') : idIntern.length)) }, pageLocation.detailLocationEvent);
-					else if (idIntern.indexOf('f=') == 0 && user.contact)
-						pageContact.sendRequestForFriendship(idIntern.substring(2));
-					else if (idIntern.indexOf('q=') == 0 && user.contact)
+					else if (idIntern.indexOf('f=') == 0) {
+						if (user.contact)
+							pageContact.sendRequestForFriendship(parseInt(idIntern.substring(2)));
+						else
+							initialisation.contactReferer = parseInt(idIntern.substring(2));
+					} else if (idIntern.indexOf('q=') == 0 && user.contact)
 						pageEvent.verifyParticipation(idIntern.substring(2));
 					else if (idIntern.indexOf('p=') == 0)
 						details.open(idIntern.substring(2), { webCall: 'ui.navigation.autoOpen', query: 'contact_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('contact.id=' + idIntern.substring(2)) }, pageContact.detail);
