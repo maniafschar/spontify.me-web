@@ -72,7 +72,7 @@ label {
 						}
 					}
 					element = document.createElement('label');
-					element.setAttribute('onclick', 'ui.navigation.openLocationPicker()');
+					element.setAttribute('onclick', 'ui.navigation.openLocationPicker(event)');
 					element.setAttribute('style', 'color:var(--buttonText)');
 					element.setAttribute('class', 'bgColor');
 					element.innerText = ui.l('home.locationPickerTitle');
