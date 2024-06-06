@@ -291,7 +291,7 @@ poll result div {
 			v.eventPrice = ui.l('events.priceDisp0');
 		if (v.event.maxParticipants)
 			v.maxParticipants = ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
-		if (e.event.contactId == user.clientId)
+		if (v.event.contactId == user.clientId)
 			v.hideOwner = ' hidden';
 		else if (v.contact.imageList)
 			v.imageEventOwner = 'src="' + global.serverImg + v.contact.imageList + '"';
@@ -610,7 +610,7 @@ poll result div {
 		var today = global.date.getToday();
 		var s = '', v;
 		var current = '';
-		var name, text, flag1, flag2, flag3, image, clazz;
+		var name, text, flag1, flag2, flag3 = '', image, clazz;
 		for (var i = 0; i < as.length; i++) {
 			if (as[i] == 'outdated')
 				s += '<listSeparator class="highlightColor strong">' + ui.l('events.outdated') + '</listSeparator>';
@@ -1098,6 +1098,7 @@ poll result div {
 			if (d.values.state > 2147483647)
 				d.values.state -= 2 * 2147483647 + 2;
 			d.values.eventId = e.event.id;
+			d.values.eventDate = eventDate;
 			d.id = e.eventParticipate?.id;
 		} else if (e.eventParticipate.id) {
 			d.values.state = e.eventParticipate.state == 1 ? -1 : 1;

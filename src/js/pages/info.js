@@ -74,7 +74,7 @@ class pageInfo {
 	}
 	static socialShare() {
 		var msg = ui.l('info.socialShareText').replace('{0}', user.contact.idDisplay).replace('{1}', user.contact.gender == 1 ? '🙋‍♂️' : '🙋‍♀️');
-		var url = ui.q('head>link[rel="canonical"]').getAttribute('href');
+		var url = ui.q('head>link[rel="canonical"]').getAttribute('href') + '?f=' + user.contact.id;
 		if (global.isBrowser())
 			ui.navigation.openPopup(ui.l('info.sendSocialShare'), ui.l('info.socialShareBrowser') + '<br/><br/><infoblock class="selectable">' + msg.replace(/\n/g, '<br/>') + '<br/><br/>' + url + '</infoblock>');
 		else {
