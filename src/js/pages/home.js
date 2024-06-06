@@ -364,7 +364,9 @@ border-radius: 0.5em 0 0 3em;
 						pageHome.initNotificationButton();
 						return;
 					}
-					if (v.imageList)
+					if (v.id == user.clientId)
+						v.image = 'source="admin"';
+					else if (v.imageList)
 						v.image = 'src="' + global.serverImg + v.imageList + '"';
 					else if (v.contactNotification.action.indexOf('news=') == 0 || v.contactNotification.action.indexOf('m=') == 0)
 						v.image = 'style="padding:0.4em;" src="images/logo.png" class="mainBG"';
