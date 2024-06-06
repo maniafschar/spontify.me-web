@@ -149,28 +149,33 @@ class user {
 		if (user.contact && user.contact.id) {
 			var wc = data.webCall;
 			delete data.webCall;
-			var v = {
-				classname: 'Contact',
-				id: user.contact.id,
-				values: data.values ? data.values : data
-			}
-			communication.ajax({
-				url: global.serverApi + 'db/one',
-				method: 'PUT',
-				progressBar: success ? true : false,
-				body: v,
-				webCall: wc,
-				success() {
-					for (var k in v.values)
-						user.contact[k] = v.values[k];
-					if (typeof user.contact.filter == 'string')
-						user.contact.filter = JSON.parse(user.contact.filter);
-					if (typeof user.contact.storage == 'string')
-						user.contact.storage = JSON.parse(user.contact.storage);
-					if (success)
-						success.call();
+			for (var k in v.values) {
+				if (user.contact[k] != v.values[k]) {
+					var v = {
+						classname: 'Contact',
+						id: user.contact.id,
+						values: data.values ? data.values : data
+					}
+					communication.ajax({
+						url: global.serverApi + 'db/one',
+						method: 'PUT',
+						progressBar: success ? true : false,
+						body: v,
+						webCall: wc,
+						success() {
+							for (var k in v.values)
+								user.contact[k] = v.values[k];
+							if (typeof user.contact.filter == 'string')
+								user.contact.filter = JSON.parse(user.contact.filter);
+							if (typeof user.contact.storage == 'string')
+								user.contact.storage = JSON.parse(user.contact.storage);
+							if (success)
+								success.call();
+						}
+					});
+					return true;
 				}
-			});
+			}
 		}
 	}
 	static set(key, value) {

@@ -506,6 +506,8 @@ listHeader chatName {
 	position: relative;
 	cursor: pointer;
 	line-height: 4;
+	display: inline-block;
+	padding-right: 1em;
 }
 
 listHeader chatDate {
