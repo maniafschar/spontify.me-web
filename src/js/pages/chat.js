@@ -294,7 +294,9 @@ class pageChat {
 				var s = '';
 				for (var i = 1; i < d.length; i++) {
 					var v = model.convert(new Contact(), d, i);
-					if (v.imageList)
+					if (v.id == user.clientId)
+						v.image = 'source="admin"';
+					else if (v.imageList)
 						v.image = 'src="' + global.serverImg + v.imageList + '"';
 					else
 						v.image = 'source="contacts" class="mainBG"';
