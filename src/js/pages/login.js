@@ -446,7 +446,7 @@ class pageLogin {
 			v.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 			v.referer = initialisation.contactReferer;
 			if (v.os != 'web')
-				v.screen = window.outerWidth + 'x' + window.outerHeight;
+				v.screen = screen.availWidth + 'x' + screen.availHeight + 'x' + screen.colorDepth + 'x' + screen.pixelDepth;
 			communication.ajax({
 				url: global.serverApi + 'authentication/register',
 				webCall: 'login.register',

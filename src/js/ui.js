@@ -245,7 +245,7 @@ class ui {
 						else {
 							initialisation.contactReferer = id;
 							communication.ajax({
-								url: global.serverApi + 'action/referer?contactId=' + id + '&screen=' + window.outerWidth + 'x' + window.outerHeight,
+								url: global.serverApi + 'action/referer?contactId=' + id + '&screen=' + screen.availWidth + 'x' + screen.availHeight + 'x' + screen.colorDepth + 'x' + screen.pixelDepth,
 								webCall: 'ui.navigation.autoOpen',
 								method: 'POST'
 							});
