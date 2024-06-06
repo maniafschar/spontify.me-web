@@ -593,7 +593,9 @@ chatList>div>span {
 
 chatList img,
 chatList svg.mainBG,
+chatList svg.admin,
 notificationList svg.mainBG,
+notificationList svg.admin,
 notificationList img {
 	position: absolute;
 	height: 100%;
@@ -603,6 +605,7 @@ notificationList img {
 }
 
 chatList svg.mainBG,
+chatList svg.admin,
 chatList img {
 	border-radius: 0 2em 2em 0;
 }
@@ -614,11 +617,14 @@ notificationList img {
 }
 
 chatList svg.mainBG,
-notificationList svg.mainBG {
+chatList svg.admin,
+notificationList svg.mainBG,
+notificationList svg.admin {
 	padding: 0.6em;
 }
 
-chatList svg:not(.mainBG) {
+chatList svg:not(.mainBG),
+chatList svg:not(.admin) {
 	position: absolute;
 	right: 1em;
 	height: 1em;
@@ -627,6 +633,7 @@ chatList svg:not(.mainBG) {
 }
 
 chatList>div.unseen svg:not(.mainBG),
+chatList>div.unseen svg:not(.admin),
 chat time.unseen {
 	opacity: 0.3;
 }
