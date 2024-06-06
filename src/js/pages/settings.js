@@ -530,7 +530,7 @@ ${v.info}`;
 			ui.attr('input-slider[name="ageFemale"]', 'value', '');
 		if (!x || !ui.q('input-checkbox[name="ageDivers"][checked="true"]'))
 			ui.attr('input-slider[name="ageDivers"]', 'value', '');
-		user.save({ webCall: 'settings.save', ...formFunc.getForm('settings tabBody') }, () => pageSettings.postSave(goToID));
+		user.save({ webCall: 'settings.save', ...formFunc.getForm('settings tabBody').values }, () => pageSettings.postSave(goToID));
 	}
 	static selectTab(i) {
 		if (ui.q('settings tabHeader tab.tabActive').getAttribute('onclick').indexOf(i) > 0)

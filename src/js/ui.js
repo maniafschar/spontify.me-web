@@ -348,7 +348,7 @@ class ui {
 				ui.navigation.openHint({ desc: id, pos: '15%,-6em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:' + (id == 'contacts' ? 9.375 : 40.625) + '%;margin-right:-1.5em;' });
 				return;
 			}
-			user.save({ webCall: 'ui.navigation.goTo', acceptFriendship: id == 'settings' });
+			user.save({ webCall: 'ui.navigation.goTo', acceptFriendship: id == 'settings' && ui.classContains('settings tabHeader tab:first-child', 'tabActive') });
 			geoData.headingClear();
 			if (document.activeElement)
 				document.activeElement.blur();

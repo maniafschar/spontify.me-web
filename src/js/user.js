@@ -149,12 +149,12 @@ class user {
 		if (user.contact && user.contact.id) {
 			var wc = data.webCall;
 			delete data.webCall;
-			for (var k in v.values) {
-				if (user.contact[k] != v.values[k]) {
+			for (var k in data) {
+				if (user.contact[k] != data[k]) {
 					var v = {
 						classname: 'Contact',
 						id: user.contact.id,
-						values: data.values ? data.values : data
+						values: data
 					}
 					communication.ajax({
 						url: global.serverApi + 'db/one',
