@@ -137,8 +137,8 @@ class geoData {
 				geoData.current.street = '';
 			}
 		}
-		if (user.contact && user.contact.id && new Date().getTime() - geoData.lastSave > 5000 &&
-			(!geoData.localized || d > 0.05 || position.manual)) {
+		if (user.contact && user.contact.id && (position.manual ||
+			(new Date().getTime() - geoData.lastSave > 5000) && (!geoData.localized || d > 0.05))) {
 			communication.ajax({
 				url: global.serverApi + 'action/position',
 				progressBar: false,
@@ -151,29 +151,20 @@ class geoData {
 					document.dispatchEvent(new CustomEvent('GeoLocation', { detail: { type: 'update', ...geoData.current } }));
 				},
 				success(r) {
-					if (r && r.town) {
+					if (!r && (!position.manual || !position.town))
+						ui.html('dialog-popup errorHint', ui.l('home.locationNotSetable'));
+					else {
+						if (!r)
+							r = position;
 						geoData.lastSave = new Date().getTime();
 						if (position.manual)
 							geoData.currentManual = { lat: position.latitude, lon: position.longitude, street: r.street, town: r.town };
 						else
 							geoData.current = { lat: position.latitude, lon: position.longitude, street: r.street, town: r.town };
-						var e = user.get('locationPicker') || [];
-						for (var i = e.length - 1; i >= 0; i--) {
-							if (e[i].town == r.town)
-								e.splice(i, 1);
-						}
-						e.push({ lat: position.latitude, lon: position.longitude, town: r.town, street: r.street });
-						if (e.length > 5)
-							e.splice(0, e.length - 5);
-						user.set('locationPicker', e);
 						document.dispatchEvent(new CustomEvent('GeoLocation', { detail: { type: 'update', ...geoData.current } }));
-						if (ui.q('dialog-popup mapPicker'))
-							ui.navigation.closePopup();
-						ui.navigation.closeLocationPicker();
 						if (exec)
 							exec();
-					} else
-						ui.html('dialog-popup errorHint', ui.l('home.locationNotSetable'));
+					}
 				}
 			});
 		}

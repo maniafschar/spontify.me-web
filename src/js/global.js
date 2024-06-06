@@ -192,7 +192,7 @@ class global {
 		var m = ua.indexOf('mobile') > -1;
 		var a = ua.indexOf('android') > -1;
 		var p = ua.indexOf('phone') > -1;
-		var i = ua.indexOf('ipad') > -1;
+		var i = ua.indexOf('ipad') > -1 || navigator.maxTouchPoints && navigator.maxTouchPoints > 2;
 		if ((a && !m) || i)
 			return 'tablet';
 		if (m || a || p)

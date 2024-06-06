@@ -291,8 +291,8 @@ class initialisation {
 		if (!ui.q('body main'))
 			return;
 		var xWidth = global.getDevice() == 'computer' ? window.innerWidth : screen.availWidth;
-		if (xWidth < 1200)
-			xWidth = Math.min(600, xWidth);
+		if (xWidth < 1600)
+			xWidth = Math.min(800, xWidth);
 		else
 			xWidth /= 2;
 		var xDiagonal = global.getDevice() == 'computer' ?
@@ -316,7 +316,7 @@ class initialisation {
 		}
 		ui.css('body', 'font-size', font + 'px');
 		ui.emInPX = parseFloat(ui.cssValue(document.body, 'font-size'));
-		if (window.innerWidth / xWidth > 1.8 && ui.q('home homeBody')) {
+		if (window.innerWidth / xWidth > 1.6 && ui.q('home homeBody')) {
 			ui.css('add', 'width', ((window.innerWidth - xWidth) / 2) + 'px');
 			ui.css('add#addRight', 'display', 'block');
 		} else
