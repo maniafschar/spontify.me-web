@@ -165,13 +165,13 @@ class ui {
 				}, true);
 			}, 100);
 		},
-		autoOpen(id, event) {
-			if (!id)
+		autoOpen(tag, event) {
+			if (!tag)
 				return false;
 			if (event)
 				event.stopPropagation();
 			var f = function () {
-				if (ui.q('#preloader') && id.indexOf('m=') != 0)
+				if (ui.q('#preloader') && tag.indexOf('m=') != 0)
 					setTimeout(f, 100);
 				else {
 					if (global.isBrowser()) {
@@ -179,12 +179,12 @@ class ui {
 						if (!ui.q('head title').innerHTML)
 							ui.html('head title', global.appTitle);
 					}
-					if (id.indexOf('r=') == 0) {
+					if (tag.indexOf('r=') == 0) {
 						pageLogin.removeCredentials();
-						initialisation.recoverPassword(id.substring(2));
+						initialisation.recoverPassword(tag.substring(2));
 						return;
 					}
-					var e = ui.q('notificationlist div.highlightBackground[onclick*="' + id + '"]');
+					var e = ui.q('notificationlist div.highlightBackground[onclick*="' + tag + '"]');
 					if (e)
 						communication.ajax({
 							url: global.serverApi + 'db/one',
@@ -200,23 +200,23 @@ class ui {
 								communication.ping();
 							}
 						});
-					if (id.indexOf('https://') == 0) {
-						ui.navigation.openHTML(id);
+					if (tag.indexOf('https://') == 0) {
+						ui.navigation.openHTML(tag);
 						return;
 					}
-					if (id.indexOf('info') == 0) {
-						if (id.length > 4)
-							pageInfo.openSection = parseInt(id.substring(4));
+					if (tag.indexOf('info') == 0) {
+						if (tag.length > 4)
+							pageInfo.openSection = parseInt(tag.substring(4));
 						ui.navigation.goTo('info');
 						return true;
 					}
-					if (id.indexOf('news=') == 0) {
-						pageHome.openNews(id.substring(5));
+					if (tag.indexOf('news=') == 0) {
+						pageHome.openNews(tag.substring(5));
 						return true;
 					}
-					if (id.indexOf('m=') == 0) {
+					if (tag.indexOf('m=') == 0) {
 						communication.ajax({
-							url: global.serverApi + 'marketing?' + id,
+							url: global.serverApi + 'marketing?' + tag,
 							webCall: 'ui.navigation.autoOpen',
 							responseType: 'json',
 							error() { },
@@ -233,13 +233,13 @@ class ui {
 						});
 						return true;
 					}
-					if (id.indexOf('chat=') == 0) {
+					if (tag.indexOf('chat=') == 0) {
 						if (user.contact)
-							pageChat.open(id.substring(5));
+							pageChat.open(tag.substring(5));
 						return;
 					}
-					if (id.indexOf('f=') == 0) {
-						var id = parseInt(id.substring(2));
+					if (tag.indexOf('f=') == 0) {
+						var id = parseInt(tag.substring(2));
 						if (user.contact)
 							pageContact.sendRequestForFriendship(id);
 						else {
@@ -251,19 +251,19 @@ class ui {
 							});
 						}
 					}
-					id = global.decParam(id);
-					if (!id)
+					tag = global.decParam(tag);
+					if (!tag)
 						return false;
-					var idIntern = id.indexOf('&') > 0 ? id.substring(0, id.indexOf('&')) : id;
+					var tagIntern = tag.indexOf('&') > 0 ? tag.substring(0, tag.indexOf('&')) : tag;
 					ui.navigation.closePopup();
-					if (idIntern.indexOf('l=') == 0)
-						details.open(idIntern.substring(2), { webCall: 'ui.navigation.autoOpen', query: 'location_list', search: encodeURIComponent('location.id=' + idIntern.substring(2)) }, pageLocation.detailLocationEvent);
-					else if (idIntern.indexOf('e=') == 0)
-						details.open(idIntern.substring(2), { webCall: 'ui.navigation.autoOpen', query: 'event_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('event.id=' + idIntern.substring(2, idIntern.indexOf('_') > 0 ? idIntern.indexOf('_') : idIntern.length)) }, pageLocation.detailLocationEvent);
-					else if (idIntern.indexOf('q=') == 0 && user.contact)
-						pageEvent.verifyParticipation(idIntern.substring(2));
-					else if (idIntern.indexOf('p=') == 0)
-						details.open(idIntern.substring(2), { webCall: 'ui.navigation.autoOpen', query: 'contact_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('contact.id=' + idIntern.substring(2)) }, pageContact.detail);
+					if (tagIntern.indexOf('l=') == 0)
+						details.open(tagIntern.substring(2), { webCall: 'ui.navigation.autoOpen', query: 'location_list', search: encodeURIComponent('location.id=' + tagIntern.substring(2)) }, pageLocation.detailLocationEvent);
+					else if (tagIntern.indexOf('e=') == 0)
+						details.open(tagIntern.substring(2), { webCall: 'ui.navigation.autoOpen', query: 'event_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('event.id=' + tagIntern.substring(2, tagIntern.indexOf('_') > 0 ? tagIntern.indexOf('_') : tagIntern.length)) }, pageLocation.detailLocationEvent);
+					else if (tagIntern.indexOf('q=') == 0 && user.contact)
+						pageEvent.verifyParticipation(tagIntern.substring(2));
+					else if (tagIntern.indexOf('p=') == 0)
+						details.open(tagIntern.substring(2), { webCall: 'ui.navigation.autoOpen', query: 'contact_list' + (user.contact ? '' : 'Teaser'), search: encodeURIComponent('contact.id=' + tagIntern.substring(2)) }, pageContact.detail);
 				}
 			};
 			f.call();

@@ -617,14 +617,11 @@ notificationList img {
 }
 
 chatList svg.mainBG,
-chatList svg.admin,
-notificationList svg.mainBG,
-notificationList svg.admin {
+notificationList svg.mainBG {
 	padding: 0.6em;
 }
 
-chatList svg:not(.mainBG),
-chatList svg:not(.admin) {
+chatList svg.read {
 	position: absolute;
 	right: 1em;
 	height: 1em;
@@ -632,8 +629,7 @@ chatList svg:not(.admin) {
 	bottom: 0.5em;
 }
 
-chatList>div.unseen svg:not(.mainBG),
-chatList>div.unseen svg:not(.admin),
+chatList>div.unseen svg.read,
 chat time.unseen {
 	opacity: 0.3;
 }

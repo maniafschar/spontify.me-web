@@ -295,7 +295,7 @@ class pageChat {
 				for (var i = 1; i < d.length; i++) {
 					var v = model.convert(new Contact(), d, i);
 					if (v.id == user.clientId)
-						v.image = 'source="admin"';
+						v.image = 'source="admin" class="admin"';
 					else if (v.imageList)
 						v.image = 'src="' + global.serverImg + v.imageList + '"';
 					else
@@ -303,7 +303,7 @@ class pageChat {
 					if (v._maxDate.indexOf('.') > 0)
 						v._maxDate = v._maxDate.substring(0, v._maxDate.indexOf('.'));
 					s += '<div onclick="pageChat.open(' + v.id + ')" i="' + v.id + '"' + (v._unseen > 0 ? ' class="highlightBackground"' : v._unseen2 > 0 ? ' class="unseen"' : '') + '><img ' + v.image + '/><span>' + v.pseudonym
-						+ '<br/>' + global.date.formatDate(v._maxDate) + '</span><img source="' + (v._contactId == user.contact.id ? 'chatOut' : 'chatIn') + '" /></div>';
+						+ '<br/>' + global.date.formatDate(v._maxDate) + '</span><img source="' + (v._contactId == user.contact.id ? 'chatOut' : 'chatIn') + '" class="read"/></div>';
 				}
 				e.innerHTML = s;
 				if (ui.cssValue(e, 'display') == 'none')
