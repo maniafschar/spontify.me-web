@@ -56,7 +56,7 @@ appointment day hour {
 	display: block;
 	overflow: hidden;
 	margin: 0.5em 0;
-	background: rgba(0, 0, 0, 0.1);
+	background: var(--bgText);
 	border-radius: 0.5em;
 	line-height: 2;
 	cursor: pointer;
@@ -69,7 +69,7 @@ appointment day hour.closed {
 }
 
 appointment day hour.selected {
-	background-color: rgba(0, 255, 0, 0.9);
+	background-color: var(--bg3start);
 }
 
 appointment day hour.selected::after {
