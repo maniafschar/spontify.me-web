@@ -239,12 +239,13 @@ class ui {
 						return;
 					}
 					if (id.indexOf('f=') == 0) {
+						var id = parseInt(id.substring(2));
 						if (user.contact)
-							pageContact.sendRequestForFriendship(parseInt(id.substring(2)));
+							pageContact.sendRequestForFriendship(id);
 						else {
-							initialisation.contactReferer = parseInt(id.substring(2));
+							initialisation.contactReferer = id;
 							communication.ajax({
-								url: global.serverApi + 'action/referer?contactId=' + initialisation.contactReferer + '&screen=' + window.outerWidth + 'x' + window.outerHeight,
+								url: global.serverApi + 'action/referer?contactId=' + id + '&screen=' + window.outerWidth + 'x' + window.outerHeight,
 								webCall: 'ui.navigation.autoOpen',
 								method: 'POST'
 							});
