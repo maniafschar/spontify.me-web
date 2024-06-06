@@ -163,7 +163,7 @@ class geoData {
 							geoData.current = { lat: position.latitude, lon: position.longitude, street: r.street, town: r.town };
 						document.dispatchEvent(new CustomEvent('GeoLocation', { detail: { type: 'update', ...geoData.current } }));
 						if (exec)
-							exec();
+							exec(r);
 					}
 				}
 			});

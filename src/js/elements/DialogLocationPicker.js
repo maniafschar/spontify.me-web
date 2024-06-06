@@ -117,17 +117,20 @@ label {
 				}
 			});
 		} else
-			geoData.save({ latitude: e ? e.lat : DialogLocationPicker.map.getCenter().lat(), longitude: e ? e.lon : DialogLocationPicker.map.getCenter().lng(), street: e.street, town: e.town, manual: true },
-				function () {
-					var list = user.get('locationPicker') || [];
-					for (var i = list.length - 1; i >= 0; i--) {
-						if (list[i].town == e.town)
-							list.splice(i, 1);
+			geoData.save({ latitude: e ? e.lat : DialogLocationPicker.map.getCenter().lat(), longitude: e ? e.lon : DialogLocationPicker.map.getCenter().lng(), street: e?.street, town: e?.town, manual: true },
+				function (r) {
+					var t = e?.town || r.town;
+					if (t) {
+						var list = user.get('locationPicker') || [];
+						for (var i = list.length - 1; i >= 0; i--) {
+							if (list[i].town == t)
+								list.splice(i, 1);
+						}
+						list.push(e);
+						if (list.length > 5)
+							list.splice(0, list.length - 5);
+						user.set('locationPicker', list);
 					}
-					list.push(e);
-					if (list.length > 5)
-						list.splice(0, list.length - 5);
-					user.set('locationPicker', list);
 					if (ui.q('dialog-popup mapPicker'))
 						ui.navigation.closePopup();
 					ui.navigation.closeLocationPicker();
