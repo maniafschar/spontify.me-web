@@ -570,3 +570,4 @@ border-radius: 0.5em 0 0 3em;
 document.addEventListener('Event', pageHome.teaserEvents);
 document.addEventListener('GeoLocation', pageHome.setLogoTown);
 document.addEventListener('Settings', function () { pageHome.init(true); });
+document.addEventListener('Navigation', pageHome.closeList);
