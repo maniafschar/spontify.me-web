@@ -190,7 +190,9 @@ hint {
 			}
 			var s;
 			if (marketing.data.storage.html) {
-				s = marketing.data.storage.html + '<br/><br/><hint>Die Aktion läuft bis zum ' + global.date.formatDate(marketing.data.endDate) + '</hint>;
+				s = marketing.data.storage.html + '<br/><br/><hint>' + ui.l('marketing.validUntil').replace('{0}', global.date.formatDate(marketing.data.endDate)) + '</hint>;
+				if (marketing.data.storage.action)
+					s = s.replace('<action/>', '<button-text onclick="' + marketing.data.storage.action + '">' + marketing.data.storage.actionLabel + '</button-text>')'';
 			} else {
 				if (!marketing.answers)
 					marketing.answers = {};
