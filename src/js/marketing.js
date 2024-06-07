@@ -191,8 +191,8 @@ hint {
 			var s;
 			if (marketing.data.storage.html) {
 				s = marketing.data.storage.html + '<br/><br/><hint>' + ui.l('marketing.validUntil').replace('{0}', global.date.formatDate(marketing.data.endDate)) + '</hint>;
-				if (marketing.data.storage.action)
-					s = s.replace('<action/>', '<button-text onclick="' + marketing.data.storage.action + '">' + marketing.data.storage.actionLabel + '</button-text>')'';
+				if (marketing.data.storage.action && marketing.data.storage.actionLabel && marketing.data.storage.html.indexOf('<action/>') > -1)
+					s = s.replace('<action/>', '<br/><button-text onclick="' + marketing.data.storage.action + '">' + marketing.data.storage.actionLabel + '</button-text><br/>');
 			} else {
 				if (!marketing.answers)
 					marketing.answers = {};
