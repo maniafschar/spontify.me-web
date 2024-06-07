@@ -244,7 +244,7 @@ class ui {
 						else {
 							initialisation.contactReferer = id;
 							communication.ajax({
-								url: global.serverApi + 'action/referer?contactId=' + id + '&screen=' + screen.availWidth + 'x' + screen.availHeight + 'x' + screen.colorDepth + 'x' + screen.pixelDepth,
+								url: global.serverApi + 'action/referer?contactId=' + id + '&footprint=' + global.getFootprint(),
 								webCall: 'ui.navigation.autoOpen',
 								method: 'POST'
 							});

@@ -199,6 +199,9 @@ class global {
 			return 'phone';
 		return 'computer';
 	}
+	static getFootprint() {
+		return screen.availWidth + 'x' + screen.availHeight + 'x' + screen.colorDepth + 'x' + screen.pixelDepth;
+	}
 	static getOS() {
 		if (global.isBrowser())
 			return 'web';

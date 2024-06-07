@@ -299,23 +299,21 @@ class pageLogin {
 			u.email = Encryption.encPUB(u.email);
 		else
 			u.email = null;
-		var v = {
-			user: u,
-			from: os,
-			language: global.language,
-			version: global.appVersion,
-			device: global.getDevice(),
-			os: global.getOS(),
-			timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-			publicKey: Encryption.jsEncrypt.getPublicKeyB64()
-		};
-		if (v.os != 'web')
-			v.screen = window.outerWidth + 'x' + window.outerHeight;
 		communication.ajax({
 			url: global.serverApi + 'authentication/loginExternal',
 			webCall: 'login.loginToServer',
 			method: 'PUT',
-			body: v,
+			body: {
+				user: u,
+				from: os,
+				language: global.language,
+				version: global.appVersion,
+				device: global.getDevice(),
+				os: global.getOS(),
+				timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+				publicKey: Encryption.jsEncrypt.getPublicKeyB64(),
+				footpint: global.getOS() == 'web' ? null : global.getFootprint()
+			},
 			success(r) {
 				if (r) {
 					r = Encryption.jsEncrypt.decrypt(r).split(global.separatorTech);
@@ -445,8 +443,8 @@ class pageLogin {
 			v.os = global.getOS();
 			v.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 			v.referer = initialisation.contactReferer;
-			if (v.os != 'web')
-				v.screen = screen.availWidth + 'x' + screen.availHeight + 'x' + screen.colorDepth + 'x' + screen.pixelDepth;
+			if (global.getOS() != 'web')
+				v.footpint = global.getFootprint();
 			communication.ajax({
 				url: global.serverApi + 'authentication/register',
 				webCall: 'login.register',
