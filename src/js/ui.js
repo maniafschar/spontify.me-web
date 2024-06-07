@@ -378,9 +378,6 @@ class ui {
 				ContentAdminMarketing.init();
 			else if (id == 'content-admin-invoice')
 				ContentAdminInvoice.init();
-			pageChat.closeList();
-			pageHome.closeList();
-			ui.navigation.closePopup();
 			if (currentID != id) {
 				if (back == null) {
 					var e = ui.q('dialog-navigation item.' + id);
@@ -417,10 +414,8 @@ class ui {
 				}
 				if (!back)
 					ui.attr(id, 'from', currentID);
-				ui.navigation.closeLocationPicker();
+				document.dispatchEvent(new CustomEvent('Navigation', { detail: { idPrevious: currentID, id: id, back: back } }));
 				ui.navigation.fade(id, back);
-				ui.navigation.closeMenu();
-				DialogNavigation.highlight(id);
 			}
 		},
 		openAGB() {
