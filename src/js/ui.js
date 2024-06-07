@@ -416,6 +416,7 @@ class ui {
 					ui.attr(id, 'from', currentID);
 				document.dispatchEvent(new CustomEvent('Navigation', { detail: { idPrevious: currentID, id: id, back: back } }));
 				ui.navigation.fade(id, back);
+				return true;
 			}
 		},
 		openAGB() {
