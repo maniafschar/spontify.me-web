@@ -306,3 +306,4 @@ mapButton::before {
 		return false;
 	}
 }
+document.addEventListener('Navigation', DialogPopup.close);
