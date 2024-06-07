@@ -103,3 +103,4 @@ title {
 		}, 10);
 	}
 }
+document.addEventListener('Navigation', DialogMenu.close);
