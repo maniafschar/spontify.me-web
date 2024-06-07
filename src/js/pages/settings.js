@@ -103,6 +103,8 @@ class pageSettings {
 </field>
 <qrcodeDescription>${ui.l('settings.qrcode')}</qrcodeDescription>
 <qrcode></qrcode>
+<qrcodeDescription>${ui.l('settings.socialShareDescription')}</qrcodeDescription>
+<button-text onclick="pageInfo.socialShare()" label="settings.socialShare"></button-text>
 <input type="hidden" name="skills" value="${v['contact.skills']}" />
 <input type="hidden" name="skillsText" value="${v['contact.skillsText']}" />
 <input type="hidden" name="verified" value="true" />`;
@@ -325,7 +327,6 @@ ${v.info}`;
 					v.settings2 = pageSettings.templateSettings2(v);
 					v.info = pageInfo.template()
 						+ '<button-text class="settingsButtonRight" onclick="pageLogin.logoff()" label="logoff.title"></button-text>'
-						+ '<button-text class="settingsButtonRight" onclick="pageInfo.socialShare()" label="settings.socialShare"></button-text>'
 						+ pageInfo.templateCopyright();
 					v.settings3 = pageSettings.templateSettings3(v);
 					ui.q('settings').innerHTML = pageSettings.template(v);
