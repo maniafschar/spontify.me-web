@@ -112,6 +112,7 @@ class pageChat {
 		var e = ui.q('chat');
 		if (ui.cssValue(e, 'display') == 'none')
 			return false;
+		ui.css(e.getAttribute('from'), 'display', '');
 		pageChat.saveDraft();
 		ui.navigation.animation(e, 'slideUp', function () {
 			ui.css(e, 'display', 'none');

@@ -85,7 +85,7 @@ class lists {
 				e.outerHTML = '';
 				lists.setListHint(activeID);
 				if (!ui.q(activeID + ' list-row'))
-					ui.navigation.toggleMenu();
+					ui.navigation.openMenu();
 			});
 		}
 	}

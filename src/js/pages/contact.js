@@ -315,7 +315,7 @@ ${v.matchIndicatorHintDescription}
 		if (!ui.q('contacts').innerHTML)
 			ui.q('contacts').innerHTML = '<list-body></list-body>';
 		if (!ui.q('contacts listResults list-row') && ui.navigation.getActiveID() != 'contacts')
-			setTimeout(ui.navigation.toggleMenu, 500);
+			setTimeout(ui.navigation.openMenu, 500);
 	}
 	static listContacts(l) {
 		var s = '', activeID = ui.navigation.getActiveID();

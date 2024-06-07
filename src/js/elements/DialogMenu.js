@@ -55,22 +55,16 @@ title {
 		this._root.appendChild(element);
 	}
 
-	static close(exec) {
-		if (ui.cssValue('dialog-menu', 'transform').indexOf('1') > 0)
-			ui.navigation.toggleMenu();
+	static close() {
+		ui.css('dialog-menu', 'transform', 'scale(0)');
 		if (DialogHint.currentStep < 0)
 			ui.navigation.closeHint();
-		if (exec)
-			exec();
 	}
-	static toggle(id) {
+	static open(id) {
 		if (!id)
 			id = ui.navigation.getActiveID();
 		setTimeout(function () {
-			var e = ui.q('content>[class*="SlideIn"]');
-			if (e && id.toLowerCase() != e.nodeName.toLowerCase())
-				return;
-			e = ui.q('dialog-menu');
+			var e = ui.q('dialog-menu');
 			if (id == 'contacts')
 				ui.html(e._root.querySelector('div'), `
 <container>
@@ -99,8 +93,14 @@ title {
 </container>`);
 			e.setAttribute('type', id);
 			ui.classAdd(ui.qa('dialog-menu a')[parseInt(ui.q(id).getAttribute('menuIndex'))], 'highlight');
-			ui.css(e, 'transform', e.style.transform.indexOf('1') > 0 ? 'scale(0)' : 'scale(1)')
+			ui.css(e, 'transform', 'scale(1)');
 		}, 10);
+	}
+	static toggle() {
+		if (ui.cssValue('dialog-menu', 'transform').indexOf('1') > 0)
+			DialogMenu.close();
+		else
+			DialogMenu.open();
 	}
 }
 document.addEventListener('Navigation', DialogMenu.close);

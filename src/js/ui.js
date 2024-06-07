@@ -6,7 +6,6 @@ import { ContentAdminMarketing } from './elements/ContentAdminMarketing';
 import { DialogHint } from './elements/DialogHint';
 import { DialogLocationPicker } from './elements/DialogLocationPicker';
 import { DialogMenu } from './elements/DialogMenu';
-import { DialogNavigation } from './elements/DialogNavigation';
 import { DialogPopup } from './elements/DialogPopup';
 import { InputHashtags } from './elements/InputHashtags';
 import { InputRating } from './elements/InputRating';
@@ -274,8 +273,8 @@ class ui {
 		closeLocationPicker() {
 			DialogLocationPicker.close();
 		},
-		closeMenu(exec) {
-			DialogMenu.close(exec);
+		closeMenu() {
+			DialogMenu.close();
 		},
 		closePopup() {
 			return DialogPopup.close();
@@ -348,7 +347,6 @@ class ui {
 				ui.navigation.openHint({ desc: id, pos: '15%,-6em', size: '80%,auto', hinkyClass: 'bottom', hinky: 'right:' + (id == 'contacts' ? 9.375 : 40.625) + '%;margin-right:-1.5em;' });
 				return;
 			}
-			user.save({ webCall: 'ui.navigation.goTo', acceptFriendship: id == 'settings' && ui.classContains('settings tabHeader tab:first-child', 'tabActive') });
 			geoData.headingClear();
 			if (document.activeElement)
 				document.activeElement.blur();
@@ -459,8 +457,11 @@ class ui {
 		openPopup(title, data, closeAction, modal, exec) {
 			return DialogPopup.open(title, data, closeAction, modal, exec);
 		},
-		toggleMenu(id) {
-			DialogMenu.toggle(id);
+		openMenu(id) {
+			DialogMenu.open(id);
+		},
+		toggleMenu() {
+			DialogMenu.toggle();
 		}
 	};
 	static query = {

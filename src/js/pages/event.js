@@ -578,7 +578,7 @@ poll result div {
 		if (!ui.q('events').innerHTML)
 			ui.q('events').innerHTML = '<list-body></list-body>';
 		if (!ui.q('events listResults list-row') && ui.navigation.getActiveID() != 'events')
-			setTimeout(ui.navigation.toggleMenu, 500);
+			setTimeout(ui.navigation.openMenu, 500);
 		if (!pageLocation.map.svgLocation)
 			communication.ajax({
 				url: '/images/locations.svg',
