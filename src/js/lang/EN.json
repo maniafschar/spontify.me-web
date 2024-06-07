@@ -586,7 +586,7 @@
 		"marketing": {
 			"next": "Next",
 			"previous": "Back",
-			"validUntil": "This promotion runs until {0}"
+			"validUntil": "This promotion runs until {0}<br/>Hurry up, the offer lasts while stocks last.<br/>Legal recourse is excluded."
 		},
 		"noResults": {
 			"block": "You do not have any blocked ${buddies}/Locations/Events.",

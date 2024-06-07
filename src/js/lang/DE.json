@@ -586,7 +586,7 @@
 		"marketing": {
 			"next": "Weiter",
 			"previous": "Zurück",
-			"validUntil": "Dies Aktion läuft bis zum {0}"
+			"validUntil": "Diese Aktion läuft bis zum {0}<br/>Beeile Dich, Aktion geht solange der Vorrat reicht.<br/>Der Rechtsweg ist ausgeschlossen."
 		},
 		"noResults": {
 			"block": "Du hast noch keine ${buddies}/Locations/Events geblockt.",
