@@ -143,3 +143,4 @@ item.content-admin-invoice {
 		}
 	}
 }
+document.addEventListener('Navigation', function (e) { DialogNavigation.highlight(e.detail.id) });
