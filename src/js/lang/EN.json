@@ -585,7 +585,8 @@
 		},
 		"marketing": {
 			"next": "Next",
-			"previous": "Back"
+			"previous": "Back",
+			"validUntil": "This promotion runs until {0}"
 		},
 		"noResults": {
 			"block": "You do not have any blocked ${buddies}/Locations/Events.",
