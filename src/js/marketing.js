@@ -71,6 +71,13 @@ b{
 img.result {
 	width: 100%;
 }
+
+hint {
+	display: block;
+	font-size: 0.8em;
+	padding-top: 1.5em;
+	opacity: 0.6;
+}
 </style>`;
 	static close() {
 		if (ui.q('marketing').innerHTML) {
