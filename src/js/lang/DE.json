@@ -585,7 +585,8 @@
 		},
 		"marketing": {
 			"next": "Weiter",
-			"previous": "Zurück"
+			"previous": "Zurück",
+			"validUntil": "Dies Aktion läuft bis zum {0}"
 		},
 		"noResults": {
 			"block": "Du hast noch keine ${buddies}/Locations/Events geblockt.",
