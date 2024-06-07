@@ -143,3 +143,4 @@ label {
 			ui.q('dialog-popup button-text').setAttribute('label', ui.q('dialog-popup input').value ? 'home.locationPickerButtonLookup' : 'home.locationPickerButtonSet');
 	}
 }
+document.addEventListener('Navigation', DialogLocationPicker.close);
