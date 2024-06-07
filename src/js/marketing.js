@@ -181,10 +181,9 @@ img.result {
 				}
 				return;
 			}
-			var s, h = '-4em';
+			var s;
 			if (marketing.data.storage.html) {
 				s = marketing.data.storage.html + '<br/><br/><hint>Die Aktion läuft bis zum ' + global.date.formatDate(marketing.data.endDate) + '</hint>;
-				h = 'auto';
 			} else {
 				if (!marketing.answers)
 					marketing.answers = {};
@@ -201,7 +200,7 @@ img.result {
 						ui.navigation.openHint({
 							desc: marketing.style + '<marketing>' + s + '</marketing>',
 							pos: '5%,5%',
-							size: '-5%,' + h,
+							size: '-5%,-4em',
 							onclick: 'return;',
 							noLogin: true
 						});
