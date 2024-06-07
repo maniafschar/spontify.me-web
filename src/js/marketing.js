@@ -202,7 +202,8 @@ img.result {
 							desc: marketing.style + '<marketing>' + s + '</marketing>',
 							pos: '5%,5%',
 							size: '-5%,' + h,
-							onclick: 'return;'
+							onclick: 'return;',
+							noLogin: true
 						});
 				}, 2000);
 		}
