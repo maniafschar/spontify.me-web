@@ -670,3 +670,4 @@ class pageChat {
 		});
 	}
 }
+document.addEventListener('Navigation', pageChat.closeList);
