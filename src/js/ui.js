@@ -350,8 +350,6 @@ class ui {
 			geoData.headingClear();
 			if (document.activeElement)
 				document.activeElement.blur();
-			if (DialogHint.currentStep < 0)
-				ui.navigation.closeHint();
 			if (currentID == 'settings' && !pageSettings.save(id))
 				return;
 			if (!user.contact && currentID == 'login')

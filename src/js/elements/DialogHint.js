@@ -166,6 +166,10 @@ chart {
 		var e = ui.q('dialog-hint');
 		if (!e || !data || new Date().getTime() / 60000 - DialogHint.lastHint < 4)
 			return;
+		if (ui.q('preloader')) {
+			document.addEventListener('Preloader', function () { DialogHint.open(data) }, true);
+			return;
+		}
 		if (data.action)
 			eval(data.action);
 		if (global.hash(data.desc) == e.getAttribute('i')) {

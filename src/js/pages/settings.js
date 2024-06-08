@@ -539,6 +539,7 @@ ${v.info}`;
 		var animation = ui.q('settings tabBody').getAttribute('animation');
 		if (animation && new Date().getTime() - animation < 500)
 			return;
+		document.dispatchEvent(new CustomEvent('Navigation', { detail: { id: 'settings', subId: i } }));
 		ui.classRemove('settings tab', 'tabActive');
 		ui.classAdd(ui.qa('settings tab')[i], 'tabActive');
 		ui.q('settings tabBody').style.marginLeft = i * -100 + '%';

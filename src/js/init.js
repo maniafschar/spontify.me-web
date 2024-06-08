@@ -72,7 +72,6 @@ class initialisation {
 				var f = function () {
 					if (ui.cssValue('content > *', 'display')) {
 						ui.css('preloader', 'opacity', 0);
-						document.dispatchEvent(new CustomEvent('Preloader', { detail: { status: 'TERMINATED' } }));
 						setTimeout(function () {
 							var e = ui.q('preloader');
 							if (e)
@@ -80,6 +79,7 @@ class initialisation {
 							e = ui.q('#preloader');
 							if (e)
 								e.outerHTML = '';
+							document.dispatchEvent(new CustomEvent('Preloader', { detail: { status: 'TERMINATED' } }));
 						}, 500);
 					} else
 						setTimeout(f, 200);

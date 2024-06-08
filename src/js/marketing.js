@@ -3,6 +3,7 @@ import { global } from './global';
 import { ClientMarketing, model } from './model';
 import { pageHome } from './pages/home';
 import { formFunc, ui } from './ui';
+import { user } from './user';
 
 export { marketing };
 
@@ -166,12 +167,15 @@ hint {
 					next();
 				}
 			});
+		communication.ajax({
+			url: global.serverApi + 'marketing',
+			webCall: 'marketing.next',
+			body: { classname: 'ContactMarketing', values: { clientMarketingId: marketing.data.id, storage: JSON.stringify({}), finished: true } },
+			method: 'POST'
+		});
 	}
 	static open(inline) {
-		var isMarketingOpen = function () {
-			return (ui.q('dialog-hint marketing') && ui.q('dialog-hint marketing').innerHTML) || ui.q('marketing').innerHTML;
-		}
-		if (marketing.data && !isMarketingOpen()) {
+		if (marketing.data && ((ui.q('dialog-hint marketing') && ui.q('dialog-hint marketing').innerHTML) || ui.q('marketing').innerHTML)) {
 			if (marketing.data.clientMarketingResult.id) {
 				if (marketing.data.clientMarketingResult.image) {
 					var f = function () {
@@ -203,9 +207,12 @@ hint {
 				var e = ui.q('marketing');
 				e.innerHTML = marketing.style + s;
 				e.style.display = 'block';
-			} else
-				setTimeout(function () {
-					if (!isMarketingOpen())
+			} else {
+				var f = function () {
+					if (user.get('intro')?.includes('settings') &&
+						ui.cssValue('dialog-hint', 'display') == 'none' &&
+						ui.cssValue('dialog-popup', 'display') == 'none' &&
+						ui.cssValue('dialog-location-picker', 'display') == 'none')
 						ui.navigation.openHint({
 							desc: marketing.style + '<marketing>' + s + '</marketing>',
 							pos: '5%,5%',
@@ -213,7 +220,11 @@ hint {
 							onclick: 'return;',
 							noLogin: true
 						});
-				}, 2000);
+					else
+						setTimeout(f, 5000);
+				}
+				setTimeout(f, 2000);
+			}
 		}
 	}
 	static setQuestion(index) {

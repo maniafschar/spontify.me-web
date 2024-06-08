@@ -1,4 +1,3 @@
-import { DialogHint } from '../elements/DialogHint';
 import { geoData } from '../geoData';
 import { global } from '../global';
 import { lists } from '../lists';
@@ -393,8 +392,7 @@ ${v.keywords}
 		var animation = ui.q('search tabBody').getAttribute('animation');
 		if (animation && new Date().getTime() - animation < 500)
 			return;
-		if (DialogHint.currentStep < 0)
-			ui.navigation.closeHint();
+		document.dispatchEvent(new CustomEvent('Navigation', { detail: { id: 'search', subId: id } }));
 		ui.css('search tabBody>div', 'opacity', 1);
 		ui.q('search tabBody').style.marginLeft = ((id == 'locations' ? 2 : id == 'contacts' ? 1 : 0) * -100) + '%';
 		ui.attr('search tabBody', 'animation', new Date().getTime());
