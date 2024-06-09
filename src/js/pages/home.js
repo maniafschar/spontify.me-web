@@ -341,13 +341,23 @@ border-radius: 0.5em 0 0 3em;
 			initialisation.reposition();
 			pageHome.teaserContacts();
 			pageHome.teaserEvents();
-			if (user.contact && !user.get('intro')?.includes('settings')) {
-				v = user.get('intro') || [];
+		}
+		if (user.contact) {
+			v = user.get('intro') || [];
+			if (!v.includes('settings')) {
 				v.push('settings');
-				user.set('intro', v);
 				if (!user.contact.imageList)
 					ui.navigation.openHint({ desc: 'settings', onclick: 'ui.navigation.goTo("settings")', pos: '-1%,6em', size: 'auto,auto', hinkyClass: 'top', hinky: 'right:1em' });
+			} else if (!v.includes('notifications')) {
+				v.push('notifications');
+				if (ui.q('dialog-navigation badgeNotifications').innerText > 0)
+					ui.navigation.openHint({ desc: 'notifications', onclick: 'pageHome.toggleNotification();ui.navigation.closeHint()', pos: '-1%,-7em', size: 'auto,auto', hinkyClass: 'bottom', hinky: 'right:0.5em' });
+			} else if (!v.includes('chats')) {
+				v.push('chats');
+				if (!user.contact.imageList)
+					ui.navigation.openHint({ desc: 'chats', onclick: 'pageChat.toggleUserList();ui.navigation.closeHint()', pos: '1%,-7em', size: 'auto,auto', hinkyClass: 'bottom', hinky: 'left:2em' });
 			}
+			user.set('intro', v);
 		}
 		pageHome.initNotificationButton();
 		if (user.contact)
