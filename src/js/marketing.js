@@ -185,8 +185,7 @@ hint {
 					desc: marketing.style + '<marketing>' + s + '</marketing>',
 					pos: '5%,5%',
 					size: '-5%,-4em',
-					onclick: 'return;',
-					noLogin: true
+					onclick: 'return;'
 				});
 		}
 	}

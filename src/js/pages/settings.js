@@ -534,7 +534,7 @@ ${v.info}`;
 		user.save({ webCall: 'settings.save', ...formFunc.getForm('settings tabBody').values }, () => pageSettings.postSave(goToID));
 	}
 	static selectTab(i) {
-		if (ui.q('settings tabHeader tab.tabActive').getAttribute('onclick').indexOf(i) > 0)
+		if (ui.q('settings tabHeader tab.tabActive')?.getAttribute('onclick').indexOf(i) > 0)
 			return;
 		var animation = ui.q('settings tabBody').getAttribute('animation');
 		if (animation && new Date().getTime() - animation < 500)
