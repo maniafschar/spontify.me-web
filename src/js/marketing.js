@@ -1,9 +1,7 @@
 import { communication } from './communication';
 import { global } from './global';
-import { ClientMarketing, model } from './model';
 import { pageHome } from './pages/home';
 import { formFunc, ui } from './ui';
-import { user } from './user';
 
 export { marketing };
 
@@ -89,24 +87,6 @@ hint {
 		} else
 			ui.navigation.closeHint();
 	}
-	static init() {
-		communication.ajax({
-			url: global.serverApi + 'marketing',
-			responseType: 'json',
-			webCall: 'marketing.init',
-			success(r) {
-				if (r.length > 1) {
-					marketing.data = model.convert(new ClientMarketing(), r, 1);
-					if (marketing.data.storage)
-						marketing.data.storage = JSON.parse(marketing.data.storage);
-					if (marketing.data.clientMarketingResult.storage)
-						marketing.data.clientMarketingResult.storage = JSON.parse(marketing.data.clientMarketingResult.storage);
-					marketing.open();
-				} else
-					marketing.data = null;
-			}
-		});
-	}
 	static next(back) {
 		var prefix = ui.q('marketing').innerHTML ? 'marketing ' : 'dialog-hint ';
 		var answers = ui.qa(prefix + 'input-checkbox[checked="true"]');
@@ -175,21 +155,14 @@ hint {
 		});
 	}
 	static open(inline) {
-		if (marketing.data && ((ui.q('dialog-hint marketing') && ui.q('dialog-hint marketing').innerHTML) || ui.q('marketing').innerHTML)) {
+		if (marketing.data && !ui.q('dialog-hint marketing')?.innerHTML && !ui.q('marketing').innerHTML) {
 			if (marketing.data.clientMarketingResult.id) {
-				if (marketing.data.clientMarketingResult.image) {
-					var f = function () {
-						ui.navigation.openHint({
-							desc: marketing.style + '<img class="result" src="' + global.serverImg + marketing.data.clientMarketingResult.image + '" />' + (marketing.data.storage.epilog ? '<div>'
-								+ marketing.data.storage.epilog.replace(/\n/g, '<br/>') + '</div>' : ''),
-							pos: '5%,5%', size: '-5%,auto', onclick: 'return;'
-						});
-					};
-					if (ui.q('preloader'))
-						ui.on(document, 'Preloader', f, true);
-					else
-						f();
-				}
+				if (marketing.data.clientMarketingResult.image)
+					ui.navigation.openHint({
+						desc: marketing.style + '<img class="result" src="' + global.serverImg + marketing.data.clientMarketingResult.image + '" />' + (marketing.data.storage.epilog ? '<div>'
+							+ marketing.data.storage.epilog.replace(/\n/g, '<br/>') + '</div>' : ''),
+						pos: '5%,5%', size: '-5%,auto', onclick: 'return;'
+					});
 				return;
 			}
 			var s;
@@ -207,24 +180,14 @@ hint {
 				var e = ui.q('marketing');
 				e.innerHTML = marketing.style + s;
 				e.style.display = 'block';
-			} else {
-				var f = function () {
-					if (user.get('intro')?.includes('settings') &&
-						ui.cssValue('dialog-hint', 'display') == 'none' &&
-						ui.cssValue('dialog-popup', 'display') == 'none' &&
-						ui.cssValue('dialog-location-picker', 'display') == 'none')
-						ui.navigation.openHint({
-							desc: marketing.style + '<marketing>' + s + '</marketing>',
-							pos: '5%,5%',
-							size: '-5%,-4em',
-							onclick: 'return;',
-							noLogin: true
-						});
-					else
-						setTimeout(f, 5000);
-				}
-				setTimeout(f, 2000);
-			}
+			} else
+				ui.navigation.openHint({
+					desc: marketing.style + '<marketing>' + s + '</marketing>',
+					pos: '5%,5%',
+					size: '-5%,-4em',
+					onclick: 'return;',
+					noLogin: true
+				});
 		}
 	}
 	static setQuestion(index) {

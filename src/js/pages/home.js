@@ -341,11 +341,12 @@ border-radius: 0.5em 0 0 3em;
 			initialisation.reposition();
 			pageHome.teaserContacts();
 			pageHome.teaserEvents();
-			if (!user.get('intro')?.includes('settings')) {
+			if (user.contact && !user.get('intro')?.includes('settings')) {
 				v = user.get('intro') || [];
 				v.push('settings');
 				user.set('intro', v);
-				ui.navigation.openHint({ desc: 'settings', onclick: 'ui.navigation.goTo("settings")', pos: '-1%,6em', size: 'auto,auto', hinkyClass: 'top', hinky: 'right:1em' });
+				if (!user.contact.imageList)
+					ui.navigation.openHint({ desc: 'settings', onclick: 'ui.navigation.goTo("settings")', pos: '-1%,6em', size: 'auto,auto', hinkyClass: 'top', hinky: 'right:1em' });
 			}
 		}
 		pageHome.initNotificationButton();

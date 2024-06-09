@@ -4,7 +4,6 @@ import { DialogPopup } from '../elements/DialogPopup';
 import { geoData } from '../geoData';
 import { global } from '../global';
 import { initialisation } from '../init';
-import { marketing } from '../marketing';
 import { Contact } from '../model';
 import { formFunc, ui } from '../ui';
 import { user } from '../user';
@@ -262,7 +261,6 @@ class pageLogin {
 					pageChat.initActiveChats();
 					geoData.init();
 					bluetooth.init();
-					marketing.init();
 					document.dispatchEvent(new CustomEvent('User', { detail: { action: 'login' } }));
 					if (exec)
 						setTimeout(exec, 1500);
