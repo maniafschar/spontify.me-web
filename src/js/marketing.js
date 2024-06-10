@@ -167,6 +167,8 @@ hint {
 			}
 			var s;
 			if (marketing.data.storage.html) {
+				if (!user.contact)
+					return;
 				s = '<div>' + marketing.data.storage.html + '<hint>' + ui.l('marketing.validUntil').replace('{0}', global.date.formatDate(marketing.data.endDate)) + '</hint></div>';
 				if (marketing.data.storage.action && marketing.data.storage.actionLabel && marketing.data.storage.html.indexOf('<action/>') > -1)
 					s = s.replace('<action/>', '<br/><button-text onclick="' + marketing.data.storage.action + '">' + marketing.data.storage.actionLabel + '</button-text><br/>');
