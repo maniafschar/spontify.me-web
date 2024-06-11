@@ -1054,7 +1054,7 @@ poll result div {
 				v.values.description = JSON.stringify(d);
 		}
 		if (ui.q('dialog-popup errorHint')) {
-			ui.q('dialog-popup popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });;
+			ui.q('dialog-popup popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });
 			return;
 		}
 		v.classname = 'Event';
