@@ -164,7 +164,7 @@ class ui {
 				}, true);
 			}, 100);
 		},
-		autoOpen(tag, event, background) {
+		autoOpen(tag, event) {
 			if (!tag)
 				return false;
 			if (event)
