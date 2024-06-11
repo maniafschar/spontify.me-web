@@ -159,7 +159,7 @@ class communication {
 		},
 		openBackground(e) {
 			communication.setApplicationIconBadgeNumber(e.count);
-			ui.navigation.autoOpen(e.exec, true);
+			ui.navigation.autoOpen(e.exec, null, true);
 		},
 		register() {
 			window.cordova.plugins.firebase.messaging.requestPermission().then(function () {
