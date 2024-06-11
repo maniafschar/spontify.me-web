@@ -471,6 +471,16 @@ border-radius: 0.5em 0 0 3em;
 				}
 			});
 	}
+	static openNotification(id) {
+		if (id && user.contact && ui.cssValue('notificationList', 'display') == 'none') {
+			pageHome.toggleNotification();
+			var e = ui.q('notificationList>div[i="' + id + '"]');
+			if (e) {
+				ui.classAdd(e, 'highlight');
+				e.scrollTo({ top: e.offsetTop - 20, behavior: 'smooth' });
+			}
+		}
+	}
 	static reset() {
 		pageHome.badge = -1;
 		ui.html('chatList', '');
@@ -581,6 +591,7 @@ border-radius: 0.5em 0 0 3em;
 			if (ui.q('notificationList').style.display == 'none')
 				pageChat.closeList();
 			ui.toggleHeight('notificationList');
+			ui.classRemove('notificationList>div', 'highlight');
 		}
 	}
 }
