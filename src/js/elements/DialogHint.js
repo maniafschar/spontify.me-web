@@ -9,7 +9,6 @@ export { DialogHint };
 
 class DialogHint extends HTMLElement {
 	static currentStep = -1;
-	static lastHint = 0;
 	static steps = [];
 
 	constructor() {
@@ -164,7 +163,7 @@ chart {
 	}
 	static open(data) {
 		var e = ui.q('dialog-hint');
-		if (!e || !data || new Date().getTime() / 60000 - DialogHint.lastHint < 4)
+		if (!e || !data)
 			return;
 		if (ui.q('preloader')) {
 			document.addEventListener('Preloader', function () { DialogHint.open(data) }, true);
