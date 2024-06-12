@@ -864,7 +864,8 @@ poll result div {
 						if ((e.state & Math.pow(2, i2)) > 0) {
 							var key = ui.q('detail input-checkbox[name="poll' + id + '"][value="' + i2 + '"] label').innerText;
 							count[key] = count[key] > 0 ? count[key] + 1 : 1;
-							labels.push(key);
+							if (!labels.includes(key))
+								labels.push(key);
 							votes++;
 						}
 					}
