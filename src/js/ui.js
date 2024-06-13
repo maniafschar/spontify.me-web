@@ -221,6 +221,8 @@ class ui {
 							error() { },
 							success(r) {
 								if (r && r.length > 1) {
+									if (tag.indexOf('&i=') > 0)
+										marketing.openTag = tag;
 									marketing.data = model.convert(new ClientMarketing(), r, 1);
 									if (marketing.data.storage)
 										marketing.data.storage = JSON.parse(marketing.data.storage);
