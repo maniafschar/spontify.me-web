@@ -9,6 +9,7 @@ class marketing {
 	static data;
 	static answers;
 	static index = [];
+	static openTag;
 	static style = `<style>
 marketing {
 	padding: 2em 1em;
