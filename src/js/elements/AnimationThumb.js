@@ -1,3 +1,5 @@
+marketing.data={clientMarketingResult:{}};marketing.data.storage={ prolog: 'Lieber Sky Kunde,<br/>unsere Community ist auf der suche nach den besten Live-Bars in ihrer Umgebung. Unsere App listet auch Deine Bar. Möchtest Du noch mehr Gäste?', questions:[{question: 'Stimmen Name und Adresse?',textField:true},{question:'Möchtest Du Marketing-Aufkleber, als Aushang für Gäste und/oder zum platzieren an prominanter Stelle, z.B. Sanitäranlagen, Eingang, etc.?', answers:['20', '50']},{question:'Möchtest Du jetzt einen Zugang anlegen?',answers:['Ja','Nein']}] };marketing.open()
+
 https://codepen.io/dzuncoi/pen/pbQojj
 https://www.sliderrevolution.com/resources/css-animation-examples/
 <div class="icon-wrapper">
