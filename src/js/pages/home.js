@@ -4,6 +4,7 @@ import { InputHashtags } from '../elements/InputHashtags';
 import { VideoCall } from '../elements/VideoCall';
 import { geoData } from '../geoData';
 import { global } from '../global';
+import { marketing } from '../marketing';
 import { initialisation } from '../init';
 import { ClientNews, Contact, model } from '../model';
 import { formFunc, ui } from '../ui';
@@ -310,9 +311,7 @@ border-radius: 0.5em 0 0 3em;
 		}
 		if (force || !ui.q('home teaser.events>div card')) {
 			var v = {
-				actionLogo: global.config.club ? 'pageHome.openNews(null,event)' :
-					user.contact ? (global.config.news ? 'ui.navigation.openLocationPicker(event)'
-						: 'ui.navigation.goTo(&quot;settings&quot;)') : 'pageHome.openHint()'
+				actionLogo: 'pageHome.open(event)'
 			};
 			v.statsButton = ' hidden';
 			if (user.contact) {
@@ -409,6 +408,14 @@ border-radius: 0.5em 0 0 3em;
 			ui.classRemove('dialog-navigation buttonIcon.notifications', 'pulse highlight');
 		if (ui.q('dialog-navigation badgeNotifications'))
 			ui.q('dialog-navigation badgeNotifications').innerText = Math.max(pageHome.badge, 0);
+	}
+	static open(event) {
+		if (marketing.openTag)
+			marketing.open();
+		else if (user.contact)
+			ui.navigation.openLocationPicker(event);
+		else
+			pageHome.openHint();
 	}
 	static openHint() {
 		if (!user.contact)
