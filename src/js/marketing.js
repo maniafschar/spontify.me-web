@@ -103,7 +103,7 @@ hint {
 			if (ui.q(prefix + 'textarea')) {
 				if (ui.q(prefix + 'textarea').value)
 					marketing.answers['q' + index].t = ui.q(prefix + 'textarea').value.trim().replace(/</g, '&lt;');
-				else if (!back && ui.q(prefix + 'input-checkbox:last-child').getAttribute('checked') == 'true')
+				else if (!back && ui.q(prefix + 'input-checkbox') && ui.q(prefix + 'input-checkbox:last-child').getAttribute('checked') == 'true')
 					return;
 			}
 			if (!back && ui.q(prefix + 'input-checkbox') && !marketing.answers['q' + index].a.length && !marketing.answers['q' + index].t)
@@ -168,8 +168,6 @@ hint {
 			}
 			var s;
 			if (marketing.data.storage.html) {
-				if (!user.contact)
-					return;
 				s = '<div>' + marketing.data.storage.html + '<hint>' + ui.l('marketing.validUntil').replace('{0}', global.date.formatDate(marketing.data.endDate)) + '</hint></div>';
 				if (marketing.data.storage.action && marketing.data.storage.actionLabel && marketing.data.storage.html.indexOf('<action/>') > -1)
 					s = s.replace('<action/>', '<br/><button-text onclick="' + marketing.data.storage.action + '">' + marketing.data.storage.actionLabel + '</button-text><br/>');
@@ -195,10 +193,13 @@ hint {
 	static setQuestion(index) {
 		var prefix = ui.q('marketing').innerHTML ? 'marketing ' : 'dialog-hint ';
 		var q = marketing.data.storage.questions[index];
-		var s = q.question + '<br/><answers' + (q.textField ? ' style="width:100%;"' : '') + '>';
-		for (var i = 0; i < q.answers.length; i++)
-			s += '<br/><input-checkbox' + (q.multiple ? '' : ' type="radio" next="' + (q.answers[i].next ? q.answers[i].next : '') + '"') + ' name="answers" value="' + i + '" label="' + q.answers[i].answer + '" checked="' + (marketing.answers['q' + index]?.a.includes(i) ? true : false) + '"></input-checkbox>';
-		s += '</answers>';
+		var s = q.question;
+		if (q.answers) {
+			s += '<br/><answers' + (q.textField ? ' style="width:100%;"' : '') + '>';
+			for (var i = 0; i < q.answers.length; i++)
+				s += '<br/><input-checkbox' + (q.multiple ? '' : ' type="radio" next="' + (q.answers[i].next ? q.answers[i].next : '') + '"') + ' name="answers" value="' + i + '" label="' + q.answers[i].answer + '" checked="' + (marketing.answers['q' + index]?.a.includes(i) ? true : false) + '"></input-checkbox>';
+			s += '</answers>';
+		}
 		if (q.textField) {
 			var v = marketing.answers['q' + index]?.t;
 			if (!v && q.textFieldDefault)
