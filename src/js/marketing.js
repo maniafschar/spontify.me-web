@@ -1,6 +1,5 @@
 import { communication } from './communication';
 import { global } from './global';
-import { pageHome } from './pages/home';
 import { formFunc, ui } from './ui';
 
 export { marketing };
@@ -79,43 +78,33 @@ hint {
 	opacity: 0.6;
 }
 </style>`;
-	static close() {
-		if (ui.q('marketing').innerHTML) {
-			pageHome.init(true);
-			var e = ui.q('marketing');
-			e.innerHTML = '';
-			e.style.display = 'none';
-		} else
-			ui.navigation.closeHint();
-	}
 	static next(back) {
-		var prefix = ui.q('marketing').innerHTML ? 'marketing ' : 'dialog-hint ';
-		var answers = ui.qa(prefix + 'input-checkbox[checked="true"]');
+		var answers = ui.qa('dialog-hint input-checkbox[checked="true"]');
 		var index = marketing.index[marketing.index.length - 1];
 		if (index > 0 && !back && !marketing.data.storage.questions[index]) {
-			marketing.close();
+			ui.navigation.closeHint();
 			return;
 		}
 		if (index > -1) {
 			marketing.answers['q' + index] = { a: [] };
 			for (var i = 0; i < answers.length; i++)
 				marketing.answers['q' + index].a.push(parseInt(answers[i].getAttribute('value')));
-			if (ui.q(prefix + 'textarea')) {
-				if (ui.q(prefix + 'textarea').value)
-					marketing.answers['q' + index].t = ui.q(prefix + 'textarea').value.trim().replace(/</g, '&lt;');
-				else if (!back && ui.q(prefix + 'input-checkbox') && ui.q(prefix + 'input-checkbox:last-child').getAttribute('checked') == 'true')
+			if (ui.q('dialog-hint textarea')) {
+				if (ui.q('dialog-hint textarea').value)
+					marketing.answers['q' + index].t = ui.q('dialog-hint textarea').value.trim().replace(/</g, '&lt;');
+				else if (!back && ui.q('dialog-hint input-checkbox') && ui.q('dialog-hint input-checkbox:last-child').getAttribute('checked') == 'true')
 					return;
 			}
-			if (!back && ui.q(prefix + 'input-checkbox') && !marketing.answers['q' + index].a.length && !marketing.answers['q' + index].t)
+			if (!back && ui.q('dialog-hint input-checkbox') && !marketing.answers['q' + index].a.length && !marketing.answers['q' + index].t)
 				return;
 		}
 		if (back) {
 			marketing.index.splice(marketing.index.length - 1, 1);
 			index = marketing.index[marketing.index.length - 1];
 		} else {
-			if (ui.q(prefix + 'input-checkbox[type="radio"][checked="true"]') &&
-				ui.q(prefix + 'input-checkbox[type="radio"][checked="true"]').getAttribute('next'))
-				index = parseInt(ui.q(prefix + 'input-checkbox[type="radio"][checked="true"]').getAttribute('next'));
+			if (ui.q('dialog-hint input-checkbox[type="radio"][checked="true"]') &&
+				ui.q('dialog-hint input-checkbox[type="radio"][checked="true"]').getAttribute('next'))
+				index = parseInt(ui.q('dialog-hint input-checkbox[type="radio"][checked="true"]').getAttribute('next'));
 			else
 				index++;
 		}
@@ -125,14 +114,14 @@ hint {
 			if (marketing.data.storage.questions[index])
 				marketing.setQuestion(index);
 			else if (index < 0) {
-				ui.q(prefix + 'div').innerHTML = marketing.data.storage.prolog ? marketing.data.storage.prolog.replace(/\n/g, '<br/>') : '';
-				var e = ui.q(prefix + 'button-text.left');
+				ui.q('dialog-hint div').innerHTML = marketing.data.storage.prolog ? marketing.data.storage.prolog.replace(/\n/g, '<br/>') : '';
+				var e = ui.q('dialog-hint button-text.left');
 				e.setAttribute('label', 'No');
-				e.setAttribute('onclick', 'marketing.close()');
-				ui.q(prefix + 'button-text.right').setAttribute('label', 'Yes');
-				ui.q(prefix + 'buttons progressindex').style.width = 0;
+				e.setAttribute('onclick', 'ui.navigation.closeHint()');
+				ui.q('dialog-hint button-text.right').setAttribute('label', 'Yes');
+				ui.q('dialog-hint buttons progressindex').style.width = 0;
 			} else
-				ui.q(prefix + 'div').innerHTML = marketing.data.storage.epilog ? marketing.data.storage.epilog.replace(/\n/g, '<br/>') : '';
+				ui.q('dialog-hint div').innerHTML = marketing.data.storage.epilog ? marketing.data.storage.epilog.replace(/\n/g, '<br/>') : '';
 		};
 		if (marketing.data.mode == 'test')
 			next();
@@ -148,15 +137,9 @@ hint {
 					next();
 				}
 			});
-		communication.ajax({
-			url: global.serverApi + 'marketing',
-			webCall: 'marketing.next',
-			body: { classname: 'ContactMarketing', values: { clientMarketingId: marketing.data.id, storage: JSON.stringify({}), finished: true } },
-			method: 'POST'
-		});
 	}
-	static open(inline) {
-		if (marketing.data && !ui.q('dialog-hint marketing')?.innerHTML && !ui.q('marketing').innerHTML) {
+	static open() {
+		if (marketing.data && !ui.q('dialog-hint marketing')?.innerHTML) {
 			if (marketing.data.clientMarketingResult.id) {
 				if (marketing.data.clientMarketingResult.image)
 					ui.navigation.openHint({
@@ -175,23 +158,18 @@ hint {
 				if (!marketing.answers)
 					marketing.answers = {};
 				marketing.index.push(-1);
-				s = '<div>' + (marketing.data.storage.prolog ? marketing.data.storage.prolog.replace(/\n/g, '<br/>') : '') + '</div><buttons><button-text onclick="marketing.close()" label="No" class="left"></button-text><button-text onclick="marketing.next()" label="Yes" class="right"></button-text><progressindex></progressindex></buttons>';
+				s = '<div>' + (marketing.data.storage.prolog ? marketing.data.storage.prolog.replace(/\n/g, '<br/>') : '') + '</div><buttons><button-text onclick="ui.navigation.closeHint()" label="No" class="left"></button-text><button-text onclick="marketing.next()" label="Yes" class="right"></button-text><progressindex></progressindex></buttons>';
 			}
-			if (inline) {
-				var e = ui.q('marketing');
-				e.innerHTML = marketing.style + s;
-				e.style.display = 'block';
-			} else
-				ui.navigation.openHint({
-					desc: marketing.style + '<marketing>' + s + '</marketing>',
-					pos: '5%,5%',
-					size: '-5%,-4em',
-					onclick: 'return;'
-				});
+			ui.navigation.openHint({
+				desc: marketing.style + '<marketing>' + s + '</marketing>',
+				pos: '5%,5%',
+				size: '-5%,-4em',
+				onclick: 'return;',
+				noLogin: true
+			});
 		}
 	}
 	static setQuestion(index) {
-		var prefix = ui.q('marketing').innerHTML ? 'marketing ' : 'dialog-hint ';
 		var q = marketing.data.storage.questions[index];
 		var s = q.question;
 		if (q.answers) {
@@ -208,14 +186,14 @@ hint {
 				} catch (e) { }
 			s += '<textarea>' + (v ? v : '') + '</textarea>';
 		}
-		ui.q(prefix + 'div').innerHTML = s;
-		var e = ui.q(prefix + 'button-text.left');
+		ui.q('dialog-hint div').innerHTML = s;
+		var e = ui.q('dialog-hint button-text.left');
 		e.setAttribute('label', 'marketing.previous');
 		e.setAttribute('onclick', 'marketing.next(true)');
-		var e = ui.q(prefix + 'button-text.right');
+		var e = ui.q('dialog-hint button-text.right');
 		e.setAttribute('label', 'marketing.next');
 		e.setAttribute('onclick', 'marketing.next()');
-		formFunc.initFields(ui.q(prefix + 'div'));
-		ui.q(prefix + 'buttons progressindex').style.width = ((1 + index) / marketing.data.storage.questions.length * 100) + '%';
+		formFunc.initFields(ui.q('dialog-hint div'));
+		ui.q('dialog-hint buttons progressindex').style.width = ((1 + index) / marketing.data.storage.questions.length * 100) + '%';
 	}
 }
