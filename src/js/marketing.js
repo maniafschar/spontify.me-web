@@ -1,5 +1,6 @@
 import { communication } from './communication';
 import { global } from './global';
+import { ContactMarketing, model } from './model';
 import { formFunc, ui } from './ui';
 
 export { marketing };
@@ -79,7 +80,7 @@ hint {
 }
 </style>`;
 	static next(back) {
-		var answers = ui.qa('dialog-hint input-checkbox[checked="true"]');
+		var answers = ui.qa('dialog-hint input-checkbox[checked="true"]'), s;
 		var index = marketing.index[marketing.index.length - 1];
 		if (index > 0 && !back && !marketing.data.storage.questions[index]) {
 			ui.navigation.closeHint();
@@ -89,14 +90,13 @@ hint {
 			marketing.answers['q' + index] = { a: [] };
 			for (var i = 0; i < answers.length; i++)
 				marketing.answers['q' + index].a.push(parseInt(answers[i].getAttribute('value')));
-			if (ui.q('dialog-hint textarea')) {
-				if (ui.q('dialog-hint textarea').value)
-					marketing.answers['q' + index].t = ui.q('dialog-hint textarea').value.trim().replace(/</g, '&lt;');
-				else if (!back && ui.q('dialog-hint input-checkbox') && ui.q('dialog-hint input-checkbox:last-child').getAttribute('checked') == 'true')
+			s = ui.val('dialog-hint textarea') || ui.val('dialog-hint input');
+			if (s)
+				marketing.answers['q' + index].t = s.trim().replace(/</g, '&lt;');
+			else if (!back && ui.q('dialog-hint input-checkbox')) {
+				if (!marketing.answers['q' + index].a.length || ui.val('dialog-hint textarea') && ui.q('dialog-hint input-checkbox:last-child').getAttribute('checked') == 'true')
 					return;
 			}
-			if (!back && ui.q('dialog-hint input-checkbox') && !marketing.answers['q' + index].a.length && !marketing.answers['q' + index].t)
-				return;
 		}
 		if (back) {
 			marketing.index.splice(marketing.index.length - 1, 1);
@@ -127,22 +127,26 @@ hint {
 			next();
 		else {
 			if (marketing.openTag) {
-				var s = marketing.openTag.split('&');
+				s = marketing.openTag.split('&');
 				for (var i = 0; i < s.length; i++) {
 					if (s[i].indexOf('i=') == 0)
-						marketing.answers.locationId = marketing.openTag.substring(s[i].substring(2));
+						marketing.answers.locationId = s[i].substring(2);
 					else if (s[i].indexOf('h=') == 0)
-						marketing.answers.hash = marketing.openTag.substring(s[i].substring(2));
+						marketing.answers.hash = s[i].substring(2);
 				}
 			}
 			communication.ajax({
 				url: global.serverApi + 'marketing',
 				webCall: 'marketing.next',
+				responseType: 'json',
 				body: { classname: 'ContactMarketing', id: marketing.data.answerId, values: { clientMarketingId: marketing.data.id, storage: JSON.stringify(marketing.answers), finished: back || marketing.data.storage.questions[index] ? false : true } },
 				method: marketing.data.answerId ? 'PUT' : 'POST',
 				success(r) {
-					if (r)
-						marketing.data.answerId = r;
+					if (r) {
+						var e = model.convert(new ContactMarketing(), r);
+						marketing.data.answerId = e.id;
+						marketing.answers = JSON.parse(e.storage);
+					}
 					next();
 				}
 			});
@@ -190,9 +194,9 @@ hint {
 		}
 		if (q.textField) {
 			var v = marketing.answers['q' + index]?.t;
-			if (!v && q.textFieldDefault)
+			if (!v && q.default)
 				try {
-					v = eval(q.textFieldDefault);
+					v = eval(q.default);
 				} catch (e) { }
 			if (!v)
 				v = '';
