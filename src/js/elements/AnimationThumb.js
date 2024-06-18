@@ -186,7 +186,7 @@
 			"question": "Möchtest Du jetzt einen Zugang anlegen? Er ist und bleibt natürlich kostenlos.",
 			"answers": [
 				{
-					"answer":"Ja"
+					"answer": "Ja"
 				},
 				{
 					"answer": "Nein"
