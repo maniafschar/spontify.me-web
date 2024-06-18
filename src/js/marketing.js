@@ -125,7 +125,16 @@ hint {
 		};
 		if (marketing.data.mode == 'test')
 			next();
-		else
+		else {
+			if (marketing.openTag) {
+				var s = marketing.openTag.split('&');
+				for (var i = 0; i < s.length; i++) {
+					if (s[i].indexOf('i=') == 0)
+						marketing.answers.locationId = marketing.openTag.substring(s[i].substring(2));
+					else if (s[i].indexOf('h=') == 0)
+						marketing.answers.hash = marketing.openTag.substring(s[i].substring(2));
+				}
+			}
 			communication.ajax({
 				url: global.serverApi + 'marketing',
 				webCall: 'marketing.next',
@@ -137,6 +146,7 @@ hint {
 					next();
 				}
 			});
+		}
 	}
 	static open() {
 		if (marketing.data && !ui.q('dialog-hint marketing')?.innerHTML) {
