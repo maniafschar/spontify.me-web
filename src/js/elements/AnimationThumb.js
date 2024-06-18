@@ -30,6 +30,7 @@
 		},
 		{
 			"question": "Welche Attribute treffen auf Dich zu?",
+			"default": "marketing.data.skills",
 			"answers": [
 				{
 					"answer": "Afghanisch",
