@@ -1,4 +1,200 @@
-{\n\t\"type\":\"locationMarketing\",\n\t\"prolog\": \"Lieber Sky Kunde,<br><br>unsere Community ist auf der suche nach den besten <b>Live-Sport-Locations</b> in ihrer Umgebung. Unsere App listet auch Deine Location.<br><br>Möchtest Du <b>mehr Gäste?</b><br><br>Du kannst jederzeit den Dialog schließen, Dich umschauen und durch klicken des Logos diesen Dialod wieder öffnen.\",\n\t\"epilog\": \"Lieben Dank für Deine Teilnahme, wir melden uns gegenbenenfalls bei Dir.\",\n\t\"questions\": [\n\t\t\t{ \"question\": \"Stimmt der Name Deiner Location?\", \"textField\": \"text\", \"default\": \"marketing.data.name\" },\n\t\t\t{ \"question\": \"Stimmt die Adresse Deiner Location?\", \"textField\": \"textarea\", \"default\": \"marketing.data.address\" },\n\t\t\t{ \"question\": \"Stimmt die Telefonnummer Deiner Location?\", \"textField\": \"text\", \"default\": \"marketing.data.telephone\" },\n\t\t\t{ \"question\": \"Stimmt die URL Deiner Location?\", \"textField\": \"text\", \"default\": \"marketing.data.url\" },\n\t\t\t{ \"question\": \"Hier kannst Du Deine Location beschreiben:\", \"textField\": \"textarea\", \"default\": \"marketing.data.description\" },\n\t\t\t{ \"question\": \"Welche Attribute treffen auf Dich zu?\", \"textField\": true },\n\t\t\t{ \"question\": \"Möchtest Du Marketing-Aufkleber als Aushang für Gäste und/oder zum platzieren an prominanter Stelle, z.B. Sanitäranlagen, Eingang, etc.?\", \"answers\": [{\"answer\":\"Ja, 20\"}, {\"answer\":\"Ja, 50\"}, {\"answer\":\"Nein Danke\"}] },\n\t\t\t{ \"question\": \"Möchtest Du jetzt einen Zugang anlegen?\", \"answers\": [{\"answer\":\"Ja\"}, {\"answer\":\"Nein\"}] },\n\t\t\t{ \"question\": \"Bist Du an einer engeren Zusammenarbeit interessiert, um z.B. um Events in Deiner Location zu promoten?\", \"answers\": [{\"answer\":\"Ja\"}, {\"answer\":\"Nein\"}] },\n\t\t\t{ \"question\": \"Hast Du weitere Anmerkungen/Anregungen für uns?\", \"textField\": \"textarea\" }\n\t]\n}
+{
+	"type": "locationMarketing",
+	"prolog": "Lieber Sky Kunde,<br><br>unsere Community ist auf der suche nach den besten <b>Live-Sport-Locations</b> in ihrer Umgebung. Unsere App listet auch Deine Location.<br><br>Möchtest Du <b>mehr Gäste?</b><br><br>Du kannst jederzeit den Dialog schließen, Dich umschauen und durch klicken des Logos diesen Dialod wieder öffnen.",
+	"epilog": "Lieben Dank für Deine Teilnahme, wir melden uns gegenbenenfalls bei Dir.",
+	"questions": [
+		{ 
+			"question": "Stimmt der Name Deiner Location?",
+			"textField": "text",
+			"default": "marketing.data.name"
+		},
+		{ 
+			"question": "Stimmt die Adresse Deiner Location?",
+			"textField": "textarea",
+			"default": "marketing.data.address"
+		},
+		{
+			"question": "Stimmt die Telefonnummer Deiner Location?",
+			"textField": "text",
+			"default": "marketing.data.telephone"
+		},
+		{
+			"question": "Stimmt die URL Deiner Location?",
+			"textField": "text",
+			"default": "marketing.data.url"
+		},
+		{
+			"question": "Hier kannst Du Deine Location beschreiben:",
+			"textField": "textarea",
+			"default": "marketing.data.description"
+		},
+		{
+			"question": "Welche Attribute treffen auf Dich zu?",
+			"answers": [
+				{
+					"answer": "Afghanisch",
+					"key": "2.01"
+				},
+				{
+					"answer": "Bayerisch",
+					"key": "2.02"
+				},
+				{
+					"answer": "Bier",
+					"key": "2.03"
+				},
+				{
+					"answer": "Burger",
+					"key": "2.04"
+				},
+				{
+					"answer": "Chinesisch",
+					"key": "2.05"
+				},
+				{
+					"answer": "Cocktails",
+					"key": "2.29"
+				},
+				{
+					"answer": "Dessert",
+					"key": "2.06"
+				},
+				{
+					"answer": "Deutsch",
+					"key": "2.07"
+				},
+				{
+					"answer": "Fisch",
+					"key": "2.08"
+				},
+				{
+					"answer": "Fleisch",
+					"key": "2.09"
+				},
+				{
+					"answer": "Französisch",
+					"key": "2.10"
+				},
+				{
+					"answer": "Grill",
+					"key": "2.11"
+				},
+				{
+					"answer": "Italienisch",
+					"key": "2.12"
+				},
+				{
+					"answer": "Japanisch",
+					"key": "2.13"
+				},
+				{
+					"answer": "Kaffee",
+					"key": "2.14"
+				},
+				{
+					"answer": "Kuchen",
+					"key": "2.15"
+				},
+				{
+					"answer": "Libanesisch",
+					"key": "2.16"
+				},
+				{
+					"answer": "Pasta",
+					"key": "2.17"
+				},
+				{
+					"answer": "Persisch",
+					"key": "2.18"
+				},
+				{
+					"answer": "Pizza",
+					"key": "2.19"
+				},
+				{
+					"answer": "Spanisch",
+					"key": "2.20"
+				},
+				{
+					"answer": "Spirituosen",
+					"key": "2.21"
+				},
+				{
+					"answer": "Sportsbar",
+					"key": "x.1"
+				},
+				{
+					"answer": "Thai",
+					"key": "2.22"
+				},
+				{
+					"answer": "Vegan",
+					"key": "2.23"
+				},
+				{
+					"answer": "Vegetarisch",
+					"key": "2.24"
+				},
+				{
+					"answer": "Vietnamesisch",
+					"key": "2.25"
+				},
+				{
+					"answer": "Wein",
+					"key": "2.26"
+				},
+				{
+					"answer": "Whisky",
+					"key": "2.27"
+				},
+				{
+					"answer": "Zigarren",
+					"key": "2.28"
+				}
+		},
+		{
+			"question": "Möchtest Du Marketing-Aufkleber als Aushang für Gäste und/oder zum platzieren an prominanter Stelle, z.B. Sanitäranlagen, Eingang, etc.?",
+			"answers": [
+				{
+					"answer": "Ja, 20"
+				},
+				{
+					"answer": "Ja, 50"
+				},
+				{
+					"answer": "Nein Danke"
+				}
+			]
+		},
+		{
+			"question": "Möchtest Du jetzt einen Zugang anlegen?",
+			"answers": [
+				{
+					"answer":"Ja"
+				},
+				{
+					"answer": "Nein"
+				}
+			]
+		},
+		{
+			"question": "Bist Du an einer engeren Zusammenarbeit interessiert, um z.B. um Events in Deiner Location zu promoten?",
+			"answers": [
+				{
+					"answer": "Ja"
+				},
+				{
+					"answer": "Nein"
+				}
+			]
+		},
+		{
+			"question": "Hast Du weitere Anmerkungen/Anregungen für uns?",
+			"textField": "textarea"
+		}
+	]
+}
+
 
 https://codepen.io/dzuncoi/pen/pbQojj
 https://www.sliderrevolution.com/resources/css-animation-examples/
