@@ -29,7 +29,7 @@
 			"default": "marketing.data.description"
 		},
 		{
-			"question": "Welche Attribute treffen auf Dich zu?",
+			"question": "Welche kulinarischen Attribute treffen auf Deine Location zu?",
 			"default": "marketing.data.skills",
 			"answers": [
 				{
@@ -121,10 +121,6 @@
 					"key": "2.21"
 				},
 				{
-					"answer": "Sportsbar",
-					"key": "x.1"
-				},
-				{
 					"answer": "Thai",
 					"key": "2.22"
 				},
@@ -152,6 +148,25 @@
 					"answer": "Zigarren",
 					"key": "2.28"
 				}
+			]
+		},
+		{
+			"question": "Welche weiteren Attribute treffen auf Deine Location zu?",
+			"default": "marketing.data.skills",
+			"answers": [
+				{
+					"answer": "Kino",
+					"key": "2.28"
+				},
+				{
+					"answer": "Museum",
+					"key": "2.28"
+				},
+				{
+					"answer": "Sportsbar",
+					"key": "x.1"
+				}
+			]
 		},
 		{
 			"question": "Möchtest Du Marketing-Aufkleber als Aushang für Gäste und/oder zum platzieren an prominanter Stelle, z.B. Sanitäranlagen, Eingang, etc.?",
@@ -168,7 +183,7 @@
 			]
 		},
 		{
-			"question": "Möchtest Du jetzt einen Zugang anlegen?",
+			"question": "Möchtest Du jetzt einen Zugang anlegen? Er ist und bleibt natürlich kostenlos.",
 			"answers": [
 				{
 					"answer":"Ja"
