@@ -184,7 +184,12 @@ hint {
 				try {
 					v = eval(q.textFieldDefault);
 				} catch (e) { }
-			s += '<textarea>' + (v ? v : '') + '</textarea>';
+			if (!v)
+				v = '';
+			if (q.textField == 'textarea')
+				s += '<textarea>' + v + '</textarea>';
+			else
+				s += '<input value="' + v + '" type="' + q.textField + '"></input>';
 		}
 		ui.q('dialog-hint div').innerHTML = s;
 		var e = ui.q('dialog-hint button-text.left');
