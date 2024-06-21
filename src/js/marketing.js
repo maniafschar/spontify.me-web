@@ -1,6 +1,5 @@
 import { communication } from './communication';
 import { global } from './global';
-import { ContactMarketing, model } from './model';
 import { formFunc, ui } from './ui';
 
 export { marketing };
@@ -135,18 +134,18 @@ hint {
 						marketing.answers.hash = s[i].substring(2);
 				}
 			}
+			var finished = back || marketing.data.storage.questions[index] ? false : true;
 			communication.ajax({
 				url: global.serverApi + 'marketing',
 				webCall: 'marketing.next',
-				body: { classname: 'ContactMarketing', id: marketing.data.answerId, values: { clientMarketingId: marketing.data.id, storage: JSON.stringify(marketing.answers), finished: back || marketing.data.storage.questions[index] ? false : true } },
+				body: { classname: 'ContactMarketing', id: marketing.data.answerId, values: { clientMarketingId: marketing.data.id, storage: JSON.stringify(marketing.answers), finished: finished } },
 				method: marketing.data.answerId ? 'PUT' : 'POST',
 				success(r) {
-					if (r) {
-						var e = model.convert(new ContactMarketing(), r);
-						marketing.data.answerId = e.id;
-						marketing.answers = JSON.parse(e.storage);
-					}
+					if (r)
+						marketing.data.answerId = r;
 					next();
+					if (finished)
+						marketing.openTag = null;
 				}
 			});
 		}
