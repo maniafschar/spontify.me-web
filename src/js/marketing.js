@@ -107,7 +107,7 @@ hint {
 			else
 				index++;
 		}
-		var next = function () {
+		var next = function (msg) {
 			if (!back)
 				marketing.index.push(index);
 			if (marketing.data.storage.questions[index])
@@ -120,7 +120,7 @@ hint {
 				ui.q('dialog-hint button-text.right').setAttribute('label', 'Yes');
 				ui.q('dialog-hint buttons progressindex').style.width = 0;
 			} else
-				ui.q('dialog-hint div').innerHTML = marketing.data.storage.epilog ? marketing.data.storage.epilog.replace(/\n/g, '<br/>') : '';
+				ui.q('dialog-hint div').innerHTML = (marketing.data.storage.epilog ? marketing.data.storage.epilog.replace(/\n/g, '<br/>') : '') + (msg ? '<br/><br/>' + msg.replace(/\n/g, '<br/>') : '');
 		};
 		if (marketing.data.mode == 'test')
 			next();
@@ -141,11 +141,11 @@ hint {
 				body: { classname: 'ContactMarketing', id: marketing.data._answer.id, values: { clientMarketingId: marketing.data.id, storage: JSON.stringify(marketing.data._answer.storage), finished: finished } },
 				method: marketing.data._answer.id ? 'PUT' : 'POST',
 				success(r) {
-					if (r)
-						marketing.data._answer = { id: r };
-					next();
 					if (finished)
 						marketing.openTag = null;
+					else if (r)
+						marketing.data._answer = { id: r };
+					next(r);
 				}
 			});
 		}
