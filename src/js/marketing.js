@@ -86,14 +86,14 @@ hint {
 			return;
 		}
 		if (index > -1) {
-			marketing.answers['q' + index] = { a: [] };
+			marketing.data._answer.storage['q' + index] = { a: [] };
 			for (var i = 0; i < answers.length; i++)
-				marketing.answers['q' + index].a.push(parseInt(answers[i].getAttribute('value')));
+				marketing.data._answer.storage['q' + index].a.push(parseInt(answers[i].getAttribute('value')));
 			s = ui.val('dialog-hint textarea') || ui.val('dialog-hint input');
 			if (s)
-				marketing.answers['q' + index].t = s.trim().replace(/</g, '&lt;');
+				marketing.data._answer.storage['q' + index].t = s.trim().replace(/</g, '&lt;');
 			else if (!back && ui.q('dialog-hint input-checkbox')) {
-				if (!marketing.answers['q' + index].a.length || ui.val('dialog-hint textarea') && ui.q('dialog-hint input-checkbox:last-child').getAttribute('checked') == 'true')
+				if (!marketing.data._answer.storage['q' + index].a.length || ui.val('dialog-hint textarea') && ui.q('dialog-hint input-checkbox:last-child').getAttribute('checked') == 'true')
 					return;
 			}
 		}
@@ -129,20 +129,20 @@ hint {
 				s = marketing.openTag.split('&');
 				for (var i = 0; i < s.length; i++) {
 					if (s[i].indexOf('i=') == 0)
-						marketing.answers.locationId = s[i].substring(2);
+						marketing.data._answer.storage.locationId = s[i].substring(2);
 					else if (s[i].indexOf('h=') == 0)
-						marketing.answers.hash = s[i].substring(2);
+						marketing.data._answer.storage.hash = s[i].substring(2);
 				}
 			}
 			var finished = back || marketing.data.storage.questions[index] ? false : true;
 			communication.ajax({
 				url: global.serverApi + 'marketing',
 				webCall: 'marketing.next',
-				body: { classname: 'ContactMarketing', id: marketing.data.answerId, values: { clientMarketingId: marketing.data.id, storage: JSON.stringify(marketing.answers), finished: finished } },
-				method: marketing.data.answerId ? 'PUT' : 'POST',
+				body: { classname: 'ContactMarketing', id: marketing.data._answer.id, values: { clientMarketingId: marketing.data.id, storage: JSON.stringify(marketing.data._answer.storage), finished: finished } },
+				method: marketing.data._answer.id ? 'PUT' : 'POST',
 				success(r) {
 					if (r)
-						marketing.data.answerId = r;
+						marketing.data._answer = { id: r };
 					next();
 					if (finished)
 						marketing.openTag = null;
@@ -167,8 +167,8 @@ hint {
 				if (marketing.data.storage.action && marketing.data.storage.actionLabel && marketing.data.storage.html.indexOf('<action/>') > -1)
 					s = s.replace('<action/>', '<br/><button-text onclick="' + marketing.data.storage.action + '">' + marketing.data.storage.actionLabel + '</button-text><br/>');
 			} else {
-				if (!marketing.answers)
-					marketing.answers = {};
+				if (!marketing.data._answer.storage)
+					marketing.data._answer.storage = {};
 				marketing.index.push(-1);
 				s = '<div>' + (marketing.data.storage.prolog ? marketing.data.storage.prolog.replace(/\n/g, '<br/>') : '') + '</div><buttons><button-text onclick="ui.navigation.closeHint()" label="No" class="left"></button-text><button-text onclick="marketing.next()" label="Yes" class="right"></button-text><progressindex></progressindex></buttons>';
 			}
@@ -187,11 +187,11 @@ hint {
 		if (q.answers) {
 			s += '<br/><answers' + (q.textField ? ' style="width:100%;"' : '') + '>';
 			for (var i = 0; i < q.answers.length; i++)
-				s += '<br/><input-checkbox' + (q.multiple ? '' : ' type="radio" next="' + (q.answers[i].next ? q.answers[i].next : '') + '"') + ' name="answers" value="' + i + '" label="' + q.answers[i].answer + '" checked="' + (marketing.answers['q' + index]?.a.includes(i) ? true : false) + '"></input-checkbox>';
+				s += '<br/><input-checkbox' + (q.multiple ? '' : ' type="radio" next="' + (q.answers[i].next ? q.answers[i].next : '') + '"') + ' name="answers" value="' + i + '" label="' + q.answers[i].answer + '" checked="' + (marketing.data._answer.storage['q' + index]?.a.includes(i) ? true : false) + '"></input-checkbox>';
 			s += '</answers>';
 		}
 		if (q.textField) {
-			var v = marketing.answers['q' + index]?.t;
+			var v = marketing.data._answer.storage['q' + index]?.t;
 			if (!v && q.default)
 				try {
 					v = eval(q.default);

@@ -15,7 +15,7 @@ import { global } from './global';
 import { initialisation } from './init';
 import { lists } from './lists';
 import { marketing } from './marketing';
-import { ClientMarketing, model } from './model';
+import { ClientMarketing, ContactMarketing, model } from './model';
 import { pageChat } from './pages/chat';
 import { pageContact } from './pages/contact';
 import { pageEvent } from './pages/event';
@@ -228,6 +228,10 @@ class ui {
 										marketing.data.storage = JSON.parse(marketing.data.storage);
 									if (marketing.data.clientMarketingResult.storage)
 										marketing.data.clientMarketingResult.storage = JSON.parse(marketing.data.clientMarketingResult.storage);
+									if (marketing.data._answer) {
+										marketing.data._answer = model.convert(new ContactMarketing(), marketing.data._answer);
+										marketing.data._answer.storage = JSON.parse(marketing.data._answer.storage);
+									}
 									marketing.open();
 								}
 							}

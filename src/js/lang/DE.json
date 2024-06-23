@@ -603,6 +603,7 @@
 			"list": "Du befindest Dich momentan an einem Ort, an dem noch keine ${appTitle} {0} erfasst wurden. Lade Freunde ein und erfasse neue Locations.{1}",
 			"matches": "In dieser Liste siehst Du {0} die zu Dir passen. Fülle die Einstellungen aus, damit Dir hier passende Einträge angezeigt werden.${noResults.openSettings}",
 			"noGroups": "Du hast noch keine Gruppen angelegt. ${noResults.groupsDescription}",
+			"openPoll": "Klicke auf den Home Button und dort auf das Logo, um die Umfrage wieder zu öffnen.",
 			"openSettings": "<br/><br/>Tipp: Diese Liste zeigt {0} an, die zu Deinen Einstellungen passen.<br/><br/>Möchtest Du Deine Einstellungen überarbeiten?{1}",
 			"profile": "Dein Profil wurde noch nicht angeklickt. Möchtest Du es attraktiver gestallten?{1}",
 			"repeat": "Ohne Schlagwörter wiederholen",
