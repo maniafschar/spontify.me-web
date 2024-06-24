@@ -144,7 +144,7 @@ hint {
 					if (finished)
 						marketing.openTag = null;
 					else if (r)
-						marketing.data._answer = { id: r };
+						marketing.data._answer = { id: r, storage: {} };
 					next(r);
 				}
 			});
@@ -167,8 +167,8 @@ hint {
 				if (marketing.data.storage.action && marketing.data.storage.actionLabel && marketing.data.storage.html.indexOf('<action/>') > -1)
 					s = s.replace('<action/>', '<br/><button-text onclick="' + marketing.data.storage.action + '">' + marketing.data.storage.actionLabel + '</button-text><br/>');
 			} else {
-				if (!marketing.data._answer.storage)
-					marketing.data._answer.storage = {};
+				if (!marketing.data._answer)
+					marketing.data._answer = { storage: {} };
 				marketing.index.push(-1);
 				s = '<div>' + (marketing.data.storage.prolog ? marketing.data.storage.prolog.replace(/\n/g, '<br/>') : '') + '</div><buttons><button-text onclick="ui.navigation.closeHint()" label="No" class="left"></button-text><button-text onclick="marketing.next()" label="Yes" class="right"></button-text><progressindex></progressindex></buttons>';
 			}
