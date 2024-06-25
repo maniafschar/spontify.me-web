@@ -3,31 +3,37 @@
 		"epilog": "Lieben Dank für Deine Teilnahme, wir melden uns gegenbenenfalls bei Dir.",
 			"questions": [
 				{
+					"id": "name",
 					"question": "Stimmt der Name Deiner Location?",
 					"textField": "text",
 					"preset": "marketing.data._name"
 				},
 				{
+					"id": "address",
 					"question": "Stimmt die Adresse Deiner Location?",
 					"textField": "textarea",
 					"preset": "marketing.data._address"
 				},
 				{
+					"id": "telephone",
 					"question": "Stimmt die Telefonnummer Deiner Location?",
 					"textField": "text",
 					"presetdefault": "marketing.data._telephone"
 				},
 				{
+					"id": "url",
 					"question": "Stimmt die URL Deiner Location?",
 					"textField": "text",
 					"presetdefault": "marketing.data._url"
 				},
 				{
+					"id": "description",
 					"question": "Hier kannst Du Deine Location beschreiben:",
 					"textField": "textarea",
 					"presetdefault": "marketing.data._description"
 				},
 				{
+					"id": "skills",
 					"question": "Welche kulinarischen Attribute treffen auf Deine Location zu?",
 					"multiple": true,
 					"textField": "text",
@@ -155,6 +161,7 @@
 					]
 				},
 				{
+					"id": "skills",
 					"question": "Welche weiteren Attribute treffen auf Deine Location zu?",
 					"multiple": true,
 					"textField": "text",
@@ -178,6 +185,7 @@
 					]
 				},
 				{
+					"id": "cards",
 					"question": "Möchtest Du Marketing-Aufkleber als Aushang für Gäste und/oder zum platzieren an prominanter Stelle, z.B. Sanitäranlagen, Eingang, etc.?",
 					"answers": [
 						{
@@ -192,6 +200,7 @@
 					]
 				},
 				{
+					"id": "account",
 					"question": "Möchtest Du jetzt einen Zugang anlegen? Mit dem Zugang kannst Du Events einstellen, Deine Location pflegen und bekommst diverse Analysemöglichkeiten. Er is natürlich kostenlos.",
 					"answers": [
 						{
@@ -203,6 +212,7 @@
 					]
 				},
 				{
+					"id": "cooperation",
 					"question": "Bist Du an einer engeren Zusammenarbeit interessiert, um z.B. um Events in Deiner Location zu promoten?",
 					"answers": [
 						{
@@ -214,6 +224,7 @@
 					]
 				},
 				{
+					"id": "feedback",
 					"question": "Hast Du weitere Anmerkungen/Anregungen für uns?",
 					"textField": "textarea"
 				}
