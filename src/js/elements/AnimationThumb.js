@@ -1,229 +1,224 @@
-details.open(141, {
-					webCall: 'AnimationThumb.undefined', query: 'location_list', search: encodeURIComponent('location.id=141')
-				},function(e,id) { setTimeout(function() {ui.navigation.openHint({
-                        desc: "Klicke auf den Home Button und dort auf das Logo, um die Umfrage wieder zu öffnen.",
-                        pos: "1em,-6.5em",
-                        size: "60%,auto",
-    onclick:'ui.navigation.goTo("home")',
-                        hinkyClass: "bottom",
-                        hinky: "left:17%",
-    noLogin:true
-                    })},1500);return pageLocation.detailLocationEvent(e, id);})
-
-
 {
-	"type": "locationMarketing",
-	"prolog": "Lieber Sky Kunde,<br><br>unsere Community ist auf der suche nach den besten <b>Live-Sport-Locations</b> in ihrer Umgebung. Unsere App listet auch Deine Location.<br><br>Möchtest Du <b>mehr Gäste?</b><br><br>Du kannst jederzeit den Dialog schließen, Dich umschauen und durch klicken des Logos diesen Dialod wieder öffnen.",
-	"epilog": "Lieben Dank für Deine Teilnahme, wir melden uns gegenbenenfalls bei Dir.",
-	"questions": [
-		{ 
-			"question": "Stimmt der Name Deiner Location?",
-			"textField": "text",
-			"default": "marketing.data.name"
-		},
-		{ 
-			"question": "Stimmt die Adresse Deiner Location?",
-			"textField": "textarea",
-			"default": "marketing.data.address"
-		},
-		{
-			"question": "Stimmt die Telefonnummer Deiner Location?",
-			"textField": "text",
-			"default": "marketing.data.telephone"
-		},
-		{
-			"question": "Stimmt die URL Deiner Location?",
-			"textField": "text",
-			"default": "marketing.data.url"
-		},
-		{
-			"question": "Hier kannst Du Deine Location beschreiben:",
-			"textField": "textarea",
-			"default": "marketing.data.description"
-		},
-		{
-			"question": "Welche kulinarischen Attribute treffen auf Deine Location zu?",
-			"default": "marketing.data.skills",
-			"answers": [
+	"prolog": "Lieber Sky Kunde,<br><br>unsere Community ist auf der suche nach den besten <b>Live-Sport-Locations</b> in ihrer Umgebung. Unsere App listet auch Deine Location.<br><br>Möchtest Du <b>mehr Gäste?</b><br><br><button-text label=\"meine Location anzeigen\" onclick=\"details.openLocationMarketing()\"></button-text><br><br><br><br><explain style=\"width:70%;margin-left:15%;\">Wir sind ein Münchner IT Unternehmen und begeisterte Fußball Fans. Wir möchten Fans besser venetzen.</explain>",
+		"epilog": "Lieben Dank für Deine Teilnahme, wir melden uns gegenbenenfalls bei Dir.",
+			"questions": [
 				{
-					"answer": "Afghanisch",
-					"key": "2.01"
+					"question": "Stimmt der Name Deiner Location?",
+					"textField": "text",
+					"preset": "marketing.data._name"
 				},
 				{
-					"answer": "Bayerisch",
-					"key": "2.02"
+					"question": "Stimmt die Adresse Deiner Location?",
+					"textField": "textarea",
+					"preset": "marketing.data._address"
 				},
 				{
-					"answer": "Bier",
-					"key": "2.03"
+					"question": "Stimmt die Telefonnummer Deiner Location?",
+					"textField": "text",
+					"presetdefault": "marketing.data._telephone"
 				},
 				{
-					"answer": "Burger",
-					"key": "2.04"
+					"question": "Stimmt die URL Deiner Location?",
+					"textField": "text",
+					"presetdefault": "marketing.data._url"
 				},
 				{
-					"answer": "Chinesisch",
-					"key": "2.05"
+					"question": "Hier kannst Du Deine Location beschreiben:",
+					"textField": "textarea",
+					"presetdefault": "marketing.data._description"
 				},
 				{
-					"answer": "Cocktails",
-					"key": "2.29"
+					"question": "Welche kulinarischen Attribute treffen auf Deine Location zu?",
+					"multiple": true,
+					"textField": "text",
+					"answers": [
+						{
+							"answer": "Afghanisch",
+							"key": "2.01"
+						},
+						{
+							"answer": "Bayerisch",
+							"key": "2.02"
+						},
+						{
+							"answer": "Bier",
+							"key": "2.03"
+						},
+						{
+							"answer": "Burger",
+							"key": "2.04"
+						},
+						{
+							"answer": "Chinesisch",
+							"key": "2.05"
+						},
+						{
+							"answer": "Cocktails",
+							"key": "2.29"
+						},
+						{
+							"answer": "Dessert",
+							"key": "2.06"
+						},
+						{
+							"answer": "Deutsch",
+							"key": "2.07"
+						},
+						{
+							"answer": "Fisch",
+							"key": "2.08"
+						},
+						{
+							"answer": "Fleisch",
+							"key": "2.09"
+						},
+						{
+							"answer": "Französisch",
+							"key": "2.10"
+						},
+						{
+							"answer": "Grill",
+							"key": "2.11"
+						},
+						{
+							"answer": "Italienisch",
+							"key": "2.12"
+						},
+						{
+							"answer": "Japanisch",
+							"key": "2.13"
+						},
+						{
+							"answer": "Kaffee",
+							"key": "2.14"
+						},
+						{
+							"answer": "Kuchen",
+							"key": "2.15"
+						},
+						{
+							"answer": "Libanesisch",
+							"key": "2.16"
+						},
+						{
+							"answer": "Pasta",
+							"key": "2.17"
+						},
+						{
+							"answer": "Persisch",
+							"key": "2.18"
+						},
+						{
+							"answer": "Pizza",
+							"key": "2.19"
+						},
+						{
+							"answer": "Spanisch",
+							"key": "2.20"
+						},
+						{
+							"answer": "Spirituosen",
+							"key": "2.21"
+						},
+						{
+							"answer": "Thai",
+							"key": "2.22"
+						},
+						{
+							"answer": "Vegan",
+							"key": "2.23"
+						},
+						{
+							"answer": "Vegetarisch",
+							"key": "2.24"
+						},
+						{
+							"answer": "Vietnamesisch",
+							"key": "2.25"
+						},
+						{
+							"answer": "Wein",
+							"key": "2.26"
+						},
+						{
+							"answer": "Whisky",
+							"key": "2.27"
+						},
+						{
+							"answer": "Zigarren",
+							"key": "2.28"
+						},
+						{
+							"answer": "Weitere Attribute",
+							"key": "0"
+						}
+					]
 				},
 				{
-					"answer": "Dessert",
-					"key": "2.06"
+					"question": "Welche weiteren Attribute treffen auf Deine Location zu?",
+					"multiple": true,
+					"textField": "text",
+					"answers": [
+						{
+							"answer": "Kino",
+							"key": "2.28"
+						},
+						{
+							"answer": "Museum",
+							"key": "2.28"
+						},
+						{
+							"answer": "Sportsbar",
+							"key": "x.1"
+						},
+						{
+							"answer": "Weitere Attribute",
+							"key": "0"
+						}
+					]
 				},
 				{
-					"answer": "Deutsch",
-					"key": "2.07"
+					"question": "Möchtest Du Marketing-Aufkleber als Aushang für Gäste und/oder zum platzieren an prominanter Stelle, z.B. Sanitäranlagen, Eingang, etc.?",
+					"answers": [
+						{
+							"answer": "Ja, 20"
+						},
+						{
+							"answer": "Ja, 50"
+						},
+						{
+							"answer": "Nein Danke"
+						}
+					]
 				},
 				{
-					"answer": "Fisch",
-					"key": "2.08"
+					"question": "Möchtest Du jetzt einen Zugang anlegen? Mit dem Zugang kannst Du Events einstellen, Deine Location pflegen und bekommst diverse Analysemöglichkeiten. Er is natürlich kostenlos.",
+					"answers": [
+						{
+							"answer": "Ja"
+						},
+						{
+							"answer": "Nein"
+						}
+					]
 				},
 				{
-					"answer": "Fleisch",
-					"key": "2.09"
+					"question": "Bist Du an einer engeren Zusammenarbeit interessiert, um z.B. um Events in Deiner Location zu promoten?",
+					"answers": [
+						{
+							"answer": "Ja"
+						},
+						{
+							"answer": "Nein"
+						}
+					]
 				},
 				{
-					"answer": "Französisch",
-					"key": "2.10"
-				},
-				{
-					"answer": "Grill",
-					"key": "2.11"
-				},
-				{
-					"answer": "Italienisch",
-					"key": "2.12"
-				},
-				{
-					"answer": "Japanisch",
-					"key": "2.13"
-				},
-				{
-					"answer": "Kaffee",
-					"key": "2.14"
-				},
-				{
-					"answer": "Kuchen",
-					"key": "2.15"
-				},
-				{
-					"answer": "Libanesisch",
-					"key": "2.16"
-				},
-				{
-					"answer": "Pasta",
-					"key": "2.17"
-				},
-				{
-					"answer": "Persisch",
-					"key": "2.18"
-				},
-				{
-					"answer": "Pizza",
-					"key": "2.19"
-				},
-				{
-					"answer": "Spanisch",
-					"key": "2.20"
-				},
-				{
-					"answer": "Spirituosen",
-					"key": "2.21"
-				},
-				{
-					"answer": "Thai",
-					"key": "2.22"
-				},
-				{
-					"answer": "Vegan",
-					"key": "2.23"
-				},
-				{
-					"answer": "Vegetarisch",
-					"key": "2.24"
-				},
-				{
-					"answer": "Vietnamesisch",
-					"key": "2.25"
-				},
-				{
-					"answer": "Wein",
-					"key": "2.26"
-				},
-				{
-					"answer": "Whisky",
-					"key": "2.27"
-				},
-				{
-					"answer": "Zigarren",
-					"key": "2.28"
+					"question": "Hast Du weitere Anmerkungen/Anregungen für uns?",
+					"textField": "textarea"
 				}
 			]
-		},
-		{
-			"question": "Welche weiteren Attribute treffen auf Deine Location zu?",
-			"default": "marketing.data.skills",
-			"answers": [
-				{
-					"answer": "Kino",
-					"key": "2.28"
-				},
-				{
-					"answer": "Museum",
-					"key": "2.28"
-				},
-				{
-					"answer": "Sportsbar",
-					"key": "x.1"
-				}
-			]
-		},
-		{
-			"question": "Möchtest Du Marketing-Aufkleber als Aushang für Gäste und/oder zum platzieren an prominanter Stelle, z.B. Sanitäranlagen, Eingang, etc.?",
-			"answers": [
-				{
-					"answer": "Ja, 20"
-				},
-				{
-					"answer": "Ja, 50"
-				},
-				{
-					"answer": "Nein Danke"
-				}
-			]
-		},
-		{
-			"question": "Möchtest Du jetzt einen Zugang anlegen? Er ist und bleibt natürlich kostenlos.",
-			"answers": [
-				{
-					"answer": "Ja"
-				},
-				{
-					"answer": "Nein"
-				}
-			]
-		},
-		{
-			"question": "Bist Du an einer engeren Zusammenarbeit interessiert, um z.B. um Events in Deiner Location zu promoten?",
-			"answers": [
-				{
-					"answer": "Ja"
-				},
-				{
-					"answer": "Nein"
-				}
-			]
-		},
-		{
-			"question": "Hast Du weitere Anmerkungen/Anregungen für uns?",
-			"textField": "textarea"
-		}
-	]
 }
-
 
 https://codepen.io/dzuncoi/pen/pbQojj
 https://www.sliderrevolution.com/resources/css-animation-examples/
@@ -238,261 +233,261 @@ https://www.sliderrevolution.com/resources/css-animation-examples/
 		<span></span><span></span><span></span><span></span>
 	</div>
 </div>
-.icon-wrapper {
-	font-size: 40px;
-	text-align: center;
-	margin-top: 70px;
+.icon - wrapper {
+	font - size: 40px;
+	text - align: center;
+	margin - top: 70px;
 	position: relative;
 	cursor: pointer;
-	display: inline-block;
+	display: inline - block;
 	.icon {
 		color: #90A4AE;
 		i {
 			transform: scale(1);
 		}
 	}
-	&.anim .icon {
+	&.anim.icon {
 		color: rgb(152, 138, 222);
 		i {
-			animation: icon-animation cubic-bezier(0.165, 0.840, 0.440, 1.000) 1.2s;
+			animation: icon - animation cubic - bezier(0.165, 0.840, 0.440, 1.000) 1.2s;
 		}
 	}
 	.border {
 		position: absolute;
-		top: 50%;
-		left: 50%;
+		top: 50 %;
+		left: 50 %;
 		width: 80px;
 		height: 80px;
-		margin-left: -40px;
-		margin-top: -40px;
-		z-index: 0;
+		margin - left: -40px;
+		margin - top: -40px;
+		z - index: 0;
 		transition: all ease .5s;
-		transform-origin: 0px 0px;
+		transform - origin: 0px 0px;
 		span {
 			position: absolute;
 			left: 0;
-			width: 100%;
-			height: 100%;
-			border-radius: 50%;
+			width: 100 %;
+			height: 100 %;
+			border - radius: 50 %;
 			border: 1px solid rgb(152, 138, 222);
-			transform: scale(0.1); 
+			transform: scale(0.1);
 		}
 	}
-	&.anim .border span {
-		animation: border-animation cubic-bezier(0.075, 0.820, 0.165, 1.000) 1s;
-		animation-fill-mode: forwards;
+	&.anim.border span {
+		animation: border - animation cubic - bezier(0.075, 0.820, 0.165, 1.000) 1s;
+		animation - fill - mode: forwards;
 	}
 	.satellite {
 		position: absolute;
-		left: 50%; top: 50%;
+		left: 50 %; top: 50 %;
 		width: 80px;
 		height: 80px;
-		margin-left: -40px;
-		margin-top: -40px;
+		margin - left: -40px;
+		margin - top: -40px;
 		span {
 			position: absolute;
-			width: $satellite-size;
-			height: $satellite-size;
-			border-radius: 50%;
-			margin-top: -$satellite-size/2;
-			margin-left: -$satellite-size/2;
+			width: $satellite - size;
+			height: $satellite - size;
+			border - radius: 50 %;
+			margin - top: -$satellite - size / 2;
+			margin - left: -$satellite - size / 2;
 			transition: all ease .5s;
-			transform-origin: center 0px;
-			transform: translate(0,0) scale(0);
-			animation-timing-function: cubic-bezier(0.165, 0.840, 0.440, 1.000);
-			animation-duration: 1.5s;
-			animation-fill-mode: forwards;
+			transform - origin: center 0px;
+			transform: translate(0, 0) scale(0);
+			animation - timing - function: cubic- bezier(0.165, 0.840, 0.440, 1.000);
+			animation - duration: 1.5s;
+			animation - fill - mode: forwards;
 		}
 	}
-	&.anim .satellite span {
-		&:nth-child(1) {
-			top: 0; left: 50%;
+	&.anim.satellite span {
+		&: nth - child(1) {
+			top: 0; left: 50 %;
 			background: rgb(152, 138, 222);
-			animation-name: satellite-top;
+			animation - name: satellite - top;
 		}
-		&:nth-child(2) {
-			top: 25%; left: 100%;
+		&: nth - child(2) {
+			top: 25 %; left: 100 %;
 			background: rgb(222, 138, 160);
-			animation-name: satellite-top-right;
+			animation - name: satellite - top - right;
 		}
-		&:nth-child(3) {
-			top: 75%; left: 100%;
+		&: nth - child(3) {
+			top: 75 %; left: 100 %;
 			background: rgb(138, 174, 222);
-			animation-name: satellite-bottom-right;
+			animation - name: satellite - bottom - right;
 		}
-		&:nth-child(4) {
-			top: 100%; left: 50%;
+		&: nth - child(4) {
+			top: 100 %; left: 50 %;
 			background: rgb(138, 222, 173);
-			animation-name: satellite-bottom;
+			animation - name: satellite - bottom;
 		}
-		&:nth-child(5) {
-			top: 75%; left: 0;
+		&: nth - child(5) {
+			top: 75 %; left: 0;
 			background: rgb(222, 197, 138);
-			animation-name: satellite-bottom-left;
+			animation - name: satellite - bottom - left;
 		}
-		&:nth-child(6) {
-			top: 25%; left: 0;
+		&: nth - child(6) {
+			top: 25 %; left: 0;
 			background: rgb(138, 209, 222);
-			animation-name: satellite-top-left;
+			animation - name: satellite - top - left;
 		}
 	}
 }
 
-@keyframes border-animation {
-	0% { 
-		border-width: 20px;
-		opacity: 1;
-	}
-	40% {
-		opacity: 1;
-	}
-	100% { 
-		transform: scale(1.2); 
-		border-width: 0px;
-		opacity: 0;
+@keyframes border - animation {
+	0 % {
+		border- width: 20px;
+	opacity: 1;
+}
+40 % {
+	opacity: 1;
+}
+100 % {
+	transform: scale(1.2);
+	border- width: 0px;
+opacity: 0;
 	}
 }
 
-@keyframes satellite-top {
-	0% {
+@keyframes satellite - top {
+	0 % {
 		transform: scale(1) translate(0,0);
 	}
-	100% {
-		transform: scale(0) translate(0, -$satellite-move);
-	}
+	100 % {
+		transform: scale(0) translate(0, - $satellite - move);
+}
 }
 
-@keyframes satellite-bottom {
-	0% {
+@keyframes satellite - bottom {
+	0 % {
 		transform: scale(1) translate(0,0);
 	}
-	100% {
-		transform: scale(0) translate(0, $satellite-move);
-	}
+	100 % {
+		transform: scale(0) translate(0, $satellite- move);
+}
 }
 
-@keyframes satellite-top-right {
-	0% {
+@keyframes satellite - top - right {
+	0 % {
 		transform: scale(1) translate(0,0);
 	}
-	100% {
-		transform: scale(0) translate(2*$satellite-move/2.236,- $satellite-move/2.236);
-	}
+	100 % {
+		transform: scale(0) translate(2*$satellite- move / 2.236, - $satellite - move / 2.236);
+}
 }
 
-@keyframes satellite-bottom-right {
-	0% {
+@keyframes satellite - bottom - right {
+	0 % {
 		transform: scale(1) translate(0,0);
 	}
-	100% {
-		transform: scale(0) translate(2*$satellite-move/2.236, $satellite-move/2.236);
-	}
+	100 % {
+		transform: scale(0) translate(2*$satellite- move / 2.236, $satellite - move / 2.236);
+}
 }
 
-@keyframes satellite-bottom-left {
-	0% {
+@keyframes satellite - bottom - left {
+	0 % {
 		transform: scale(1) translate(0,0);
 	}
-	100% {
-		transform: scale(0) translate(-2*$satellite-move/2.236, $satellite-move/2.236);
-	}
+	100 % {
+		transform: scale(0) translate(- 2 * $satellite - move / 2.236, $satellite - move / 2.236);
+}
 }
 
-@keyframes satellite-top-left {
-	0% {
+@keyframes satellite - top - left {
+	0 % {
 		transform: scale(1) translate(0,0);
 	}
-	100% {
-		transform: scale(0) translate(-2*$satellite-move/2.236,- $satellite-move/2.236);
-	}
+	100 % {
+		transform: scale(0) translate(- 2 * $satellite - move / 2.236, - $satellite - move / 2.236);
+}
 }
 
-@keyframes icon-animation {
-	0% {
+@keyframes icon - animation {
+	0 % {
 		transform: scale(0);
 	}
-	100% {
+	100 % {
 		transform: scale(1);
 	}
 }
 
-@mixin on-circle($item-count, $circle-size, $item-width, $item-height) {
+@mixin on - circle($item - count, $circle - size, $item - width, $item - height) {
 	position: relative;
-	width: $circle-size;
-	height: $circle-size;
-	border-radius: 50%;
+	width: $circle - size;
+	height: $circle - size;
+	border - radius: 50 %;
 	span {
 		position: absolute;
-		width: $item-width;
-		height: $item-height;
-		top: 50%; left: 50%;
-		margin-top: -$item-height/2;
-		margin-left: -$item-width/2;
+		width: $item - width;
+		height: $item - height;
+		top: 50 %; left: 50 %;
+		margin - top: -$item - height / 2;
+		margin - left: -$item - width / 2;
 	}
-	$angle: (360/$item-count);
+	$angle: (360 / $item - count);
 	$inc: 0;
-	@for $i from 1 through $item-count {
-		span:nth-of-type(#{$i}) {
-			transform: rotate($inc*-1deg) translate($circle-size/2) scale(0);
+	@for $i from 1 through $item - count {
+		span: nth - of - type(#{ $i }) {
+			transform: rotate($inc * -1deg) translate($circle - size / 2) scale(0);
 		}
 		$inc: $inc + $angle;
 	}
 }
 
-$spark-width: 25px;
-$spark-height: 4px;
-$item-count: 20;
-$circle-size: 80px;
-.icon-wrapper .spark {
-	@include on-circle($item-count, $circle-size, $spark-width, $spark-height);
+$spark - width: 25px;
+$spark - height: 4px;
+$item - count: 20;
+$circle - size: 80px;
+.icon - wrapper.spark {
+	@include on - circle($item - count, $circle - size, $spark - width, $spark - height);
 	position: absolute;
-	left: 50%; top: 50%;
-	margin-left: -40px;
-	margin-top: -40px;
+	left: 50 %; top: 50 %;
+	margin - left: -40px;
+	margin - top: -40px;
 	span {
 		background: rgb(152, 138, 222);
-		border-radius: $spark-height/2;
+		border - radius: $spark - height / 2;
 	}
 }
-.icon-wrapper.anim {
+.icon - wrapper.anim {
 	.spark {
-		$inc:0;
-		$angle: 360/$item-count;
-		@for $i from 1 through $item-count {
-			span:nth-of-type(#{$i}) {
-				animation: spark-animation-#{$i} cubic-bezier(0.075, 0.820, 0.165, 1.000) 1.5s;
+		$inc: 0;
+		$angle: 360 / $item - count;
+		@for $i from 1 through $item - count {
+			span: nth - of - type(#{ $i }) {
+				animation: spark - animation -#{ $i } cubic - bezier(0.075, 0.820, 0.165, 1.000) 1.5s;
 			}
 			$inc: $inc + $angle;
 		}
 	}
 }
 
-$angle: (360/$item-count);
+$angle: (360 / $item - count);
 $inc: 0;
-@for $i from 1 through $item-count {
-	@keyframes spark-animation-#{$i} {
-		0% {
+@for $i from 1 through $item - count {
+	@keyframes spark - animation -#{ $i } {
+		0 % {
 			opacity: 1;
-			transform: rotate($inc*-1deg) translate($circle-size/2) scale(1);
-		}
-		80% {
-			opacity: 1;
-		}
-		100% {
-			opacity: 0;
-			transform: rotate($inc*-1deg) translate($circle-size*1.2) scale(0);
-		}
+			transform: rotate($inc * -1deg) translate($circle- size / 2) scale(1);
 	}
-	$inc: $inc + $angle;
+	80 % {
+		opacity: 1;
+	}
+	100 % {
+		opacity: 0;
+		transform: rotate($inc * -1deg) translate($circle- size * 1.2) scale(0);
+}
+	}
+$inc: $inc + $angle;
 }
 
-.on('click', function() {
+.on('click', function () {
 	var _this = $iconWrapper2;
 	if (_this.hasClass('anim')) _this.removeClass('anim');
 	else {
 		_this.addClass('anim');
 		_this.css('pointer-events', 'none');
-		setTimeout(function() {
+		setTimeout(function () {
 			_this.css('pointer-events', '');
 		}, 1200);
 	}
