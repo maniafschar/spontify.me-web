@@ -192,9 +192,9 @@ hint {
 		}
 		if (q.textField) {
 			var v = marketing.data._answer.storage['q' + index]?.t;
-			if (!v && q.default)
+			if (!v && q.preset)
 				try {
-					v = eval(q.default);
+					v = eval(q.preset);
 				} catch (e) { }
 			if (!v)
 				v = '';
