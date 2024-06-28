@@ -4,8 +4,8 @@ import { InputHashtags } from '../elements/InputHashtags';
 import { VideoCall } from '../elements/VideoCall';
 import { geoData } from '../geoData';
 import { global } from '../global';
-import { marketing } from '../marketing';
 import { initialisation } from '../init';
+import { marketing } from '../marketing';
 import { ClientNews, Contact, model } from '../model';
 import { formFunc, ui } from '../ui';
 import { user } from '../user';
@@ -545,12 +545,15 @@ border-radius: 0.5em 0 0 3em;
 				if (!l)
 					return;
 				var e = pageEvent.getCalendarList(l), s = '<card onclick="pageEvent.edit()" class="mainBG" style="color:var(--text)"><img source="add"/><text>' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>', processedIds = [], e2 = [];
+				var now = new Date();
+				now.setHours(now.getHours() - 1);
 				for (var i = 0; i < e.length; i++) {
-					if ('outdated' == e[i])
+					if ('outdated' == e[i] || e2.length > 23)
 						break;
 					if (processedIds.indexOf(e[i].event.id) < 0) {
 						processedIds.push(e[i].event.id);
-						e2.push(e[i]);
+						if (e[i].event.startDate > now)
+							e2.push(e[i]);
 					}
 				}
 				e = e2;
