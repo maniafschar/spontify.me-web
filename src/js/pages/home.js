@@ -129,6 +129,7 @@ teaser card text {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	line-height: 1.2;
+	text-shadow: 0 0 0.1em rgba(0, 0, 0, 0.9);
 }
 
 teaser card poll {
