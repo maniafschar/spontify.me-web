@@ -140,21 +140,21 @@ class pageSettings {
 	static templateSettings3 = v =>
 		global.template`<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;settings tabBody .notification&quot;)" label="settings.myNotifications"></button-text><br/>
 <div class="notification" class="notifications" style="display:none;padding:0.5em 1em 1em 1em;">
-	<input-checkbox value="true" name="notificationNews" label="notification.news" ${v['contact.notificationNews']} ${v.hideNotificationNews}></input-checkbox>
+	<input-checkbox name="notification" value="news" label="notification.news" ${v['contact.notificationNews']} ${v.hideNotificationNews}></input-checkbox>
 	<br />
-	<input-checkbox value="true" name="notificationChat" label="notification.chat" ${v['contact.notificationChat']}></input-checkbox>
+	<input-checkbox name="notification" value="chat" label="notification.chat" ${v['contact.notificationChat']}></input-checkbox>
 	<br />
-	<input-checkbox value="true" name="notificationFriendRequest" label="notification.friendRequest" ${v['contact.notificationFriendRequest']}></input-checkbox>
+	<input-checkbox name="notification" value="friend" label="notification.friendRequest" ${v['contact.notificationFriend']}></input-checkbox>
 	<br />
-	<input-checkbox value="true" name="notificationBirthday" label="notification.birthday" ${v['contact.notificationBirthday']}></input-checkbox>
+	<input-checkbox name="notification" value="birthday" label="notification.birthday" ${v['contact.notificationBirthday']}></input-checkbox>
 	<br />
-	<input-checkbox value="true" name="notificationEngagement" label="notification.engagement" ${v['contact.notificationMarkEvent']}></input-checkbox>
+	<input-checkbox name="notification" value="engagement" label="notification.engagement" ${v['contact.notificationEngagement']}></input-checkbox>
 	<br />
-	<input-checkbox value="true" name="notificationVisitProfile" label="notification.visitProfile" ${v['contact.notificationVisitProfile']}></input-checkbox>
+	<input-checkbox name="notification" value="visitProfile" label="notification.visitProfile" ${v['contact.notificationVisitProfile']}></input-checkbox>
 	<br />
-	<input-checkbox value="true" name="notificationVisitLocation" label="notification.visitLocation" ${v['contact.notificationVisitLocation']}></input-checkbox>
+	<input-checkbox name="notification" value="visitLocation" label="notification.visitLocation" ${v['contact.notificationVisitLocation']}></input-checkbox>
 	<br />
-	<input-checkbox value="true" name="notificationMarkEvent" label="notification.markEvent" ${v['contact.notificationMarkEvent']}></input-checkbox>
+	<input-checkbox name="notification" value="event" label="notification.markEvent" ${v['contact.notificationEvent']}></input-checkbox>
 </div>
 <button-text class="settingsButton" onclick="pageSettings.toggleBlocked()" label="contacts.blocked"></button-text><br/>
 <div id="blocked" style="display:none;"></div>
@@ -261,14 +261,14 @@ ${v.info}`;
 		s += global.separatorTech + (ui.q('settings input-checkbox[name="teaser"][checked="true"]') ? 1 : 0);
 		s += global.separatorTech + (ui.q('settings input-checkbox[name="search"][checked="true"]') ? 1 : 0);
 		s += global.separatorTech + ui.val('settings input[name="pseudonym"]');
-		s += global.separatorTech + (ui.q('settings input-checkbox[name="notificationNews"][checked="true"]') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings input-checkbox[name="notificationChat"][checked="true"]') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings input-checkbox[name="notificationEngagement"][checked="true"]') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings input-checkbox[name="notificationFriendRequest"][checked="true"]') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings input-checkbox[name="notificationBirthday"][checked="true"]') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings input-checkbox[name="notificationVisitProfile"][checked="true"]') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings input-checkbox[name="notificationVisitLocation"][checked="true"]') ? 1 : 0);
-		s += global.separatorTech + (ui.q('settings input-checkbox[name="notificationMarkEvent"][checked="true"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings input-checkbox[name="notification"][checked="true"][value="news"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings input-checkbox[name="notification"][checked="true"][value="chat"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings input-checkbox[name="notification"][checked="true"][value="engagement"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings input-checkbox[name="notification"][checked="true"][value="friend"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings input-checkbox[name="notification"][checked="true"][value="birthday"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings input-checkbox[name="notification"][checked="true"][value="visitProfile"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings input-checkbox[name="notification"][checked="true"][value="visitLocation"]') ? 1 : 0);
+		s += global.separatorTech + (ui.q('settings input-checkbox[name="notification"][checked="true"][value="event"]') ? 1 : 0);
 		s += global.separatorTech + ui.q('settings input-hashtags').getAttribute('ids');
 		s += global.separatorTech + ui.q('settings input-hashtags').getAttribute('text');
 		return s;
@@ -296,14 +296,14 @@ ${v.info}`;
 					v.birthdayMax = (d = new Date(d.setFullYear(d.getFullYear() - 18))).toISOString().substring(0, 10);
 					v.birthdayMin = new Date(d.setFullYear(d.getFullYear() - 81)).toISOString().substring(0, 10);
 					v.hideNotificationNews = global.config.club ? '' : ' class="hidden"';
-					v['contact.notificationNews'] = v['contact.notificationNews'] == 1 ? ' checked="true"' : '';
-					v['contact.notificationChat'] = v['contact.notificationChat'] == 1 ? ' checked="true"' : '';
-					v['contact.notificationEngagement'] = v['contact.notificationEngagement'] == 1 ? ' checked="true"' : '';
-					v['contact.notificationFriendRequest'] = v['contact.notificationFriendRequest'] == 1 ? ' checked="true"' : '';
-					v['contact.notificationBirthday'] = v['contact.notificationBirthday'] == 1 ? ' checked="true"' : '';
-					v['contact.notificationVisitProfile'] = v['contact.notificationVisitProfile'] == 1 ? ' checked="true"' : '';
-					v['contact.notificationVisitLocation'] = v['contact.notificationVisitLocation'] == 1 ? ' checked="true"' : '';
-					v['contact.notificationMarkEvent'] = v['contact.notificationMarkEvent'] == 1 ? ' checked="true"' : '';
+					v['contact.notificationNews'] = v['contact.notification'].indexOf('news') > -1 ? ' checked="true"' : '';
+					v['contact.notificationChat'] = v['contact.notification'].indexOf('chat') > -1 ? ' checked="true"' : '';
+					v['contact.notificationEngagement'] = v['contact.notification'].indexOf('engagement') > -1 ? ' checked="true"' : '';
+					v['contact.notificationFriend'] = v['contact.notification'].indexOf('friend') > -1 ? ' checked="true"' : '';
+					v['contact.notificationBirthday'] = v['contact.notification'].indexOf('birthday') > -1 ? ' checked="true"' : '';
+					v['contact.notificationVisitProfile'] = v['contact.notification'].indexOf('visitProfile') > -1 ? ' checked="true"' : '';
+					v['contact.notificationVisitLocation'] = v['contact.notification'].indexOf('visitLocation') > -1 ? ' checked="true"' : '';
+					v['contact.notificationEvent'] = v['contact.notification'].indexOf('event') > -1 ? ' checked="true"' : '';
 					v.langDE = v['contact.language'] == 'DE' ? ' checked="true"' : '';
 					v.langEN = v['contact.language'] == 'EN' ? ' checked="true"' : '';
 					v.gender1 = v['contact.gender'] == 1 ? ' checked="true"' : '';

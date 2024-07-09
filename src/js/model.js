@@ -86,7 +86,6 @@ class Contact extends BaseEntity {
 	birthday;
 	birthdayDisplay;
 	bluetooth;
-	coach;
 	description;
 	gender;
 	idDisplay;
@@ -95,13 +94,7 @@ class Contact extends BaseEntity {
 	language;
 	latitude;
 	longitude;
-	notificationBirthday;
-	notificationChat;
-	notificationEngagement;
-	notificationFriendRequest;
-	notificationMarkEvent;
-	notificationVisitLocation;
-	notificationVisitProfile;
+	notification;
 	pseudonym;
 	rating;
 	search;
