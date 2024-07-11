@@ -771,6 +771,8 @@
 		"birthday.gratulation": "Herzlichen Glückwunsch zu Deinem {0}. Geburtstag!<br/>Wir wünschen Dir einen wunderschönen Tag!",
 		"birthday": "Geburtstag",
 		"blocked.title": "${buddy} geblockt",
+		"buddy": "${buddy}",
+		"buddies": "${buddies}",
 		"camera.notAvailabe": "Bei der Bildauswahl ist ein Fehler aufgetreten:<br/>{0}",
 		"camera.select": "Auswählen",
 		"camera.shoot": "Aufnehmen",
