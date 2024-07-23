@@ -402,6 +402,39 @@ streams {
 			e.style.zIndex = '-1';
 		}
 	}
+	static setActiveDeviceId(stream) {
+		if (stream && (global.isBrowser() || global.getOS() != 'ios')) {
+			const videoTracks = stream.getVideoTracks();
+			const videoTrackSettings = videoTracks[0]?.getSettings();
+			VideoCall.activeDeviceId = videoTrackSettings?.deviceId;
+		}
+	}
+	static setAudioMute() {
+		if (ui.classContains('video-call videochat buttonIcon.mute', 'muted')) {
+			ui.q('video-call #localStream').srcObject.getAudioTracks()[0].enabled = true;
+			ui.classRemove('video-call videochat buttonIcon.mute', 'muted');
+		} else {
+			ui.q('video-call #localStream').srcObject.getAudioTracks()[0].enabled = false;
+			ui.classAdd('video-call videochat buttonIcon.mute', 'muted');
+		}
+	}
+	static startAdminCall() {
+		communication.ajax({
+			url: global.serverApi + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contactVideoCall.time>cast(\'' + global.date.local2server(global.date.getToday()) + '\' as timestamp) and contactVideoCall.contactId=' + user.contact.id),
+			webCall: 'VideoCall.startAdminCall',
+			responseType: 'json',
+			success(r) {
+				if (r.length > 1) {
+					var d = global.date.server2local(r[1][0]).getTime(), n = new Date().getTime();
+					if (d - 600000 < n && d + 3600000 > n)
+						VideoCall.startVideoCall(ui.q('chat').getAttribute('i'));
+					else
+						ui.navigation.openPopup(ui.l('attention'), ui.l('events.videoCallDateHint').replace('{0}', global.date.formatDate(r[1][0])));
+				} else
+					ui.navigation.openPopup(ui.l('attention'), ui.l('events.videoCallDateNoDate') + user.getAppointmentTemplate());
+			}
+		});
+	}
 	static startVideoCall(id) {
 		if (!VideoCall.permission) {
 			ui.navigation.openPopup(ui.l('attention'), ui.l('chat.videoPermissionDenied'));
@@ -443,39 +476,6 @@ streams {
 		}).catch(err => {
 			ui.navigation.openPopup(ui.l('attention'), ui.l('chat.videoErrorDevice').replace('{0}', err.name == 'NotFoundError' ? '.' : ':<br/>' + err));
 			VideoCall.callStop();
-		});
-	}
-	static setActiveDeviceId(stream) {
-		if (stream && (global.isBrowser() || global.getOS() != 'ios')) {
-			const videoTracks = stream.getVideoTracks();
-			const videoTrackSettings = videoTracks[0]?.getSettings();
-			VideoCall.activeDeviceId = videoTrackSettings?.deviceId;
-		}
-	}
-	static setAudioMute() {
-		if (ui.classContains('video-call videochat buttonIcon.mute', 'muted')) {
-			ui.q('video-call #localStream').srcObject.getAudioTracks()[0].enabled = true;
-			ui.classRemove('video-call videochat buttonIcon.mute', 'muted');
-		} else {
-			ui.q('video-call #localStream').srcObject.getAudioTracks()[0].enabled = false;
-			ui.classAdd('video-call videochat buttonIcon.mute', 'muted');
-		}
-	}
-	static startAdminCall() {
-		communication.ajax({
-			url: global.serverApi + 'db/list?query=contact_listVideoCalls&search=' + encodeURIComponent('contactVideoCall.time>cast(\'' + global.date.local2server(global.date.getToday()) + '\' as timestamp) and contactVideoCall.contactId=' + user.contact.id),
-			webCall: 'VideoCall.startAdminCall',
-			responseType: 'json',
-			success(r) {
-				if (r.length > 1) {
-					var d = global.date.server2local(r[1][0]).getTime(), n = new Date().getTime();
-					if (d - 600000 < n && d + 3600000 > n)
-						VideoCall.startVideoCall(ui.q('chat').getAttribute('i'));
-					else
-						ui.navigation.openPopup(ui.l('attention'), ui.l('events.videoCallDateHint').replace('{0}', global.date.formatDate(r[1][0])));
-				} else
-					ui.navigation.openPopup(ui.l('attention'), ui.l('events.videoCallDateNoDate') + user.getAppointmentTemplate());
-			}
 		});
 	}
 	static switchVideo() {
