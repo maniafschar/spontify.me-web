@@ -700,7 +700,7 @@ class WebSocket {
 						else if (data.candidate)
 							VideoCall.onCandidate(data.candidate);
 						else
-							VideoCall.stopCall();
+							VideoCall.callStop();
 					}
 				);
 				WebSocket.stompClient.subscribe(
