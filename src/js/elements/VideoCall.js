@@ -153,7 +153,7 @@ streams {
 	static callAccept() {
 		ui.classAdd('video-call call', 'hidden');
 		ui.classRemove('video-call videochat', 'hidden');
-		VideoCall.incomingCallModal();
+		VideoCall.callButtons();
 		ui.q('video-call streams').style.left = '';
 		navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
 			ui.q('video-call #localStream').srcObject = stream;
@@ -184,10 +184,29 @@ streams {
 			});
 		});
 	}
+	static callButtons(show) {
+		if (show) {
+			ui.classRemove('video-call call', 'hidden');
+			ui.classAdd('video-call videochat', 'hidden');
+			ui.q('video-call').style.display = 'block';
+			ui.q('video-call call initiator').innerHTML = VideoCall.connectedUser;
+			ui.classRemove('video-call call', 'hidden');
+			VideoCall.playAudio('call');
+		} else {
+			ui.classAdd('video-call call', 'hidden');
+			VideoCall.audio.pause();
+		}
+	}
+	static callLeave() {
+		ui.q('video-call').style.display = 'none';
+		ui.classAdd('video-call call', 'hidden');
+		ui.q('video-call #localStream').style.visibility = 'hidden';
+		ui.q('video-call #remoteStream').style.visibility = 'hidden';
+	}
 	static callReject() {
 		if (VideoCall.rtcPeerConnection) {
 			VideoCall.callStop();
-			VideoCall.incomingCallModal();
+			VideoCall.callButtons();
 		}
 		if (VideoCall.connectedId) {
 			var e = communication.generateCredentials();
@@ -196,7 +215,7 @@ streams {
 				communication.wsSend('/ws/video', e);
 			}
 		}
-		VideoCall.leave();
+		VideoCall.callLeave();
 	}
 	static callStop() {
 		VideoCall.offer = null;
@@ -241,7 +260,7 @@ streams {
 
 		if (!global.isBrowser() && global.getOS() == 'ios')
 			ui.q('video-call').style.background = '#000000';
-		VideoCall.leave();
+		VideoCall.callLeave();
 	}
 	static getRtcPeerConnection() {
 		if (!VideoCall.rtcPeerConnection) {
@@ -320,12 +339,6 @@ streams {
 			VideoCall.audio.play();
 		}
 	}
-	static leave() {
-		ui.q('video-call').style.display = 'none';
-		ui.classAdd('video-call call', 'hidden');
-		ui.q('video-call #localStream').style.visibility = 'hidden';
-		ui.q('video-call #remoteStream').style.visibility = 'hidden';
-	}
 	static onAnswer(answer) {
 		if (answer.userState) {
 			if (answer.userState == 'offline' && VideoCall.offer)
@@ -357,7 +370,7 @@ streams {
 			VideoCall.connectedUser = data.name;
 			VideoCall.connectedId = data.user;
 			VideoCall.getRtcPeerConnection().setRemoteDescription(new RTCSessionDescription(data.offer));
-			VideoCall.incomingCallModal(true);
+			VideoCall.callButtons(true);
 			ui.q('video-call').style.background = '';
 		} else {
 			var e = communication.generateCredentials();
@@ -365,19 +378,6 @@ streams {
 				e.id = data.user;
 				communication.wsSend('/ws/video', e);
 			}
-		}
-	}
-	static incomingCallModal(show) {
-		if (show) {
-			ui.classRemove('video-call call', 'hidden');
-			ui.classAdd('video-call videochat', 'hidden');
-			ui.q('video-call').style.display = 'block';
-			ui.q('video-call call initiator').innerHTML = VideoCall.connectedUser;
-			ui.classRemove('video-call call', 'hidden');
-			VideoCall.playAudio('call');
-		} else {
-			ui.classAdd('video-call call', 'hidden');
-			VideoCall.audio.pause();
 		}
 	}
 	static playAudio(id) {
