@@ -213,6 +213,7 @@
 			"serviceSendError": "Dein Standort konnte nicht ermittelt werden, ${appTitle} kann Deine Position nicht senden.",
 			"share": "Teilen",
 			"title": "Chat",
+			"videoErrorDevice": "Dein Gerät ist für einen Video-Call nicht geeignet{0}",
 			"videoPermissionButton": "Video",
 			"videoPermissionDenied": "Du hast die Erlaubnis für das Mikrophone und die Kamera untersagt. Ohne diese kannst Du kein Videoanruf tätigen.",
 			"videoPermissionHint": "Nur Freunde können sich jederzeit gegenseitig anrufen. Wenn Du dem ${buddy} eine Freundschaftsanfrage sendest, kann der Dich noch vor der Annahme der Anfrage anrufen.",
