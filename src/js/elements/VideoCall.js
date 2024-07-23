@@ -363,13 +363,13 @@ streams {
 					});
 				}
 			}).catch(error => {
-				ui.navigation.openPopup(ui.l('attention'), error);
+				ui.navigation.openPopup(ui.l('attention'), ui.l('chat.videoErrorDevice').replace('{0}', ':<br/>' + error));
 				VideoCall.stopCall();
 			});
 			VideoCall.setActiveDeviceId(stream);
 			VideoCall.prepareVideoElement('localStream');
-		}).catch((err) => {
-			ui.navigation.openPopup(ui.l('attention'), err);
+		}).catch(err => {
+			ui.navigation.openPopup(ui.l('attention'), ui.l('chat.videoErrorDevice').replace('{0}', err.name == 'NotFoundError' ? '.' : ':<br/>' + err));
 			VideoCall.stopCall();
 		});
 	}
