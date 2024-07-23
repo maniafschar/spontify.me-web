@@ -213,6 +213,7 @@
 			"serviceSendError": "Your site could not be determined, ${appTitle} can not send your position.",
 			"share": "Share",
 			"title": "Chat",
+			"videoErrorDevice": "Your device is not suitable for a video call{0}",
 			"videoPermissionButton": "Video",
 			"videoPermissionDenied": "You denied permission for the microphone and camera. You cannot make a video call without it.",
 			"videoPermissionHint": "Only friends may call each other at any time. If you send a friends request to the ${buddy}, he will be allowed to call you, even before accepting the friends request.",
