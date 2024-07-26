@@ -115,6 +115,7 @@ module.exports = (env) => {
 						fs.writeFileSync('dist' + file, fs.readFileSync('clients/' + client + '/style.css', 'utf8') + '\n\n' + fs.readFileSync('src/css/elements.css', 'utf8') + '\n\n' + fs.readFileSync('src' + file, 'utf8'));
 						fs.writeFileSync('dist/index.html', fs.readFileSync('src/index.html', 'utf8')
 							.replace(/\{placeholderAppleId}/g, props.appleId)
+							.replace(/\{placeholderColorBg1start}/g, /--bg1start:([^;]*)/g.exec(fs.readFileSync('clients/' + client + '/style.css', 'utf8'))[1].trim())
 							.replace(/\{placeholderEmail}/g, props.email)
 							.replace(/\{placeholderName}/g, props.name)
 							.replace(/\{placeholderDescription}/g, props.name + ' · Events · ' + props.en.buddies)
