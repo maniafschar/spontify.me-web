@@ -189,8 +189,8 @@ module.exports = (env) => {
 							}
 						];
 						file = '../spontify.me-app/config.xml';
-						var s = fs.readFileSync(file, 'utf8');
-						if (s) {
+						try {
+							var s = fs.readFileSync(file, 'utf8');
 							for (var i = 0; i < regexs.length; i++) {
 								if (!regexs[i].pattern.test(s)) {
 									fs.rmdirSync('dist', { recursive: true });
@@ -207,7 +207,7 @@ module.exports = (env) => {
 							s = fs.readFileSync(file, 'utf8');
 							s = s.replace(/("package_name": "com\.jq\.)([^"]+)/, '$1' + props.bundleId.substring(7));
 							fs.writeFileSync(file, s);
-						}
+						} catch (e) { }
 						file = 'dist/images/logo.svg';
 						s = fs.readFileSync(file, 'utf8')
 							.replace('{placeholderAppTitle}', props.nameShort);
