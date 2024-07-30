@@ -107,19 +107,7 @@ class details {
 		var id = marketing.openTag.split('&')[1].substring(2);
 		details.open(id, {
 			webCall: 'details.openLocationMarketing', query: 'location_list', search: encodeURIComponent('location.id=' + id)
-		}, function (e, id) {
-			setTimeout(function () {
-				ui.navigation.openHint({
-					desc: "Klicke auf den Home Button und dort auf das Logo, um die Umfrage wieder zu öffnen.",
-					pos: "1em,-6.5em",
-					size: "60%,auto",
-					onclick: 'ui.navigation.goTo("home")',
-					hinkyClass: "bottom",
-					hinky: "left:17%",
-					noLogin: true
-				})
-			}, 1500); return pageLocation.detailLocationEvent(e, id);
-		});
+		}, pageLocation.detailLocationEvent);
 	}
 	static openDetailNav(next, id) {
 		var e = ui.q('detail');
