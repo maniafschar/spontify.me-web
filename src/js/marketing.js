@@ -83,6 +83,7 @@ hint {
 		var index = marketing.index[marketing.index.length - 1];
 		if (index > 0 && !back && !marketing.data.storage.questions[index]) {
 			ui.navigation.closeHint();
+			marketing.openTag = null;
 			return;
 		}
 		if (index > -1) {
@@ -141,9 +142,7 @@ hint {
 				body: { classname: 'ContactMarketing', id: marketing.data._answer.id, values: { clientMarketingId: marketing.data.id, storage: JSON.stringify(marketing.data._answer.storage), finished: finished } },
 				method: marketing.data._answer.id ? 'PUT' : 'POST',
 				success(r) {
-					if (finished)
-						marketing.openTag = null;
-					else if (r)
+					if (!finished && r)
 						marketing.data._answer = { id: r, storage: {} };
 					next(r);
 				}
