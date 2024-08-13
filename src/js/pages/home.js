@@ -448,7 +448,7 @@ border-radius: 0.5em 0 0 3em;
 			});
 		else
 			communication.ajax({
-				url: global.serverApi + 'action/news' + (global.config.news && geoData.getCurrent().lon ? '?latitude=' + geoData.getCurrent().lat + '&longitude=' + geoData.getCurrent().lon : ''),
+				url: global.serverApi + 'action/news' + (global.config.onlyRegionNews && geoData.getCurrent().lon ? '?latitude=' + geoData.getCurrent().lat + '&longitude=' + geoData.getCurrent().lon : ''),
 				webCall: 'home.openNews',
 				responseType: 'json',
 				success(l) {

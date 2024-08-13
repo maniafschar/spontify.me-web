@@ -21,7 +21,7 @@
 	"server": "https://after-work.events",
 	"url": "https://after-work.events",
 	"appConfig": {
-		"news": true,
+		"onlyRegionNews": true,
 		"publishingWall": true
 	}
 }
