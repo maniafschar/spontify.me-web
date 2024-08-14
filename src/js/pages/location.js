@@ -317,7 +317,7 @@ mapEdit {
 				v.address = '<a href="tel:' + v.telephone.replace(/[^+\d]*/g, '') + '" style="color:black;">' + v.address + '<br/>' + v.telephone + '</a>';
 		}
 		if (v.url)
-			v.address += '<br/><br/><a href="' + v.url + '" style="color:black;" target="_blank">' + v.url + '</a>';
+			v.address += '<br/><br/><a onclick="ui.navigation.openHTML(&quot;' + v.url + '&quot;)">' + v.url + '</a>';
 		if (v.description)
 			v.description = '<text class="description">' + (v.event.id ? '<b>' + ui.l('locations.description') + '</b><br/><br/>' : '') + Strings.replaceLinks(v.description.replace(/\n/g, '<br/>')) + '</text>';
 		if (v.bonus)
