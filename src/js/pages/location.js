@@ -359,14 +359,10 @@ mapEdit {
 		pageLocation.reopenEvent = false;
 		if (id) {
 			var v = JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data')));
-			if (v.contactId == user.contact.id)
+			if (v.contactId == user.contact.id || user.authority.indexOf('editLocation[') < 0)
 				pageLocation.editInternal(id, v);
-			else {
-				if (user.authority.indexOf('editLocation') < 0)
-					ui.navigation.openPopup(ui.l('attention'), ui.l('locations.editHint').replace('{0}', pageLocation.locationsAdded) + '<br/><br/><button-text onclick="pageLocation.edit()" label="locations.new"></button-text>');
-				else
-					pageLocation.editInternal(id, v);
-			}
+			else
+				ui.navigation.openPopup(ui.l('attention'), ui.l('locations.editHint').replace('{0}', user.authority.match(/.*editLocation\[([^\]]+).+?/)[1]) + '<br/><br/><button-text onclick="pageLocation.edit()" label="locations.new"></button-text>');
 		} else {
 			if (ui.q('dialog-popup input[name="location"]'))
 				pageLocation.reopenEvent = true;

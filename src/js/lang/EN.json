@@ -541,7 +541,7 @@
 			"bonusHint": "In order to accept the offer, you have to the location before payment rate and show the operator the confirmation page on your mobile.",
 			"clickForMoreDetails": "More...",
 			"desc": "Location description",
-			"editHint": "You entered {0} Locations until now. Enter at least 5 locations, then you may edit other locations, too.",
+			"editHint": "You entered {0} locations/events until now. Enter at least ${minLocations} locations/events, then you may edit locations, which you didn't enter, too.",
 			"loginAction": "as soon as you are logged in, you may use this functionality.",
 			"my": "The following locations I entered",
 			"myNone": "I have not yet entered Locations.",

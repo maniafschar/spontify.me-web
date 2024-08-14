@@ -541,7 +541,7 @@
 			"bonusHint": "Um das Angebot anzunehmen, musst Du die Location vor der Bezahlung bewerten und dem Betreiber die Bestätigungsseite auf deinem Handy vorzeigen.",
 			"clickForMoreDetails": "Mehr...",
 			"desc": "Beschreibung der Location",
-			"editHint": "Du hast erst {0} Locations angelegt. Lege mindestens ${minLocations} Locations an, dann kannst Du andere Locations auch ändern.",
+			"editHint": "Du hast erst {0} Locations/Events angelegt. Lege mindestens ${minLocations} Locations/Events an, dann kannst Du andere Locations, die Du nicht selbst angelegt hast, ändern.",
 			"loginAction": "Sobald Du eingeloggt bist, kannst Du diese Funktionalität benutzen.",
 			"my": "Folgende Locations habe ich eingegeben",
 			"myNone": "Ich habe noch keine Locations eingegeben.",
