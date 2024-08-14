@@ -311,12 +311,13 @@ mapEdit {
 			if (v.contact.gender)
 				v.gender = '<img source="gender' + v.contact.gender + '" />';
 		}
-		if (eventWithLocation) {
+		if (v.address) {
 			v.address = v.address.replace(/\n/g, '<br />');
 			if (v.telephone)
 				v.address = '<a href="tel:' + v.telephone.replace(/[^+\d]*/g, '') + '" style="color:black;">' + v.address + '<br/>' + v.telephone + '</a>';
-
 		}
+		if (v.url)
+			v.address += '<br/><br/><a href="' + v.url + '" style="color:black;">' + v.url + '</a>';
 		if (v.description)
 			v.description = '<text class="description">' + (v.event.id ? '<b>' + ui.l('locations.description') + '</b><br/><br/>' : '') + Strings.replaceLinks(v.description.replace(/\n/g, '<br/>')) + '</text>';
 		if (v.bonus)
