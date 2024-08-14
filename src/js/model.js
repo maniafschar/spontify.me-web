@@ -222,6 +222,7 @@ class Location extends BaseEntity {
 	skills;
 	telephone;
 	town;
+	url;
 
 	block = new Block();
 	contact = new Contact();
