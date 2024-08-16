@@ -99,8 +99,6 @@ module.exports = (env) => {
 						var colorStart = /--bg1start: rgb\(([^)]*)/g.exec(fs.readFileSync('clients/' + client + '/style.css', 'utf8'))[1].trim().split(',');
 						var colorStop = /--bg1stop: rgb\(([^)]*)/g.exec(fs.readFileSync('clients/' + client + '/style.css', 'utf8'))[1].trim().split(',');
 						var calc = function (a, b) {
-							console.log(a);
-							console.log(b);
 							return parseInt('' + ((parseInt(a) + parseInt(b)) / 2));
 						};
 						var color = 'rgb(' + calc(colorStart[0], colorStop[0]) + ',' + calc(colorStart[1], colorStop[1]) + ',' + calc(colorStart[2], colorStop[2]) + ')';
