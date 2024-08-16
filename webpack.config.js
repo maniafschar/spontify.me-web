@@ -96,6 +96,14 @@ module.exports = (env) => {
 						var props = JSON.parse(fs.readFileSync('clients/' + client + '/props.json', 'utf8'));
 						if (!props)
 							throw 'client ' + client + ' does not exists!';
+						var colorStart = /--bg1start: rgb\(([^)]*)/g.exec(fs.readFileSync('clients/' + client + '/style.css', 'utf8'))[1].trim().split(',');
+						var colorStop = /--bg1stop: rgb\(([^)]*)/g.exec(fs.readFileSync('clients/' + client + '/style.css', 'utf8'))[1].trim().split(',');
+						var calc = function (a, b) {
+							console.log(a);
+							console.log(b);
+							return parseInt('' + ((parseInt(a) + parseInt(b)) / 2));
+						};
+						var color = 'rgb(' + calc(colorStart[0], colorStop[0]) + ',' + calc(colorStart[1], colorStop[1]) + ',' + calc(colorStart[2], colorStop[2]) + ')';
 						props.nameShort = props.name.indexOf(' · ') > -1 ? props.name.substring(props.name.indexOf(' · ') + 3) : props.name;
 						fs.mkdirSync('dist/audio');
 						fs.mkdirSync('dist/css');
@@ -115,7 +123,7 @@ module.exports = (env) => {
 						fs.writeFileSync('dist' + file, fs.readFileSync('clients/' + client + '/style.css', 'utf8') + '\n\n' + fs.readFileSync('src/css/elements.css', 'utf8') + '\n\n' + fs.readFileSync('src' + file, 'utf8'));
 						fs.writeFileSync('dist/index.html', fs.readFileSync('src/index.html', 'utf8')
 							.replace(/\{placeholderAppleId}/g, props.appleId)
-							.replace(/\{placeholderColorBg1start}/g, /--bg1start:([^;]*)/g.exec(fs.readFileSync('clients/' + client + '/style.css', 'utf8'))[1].trim())
+							.replace(/\{placeholderColorBg1start}/g, color)
 							.replace(/\{placeholderEmail}/g, props.email)
 							.replace(/\{placeholderName}/g, props.name)
 							.replace(/\{placeholderDescription}/g, props.name + ' · Events · ' + props.en.buddies)
