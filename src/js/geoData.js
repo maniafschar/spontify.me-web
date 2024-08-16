@@ -92,7 +92,7 @@ class geoData {
 	}
 	static init2(status) {
 		if (status && status.toLowerCase().indexOf('denied') < 0) {
-			geoData.id = navigator.geolocation.watchPosition(function (p) {
+			var f = function (p) {
 				if (p.coords && p.coords.latitude)
 					geoData.save({
 						latitude: p.coords.latitude,
@@ -102,7 +102,10 @@ class geoData {
 						speed: p.coords.speed,
 						accuracy: p.coords.accuracy
 					});
-			}, null, { timeout: 10000, maximumAge: 10000, enableHighAccuracy: true });
+			};
+			var p = { timeout: 10000, maximumAge: 10000, enableHighAccuracy: true };
+			navigator.geolocation.getCurrentPosition(f, null, p);
+			geoData.id = navigator.geolocation.watchPosition(f, null, p);
 		}
 	}
 	static pause() {
