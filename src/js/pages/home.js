@@ -151,7 +151,7 @@ teaser title {
 </style>
 <homeHeader>
 	<buttonIcon class="statistics left${v.statsButton}" onclick="${v.statsOnclick}"><span>${v.statsLabel}</span></buttonIcon>
-	<img onclick="${v.actionLogo}" source="logo"/>
+	<img onclick="pageHome.open(event)" source="logo"/>
 	<buttonIcon onclick="ui.navigation.goTo(&quot;settings&quot;)" class="right${v.dispProfile}">
 		${v.imgProfile}
 	</buttonIcon>
@@ -312,9 +312,8 @@ border-radius: 0.5em 0 0 3em;
 		}
 		if (force || !ui.q('home teaser.events>div card')) {
 			var v = {
-				actionLogo: 'pageHome.open(event)'
+				statsButton: ' hidden'
 			};
-			v.statsButton = ' hidden';
 			if (user.contact) {
 				if (user.contact.imageList)
 					v.imgProfile = '<img src="' + global.serverImg + user.contact.imageList + '"/>';

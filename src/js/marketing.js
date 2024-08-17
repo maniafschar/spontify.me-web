@@ -144,6 +144,8 @@ hint {
 				success(r) {
 					if (!finished && r)
 						marketing.data._answer = { id: r, storage: {} };
+					if (finished)
+						marketing.openTag = null;
 					next(r);
 				}
 			});
