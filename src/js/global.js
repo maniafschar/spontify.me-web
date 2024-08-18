@@ -5,11 +5,11 @@ import { Contact, Location, model } from './model';
 import { formFunc, ui } from './ui';
 import { user } from './user';
 
-export { Strings, global };
+export { global, Strings };
 
 class global {
 	static appTitle = '{placeholderAppTitle}';
-	static appVersion = '0.6.9';
+	static appVersion = '0.7.0';
 	static config = JSON.parse('{placeholderAppConfig}');
 	static imprintCustom = '{imprintCustom}';
 	static language = null;

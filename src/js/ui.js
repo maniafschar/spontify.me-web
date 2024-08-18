@@ -432,7 +432,10 @@ class ui {
 			if (!name)
 				name = 'abcdefghi';
 			setTimeout(function () {
-				var e = window.open(url, name, 'location=no,hardwareback=no,toolbar=yes,closebuttoncaption=' + ui.l('back'));
+				var e = window.open(url, name, 'location=no,hardwareback=no,toolbar=yes,mediaPlaybackRequiresUserAction=yes,allowInlineMediaPlayback=yes,closebuttoncolor='
+					+ ui.rgbToHex(ui.cssValue(document.body, '--bg2stop').replace('rgb(', '')) + ',navigationbuttoncolor='
+					+ ui.rgbToHex(ui.cssValue(document.body, '--bg2stop').replace('rgb(', '')) + ',toolbarcolor='
+					+ ui.rgbToHex(ui.cssValue(document.body, '--bg1start').replace('rgb(', '')) + ',closebuttoncaption=  <<<');
 				if (e) {
 					ui.navigation.openWindows[name] = e;
 					if (e.focus)
@@ -816,6 +819,15 @@ class ui {
 				f(e[i]);
 		} else if (e && typeof e.addEventListener == 'function')
 			f(e);
+	}
+	static rgbToHex(rgb) {
+		var c = function (c) {
+			c = parseInt(c);
+			var hex = c.toString(16);
+			return hex.length == 1 ? "0" + hex : hex;
+		}
+		rgb = rgb.split(',');
+		return "#" + c(rgb[0]) + c(rgb[1]) + c(rgb[2]);
 	}
 };
 
