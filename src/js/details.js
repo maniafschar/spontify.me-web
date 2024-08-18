@@ -107,7 +107,10 @@ class details {
 		var id = marketing.openTag.split('&')[1].substring(2);
 		details.open(id, {
 			webCall: 'details.openLocationMarketing', query: 'location_list', search: encodeURIComponent('location.id=' + id)
-		}, pageLocation.detailLocationEvent);
+		}, function (e) {
+			pageLocation.detailLocationEvent(e, id);
+			marketing.openTag = null;
+		});
 	}
 	static openDetailNav(next, id) {
 		var e = ui.q('detail');
