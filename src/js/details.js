@@ -108,8 +108,8 @@ class details {
 		details.open(id, {
 			webCall: 'details.openLocationMarketing', query: 'location_list', search: encodeURIComponent('location.id=' + id)
 		}, function (e) {
-			pageLocation.detailLocationEvent(e, id);
 			marketing.openTag = null;
+			return pageLocation.detailLocationEvent(e, id);
 		});
 	}
 	static openDetailNav(next, id) {
