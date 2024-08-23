@@ -4,6 +4,11 @@ import { ui } from '../ui';
 export { InputHashtags };
 
 class InputHashtags extends HTMLElement {
+	static locationAttributes = [
+		ui.l('locations.attributeMuseum') + '|x.3',
+		ui.l('locations.attributeCinema') + '|x,2',
+		ui.l('locations.attributeSportsbar') + '|x.1'
+	];
 	constructor() {
 		super();
 		this._root = this.attachShadow({ mode: 'closed' });
@@ -125,9 +130,12 @@ hashtagButton::before {
 	convert(hashtags) {
 		var category = '', i3;
 		hashtags = hashtags.replace(/\n|\t|\r/g, ' ');
-		if ((i3 = hashtags.indexOf(ui.l('locations.attributeSportsbar'))) > -1) {
-			category += '|x.1';
-			hashtags = hashtags.substring(0, i3) + hashtags.substring(i3 + ui.l('locations.attributeSportsbar').length);
+		for (var i = 0; i < InputHashtags.locationAttributes.length; i++) {
+			var s = InputHashtags.locationAttributes[i].split('\|');
+			if ((i3 = hashtags.indexOf(s[0])) > -1) {
+				category += '|' + s[1];
+				hashtags = hashtags.substring(0, i3) + hashtags.substring(i3 + s[0].length);
+			}
 		}
 		for (var i = 0; i < ui.categories.length; i++) {
 			for (var i2 = 0; i2 < ui.categories[i].values.length; i2++) {
@@ -166,8 +174,13 @@ hashtagButton::before {
 						break;
 					}
 				}
-			else if (ids[i] == 'x.1')
-				a.push(ui.l('locations.attributeSportsbar'));
+			else {
+				for (var i2 = 0; i2 < InputHashtags.locationAttributes.length; i2++) {
+					var s = InputHashtags.locationAttributes[i2].split('\|');
+					if (ids[i] == s[1])
+						a.push(s[0]);
+				}
+			}
 		}
 		a.sort(function (a, b) { return a.toLowerCase() > b.toLowerCase() ? 1 : -1 });
 		return a.join(' ').trim();
@@ -179,10 +192,8 @@ hashtagButton::before {
 			for (var i = 0; i < ui.categories.length; i++) {
 				if (ui.categories[i].key == 2) {
 					var subs = [...ui.categories[i].values];
-					subs.push(ui.l('locations.attributeMuseum') + '|x.3');
-					subs.push(ui.l('locations.attributeCinema') + '|x,2');
-					subs.push(ui.l('locations.attributeSportsbar') + '|x.1');
-					subs = subs.sort(function (a, b) { return a > b ? 1 : -1 });
+					for (var i2 = 0; i2 < InputHashtags.locationAttributes.length; i2++)
+						subs.push(InputHashtags.locationAttributes[i2]);
 					for (var i2 = 0; i2 < subs.length; i2++)
 						s += '<label onclick="this.getRootNode().host.add(&quot;' + subs[i2].split('|')[0] + '&quot;)">' + subs[i2].split('|')[0] + '</label>';
 					break;
