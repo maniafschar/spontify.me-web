@@ -179,9 +179,9 @@ hashtagButton::before {
 			for (var i = 0; i < ui.categories.length; i++) {
 				if (ui.categories[i].key == 2) {
 					var subs = [...ui.categories[i].values];
-					subs.push(ui.l('locations.attributeMuseum') + '|');
-					subs.push(ui.l('locations.attributeCinema') + '|');
-					subs.push(ui.l('locations.attributeSportsbar') + '|');
+					subs.push(ui.l('locations.attributeMuseum') + '|x.3');
+					subs.push(ui.l('locations.attributeCinema') + '|x,2');
+					subs.push(ui.l('locations.attributeSportsbar') + '|x.1');
 					subs = subs.sort(function (a, b) { return a > b ? 1 : -1 });
 					for (var i2 = 0; i2 < subs.length; i2++)
 						s += '<label onclick="this.getRootNode().host.add(&quot;' + subs[i2].split('|')[0] + '&quot;)">' + subs[i2].split('|')[0] + '</label>';
