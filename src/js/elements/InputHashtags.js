@@ -107,7 +107,7 @@ hashtagButton::before {
 	attributeChangedCallback(name, oldValue, newValue) {
 		var e = this._root.querySelector('textarea');
 		if (e)
-			e.value = (InputHashtags.ids2Text(this.getAttribute('ids')) + (this.getAttribute('text') ? ' ' + this.getAttribute('text') : '')).trim();
+			e.value = (InputHashtags.ids2Text(this.getAttribute('ids')) + (this.getAttribute('text') ? ' ' + this.getAttribute('text').replace(/\|/g, ' ') : '')).trim();
 	}
 	add(tag) {
 		var e = this._root.querySelector('textarea');
