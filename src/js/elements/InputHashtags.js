@@ -101,7 +101,7 @@ hashtagButton::before {
 		element.setAttribute('transient', 'true');
 		element.setAttribute('onkeyup', 'this.getRootNode().host.synchonizeTags()');
 		element.setAttribute('onfocus', 'this.getRootNode().host.editing=true');
-		element.setAttribute('onblur', 'this.getRootNode().host.editing=false');
+		element.setAttribute('onblur', 'this.getRootNode().host.editing=false;this.getRootNode().host.synchonizeTags()');
 		element.setAttribute('style', 'height:2em;');
 		this._root.appendChild(element);
 		element = document.createElement('hashtags');
