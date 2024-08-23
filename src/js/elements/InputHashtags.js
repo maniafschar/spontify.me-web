@@ -4,14 +4,15 @@ import { ui } from '../ui';
 export { InputHashtags };
 
 class InputHashtags extends HTMLElement {
-	static locationAttributes = [
-		ui.l('locations.attributeMuseum') + '|x.3',
-		ui.l('locations.attributeCinema') + '|x,2',
-		ui.l('locations.attributeSportsbar') + '|x.1'
-	];
+	static locationAttributes = [];
 	constructor() {
 		super();
 		this._root = this.attachShadow({ mode: 'closed' });
+		if (InputHashtags.locationAttributes.length == 0) {
+			InputHashtags.locationAttributes.push(ui.l('locations.attributeMuseum') + '|x.3');
+			InputHashtags.locationAttributes.push(ui.l('locations.attributeCinema') + '|x,2');
+			InputHashtags.locationAttributes.push(ui.l('locations.attributeSportsbar') + '|x.1');
+		}
 	}
 	connectedCallback() {
 		const style = document.createElement('style');
