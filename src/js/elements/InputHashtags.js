@@ -195,6 +195,7 @@ hashtagButton::before {
 					var subs = [...ui.categories[i].values];
 					for (var i2 = 0; i2 < InputHashtags.locationAttributes.length; i2++)
 						subs.push(InputHashtags.locationAttributes[i2]);
+					subs = subs.sort(function (a, b) { return a > b ? 1 : -1 });
 					for (var i2 = 0; i2 < subs.length; i2++)
 						s += '<label onclick="this.getRootNode().host.add(&quot;' + subs[i2].split('|')[0] + '&quot;)">' + subs[i2].split('|')[0] + '</label>';
 					break;
