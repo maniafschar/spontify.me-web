@@ -92,7 +92,6 @@ hashtagButton::before {
 		element.setAttribute('name', 'hashtagsDisp');
 		element.setAttribute('maxlength', '250');
 		element.setAttribute('transient', 'true');
-		element.setAttribute('onkeyup', 'this.getRootNode().host.synchonizeTags()');
 		element.setAttribute('style', 'height:2em;');
 		this._root.appendChild(element);
 		element = document.createElement('hashtags');
