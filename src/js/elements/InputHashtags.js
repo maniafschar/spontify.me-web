@@ -98,7 +98,7 @@ hashtagButton::before {
 		element.setAttribute('name', 'hashtagsDisp');
 		element.setAttribute('maxlength', '250');
 		element.setAttribute('transient', 'true');
-		element.setAttribute('onblur', 'this.getRootNode().host.synchonizeTags()');
+		element.setAttribute('onkeyup', 'this.getRootNode().host.synchonizeTags(true)');
 		element.setAttribute('style', 'height:2em;');
 		this._root.appendChild(element);
 		element = document.createElement('hashtags');
@@ -217,13 +217,14 @@ hashtagButton::before {
 		}
 		return s;
 	}
-	synchonizeTags() {
+	synchonizeTags(doNotCalcTextareaHeight) {
 		var textarea = this._root.querySelector('textarea');
 		var tags = this._root.querySelector('hashtags').querySelectorAll('div>label');
 		var s = textarea.value.toLowerCase();
 		for (var i = 0; i < tags.length; i++)
 			s.indexOf(tags[i].innerHTML.trim().toLowerCase()) < 0 ? ui.classRemove(tags[i], 'selected') : ui.classAdd(tags[i], 'selected');
-		ui.adjustTextarea(textarea);
+		if (!doNotCalcTextareaHeight)
+			ui.adjustTextarea(textarea);
 		var hts = this.convert(textarea.value);
 		this._root.host.setAttribute('ids', hts.ids);
 		this._root.host.setAttribute('text', hts.text);

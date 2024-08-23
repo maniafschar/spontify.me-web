@@ -425,7 +425,7 @@ mapEdit {
 						webCall: 'location.editMap',
 						responseType: 'json',
 						success(r) {
-							if (r && r.length) {
+							if (r && r.length && ui.q('dialog-popup [name="latitude"]')) {
 								pageLocation.mapEdit.canvas.setCenter({ lat: r[0].latitude, lng: r[0].longitude });
 								ui.q('dialog-popup [name="latitude"]').value = r[0].latitude;
 								ui.q('dialog-popup [name="longitude"]').value = r[0].longitude;
