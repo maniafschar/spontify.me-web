@@ -221,10 +221,11 @@ hashtagButton::before {
 		var textarea = this._root.querySelector('textarea');
 		var tags = this._root.querySelector('hashtags').querySelectorAll('div>label');
 		var s = textarea.value.toLowerCase();
-		if (!doNotCalcTextareaHeight)
+		if (!doNotCalcTextareaHeight) {
 			for (var i = 0; i < tags.length; i++)
 				s.indexOf(tags[i].innerHTML.trim().toLowerCase()) < 0 ? ui.classRemove(tags[i], 'selected') : ui.classAdd(tags[i], 'selected');
-		ui.adjustTextarea(textarea);
+			ui.adjustTextarea(textarea);
+		}
 		var hts = this.convert(textarea.value);
 		this._root.host.setAttribute('ids', hts.ids);
 		this._root.host.setAttribute('text', hts.text);
