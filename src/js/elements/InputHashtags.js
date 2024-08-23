@@ -10,7 +10,7 @@ class InputHashtags extends HTMLElement {
 		this._root = this.attachShadow({ mode: 'closed' });
 		if (InputHashtags.locationAttributes.length == 0) {
 			InputHashtags.locationAttributes.push(ui.l('locations.attributeMuseum') + '|x.3');
-			InputHashtags.locationAttributes.push(ui.l('locations.attributeCinema') + '|x,2');
+			InputHashtags.locationAttributes.push(ui.l('locations.attributeCinema') + '|x.2');
 			InputHashtags.locationAttributes.push(ui.l('locations.attributeSportsbar') + '|x.1');
 		}
 	}
