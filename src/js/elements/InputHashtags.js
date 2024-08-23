@@ -4,6 +4,7 @@ import { ui } from '../ui';
 export { InputHashtags };
 
 class InputHashtags extends HTMLElement {
+	editing = false;
 	static locationAttributes = [];
 	constructor() {
 		super();
@@ -98,7 +99,9 @@ hashtagButton::before {
 		element.setAttribute('name', 'hashtagsDisp');
 		element.setAttribute('maxlength', '250');
 		element.setAttribute('transient', 'true');
-		element.setAttribute('onkeyup', 'this.getRootNode().host.synchonizeTags(true)');
+		element.setAttribute('onkeyup', 'this.getRootNode().host.synchonizeTags()');
+		element.setAttribute('onfocus', 'this.getRootNode().host.editing=true');
+		element.setAttribute('onblur', 'this.getRootNode().host.editing=false');
 		element.setAttribute('style', 'height:2em;');
 		this._root.appendChild(element);
 		element = document.createElement('hashtags');
@@ -110,10 +113,12 @@ hashtagButton::before {
 		setTimeout(function () { ui.adjustTextarea(r.querySelector('textarea')) }, 1000);
 	}
 	static get observedAttributes() { return ['ids', 'text']; }
-	attributeChangedCallback(name, oldValue, newValue) {
-		var e = this._root.querySelector('textarea');
-		if (e)
-			e.value = (InputHashtags.ids2Text(this.getAttribute('ids')) + (this.getAttribute('text') ? ' ' + this.getAttribute('text').replace(/\|/g, ' ') : '')).trim();
+	attributeChangedCallback() {
+		if (this.editing) {
+			var e = this._root.querySelector('textarea');
+			if (e)
+				e.value = (InputHashtags.ids2Text(this.getAttribute('ids')) + (this.getAttribute('text') ? ' ' + this.getAttribute('text').replace(/\|/g, ' ') : '')).trim();
+		}
 	}
 	add(tag) {
 		var e = this._root.querySelector('textarea');
@@ -217,15 +222,13 @@ hashtagButton::before {
 		}
 		return s;
 	}
-	synchonizeTags(doNotCalcTextareaHeight) {
+	synchonizeTags() {
 		var textarea = this._root.querySelector('textarea');
 		var tags = this._root.querySelector('hashtags').querySelectorAll('div>label');
 		var s = textarea.value.toLowerCase();
-		if (!doNotCalcTextareaHeight) {
-			for (var i = 0; i < tags.length; i++)
-				s.indexOf(tags[i].innerHTML.trim().toLowerCase()) < 0 ? ui.classRemove(tags[i], 'selected') : ui.classAdd(tags[i], 'selected');
-			ui.adjustTextarea(textarea);
-		}
+		for (var i = 0; i < tags.length; i++)
+			s.indexOf(tags[i].innerHTML.trim().toLowerCase()) < 0 ? ui.classRemove(tags[i], 'selected') : ui.classAdd(tags[i], 'selected');
+		ui.adjustTextarea(textarea);
 		var hts = this.convert(textarea.value);
 		this._root.host.setAttribute('ids', hts.ids);
 		this._root.host.setAttribute('text', hts.text);
