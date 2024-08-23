@@ -114,7 +114,7 @@ hashtagButton::before {
 	}
 	static get observedAttributes() { return ['ids', 'text']; }
 	attributeChangedCallback() {
-		if (this.editing) {
+		if (!this.editing) {
 			var e = this._root.querySelector('textarea');
 			if (e)
 				e.value = (InputHashtags.ids2Text(this.getAttribute('ids')) + (this.getAttribute('text') ? ' ' + this.getAttribute('text').replace(/\|/g, ' ') : '')).trim();
