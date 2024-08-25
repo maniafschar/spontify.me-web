@@ -133,36 +133,38 @@ hashtagButton::before {
 		ui.adjustTextarea(e);
 		this.synchonizeTags();
 	}
-	convert(hashtags) {
-		var category = '', i3;
-		hashtags = hashtags.replace(/\n|\t|\r/g, ' ');
-		for (var i = 0; i < InputHashtags.locationAttributes.length; i++) {
-			var s = InputHashtags.locationAttributes[i].split('\|');
-			if ((i3 = hashtags.indexOf(s[0])) > -1) {
-				category += '|' + s[1];
-				hashtags = hashtags.substring(0, i3) + hashtags.substring(i3 + s[0].length);
+	convert(text) {
+		var ids = '', i3;
+		text = text.replace(/\n|\t|\r,/g, ' ');
+		if (this.classList.contains('location')) {
+			for (var i = 0; i < InputHashtags.locationAttributes.length; i++) {
+				var s = InputHashtags.locationAttributes[i].split('\|');
+				if ((i3 = text.indexOf(s[0])) > -1) {
+					ids += '|' + s[1];
+					text = text.substring(0, i3) + text.substring(i3 + s[0].length);
+				}
 			}
 		}
 		for (var i = 0; i < ui.categories.length; i++) {
 			for (var i2 = 0; i2 < ui.categories[i].values.length; i2++) {
 				var t = ui.categories[i].values[i2].split('|');
-				i3 = hashtags.toLowerCase().indexOf(t[0].toLowerCase());
+				i3 = text.toLowerCase().indexOf(t[0].toLowerCase());
 				if (i3 > -1) {
-					category += '|' + ui.categories[i].key + '.' + t[1];
-					hashtags = hashtags.substring(0, i3) + hashtags.substring(i3 + t[0].length);
+					ids += '|' + ui.categories[i].key + '.' + t[1];
+					text = text.substring(0, i3) + text.substring(i3 + t[0].length);
 				}
 			}
 		}
-		if (category)
-			category = category.substring(1);
-		while (category.length > 255)
-			category = category.substring(0, category.lastIndexOf('|'));
-		hashtags = hashtags.trim();
-		while (hashtags.indexOf('  ') > -1)
-			hashtags = hashtags.replace('  ', ' ').trim();
-		if (hashtags.length > 255)
-			hashtags = hashtags.substring(0, 255);
-		return { ids: category, text: hashtags.replace(/ /g, '|') };
+		if (ids)
+			ids = ids.substring(1);
+		while (ids.length > 255)
+			ids = ids.substring(0, ids.lastIndexOf('|'));
+		text = text.trim();
+		while (text.indexOf('  ') > -1)
+			text = text.replace('  ', ' ').trim();
+		if (text.length > 255)
+			text = text.substring(0, 255);
+		return { ids: ids, text: text.replace(/ /g, '|') };
 	}
 	static ids2Text(ids) {
 		if (!ids)

@@ -140,7 +140,7 @@ class geoData {
 				geoData.current.street = '';
 			}
 		}
-		if (user.contact && user.contact.id && (position.manual ||
+		if (user.contact?.id && (position.manual ||
 			(new Date().getTime() - geoData.lastSave > 5000) && (!geoData.localized || d > 0.05))) {
 			communication.ajax({
 				url: global.serverApi + 'action/position',
@@ -154,20 +154,16 @@ class geoData {
 					document.dispatchEvent(new CustomEvent('GeoLocation', { detail: { type: 'update', ...geoData.current } }));
 				},
 				success(r) {
-					if (!r && (!position.manual || !position.town))
-						ui.html('dialog-popup errorHint', ui.l('home.locationNotSetable'));
-					else {
-						if (!r)
-							r = position;
-						geoData.lastSave = new Date().getTime();
-						if (position.manual)
-							geoData.currentManual = { lat: position.latitude, lon: position.longitude, street: r.street, town: r.town };
-						else
-							geoData.current = { lat: position.latitude, lon: position.longitude, street: r.street, town: r.town };
-						document.dispatchEvent(new CustomEvent('GeoLocation', { detail: { type: 'update', ...geoData.current } }));
-						if (exec)
-							exec(r);
-					}
+					if (!r)
+						r = position;
+					geoData.lastSave = new Date().getTime();
+					if (position.manual)
+						geoData.currentManual = { lat: position.latitude, lon: position.longitude, street: r.street, town: r.town };
+					else
+						geoData.current = { lat: position.latitude, lon: position.longitude, street: r.street, town: r.town };
+					document.dispatchEvent(new CustomEvent('GeoLocation', { detail: { type: 'update', ...geoData.current } }));
+					if (exec)
+						exec(r);
 				}
 			});
 		}
