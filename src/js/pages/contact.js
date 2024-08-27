@@ -451,10 +451,12 @@ ${v.matchIndicatorHintDescription}
 	}
 	static toggleMatchIndicatorHint(id, event) {
 		var e = ui.q('detail card:last-child[i="' + id + '"] [name="matchIndicatorHint"]');
-		var button = ui.parents(event.target, 'matchIndicator');
-		e.style.top = (button.offsetTop + button.offsetHeight) + 'px';
-		e.style.left = '5%';
-		ui.toggleHeight(e);
+		if (e) {
+			var button = ui.parents(event.target, 'matchIndicator');
+			e.style.top = (button.offsetTop + button.offsetHeight) + 'px';
+			e.style.left = '5%';
+			ui.toggleHeight(e);
+		}
 	}
 }
 
