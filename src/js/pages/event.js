@@ -1197,6 +1197,8 @@ poll result div {
 				if (skills[i].indexOf(global.config.searchMandatory) == 0)
 					s += '<input-checkbox type="radio" name="skills" value="' + skills[i] + '" label="' + InputHashtags.ids2Text(skills[i]) + '"' + (s ? '' : ' checked="true"') + '></input-checkbox>';
 			}
+			if (s && ui.q('dialog-popup input[name="id"]').getAttribute('value'))
+				s += '<input-checkbox type="radio" name="skills" value="x" label="' + ui.l('events.skillsStopRepetition') + '></input-checkbox>';
 			ui.q('dialog-popup clubs').innerHTML = s ? s : ui.l('events.noClubs');
 		}
 		pageEvent.openSection('dialog-popup clubs', repetition);
