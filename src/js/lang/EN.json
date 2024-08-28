@@ -400,6 +400,7 @@
 			"repetition_w2": "every 2. weeks",
 			"repetition_y": "once a year",
 			"selectLocation": "Go to location selection",
+			"skillsStopRepetition": "Cancel serial event",
 			"soldOut": "Maximum of {0} participants reached!",
 			"start": "Start date",
 			"startHour": "Start",
