@@ -366,6 +366,8 @@
 			"newOnlineEvent": "Online",
 			"newPoll": "Poll",
 			"next": "Coming {0}",
+			"noClubs": "You have not selected any favorite clubs yet.",
+			"noClubsButton": "Select clubs",
 			"noEvents": "At the moment, no Events found.",
 			"noImage": "Upload a profile picture, then you can create an event.<br/>Would you like to do something with new ${buddies}, who do not have a nice profile here?",
 			"noParticipant": "No participants up to now. Be the first!",
