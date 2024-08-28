@@ -1195,7 +1195,7 @@ poll result div {
 			var s = '';
 			for (var i = 0; i < skills.length; i++) {
 				if (skills[i].indexOf(global.config.searchMandatory) == 0)
-					s += '<input-checkbox type="radio" name="clubs" value="' + skills[i] + '" label="' + InputHashtags.ids2Text(skills[i]) + '"' + (s ? '' : ' checked="true"') + '></input-checkbox>';
+					s += '<input-checkbox type="radio" name="skills" value="' + skills[i] + '" label="' + InputHashtags.ids2Text(skills[i]) + '"' + (s ? '' : ' checked="true"') + '></input-checkbox>';
 			}
 			ui.q('dialog-popup clubs').innerHTML = s ? s : ui.l('events.noClubs');
 		}
