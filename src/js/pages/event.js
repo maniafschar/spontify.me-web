@@ -3,6 +3,7 @@ import { communication } from '../communication';
 import { details } from '../details';
 import { DialogHint } from '../elements/DialogHint';
 import { DialogPopup } from '../elements/DialogPopup';
+import { InputHashtags } from '../elements/InputHashtags';
 import { geoData } from '../geoData';
 import { global, Strings } from '../global';
 import { lists } from '../lists';
@@ -49,6 +50,10 @@ field.checkbox {
 	height: 1.2em;
 	line-height: 1.2;
 }
+clubs {
+	position: relative;
+ 	display: block;
+ }
 </style>
 <form name="editElement" onsubmit="return false">
 <input type="hidden" name="id" value="${v.id}"/>
@@ -85,7 +90,8 @@ field.checkbox {
 			<input-checkbox type="radio" deselect="true" name="repetition" value="w2" label="events.repetition_w2" onclick="pageEvent.setForm()" ${v.repetition_w2}></input-checkbox>
 			<input-checkbox type="radio" deselect="true" name="repetition" value="m" label="events.repetition_m" onclick="pageEvent.setForm()" ${v.repetition_m}></input-checkbox>
 			<input-checkbox type="radio" deselect="true" name="repetition" value="y" label="events.repetition_y" onclick="pageEvent.setForm()" ${v.repetition_y}></input-checkbox>
-			<input-checkbox type="radio" deselect="true" name="repetition" value="c" label="events.repetition_c" onclick="pageEvent.setForm()" ${v.repetition_c}></input-checkbox>
+			<input-checkbox type="radio" deselect="true" name="repetition" value="c" label="events.repetition_c" onclick="pageEvent.setForm()" ${v.repetition_c}${v.repetitionClubsStyle}></input-checkbox>
+   			<clubs style="display:none;"></clubs>
 		</value>
 	</field>
 	<field class="noWTDField" name="endDate" style="display:none;">
@@ -444,6 +450,8 @@ poll result div {
 		if (global.config.club)
 			v.hideOnlineEvent = 'class="hidden"';
 		v.publish = global.config.publishingWall ? '' : ' class="hidden"';
+		if (!global.config.searchMandatory)
+			v.repetitionClubsStyle = ' style="display:none;"';
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
 		setTimeout(pageEvent.setForm, 400);
 		var selectable = function (value) {
@@ -1181,6 +1189,17 @@ poll result div {
 			ui.classAdd(e, 'selected');
 	}
 	static setForm() {
+		var repetition = ui.val('dialog-popup input-checkbox[name="repetition"][checked="true"]');
+		if (repetition && !ui.q('dialog-popup clubs').innerHTML) {
+			var skills = user.contact.skills?.split('\|');
+			var s = '';
+			for (var i = 0; i < skills.length; i++) {
+				if (skills[i].indexOf(global.config.searchMandatory) == 0)
+					s += '<input-checkbox type="radio" name="clubs" value="' + skills[i] + '" label="' + InputHashtags.ids2Text(skills[i]) + '"' + (s ? '' : ' checked="true"') + '></input-checkbox>';
+			}
+			ui.q('dialog-popup clubs').innerHTML = s ? s : ui.l('events.noClubs');
+		}
+		pageEvent.openSection('dialog-popup clubs', repetition);
 		var b = ui.val('dialog-popup input-checkbox[name="type"][checked="true"]');
 		var es = ui.qa('dialog-popup .noWTDField:not(field[name="endDate"])');
 		for (var i = 0; i < es.length; i++)
