@@ -85,6 +85,7 @@ field.checkbox {
 			<input-checkbox type="radio" deselect="true" name="repetition" value="w2" label="events.repetition_w2" onclick="pageEvent.setForm()" ${v.repetition_w2}></input-checkbox>
 			<input-checkbox type="radio" deselect="true" name="repetition" value="m" label="events.repetition_m" onclick="pageEvent.setForm()" ${v.repetition_m}></input-checkbox>
 			<input-checkbox type="radio" deselect="true" name="repetition" value="y" label="events.repetition_y" onclick="pageEvent.setForm()" ${v.repetition_y}></input-checkbox>
+			<input-checkbox type="radio" deselect="true" name="repetition" value="c" label="events.repetition_c" onclick="pageEvent.setForm()" ${v.repetition_c}></input-checkbox>
 		</value>
 	</field>
 	<field class="noWTDField" name="endDate" style="display:none;">
@@ -390,16 +391,7 @@ poll result div {
 		v.today = d.year + '-' + d.month + '-' + d.day;
 		v.id = id;
 		v.locationID = locationID;
-		if (!v.repetition || v.repetition == 'o')
-			v.repetition_o = ' checked="true"';
-		if (v.repetition == 'w1')
-			v.repetition_w1 = ' checked="true"';
-		if (v.repetition == 'w2')
-			v.repetition_w2 = ' checked="true"';
-		if (v.repetition == 'm')
-			v.repetition_m = ' checked="true"';
-		if (v.repetition == 'y')
-			v.repetition_y = ' checked="true"';
+		v['repetition_' + v.repetition] = ' checked="true"';
 		if (!v.startDate) {
 			d = new Date();
 			d.setDate(d.getDate() + 1);
