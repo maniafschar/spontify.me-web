@@ -500,8 +500,8 @@ border-radius: 0.5em 0 0 3em;
 	static setLogoTown() {
 		var e = ui.q('home text.town');
 		if (e) {
-			var s = geoData.getCurrent().town.toLowerCase();
-			if (e.innerHTML.trim() != s) {
+			var s = geoData.getCurrent().town?.toLowerCase();
+			if (s && e.innerHTML.trim() != s) {
 				pageHome.teaserContacts();
 				pageHome.teaserEvents();
 				e.innerHTML = s;
