@@ -366,7 +366,7 @@
 			"newOnlineEvent": "Online",
 			"newPoll": "Umfrage",
 			"next": "Kommenden {0}",
-			"noClubs": "Du hast noch keine Lieblings-Clubs angegeben.",
+			"noClubs": "Du hast noch keine Lieblings-Clubs ausgewählt.",
 			"noClubsButton": "Clubs auswählen",
 			"noEvents": "Momentan wurden keine Events gefunden.",
 			"noImage": "Lade eine Profilbild hoch, dann kannst Du hier etwas unternehmen.<br/>Würdest Du mit neuen ${buddies} etwas unternehmen wollen, die kein schönes Profil hier haben?",
