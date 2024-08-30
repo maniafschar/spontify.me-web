@@ -348,21 +348,23 @@ class pageChat {
 						responseType: 'json',
 						webCall: 'chat.open',
 						success(r2) {
-							ui.attr('chat[i="' + id + '"] listHeader chatName', 'onclick', 'ui.navigation.autoOpen("' + global.encParam('p=' + id) + '",event)');
-							ui.html('chat[i="' + id + '"] listHeader chatName span', r2['contact.pseudonym']);
-							var e2 = ui.q('chat[i="' + id + '"] listHeader img');
-							if (r2['contact.id'] == user.clientId) {
-								e2.setAttribute('source', 'admin');
-								ui.classAdd(e2, 'admin');
-							} else if (r2['contact.imageList'])
-								e2.setAttribute('src', global.serverImg + r2['contact.imageList']);
-							else {
-								ui.attr(e2, 'source', 'contacts');
-								ui.classAdd(e2, 'bgColor');
+							if (r2) {
+								ui.attr('chat[i="' + id + '"] listHeader chatName', 'onclick', 'ui.navigation.autoOpen("' + global.encParam('p=' + id) + '",event)');
+								ui.html('chat[i="' + id + '"] listHeader chatName span', r2['contact.pseudonym']);
+								var e2 = ui.q('chat[i="' + id + '"] listHeader img');
+								if (r2['contact.id'] == user.clientId) {
+									e2.setAttribute('source', 'admin');
+									ui.classAdd(e2, 'admin');
+								} else if (r2['contact.imageList'])
+									e2.setAttribute('src', global.serverImg + r2['contact.imageList']);
+								else {
+									ui.attr(e2, 'source', 'contacts');
+									ui.classAdd(e2, 'bgColor');
+								}
+								if (ui.cssValue('main', 'padding-top') && parseInt(ui.cssValue('main', 'padding-top')))
+									e2.style.borderRadius = '0 2em 2em 0';
+								formFunc.svg.replaceAll();
 							}
-							if (ui.cssValue('main', 'padding-top') && parseInt(ui.cssValue('main', 'padding-top')))
-								e2.style.borderRadius = '0 2em 2em 0';
-							formFunc.svg.replaceAll();
 						}
 					});
 					ui.navigation.closeMenu();
