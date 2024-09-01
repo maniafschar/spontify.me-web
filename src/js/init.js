@@ -42,6 +42,23 @@ class initialisation {
 	static elementsCss;
 	static contactReferer = null;
 	static recoverInvoked = false;
+	static createLocationUser(tag) {
+		tag = tag.split('&');
+		communication.ajax({
+			url: global.serverApi + 'marketing/user/' + tag[1].substring(2) + '/' + tag[2].substring(2),
+			webCall: 'init.init',
+			method: 'POST',
+			success(r) {
+				if (r == 'noError')
+					;
+				else if (r == 'errorContactId')
+					;
+				else if (r == 'errorHash')
+					;
+				ui.navigation.openHint({ desc: '<div style="width:100%;max-height:80vh;overflow-y:auto;">' + ui.l('home.marketingCreateLocationUser') + '<br/><br/><button-text onclick="initialisation.createLocationUser(&quot;' + p + '&quot;)" label="home.marketingCreateLocationUserButton"></button-text></div>', pos: '5%,2em', size: '90%,auto', onclick: 'return false;' });
+			}
+		});
+	}
 	static init() {
 		communication.ajax({
 			url: 'css/elements.css',
@@ -418,6 +435,8 @@ class initialisation {
 			setTimeout(function () {
 				if (ui.q('head link[rel="canonical"]').getAttribute('href').split('/').length > 4)
 					ui.navigation.openHint({ desc: '<div style="width:100%;max-height:80vh;overflow-y:auto;"><img src="images/celebrate.svg" style="max-width:70%;"/><br/>' + ui.l('home.marketingOpenArticleText') + '<br/><br/><button-text onclick="ui.navigation.autoOpen(&quot;' + p + '&quot;)" label="home.marketingOpenArticleButton"></button-text></div>', pos: '5%,2em', size: '90%,auto', onclick: 'return false;' });
+				else if (p.indexOf('c=') == 0 && p.indexOf('&i=') > 0 && p.indexOf('&h=') > 0)
+					ui.navigation.openHint({ desc: ui.l('home.marketingCreateLocationUser') + '<br/><br/><button-text onclick="initialisation.createLocationUser(&quot;' + p + '&quot;)" label="home.marketingCreateLocationUserButton"></button-text>', pos: '5%,2em', size: '90%,auto', onclick: 'return false;' });
 				else
 					ui.navigation.autoOpen(p);
 			}, 2500);

@@ -434,6 +434,8 @@
 			"locationPickerButtonReset": "Reset",
 			"locationPickerButtonSet": "Fix location",
 			"locationPickerTitle": "Choose location",
+			"marketingCreateLocationUser": "Dear location operator,\nwould you like to create a user with whom you can maintain your location and set up events?",
+			"marketingCreateLocationUserButton": "Create user",
 			"marketingOpenArticleButton": "Open article",
 			"marketingOpenArticleText": "${marketingOpenArticleText}",
 			"news": "News",
