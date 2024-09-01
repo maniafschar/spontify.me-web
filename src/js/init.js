@@ -431,6 +431,7 @@ class initialisation {
 					ui.navigation.openHint({ desc: '<div style="width:100%;max-height:80vh;overflow-y:auto;"><img src="images/celebrate.svg" style="max-width:70%;"/><br/>' + ui.l('home.marketingOpenArticleText') + '<br/><br/><button-text onclick="ui.navigation.autoOpen(&quot;' + p + '&quot;)" label="home.marketingOpenArticleButton"></button-text></div>', pos: '5%,2em', size: '90%,auto', onclick: 'return false;' });
 				else if (p.indexOf('c=') == 0 && p.indexOf('&i=') > 0 && p.indexOf('&h=') > 0) {
 					p = p.split('&');
+					history.pushState(null, null, window.location.origin); history.pushState(null, null, window.location.origin);
 					communication.ajax({
 						url: global.serverApi + 'marketing/user/' + p[1].substring(2) + '/' + p[2].substring(2),
 						webCall: 'init.showStartDialogs',
