@@ -436,6 +436,7 @@
 			"locationPickerTitle": "Choose location",
 			"marketingCreateLocationUser": "Dear location operator,\nwould you like to create a user with whom you can maintain your location and set up events?",
 			"marketingCreateLocationUserButton": "Create user",
+			"marketing CreateLocationUserResult": "Your user has been created, a confirmation email has been sent to you.",
 			"marketingOpenArticleButton": "Open article",
 			"marketingOpenArticleText": "${marketingOpenArticleText}",
 			"news": "News",

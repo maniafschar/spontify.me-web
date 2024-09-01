@@ -436,6 +436,7 @@
 			"locationPickerTitle": "Standort wählen",
 			"marketingCreateLocationUser": "Lieber Location Betreiber,\nmöchtest Du einen Benutzer anlegen, mit dem Du Deine Location pflegen und Events einstellen kannst?",
 			"marketingCreateLocationUserButton": "Benutzer anlegen",
+			"marketingCreateLocationUserResult": "Dein Benutzer wurde angelegt, eine Bestätigungsemail wurde Dir zugesendet.",
 			"marketingOpenArticleButton": "Artikel öffnen",
 			"marketingOpenArticleText": "${marketingOpenArticleText}",
 			"news": "News",
