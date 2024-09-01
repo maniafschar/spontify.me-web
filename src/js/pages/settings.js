@@ -358,9 +358,7 @@ ${v.info}`;
 							s = ui.l('info.localized') + '<br/>' + s;
 						} else if (user.contact)
 							s = ui.l('info.notLocalized') + '<br/>' + (geoData.current.street ? geoData.current.street : '');
-						ui.q('settings localisation').innerHTML = s;
-						if (ui.q('settings localisation'))
-							ui.q('settings localisation').innerHTML = s;
+						ui.html('settings localisation', s);
 					};
 					document.addEventListener('GeoLocation', localisation);
 					localisation();
