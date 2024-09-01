@@ -435,8 +435,8 @@ class initialisation {
 						url: global.serverApi + 'marketing/user/' + p[1].substring(2) + '/' + p[2].substring(2),
 						webCall: 'init.showStartDialogs',
 						success(r) {
-							if (r == 'true')
-								ui.navigation.openHint({ desc: ui.l('home.marketingCreateLocationUser') + '<br/><br/><button-text onclick="initialisation.createLocationUser(&quot;' + p + '&quot;)" label="home.marketingCreateLocationUserButton"></button-text>', pos: '5%,2em', size: '90%,auto', onclick: 'return false;' });
+							if (r)
+								ui.navigation.openHint({ desc: ui.l('home.marketingCreateLocationUser').replace('{0}', r) + '<br/><br/><button-text onclick="initialisation.createLocationUser(&quot;' + p + '&quot;)" label="home.marketingCreateLocationUserButton"></button-text>', pos: '5%,2em', size: '90%,auto', onclick: 'return false;' });
 						}
 					});
 				} else
