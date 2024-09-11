@@ -1039,13 +1039,11 @@ poll result div {
 		if (parseInt(ui.val('dialog-popup input-checkbox[name="type"][checked="true"]')) < 0)
 			v.values.locationId = ui.val('dialog-popup input-checkbox[name="type"][checked="true"]');
 		var answers = ui.qa('dialog-popup field.poll input');
-		if (type == 'Poll') {
-			for (var i = 0; i < answers.length; i++)
-				formFunc.validation.filterWords(answers[i]);
-		}
 		if (!ui.q('dialog-popup [name="repetition"][checked="true"]') || v.values.type == 'Inquiry' || v.values.type == 'Poll')
 			v.values.repetition = 'Once';
 		if (type == 'Poll') {
+			for (var i = 0; i < answers.length; i++)
+				formFunc.validation.filterWords(answers[i]);
 			var d = { q: v.values.description, a: [] };
 			for (var i = 0; i < answers.length; i++) {
 				if (answers[i].value)
@@ -1055,7 +1053,8 @@ poll result div {
 				formFunc.setError(answers[answers.length - 1], 'events.errorAnswer');
 			else
 				v.values.description = JSON.stringify(d);
-		}
+		} else if (type == 'Games')
+			v.values.skills = ui.val('dialog-popup clubs input-checkbox[checked="true"]');
 		if (ui.q('dialog-popup errorHint')) {
 			ui.q('dialog-popup popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });
 			return;
