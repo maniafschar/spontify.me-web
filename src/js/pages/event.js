@@ -1002,6 +1002,7 @@ poll result div {
 		var text = ui.q('dialog-popup [name="description"]');
 		var tags = ui.q('dialog-popup input-hashtags');
 		var id = ui.val('dialog-popup [name="id"]');
+		var repetition = ui.val('dialog-popup [name="repetition"][checked="true"]');
 		var type = ui.val('dialog-popup input-checkbox[name="type"][checked="true"]');
 		DialogPopup.setHint('');
 		formFunc.resetError(start);
@@ -1028,7 +1029,7 @@ poll result div {
 			if (type != 'Online')
 				ui.q('dialog-popup input[name="url"]').value = '';
 		}
-		if (ui.q('dialog-popup [name="repetition"][checked="true"]')) {
+		if (repetition && repetition != 'Games') {
 			if (end.getAttribute('complete') == 'false')
 				formFunc.setError(end, 'events.errorDateNoEnd');
 		} else if (start.getAttribute('complete') == 'true')
@@ -1036,8 +1037,6 @@ poll result div {
 		var v = formFunc.getForm('dialog-popup form');
 		if (!v.values.price)
 			v.values.price = 0;
-		if (parseInt(ui.val('dialog-popup input-checkbox[name="type"][checked="true"]')) < 0)
-			v.values.locationId = ui.val('dialog-popup input-checkbox[name="type"][checked="true"]');
 		var answers = ui.qa('dialog-popup field.poll input');
 		if (!ui.q('dialog-popup [name="repetition"][checked="true"]') || v.values.type == 'Inquiry' || v.values.type == 'Poll')
 			v.values.repetition = 'Once';
@@ -1053,7 +1052,7 @@ poll result div {
 				formFunc.setError(answers[answers.length - 1], 'events.errorAnswer');
 			else
 				v.values.description = JSON.stringify(d);
-		} else if (type == 'Games')
+		} else if (repetition == 'Games')
 			v.values.skills = ui.val('dialog-popup clubs input-checkbox[checked="true"]');
 		if (ui.q('dialog-popup errorHint')) {
 			ui.q('dialog-popup popupContent>div').scrollTo({ top: 0, behavior: 'smooth' });
