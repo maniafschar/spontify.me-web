@@ -455,6 +455,8 @@ poll result div {
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
 		setTimeout(pageEvent.setForm, 400);
 		var selectable = function (value) {
+			if (value == 'Once' || value == 'Games')
+				return;
 			var e = ui.q('dialog-popup input-date[name="endDate"]');
 			var startDate = ui.q('dialog-popup input-date[name="startDate"]');
 			if (value && startDate.getAttribute('complete') == 'true') {
