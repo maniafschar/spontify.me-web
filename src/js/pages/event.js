@@ -86,11 +86,11 @@ clubs {
 	<field class="noWTDField checkbox">
 		<label>${ui.l('events.repetition')}</label>
 		<value>
-			<input-checkbox type="radio" deselect="true" name="repetition" value="w1" label="events.repetition_w1" onclick="pageEvent.setForm()" ${v.repetition_w1}></input-checkbox>
-			<input-checkbox type="radio" deselect="true" name="repetition" value="w2" label="events.repetition_w2" onclick="pageEvent.setForm()" ${v.repetition_w2}></input-checkbox>
-			<input-checkbox type="radio" deselect="true" name="repetition" value="m" label="events.repetition_m" onclick="pageEvent.setForm()" ${v.repetition_m}></input-checkbox>
-			<input-checkbox type="radio" deselect="true" name="repetition" value="y" label="events.repetition_y" onclick="pageEvent.setForm()" ${v.repetition_y}></input-checkbox>
-			<input-checkbox type="radio" deselect="true" name="repetition" value="c" label="events.repetition_c" onclick="pageEvent.setForm()" ${v.repetition_c}${v.repetitionClubsStyle}></input-checkbox>
+			<input-checkbox type="radio" deselect="true" name="repetition" value="Week" label="events.repetition_Week" onclick="pageEvent.setForm()" ${v.repetition_Week}></input-checkbox>
+			<input-checkbox type="radio" deselect="true" name="repetition" value="TwoWeeks" label="events.repetition_TwoWeeks" onclick="pageEvent.setForm()" ${v.repetition_TwoWeeks}></input-checkbox>
+			<input-checkbox type="radio" deselect="true" name="repetition" value="Month" label="events.repetition_Month" onclick="pageEvent.setForm()" ${v.repetition_Month}></input-checkbox>
+			<input-checkbox type="radio" deselect="true" name="repetition" value="Year" label="events.repetition_Year" onclick="pageEvent.setForm()" ${v.repetition_Year}></input-checkbox>
+			<input-checkbox type="radio" deselect="true" name="repetition" value="Games" label="events.repetition_Games" onclick="pageEvent.setForm()" ${v.repetition_Games}${v.repetitionClubsStyle}></input-checkbox>
    			<clubs style="display:none;"></clubs>
 		</value>
 	</field>
@@ -233,7 +233,7 @@ poll result div {
 	static detail(v) {
 		v.eventParticipate = new EventParticipate();
 		v.copyLinkHint = ui.l('copyLinkHint.event');
-		if (v.event.repetition && v.event.repetition != 'o') {
+		if (v.event.repetition && v.event.repetition != 'Once') {
 			var s = global.date.formatDate(v.event.endDate);
 			v.endDate = ' (' + ui.l('events.repetition_' + v.event.repetition) + ' ' + ui.l('to') + s.substring(s.indexOf(' ')) + ')';
 		}
@@ -249,7 +249,7 @@ poll result div {
 			if (v.id.split('_').length > 1)
 				communication.ajax({
 					url: global.serverApi + 'db/list?query=event_listParticipateRaw&search=' + encodeURIComponent('eventParticipate.eventId=' + v.event.id
-						+ (v.event.repetition == 'o' ? '' : ' and eventParticipate.eventDate=cast(\'' + v.id.split('_')[1] + '\' as timestamp)')),
+						+ (v.event.repetition == 'Once' ? '' : ' and eventParticipate.eventDate=cast(\'' + v.id.split('_')[1] + '\' as timestamp)')),
 					webCall: 'event.detail',
 					responseType: 'json',
 					success(r) {
@@ -460,13 +460,13 @@ poll result div {
 			if (value && startDate.getAttribute('complete') == 'true') {
 				var d = new Date(startDate.getAttribute('value')), s = '', maxDate = new Date(startDate.getAttribute('max'));
 				while (true) {
-					if (value == 'w1')
+					if (value == 'Week')
 						d.setDate(d.getDate() + 7);
-					else if (value == 'w2')
+					else if (value == 'TwoWeeks')
 						d.setDate(d.getDate() + 14);
-					else if (value == 'm')
+					else if (value == 'Month')
 						d.setMonth(d.getMonth() + 1);
-					else
+					else if (value == 'Year')
 						d.setFullYear(d.getFullYear() + 1);
 					if (d > maxDate)
 						break;
@@ -517,17 +517,17 @@ poll result div {
 						v2.event.startDate = new Date(d1.getTime());
 						actualEvents.push(v2);
 					}
-					if (v.event.repetition == 'w1')
+					if (v.event.repetition == 'Week')
 						d1.setDate(d1.getDate() + 7);
-					else if (v.event.repetition == 'w2')
+					else if (v.event.repetition == 'TwoWeeks')
 						d1.setDate(d1.getDate() + 14);
-					else if (v.event.repetition == 'm')
+					else if (v.event.repetition == 'Month')
 						d1.setMonth(d1.getMonth() + 1);
-					else if (v.event.repetition == 'y')
+					else if (v.event.repetition == 'Year')
 						d1.setFullYear(d1.getFullYear() + 1);
 					else
 						break;
-				} while (v.event.repetition != 'o' && d1 < d2);
+				} while (v.event.repetition != 'Once' && v.event.repetition != 'Games' && d1 < d2);
 			}
 			if (!added && user.contact && user.contact.id == v.event.contactId) {
 				v.event.startDate = global.date.server2local(v.event.startDate);
@@ -1042,7 +1042,7 @@ poll result div {
 				formFunc.validation.filterWords(answers[i]);
 		}
 		if (!ui.q('dialog-popup [name="repetition"][checked="true"]') || v.values.type == 'Inquiry' || v.values.type == 'Poll')
-			v.values.repetition = 'o';
+			v.values.repetition = 'Once';
 		if (type == 'Poll') {
 			var d = { q: v.values.description, a: [] };
 			for (var i = 0; i < answers.length; i++) {
