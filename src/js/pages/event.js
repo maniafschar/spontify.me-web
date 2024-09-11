@@ -1190,7 +1190,7 @@ poll result div {
 	}
 	static setForm() {
 		var repetition = ui.val('dialog-popup input-checkbox[name="repetition"][checked="true"]');
-		if (repetition && !ui.q('dialog-popup clubs').innerHTML) {
+		if (repetition == 'Games' && !ui.q('dialog-popup clubs').innerHTML) {
 			var skills = user.contact.skills?.split('\|');
 			var s = '';
 			for (var i = 0; i < skills.length; i++) {
@@ -1201,14 +1201,14 @@ poll result div {
 				s += '<input-checkbox type="radio" name="skills" value="x" label="' + ui.l('events.skillsStopRepetition') + '></input-checkbox>';
 			ui.q('dialog-popup clubs').innerHTML = s ? s : ui.l('events.noClubs');
 		}
-		pageEvent.openSection('dialog-popup clubs', repetition);
+		pageEvent.openSection('dialog-popup clubs', repetition == 'Games');
 		var b = ui.val('dialog-popup input-checkbox[name="type"][checked="true"]');
 		var es = ui.qa('dialog-popup .noWTDField:not(field[name="endDate"])');
 		for (var i = 0; i < es.length; i++)
 			pageEvent.openSection(es[i], b == 'Online' || b == 'Location');
 		if (b == 'Inquiry' || b == 'Poll')
 			ui.html('dialog-popup explain.type', b == 'Inquiry' ? ui.l('events.newInquiryDescription') : ui.l('events.newPollDescription'));
-		pageEvent.openSection('dialog-popup field[name="endDate"]', (b == 'Online' || b == 'Location') && ui.q('dialog-popup [name="repetition"][checked="true"]') != null);
+		pageEvent.openSection('dialog-popup field[name="endDate"]', (b == 'Online' || b == 'Location') && repetition != null && repetition != 'Games');
 		ui.q('dialog-popup .url label').innerText = ui.l(b == 'Online' ? 'events.urlOnlineEvent' : 'events.url');
 		pageEvent.openSection('dialog-popup .url', b == 'Online');
 		pageEvent.openSection('dialog-popup explain.type', b == 'Inquiry' || b == 'Poll');
