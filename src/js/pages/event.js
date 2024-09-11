@@ -1210,7 +1210,8 @@ poll result div {
 			pageEvent.openSection(es[i], b == 'Online' || b == 'Location');
 		if (b == 'Inquiry' || b == 'Poll')
 			ui.html('dialog-popup explain.type', b == 'Inquiry' ? ui.l('events.newInquiryDescription') : ui.l('events.newPollDescription'));
-		pageEvent.openSection('dialog-popup field[name="endDate"]', (b == 'Online' || b == 'Location') && repetition != null && repetition != 'Games');
+		pageEvent.openSection('dialog-popup field[name="startDate"]', repetition != 'Games');
+		pageEvent.openSection('dialog-popup field[name="endDate"]', (b == 'Online' || b == 'Location') && repetition && repetition != 'Games');
 		ui.q('dialog-popup .url label').innerText = ui.l(b == 'Online' ? 'events.urlOnlineEvent' : 'events.url');
 		pageEvent.openSection('dialog-popup .url', b == 'Online');
 		pageEvent.openSection('dialog-popup explain.type', b == 'Inquiry' || b == 'Poll');
