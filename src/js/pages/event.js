@@ -77,7 +77,7 @@ clubs {
 			<input-hashtags ids="${v.skills}" text="${v.skillsText}" name="skills"></input-hashtags>
 		</value>
 	</field>
-	<field>
+	<field name="startDate">
 		<label class="date">${ui.l('events.start')}</label>
 		<value>
 			<input-date name="startDate" value="${v.startDate}" min="${v.dateMin}" max="${v.dateMax}" scroll="dialog-popup popupContent div"></input-date>
