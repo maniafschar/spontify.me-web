@@ -395,7 +395,7 @@
 			"qrcodeDate": "Event on {0} o'clock",
 			"qrcodeError": "No data found for this QR Code!",
 			"repetition": "Repetition",
-			"repetition_c": "all home matches",
+			"repetition_c": "all matches",
 			"repetition_m": "every month",
 			"repetition_o": "once",
 			"repetition_w1": "every week",
