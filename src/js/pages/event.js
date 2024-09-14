@@ -1072,9 +1072,9 @@ poll result div {
 						url: global.serverApi + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id),
 						responseType: 'json',
 						webCall: 'event.save',
-						success(r) {
-							if (user.contact.storage)
-								user.contact.storage = JSON.parse(user.contact.storage);
+						success(r2) {
+							if (r2['contact.storage'])
+								user.contact.storage = JSON.parse(r2['contact.storage']);
 						}
 					});
 				}
