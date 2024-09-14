@@ -1070,7 +1070,7 @@ poll result div {
 				if (r && r.responseText) {
 					var e = JSON.parse(r.responseText);
 					if (e.msg && e.msg.indexOf('event series exists:') == 0)
-						ui.navigation.openPopup(ui.l('attention'), ui.l('attention') + '<br/><br/><button-text onclick="ui.navigation.autoOpen(&quot;' + global.encParam('e=' + e.msg.substring(e.indexOf(':') + 1).trim()) + '&quot;)"></button-text>');
+						ui.navigation.openPopup(ui.l('attention'), ui.l('attention') + '<br/><br/><button-text onclick="ui.navigation.autoOpen(&quot;' + global.encParam('e=' + e.msg.substring(e.msg.indexOf(':') + 1).trim()) + '&quot;)"></button-text>');
 					else
 						communication.onError(r);
 				}
