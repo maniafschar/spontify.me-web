@@ -1069,10 +1069,9 @@ poll result div {
 			error(r) {
 				if (r && r.responseText) {
 					var e = JSON.parse(r.responseText);
-					if (e.msg && e.msg.indexOf('event series exists:') == 0) {
-						ui.q('dialog-popup input[name="id"]').setAttribute('value', e.msg.substring(e.msg.lastIndexOf(':') + 1).trim());
-						pageEvent.save();
-					} else
+					if (e.msg && e.msg.indexOf('event series exists:') == 0)
+						ui.navigation.openPopup(ui.l('attention'), ui.l('attention') + '<br/><br/><button-text onclick="ui.navigation.autoOpen(&quot;' + global.encParam('e=' + e.msg.substring(e.indexOf(':') + 1).trim()) + '&quot;)"></button-text>');
+					else
 						communication.onError(r);
 				}
 			},
