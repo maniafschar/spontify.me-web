@@ -1067,6 +1067,17 @@ poll result div {
 			webCall: 'event.save',
 			body: v,
 			success(r) {
+				if (v.values.repetition == 'Games') {
+					communication.ajax({
+						url: global.serverApi + 'db/one?query=contact_list&search=' + encodeURIComponent('contact.id=' + user.contact.id),
+						responseType: 'json',
+						webCall: 'event.save',
+						success(r) {
+							if (user.contact.storage)
+								user.contact.storage = JSON.parse(user.contact.storage);
+						}
+					});
+				}
 				ui.navigation.closePopup();
 				user.remove('event');
 				details.open(id ? ui.q('detail card:last-child').getAttribute('i') : r + '_' + global.date.local2server(v.values.startDate).substring(0, 10),
