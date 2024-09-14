@@ -1066,6 +1066,16 @@ poll result div {
 			method: id ? 'PUT' : 'POST',
 			webCall: 'event.save',
 			body: v,
+			error(r) {
+				if (r && r.responseText) {
+					var e = JSON.parse(r.responseText);
+					if (e.msg && e.msg.indexOf('event series exists:') == 0) {
+						ui.q('dialog-popup input[name="id"]').setAttribute('value', e.msg.substring(e.msg.lastIndexOf(':') + 1).trim());
+						pageEvent.save();
+					} else
+						communication.onError(r);
+				}
+			},
 			success(r) {
 				if (v.values.repetition == 'Games') {
 					communication.ajax({
