@@ -91,7 +91,7 @@ clubs {
 			<input-checkbox type="radio" deselect="true" name="repetition" value="Month" label="events.repetition_Month" onclick="pageEvent.setForm()" ${v.repetition_Month}></input-checkbox>
 			<input-checkbox type="radio" deselect="true" name="repetition" value="Year" label="events.repetition_Year" onclick="pageEvent.setForm()" ${v.repetition_Year}></input-checkbox>
 			<input-checkbox type="radio" deselect="true" name="repetition" value="Games" label="events.repetition_Games" onclick="pageEvent.setForm()" ${v.repetition_Games}${v.repetitionClubsStyle}></input-checkbox>
-   			<clubs style="display:none;"></clubs>
+   			<clubs style="display:none;">${v.clubs}</clubs>
 		</value>
 	</field>
 	<field class="noWTDField" name="endDate" style="display:none;">
@@ -450,6 +450,15 @@ poll result div {
 		if (global.config.club)
 			v.hideOnlineEvent = 'class="hidden"';
 		v.publish = global.config.publishingWall ? '' : ' class="hidden"';
+		var skills = user.contact.skills?.split('\|');
+		var s = '';
+		for (var i = 0; i < skills.length; i++) {
+			if (skills[i].indexOf(global.config.searchMandatory) == 0)
+				s += '<input-checkbox type="radio" name="skills" value="' + skills[i] + '" label="' + InputHashtags.ids2Text(skills[i]) + '"' + (s ? '' : ' checked="true"') + '></input-checkbox>';
+		}
+		if (s && v.id)
+			s += '<input-checkbox type="radio" name="skills" value="x" label="' + ui.l('events.skillsStopRepetition') + '></input-checkbox>';
+		v.clubs = s ? s : ui.l('events.noClubs');
 		if (!global.config.searchMandatory)
 			v.repetitionClubsStyle = ' style="display:none;"';
 		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
@@ -1212,17 +1221,6 @@ poll result div {
 	}
 	static setForm() {
 		var repetition = ui.val('dialog-popup input-checkbox[name="repetition"][checked="true"]');
-		if (repetition == 'Games' && !ui.q('dialog-popup clubs').innerHTML) {
-			var skills = user.contact.skills?.split('\|');
-			var s = '';
-			for (var i = 0; i < skills.length; i++) {
-				if (skills[i].indexOf(global.config.searchMandatory) == 0)
-					s += '<input-checkbox type="radio" name="skills" value="' + skills[i] + '" label="' + InputHashtags.ids2Text(skills[i]) + '"' + (s ? '' : ' checked="true"') + '></input-checkbox>';
-			}
-			if (s && ui.q('dialog-popup input[name="id"]').getAttribute('value'))
-				s += '<input-checkbox type="radio" name="skills" value="x" label="' + ui.l('events.skillsStopRepetition') + '></input-checkbox>';
-			ui.q('dialog-popup clubs').innerHTML = s ? s : ui.l('events.noClubs');
-		}
 		pageEvent.openSection('dialog-popup clubs', repetition == 'Games');
 		var b = ui.val('dialog-popup input-checkbox[name="type"][checked="true"]');
 		var es = ui.qa('dialog-popup .noWTDField:not(field[name="endDate"])');
