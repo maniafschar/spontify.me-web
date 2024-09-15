@@ -457,7 +457,7 @@ poll result div {
 				s += '<input-checkbox type="radio" name="skills" value="' + skills[i] + '" label="' + InputHashtags.ids2Text(skills[i]) + '"' + (s ? '' : ' checked="true"') + '></input-checkbox>';
 		}
 		if (s && v.id)
-			s += '<input-checkbox type="radio" name="skills" value="x" label="' + ui.l('events.skillsStopRepetition') + '"></input-checkbox>';
+			s += '<input-checkbox type="radio" name="skills" value="X" label="' + ui.l('events.skillsStopRepetition') + '"></input-checkbox>';
 		v.clubs = s ? s : ui.l('events.noClubs');
 		if (!global.config.searchMandatory)
 			v.repetitionClubsStyle = ' style="display:none;"';
