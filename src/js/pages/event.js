@@ -452,12 +452,14 @@ poll result div {
 		v.publish = global.config.publishingWall ? '' : ' class="hidden"';
 		var skills = user.contact.skills?.split('\|');
 		var s = '';
-		for (var i = 0; i < skills.length; i++) {
-			if (skills[i].indexOf(global.config.searchMandatory) == 0)
-				s += '<input-checkbox type="radio" name="skills" value="' + skills[i] + '" label="' + InputHashtags.ids2Text(skills[i]) + '"' + (s ? '' : ' checked="true"') + '></input-checkbox>';
+		if (skills) {
+			for (var i = 0; i < skills.length; i++) {
+				if (skills[i].indexOf(global.config.searchMandatory) == 0)
+					s += '<input-checkbox type="radio" name="skills" value="' + skills[i] + '" label="' + InputHashtags.ids2Text(skills[i]) + '"' + (s ? '' : ' checked="true"') + '></input-checkbox>';
+			}
+			if (s && v.id)
+				s += '<input-checkbox type="radio" name="skills" value="X" label="' + ui.l('events.skillsStopRepetition') + '"></input-checkbox>';
 		}
-		if (s && v.id)
-			s += '<input-checkbox type="radio" name="skills" value="X" label="' + ui.l('events.skillsStopRepetition') + '"></input-checkbox>';
 		v.clubs = s ? s : ui.l('events.noClubs');
 		if (!global.config.searchMandatory)
 			v.repetitionClubsStyle = ' style="display:none;"';
