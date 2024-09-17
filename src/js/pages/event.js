@@ -1293,16 +1293,13 @@ poll result div {
 					image = v.event.imageList ? v.event.imageList : v.imageList ? v.imageList : v.contact.imageList;
 				else
 					image = 'events';
-				text = '';
+				text = v.event.description;
 				if (v.event.price > 0)
 					text += global.separator + ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2).replace('.', ','));
 				if (v.event.maxParticipants)
 					text += global.separator + ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
-				if (text)
-					text = '<br/>' + text.substring(global.separator.length);
-				text += '<br/>' + v.event.description;
 				if (field == 'location')
-					text = '<br/>' + v.name + text;
+					text = '<br/>' + v.name;
 				s += global.template`<list-row
 					${v.eventParticipate.state == 1 ? ' class="participate"' : v.eventParticipate.state == -1 ? ' class="canceled"' : ''}
 					onclick="details.open(&quot;${idIntern}&quot;,${JSON.stringify({ webCall: 'event.toggleInternal', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;')},pageLocation.detailLocationEvent)"
