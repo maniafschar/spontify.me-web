@@ -1292,7 +1292,7 @@ poll result div {
 				if (v.event.imageList || v.imageList || v.event.type == 'Inquiry' && v.contact.imageList)
 					image = v.event.imageList ? v.event.imageList : v.imageList ? v.imageList : v.contact.imageList;
 				else
-					image = 'images/events.svg';
+					image = 'events';
 				text = '';
 				if (v.event.price > 0)
 					text += global.separator + ui.l('events.priceDisp').replace('{0}', parseFloat(v.event.price).toFixed(2).replace('.', ','));
