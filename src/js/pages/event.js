@@ -1310,9 +1310,9 @@ poll result div {
 				else if (v.contact.gender)
 					flag3 = '<img source="gender' + v.contact.gender + '" />';
 				s += global.template`<list-row
-					${v.eventParticipate.state == 1 ? ' class="participate"' : v.eventParticipate.state == -1 ? ' class="canceled"' : ''}
+					class="event${v.eventParticipate.state == 1 ? ' participate' : v.eventParticipate.state == -1 ? 'canceled' : ''}"
 					onclick="details.open(&quot;${idIntern}&quot;,${JSON.stringify({ webCall: 'event.toggleInternal', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;')},pageLocation.detailLocationEvent)"
-					i="${v.idIntern}"
+					i="${idIntern}"
 					title="${encodeURIComponent(title)}"
 					text="${encodeURIComponent(text)}"
 					flag1="${flag1}"
