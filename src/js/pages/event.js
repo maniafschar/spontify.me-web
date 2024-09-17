@@ -1299,7 +1299,7 @@ poll result div {
 				if (v.event.maxParticipants)
 					text += global.separator + ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
 				if (field == 'location')
-					text = '<br/>' + v.name;
+					text += '<br/>' + v.name;
 				s += global.template`<list-row
 					${v.eventParticipate.state == 1 ? ' class="participate"' : v.eventParticipate.state == -1 ? ' class="canceled"' : ''}
 					onclick="details.open(&quot;${idIntern}&quot;,${JSON.stringify({ webCall: 'event.toggleInternal', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;')},pageLocation.detailLocationEvent)"
