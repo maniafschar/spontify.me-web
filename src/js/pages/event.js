@@ -1300,11 +1300,24 @@ poll result div {
 					text += global.separator + ui.l('events.maxParticipants') + ':&nbsp;' + v.event.maxParticipants;
 				if (field == 'location')
 					text += '<br/>' + v.name;
+				var skills = ui.getSkills(v.event.id ? v.event : v.contact, 'list');
+				var flag1 = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 || !v.id ? 0 : 1).replace('.', ',') : '';
+				var flag2 = skills.total && skills.totalMatch ? parseInt('' + (skills.totalMatch / skills.total * 100 + 0.5)) + '%' : '';
+				var flag3 = '';
+				if (v._geolocationDistance && v.latitude)
+					flag3 = '<compass style="transform:rotate('
+						+ geoData.getAngel(geoData.getCurrent(), { lat: v.latitude, lon: v.longitude }) + 'deg);"></compass>';
+				else if (v.contact.gender)
+					flag3 = '<img source="gender' + v.contact.gender + '" />';
 				s += global.template`<list-row
 					${v.eventParticipate.state == 1 ? ' class="participate"' : v.eventParticipate.state == -1 ? ' class="canceled"' : ''}
 					onclick="details.open(&quot;${idIntern}&quot;,${JSON.stringify({ webCall: 'event.toggleInternal', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;')},pageLocation.detailLocationEvent)"
+					i="${v.idIntern}"
 					title="${encodeURIComponent(title)}"
 					text="${encodeURIComponent(text)}"
+					flag1="${flag1}"
+					flag2="${flag2}"
+					flag3="${encodeURIComponent(flag3)}"
 					image="${image}">
 					</list-row>`;
 			}
