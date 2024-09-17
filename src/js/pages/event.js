@@ -1260,7 +1260,7 @@ poll result div {
 			if (!d.innerHTML) {
 				var field = ui.q('detail card:last-child').getAttribute('type');
 				communication.ajax({
-					url: global.serverApi + 'db/list?query=event_list&search=' + encodeURIComponent('event.' + field + 'Id=' + id),
+					url: global.serverApi + 'db/list?query=event_list&search=' + encodeURIComponent('event.' + field + 'Id=' + id) + '&distance=-1&latitude=' + geoData.getCurrent().lat + '&longitude=' + geoData.getCurrent().lon,
 					webCall: 'event.toggle',
 					responseType: 'json',
 					success(r) {
