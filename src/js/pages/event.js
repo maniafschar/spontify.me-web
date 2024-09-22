@@ -517,7 +517,7 @@ poll result div {
 		for (var i = 0; i < list.length; i++) {
 			var v = list[i];
 			var d1 = global.date.server2local(v.event.startDate);
-			var d2 = global.date.server2local(v.event.endDate);
+			var d2 = global.date.server2local(v.event.endDate ? v.event.endDate : v.event.startDate);
 			d2.setHours(23);
 			d2.setMinutes(59);
 			d2.setSeconds(59);
