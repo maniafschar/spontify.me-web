@@ -1070,11 +1070,10 @@ poll result div {
 			return;
 		}
 		v.classname = 'Event';
-		v.id = id;
 		v.values.publishId = null;
 		communication.ajax({
-			url: global.serverApi + 'db/one',
-			method: id ? 'PUT' : 'POST',
+			url: global.serverApi + 'db/one' + (id ? '/' + id : ''),
+			method: id ? 'PATCH' : 'POST',
 			webCall: 'event.save',
 			body: v,
 			error(r) {
