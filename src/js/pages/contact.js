@@ -126,8 +126,9 @@ ${v.matchIndicatorHintDescription}
 				contactId2: id
 			}
 		};
+		vat blockId = '';
 		if (ui.q(path).getAttribute('blockID') > 0)
-			v.id = ui.q(path).getAttribute('blockID');
+			blockId = '/' + ui.q(path).getAttribute('blockID');
 		var n = ui.q(path + ' [name="note"]');
 		if (!n.value && ui.q(path + ' [name="reason"][value="100"][checked="true"]')) {
 			formFunc.setError(n, 'contacts.blockActionHint');
@@ -136,8 +137,8 @@ ${v.matchIndicatorHintDescription}
 		v.values.reason = ui.val(path + ' [name="reason"][checked="true"]');
 		v.values.note = n.value;
 		communication.ajax({
-			url: global.serverApi + 'db/one',
-			method: v.id ? 'PUT' : 'POST',
+			url: global.serverApi + 'db/one' + blockId,
+			method: blockId ? 'PATCH' : 'POST',
 			webCall: 'contact.block',
 			body: v,
 			success() {
@@ -152,10 +153,10 @@ ${v.matchIndicatorHintDescription}
 	}
 	static confirmFriendship(linkId, status, id) {
 		communication.ajax({
-			url: global.serverApi + 'db/one',
+			url: global.serverApi + 'db/one/' + linkId,
 			webCall: 'contact.confirmFriendship',
-			method: 'PUT',
-			body: { classname: 'ContactLink', id: linkId, values: { status: status } },
+			method: 'PATCH',
+			body: { classname: 'ContactLink', values: { status: status } },
 			success() {
 				ui.toggleHeight(ui.q('detail card:last-child [name="friend"]'));
 				if (status == 'Friends') {
