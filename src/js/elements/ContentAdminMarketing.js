@@ -546,7 +546,7 @@ results freetext div {
 	save() {
 		var o = ContentAdminMarketing.html2json();
 		communication.ajax({
-			url: global.serverApi + 'db/one',
+			url: global.serverApi + 'db/one' + (o.id ? '/' + o.id : '),
 			method: o.id ? 'PUT' : 'POST',
 			body: { classname: 'ClientMarketing', id: o.id, values: o },
 			responseType: 'json',
