@@ -494,12 +494,7 @@ class ui {
 			}, pageContact.listContacts, 'contacts', 'visits');
 		},
 		contactVisits() {
-			communication.ajax({
-				url: global.serverApi + 'db/one/' + user.contact.id,
-				webCall: 'ui.query.contactVisits',
-				method: 'PATCH',
-				body: { classname: 'Contact', values: { visitPage: global.date.local2server(new Date()) } }
-			});
+			user.save({ webCall: 'bluetooth.toggle', visitPage: global.date.local2server(new Date()) });
 			return lists.load({
 				webCall: 'ui.query.contactVisits',
 				query: 'contact_listVisit',
