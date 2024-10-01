@@ -179,8 +179,9 @@ mapEdit {
 			values: {
 			}
 		};
+		var blockId = '';
 		if (ui.q(path).getAttribute('blockID') > 0)
-			v.id = ui.q(path).getAttribute('blockID');
+			blockId = '/' + ui.q(path).getAttribute('blockID');
 		var n = ui.q(path + ' [name="note"]');
 		if (!n.value && ui.q(path + ' [name="reason"][value="100"][checked="true"]')) {
 			formFunc.setError(n, 'contacts.blockActionHint');
@@ -196,9 +197,9 @@ mapEdit {
 		else
 			v.values.locationId = id;
 		communication.ajax({
-			url: global.serverApi + 'db/one',
+			url: global.serverApi + 'db/one' + blockId,
 			webCall: 'location.block',
-			method: v.id ? 'PUT' : 'POST',
+			method: blockId ? 'PATCH' : 'POST',
 			body: v,
 			success() {
 				var e = ui.q('locations [i="' + id + '"]');
@@ -564,12 +565,10 @@ mapEdit {
 		var id = ui.val('dialog-popup [name="id"]');
 		var v = formFunc.getForm('dialog-popup form');
 		v.classname = 'Location';
-		if (id)
-			v.id = id;
 		communication.ajax({
-			url: global.serverApi + 'db/one',
+			url: global.serverApi + 'db/one' + (id ? '/' + id : ''),
 			webCall: 'location.save',
-			method: id ? 'PUT' : 'POST',
+			method: id ? 'PATCH' : 'POST',
 			body: v,
 			error(e) {
 				if (e.status == 500 && e.response && (e.response.indexOf('exists') > -1 || e.response.indexOf('ConstraintViolationException') > -1))
