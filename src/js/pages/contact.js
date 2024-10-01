@@ -580,11 +580,11 @@ class groups {
 		s = s.replace(/</g, '&lt;');
 		ui.q('#groupsRename').children[0].value = s;
 		communication.ajax({
-			url: global.serverApi + 'db/one',
+			url: global.serverApi + 'db/one/' + ui.q('input-checkbox[name="groupdialog"][checked="true"]').getAttribute('value'),
 			responseType: 'json',
 			webCall: 'contact.rename',
-			method: 'PUT',
-			body: { classname: 'ContactGroup', id: ui.q('input-checkbox[name="groupdialog"][checked="true"]').getAttribute('value'), values: { name: s } },
+			method: 'PATCH',
+			body: { classname: 'ContactGroup', values: { name: s } },
 			success(r) {
 				groups.getGroups();
 				var s = ui.q('#groupsRename').children[0].value;
