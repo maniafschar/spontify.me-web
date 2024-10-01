@@ -1134,10 +1134,8 @@ poll result div {
 				d.values.state -= 2 * 2147483647 + 2;
 			d.values.eventId = e.event.id;
 			d.values.eventDate = eventDate;
-			d.id = e.eventParticipate?.id;
 		} else if (e.eventParticipate.id) {
 			d.values.state = e.eventParticipate.state == 1 ? -1 : 1;
-			d.id = e.eventParticipate.id;
 			if (!ui.q('#stopParticipateReason')) {
 				ui.navigation.openPopup(ui.l('events.stopParticipate'), ui.l('events.stopParticipateText') + '<br/><textarea id="stopParticipateReason" placeholder="' + ui.l('events.stopParticipateHint') + '" style="margin-top:0.5em;"></textarea><br/><br/><button-text style="margin-top:1em;" onclick="pageEvent.saveParticipation()" label="events.stopParticipateButton"></button-text>');
 				return;
@@ -1152,9 +1150,9 @@ poll result div {
 			d.values.payment = order;
 		}
 		communication.ajax({
-			url: global.serverApi + 'db/one',
+			url: global.serverApi + 'db/one' + (e.eventParticipate?.id ? '/' + e.eventParticipate.id : ''),
 			webCall: 'event.saveParticipation',
-			method: e.eventParticipate.id ? 'PUT' : 'POST',
+			method: e.eventParticipate?.id ? 'PATCH' : 'POST',
 			body: d,
 			success(r) {
 				e.eventParticipate.state = d.values.state;
