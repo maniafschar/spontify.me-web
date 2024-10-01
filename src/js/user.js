@@ -153,12 +153,11 @@ class user {
 				if (user.contact[k] != data[k]) {
 					var v = {
 						classname: 'Contact',
-						id: user.contact.id,
 						values: data
 					}
 					communication.ajax({
-						url: global.serverApi + 'db/one',
-						method: 'PUT',
+						url: global.serverApi + 'db/one/' + user.contact.id,
+						method: 'PATCH',
 						progressBar: success ? true : false,
 						body: v,
 						webCall: wc,
