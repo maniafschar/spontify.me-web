@@ -186,12 +186,11 @@ class ui {
 					var e = ui.q('notificationlist div.highlightBackground[onclick*="' + tag + '"]');
 					if (e)
 						communication.ajax({
-							url: global.serverApi + 'db/one',
+							url: global.serverApi + 'db/one/' + e.getAttribute('i'),
 							webCall: 'ui.navigation.autoOpen',
-							method: 'PUT',
+							method: 'PATCH',
 							body: {
 								classname: 'ContactNotification',
-								id: e.getAttribute('i'),
 								values: { seen: true }
 							},
 							success() {
@@ -496,10 +495,10 @@ class ui {
 		},
 		contactVisits() {
 			communication.ajax({
-				url: global.serverApi + 'db/one',
+				url: global.serverApi + 'db/one/' + user.contact.id,
 				webCall: 'ui.query.contactVisits',
-				method: 'PUT',
-				body: { classname: 'Contact', id: user.contact.id, values: { visitPage: global.date.local2server(new Date()) } }
+				method: 'PATCH',
+				body: { classname: 'Contact', values: { visitPage: global.date.local2server(new Date()) } }
 			});
 			return lists.load({
 				webCall: 'ui.query.contactVisits',
