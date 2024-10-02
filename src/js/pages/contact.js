@@ -126,7 +126,7 @@ ${v.matchIndicatorHintDescription}
 				contactId2: id
 			}
 		};
-		vat blockId = '';
+		var blockId = '';
 		if (ui.q(path).getAttribute('blockID') > 0)
 			blockId = '/' + ui.q(path).getAttribute('blockID');
 		var n = ui.q(path + ' [name="note"]');

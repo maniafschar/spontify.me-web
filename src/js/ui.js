@@ -494,7 +494,7 @@ class ui {
 			}, pageContact.listContacts, 'contacts', 'visits');
 		},
 		contactVisits() {
-			user.save({ webCall: 'bluetooth.toggle', visitPage: global.date.local2server(new Date()) });
+			user.save({ webCall: 'ui.query.contactVisits', visitPage: global.date.local2server(new Date()) });
 			return lists.load({
 				webCall: 'ui.query.contactVisits',
 				query: 'contact_listVisit',
