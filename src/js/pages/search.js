@@ -210,6 +210,7 @@ ${v.keywords}
 		},
 		search() {
 			pageSearch.events.fieldValues = formFunc.getForm('search tabBody div.events form').values;
+			var type = ui.val('search tabBody div.events input-date');
 			pageEvent.loadEvents({
 				webCall: 'search.events.search',
 				latitude: geoData.getCurrent().lat,
@@ -219,7 +220,6 @@ ${v.keywords}
 				query: 'event_list',
 				search: encodeURIComponent(pageSearch.events.getSearch())
 			}, function (events) {
-				var type = ui.val('search tabBody div.events input-date');
 				var d = new Date();
 				var twoWeeks = new Date();
 				twoWeeks.setDate(twoWeeks.getDate() + 14);
@@ -241,6 +241,12 @@ ${v.keywords}
 				if (friday.getDay() < 5 && friday.getDay() > 0)
 					while (friday.getDay() != 5)
 						friday.setDate(friday.getDate() + 1);
+				for (var i = events.length - 1; i >= 0; i--) {
+					if (events[i] == 'outdated') {
+						events.splice(i, events.length - i);
+						break;
+					}
+				}
 				for (var i = events.length - 1; i >= 0; i--) {
 					if (type == 'today') {
 						if (global.date.local2server(events[i].event.startDate).indexOf(today) != 0)
