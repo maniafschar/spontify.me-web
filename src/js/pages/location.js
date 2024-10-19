@@ -229,15 +229,15 @@ mapEdit {
 				body: { classname: classname, id: id },
 				success(r) {
 					ui.navigation.closePopup();
-					ui.navigation.goTo('home');
+					ui.navigation.goTo(ui.q('detail') ? ui.q('detail').getAttribute('from') : 'home');
 					document.dispatchEvent(new CustomEvent(classname, { detail: { action: 'delete' } }));
 					setTimeout(function () {
 						if (classname == 'Location')
 							lists.removeListEntry(id, 'locations');
 						else {
-							var rows = ui.qa('locations row[i^="' + id + '_"]');
+							var rows = ui.qa('events row[i^="' + id + '_"]');
 							for (var i = 0; i < rows.length; i++)
-								lists.removeListEntry(rows[i].getAttribute('i'), 'locations');
+								lists.removeListEntry(rows[i].getAttribute('i'), 'events');
 						}
 					}, 700);
 				}
