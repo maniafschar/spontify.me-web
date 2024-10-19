@@ -12,7 +12,7 @@ import { pageLogin } from './pages/login';
 import { ui } from './ui';
 import { user } from './user';
 
-export { Encryption, FB, WebSocket, communication };
+export { communication, Encryption, FB, WebSocket };
 
 class communication {
 	static currentCalls = [];

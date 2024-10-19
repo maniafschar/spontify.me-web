@@ -484,3 +484,7 @@ window.groups = groups;
 window.VideoCall = VideoCall;
 window.marketing = marketing;
 window.InputDate = InputDate;
+
+document.addEventListener("focus", function () {
+	communication.ping();
+});
