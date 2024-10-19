@@ -309,8 +309,18 @@ tabBody {
 	animation-name: detailSlideOut;
 }
 
+@keyframes detailSlideIn {
+	0% {
+		transform: none;
+	}
+
+	100% {
+		transform: translate3d(100%, 0, 0);
+	}
+}
+
 .detailSlideIn {
-	transform: translate3d(100%, 0, 0);
+	animation-name: detailSlideIn;
 }
 
 @keyframes pulse_animation {
