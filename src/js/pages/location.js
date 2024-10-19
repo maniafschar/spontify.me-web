@@ -235,7 +235,7 @@ mapEdit {
 						if (classname == 'Location')
 							lists.removeListEntry(id, 'locations');
 						else {
-							var rows = ui.qa('events row[i^="' + id + '_"]');
+							var rows = ui.qa('events list-row[i^="' + id + '_"]');
 							for (var i = 0; i < rows.length; i++)
 								lists.removeListEntry(rows[i].getAttribute('i'), 'events');
 						}

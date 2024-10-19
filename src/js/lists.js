@@ -67,10 +67,10 @@ class lists {
 		});
 	}
 	static removeListEntry(id, activeID) {
-		ui.attr(activeID + ' [i="' + id + '"]', 'remove', '1');
+		ui.attr(activeID + ' list-row[i="' + id + '"]', 'remove', '1');
 		if (ui.q('detail card:last-child [i="' + id + '"]'))
 			ui.q('detail card:last-child [i="' + id + '"]').outerHTML = '';
-		var e = ui.q(activeID + ' row[i="' + id + '"]');
+		var e = ui.q(activeID + ' list-row[i="' + id + '"]');
 		if (e) {
 			ui.navigation.animation(e, 'homeSlideOut', function () {
 				if (e.nextSibling) {
