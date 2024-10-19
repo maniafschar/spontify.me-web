@@ -693,6 +693,7 @@ listSeparator {
 	height: 3em;
 	line-height: 4em;
 	display: block;
+	transition: all 0.4s ease-out;
 }
 
 listSeparator.strong {
