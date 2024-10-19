@@ -72,7 +72,7 @@ class lists {
 			ui.q('detail card:last-child [i="' + id + '"]').outerHTML = '';
 		var e = ui.q(activeID + ' list-row[i="' + id + '"]');
 		if (e) {
-			ui.navigation.animation(e, 'detailSlideIn', function () {
+			ui.navigation.animation(e, 'deleteSlideOut', function () {
 				if (e.nextSibling) {
 					var e2 = e.nextSibling;
 					e2.style.transition = 'none';

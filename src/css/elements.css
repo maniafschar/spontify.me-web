@@ -309,7 +309,7 @@ tabBody {
 	animation-name: detailSlideOut;
 }
 
-@keyframes detailSlideIn {
+@keyframes deleteSlideOut {
 	0% {
 		transform: none;
 	}
@@ -319,8 +319,12 @@ tabBody {
 	}
 }
 
+.deleteSlideOut {
+	animation-name: deleteSlideOut;
+}
+
 .detailSlideIn {
-	animation-name: detailSlideIn;
+	transform: translate3d(100%, 0, 0);
 }
 
 @keyframes pulse_animation {

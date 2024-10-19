@@ -151,7 +151,7 @@ class ui {
 				e = ui.q(e);
 			if (ui.classContains(e, 'animated'))
 				return;
-			var s = 'popupSlideOut detailSlideOut detailBackSlideOut popupSlideIn detailSlideIn detailBackSlideIn slideUp slideDown';
+			var s = 'popupSlideOut detailSlideOut detailBackSlideOut popupSlideIn deleteSlideOut detailBackSlideIn slideUp slideDown';
 			ui.classRemove(e, s);
 			setTimeout(function () {
 				ui.classAdd(e, animation);

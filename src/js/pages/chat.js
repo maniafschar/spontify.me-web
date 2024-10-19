@@ -633,7 +633,7 @@ class pageChat {
 		ui.css(e, 'marginRight', null);
 		ui.navigation.animation(e, 'homeSlideIn');
 		ui.on('chatConversation', 'scroll', function () {
-			ui.navigation.animation(e, 'detailSlideIn', function () {
+			ui.navigation.animation(e, 'deleteSlideOut', function () {
 				ui.css(e, 'display', 'none');
 			});
 		}, true);
