@@ -283,12 +283,30 @@ tabBody {
 	display: block;
 }
 
+.animated {
+	animation-duration: 0.5s;
+}
+
 .pulse {
 	animation-name: pulse_animation;
 	animation-duration: 5000ms;
 	transform-origin: 70% 70%;
 	animation-iteration-count: infinite;
 	animation-timing-function: linear;
+}
+
+@keyframes detailSlideOut {
+	0% {
+		transform: none;
+	}
+
+	100% {
+		transform: translate3d(-100%, 0, 0);
+	}
+}
+
+.detailSlideOut {
+	animation-name: detailSlideOut;
 }
 
 @keyframes pulse_animation {

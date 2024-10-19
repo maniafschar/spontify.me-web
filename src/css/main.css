@@ -1459,20 +1459,6 @@ dialog-menu {
 	transform: translate3d(100%, 0, 0);
 }
 
-@keyframes detailSlideOut {
-	0% {
-		transform: none;
-	}
-
-	100% {
-		transform: translate3d(-100%, 0, 0);
-	}
-}
-
-.detailSlideOut {
-	animation-name: detailSlideOut;
-}
-
 .detailBackSlideIn {
 	transform: translate3d(-100%, 0, 0);
 }
@@ -1517,10 +1503,6 @@ dialog-menu {
 
 .slideDown {
 	animation-name: slideDown;
-}
-
-.animated {
-	animation-duration: 0.5s;
 }
 
 progressbar>* {
