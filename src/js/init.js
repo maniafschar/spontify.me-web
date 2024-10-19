@@ -485,6 +485,7 @@ window.VideoCall = VideoCall;
 window.marketing = marketing;
 window.InputDate = InputDate;
 
-document.addEventListener("focus", function () {
-	communication.ping();
+document.addEventListener("visibilitychange", function () {
+	if (document.visibilityState == 'visible')
+		communication.ping();
 });
