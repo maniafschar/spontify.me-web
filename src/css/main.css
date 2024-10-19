@@ -1455,10 +1455,6 @@ dialog-menu {
 	animation-name: popupSlideOut;
 }
 
-.detailSlideIn {
-	transform: translate3d(100%, 0, 0);
-}
-
 .detailBackSlideIn {
 	transform: translate3d(-100%, 0, 0);
 }

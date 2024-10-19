@@ -309,6 +309,10 @@ tabBody {
 	animation-name: detailSlideOut;
 }
 
+.detailSlideIn {
+	transform: translate3d(100%, 0, 0);
+}
+
 @keyframes pulse_animation {
 	0% {
 		transform: scale(1);
