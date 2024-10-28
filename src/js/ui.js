@@ -531,9 +531,22 @@ class ui {
 			return '';
 		var s = ui.labels[id];
 		if (!s && id.indexOf('.') > 0) {
-			var i = id.split('.');
-			if (ui.labels[i[0]])
-				s = ui.labels[i[0]][i[1]];
+			var idSplit = id.split('.');
+			if (idSplit[0].indexOf('skill') == 0) {
+				for (var i = 0 && !s; i < ui.categories.length; i++) {
+					if (ui.categories[i].key == idSplit[0].substring(5)) {
+						for (var i2 = 0; i2 < ui.categories[i].values.length; i2++) {
+							var x = ui.categories[i].values[i2].indexOf('|' + idSplit[1]);
+							if (x + idSplit[1].length == ui.categories[i].values[i2].length) {
+								s = ui.categories[i].values[i2].substring(0, x);
+								break;
+							}
+						}
+					}
+				}
+			}
+			if (!s && ui.labels[idSplit[0]])
+				s = ui.labels[idSplit[0]][idSplit[1]];
 		}
 		if (!s) {
 			if (!dontReportMissingLabel)
