@@ -537,7 +537,7 @@ class ui {
 					if (ui.categories[i].key == idSplit[0].substring(5)) {
 						for (var i2 = 0; i2 < ui.categories[i].values.length; i2++) {
 							var x = ui.categories[i].values[i2].indexOf('|' + idSplit[1]);
-							if (x + idSplit[1].length == ui.categories[i].values[i2].length) {
+							if (x + idSplit[1].length + 1 == ui.categories[i].values[i2].length) {
 								s = ui.categories[i].values[i2].substring(0, x);
 								break;
 							}
