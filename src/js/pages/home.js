@@ -463,7 +463,7 @@ border-radius: 0.5em 0 0 3em;
 								s += '<date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
 							else
 								s += '<date>' + global.date.formatDate(e.publish) + (e.category && InputHashtags.ids2Text(e.category) ? global.separator + InputHashtags.ids2Text(e.category) : '')
-										+ (e.source ? global.separator + e.source : '') + (e.skills ? global.separator + ui.l(e.skills) : '') + '</date>';
+										+ (e.source ? global.separator + e.source : '') + (e.skills ? global.separator + ui.l('skill' + e.skills) : '') + '</date>';
 							s += e.description.replace(/\n/g, '<br/>');
 							s += '</p>'
 							if (e.image)
