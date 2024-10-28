@@ -155,6 +155,7 @@ class ClientNews extends BaseEntity {
 	description;
 	image;
 	publish;
+	skills;
 	source;
 	url;
 }
