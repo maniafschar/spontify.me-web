@@ -533,7 +533,7 @@ class ui {
 		if (!s && id.indexOf('.') > 0) {
 			var idSplit = id.split('.');
 			if (idSplit[0].indexOf('skill') == 0) {
-				for (var i = 0 && !s; i < ui.categories.length; i++) {
+				for (var i = 0; i < ui.categories.length && !s; i++) {
 					if (ui.categories[i].key == idSplit[0].substring(5)) {
 						for (var i2 = 0; i2 < ui.categories[i].values.length; i2++) {
 							var x = ui.categories[i].values[i2].indexOf('|' + idSplit[1]);
