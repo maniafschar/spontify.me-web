@@ -99,8 +99,7 @@ teaser.events {
 }
 
 teaser card {
-	margin: 0 0.5em;
-	border-radius: 0.5em;
+	margin: 0 1px;
 	overflow: hidden;
 	position: relative;
 	display: inline-block;
@@ -546,7 +545,7 @@ border-radius: 0.5em 0 0 3em;
 			success(l) {
 				if (!l)
 					return;
-				var e = pageEvent.getCalendarList(l), s = '<card onclick="pageEvent.edit()" class="mainBG" style="color:var(--text)"><img source="add"/><text>' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>', processedIds = [], e2 = [];
+				var e = pageEvent.getCalendarList(l), s = '<card onclick="pageEvent.edit()" class="mainBG" style="color:var(--text);background:rgba(100,200,200,0.3);"><img source="add"/><text>' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>', processedIds = [], e2 = [];
 				var now = new Date();
 				now.setHours(now.getHours() - 1);
 				for (var i = 0; i < e.length; i++) {
