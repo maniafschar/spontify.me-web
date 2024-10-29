@@ -244,14 +244,18 @@ class ui {
 					}
 					if (tag.indexOf('f=') == 0) {
 						var id = parseInt(tag.substring(2));
-						if (user.contact)
+						if (user.contact) {
 							pageContact.sendRequestForFriendship(id);
-						else {
+							ui.navigation.openPopup(ui.l('attention'), ui.l('contact.requestFriendshipAlreadySent'));
+						} else {
 							initialisation.contactReferer = id;
 							communication.ajax({
 								url: global.serverApi + 'action/referer?contactId=' + id + '&footprint=' + global.getFootprint(),
 								webCall: 'ui.navigation.autoOpen',
-								method: 'POST'
+								method: 'POST',
+								success() {
+									ui.navigation.openPopup(ui.l('attention'), ui.l('contact.requestFriendshipRegister') + '<br/><br/><button-text onclick="ui.navigation.goTo(&quot;login&quot;)" label="login.action"></button-text>');
+								}
 							});
 						}
 					}
