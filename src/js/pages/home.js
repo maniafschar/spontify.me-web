@@ -345,6 +345,8 @@ border-radius: 0.5em 0 0 3em;
 			initialisation.reposition();
 			pageHome.teaserContacts();
 			pageHome.teaserEvents();
+			if (user.contact.imageList)
+				ui.classAdd('homeHeader buttonIcon.right', 'profile');
 		}
 		if (user.contact) {
 			v = user.get('intro') || [];
