@@ -83,7 +83,6 @@ teaser div {
 	overflow-x: auto;
 	overflow-y: hidden;
 	white-space: nowrap;
-	padding: 0.5em;
 	position: absolute;
 	height: 100%;
 	width: 100%;
@@ -95,7 +94,7 @@ teaser.contacts {
 }
 
 teaser.events {
-	bottom: 2.2em;
+	bottom: 3em;
 }
 
 teaser card {
@@ -106,7 +105,6 @@ teaser card {
 	cursor: pointer;
 	height: 100%;
 	color: white;
-	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
 }
 
 teaser card img {
@@ -463,7 +461,7 @@ border-radius: 0.5em 0 0 3em;
 								s += '<date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
 							else
 								s += '<date>' + global.date.formatDate(e.publish) + (e.category && InputHashtags.ids2Text(e.category) ? global.separator + InputHashtags.ids2Text(e.category) : '')
-										+ (e.source ? global.separator + e.source : '') + (e.skills ? global.separator + ui.l('skill' + e.skills) : '') + '</date>';
+									+ (e.source ? global.separator + e.source : '') + (e.skills ? global.separator + ui.l('skill' + e.skills) : '') + '</date>';
 							s += e.description.replace(/\n/g, '<br/>');
 							s += '</p>'
 							if (e.image)
