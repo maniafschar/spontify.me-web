@@ -46,6 +46,14 @@ homeHeader>buttonIcon.right {
 	right: 0;
 }
 
+homeHeader>buttonIcon.right.profile {
+	padding: 0;
+}
+
+homeHeader>buttonIcon.right.profile img {
+	border-radius: 0;
+}
+
 buttonIcon {
 	top: 0;
 	box-shadow: none;
