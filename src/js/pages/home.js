@@ -376,6 +376,7 @@ border-radius: 0.5em 0 0 3em;
 				for (var i = 1; i < d.length; i++) {
 					var v = model.convert(new Contact(), d, i);
 					if (i == 1 && ui.q('notificationList div[i="' + v.contactNotification.id + '"]')) {
+						ui.classRemove('notificationList > div', 'highlightBackground');
 						pageHome.badge = 0;
 						pageHome.initNotificationButton();
 						return;
