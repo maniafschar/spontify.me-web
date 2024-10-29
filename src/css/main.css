@@ -1414,13 +1414,11 @@ info subject {
 }
 
 dialog-menu {
-	border-radius: 1em 0 0 1em;
 	box-shadow: 0 0 3em rgba(0, 0, 0, 0.3);
-	background: var(--bg3stop);
 	position: absolute;
 	top: 4em;
 	z-index: 4;
-	right: 0;
+	right: 0.5em;
 	padding: 1.25em 2em;
 	transition: all .4s ease-out;
 	transform-origin: top right;

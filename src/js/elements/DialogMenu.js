@@ -20,7 +20,7 @@ div{
 }
 
 hinky {
-	right: 0.9em;
+	right: 0.5em;
 	top: -1em;
 	border-bottom: solid 1.1em var(--bg2stop);
 	position: absolute;
