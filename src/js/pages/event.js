@@ -208,7 +208,7 @@ poll result div {
 <div class="eventMargin">${v.text}</div>
 <div class="eventMargin">${v.maxParticipants}</div>
 <div class="price eventMargin">${v.eventPrice}</div>
-<div class="eventMargin"><urls>${v.url}</urls></div>
+<div class="eventMargin"><urls>${v.eventUrl}</urls></div>
 <div class="reason eventMargin"></div>
 <span class="eventParticipationButtons eventMargin"></span>
 </text>`;
@@ -319,7 +319,7 @@ poll result div {
 			var h = new URL(v.event.url).hostname;
 			while (h.indexOf('.') != h.lastIndexOf('.'))
 				h = h.substring(h.indexOf('.') + 1);
-			v.url = '<label class="multipleLabel" onclick="ui.navigation.openHTML(&quot;' + v.event.url + '&quot;)">' + (v.event.type == 'Online' ? ui.l('events.newOnlineEvent') + ': ' : '') + h.toLowerCase() + '</label>';
+			v.eventUrl = '<label class="multipleLabel" onclick="ui.navigation.openHTML(&quot;' + v.event.url + '&quot;)">' + (v.event.type == 'Online' ? ui.l('events.newOnlineEvent') + ': ' : '') + h.toLowerCase() + '</label>';
 		}
 		if (user.contact && user.contact.id == v.event.contactId)
 			v.editAction = 'pageEvent.edit(' + v.locID + ',' + v.event.id + ')';
