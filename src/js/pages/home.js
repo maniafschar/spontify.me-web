@@ -52,7 +52,7 @@ homeHeader>buttonIcon.right.profile {
 }
 
 homeHeader>buttonIcon.right.profile img {
-	border-radius: 0;
+	border-radius: 0 0 0 0.5em;
 	width: 100%;
 	height: 100%;
 	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.5);
