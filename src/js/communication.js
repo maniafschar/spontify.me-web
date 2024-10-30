@@ -357,31 +357,6 @@ class communication {
 
 class Encryption {
 	static jsEncrypt = new JSEncrypt();
-
-	static decAES(transitmessage, pass) {
-		var key = CryptoJS.PBKDF2(pass, CryptoJS.enc.Hex.parse(transitmessage.substr(0, 32)), {
-			"keySize": 256 / 32,
-			"iterations": 100
-		});
-		return CryptoJS.AES.decrypt(transitmessage.substring(64), key, {
-			"iv": CryptoJS.enc.Hex.parse(transitmessage.substr(32, 32)),
-			"padding": CryptoJS.pad.Pkcs7,
-			"mode": CryptoJS.mode.CBC
-		}).toString(CryptoJS.enc.Utf8);
-	}
-	static encAES(msg, pass) {
-		var salt = CryptoJS.lib.WordArray.random(128 / 8);
-		var key = CryptoJS.PBKDF2(pass, salt, {
-			"keySize": 256 / 32,
-			"iterations": 100
-		});
-		var iv = CryptoJS.lib.WordArray.random(128 / 8);
-		return salt.toString() + iv.toString() + CryptoJS.AES.encrypt(msg, key, {
-			"iv": iv,
-			"padding": CryptoJS.pad.Pkcs7,
-			"mode": CryptoJS.mode.CBC
-		}).toString();
-	}
 	static encPUB(s) {
 		var enc = new JSEncrypt();
 		enc.setPublicKey('MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAih4+Co9A7+3Hm6aUAHAG0LMjHgQ9ZxT+twg6aNtpg5fJvIApYAufImV5i/Tbv57M/Bmwj4kloONv4WaeUlbx4Vy0SVdPl2fpwTY/DhaS5DIiq3VYWQqjT/MHtMNBqX7tRHHZTBJzKEvKHig0sn2rdEMrZLcBErwbWPZpLz7RWFTbjkmAzxEbTKKGBSpqGO/l4xjZIVSrjKdBOtEdB8+Tw3lwNs2eGrx13rJCPY9VLocErw5CEgqdpgYXWmGOTsfqZjTODmavopTpupI7FMG3UG0Re8YE3Eju9aSsvTyjoBGoe9Gel/dTsZJeckTt5gTPiLr7khzFlZ7MVO75n4PnT4Gsc4YCBMQPlcJ4lv5JdfjwK+JTM/ZnSAezez3TzBz9SuSPck5vpEi6ug1LkUVOmjIXJBkwuGb7eYbRUG/1cj/7boCIZa8cNg2Ired2LKn2DVfurC1LH1U4p/oZGkGP3hd0aA6GD+2PJGZL9qhOSf1Bwuj+QFnHNhil2BV5Zou73KJ1ebCBmG77jkqtk02EMxFM6zPP4ViYmoMcxrSpG12fBWMJDdXaM9aEP0nkd62X7VOi3pHHEOaNnYe1AKV2u/IPApUyWnnrQJXzVag5wHcR1kDDd4G9nzccH1QyxBTJEuEoMYbsGQUyTYsOoSL0SvvOQAf/ukBCRAh90WgTkjsCAwEAAQ==');
@@ -394,7 +369,7 @@ class Encryption {
 
 class sha256 {
 	static str2rstr_utf8(input) {
-		var output = "";
+		var output = '';
 		var i = -1;
 		var x, y;
 
@@ -426,7 +401,11 @@ class sha256 {
 		return output;
 	}
 	static rstr_sha256(s) {
-		return sha256.binb2rstr(sha256.binb_sha256(sha256.rstr2binb(s), s.length * 8));
+		var output = '';
+		var input = sha256.binb_sha256(sha256.rstr2binb(s), s.length * 8);
+		for (var i = 0; i < input.length * 32; i += 8)
+			output += String.fromCharCode((input[i >> 5] >>> (24 - i % 32)) & 0xFF);
+		return output;
 	}
 	static rstr2hex(input) {
 		var hex_tab = '0123456789abcdef';
@@ -517,12 +496,6 @@ class sha256 {
 		var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
 		return (msw << 16) | (lsw & 0xFFFF);
 	}
-	static binb2rstr(input) {
-		var output = "";
-		for (var i = 0; i < input.length * 32; i += 8)
-			output += String.fromCharCode((input[i >> 5] >>> (24 - i % 32)) & 0xFF);
-		return output;
-	}
 }
 
 class FB {
@@ -579,7 +552,7 @@ class FB {
 				var f = function () {
 					if (ui.navigation.openWindows['fb_login'])
 						ui.on(ui.navigation.openWindows['fb_login'], 'loadstart', event => {
-							if (event.url.indexOf("access_token=") > 0 || event.url.indexOf("error=") > 0) {
+							if (event.url.indexOf('access_token=') > 0 || event.url.indexOf('error=') > 0) {
 								setTimeout(ui.navigation.openWindows['fb_login'].close, 100);
 								FB.oauthCallback(event.url);
 							}
@@ -599,9 +572,9 @@ class FB {
 				animated: false, // default true, note that 'hide' will reuse this preference (the 'Done' button will always animate though)
 				transition: null, // (this only works in iOS 9.1/9.2 and lower) unless animated is false you can choose from: curl, flip, fade, slide (default)
 				enterReaderModeIfAvailable: false, // default false
-				tintColor: "#00ffff", // default is ios blue
-				barColor: "#0000ff", // on iOS 10+ you can change the background color as well
-				controlTintColor: "#ffffff" // on iOS 10+ you can override the default tintColor
+				tintColor: '#00ffff', // default is ios blue
+				barColor: '#0000ff', // on iOS 10+ you can change the background color as well
+				controlTintColor: '#ffffff' // on iOS 10+ you can override the default tintColor
 			},
 				null,
 				openInAppBrowser
@@ -611,13 +584,13 @@ class FB {
 	}
 	static oauthCallback(url) {
 		var queryString, obj;
-		if (url.indexOf("access_token=") > 0) {
+		if (url.indexOf('access_token=') > 0) {
 			queryString = url.substr(url.indexOf('#') + 1);
 			obj = FB.parseQueryString(queryString);
 			FB.tokenStore['fbtoken'] = obj['access_token'];
 			if (FB.loginCallback)
 				FB.loginCallback({ status: 'connected', token: FB.tokenStore['fbtoken'] });
-		} else if (url.indexOf("error=") > 0) {
+		} else if (url.indexOf('error=') > 0) {
 			queryString = url.substring(url.indexOf('?') + 1, url.indexOf('#'));
 			obj = FB.parseQueryString(queryString);
 			if (FB.loginCallback)
@@ -675,9 +648,9 @@ class FB {
 		var parts = [];
 		for (var i in obj) {
 			if (obj.hasOwnProperty(i))
-				parts.push(i + "=" + encodeURIComponent(obj[i]));
+				parts.push(i + '=' + encodeURIComponent(obj[i]));
 		}
-		return parts.join("&");
+		return parts.join('&');
 	}
 }
 class WebSocket {
@@ -690,7 +663,7 @@ class WebSocket {
 		if (communication.generateCredentials().user)
 			WebSocket.stompClient.connect({}, frame => {
 				WebSocket.stompClient.subscribe(
-					"/user/" + user.contact.id + "/video",
+					'/user/' + user.contact.id + '/video',
 					message => {
 						var data = JSON.parse(message.body);
 						if (data.offer)
@@ -704,7 +677,7 @@ class WebSocket {
 					}
 				);
 				WebSocket.stompClient.subscribe(
-					"/user/" + user.contact.id + "/refresh",
+					'/user/' + user.contact.id + '/refresh',
 					r => communication.refresh(JSON.parse(r.body))
 				);
 			});
