@@ -27,8 +27,8 @@ homeHeader {
 }
 
 homeHeader>svg {
-	top: 20%;
-	height: 75%;
+	top: 8%;
+	height: 85%;
 	cursor: pointer;
 	position: relative;
 	display: inline-block;
