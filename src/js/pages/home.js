@@ -28,7 +28,7 @@ homeHeader {
 
 homeHeader>svg {
 	top: 20%;
-	height: 80%;
+	height: 75%;
 	cursor: pointer;
 	position: relative;
 	display: inline-block;
@@ -83,7 +83,7 @@ teaser {
 	left: 0;
 	opacity: 0;
 	transition: all 0.4s ease-out;
-	height: 38%;
+	height: 44%;
 	display: block;
 }
 
@@ -98,15 +98,16 @@ teaser div {
 }
 
 teaser.contacts {
-	top: 1em;
+	top: 0;
 }
 
 teaser.events {
-	bottom: 3em;
+	top: 44%;
+	margin-top: 1px;
 }
 
 teaser card {
-	margin: 0 1px;
+	margin: 0 1px 0 0;
 	overflow: hidden;
 	position: relative;
 	display: inline-block;
@@ -345,7 +346,7 @@ border-radius: 0.5em 0 0 3em;
 			initialisation.reposition();
 			pageHome.teaserContacts();
 			pageHome.teaserEvents();
-			if (user.contact.imageList)
+			if (user.contact && user.contact.imageList)
 				ui.classAdd('homeHeader buttonIcon.right', 'profile');
 		}
 		if (user.contact) {
