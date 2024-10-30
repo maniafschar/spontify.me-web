@@ -55,6 +55,7 @@ homeHeader>buttonIcon.right.profile img {
 	border-radius: 0;
 	width: 100%;
 	height: 100%;
+	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.5);
 }
 
 buttonIcon {
