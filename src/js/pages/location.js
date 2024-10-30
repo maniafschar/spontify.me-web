@@ -315,8 +315,6 @@ mapEdit {
 		if (eventWithLocation) {
 			if (v.address)
 				v.address = v.address.replace(/\n/g, '<br />');
-			else
-				v.address = '';
 			if (v.telephone)
 				v.address = '<a href="tel:' + v.telephone.replace(/[^+\d]*/g, '') + '" style="color:black;">' + v.address + '<br/>' + v.telephone + '</a>';
 			if (v.url)
