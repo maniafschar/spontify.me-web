@@ -46,22 +46,16 @@ homeHeader>buttonIcon.right {
 	right: 0;
 }
 
-homeHeader>buttonIcon.right.profile {
-	padding: 0;
- 	width: 15%;
-}
-
-homeHeader>buttonIcon.right.profile img {
-	border-radius: 0 0 0 0.5em;
-	width: 100%;
-	height: 100%;
-	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.5);
+homeHeader>buttonIcon.right span {
+	max-width: 100%;
+ 	white-space: nowrap;
 }
 
 buttonIcon {
 	top: 0;
 	box-shadow: none;
 	font-size: 1.4em;
+ 	max-width: 40%;
 }
 
 buttonIcon span {
@@ -325,10 +319,7 @@ border-radius: 0.5em 0 0 3em;
 				statsButton: ' hidden'
 			};
 			if (user.contact) {
-				if (user.contact.imageList)
-					v.imgProfile = '<img src="' + global.serverImg + user.contact.imageList + '"/>';
-				else
-					v.imgProfile = '<span>' + user.contact.pseudonym + '</span>';
+				v.imgProfile = '<span>' + user.contact.pseudonym + '</span>';
 				v.infoButton = ' hidden';
 				v.langButton = ' hidden';
 				if (user.contact.type == 'adminContent') {
@@ -350,8 +341,6 @@ border-radius: 0.5em 0 0 3em;
 			initialisation.reposition();
 			pageHome.teaserContacts();
 			pageHome.teaserEvents();
-			if (user.contact && user.contact.imageList)
-				ui.classAdd('homeHeader buttonIcon.right', 'profile');
 		}
 		if (user.contact) {
 			v = user.get('intro') || [];
