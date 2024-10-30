@@ -51,10 +51,6 @@ homeHeader>buttonIcon.right span {
  	white-space: nowrap;
 }
 
-homeHeader>buttonIcon.right span.profile {
-	padding-right: 1em;
-}
-
 buttonIcon {
 	top: 0;
 	box-shadow: none;
