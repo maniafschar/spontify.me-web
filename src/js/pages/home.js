@@ -51,6 +51,13 @@ homeHeader>buttonIcon.right span {
  	white-space: nowrap;
 }
 
+homeHeader>buttonIcon.right span::after {
+	content: '⚙';
+	padding-left: 0.5em;
+	position: absolute;
+	right: 0.5em;
+}
+
 buttonIcon {
 	top: 0;
 	box-shadow: none;
