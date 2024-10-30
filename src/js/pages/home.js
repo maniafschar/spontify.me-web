@@ -51,7 +51,7 @@ homeHeader>buttonIcon.right span {
  	white-space: nowrap;
 }
 
-homeHeader>buttonIcon.right span::after {
+homeHeader>buttonIcon.right span.profile::after {
 	content: '⚙';
 	padding-left: 0.5em;
 	position: absolute;
@@ -326,7 +326,7 @@ border-radius: 0.5em 0 0 3em;
 				statsButton: ' hidden'
 			};
 			if (user.contact) {
-				v.imgProfile = '<span>' + user.contact.pseudonym + '</span>';
+				v.imgProfile = '<span class="profile">' + user.contact.pseudonym + '</span>';
 				v.infoButton = ' hidden';
 				v.langButton = ' hidden';
 				if (user.contact.type == 'adminContent') {
