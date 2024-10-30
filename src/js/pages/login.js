@@ -531,7 +531,7 @@ class pageLogin {
 		e = formFunc.getForm('hint');
 		if (e.values.image)
 			d.image = e.values.image;
-		if (Object.keys(d).length)
+		if (Object.keys(d)?.length)
 			user.save({ webCall: 'login.saveProfile', ...d }, ui.navigation.closeHint);
 		else
 			ui.navigation.closeHint();

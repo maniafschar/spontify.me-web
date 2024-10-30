@@ -270,7 +270,7 @@ class communication {
 					ui.classAdd('chatList [i="' + i + '"]', 'highlightBackground');
 			}
 		}
-		var chatHash = r.chat.firstId + '|' + chat + '|' + Object.keys(r.chat.unseen).length;
+		var chatHash = r.chat.firstId + '|' + chat + '|' + Object.keys(r.chat.unseen)?.length;
 		if (chatHash != ui.q('chatList').getAttribute('hash')) {
 			pageChat.initActiveChats();
 			ui.q('chatList').setAttribute('hash', chatHash);

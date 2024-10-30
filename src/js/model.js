@@ -14,8 +14,9 @@ class model {
 		} else {
 			keys = Object.keys(list);
 			object2Transform = [];
-			for (var i = 0; i < keys.length; i++)
-				object2Transform.push(list[keys[i]]);
+			if (keys)
+				for (var i = 0; i < keys.length; i++)
+					object2Transform.push(list[keys[i]]);
 		}
 		for (var i = 0; i < keys.length; i++) {
 			var o = object, key = keys[i];
