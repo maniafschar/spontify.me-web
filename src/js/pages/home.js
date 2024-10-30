@@ -56,7 +56,7 @@ homeHeader>buttonIcon.right span.profile {
 }
 
 homeHeader>buttonIcon.right span.profile::after {
-	content: '☑';
+	content: '✓';
 	position: absolute;
 	right: 0.5em;
 }
