@@ -55,17 +55,11 @@ homeHeader>buttonIcon.right span.profile {
 	padding-right: 1em;
 }
 
-homeHeader>buttonIcon.right span.profile::after {
-	content: '✓';
-	position: absolute;
-	right: 0.5em;
-}
-
 buttonIcon {
 	top: 0;
 	box-shadow: none;
 	font-size: 1.4em;
- 	max-width: 40%;
+ 	max-width: 37%;
 }
 
 buttonIcon span {
