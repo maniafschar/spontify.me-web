@@ -51,6 +51,10 @@ homeHeader>buttonIcon.right span {
  	white-space: nowrap;
 }
 
+homeHeader>buttonIcon.right span.profile {
+	padding-right: 1.2em;
+}
+
 homeHeader>buttonIcon.right span.profile::after {
 	content: '⚙';
 	padding-left: 0.5em;
