@@ -87,7 +87,7 @@ teaser {
 	left: 0;
 	opacity: 0;
 	transition: all 0.4s ease-out;
-	height: 44%;
+	height: 42%;
 	display: block;
 }
 
@@ -106,7 +106,7 @@ teaser.contacts {
 }
 
 teaser.events {
-	top: 44%;
+	top: 42%;
 	margin-top: 1px;
 }
 
