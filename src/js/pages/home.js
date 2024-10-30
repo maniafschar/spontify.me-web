@@ -52,12 +52,11 @@ homeHeader>buttonIcon.right span {
 }
 
 homeHeader>buttonIcon.right span.profile {
-	padding-right: 1.2em;
+	padding-right: 1em;
 }
 
 homeHeader>buttonIcon.right span.profile::after {
-	content: '⚙';
-	padding-left: 0.5em;
+	content: '☑';
 	position: absolute;
 	right: 0.5em;
 }
