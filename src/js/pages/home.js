@@ -460,11 +460,11 @@ border-radius: 0.5em 0 0 3em;
 							var e = model.convert(new ClientNews(), l, i);
 							var oc = e.url ? 'onclick="ui.navigation.openHTML(&quot;' + e.url + '&quot;)"' : '';
 							s += oc ? '<card ' + oc + ' style="cursor:pointer;">' : '<card>';
-							s += '<p' + (e.image || e.imgUrl ? ' style="padding-bottom:1.25em;">' : '>');
+							s += '<p' + (e.image ? ' style="padding-bottom:1.25em;">' : '>');
 							if (global.date.server2local(e.publish) > new Date())
 								s += '<date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
 							else
-								s += '<date>' + global.date.formatDate(e.publish) + (e.category && InputHashtags.ids2Text(e.category) ? global.separator + InputHashtags.ids2Text(e.category) : '')
+								s += '<date>' + global.date.formatDate(e.publish)
 									+ (e.source ? global.separator + e.source : '') + (e.skills ? global.separator + ui.l('skill' + e.skills) : '') + '</date>';
 							s += e.description.replace(/\n/g, '<br/>');
 							s += '</p>'
