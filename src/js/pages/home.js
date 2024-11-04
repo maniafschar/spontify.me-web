@@ -174,56 +174,56 @@ teaser title {
 	static templateNews = v =>
 		global.template`<style>
 news {
-position: relative;
-display: block;
-overflow: hidden;
-height: 100%;
-border-radius: 0.5em;
+	position: relative;
+	display: block;
+	overflow: hidden;
+	height: 100%;
+	border-radius: 0.5em;
 }
 
 
 news div {
-width: 100%;
-display: block;
-padding-top: 1.5em;
-position: relative;
-height: 100%;
-overflow: auto;
+	width: 100%;
+	display: block;
+	padding-top: 1.5em;
+	position: relative;
+	height: 100%;
+	overflow: auto;
 }
 
 news card {
-text-align: left;
-position: relative;
-display: block;
-margin-bottom: 1.5em;
+	text-align: left;
+	position: relative;
+	display: block;
+	margin-bottom: 1.5em;
 }
 
 news card::after {
-content: ' ';
-display: block;
-clear: both;
+	content: ' ';
+	display: block;
+	clear: both;
 }
 
 news card p {
-background: rgba(255, 255, 255, 0.6);
-padding: 0.75em 6% 0.75em  4%;
-border-radius: 0 2em 0.5em 0;
-max-width: 96%;
-display: inline-block
+	background: rgba(255, 255, 255, 0.6);
+	padding: 0.75em 4%;
+	border-radius: 0 2em 0.5em 0;
+	max-width: 96%;
+	display: inline-block
 }
 
 news card date {
-font-size: 0.7em;
-display: block;
+	font-size: 0.7em;
+	display: block;
 }
 
 news card img {
-width: 96%;
-margin-left: 4%;
-position: relative;
-float: right;
-margin-top: -1em;
-border-radius: 0.5em 0 0 3em;
+	width: 96%;
+	margin-left: 4%;
+	position: relative;
+	float: right;
+	margin-top: -1em;
+	border-radius: 0.5em 0 0 3em;
 }
 </style><news>
 <div class="news">${v.news}</div>
