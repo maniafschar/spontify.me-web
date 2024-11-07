@@ -204,12 +204,12 @@ news card::after {
 	clear: both;
 }
 
-news card p {
+news card text {
 	background: rgba(255, 255, 255, 0.6);
 	padding: 0.75em 4%;
 	border-radius: 0 2em 0.5em 0;
 	max-width: 96%;
-	display: inline-block
+	display: inline-block;
 }
 
 news card date {
@@ -460,20 +460,20 @@ news card img {
 							var e = model.convert(new ClientNews(), l, i);
 							var oc = e.url ? 'onclick="ui.navigation.openHTML(&quot;' + e.url + '&quot;)"' : '';
 							s += oc ? '<card ' + oc + ' style="cursor:pointer;">' : '<card>';
-							s += '<p' + (e.image ? ' style="padding-bottom:1.25em;">' : '>');
+							s += '<text' + (e.image ? ' style="padding-bottom:1.25em;">' : '>');
 							if (global.date.server2local(e.publish) > new Date())
 								s += '<date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
 							else
 								s += '<date>' + global.date.formatDate(e.publish)
 									+ (e.source ? global.separator + e.source : '') + (e.skills ? global.separator + ui.l('skill' + e.skills) : '') + '</date>';
 							s += e.description.replace(/\n/g, '<br/>');
-							s += '</p>'
+							s += '</text>'
 							if (e.image)
 								s += '<img src="' + global.serverImg + e.image + '"/>';
 							s += '</card>'
 						}
 					}
-					v.news = s ? s : '<card><p>' + ui.l('home.noNews' + (global.config.club ? 'Club' : '')).replace('{0}', geoData.getCurrent().town) + '</p></card>';
+					v.news = s ? s : '<card>' + ui.l('home.noNews' + (global.config.club ? 'Club' : '')).replace('{0}', geoData.getCurrent().town) + '</card>';
 					if (ui.q('dialog-hint news'))
 						ui.q('dialog-hint span').innerHTML = pageHome.templateNews(v);
 					else
