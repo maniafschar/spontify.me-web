@@ -382,7 +382,7 @@ news card img {
 						return;
 					}
 					if (v.id == user.clientId)
-						v.image = 'source="admin" class="mainBG"';
+						v.image = 'source="admin" class="admin mainBG"';
 					else if (v.imageList)
 						v.image = 'src="' + global.serverImg + v.imageList + '"';
 					else if (v.contactNotification.action.indexOf('news=') == 0 || v.contactNotification.action.indexOf('m=') == 0)
