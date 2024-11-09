@@ -618,11 +618,6 @@ notificationList img {
 	right: 0;
 }
 
-chatList svg.mainBG,
-notificationList svg.mainBG {
-	padding: 0.6em;
-}
-
 chatList svg.read {
 	position: absolute;
 	right: 1em;

@@ -296,7 +296,7 @@ class pageChat {
 				for (var i = 1; i < d.length; i++) {
 					var v = model.convert(new Contact(), d, i);
 					if (v.id == user.clientId)
-						v.image = 'source="admin" class="admin"';
+						v.image = 'source="admin" class="admin mainBG"';
 					else if (v.imageList)
 						v.image = 'src="' + global.serverImg + v.imageList + '"';
 					else

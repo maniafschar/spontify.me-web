@@ -1,6 +1,5 @@
 import { bluetooth } from '../bluetooth';
 import { communication } from '../communication';
-import { InputHashtags } from '../elements/InputHashtags';
 import { VideoCall } from '../elements/VideoCall';
 import { geoData } from '../geoData';
 import { global } from '../global';
@@ -383,7 +382,7 @@ news card img {
 						return;
 					}
 					if (v.id == user.clientId)
-						v.image = 'source="admin"';
+						v.image = 'source="admin" class="mainBG"';
 					else if (v.imageList)
 						v.image = 'src="' + global.serverImg + v.imageList + '"';
 					else if (v.contactNotification.action.indexOf('news=') == 0 || v.contactNotification.action.indexOf('m=') == 0)
