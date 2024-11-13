@@ -473,7 +473,7 @@ skills {
 								s += '<date>' + global.date.formatDate(e.publish)
 									+ (e.source ? global.separator + e.source : '') + (e.skills ? global.separator + ui.l('skill' + e.skills) : '') + '</date>';
 								if (e.skills && skills.indexOf('label="skill' + e.skills + '"') < 0)
-									skills += '<input-checkbox type="radio" onclick="pageHome.fliterNews()" label="skill' + e.skills + '" deselect="true"></input-checkbox>';
+									skills += '<input-checkbox type="radio" name="news_skills" onclick="pageHome.fliterNews()" label="skill' + e.skills + '" deselect="true"></input-checkbox>';
 							}
 							s += e.description.replace(/\n/g, '<br/>');
 							s += '</text>'
@@ -484,7 +484,7 @@ skills {
 					}
 					if (skills)
 						v.skills = '<skills>' + skills + '</skills>';
-					v.news = s ? skills + s : '<card>' + ui.l('home.noNews' + (global.config.club ? 'Club' : '')).replace('{0}', geoData.getCurrent().town) + '</card>';
+					v.news = s ? s : '<card>' + ui.l('home.noNews' + (global.config.club ? 'Club' : '')).replace('{0}', geoData.getCurrent().town) + '</card>';
 					if (ui.q('dialog-hint news'))
 						ui.q('dialog-hint span').innerHTML = pageHome.templateNews(v);
 					else
