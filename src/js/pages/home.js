@@ -224,7 +224,12 @@ news card img {
 	margin-top: -1em;
 	border-radius: 0.5em 0 0 3em;
 }
-</style><news>
+skills {
+	padding-top: 1em;
+	display: block;
+	margin-bottom: -1em;
+}
+</style>${v.skills}<news>
 <div class="news">${v.news}</div>
 </news>`;
 	static clickNotification(action) {
@@ -267,6 +272,8 @@ news card img {
 			search = search.substring(0, search.length - 4) + ')';
 		}
 		pageHome.teaserEvents(search);
+	}
+	static fliterNews() {
 	}
 	static filterOpen() {
 		var render = function () {
@@ -453,7 +460,7 @@ news card img {
 				responseType: 'json',
 				success(l) {
 					pageHome.closeList();
-					var v = {}, s = '';
+					var v = {}, s = '', skills = '';
 					if (l) {
 						for (var i = 1; i < l.length; i++) {
 							var e = model.convert(new ClientNews(), l, i);
@@ -462,9 +469,12 @@ news card img {
 							s += '<text' + (e.image ? ' style="padding-bottom:1.25em;">' : '>');
 							if (global.date.server2local(e.publish) > new Date())
 								s += '<date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
-							else
+							else {
 								s += '<date>' + global.date.formatDate(e.publish)
 									+ (e.source ? global.separator + e.source : '') + (e.skills ? global.separator + ui.l('skill' + e.skills) : '') + '</date>';
+								if (e.skills)
+									skills += '<input-checkbox type="radio" onclick="pageHome.fliterNews()" label="skill' + e.skills + '" deselect="true"></input-checkbox>';
+							}
 							s += e.description.replace(/\n/g, '<br/>');
 							s += '</text>'
 							if (e.image)
@@ -472,7 +482,9 @@ news card img {
 							s += '</card>'
 						}
 					}
-					v.news = s ? s : '<card>' + ui.l('home.noNews' + (global.config.club ? 'Club' : '')).replace('{0}', geoData.getCurrent().town) + '</card>';
+					if (skills)
+						v.skills = '<skills>' + skills + '</skills>';
+					v.news = s ? skills + s : '<card>' + ui.l('home.noNews' + (global.config.club ? 'Club' : '')).replace('{0}', geoData.getCurrent().town) + '</card>';
 					if (ui.q('dialog-hint news'))
 						ui.q('dialog-hint span').innerHTML = pageHome.templateNews(v);
 					else
