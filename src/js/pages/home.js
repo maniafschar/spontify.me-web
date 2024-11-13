@@ -181,10 +181,10 @@ news {
 }
 
 
-news div {
+news>div {
 	width: 100%;
 	display: block;
-	padding-top: 1.5em;
+	padding: 1.5em 0 2em 0;
 	position: relative;
 	height: 100%;
 	overflow: auto;
