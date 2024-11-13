@@ -227,7 +227,7 @@ news card img {
 skills {
 	padding-top: 1em;
 	display: block;
-	margin-bottom: -1em;
+	font-size: 0.7em;
 }
 </style>${v.skills}<news>
 <div class="news">${v.news}</div>
