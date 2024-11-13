@@ -472,7 +472,7 @@ skills {
 							else {
 								s += '<date>' + global.date.formatDate(e.publish)
 									+ (e.source ? global.separator + e.source : '') + (e.skills ? global.separator + ui.l('skill' + e.skills) : '') + '</date>';
-								if (e.skills)
+								if (e.skills && skills.indexOf('label="skill' + e.skills + '"') < 0)
 									skills += '<input-checkbox type="radio" onclick="pageHome.fliterNews()" label="skill' + e.skills + '" deselect="true"></input-checkbox>';
 							}
 							s += e.description.replace(/\n/g, '<br/>');
