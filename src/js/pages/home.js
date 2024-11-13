@@ -229,7 +229,7 @@ skills {
 	display: block;
 	font-size: 0.7em;
 }
-</style>${v.skills}<news>
+</style><news>${v.skills}
 <div class="news">${v.news}</div>
 </news>`;
 	static clickNotification(action) {
@@ -460,7 +460,7 @@ skills {
 				responseType: 'json',
 				success(l) {
 					pageHome.closeList();
-					var v = {}, s = '', skills = '';
+					var v = {}, s = '', skills = '', userSkills = user.contact && user.contact.skills ? '|' + user.contact.skills + '|' : '';
 					if (l) {
 						for (var i = 1; i < l.length; i++) {
 							var e = model.convert(new ClientNews(), l, i);
@@ -472,7 +472,7 @@ skills {
 							else {
 								s += '<date>' + global.date.formatDate(e.publish)
 									+ (e.source ? global.separator + e.source : '') + (e.skills ? global.separator + ui.l('skill' + e.skills) : '') + '</date>';
-								if (e.skills && skills.indexOf('label="skill' + e.skills + '"') < 0)
+								if (e.skills && userSkills.indexOf('|' + e.skills + '|') > -1 && skills.indexOf('label="skill' + e.skills + '"') < 0)
 									skills += '<input-checkbox type="radio" name="news_skills" onclick="pageHome.fliterNews()" label="skill' + e.skills + '" deselect="true"></input-checkbox>';
 							}
 							s += e.description.replace(/\n/g, '<br/>');
