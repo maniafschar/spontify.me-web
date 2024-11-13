@@ -465,8 +465,12 @@ skills {
 						for (var i = 1; i < l.length; i++) {
 							var e = model.convert(new ClientNews(), l, i);
 							var oc = e.url ? 'onclick="ui.navigation.openHTML(&quot;' + e.url + '&quot;)"' : '';
-							s += oc ? '<card ' + oc + ' style="cursor:pointer;">' : '<card>';
-							s += '<text' + (e.image ? ' style="padding-bottom:1.25em;">' : '>');
+							s += '<card';
+							if (e.skills)
+								s += ' skills="' + e.skills + '"';
+							if (oc)
+								s += ' ' + oc + ' style="cursor:pointer;"';
+							s += '><text' + (e.image ? ' style="padding-bottom:1.25em;">' : '>');
 							if (global.date.server2local(e.publish) > new Date())
 								s += '<date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
 							else {
