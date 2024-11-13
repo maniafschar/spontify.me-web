@@ -274,6 +274,13 @@ skills {
 		pageHome.teaserEvents(search);
 	}
 	static fliterNews() {
+		ui.toggleHeight('dialog-hint news card[style*="display: none"]');
+		ui.toggleHeight('dialog-hint news match[style*="display: none"]');
+		var skill = ui.q('dialog-hint skills input-checkbox[checked="true"]');
+		if (skill) {
+			ui.toggleHeight('dialog-hint news card[onclick]:not([skills="' + skill.getAttribute('value') + '"])');
+			ui.toggleHeight('dialog-hint news match:not([skills="' + skill.getAttribute('value') + '"])');
+		}
 	}
 	static filterOpen() {
 		var render = function () {
@@ -477,7 +484,7 @@ skills {
 								s += '<date>' + global.date.formatDate(e.publish)
 									+ (e.source ? global.separator + e.source : '') + (e.skills ? global.separator + ui.l('skill' + e.skills) : '') + '</date>';
 								if (e.skills && userSkills.indexOf('|' + e.skills + '|') > -1 && skills.indexOf('label="skill' + e.skills + '"') < 0)
-									skills += '<input-checkbox type="radio" name="news_skills" onclick="pageHome.fliterNews()" label="skill' + e.skills + '" deselect="true"></input-checkbox>';
+									skills += '<input-checkbox type="radio" name="news_skills" value="' + e.skills + '" onclick="pageHome.fliterNews()" label="skill' + e.skills + '" deselect="true"></input-checkbox>';
 							}
 							s += e.description.replace(/\n/g, '<br/>');
 							s += '</text>'
