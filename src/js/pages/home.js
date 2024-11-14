@@ -225,7 +225,7 @@ news card img {
 	border-radius: 0.5em 0 0 3em;
 }
 skills {
-	padding-top: 2em;
+	padding: 2em 1em 0 1em;
 	display: block;
 	font-size: 0.7em;
 }
