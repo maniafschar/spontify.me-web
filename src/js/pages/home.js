@@ -184,7 +184,7 @@ news {
 news>div {
 	width: 100%;
 	display: block;
-	padding: 1.5em 0 2em 0;
+	padding: 1em 0 2em 0;
 	position: relative;
 	height: 100%;
 	overflow: auto;
@@ -225,7 +225,7 @@ news card img {
 	border-radius: 0.5em 0 0 3em;
 }
 skills {
-	padding-top: 1em;
+	padding-top: 2em;
 	display: block;
 	font-size: 0.7em;
 }
