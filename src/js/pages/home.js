@@ -180,7 +180,6 @@ news {
 	border-radius: 0.5em;
 }
 
-
 news>div {
 	width: 100%;
 	display: block;
