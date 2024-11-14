@@ -184,7 +184,7 @@ news {
 news>div {
 	width: 100%;
 	display: block;
-	padding: 1em 0 2em 0;
+	padding: 1em 0;
 	position: relative;
 	height: 100%;
 	overflow: auto;
@@ -225,12 +225,12 @@ news card img {
 	border-radius: 0.5em 0 0 3em;
 }
 skills {
-	padding: 2em 1em 0 1em;
+	padding: 1em;
 	display: block;
 	font-size: 0.7em;
 }
-</style><news>${v.skills}
-<div class="news">${v.news}</div>
+</style><news>
+<div>${v.skills}${v.news}</div>
 </news>`;
 	static clickNotification(action) {
 		ui.navigation.autoOpen(action);
