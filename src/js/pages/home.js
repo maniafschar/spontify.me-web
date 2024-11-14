@@ -184,7 +184,7 @@ news {
 news>div {
 	width: 100%;
 	display: block;
-	padding: 1em 0;
+	padding-top: 1em;
 	position: relative;
 	height: 100%;
 	overflow: auto;
