@@ -473,7 +473,7 @@ skills {
 				responseType: 'json',
 				success(l) {
 					pageHome.closeList();
-					var v = {}, s = '', skills = '', userSkills = user.contact && user.contact.skills ? '|' + user.contact.skills + '|' : '';
+					var v = {}, s = '';
 					if (l) {
 						for (var i = 1; i < l.length; i++) {
 							var e = model.convert(new ClientNews(), l, i);
@@ -486,12 +486,9 @@ skills {
 							s += '><text' + (e.image ? ' style="padding-bottom:1.25em;">' : '>');
 							if (global.date.server2local(e.publish) > new Date())
 								s += '<date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
-							else {
+							else
 								s += '<date>' + global.date.formatDate(e.publish)
 									+ (e.source ? global.separator + e.source : '') + (e.skills ? global.separator + ui.l('skill' + e.skills) : '') + '</date>';
-								if (e.skills && userSkills.indexOf('|' + e.skills + '|') > -1 && skills.indexOf('label="skill' + e.skills + '"') < 0)
-									skills += '<input-checkbox type="radio" name="news_skills" value="' + e.skills + '" onclick="pageHome.fliterNews()" label="skill' + e.skills + '" deselect="true"></input-checkbox>';
-							}
 							s += e.description.replace(/\n/g, '<br/>');
 							s += '</text>'
 							if (e.image)
@@ -499,8 +496,15 @@ skills {
 							s += '</card>'
 						}
 					}
-					if (skills)
-						v.skills = '<skills>' + skills + '</skills>';
+					if (user.contact && user.contact.skills) {
+						var skills = '';
+						user.contact.skills.split('|').forEach(e => {
+						    if (e.indexOf('9.') == 0 && skills.indexOf('value="' + e + '"') < 0)
+								skills += '<input-checkbox type="radio" name="news_skills" value="' + e + '" onclick="pageHome.fliterNews()" label="skill' + e + '" deselect="true"></input-checkbox>';
+						});
+						if (skills)
+							v.skills = '<skills>' + skills + '</skills>';
+					}
 					v.news = s ? s : '<card>' + ui.l('home.noNews' + (global.config.club ? 'Club' : '')).replace('{0}', geoData.getCurrent().town) + '</card>';
 					if (ui.q('dialog-hint news'))
 						ui.q('dialog-hint span').innerHTML = pageHome.templateNews(v);
