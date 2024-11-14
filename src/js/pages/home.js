@@ -274,14 +274,20 @@ skills {
 		pageHome.teaserEvents(search);
 	}
 	static fliterNews() {
+		var pause = ui.q('dialog-hint news card[style*="display: none"]') || ui.q('dialog-hint news match[style*="display: none"]');
 		ui.toggleHeight('dialog-hint news match[style*="display: none"]');
-		ui.toggleHeight('dialog-hint news card[style*="display: none"]', function() {
-			var skill = ui.q('dialog-hint skills input-checkbox[checked="true"]');
-			if (skill) {
+		ui.toggleHeight('dialog-hint news card[style*="display: none"]');
+		var skill = ui.q('dialog-hint skills input-checkbox[checked="true"]');
+		if (skill) {
+			var f = function() {
 				ui.toggleHeight('dialog-hint news card[onclick]:not([skills="' + skill.getAttribute('value') + '"])');
 				ui.toggleHeight('dialog-hint news match:not([skills="' + skill.getAttribute('value') + '"])');
-			}
-		});
+			};
+			if (pause)
+				setTimeout(f, 500);
+			else
+				f();
+		}
 	}
 	static filterOpen() {
 		var render = function () {
