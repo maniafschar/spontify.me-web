@@ -579,7 +579,7 @@ skills {
 			success(l) {
 				if (!l)
 					return;
-				var e = pageEvent.getCalendarList(l), s = '<card onclick="pageEvent.edit()" style="color:var(--text);background:rgba(50,200,255,0.2);"><img source="add"/><text style="text-shadow:none;">' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>', processedIds = [], e2 = [];
+				var e = pageEvent.getCalendarList(l), s = '<card onclick="pageEvent.edit()" style="color:var(--text);background:rgba(0,50,255,0.1);"><img source="add"/><text style="text-shadow:none;">' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>', processedIds = [], e2 = [];
 				var now = new Date();
 				now.setHours(now.getHours() - 1);
 				for (var i = 0; i < e.length; i++) {
