@@ -278,7 +278,7 @@ skills {
 		ui.toggleHeight('dialog-hint news card[style*="display: none"]');
 		var skill = ui.q('dialog-hint skills input-checkbox[checked="true"]');
 		if (skill) {
-			var f = function() {
+			var f = function () {
 				ui.toggleHeight('dialog-hint news card[onclick]:not([skills="' + skill.getAttribute('value') + '"])');
 				ui.toggleHeight('dialog-hint news match:not([skills="' + skill.getAttribute('value') + '"])');
 			};
@@ -499,7 +499,7 @@ skills {
 					if (user.contact && user.contact.skills) {
 						var skills = '';
 						user.contact.skills.split('|').forEach(e => {
-						    if (e.indexOf('9.') == 0 && skills.indexOf('value="' + e + '"') < 0)
+							if (e.indexOf('9.') == 0 && skills.indexOf('value="' + e + '"') < 0)
 								skills += '<input-checkbox type="radio" name="news_skills" value="' + e + '" onclick="pageHome.fliterNews()" label="skill' + e + '" deselect="true"></input-checkbox>';
 						});
 						if (skills)
@@ -579,7 +579,7 @@ skills {
 			success(l) {
 				if (!l)
 					return;
-				var e = pageEvent.getCalendarList(l), s = '<card onclick="pageEvent.edit()" style="color:var(--text);background:rgba(0,50,255,0.1);"><img source="add"/><text style="text-shadow:none;">' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>', processedIds = [], e2 = [];
+				var e = pageEvent.getCalendarList(l), s = '<card onclick="pageEvent.edit()" style="color:var(--text);background:rgba(190,120,255,0.1);"><img source="add"/><text style="text-shadow:none;">' + ui.l('events.new').replace(' ', '<br/>') + '</text></card>', processedIds = [], e2 = [];
 				var now = new Date();
 				now.setHours(now.getHours() - 1);
 				for (var i = 0; i < e.length; i++) {

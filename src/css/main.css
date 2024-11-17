@@ -607,6 +607,11 @@ notificationList img {
 }
 
 chatList svg.mainBG,
+notificationList svg.mainBG {
+	padding: 0.5em;
+}
+
+chatList svg.mainBG,
 chatList svg.admin,
 chatList img {
 	border-radius: 0 2em 2em 0;
