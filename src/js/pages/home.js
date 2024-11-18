@@ -395,12 +395,6 @@ skills {
 				var s = '';
 				for (var i = 1; i < d.length; i++) {
 					var v = model.convert(new Contact(), d, i);
-					if (i == 1 && ui.q('notificationList div[i="' + v.contactNotification.id + '"]')) {
-						ui.classRemove('notificationList > div', 'highlightBackground');
-						pageHome.badge = 0;
-						pageHome.initNotificationButton();
-						return;
-					}
 					if (v.id == user.clientId)
 						v.image = 'source="admin" class="admin"';
 					else if (v.imageList)
