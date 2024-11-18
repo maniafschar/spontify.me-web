@@ -136,8 +136,11 @@ teaser card text {
 }
 
 teaser card poll {
-	width: 10em;
-	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
 	overflow: hidden;
 	display: block;
 	text-overflow: ellipsis;
@@ -596,12 +599,11 @@ skills {
 					}
 					return true;
 				}
-				var widthPoll = ui.q('home teaser').clientHeight - parseFloat(ui.cssValue('home teaser div', 'padding')) * 2;
 				for (var i = 0; i < e.length; i++) {
 					if (!dateFiltered(e[i])) {
 						var s2;
 						if (e[i].event.type == 'Poll')
-							s2 = '<poll class="bgColor" style="width:' + widthPoll + 'px;">' + JSON.parse(e[i].event.description).q + '</poll>';
+							s2 = '<img source="add" style="opacity:0;"/><poll class="bgColor">' + JSON.parse(e[i].event.description).q + '</poll>';
 						else
 							s2 = '<img src="' + global.serverImg + (e[i].event.imageList ? e[i].event.imageList : e[i].imageList ? e[i].imageList : e[i].contact.imageList) + '"/><text>'
 								+ global.date.formatDate(e[i].event.startDate, 'noWeekday') + '<br/>' + e[i].event.description + '</text>';
