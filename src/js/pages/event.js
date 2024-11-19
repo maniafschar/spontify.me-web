@@ -17,6 +17,7 @@ export { pageEvent };
 
 class pageEvent {
 	static nearByExec = null;
+	static popupValues;
 	static paypal = { fee: null, feeDate: null, feeAfter: null, currency: null, merchantUrl: null };
 	static templateEdit = v =>
 		global.template`
@@ -504,6 +505,7 @@ poll result div {
 			}
 		});
 		selectable(v.repetition);
+		pageEvent.popupValues = JSON.stringify(formFunc.getForm('dialog-popup form'));
 	}
 	static getCalendarList(data) {
 		if (!data || data.length < 2)
@@ -1110,7 +1112,8 @@ poll result div {
 		});
 	}
 	static saveDraft() {
-		user.set('event', formFunc.getForm('dialog-popup form'));
+		if (pageEvent.popupValues != JSON.stringify(formFunc.getForm('dialog-popup form')))
+			user.set('event', formFunc.getForm('dialog-popup form'));
 	}
 	static saveParticipation(order) {
 		if (!user.contact)
