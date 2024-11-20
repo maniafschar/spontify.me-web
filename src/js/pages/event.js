@@ -307,9 +307,9 @@ poll result div {
 			v.imageEventOwner = 'source="contacts" style="padding:1em;"';
 		if (v.event.type == 'Poll') {
 			var end = global.date.getDateFields(v.event.endDate);
-			d.setDate(d.day);
-			d.setMonth(d.month);
-			d.setYear(d.year);
+			d.setDate(end.day);
+			d.setMonth(end.month);
+			d.setYear(end.year);
 			var data = JSON.parse(v.event.description);
 			v.text = '<b>' + ui.l('events.newPoll') + '</b><br/>' + data.q.replace(/\n/g, '<br/>') + '<participantCount></participantCount><poll>';
 			for (var i = 0; i < data.a.length; i++)
