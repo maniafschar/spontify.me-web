@@ -53,7 +53,7 @@ explain {
 		}
 	}
 	toggleCheckbox(event) {
-		if (!this.getAttribute("readonly") == 'true') {
+		if (this.getAttribute("readonly") != 'true') {
 			var e = event.target, alterState = true;
 			if (e.getAttribute('type') == 'radio') {
 				alterState = e.getAttribute('checked') != 'true';
