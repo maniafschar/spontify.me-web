@@ -313,7 +313,7 @@ poll result div {
 			var data = JSON.parse(v.event.description);
 			v.text = '<b>' + ui.l('events.newPoll') + '</b><br/>' + data.q.replace(/\n/g, '<br/>') + '<participantCount></participantCount><poll>';
 			for (var i = 0; i < data.a.length; i++)
-				v.text += '<input-checkbox name="poll' + v.id + '" onclick="pageEvent.saveParticipation()" label="' + data.a[i] + '" value="' + (i + 1) + '"' + (d < new Date() ? ' editable="false"' : '') + '></input-checkbox>';
+				v.text += '<input-checkbox name="poll' + v.id + '" onclick="pageEvent.saveParticipation()" label="' + data.a[i] + '" value="' + (i + 1) + '"' + (d < new Date() ? ' readonly="true"' : '') + '></input-checkbox>';
 			v.text += '<result></result></poll>';
 		} else
 			v.text = Strings.replaceLinks(v.event.description).replace(/\n/g, '<br/>');
