@@ -18,7 +18,7 @@ class InputCheckbox extends HTMLElement {
 	opacity: 1;
 }
 :host([readonly="true"]) label {
-	opacity: 0.7;
+	opacity: 0.4;
 }
 :host([checked="true"]) label:before {
 	position: absolute;
