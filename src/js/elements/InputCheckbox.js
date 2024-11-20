@@ -17,6 +17,9 @@ class InputCheckbox extends HTMLElement {
 	color: black;
 	opacity: 1;
 }
+:host([readonly="true"]) label {
+	opacity: 0.7;
+}
 :host([checked="true"]) label:before {
 	position: absolute;
 	content: '\\2713';
@@ -50,16 +53,18 @@ explain {
 		}
 	}
 	toggleCheckbox(event) {
-		var e = event.target, alterState = true;
-		if (e.getAttribute('type') == 'radio') {
-			alterState = e.getAttribute('checked') != 'true';
-			if (!alterState && e.getAttribute('deselect') != 'true')
-				return;
-			ui.attr(e.parentElement.querySelectorAll('input-checkbox[name="' + e.getAttribute('name') + '"][type="radio"]'), 'checked', 'false');
-		}
-		if (alterState) {
-			e.setAttribute('checked', e.getAttribute('checked') == 'true' ? 'false' : 'true');
-			this.dispatchEvent(new CustomEvent('Checkbox', { detail: { value: e.getAttribute('checked') == 'true' ? e.getAttribute('value') : '' } }));
+		if (!this.getAttribute("readonly") == 'true') {
+			var e = event.target, alterState = true;
+			if (e.getAttribute('type') == 'radio') {
+				alterState = e.getAttribute('checked') != 'true';
+				if (!alterState && e.getAttribute('deselect') != 'true')
+					return;
+				ui.attr(e.parentElement.querySelectorAll('input-checkbox[name="' + e.getAttribute('name') + '"][type="radio"]'), 'checked', 'false');
+			}
+			if (alterState) {
+				e.setAttribute('checked', e.getAttribute('checked') == 'true' ? 'false' : 'true');
+				this.dispatchEvent(new CustomEvent('Checkbox', { detail: { value: e.getAttribute('checked') == 'true' ? e.getAttribute('value') : '' } }));
+			}
 		}
 	}
 }
