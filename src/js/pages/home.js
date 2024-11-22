@@ -481,7 +481,7 @@ skills {
 							if (oc)
 								s += ' ' + oc + ' style="cursor:pointer;"';
 							s += '><text' + (e.image ? ' style="padding-bottom:1.25em;">' : '>');
-							if (global.date.server2local(e.publish) > new Date())
+							if (v.id && global.date.server2local(e.publish) > new Date())
 								s += '<date style="color:red;">' + global.date.formatDate(e.publish) + global.separator + ui.l('home.notYetPublished') + '</date>';
 							else
 								s += '<date>' + global.date.formatDate(e.publish)
