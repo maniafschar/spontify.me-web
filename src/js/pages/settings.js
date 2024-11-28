@@ -140,7 +140,7 @@ class pageSettings {
 	static templateSettings3 = v =>
 		global.template`<button-text class="settingsButton" onclick="pageInfo.toggleInfoBlock(&quot;settings tabBody .notification&quot;)" label="settings.myNotifications"></button-text><br/>
 <div class="notification" class="notifications" style="display:none;padding:0.5em 1em 1em 1em;">
-	<input-checkbox name="notification" value="news" label="notification.news" ${v['contact.notificationNews']} ${v.hideNotificationNews}></input-checkbox>
+	<input-checkbox name="notification" value="news" label="notification.news" ${v['contact.notificationNews']}></input-checkbox>
 	<br />
 	<input-checkbox name="notification" value="chat" label="notification.chat" ${v['contact.notificationChat']}></input-checkbox>
 	<br />
@@ -295,7 +295,6 @@ ${v.info}`;
 					d = new Date();
 					v.birthdayMax = (d = new Date(d.setFullYear(d.getFullYear() - 18))).toISOString().substring(0, 10);
 					v.birthdayMin = new Date(d.setFullYear(d.getFullYear() - 81)).toISOString().substring(0, 10);
-					v.hideNotificationNews = global.config.club ? '' : ' class="hidden"';
 					v['contact.notificationNews'] = v['contact.notification'].indexOf('news') > -1 ? ' checked="true"' : '';
 					v['contact.notificationChat'] = v['contact.notification'].indexOf('chat') > -1 ? ' checked="true"' : '';
 					v['contact.notificationEngagement'] = v['contact.notification'].indexOf('engagement') > -1 ? ' checked="true"' : '';
