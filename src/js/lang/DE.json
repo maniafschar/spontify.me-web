@@ -601,6 +601,7 @@
 		},
 		"marketing": {
 			"next": "Weiter",
+			"noResult": "Es gab zu wenige Teilnehmer an der Umfrage, das Resulat kann nicht angezeigt werden.",
 			"previous": "Zurück",
 			"validUntil": "Diese Aktion läuft bis zum {0}<br/>Beeile Dich, Aktion geht solange der Vorrat reicht.<br/>Der Rechtsweg ist ausgeschlossen."
 		},

@@ -217,7 +217,6 @@ class ui {
 							url: global.serverApi + 'marketing?' + tag,
 							webCall: 'ui.navigation.autoOpen',
 							responseType: 'json',
-							error() { },
 							success(r) {
 								if (r) {
 									if (tag.indexOf('&i=') > 0)
@@ -232,7 +231,8 @@ class ui {
 										marketing.data._answer.storage = JSON.parse(marketing.data._answer.storage);
 									}
 									marketing.open();
-								}
+								} else
+									ui.navigation.openPopup(ui.l('attention'), ui.l('marketing.noResult'));
 							}
 						});
 						return true;
