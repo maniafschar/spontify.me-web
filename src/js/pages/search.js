@@ -298,7 +298,7 @@ ${v.keywords}
 <errorHint></errorHint>
 <dialogButtons>
 <button-text class="defaultButton" onclick="pageSearch.locations.search()" label="search.action"></button-text>
-<button-text class="defaultButton" onclick="pageSearch.toggleMap()" label="search.buttonMap" style="display:none;"></button-text>
+<button-text class="map" onclick="pageSearch.toggleMap()" label="search.buttonMap" style="display:none;"></button-text>
 </dialogButtons>
 </form><map style="display:none;"></map>`,
 		getFields() {
