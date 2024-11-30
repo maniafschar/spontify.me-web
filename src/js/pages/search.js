@@ -297,8 +297,8 @@ ${v.keywords}
 <explain class="searchKeywordHint">${ui.l('search.hintLocation')}</explain>
 <errorHint></errorHint>
 <dialogButtons>
-	<button-text class="defaultButton" onclick="pageSearch.locations.search()" label="search.action"></button-text>
-	<button-text class="map" onclick="pageSearch.toggleMap()" label="search.buttonMap"></button-text>
+<button-text class="defaultButton" onclick="pageSearch.locations.search()" label="search.action"></button-text>
+<button-text class="map hidden" onclick="pageSearch.toggleMap()" label="search.buttonMap"></button-text>
 </dialogButtons>
 </form><map style="display:none;"></map>`,
 		getFields() {

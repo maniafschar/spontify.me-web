@@ -45,17 +45,6 @@ span {
 	display: inline-block;
 }
 
-:host(.map)>span {
-	position: absolute;
-	width: 18em;
-	left: 50%;
-	margin-left: -9em;
-	top: 4.25em;
-	opacity: 0.8;
-	font-size: 0.8em;
-	display: none;
-}
-
 :host(.settingsButton)>span {
 	margin: 1em 0 0.25em 0;
 	border-radius: 0 2em 2em 0;
