@@ -1,3 +1,5 @@
+import { communication } from 'js/communication';
+import { model } from 'js/model';
 import { geoData } from '../geoData';
 import { global } from '../global';
 import { lists } from '../lists';
@@ -10,6 +12,18 @@ import { pageLocation } from './location';
 export { pageSearch };
 
 class pageSearch {
+	static map = {
+		canvas: null,
+		id: null,
+		loadActive: false,
+		markerLocation: null,
+		markerMe: null,
+		open: false,
+		scrollTop: -1,
+		svgLocation: null,
+		svgMe: null,
+		timeout: null
+	};
 	static template = v =>
 		global.template`<tabHeader>
 	<tab onclick="pageSearch.selectTab('events')" i="events" class="tabActive">
@@ -284,8 +298,9 @@ ${v.keywords}
 <errorHint></errorHint>
 <dialogButtons>
 <button-text class="defaultButton" onclick="pageSearch.locations.search()" label="search.action"></button-text>
+<button-text class="defaultButton" onclick="pageSearch.toggleMap()" label="search.map"></button-text>
 </dialogButtons>
-</form>`,
+</form><map></map>`,
 		getFields() {
 			var v = {};
 			if (pageSearch.locations.fieldValues.favorites)
@@ -296,7 +311,7 @@ ${v.keywords}
 				v.keywordsText = pageSearch.locations.fieldValues.keywordsText;
 			return pageSearch.locations.template(v);
 		},
-		getSearch() {
+		getSearch(bounds) {
 			var s = '';
 			var v = ui.q('search tabBody div.locations input-hashtags').getAttribute('text');
 			if (v) {
@@ -316,13 +331,6 @@ ${v.keywords}
 				s += (s ? ' or ' : '') + global.getRegEx('location.skills', v);
 			if (ui.q('search tabBody div.locations [name="favorites"][checked="true"]'))
 				s += (s ? ' and ' : '') + 'locationFavorite.favorite=true';
-			return s;
-		},
-		getSearch1(bounds) {
-			var s = '';
-			if (ui.q('search tabBody div.locations [name="matches"][checked="true"]'))
-				s = pageSearch.events.getMatches();
-			var c = '', d = '';
 			if (bounds) {
 				var border = 0.1 * Math.abs(bounds.getSouthWest().lat() - bounds.getNorthEast().lat());
 				s += (s ? ' and ' : '') + 'location.latitude>' + (bounds.getSouthWest().lat() + border);
@@ -331,23 +339,6 @@ ${v.keywords}
 				s += ' and location.longitude>' + (bounds.getSouthWest().lng() + border);
 				s += ' and location.longitude<' + (bounds.getNorthEast().lng() - border);
 			}
-			var v = ui.q('search tabBody div.locations input-hashtags').getAttribute('text');
-			if (v) {
-				v = v.replace(/'/g, '\'\'').split(' ');
-				for (var i = 0; i < v.length; i++) {
-					if (v[i].trim()) {
-						v[i] = v[i].trim().toLowerCase();
-						var l = ') like \'%' + v[i].trim().toLowerCase() + '%\' or LOWER(';
-						d += '(LOWER(location.name' + l + 'location.description' + l + 'location.address' + l + 'location.address2' + l + 'location.telephone' + l;
-						d = d.substring(0, d.lastIndexOf('LOWER'));
-						d = d.substring(0, d.length - 4) + ') and ';
-					}
-				}
-				if (d)
-					d = '(' + d.substring(0, d.length - 5) + ')';
-			}
-			if (d)
-				s += (s ? ' and ' : '') + d;
 			return s;
 		},
 		search() {
@@ -391,6 +382,100 @@ ${v.keywords}
 		var type = ui.q('search tabHeader tab.tabActive').getAttribute('i');
 		ui.q('search div.' + type + ' [name="keywords"]').value = '';
 		pageSearch[type].search();
+	}
+	static toggleMap() {
+		/*		if (ui.q('search map').style.display != 'none')
+					setTimeout(pageSearch.scrollMap, 400);
+				if (pageSearch.map.open) {
+					pageSearch.map.open = false;
+					//pageSearch.toggleMap();
+				}
+		*/
+		var prefix = 'search .locations ';
+		if (ui.q(prefix + 'map').getAttribute('created')) {
+			ui.q(prefix + 'map').setAttribute('created', new Date().getTime());
+			ui.toggleHeight(prefix + 'map', pageSearch.scrollMap);
+			pageSearch.map.scrollTop = -1;
+			pageSearch.map.id = -1;
+			setTimeout(function () { ui.classRemove(prefix + 'list-row div.highlightMap', 'highlightMap'); }, 500);
+		} else if (!ui.q(prefix + 'list-row')) {
+			pageSearch.map.open = true;
+			//pageLocation.search();
+		} else {
+			ui.attr('map', 'created', new Date().getTime());
+			communication.loadMap('pageSearch.toggleMap');
+			ui.on(prefix + 'listResults', 'scroll', pageSearch.scrollMap);
+		}
+	}
+	static scrollMap() {
+		var prefix = 'search .locations ';
+		if (ui.cssValue(prefix + 'map', 'display') == 'none')
+			return;
+		if (pageSearch.map.scrollTop != ui.q(prefix + 'listResults').scrollTop) {
+			pageSearch.map.scrollTop = ui.q(prefix + 'listResults').scrollTop;
+			clearTimeout(pageSearch.map.timeout);
+			pageSearch.map.timeout = setTimeout(pageSearch.scrollMap, 100);
+			return;
+		}
+		var rows = ui.qa(prefix + 'listResults list-row');
+		var id = ui.q(prefix + 'listResults').scrollTop - ui.emInPX, i = 0;
+		for (; i < rows.length; i++) {
+			if (rows[i].offsetTop > id && rows[i].getAttribute('filtered') != 'true') {
+				id = parseInt(rows[i].getAttribute('i'));
+				break;
+			}
+		}
+		if (id == pageSearch.map.id || !rows[i])
+			return;
+		ui.classRemove(prefix + 'listResults row div.highlightMap', 'highlightMap');
+		rows[i].children[0].classList = 'highlightMap';
+		pageSearch.map.id = id;
+		var d = model.convert(new Location(), lists.data['locations'], i + 1);
+		if (pageSearch.map.canvas) {
+			pageSearch.map.markerMe.setMap(null);
+			pageSearch.map.markerLocation.setMap(null);
+			ui.q('map').setAttribute('created', new Date().getTime());
+			ui.q('locations button-text.map').style.display = null;
+		} else {
+			pageSearch.map.canvas = new google.maps.Map(ui.q('map'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true });
+			pageSearch.map.canvas.addListener('bounds_changed', function () {
+				if (new Date().getTime() - ui.q('map').getAttribute('created') > 2000)
+					ui.q('locations button-text.map').style.display = 'inline-block';
+			});
+		}
+		if (!pageSearch.map.loadActive) {
+			var deltaLat = Math.abs(geoData.getCurrent().lat - d.latitude) * 0.075, deltaLon = Math.abs(geoData.getCurrent().lon - d.longitude) * 0.075;
+			pageSearch.map.canvas.fitBounds(new google.maps.LatLngBounds(
+				new google.maps.LatLng(Math.max(geoData.getCurrent().lat, d.latitude) + deltaLat, Math.min(geoData.getCurrent().lon, d.longitude) - deltaLon), //south west
+				new google.maps.LatLng(Math.min(geoData.getCurrent().lat, d.latitude) - deltaLat, Math.max(geoData.getCurrent().lon, d.longitude) + deltaLon) //north east
+			));
+			pageSearch.map.markerMe = new google.maps.Marker(
+				{
+					map: pageSearch.map.canvas,
+					title: 'me',
+					contentString: '',
+					icon: {
+						url: pageSearch.map.svgMe,
+						scaledSize: new google.maps.Size(24, 24),
+						origin: new google.maps.Point(0, 0),
+						anchor: new google.maps.Point(12, 24)
+					},
+					position: new google.maps.LatLng(geoData.getCurrent().lat, geoData.getCurrent().lon)
+				});
+		}
+		pageSearch.map.markerLocation = new google.maps.Marker(
+			{
+				map: pageSearch.map.canvas,
+				title: d.name,
+				contentString: '',
+				icon: {
+					url: pageSearch.map.svgLocation,
+					scaledSize: new google.maps.Size(40, 40),
+					origin: new google.maps.Point(0, 0),
+					anchor: new google.maps.Point(20, 40)
+				},
+				position: new google.maps.LatLng(d.latitude, d.longitude)
+			});
 	}
 	static selectTab(id) {
 		if (id == ui.q('search tabHeader tab.tabActive').getAttribute('i'))

@@ -13,18 +13,6 @@ import { pageEvent } from './event';
 export { pageLocation };
 
 class pageLocation {
-	static map = {
-		canvas: null,
-		id: null,
-		loadActive: false,
-		markerLocation: null,
-		markerMe: null,
-		open: false,
-		scrollTop: -1,
-		svgLocation: null,
-		svgMe: null,
-		timeout: null
-	};
 	static mapEdit = {
 		canvas: null,
 		load: null
@@ -453,8 +441,6 @@ mapEdit {
 			return 'N';
 	}
 	static listLocation(l) {
-		if (ui.q('locations button-text.map'))
-			ui.q('locations button-text.map').style.display = null;
 		var s = '';
 		var text, image, flag1, flag2, flag3;
 		for (var i = 1; i < l.length; i++) {
@@ -484,12 +470,6 @@ mapEdit {
 					flag2="${flag2}"
 					flag3="${encodeURIComponent(flag3)}"
 					image="${image}"></list-row>`;
-		}
-		if (ui.q('locations map') && ui.q('locations map').style.display != 'none')
-			setTimeout(pageLocation.scrollMap, 400);
-		if (pageLocation.map.open) {
-			pageLocation.map.open = false;
-			pageLocation.toggleMap();
 		}
 		formFunc.svg.replaceAll();
 		return s;
@@ -595,75 +575,6 @@ mapEdit {
 			return;
 		user.set('location', formFunc.getForm('dialog-popup form'));
 	}
-	static scrollMap() {
-		if (ui.cssValue('map', 'display') == 'none')
-			return;
-		if (pageLocation.map.scrollTop != ui.q('locations listBody').scrollTop) {
-			pageLocation.map.scrollTop = ui.q('locations listBody').scrollTop;
-			clearTimeout(pageLocation.map.timeout);
-			pageLocation.map.timeout = setTimeout(pageLocation.scrollMap, 100);
-			return;
-		}
-		var rows = ui.qa('locations listResults list-row');
-		var id = ui.q('locations listBody').scrollTop - ui.emInPX, i = 0;
-		for (; i < rows.length; i++) {
-			if (rows[i].offsetTop > id && rows[i].getAttribute('filtered') != 'true') {
-				id = parseInt(rows[i].getAttribute('i'));
-				break;
-			}
-		}
-		if (id == pageLocation.map.id || !rows[i])
-			return;
-		ui.classRemove('locations listResults row div.highlightMap', 'highlightMap');
-		rows[i].children[0].classList = 'highlightMap';
-		pageLocation.map.id = id;
-		var d = model.convert(new Location(), lists.data['locations'], i + 1);
-		if (pageLocation.map.canvas) {
-			pageLocation.map.markerMe.setMap(null);
-			pageLocation.map.markerLocation.setMap(null);
-			ui.q('map').setAttribute('created', new Date().getTime());
-			ui.q('locations button-text.map').style.display = null;
-		} else {
-			pageLocation.map.canvas = new google.maps.Map(ui.q('map'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true });
-			pageLocation.map.canvas.addListener('bounds_changed', function () {
-				if (new Date().getTime() - ui.q('map').getAttribute('created') > 2000)
-					ui.q('locations button-text.map').style.display = 'inline-block';
-			});
-		}
-		if (!pageLocation.map.loadActive) {
-			var deltaLat = Math.abs(geoData.getCurrent().lat - d.latitude) * 0.075, deltaLon = Math.abs(geoData.getCurrent().lon - d.longitude) * 0.075;
-			pageLocation.map.canvas.fitBounds(new google.maps.LatLngBounds(
-				new google.maps.LatLng(Math.max(geoData.getCurrent().lat, d.latitude) + deltaLat, Math.min(geoData.getCurrent().lon, d.longitude) - deltaLon), //south west
-				new google.maps.LatLng(Math.min(geoData.getCurrent().lat, d.latitude) - deltaLat, Math.max(geoData.getCurrent().lon, d.longitude) + deltaLon) //north east
-			));
-			pageLocation.map.markerMe = new google.maps.Marker(
-				{
-					map: pageLocation.map.canvas,
-					title: 'me',
-					contentString: '',
-					icon: {
-						url: pageLocation.map.svgMe,
-						scaledSize: new google.maps.Size(24, 24),
-						origin: new google.maps.Point(0, 0),
-						anchor: new google.maps.Point(12, 24)
-					},
-					position: new google.maps.LatLng(geoData.getCurrent().lat, geoData.getCurrent().lon)
-				});
-		}
-		pageLocation.map.markerLocation = new google.maps.Marker(
-			{
-				map: pageLocation.map.canvas,
-				title: d.name,
-				contentString: '',
-				icon: {
-					url: pageLocation.map.svgLocation,
-					scaledSize: new google.maps.Size(40, 40),
-					origin: new google.maps.Point(0, 0),
-					anchor: new google.maps.Point(20, 40)
-				},
-				position: new google.maps.LatLng(d.latitude, d.longitude)
-			});
-	}
 	static setLocationName(event) {
 		var e = event.target;
 		ui.q('dialog-popup input[name="name"]').value = e.getAttribute('n');
@@ -732,31 +643,6 @@ mapEdit {
 				}
 			}
 		});
-	}
-	static toggleMap() {
-		if (ui.q('map').getAttribute('created')) {
-			ui.q('map').setAttribute('created', new Date().getTime());
-			if (ui.cssValue('map', 'display') == 'none') {
-				ui.css('locations listBody', 'margin-top', '20em');
-				ui.css('locations listBody', 'padding-top', '0.5em');
-			} else {
-				ui.css('locations listBody', 'margin-top', '');
-				ui.css('locations listBody', 'padding-top', '');
-				ui.q('locations button-text.map').style.display = null;
-				pageLocation.map.loadActive = false;
-			}
-			ui.toggleHeight('map', pageLocation.scrollMap);
-			pageLocation.map.scrollTop = -1;
-			pageLocation.map.id = -1;
-			setTimeout(function () { ui.classRemove('locations listResults row div.highlightMap', 'highlightMap'); }, 500);
-		} else if (!ui.q('locations list-row')) {
-			pageLocation.map.open = true;
-			//pageLocation.search();
-		} else {
-			ui.attr('map', 'created', new Date().getTime());
-			communication.loadMap('pageLocation.toggleMap');
-			ui.on('locations listBody', 'scroll', pageLocation.scrollMap);
-		}
 	}
 	static toggleMatchIndicatorHint(id, event) {
 		var e = ui.q('detail card:last-child [name="matchIndicatorHint"]');
