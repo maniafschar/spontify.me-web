@@ -417,7 +417,7 @@ ${v.keywords}
 			return;
 		}
 		var rows = ui.qa(prefix + 'listResults list-row');
-		var id = ui.q(prefix + 'listResults').scrollTop - ui.q(prefix + 'listResults').offsetTop, i = 0;
+		var id = ui.q(prefix + 'listResults').scrollTop + ui.q(prefix + 'listResults').offsetTop, i = 0;
 		for (; i < rows.length; i++) {
 			if (rows[i].offsetTop > id && rows[i].getAttribute('filtered') != 'true') {
 				id = parseInt(rows[i].getAttribute('i'));
