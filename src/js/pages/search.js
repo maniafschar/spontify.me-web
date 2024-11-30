@@ -27,13 +27,15 @@ class pageSearch {
 		global.template`<style>
 button-text.map {
 	position: absolute;
-	width: 18em;
+	width: 30em;
 	left: 50%;
-	margin-left: -9em;
-	top: 4.25em;
-	opacity: 0.8;
-	font-size: 0.8em;
+	margin-left: -15em;
+	margin-top: 0.5em;
+	opacity: 0.7;
+	font-size: 0.7em;
 	display: none;
+	z-index: 1;
+	text-align: center;
 }
 </style>
 <tabHeader>
