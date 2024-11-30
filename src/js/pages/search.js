@@ -205,12 +205,14 @@ ${v.keywords}
 				s = '(' + s + ') and ';
 			if (bounds) {
 				var b = pageSearch.map.canvas.getBounds();
-				var border = 0.1 * Math.abs(b.getSouthWest().lat() - b.getNorthEast().lat());
-				s += (s ? ' and ' : '') + 'location.latitude>' + (b.getSouthWest().lat() + border);
-				s += ' and location.latitude<' + (b.getNorthEast().lat() - border);
-				border = 0.1 * Math.abs(b.getNorthEast().lng() - b.getSouthWest().lng());
-				s += ' and location.longitude>' + (b.getSouthWest().lng() + border);
-				s += ' and location.longitude<' + (b.getNorthEast().lng() - border);
+				if (b) {
+					var border = 0.1 * Math.abs(b.getSouthWest().lat() - b.getNorthEast().lat());
+					s += (s ? ' and ' : '') + 'location.latitude>' + (b.getSouthWest().lat() + border);
+					s += ' and location.latitude<' + (b.getNorthEast().lat() - border);
+					border = 0.1 * Math.abs(b.getNorthEast().lng() - b.getSouthWest().lng());
+					s += ' and location.longitude>' + (b.getSouthWest().lng() + border);
+					s += ' and location.longitude<' + (b.getNorthEast().lng() - border);
+				}
 			}
 			return s + 'event.endDate>=cast(\'' + global.date.local2server(new Date()).substring(0, 10) + '\' as timestamp)';
 		},
