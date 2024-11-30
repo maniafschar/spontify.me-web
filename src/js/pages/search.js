@@ -298,7 +298,7 @@ ${v.keywords}
 <errorHint></errorHint>
 <dialogButtons>
 <button-text class="defaultButton" onclick="pageSearch.locations.search()" label="search.action"></button-text>
-<button-text class="map hidden" onclick="pageSearch.toggleMap()" label="search.buttonMap"></button-text>
+<button-text class="map" onclick="pageSearch.toggleMap()" label="search.buttonMap" style="display:none;"></button-text>
 </dialogButtons>
 </form><map style="display:none;"></map>`,
 		getFields() {
@@ -343,10 +343,7 @@ ${v.keywords}
 		},
 		list(l) {
 			var s = pageLocation.listLocation(l);
-			if (s.indexOf('</list-row>') > 0)
-				ui.classRemove('search .locations button-text.map', 'hidden');
-			else
-				ui.classAdd('search .locations button-text.map', 'hidden');
+			ui.css('search .locations button-text.map', 'display', s.indexOf('</list-row>') > 0 ? '' : 'none');
 			return s;
 		},
 		search() {
