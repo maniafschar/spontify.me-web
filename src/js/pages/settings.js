@@ -32,9 +32,9 @@ class pageSettings {
 	</tab>
 </tabHeader>
 <tabBody>
-	<div style="padding:0 0.5em 2em 0.5em;">${v.settings1}</div>
-	<div style="padding:0 0.5em 2em 0.5em;">${v.settings2}</div>
-	<div style="text-align:left;">${v.settings3}</div>
+	<div><div style="padding:0 0.5em 2em 0.5em;">${v.settings1}</div></div>
+	<div><div style="padding:0 0.5em 2em 0.5em;">${v.settings2}</div></div>
+	<div><div style="text-align:left;">${v.settings3}</div></div>
 </tabBody><save class="highlightColor" onclick="pageSettings.save()">&check;</save>`;
 	static templateSettings1 = v =>
 		global.template`<field>
