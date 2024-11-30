@@ -428,8 +428,8 @@ ${v.keywords}
 		}
 		if (id == pageSearch.map.id || !rows[i])
 			return;
-		ui.classRemove(prefix + 'listResults row div.highlightMap', 'highlightMap');
-		rows[i].children[0].classList = 'highlightMap';
+		ui.classRemove(prefix + 'listResults list-row.highlightMap', 'highlightMap');
+		ui.classAdd(rows[i], 'highlightMap');
 		pageSearch.map.id = id;
 		var d = model.convert(new Location(), lists.data['locations'], i + 1);
 		if (pageSearch.map.canvas) {

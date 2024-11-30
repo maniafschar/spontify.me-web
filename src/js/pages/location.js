@@ -445,6 +445,7 @@ mapEdit {
 		var text, image, flag1, flag2, flag3;
 		for (var i = 1; i < l.length; i++) {
 			var v = model.convert(new Location(), l, i);
+			var data = encodeURIComponent(JSON.stringify(v));
 			flag1 = v._geolocationDistance ? parseFloat(v._geolocationDistance).toFixed(v._geolocationDistance >= 9.5 || !v.id ? 0 : 1).replace('.', ',') : '';
 			flag3 = v._geolocationDistance && v.latitude ? '<compass style="transform:rotate('
 				+ geoData.getAngel(geoData.getCurrent(), { lat: v.latitude, lon: v.longitude }) + 'deg);"></compass>' : '';
@@ -463,7 +464,11 @@ mapEdit {
 				oc = 'details.open(&quot;' + v.id + '&quot;,' + JSON.stringify({
 					webCall: 'location.listLocation', query: 'location_list', search: encodeURIComponent('location.id=' + v.id)
 				}).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)';
-			s += global.template`<list-row onclick="${oc}" i="${v.id}" class="location${v.locationFavorite.favorite ? ' favorite' : ''}"
+			s += global.template`<list-row
+					data="${data}"
+					onclick="${oc}"
+					i="${v.id}"
+					class="location${v.locationFavorite.favorite ? ' favorite' : ''}"
 					title="${encodeURIComponent(v.name)}"
 					text="${encodeURIComponent(text)}"
 					flag1="${flag1}"

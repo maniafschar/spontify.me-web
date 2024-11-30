@@ -323,6 +323,7 @@ ${v.matchIndicatorHintDescription}
 		var image, text, flag1, flag2, flag3, birth;
 		for (var i = 1; i < l.length; i++) {
 			var v = model.convert(new Contact(), l, i);
+			var data = encodeURIComponent(JSON.stringify(v));
 			if (v.id == user.clientId) {
 				flag1 = '';
 				flag2 = '';
@@ -359,14 +360,18 @@ ${v.matchIndicatorHintDescription}
 				oc = 'details.open(' + v.id + ',' + JSON.stringify({ webCall: 'contact.listContacts', query: 'contact_listNotification', search: encodeURIComponent('contactNotification.id=' + v.contactNotification.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)';
 			else
 				oc = 'details.open(' + v.id + ',' + JSON.stringify({ webCall: 'contact.listContacts', query: 'contact_list', search: encodeURIComponent('contact.id=' + v.id) }).replace(/"/g, '&quot;') + ',pageContact.detail)';
-			s += global.template`<list-row onclick="${oc}" i="${v.id}" class="contact${v.contactLink.status == 'Friends' ? ' favorite' : ''}"
-				title="${encodeURIComponent(v.pseudonym + (birth.age ? ' (' + birth.age + ')' : ''))}"
-				text="${encodeURIComponent(text)}"
-				flag1="${flag1}"
-				flag2="${flag2}"
-				flag3="${encodeURIComponent(flag3)}"
-				image="${image}"
-				badge="${v.authenticate ? 'authenticated' : ''}"></list-row>`;
+			s += global.template`<list-row
+					data="${data}"
+					onclick="${oc}"
+					i="${v.id}"
+					class="contact${v.contactLink.status == 'Friends' ? ' favorite' : ''}"
+					title="${encodeURIComponent(v.pseudonym + (birth.age ? ' (' + birth.age + ')' : ''))}"
+					text="${encodeURIComponent(text)}"
+					flag1="${flag1}"
+					flag2="${flag2}"
+					flag3="${encodeURIComponent(flag3)}"
+					image="${image}"
+					badge="${v.authenticate ? 'authenticated' : ''}"></list-row>`;
 		}
 		return s;
 	}
