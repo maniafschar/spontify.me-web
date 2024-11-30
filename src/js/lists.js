@@ -60,6 +60,7 @@ class lists {
 					if (e)
 						e.scrollTop = 0;
 					lists.setListHint(divID);
+					document.dispatchEvent(new CustomEvent('List', { detail: { id: divID } }));
 				}
 				formFunc.svg.replaceAll(ui.qa('list-row img[source]'));
 				geoData.updateCompass();

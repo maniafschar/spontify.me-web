@@ -298,7 +298,7 @@ ${v.keywords}
 <errorHint></errorHint>
 <dialogButtons>
 <button-text class="defaultButton" onclick="pageSearch.locations.search()" label="search.action"></button-text>
-<button-text class="map" onclick="pageSearch.toggleMap()" label="search.buttonMap" style="display:none;"></button-text>
+<button-text class="map" onclick="pageSearch.toggleMap()" label="search.buttonMap"></button-text>
 </dialogButtons>
 <map style="display:none;"></map>
 </form>`,
@@ -342,12 +342,7 @@ ${v.keywords}
 			}
 			return s;
 		},
-		list(l) {
-			var s = pageLocation.listLocation(l);
-			ui.css('search .locations button-text.map', 'display', s.indexOf('</list-row>') > 0 ? '' : 'none');
-			return s;
-		},
-		search() {
+		search(bounds) {
 			pageSearch.locations.fieldValues = formFunc.getForm('search tabBody div.locations form').values;
 			lists.load({
 				webCall: 'search.locations.search',
@@ -355,8 +350,8 @@ ${v.keywords}
 				longitude: geoData.getCurrent().lon,
 				distance: -1,
 				query: 'location_list',
-				search: encodeURIComponent(pageSearch.locations.getSearch())
-			}, pageSearch.locations.list, 'search tabBody>div.locations', 'search');
+				search: encodeURIComponent(pageSearch.locations.getSearch(bounds))
+			}, pageLocation.listLocation, 'search tabBody>div.locations', 'search');
 			user.set('searchLocations', pageSearch.locations.fieldValues);
 		}
 	}
@@ -412,27 +407,6 @@ ${v.keywords}
 		var type = ui.q('search tabHeader tab.tabActive').getAttribute('i');
 		ui.q('search div.' + type + ' [name="keywords"]').value = '';
 		pageSearch[type].search();
-	}
-	static toggleMap() {
-		/*		if (ui.q('search map').style.display != 'none')
-					setTimeout(pageSearch.scrollMap, 400);
-				if (pageSearch.map.open) {
-					pageSearch.map.open = false;
-					//pageSearch.toggleMap();
-				}
-		*/
-		var prefix = 'search .locations ';
-		if (ui.q(prefix + 'map').getAttribute('created')) {
-			ui.q(prefix + 'map').setAttribute('created', new Date().getTime());
-			ui.toggleHeight(prefix + 'map', pageSearch.scrollMap);
-			pageSearch.map.scrollTop = -1;
-			pageSearch.map.id = -1;
-			setTimeout(function () { ui.classRemove(prefix + 'list-row div.highlightMap', 'highlightMap'); }, 500);
-		} else {
-			ui.attr('map', 'created', new Date().getTime());
-			communication.loadMap('pageSearch.toggleMap');
-			ui.on(prefix + 'listResults', 'scroll', pageSearch.scrollMap);
-		}
 	}
 	static scrollMap() {
 		var prefix = 'search .locations ';
@@ -538,5 +512,22 @@ ${v.keywords}
 			pageSearch.selectTab('events');
 		else
 			pageSearch.selectTab('contacts');
+	}
+	static toggleMap() {
+		var prefix = 'search .locations ';
+		if (!ui.q(prefix + ' list-row')) {
+			ui.on(document, 'List', pageSearch.toggleMap, true);
+			pageSearch.locations.search();
+		} else if (ui.q(prefix + 'map').getAttribute('created')) {
+			ui.q(prefix + 'map').setAttribute('created', new Date().getTime());
+			ui.toggleHeight(prefix + 'map', pageSearch.scrollMap);
+			pageSearch.map.scrollTop = -1;
+			pageSearch.map.id = -1;
+			setTimeout(function () { ui.classRemove(prefix + 'list-row div.highlightMap', 'highlightMap'); }, 500);
+		} else {
+			ui.attr('map', 'created', new Date().getTime());
+			communication.loadMap('pageSearch.toggleMap');
+			ui.on(prefix + 'listResults', 'scroll', pageSearch.scrollMap);
+		}
 	}
 }
