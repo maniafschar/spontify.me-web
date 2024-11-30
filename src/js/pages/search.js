@@ -328,12 +328,15 @@ ${v.keywords}
 			if (ui.q('search tabBody div.locations [name="favorites"][checked="true"]'))
 				s += (s ? ' and ' : '') + 'locationFavorite.favorite=true';
 			if (bounds) {
-				var border = 0.1 * Math.abs(bounds.getSouthWest().lat() - bounds.getNorthEast().lat());
-				s += (s ? ' and ' : '') + 'location.latitude>' + (bounds.getSouthWest().lat() + border);
-				s += ' and location.latitude<' + (bounds.getNorthEast().lat() - border);
-				border = 0.1 * Math.abs(bounds.getNorthEast().lng() - bounds.getSouthWest().lng());
-				s += ' and location.longitude>' + (bounds.getSouthWest().lng() + border);
-				s += ' and location.longitude<' + (bounds.getNorthEast().lng() - border);
+				var b = pageSearch.map.canvas.getBounds();
+				if (b) {
+					var border = 0.1 * Math.abs(b.getSouthWest().lat() - b.getNorthEast().lat());
+					s += (s ? ' and ' : '') + 'location.latitude>' + (b.getSouthWest().lat() + border);
+					s += ' and location.latitude<' + (b.getNorthEast().lat() - border);
+					border = 0.1 * Math.abs(b.getNorthEast().lng() - b.getSouthWest().lng());
+					s += ' and location.longitude>' + (b.getSouthWest().lng() + border);
+					s += ' and location.longitude<' + (b.getNorthEast().lng() - border);
+				}
 			}
 			return s;
 		},
