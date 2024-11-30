@@ -177,7 +177,7 @@ ${v.keywords}
 			v.date = pageSearch.events.fieldValues.date;
 			return pageSearch.events.template(v);
 		},
-		getSearch() {
+		getSearch(bounds) {
 			var v, s = '';
 			if (global.config.eventNoHashtags)
 				v = ui.val('search tabBody div.events input');
@@ -203,37 +203,16 @@ ${v.keywords}
 			}
 			if (s)
 				s = '(' + s + ') and ';
-			return s + 'event.endDate>=cast(\'' + global.date.local2server(new Date()).substring(0, 10) + '\' as timestamp)';
-		},
-		getSearch1(bounds) {
-			var s = '';
-			var c = '', d = '';
 			if (bounds) {
-				var border = 0.1 * Math.abs(bounds.getSouthWest().lat() - bounds.getNorthEast().lat());
-				s += (s ? ' and ' : '') + 'location.latitude>' + (bounds.getSouthWest().lat() + border);
-				s += ' and location.latitude<' + (bounds.getNorthEast().lat() - border);
-				border = 0.1 * Math.abs(bounds.getNorthEast().lng() - bounds.getSouthWest().lng());
-				s += ' and location.longitude>' + (bounds.getSouthWest().lng() + border);
-				s += ' and location.longitude<' + (bounds.getNorthEast().lng() - border);
+				var b = pageSearch.map.canvas.getBounds();
+				var border = 0.1 * Math.abs(b.getSouthWest().lat() - b.getNorthEast().lat());
+				s += (s ? ' and ' : '') + 'location.latitude>' + (b.getSouthWest().lat() + border);
+				s += ' and location.latitude<' + (b.getNorthEast().lat() - border);
+				border = 0.1 * Math.abs(b.getNorthEast().lng() - b.getSouthWest().lng());
+				s += ' and location.longitude>' + (b.getSouthWest().lng() + border);
+				s += ' and location.longitude<' + (b.getNorthEast().lng() - border);
 			}
-			var v = ui.q('search tabBody div.locations input-hashtags').getAttribute('text');
-			if (v) {
-				v = v.replace(/'/g, '\'\'').split(' ');
-				for (var i = 0; i < v.length; i++) {
-					if (v[i].trim()) {
-						v[i] = v[i].trim().toLowerCase();
-						var l = ') like \'%' + v[i].trim().toLowerCase() + '%\' or LOWER(';
-						d += '(LOWER(location.name' + l + 'location.description' + l + 'location.address' + l + 'location.address2' + l + 'location.telephone' + l;
-						d = d.substring(0, d.lastIndexOf('LOWER'));
-						d = d.substring(0, d.length - 4) + ') and ';
-					}
-				}
-				if (d)
-					d = '(' + d.substring(0, d.length - 5) + ')';
-			}
-			if (d)
-				s += (s ? ' and ' : '') + d;
-			return s;
+			return s + 'event.endDate>=cast(\'' + global.date.local2server(new Date()).substring(0, 10) + '\' as timestamp)';
 		},
 		search() {
 			pageSearch.events.fieldValues = formFunc.getForm('search tabBody div.events form').values;
@@ -313,7 +292,7 @@ ${v.keywords}
 <button-text class="defaultButton" onclick="pageSearch.locations.search()" label="search.action"></button-text>
 <button-text onclick="pageSearch.toggleMap()" label="search.buttonMap"></button-text>
 </dialogButtons>
-<button-text class="map" onclick="pageSearch.toggleMap()" label="search.map"></button-text>
+<button-text class="map" onclick="pageSearch.locations.search(true)" label="search.map"></button-text>
 <map style="display:none;"></map>
 </form>`,
 		getFields() {
