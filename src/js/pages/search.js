@@ -298,7 +298,7 @@ ${v.keywords}
 <errorHint></errorHint>
 <dialogButtons>
 <button-text class="defaultButton" onclick="pageSearch.locations.search()" label="search.action"></button-text>
-<button-text class="map hidden" onclick="pageSearch.toggleMap()" label="search.buttonMap"></button-text>
+<button-text class="map" onclick="pageSearch.toggleMap()" label="search.buttonMap"></button-text>
 </dialogButtons>
 </form><map style="display:none;"></map>`,
 		getFields() {
@@ -384,6 +384,7 @@ ${v.keywords}
 			ui.q('search tabBody div.events').innerHTML = pageSearch.events.getFields() + '<listResults></listResults>';
 			ui.q('search tabBody div.locations').innerHTML = pageSearch.locations.getFields() + '<listResults></listResults>';
 			formFunc.initFields(ui.q('search'));
+			ui.classAdd('search button-text.map', 'hidden');
 		}
 	}
 	static repeatSearch() {
