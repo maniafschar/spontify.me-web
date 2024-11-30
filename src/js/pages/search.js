@@ -298,9 +298,9 @@ ${v.keywords}
 <errorHint></errorHint>
 <dialogButtons>
 <button-text class="defaultButton" onclick="pageSearch.locations.search()" label="search.action"></button-text>
-<button-text class="defaultButton" onclick="pageSearch.toggleMap()" label="search.map"></button-text>
+<button-text class="defaultButton" onclick="pageSearch.toggleMap()" label="search.buttonMap" style="display:none;"></button-text>
 </dialogButtons>
-</form><map></map>`,
+</form><map style="display:none;"></map>`,
 		getFields() {
 			var v = {};
 			if (pageSearch.locations.fieldValues.favorites)
@@ -341,6 +341,11 @@ ${v.keywords}
 			}
 			return s;
 		},
+		list(l) {
+			var s = pageLocation.listLocation(l);
+			ui.css('search .locations button-text.map', 'display', s.indexOf('list-row') > -1 ? '' : 'none');
+			return s;
+		},
 		search() {
 			pageSearch.locations.fieldValues = formFunc.getForm('search tabBody div.locations form').values;
 			lists.load({
@@ -350,7 +355,7 @@ ${v.keywords}
 				distance: -1,
 				query: 'location_list',
 				search: encodeURIComponent(pageSearch.locations.getSearch())
-			}, pageLocation.listLocation, 'search tabBody>div.locations', 'search');
+			}, pageSearch.locations.list, 'search tabBody>div.locations', 'search');
 			user.set('searchLocations', pageSearch.locations.fieldValues);
 		}
 	}
