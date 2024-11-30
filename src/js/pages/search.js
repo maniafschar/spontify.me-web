@@ -1,8 +1,8 @@
-import { communication } from 'js/communication';
-import { model } from 'js/model';
+import { communication } from '../communication';
 import { geoData } from '../geoData';
 import { global } from '../global';
 import { lists } from '../lists';
+import { model } from '../model';
 import { formFunc, ui } from '../ui';
 import { user } from '../user';
 import { pageContact } from './contact';
