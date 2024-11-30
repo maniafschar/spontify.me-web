@@ -381,7 +381,7 @@ ${v.keywords}
 		if (!pageSearch.map.svgLocation)
 			communication.ajax({
 				url: '/images/locations.svg',
-				webCall: 'event.init',
+				webCall: 'search.init',
 				success(r) {
 					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
 					e.setAttribute('fill', 'black');
@@ -393,7 +393,7 @@ ${v.keywords}
 		if (!pageSearch.map.svgMe)
 			communication.ajax({
 				url: '/images/contacts.svg',
-				webCall: 'event.init',
+				webCall: 'search.init',
 				success(r) {
 					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
 					e.setAttribute('fill', 'black');
