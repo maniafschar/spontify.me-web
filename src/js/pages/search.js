@@ -428,9 +428,6 @@ ${v.keywords}
 			pageSearch.map.scrollTop = -1;
 			pageSearch.map.id = -1;
 			setTimeout(function () { ui.classRemove(prefix + 'list-row div.highlightMap', 'highlightMap'); }, 500);
-		} else if (!ui.q(prefix + 'list-row')) {
-			pageSearch.map.open = true;
-			//pageLocation.search();
 		} else {
 			ui.attr('map', 'created', new Date().getTime());
 			communication.loadMap('pageSearch.toggleMap');
