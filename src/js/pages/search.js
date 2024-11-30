@@ -2,7 +2,6 @@ import { communication } from '../communication';
 import { geoData } from '../geoData';
 import { global } from '../global';
 import { lists } from '../lists';
-import { model } from '../model';
 import { formFunc, ui } from '../ui';
 import { user } from '../user';
 import { pageContact } from './contact';
@@ -431,7 +430,7 @@ ${v.keywords}
 		ui.classRemove(prefix + 'listResults list-row.highlightMap', 'highlightMap');
 		ui.classAdd(rows[i], 'highlightMap');
 		pageSearch.map.id = id;
-		var d = model.convert(new Location(), lists.data['locations'], i + 1);
+		var d = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
 		if (pageSearch.map.canvas) {
 			pageSearch.map.markerMe.setMap(null);
 			pageSearch.map.markerLocation.setMap(null);
