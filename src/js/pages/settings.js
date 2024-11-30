@@ -20,7 +20,12 @@ export { pageSettings };
 class pageSettings {
 	static currentSettings = null;
 	static template = v =>
-		global.template`<tabHeader>
+		global.template`<style>
+tabBody>div>div {
+	overflow-y: auto;
+}
+</style>
+<tabHeader>
 	<tab onclick="pageSettings.selectTab(0)" class="tabActive">
 		${ui.l('settings.tabProfile')}
 	</tab>
