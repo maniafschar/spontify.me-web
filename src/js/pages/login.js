@@ -26,17 +26,17 @@ tabBody>div>form {
 </style>
 <tabHeader>
 	<tab onclick="pageLogin.setTab1()" class="tabActive">
-		<div>${ui.l('login.action')}</div>
+		${ui.l('login.action')}
 	</tab>
 	<tab onclick="pageLogin.setTab2()">
-		<div>${ui.l('login.passwordForgotten')}</div>
+		${ui.l('login.passwordForgotten')}
 	</tab>
 	<tab onclick="pageLogin.setTab3()">
-		<div>${ui.l('login.register')}</div>
+		${ui.l('login.register')}
 	</tab>
 </tabHeader>
 <tabBody>
-<form>
+<div><form>
 	<field>
 		<label>${ui.l('email')}</label>
 		<value>
@@ -69,8 +69,8 @@ tabBody>div>form {
 			</svg>&nbsp;&nbsp;Sign in with Apple
 		</button-text>
 	</dialogButtons>
-</form>
-<form name="loginRecover" onsubmit="return false">
+</form></div>
+<div><form name="loginRecover" onsubmit="return false">
 	<field>
 		<label>${ui.l('email')}</label>
 		<value>
@@ -82,8 +82,8 @@ tabBody>div>form {
 		<button-text onclick="pageLogin.sendVerificationEmail()" class="defaultButton" label="login.recoverPassword"></button-text>
 	</dialogButtons>
 	<errorHint></errorHint>
-</form>
-<form name="loginRegister" onsubmit="return false">
+</form></div>
+<div><form name="loginRegister" onsubmit="return false">
     <field>
         <label>${ui.l('email')}</label>
         <value>
@@ -118,7 +118,7 @@ tabBody>div>form {
         <br /><br />
         <button-text onclick="ui.navigation.openAGB()" style="margin-left: 0.5em;" label="${ui.l('info.legalTitle')}${global.separator}${ui.l('info.dsgvoTitle')}"></button-text>
     </dialogButtons>
-</form>
+</form></div>
 </tabBody>`;
 	static autoLogin(exec) {
 		var token = window.localStorage && window.localStorage.getItem('autoLogin');
