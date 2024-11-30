@@ -23,7 +23,7 @@ tabBody>div>form {
 	padding: 0 0.5em;
 	overflow-y: auto;
 }
-</styla>
+</style>
 <tabHeader>
 	<tab onclick="pageLogin.setTab1()" class="tabActive">
 		<div>${ui.l('login.action')}</div>
