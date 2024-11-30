@@ -384,7 +384,6 @@ ${v.keywords}
 			ui.q('search tabBody div.events').innerHTML = pageSearch.events.getFields() + '<listResults></listResults>';
 			ui.q('search tabBody div.locations').innerHTML = pageSearch.locations.getFields() + '<listResults></listResults>';
 			formFunc.initFields(ui.q('search'));
-			ui.classAdd('search button-text.map', 'hidden');
 		}
 	}
 	static repeatSearch() {
