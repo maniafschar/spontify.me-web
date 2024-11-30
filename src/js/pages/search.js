@@ -24,7 +24,19 @@ class pageSearch {
 		timeout: null
 	};
 	static template = v =>
-		global.template`<tabHeader>
+		global.template`<style>
+buttontext.map {
+	position: absolute;
+	width: 18em;
+	left: 50%;
+	margin-left: -9em;
+	top: 4.25em;
+	opacity: 0.8;
+	font-size: 0.8em;
+	display: none;
+}
+</style>
+<tabHeader>
 	<tab onclick="pageSearch.selectTab('events')" i="events" class="tabActive">
 		${ui.l('events.title')}
 	</tab>
@@ -297,10 +309,10 @@ ${v.keywords}
 <errorHint></errorHint>
 <dialogButtons>
 <button-text class="defaultButton" onclick="pageSearch.locations.search()" label="search.action"></button-text>
-<button-text class="map" onclick="pageSearch.toggleMap()" label="search.buttonMap"></button-text>
+<button-text onclick="pageSearch.toggleMap()" label="search.buttonMap"></button-text>
 </dialogButtons>
 <map style="display:none;"></map>
-</form>`,
+</form><button-text class="map" onclick="pageSearch.toggleMap()" label="search.map"></button-text>`,
 		getFields() {
 			var v = {};
 			if (pageSearch.locations.fieldValues.favorites)
@@ -435,12 +447,12 @@ ${v.keywords}
 			pageSearch.map.markerMe.setMap(null);
 			pageSearch.map.markerLocation.setMap(null);
 			ui.q('map').setAttribute('created', new Date().getTime());
-			ui.q('locations button-text.map').style.display = null;
+			ui.q(prefix + 'button-text.map').style.display = null;
 		} else {
 			pageSearch.map.canvas = new google.maps.Map(ui.q('map'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true });
 			pageSearch.map.canvas.addListener('bounds_changed', function () {
-				if (new Date().getTime() - ui.q('map').getAttribute('created') > 2000)
-					ui.q('locations button-text.map').style.display = 'inline-block';
+				if (new Date().getTime() - ui.q(prefix + 'map').getAttribute('created') > 2000)
+					ui.q(prefix + 'button-text.map').style.display = 'inline-block';
 			});
 		}
 		if (!pageSearch.map.loadActive) {
