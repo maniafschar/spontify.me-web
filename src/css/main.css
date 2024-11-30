@@ -369,7 +369,9 @@ login tabBody>form {
 	height: 100%;
 	width: 33.3333%;
 	float: left;
-	overflow-x: hidden;
+	overflow: hidden;
+	display: flex;
+	flex-flow: column;
 }
 
 login tabBody>form {

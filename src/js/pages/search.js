@@ -300,7 +300,8 @@ ${v.keywords}
 <button-text class="defaultButton" onclick="pageSearch.locations.search()" label="search.action"></button-text>
 <button-text class="map" onclick="pageSearch.toggleMap()" label="search.buttonMap" style="display:none;"></button-text>
 </dialogButtons>
-</form><map style="display:none;"></map>`,
+<map style="display:none;"></map>
+</form>`,
 		getFields() {
 			var v = {};
 			if (pageSearch.locations.fieldValues.favorites)
