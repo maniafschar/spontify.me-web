@@ -364,17 +364,13 @@ login tabBody {
 
 search tabBody>div,
 settings tabBody>div,
-login tabBody>form {
+login tabBody>div {
 	height: 100%;
 	width: 33.3333%;
 	float: left;
 	overflow: hidden;
 	display: flex;
 	flex-flow: column;
-}
-
-login tabBody>form {
-	padding: 0 0.5em;
 }
 
 search form {

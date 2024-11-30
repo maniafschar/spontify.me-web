@@ -18,15 +18,21 @@ class pageLogin {
 	static regexPW = /[^a-zA-ZÀ-ÿ0-9-_.+*#§$%&/\\ \^']/;
 	static timestamp = new Date().getTime();
 	static template = v =>
-		global.template`<tabHeader>
+		global.template`<style>
+tabBody>div>form {
+	padding: 0 0.5em;
+	overflow-y: auto;
+}
+</styla>
+<tabHeader>
 	<tab onclick="pageLogin.setTab1()" class="tabActive">
-		${ui.l('login.action')}
+		<div>${ui.l('login.action')}</div>
 	</tab>
 	<tab onclick="pageLogin.setTab2()">
-		${ui.l('login.passwordForgotten')}
+		<div>${ui.l('login.passwordForgotten')}</div>
 	</tab>
 	<tab onclick="pageLogin.setTab3()">
-		${ui.l('login.register')}
+		<div>${ui.l('login.register')}</div>
 	</tab>
 </tabHeader>
 <tabBody>
