@@ -598,30 +598,6 @@ poll result div {
 			ui.q('events').innerHTML = '<list-body></list-body>';
 		if (!ui.q('events listResults list-row') && ui.navigation.getActiveID() != 'events')
 			setTimeout(ui.navigation.openMenu, 500);
-		if (!pageLocation.map.svgLocation)
-			communication.ajax({
-				url: '/images/locations.svg',
-				webCall: 'event.init',
-				success(r) {
-					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
-					e.setAttribute('fill', 'black');
-					e.setAttribute('stroke', 'black');
-					e.setAttribute('stroke-width', '60');
-					pageLocation.map.svgLocation = 'data:image/svg+xml;base64,' + btoa(e.outerHTML);
-				}
-			});
-		if (!pageLocation.map.svgMe)
-			communication.ajax({
-				url: '/images/contacts.svg',
-				webCall: 'event.init',
-				success(r) {
-					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
-					e.setAttribute('fill', 'black');
-					e.setAttribute('stroke', 'black');
-					e.setAttribute('stroke-width', '20');
-					pageLocation.map.svgMe = 'data:image/svg+xml;base64,' + btoa(e.outerHTML);
-				}
-			});
 	}
 	static listEvents(as) {
 		if (!as.length)

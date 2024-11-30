@@ -383,6 +383,30 @@ ${v.keywords}
 			ui.q('search tabBody div.locations').innerHTML = pageSearch.locations.getFields() + '<listResults></listResults>';
 			formFunc.initFields(ui.q('search'));
 		}
+		if (!pageSearch.map.svgLocation)
+			communication.ajax({
+				url: '/images/locations.svg',
+				webCall: 'event.init',
+				success(r) {
+					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
+					e.setAttribute('fill', 'black');
+					e.setAttribute('stroke', 'black');
+					e.setAttribute('stroke-width', '60');
+					pageSearch.map.svgLocation = 'data:image/svg+xml;base64,' + btoa(e.outerHTML);
+				}
+			});
+		if (!pageSearch.map.svgMe)
+			communication.ajax({
+				url: '/images/contacts.svg',
+				webCall: 'event.init',
+				success(r) {
+					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
+					e.setAttribute('fill', 'black');
+					e.setAttribute('stroke', 'black');
+					e.setAttribute('stroke-width', '20');
+					pageSearch.map.svgMe = 'data:image/svg+xml;base64,' + btoa(e.outerHTML);
+				}
+			});
 	}
 	static repeatSearch() {
 		var type = ui.q('search tabHeader tab.tabActive').getAttribute('i');
