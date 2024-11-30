@@ -25,7 +25,7 @@ class pageSearch {
 	};
 	static template = v =>
 		global.template`<style>
-buttontext.map {
+button-text.map {
 	position: absolute;
 	width: 18em;
 	left: 50%;
