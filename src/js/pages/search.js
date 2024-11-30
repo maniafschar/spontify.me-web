@@ -513,7 +513,7 @@ ${v.keywords}
 	}
 	static toggleMap() {
 		var prefix = 'search .locations ';
-		if (!ui.q(prefix + ' list-row')) {
+		if (!ui.q(prefix + 'list-row') && !ui.q(prefix + 'noResult')) {
 			ui.on(document, 'List', pageSearch.toggleMap, true);
 			pageSearch.locations.search();
 		} else if (ui.q(prefix + 'map').getAttribute('created')) {
