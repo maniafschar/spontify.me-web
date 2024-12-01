@@ -429,11 +429,11 @@ ${v.keywords}
 		ui.classRemove(prefix + 'listResults list-row.highlightMap', 'highlightMap');
 		ui.classAdd(rows[i], 'highlightMap');
 		pageSearch.map.id = id;
-		var d = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
 		if (pageSearch.map.markerLocation)
 			pageSearch.map.markerLocation.setMap(null);
 		ui.q('map').setAttribute('created', new Date().getTime());
 		ui.q(prefix + 'button-text.map').style.display = null;
+		var d = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
 		pageSearch.map.markerLocation = new google.maps.Marker({
 			map: pageSearch.map.canvas,
 			title: d.name,
@@ -492,6 +492,13 @@ ${v.keywords}
 			ui.toggleHeight(prefix + 'map', pageSearch.scrollMap);
 			pageSearch.map.scrollTop = -1;
 			pageSearch.map.id = -1;
+			if (!pageSearch.map.canvas) {
+				pageSearch.map.canvas = new google.maps.Map(ui.q('map'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true });
+				pageSearch.map.canvas.addListener('bounds_changed', function () {
+					if (new Date().getTime() - ui.q(prefix + 'map').getAttribute('created') > 2000)
+						ui.q(prefix + 'button-text.map').style.display = 'inline-block';
+				});
+			}
 			var latSW = -5000, lonSW = 5000, latNE = 5000, lonNE = -5000;
 			var rows = ui.qa(prefix + 'listResults list-row');
 			for (var i = 0; i < rows.length; i++) {
@@ -506,13 +513,6 @@ ${v.keywords}
 					lonNE = d2.longitude;
 			}
 			var delta = 0.00005;
-			if (!pageSearch.map.canvas) {
-				pageSearch.map.canvas = new google.maps.Map(ui.q('map'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true });
-				pageSearch.map.canvas.addListener('bounds_changed', function () {
-					if (new Date().getTime() - ui.q(prefix + 'map').getAttribute('created') > 2000)
-						ui.q(prefix + 'button-text.map').style.display = 'inline-block';
-				});
-			}
 			pageSearch.map.canvas.fitBounds(new google.maps.LatLngBounds(
 				new google.maps.LatLng(latSW + delta, lonSW - delta), //south west
 				new google.maps.LatLng(latNE - delta, lonNE + delta) //north east
