@@ -444,15 +444,15 @@ ${v.keywords}
 		if (!pageSearch.map.loadActive) {
 			var latSW = -5000, lonSW = 5000, latNE = 5000, lonNE = -5000;
 			for (i = 0; i < rows.length; i++) {
-				var d = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
-				if (d.latitude > latSW)
-					latSW = d.latitude;
-				if (d.longitude < lonSW)
-					lonSW = d.longitude;
-				if (d.latitude < latSW)
-					latNE = d.latitude;
-				if (d.longitude > lonSW)
-					lonNE = d.longitude;
+				var d2 = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
+				if (d2.latitude > latSW)
+					latSW = d2.latitude;
+				if (d2.longitude < lonSW)
+					lonSW = d2.longitude;
+				if (d2.latitude < latSW)
+					latNE = d2.latitude;
+				if (d2.longitude > lonSW)
+					lonNE = d2.longitude;
 			}
 			var delta = 0.00005;
 			pageSearch.map.canvas.fitBounds(new google.maps.LatLngBounds(
