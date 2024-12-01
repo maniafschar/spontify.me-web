@@ -430,17 +430,9 @@ ${v.keywords}
 		ui.classAdd(rows[i], 'highlightMap');
 		pageSearch.map.id = id;
 		var d = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
-		if (pageSearch.map.canvas) {
-			pageSearch.map.markerLocation.setMap(null);
-			ui.q('map').setAttribute('created', new Date().getTime());
-			ui.q(prefix + 'button-text.map').style.display = null;
-		} else {
-			pageSearch.map.canvas = new google.maps.Map(ui.q('map'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true });
-			pageSearch.map.canvas.addListener('bounds_changed', function () {
-				if (new Date().getTime() - ui.q(prefix + 'map').getAttribute('created') > 2000)
-					ui.q(prefix + 'button-text.map').style.display = 'inline-block';
-			});
-		}
+		pageSearch.map.markerLocation.setMap(null);
+		ui.q('map').setAttribute('created', new Date().getTime());
+		ui.q(prefix + 'button-text.map').style.display = null;
 		pageSearch.map.markerLocation = new google.maps.Marker({
 			map: pageSearch.map.canvas,
 			title: d.name,
@@ -513,6 +505,13 @@ ${v.keywords}
 					lonNE = d2.longitude;
 			}
 			var delta = 0.00005;
+			if (!pageSearch.map.canvas) {
+				pageSearch.map.canvas = new google.maps.Map(ui.q('map'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true });
+				pageSearch.map.canvas.addListener('bounds_changed', function () {
+					if (new Date().getTime() - ui.q(prefix + 'map').getAttribute('created') > 2000)
+						ui.q(prefix + 'button-text.map').style.display = 'inline-block';
+				});
+			}
 			pageSearch.map.canvas.fitBounds(new google.maps.LatLngBounds(
 				new google.maps.LatLng(latSW + delta, lonSW - delta), //south west
 				new google.maps.LatLng(latNE - delta, lonNE + delta) //north east
