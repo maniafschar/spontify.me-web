@@ -449,9 +449,9 @@ ${v.keywords}
 					latSW = d2.latitude;
 				if (d2.longitude < lonSW)
 					lonSW = d2.longitude;
-				if (d2.latitude < latSW)
+				if (d2.latitude < latNE)
 					latNE = d2.latitude;
-				if (d2.longitude > lonSW)
+				if (d2.longitude > lonNE)
 					lonNE = d2.longitude;
 			}
 			var delta = 0.00005;
