@@ -431,7 +431,6 @@ ${v.keywords}
 		pageSearch.map.id = id;
 		var d = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
 		if (pageSearch.map.canvas) {
-			pageSearch.map.markerMe.setMap(null);
 			pageSearch.map.markerLocation.setMap(null);
 			ui.q('map').setAttribute('created', new Date().getTime());
 			ui.q(prefix + 'button-text.map').style.display = null;
@@ -449,7 +448,7 @@ ${v.keywords}
 				new google.maps.LatLng(d.latitude - deltaLat, d.longitude + deltaLon) //north east
 			));
 		}
-		pageSearch.map.markerLocation = new google.maps.Marker(
+		pageSearch.map.markerLocation = new google.maps.AdvancedMarkerElement(
 			{
 				map: pageSearch.map.canvas,
 				title: d.name,
