@@ -443,7 +443,7 @@ ${v.keywords}
 			});
 		}
 		if (!pageSearch.map.loadActive) {
-			var deltaLat = Math.abs(geoData.getCurrent().lat - d.latitude) * 0.075, deltaLon = Math.abs(geoData.getCurrent().lon - d.longitude) * 0.075;
+			var deltaLat = Math.abs(d.latitude) * 0.075, deltaLon = Math.abs(d.longitude) * 0.075;
 			pageSearch.map.canvas.fitBounds(new google.maps.LatLngBounds(
 				new google.maps.LatLng(d.latitude + deltaLat, d.longitude - deltaLon), //south west
 				new google.maps.LatLng(d.latitude - deltaLat, d.longitude + deltaLon) //north east
