@@ -448,7 +448,7 @@ ${v.keywords}
 				new google.maps.LatLng(d.latitude - deltaLat, d.longitude + deltaLon) //north east
 			));
 		}
-		pageSearch.map.markerLocation = new google.maps.AdvancedMarkerElement(
+		pageSearch.map.markerLocation = new google.maps.Marker(
 			{
 				map: pageSearch.map.canvas,
 				title: d.name,
