@@ -442,25 +442,36 @@ ${v.keywords}
 			});
 		}
 		if (!pageSearch.map.loadActive) {
-			var deltaLat = Math.abs(d.latitude) * 0.00005, deltaLon = Math.abs(d.longitude) * 0.00005;
+			var latSW = 5000, lonSW = 5000, latNE = 5000, lonNE = 5000;
+			for (i = 0; i < rows.length; i++) {
+				var d = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
+				if (d.latitude > latSW)
+					latSW = d.latitude;
+				if (d.longitude < lonSW)
+					lonSW = d.longitude;
+				if (d.latitude < latSW)
+					latNE = d.latitude;
+				if (d.longitude > lonSW)
+					lonNE = d.longitude;
+			}
+			var delta = 0.00005;
 			pageSearch.map.canvas.fitBounds(new google.maps.LatLngBounds(
-				new google.maps.LatLng(d.latitude + deltaLat, d.longitude - deltaLon), //south west
-				new google.maps.LatLng(d.latitude - deltaLat, d.longitude + deltaLon) //north east
+				new google.maps.LatLng(latSW + delta, lonSW - delta), //south west
+				new google.maps.LatLng(latNE - delta, lonNE + delta) //north east
 			));
 		}
-		pageSearch.map.markerLocation = new google.maps.Marker(
-			{
-				map: pageSearch.map.canvas,
-				title: d.name,
-				contentString: '',
-				icon: {
-					url: pageSearch.map.svgLocation,
-					scaledSize: new google.maps.Size(40, 40),
-					origin: new google.maps.Point(0, 0),
-					anchor: new google.maps.Point(20, 40)
-				},
-				position: new google.maps.LatLng(d.latitude, d.longitude)
-			});
+		pageSearch.map.markerLocation = new google.maps.Marker({
+			map: pageSearch.map.canvas,
+			title: d.name,
+			contentString: '',
+			icon: {
+				url: pageSearch.map.svgLocation,
+				scaledSize: new google.maps.Size(40, 40),
+				origin: new google.maps.Point(0, 0),
+				anchor: new google.maps.Point(20, 40)
+			},
+			position: new google.maps.LatLng(d.latitude, d.longitude)
+		});
 	}
 	static selectTab(id) {
 		if (id == ui.q('search tabHeader tab.tabActive').getAttribute('i'))
