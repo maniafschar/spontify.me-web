@@ -441,25 +441,6 @@ ${v.keywords}
 					ui.q(prefix + 'button-text.map').style.display = 'inline-block';
 			});
 		}
-		if (!pageSearch.map.loadActive) {
-			var latSW = -5000, lonSW = 5000, latNE = 5000, lonNE = -5000;
-			for (i = 0; i < rows.length; i++) {
-				var d2 = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
-				if (d2.latitude > latSW)
-					latSW = d2.latitude;
-				if (d2.longitude < lonSW)
-					lonSW = d2.longitude;
-				if (d2.latitude < latNE)
-					latNE = d2.latitude;
-				if (d2.longitude > lonNE)
-					lonNE = d2.longitude;
-			}
-			var delta = 0.00005;
-			pageSearch.map.canvas.fitBounds(new google.maps.LatLngBounds(
-				new google.maps.LatLng(latSW + delta, lonSW - delta), //south west
-				new google.maps.LatLng(latNE - delta, lonNE + delta) //north east
-			));
-		}
 		pageSearch.map.markerLocation = new google.maps.Marker({
 			map: pageSearch.map.canvas,
 			title: d.name,
@@ -518,6 +499,24 @@ ${v.keywords}
 			ui.toggleHeight(prefix + 'map', pageSearch.scrollMap);
 			pageSearch.map.scrollTop = -1;
 			pageSearch.map.id = -1;
+			var latSW = -5000, lonSW = 5000, latNE = 5000, lonNE = -5000;
+			var rows = ui.qa(prefix + 'listResults list-row');
+			for (var i = 0; i < rows.length; i++) {
+				var d2 = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
+				if (d2.latitude > latSW)
+					latSW = d2.latitude;
+				if (d2.longitude < lonSW)
+					lonSW = d2.longitude;
+				if (d2.latitude < latNE)
+					latNE = d2.latitude;
+				if (d2.longitude > lonNE)
+					lonNE = d2.longitude;
+			}
+			var delta = 0.00005;
+			pageSearch.map.canvas.fitBounds(new google.maps.LatLngBounds(
+				new google.maps.LatLng(latSW + delta, lonSW - delta), //south west
+				new google.maps.LatLng(latNE - delta, lonNE + delta) //north east
+			));
 			setTimeout(function () { ui.classRemove(prefix + 'list-row div.highlightMap', 'highlightMap'); }, 500);
 		} else {
 			ui.attr('map', 'created', new Date().getTime());
