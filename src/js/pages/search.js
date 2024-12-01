@@ -430,7 +430,8 @@ ${v.keywords}
 		ui.classAdd(rows[i], 'highlightMap');
 		pageSearch.map.id = id;
 		var d = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
-		pageSearch.map.markerLocation.setMap(null);
+		if (pageSearch.map.markerLocation)
+			pageSearch.map.markerLocation.setMap(null);
 		ui.q('map').setAttribute('created', new Date().getTime());
 		ui.q(prefix + 'button-text.map').style.display = null;
 		pageSearch.map.markerLocation = new google.maps.Marker({
