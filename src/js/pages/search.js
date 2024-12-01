@@ -445,22 +445,9 @@ ${v.keywords}
 		if (!pageSearch.map.loadActive) {
 			var deltaLat = Math.abs(geoData.getCurrent().lat - d.latitude) * 0.075, deltaLon = Math.abs(geoData.getCurrent().lon - d.longitude) * 0.075;
 			pageSearch.map.canvas.fitBounds(new google.maps.LatLngBounds(
-				new google.maps.LatLng(Math.max(geoData.getCurrent().lat, d.latitude) + deltaLat, Math.min(geoData.getCurrent().lon, d.longitude) - deltaLon), //south west
-				new google.maps.LatLng(Math.min(geoData.getCurrent().lat, d.latitude) - deltaLat, Math.max(geoData.getCurrent().lon, d.longitude) + deltaLon) //north east
+				new google.maps.LatLng(d.latitude + deltaLat, d.longitude - deltaLon), //south west
+				new google.maps.LatLng(d.latitude - deltaLat, d.longitude + deltaLon) //north east
 			));
-			pageSearch.map.markerMe = new google.maps.Marker(
-				{
-					map: pageSearch.map.canvas,
-					title: 'me',
-					contentString: '',
-					icon: {
-						url: pageSearch.map.svgMe,
-						scaledSize: new google.maps.Size(24, 24),
-						origin: new google.maps.Point(0, 0),
-						anchor: new google.maps.Point(12, 24)
-					},
-					position: new google.maps.LatLng(geoData.getCurrent().lat, geoData.getCurrent().lon)
-				});
 		}
 		pageSearch.map.markerLocation = new google.maps.Marker(
 			{
