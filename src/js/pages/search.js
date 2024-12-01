@@ -442,7 +442,7 @@ ${v.keywords}
 			});
 		}
 		if (!pageSearch.map.loadActive) {
-			var latSW = 5000, lonSW = 5000, latNE = 5000, lonNE = 5000;
+			var latSW = -5000, lonSW = 5000, latNE = 5000, lonNE = -5000;
 			for (i = 0; i < rows.length; i++) {
 				var d = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
 				if (d.latitude > latSW)
