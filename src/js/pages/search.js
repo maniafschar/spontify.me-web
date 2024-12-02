@@ -15,7 +15,7 @@ class pageSearch {
 		canvas: null,
 		id: null,
 		loadActive: false,
-		markerLocation: null,
+		markerLocation: [],
 		markerMe: null,
 		open: false,
 		scrollTop: -1,
@@ -416,36 +416,26 @@ ${v.keywords}
 			pageSearch.map.timeout = setTimeout(pageSearch.scrollMap, 100);
 			return;
 		}
+		ui.classRemove(prefix + 'listResults list-row.highlightMap', 'highlightMap');
 		var rows = ui.qa(prefix + 'listResults list-row');
-		var id = ui.q(prefix + 'listResults').scrollTop + ui.q(prefix + 'listResults').offsetTop, i = 0;
-		for (; i < rows.length; i++) {
-			if (rows[i].offsetTop >= id && rows[i].getAttribute('filtered') != 'true') {
-				id = parseInt(rows[i].getAttribute('i'));
+		var scrollTop = ui.q(prefix + 'listResults').scrollTop + ui.q(prefix + 'listResults').offsetTop;
+		var markers = {};
+		for (var i = 0; i < pageSearch.markerLocation.length; i++) {
+			markers[pageSearch.markerLocation[i].id] = pageSearch.markerLocation[i];
+			pageSearch.markerLocation[i].setOpacity(0.5);
+		}
+		for (var i = 0; i < rows.length; i++) {
+			if (rows[i].offsetTop >= scrollTop && rows[i].getAttribute('filtered') != 'true')
+				markers[rows[i].getAttribute('i')].setOpacity(1);
+				ui.classAdd(rows[i], 'highlightMap');
+				pageSearch.map.id = id;
+				ui.q('map').setAttribute('created', new Date().getTime());
+				ui.q(prefix + 'button-text.map').style.display = null;
 				break;
 			}
 		}
-		if (id == pageSearch.map.id || !rows[i])
-			return;
-		ui.classRemove(prefix + 'listResults list-row.highlightMap', 'highlightMap');
-		ui.classAdd(rows[i], 'highlightMap');
-		pageSearch.map.id = id;
-		if (pageSearch.map.markerLocation)
-			pageSearch.map.markerLocation.setMap(null);
-		ui.q('map').setAttribute('created', new Date().getTime());
-		ui.q(prefix + 'button-text.map').style.display = null;
-		var d = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
-		pageSearch.map.markerLocation = new google.maps.Marker({
-			map: pageSearch.map.canvas,
-			title: d.name,
-			contentString: '',
-			icon: {
-				url: pageSearch.map.svgLocation,
-				scaledSize: new google.maps.Size(40, 40),
-				origin: new google.maps.Point(0, 0),
-				anchor: new google.maps.Point(20, 40)
-			},
-			position: new google.maps.LatLng(d.latitude, d.longitude)
-		});
+	}
+	static selectMapLocation(event) {
 	}
 	static selectTab(id) {
 		if (id == ui.q('search tabHeader tab.tabActive').getAttribute('i'))
@@ -498,7 +488,13 @@ ${v.keywords}
 					if (new Date().getTime() - ui.q(prefix + 'map').getAttribute('created') > 2000)
 						ui.q(prefix + 'button-text.map').style.display = 'inline-block';
 				});
+				ui.on(prefix + 'input-hashtags textarea', 'keyup', function() {
+					ui.q(prefix + 'button-text.map').style.display = 'inline-block';
+				});
 			}
+			for (var i = 0; i < pageSearch.map.markerLocation.length; i++)
+				pageSearch.map.markerLocation[i].setMap(null);
+			pageSearch.map.markerLocation = [];
 			setTimeout(function () {
 				var latSW = -5000, lonSW = 5000, latNE = 5000, lonNE = -5000;
 				var rows = ui.qa(prefix + 'listResults list-row');
@@ -512,6 +508,22 @@ ${v.keywords}
 						latNE = d2.latitude;
 					if (d2.longitude > lonNE)
 						lonNE = d2.longitude;
+					var marker = new google.maps.Marker({
+						map: pageSearch.map.canvas,
+						title: d2.name,
+						id: d2.id,
+						contentString: '',
+						icon: {
+							url: pageSearch.map.svgLocation,
+							scaledSize: new google.maps.Size(40, 40),
+							origin: new google.maps.Point(0, 0),
+							anchor: new google.maps.Point(20, 40)
+						},
+						position: new google.maps.LatLng(d2.latitude, d2.longitude),
+						opacity: 0.5
+					});
+					marker.addListener('click', pageSearch.selectMapLocation);
+					pageSearch.map.markerLocation.push(marker);
 				}
 				var delta = 0.00005;
 				pageSearch.map.canvas.fitBounds(new google.maps.LatLngBounds(
