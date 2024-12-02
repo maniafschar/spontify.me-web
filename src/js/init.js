@@ -313,7 +313,7 @@ class initialisation {
 		if (xDiagonal < 800)
 			font = xDiagonal / 800 * font;
 		else
-			font += Math.min((xDiagonal - 800) / (global.getDevice() == 'computer' ? 400 : 75), 26);
+			font += (xDiagonal - 800) / 400;
 		if (global.getDevice() == 'computer') {
 			ui.css('main', 'margin-left', (-xWidth / 2) + 'px');
 			ui.css('main', 'width', xWidth + 'px');
