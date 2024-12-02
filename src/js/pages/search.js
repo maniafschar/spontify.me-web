@@ -425,7 +425,7 @@ ${v.keywords}
 			pageSearch.markerLocation[i].setOpacity(0.5);
 		}
 		for (var i = 0; i < rows.length; i++) {
-			if (rows[i].offsetTop >= scrollTop && rows[i].getAttribute('filtered') != 'true')
+			if (rows[i].offsetTop >= scrollTop && rows[i].getAttribute('filtered') != 'true') {
 				markers[rows[i].getAttribute('i')].setOpacity(1);
 				ui.classAdd(rows[i], 'highlightMap');
 				pageSearch.map.id = id;
