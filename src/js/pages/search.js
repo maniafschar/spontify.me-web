@@ -435,12 +435,15 @@ ${v.keywords}
 		}
 	}
 	static selectMapLocation(event) {
+		var prefix = 'search .locations ';
 		ui.classRemove(prefix + 'listResults list-row.highlightMap', 'highlightMap');
 		var rows = ui.qa(prefix + 'listResults list-row');
 		for (var i = 0; i < rows.length; i++) {
 			var d = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
 			if (d.latitude == event.latLng.lat() && d.longitude == event.latLng.lng()) {
 				ui.classAdd(rows[i], 'highlightMap');
+				for (var i = 0; i < pageSearch.map.markerLocation.length; i++)
+					pageSearch.map.markerLocation[i].setOpacity(pageSearch.map.markerLocation[i].id == rows[i].getAttribute('i') ? 1 : 0.2);
 				break;
 			}
 		}
