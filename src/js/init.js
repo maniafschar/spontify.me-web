@@ -443,7 +443,7 @@ class initialisation {
 				} else
 					ui.navigation.autoOpen(p);
 			}, 2500);
-		} else
+		} else if (!ui.q('head title').innerHTML)
 			ui.html('head title', global.appTitle);
 	}
 	static statusBar(toggle) {
