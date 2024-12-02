@@ -548,6 +548,7 @@ ${v.keywords}
 				});
 			}
 			ui.q(prefix + 'map').setAttribute('created', new Date().getTime());
+			ui.classRemove(prefix + 'listResults list-row.highlightMap', 'highlightMap');
 			ui.toggleHeight(prefix + 'map', pageSearch.scrollMap);
 			pageSearch.map.scrollTop = -1;
 			if (!ui.q(prefix + 'list-row') && !ui.q(prefix + 'noResult'))
