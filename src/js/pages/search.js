@@ -18,6 +18,7 @@ class pageSearch {
 		markerLocation: [],
 		markerMe: null,
 		open: false,
+		resetMapBounds: null,
 		scrollTop: -1,
 		svgLocation: null,
 		svgMe: null,
@@ -341,6 +342,7 @@ ${v.keywords}
 			return s;
 		},
 		search(bounds) {
+			pageSearch.map.resetMapBounds = bounds == null;
 			pageSearch.locations.fieldValues = formFunc.getForm('search tabBody div.locations form').values;
 			lists.load({
 				webCall: 'search.locations.search',
@@ -408,7 +410,7 @@ ${v.keywords}
 		pageSearch[type].search();
 	}
 	static resetMap(event) {
-		if (event && event.detail && event.detail.id != 'search tabBody>div.locations')
+		if (event.detail && event.detail.id != 'search tabBody>div.locations')
 			return;
 		for (var i = 0; i < pageSearch.map.markerLocation.length; i++)
 			pageSearch.map.markerLocation[i].setMap(null);
@@ -417,6 +419,7 @@ ${v.keywords}
 			var prefix = 'search .locations ';
 			var latSW = -5000, lonSW = 5000, latNE = 5000, lonNE = -5000;
 			var rows = ui.qa(prefix + 'listResults list-row');
+			var
 			for (var i = 0; i < rows.length; i++) {
 				var d2 = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
 				if (d2.latitude > latSW)
@@ -444,11 +447,13 @@ ${v.keywords}
 				marker.addListener('click', pageSearch.selectMapLocation);
 				pageSearch.map.markerLocation.push(marker);
 			}
-			var deltaLat = 0.00002 * (latNE - latSW), deltaLon = 0.00002 * (lonNE - lonSW);
-			pageSearch.map.canvas.fitBounds(new google.maps.LatLngBounds(
-				new google.maps.LatLng(latSW + deltaLat, lonSW - deltaLon), //south west
-				new google.maps.LatLng(latNE - deltaLat, lonNE + deltaLon) //north east
-			));
+			if (pageSearch.map.resetMapBounds) {
+				var deltaLat = 0.00002 * (latNE - latSW), deltaLon = 0.00002 * (lonNE - lonSW);
+				pageSearch.map.canvas.fitBounds(new google.maps.LatLngBounds(
+					new google.maps.LatLng(latSW + deltaLat, lonSW - deltaLon), //south west
+					new google.maps.LatLng(latNE - deltaLat, lonNE + deltaLon) //north east
+				));
+			}
 			ui.classRemove(prefix + 'list-row div.highlightMap', 'highlightMap');
 		}, 500);
 	}
