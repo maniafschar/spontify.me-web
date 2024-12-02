@@ -258,7 +258,7 @@ class initialisation {
 				pageSearch.swipeLeft();
 			else if (dir == 'right')
 				pageSearch.swipeRight();
-		});
+		}, 'map');
 		ui.swipe('contacts', function (dir, event) {
 			if (ui.parents(event.target, 'listBody')) {
 				if (dir == 'left')
