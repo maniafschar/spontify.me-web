@@ -18,7 +18,7 @@ class pageSearch {
 		markerLocation: [],
 		markerMe: null,
 		open: false,
-		resetMapBounds: null,
+		resetMapBounds: true,
 		scrollTop: -1,
 		svgLocation: null,
 		svgMe: null,
