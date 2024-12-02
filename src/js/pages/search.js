@@ -420,9 +420,9 @@ ${v.keywords}
 		var rows = ui.qa(prefix + 'listResults list-row');
 		var scrollTop = ui.q(prefix + 'listResults').scrollTop + ui.q(prefix + 'listResults').offsetTop;
 		var markers = {};
-		for (var i = 0; i < pageSearch.markerLocation.length; i++) {
-			markers[pageSearch.markerLocation[i].id] = pageSearch.markerLocation[i];
-			pageSearch.markerLocation[i].setOpacity(0.5);
+		for (var i = 0; i < pageSearch.map.markerLocation.length; i++) {
+			markers[pageSearch.map.markerLocation[i].id] = pageSearch.map.markerLocation[i];
+			pageSearch.map.markerLocation[i].setOpacity(0.5);
 		}
 		for (var i = 0; i < rows.length; i++) {
 			if (rows[i].offsetTop >= scrollTop && rows[i].getAttribute('filtered') != 'true') {
