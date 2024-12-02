@@ -428,7 +428,6 @@ ${v.keywords}
 			if (rows[i].offsetTop >= scrollTop && rows[i].getAttribute('filtered') != 'true') {
 				markers[rows[i].getAttribute('i')].setOpacity(1);
 				ui.classAdd(rows[i], 'highlightMap');
-				pageSearch.map.id = id;
 				ui.q('map').setAttribute('created', new Date().getTime());
 				ui.q(prefix + 'button-text.map').style.display = null;
 				break;
@@ -436,6 +435,7 @@ ${v.keywords}
 		}
 	}
 	static selectMapLocation(event) {
+		console.log(event);
 	}
 	static selectTab(id) {
 		if (id == ui.q('search tabHeader tab.tabActive').getAttribute('i'))
@@ -481,7 +481,6 @@ ${v.keywords}
 			ui.q(prefix + 'map').setAttribute('created', new Date().getTime());
 			ui.toggleHeight(prefix + 'map', pageSearch.scrollMap);
 			pageSearch.map.scrollTop = -1;
-			pageSearch.map.id = -1;
 			if (!pageSearch.map.canvas) {
 				pageSearch.map.canvas = new google.maps.Map(ui.q('map'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true });
 				pageSearch.map.canvas.addListener('bounds_changed', function () {
