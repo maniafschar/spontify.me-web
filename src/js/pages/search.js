@@ -435,7 +435,15 @@ ${v.keywords}
 		}
 	}
 	static selectMapLocation(event) {
-		console.log(event);
+		ui.classRemove(prefix + 'listResults list-row.highlightMap', 'highlightMap');
+		var rows = ui.qa(prefix + 'listResults list-row');
+		for (var i = 0; i < rows.length; i++) {
+			var d = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
+			if (d.latitude == event.latLng.lat() && d.longitude == event.latLng.lng()) {
+				ui.classAdd(rows[i], 'highlightMap');
+				break;
+			}
+		}
 	}
 	static selectTab(id) {
 		if (id == ui.q('search tabHeader tab.tabActive').getAttribute('i'))
