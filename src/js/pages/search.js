@@ -419,7 +419,6 @@ ${v.keywords}
 			var prefix = 'search .locations ';
 			var latSW = -5000, lonSW = 5000, latNE = 5000, lonNE = -5000;
 			var rows = ui.qa(prefix + 'listResults list-row');
-			var
 			for (var i = 0; i < rows.length; i++) {
 				var d2 = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
 				if (d2.latitude > latSW)
