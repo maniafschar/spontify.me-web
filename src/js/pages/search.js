@@ -422,7 +422,7 @@ ${v.keywords}
 		var markers = {};
 		for (var i = 0; i < pageSearch.map.markerLocation.length; i++) {
 			markers[pageSearch.map.markerLocation[i].id] = pageSearch.map.markerLocation[i];
-			pageSearch.map.markerLocation[i].setOpacity(0.5);
+			pageSearch.map.markerLocation[i].setOpacity(0.2);
 		}
 		for (var i = 0; i < rows.length; i++) {
 			if (rows[i].offsetTop >= scrollTop && rows[i].getAttribute('filtered') != 'true') {
@@ -520,7 +520,7 @@ ${v.keywords}
 							anchor: new google.maps.Point(20, 40)
 						},
 						position: new google.maps.LatLng(d2.latitude, d2.longitude),
-						opacity: 0.5
+						opacity: 0.2
 					});
 					marker.addListener('click', pageSearch.selectMapLocation);
 					pageSearch.map.markerLocation.push(marker);
