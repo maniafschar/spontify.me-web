@@ -444,6 +444,7 @@ ${v.keywords}
 				ui.classAdd(rows[i], 'highlightMap');
 				for (var i2 = 0; i2 < pageSearch.map.markerLocation.length; i2++)
 					pageSearch.map.markerLocation[i2].setOpacity(pageSearch.map.markerLocation[i2].id == rows[i].getAttribute('i') ? 1 : 0.2);
+				ui.q(prefix + 'listResults').scrollTo({ top: rows[i].offsetTop - ui.q(prefix + 'listResults').offsetTop, behavior: 'smooth' });
 				break;
 			}
 		}
