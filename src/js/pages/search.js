@@ -536,7 +536,7 @@ ${v.keywords}
 	}
 	static toggleMap() {
 		var prefix = 'search .locations ';
-		if (!ui.q(prefix + 'list-row') && !ui.q(prefix + 'noResult')) {
+		if (ui.q(prefix + 'map').getAttribute('created')) {
 			if (!pageSearch.map.canvas) {
 				pageSearch.map.canvas = new google.maps.Map(ui.q('map'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true });
 				pageSearch.map.canvas.addListener('bounds_changed', function () {
@@ -547,12 +547,11 @@ ${v.keywords}
 					ui.q(prefix + 'button-text.map').style.display = 'inline-block';
 				});
 			}
-			ui.on(document, 'List', pageSearch.toggleMap, true);
-			pageSearch.locations.search();
-		} else if (ui.q(prefix + 'map').getAttribute('created')) {
 			ui.q(prefix + 'map').setAttribute('created', new Date().getTime());
 			ui.toggleHeight(prefix + 'map', pageSearch.scrollMap);
 			pageSearch.map.scrollTop = -1;
+			if (!ui.q(prefix + 'list-row') && !ui.q(prefix + 'noResult'))
+				pageSearch.locations.search();
 		} else {
 			ui.attr('map', 'created', new Date().getTime());
 			communication.loadMap('pageSearch.toggleMap');
