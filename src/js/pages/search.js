@@ -444,7 +444,7 @@ ${v.keywords}
 				marker.addListener('click', pageSearch.selectMapLocation);
 				pageSearch.map.markerLocation.push(marker);
 			}
-			var deltaLat = 0.00002 + (latNE - latSW), deltaLon = 0.00002 + (lonNE - lonSW);
+			var deltaLat = 0.00002 * (latNE - latSW), deltaLon = 0.00002 * (lonNE - lonSW);
 			pageSearch.map.canvas.fitBounds(new google.maps.LatLngBounds(
 				new google.maps.LatLng(latSW + deltaLat, lonSW - deltaLon), //south west
 				new google.maps.LatLng(latNE - deltaLat, lonNE + deltaLon) //north east
