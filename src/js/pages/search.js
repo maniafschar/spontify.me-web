@@ -359,6 +359,7 @@ ${v.keywords}
 		return ui.l('search.unknownTown');
 	}
 	static init() {
+		ui.on(document, 'List', pageSearch.resetMap);
 		document.addEventListener('GeoLocation', function (event) {
 			ui.html('search label.locationPicker', pageSearch.getTown());
 		});
@@ -406,7 +407,9 @@ ${v.keywords}
 		ui.q('search div.' + type + ' [name="keywords"]').value = '';
 		pageSearch[type].search();
 	}
-	static resetMap() {
+	static resetMap(event) {
+		if (event && event.detail && event.detail.id != 'search tabBody>div.locations')
+			return;
 		for (var i = 0; i < pageSearch.map.markerLocation.length; i++)
 			pageSearch.map.markerLocation[i].setMap(null);
 		pageSearch.map.markerLocation = [];
@@ -546,7 +549,6 @@ ${v.keywords}
 					ui.q(prefix + 'button-text.map').style.display = 'inline-block';
 				});
 			}
-			pageSearch.resetMap();
 		} else {
 			ui.attr('map', 'created', new Date().getTime());
 			communication.loadMap('pageSearch.toggleMap');
