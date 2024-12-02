@@ -353,6 +353,7 @@ ${v.keywords}
 				search: encodeURIComponent(pageSearch.locations.getSearch(bounds))
 			}, pageLocation.listLocation, 'search tabBody>div.locations', 'search');
 			user.set('searchLocations', pageSearch.locations.fieldValues);
+			ui.q('search .locations button-text.map').style.display = null;
 		}
 	}
 	static getTown() {
