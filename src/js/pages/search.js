@@ -238,7 +238,7 @@ ${v.keywords}
 			return s + 'event.endDate>=cast(\'' + global.date.local2server(new Date()).substring(0, 10) + '\' as timestamp)';
 		},
 		search(bounds) {
-			pageSearch.events.map.resetMapBounds = bounds == null;
+			pageSearch.events.map.resetMapBounds = !bounds;
 			pageSearch.events.fieldValues = formFunc.getForm('search tabBody div.events form').values;
 			var type = ui.val('search tabBody div.events input-date');
 			pageEvent.loadEvents({
@@ -248,7 +248,7 @@ ${v.keywords}
 				distance: 100,
 				limit: -1,
 				query: 'event_list',
-				search: encodeURIComponent(pageSearch.events.getSearch())
+				search: encodeURIComponent(pageSearch.events.getSearch(bounds))
 			}, function (events) {
 				var d = new Date();
 				var twoWeeks = new Date();
@@ -375,7 +375,7 @@ ${v.keywords}
 			return s;
 		},
 		search(bounds) {
-			pageSearch.locations.map.resetMapBounds = bounds == null;
+			pageSearch.locations.map.resetMapBounds = !bounds;
 			pageSearch.locations.fieldValues = formFunc.getForm('search tabBody div.locations form').values;
 			lists.load({
 				webCall: 'search.locations.search',
