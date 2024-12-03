@@ -301,6 +301,7 @@ ${v.keywords}
 				}
 			});
 			user.set('searchEvents', pageSearch.events.fieldValues);
+			ui.q('search .events button-text.map').style.display = null;
 		}
 	}
 	static locations = {
