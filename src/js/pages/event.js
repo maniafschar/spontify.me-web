@@ -721,6 +721,7 @@ poll result div {
 				if (e)
 					e.scrollTop = 0;
 				lists.setListHint(divID);
+				document.dispatchEvent(new CustomEvent('List', { detail: { id: divID } }));
 			}
 		};
 		lists.load(
