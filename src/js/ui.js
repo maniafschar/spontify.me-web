@@ -438,7 +438,7 @@ class ui {
 				var e = window.open(url, name, 'location=no,hardwareback=no,toolbar=yes,mediaPlaybackRequiresUserAction=yes,allowInlineMediaPlayback=yes,closebuttoncolor='
 					+ ui.rgbToHex(ui.cssValue(document.body, '--bg2stop').replace('rgb(', '')) + ',navigationbuttoncolor='
 					+ ui.rgbToHex(ui.cssValue(document.body, '--bg2stop').replace('rgb(', '')) + ',toolbarcolor='
-					+ ui.rgbToHex(ui.cssValue(document.body, '--bg1start').replace('rgb(', '')) + ',closebuttoncaption=  vvv');
+					+ ui.rgbToHex(ui.cssValue(document.body, '--bg1start').replace('rgb(', '')) + ',closebuttoncaption=  ⤶');
 				if (e) {
 					ui.navigation.openWindows[name] = e;
 					if (e.focus)

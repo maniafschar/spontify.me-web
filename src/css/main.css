@@ -1356,14 +1356,14 @@ video-call {
 }
 
 .highlightMap::before {
-	content: '⇧';
+	content: '⤶';
 	position: absolute;
-	right: 50%;
-	margin-right: -0.75em;
+	right: 1em;
 	top: 0.7em;
-	opacity: 0.25;
-	font-size: 5em;
+	opacity: 0.15;
+	font-size: 4em;
 	color: var(--bg2stop);
+	transform: rotate(90deg);
 }
 
 info {

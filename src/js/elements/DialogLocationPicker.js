@@ -62,7 +62,7 @@ label {
 					ui.classRemove(e, 'home');
 				var s = '';
 				for (var i = l.length - 1; i >= 0; i--) {
-					if (l[i].town != geoData.getCurrent().town) {
+					if (l[i] && l[i].town != geoData.getCurrent().town) {
 						element = document.createElement('label');
 						element.setAttribute('onclick', 'ui.q("dialog-location-picker").save(' + JSON.stringify(l[i]).replace(/"/g, '\'') + ')');
 						element.innerText = l[i].town;
