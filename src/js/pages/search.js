@@ -11,32 +11,6 @@ import { pageLocation } from './location';
 export { pageSearch };
 
 class pageSearch {
-	static map = {
-		events: {
-			canvas: null,
-			id: null,
-			loadActive: false,
-			markerLocation: [],
-			markerMe: null,
-			open: false,
-			prefix: 'search .events ',
-			resetMapBounds: true,
-			scrollTop: -1,
-			timeout: null
-		},
-		locations: {
-			canvas: null,
-			id: null,
-			loadActive: false,
-			markerLocation: [],
-			markerMe: null,
-			open: false,
-			prefix: 'search .locations ',
-			resetMapBounds: true,
-			scrollTop: -1,
-			timeout: null
-		}
-	};
 	static svgLocation = null;
 	static template = v =>
 		global.template`<style>
@@ -184,6 +158,17 @@ button-text.map {
 		}
 	}
 	static events = {
+		map: {
+			canvas: null,
+			id: null,
+			loadActive: false,
+			markerLocation: [],
+			open: false,
+			prefix: 'search .events ',
+			resetMapBounds: true,
+			scrollTop: -1,
+			timeout: null
+		},
 		fieldValues: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
@@ -240,7 +225,7 @@ ${v.keywords}
 			if (s)
 				s = '(' + s + ') and ';
 			if (bounds) {
-				var b = pageSearch.map['events'].canvas.getBounds();
+				var b = pageSearch.events.map.canvas.getBounds();
 				if (b) {
 					var border = 0.1 * Math.abs(b.getSouthWest().lat() - b.getNorthEast().lat());
 					s += (s ? ' and ' : '') + 'location.latitude>' + (b.getSouthWest().lat() + border);
@@ -253,7 +238,7 @@ ${v.keywords}
 			return s + 'event.endDate>=cast(\'' + global.date.local2server(new Date()).substring(0, 10) + '\' as timestamp)';
 		},
 		search(bounds) {
-			pageSearch.map['events'].resetMapBounds = bounds == null;
+			pageSearch.events.map.resetMapBounds = bounds == null;
 			pageSearch.events.fieldValues = formFunc.getForm('search tabBody div.events form').values;
 			var type = ui.val('search tabBody div.events input-date');
 			pageEvent.loadEvents({
@@ -319,6 +304,17 @@ ${v.keywords}
 		}
 	}
 	static locations = {
+		map: {
+			canvas: null,
+			id: null,
+			loadActive: false,
+			markerLocation: [],
+			open: false,
+			prefix: 'search .events ',
+			resetMapBounds: true,
+			scrollTop: -1,
+			timeout: null
+		},
 		fieldValues: null,
 		template: v =>
 			global.template`<form onsubmit="return false">
@@ -365,7 +361,7 @@ ${v.keywords}
 			if (ui.q('search tabBody div.locations [name="favorites"][checked="true"]'))
 				s += (s ? ' and ' : '') + 'locationFavorite.favorite=true';
 			if (bounds) {
-				var b = pageSearch.map['locations'].canvas.getBounds();
+				var b = pageSearch.locations.map.canvas.getBounds();
 				if (b) {
 					var border = 0.1 * Math.abs(b.getSouthWest().lat() - b.getNorthEast().lat());
 					s += (s ? ' and ' : '') + 'location.latitude>' + (b.getSouthWest().lat() + border);
@@ -378,7 +374,7 @@ ${v.keywords}
 			return s;
 		},
 		search(bounds) {
-			pageSearch.map['locations'].resetMapBounds = bounds == null;
+			pageSearch.locations.map.resetMapBounds = bounds == null;
 			pageSearch.locations.fieldValues = formFunc.getForm('search tabBody div.locations form').values;
 			lists.load({
 				webCall: 'search.locations.search',
@@ -440,7 +436,7 @@ ${v.keywords}
 	static resetMap(event) {
 		if (event.detail && event.detail.id != 'search tabBody>div.locations')
 			return;
-		var e = pageSearch.map[pageSearch.getType()];
+		var e = pageSearch.getType() == 'locations' ? pageSearch.locations.map : pageSearch.events.map;
 		for (var i = 0; i < e.markerLocation.length; i++)
 			e.markerLocation[i].setMap(null);
 		e.markerLocation = [];
@@ -487,7 +483,7 @@ ${v.keywords}
 		}, 500);
 	}
 	static scrollMap() {
-		var e = pageSearch.map[pageSearch.getType()];
+		var e = pageSearch.getType() == 'locations' ? pageSearch.locations.map : pageSearch.events.map;
 		if (ui.cssValue(e.prefix + 'map', 'display') == 'none')
 			return;
 		if (e.scrollTop != ui.q(e.prefix + 'listResults').scrollTop) {
@@ -517,7 +513,7 @@ ${v.keywords}
 		}
 	}
 	static selectMapLocation(event) {
-		var e = pageSearch.map[pageSearch.getType()];
+		var e = pageSearch.getType() == 'locations' ? pageSearch.locations.map : pageSearch.events.map;
 		ui.classRemove(e.prefix + 'listResults list-row.highlightMap', 'highlightMap');
 		var rows = ui.qa(e.prefix + 'listResults list-row');
 		for (var i = 0; i < rows.length; i++) {
@@ -567,7 +563,7 @@ ${v.keywords}
 			pageSearch.selectTab('contacts');
 	}
 	static toggleMap() {
-		var e = pageSearch.map[pageSearch.getType()];
+		var e = pageSearch.getType() == 'locations' ? pageSearch.locations.map : pageSearch.events.map;
 		if (ui.q(e.prefix + 'map').getAttribute('created')) {
 			if (!e.canvas) {
 				e.canvas = new google.maps.Map(ui.q('map'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true });
