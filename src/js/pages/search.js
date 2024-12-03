@@ -444,9 +444,10 @@ ${v.keywords}
 		setTimeout(function () {
 			var latSW = -5000, lonSW = 5000, latNE = 5000, lonNE = -5000;
 			var rows = ui.qa(e.prefix + 'listResults list-row');
+			var processed = [];
 			for (var i = 0; i < rows.length; i++) {
 				var d2 = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
-				if (!isNaN(d2.latitude)) {
+				if (!isNaN(d2.latitude) && processed.indexOf(d2.id) < 0) {
 					if (d2.latitude > latSW)
 						latSW = d2.latitude;
 					if (d2.longitude < lonSW)
@@ -471,6 +472,7 @@ ${v.keywords}
 					});
 					marker.addListener('click', pageSearch.selectMapLocation);
 					e.markerLocation.push(marker);
+					processed.push(d2.id);
 				}
 			}
 			if (e.resetMapBounds) {
