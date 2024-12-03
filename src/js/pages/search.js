@@ -310,7 +310,7 @@ ${v.keywords}
 			loadActive: false,
 			markerLocation: [],
 			open: false,
-			prefix: 'search .events ',
+			prefix: 'search .locations ',
 			resetMapBounds: true,
 			scrollTop: -1,
 			timeout: null
