@@ -484,10 +484,12 @@ ${v.keywords}
 		}
 		for (var i = 0; i < rows.length; i++) {
 			if (rows[i].offsetTop >= scrollTop && rows[i].getAttribute('filtered') != 'true') {
-				markers[rows[i].getAttribute('i')].setOpacity(1);
-				ui.classAdd(rows[i], 'highlightMap');
-				ui.q('map').setAttribute('created', new Date().getTime());
-				ui.q(prefix + 'button-text.map').style.display = null;
+				if (markers[rows[i].getAttribute('i')]) {
+					markers[rows[i].getAttribute('i')].setOpacity(1);
+					ui.classAdd(rows[i], 'highlightMap');
+					ui.q('map').setAttribute('created', new Date().getTime());
+					ui.q(prefix + 'button-text.map').style.display = null;
+				}
 				break;
 			}
 		}
