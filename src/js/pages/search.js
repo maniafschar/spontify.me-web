@@ -407,8 +407,11 @@ ${v.keywords}
 				}
 			});
 	}
+	static getType() {
+		return ui.q('search tabHeader tab.tabActive').getAttribute('i');
+	}
 	static repeatSearch() {
-		var type = ui.q('search tabHeader tab.tabActive').getAttribute('i');
+		var type = pageSearch.getType();
 		ui.q('search div.' + type + ' [name="keywords"]').value = '';
 		pageSearch[type].search();
 	}
@@ -419,7 +422,7 @@ ${v.keywords}
 			pageSearch.map.markerLocation[i].setMap(null);
 		pageSearch.map.markerLocation = [];
 		setTimeout(function () {
-			var prefix = 'search .locations ';
+			var prefix = 'search .' + pageSearch.getType() + ' ';
 			var latSW = -5000, lonSW = 5000, latNE = 5000, lonNE = -5000;
 			var rows = ui.qa(prefix + 'listResults list-row');
 			for (var i = 0; i < rows.length; i++) {
@@ -460,7 +463,7 @@ ${v.keywords}
 		}, 500);
 	}
 	static scrollMap() {
-		var prefix = 'search .locations ';
+		var prefix = 'search .' + pageSearch.getType() + ' ';
 		if (ui.cssValue(prefix + 'map', 'display') == 'none')
 			return;
 		if (pageSearch.map.scrollTop != ui.q(prefix + 'listResults').scrollTop) {
@@ -488,7 +491,7 @@ ${v.keywords}
 		}
 	}
 	static selectMapLocation(event) {
-		var prefix = 'search .locations ';
+		var prefix = 'search .' + pageSearch.getType() + ' ';
 		ui.classRemove(prefix + 'listResults list-row.highlightMap', 'highlightMap');
 		var rows = ui.qa(prefix + 'listResults list-row');
 		for (var i = 0; i < rows.length; i++) {
@@ -538,7 +541,7 @@ ${v.keywords}
 			pageSearch.selectTab('contacts');
 	}
 	static toggleMap() {
-		var prefix = 'search .locations ';
+		var prefix = 'search .' + pageSearch.getType() + ' ';
 		if (ui.q(prefix + 'map').getAttribute('created')) {
 			if (!pageSearch.map.canvas) {
 				pageSearch.map.canvas = new google.maps.Map(ui.q('map'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true });
