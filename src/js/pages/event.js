@@ -611,6 +611,7 @@ poll result div {
 				s += '<listSeparator class="highlightColor strong">' + ui.l('events.outdated') + '</listSeparator>';
 			else {
 				v = as[i];
+				var data = encodeURIComponent(JSON.stringify(v));
 				var startDate = global.date.server2local(v.event.startDate);
 				var s2 = global.date.formatDate(startDate, 'weekdayLong');
 				var s3 = s2.substring(0, s2.lastIndexOf(' '));
@@ -664,6 +665,7 @@ poll result div {
 				else
 					oc = 'details.open(&quot;' + v.idDate + '&quot;,' + JSON.stringify({ webCall: 'event.listEvents', query: 'event_list', search: encodeURIComponent('event.id=' + v.event.id) }).replace(/"/g, '&quot;') + ',pageLocation.detailLocationEvent)';
 				s += global.template`<list-row onclick="${oc}" i="${v.idDate}" class="event${clazz ? ' ' + clazz : ''}"
+					data="${data}"	
 					title="${encodeURIComponent(name)}"
 					text="${encodeURIComponent(text)}"
 					flag1="${flag1}"
