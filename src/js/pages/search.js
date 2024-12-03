@@ -12,18 +12,32 @@ export { pageSearch };
 
 class pageSearch {
 	static map = {
-		canvas: null,
-		id: null,
-		loadActive: false,
-		markerLocation: [],
-		markerMe: null,
-		open: false,
-		resetMapBounds: true,
-		scrollTop: -1,
-		svgLocation: null,
-		svgMe: null,
-		timeout: null
+		events: {
+			canvas: null,
+			id: null,
+			loadActive: false,
+			markerLocation: [],
+			markerMe: null,
+			open: false,
+			prefix: 'search .events ',
+			resetMapBounds: true,
+			scrollTop: -1,
+			timeout: null
+		},
+		locations: {
+			canvas: null,
+			id: null,
+			loadActive: false,
+			markerLocation: [],
+			markerMe: null,
+			open: false,
+			prefix: 'search .locations ',
+			resetMapBounds: true,
+			scrollTop: -1,
+			timeout: null
+		}
 	};
+	static svgLocation = null;
 	static template = v =>
 		global.template`<style>
 map {
@@ -226,7 +240,7 @@ ${v.keywords}
 			if (s)
 				s = '(' + s + ') and ';
 			if (bounds) {
-				var b = pageSearch.map.canvas.getBounds();
+				var b = pageSearch.map['events'].canvas.getBounds();
 				if (b) {
 					var border = 0.1 * Math.abs(b.getSouthWest().lat() - b.getNorthEast().lat());
 					s += (s ? ' and ' : '') + 'location.latitude>' + (b.getSouthWest().lat() + border);
@@ -238,7 +252,8 @@ ${v.keywords}
 			}
 			return s + 'event.endDate>=cast(\'' + global.date.local2server(new Date()).substring(0, 10) + '\' as timestamp)';
 		},
-		search() {
+		search(bounds) {
+			pageSearch.map['events'].resetMapBounds = bounds == null;
 			pageSearch.events.fieldValues = formFunc.getForm('search tabBody div.events form').values;
 			var type = ui.val('search tabBody div.events input-date');
 			pageEvent.loadEvents({
@@ -350,7 +365,7 @@ ${v.keywords}
 			if (ui.q('search tabBody div.locations [name="favorites"][checked="true"]'))
 				s += (s ? ' and ' : '') + 'locationFavorite.favorite=true';
 			if (bounds) {
-				var b = pageSearch.map.canvas.getBounds();
+				var b = pageSearch.map['locations'].canvas.getBounds();
 				if (b) {
 					var border = 0.1 * Math.abs(b.getSouthWest().lat() - b.getNorthEast().lat());
 					s += (s ? ' and ' : '') + 'location.latitude>' + (b.getSouthWest().lat() + border);
@@ -363,7 +378,7 @@ ${v.keywords}
 			return s;
 		},
 		search(bounds) {
-			pageSearch.map.resetMapBounds = bounds == null;
+			pageSearch.map['locations'].resetMapBounds = bounds == null;
 			pageSearch.locations.fieldValues = formFunc.getForm('search tabBody div.locations form').values;
 			lists.load({
 				webCall: 'search.locations.search',
@@ -401,7 +416,7 @@ ${v.keywords}
 			ui.q('search tabBody div.locations').innerHTML = pageSearch.locations.getFields() + '<listResults></listResults>';
 			formFunc.initFields(ui.q('search'));
 		}
-		if (!pageSearch.map.svgLocation)
+		if (!pageSearch.svgLocation)
 			communication.ajax({
 				url: '/images/locations.svg',
 				webCall: 'search.init',
@@ -410,19 +425,7 @@ ${v.keywords}
 					e.setAttribute('fill', 'black');
 					e.setAttribute('stroke', 'black');
 					e.setAttribute('stroke-width', '60');
-					pageSearch.map.svgLocation = 'data:image/svg+xml;base64,' + btoa(e.outerHTML);
-				}
-			});
-		if (!pageSearch.map.svgMe)
-			communication.ajax({
-				url: '/images/contacts.svg',
-				webCall: 'search.init',
-				success(r) {
-					var e = new DOMParser().parseFromString(r, "text/xml").getElementsByTagName('svg')[0];
-					e.setAttribute('fill', 'black');
-					e.setAttribute('stroke', 'black');
-					e.setAttribute('stroke-width', '20');
-					pageSearch.map.svgMe = 'data:image/svg+xml;base64,' + btoa(e.outerHTML);
+					pageSearch.svgLocation = 'data:image/svg+xml;base64,' + btoa(e.outerHTML);
 				}
 			});
 	}
@@ -437,13 +440,13 @@ ${v.keywords}
 	static resetMap(event) {
 		if (event.detail && event.detail.id != 'search tabBody>div.locations')
 			return;
-		for (var i = 0; i < pageSearch.map.markerLocation.length; i++)
-			pageSearch.map.markerLocation[i].setMap(null);
-		pageSearch.map.markerLocation = [];
+		var e = pageSearch.map[pageSearch.getType()];
+		for (var i = 0; i < e.markerLocation.length; i++)
+			e.markerLocation[i].setMap(null);
+		e.markerLocation = [];
 		setTimeout(function () {
-			var prefix = 'search .' + pageSearch.getType() + ' ';
 			var latSW = -5000, lonSW = 5000, latNE = 5000, lonNE = -5000;
-			var rows = ui.qa(prefix + 'listResults list-row');
+			var rows = ui.qa(e.prefix + 'listResults list-row');
 			for (var i = 0; i < rows.length; i++) {
 				var d2 = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
 				if (!isNaN(d2.latitude)) {
@@ -456,12 +459,12 @@ ${v.keywords}
 					if (d2.longitude > lonNE)
 						lonNE = d2.longitude;
 					var marker = new google.maps.Marker({
-						map: pageSearch.map.canvas,
+						map: e.canvas,
 						title: d2.name,
 						id: d2.id,
 						contentString: '',
 						icon: {
-							url: pageSearch.map.svgLocation,
+							url: pageSearch.svgLocation,
 							scaledSize: new google.maps.Size(40, 40),
 							origin: new google.maps.Point(0, 0),
 							anchor: new google.maps.Point(20, 40)
@@ -470,36 +473,36 @@ ${v.keywords}
 						opacity: 0.2
 					});
 					marker.addListener('click', pageSearch.selectMapLocation);
-					pageSearch.map.markerLocation.push(marker);
+					e.markerLocation.push(marker);
 				}
 			}
-			if (pageSearch.map.resetMapBounds) {
+			if (e.resetMapBounds) {
 				var deltaLat = 0.00002 * (latNE - latSW), deltaLon = 0.00002 * (lonNE - lonSW);
-				pageSearch.map.canvas.fitBounds(new google.maps.LatLngBounds(
+				e.canvas.fitBounds(new google.maps.LatLngBounds(
 					new google.maps.LatLng(latSW + deltaLat, lonSW - deltaLon), //south west
 					new google.maps.LatLng(latNE - deltaLat, lonNE + deltaLon) //north east
 				));
 			}
-			ui.classRemove(prefix + 'list-row div.highlightMap', 'highlightMap');
+			ui.classRemove(e.prefix + 'list-row div.highlightMap', 'highlightMap');
 		}, 500);
 	}
 	static scrollMap() {
-		var prefix = 'search .' + pageSearch.getType() + ' ';
-		if (ui.cssValue(prefix + 'map', 'display') == 'none')
+		var e = pageSearch.map[pageSearch.getType()];
+		if (ui.cssValue(e.prefix + 'map', 'display') == 'none')
 			return;
-		if (pageSearch.map.scrollTop != ui.q(prefix + 'listResults').scrollTop) {
-			pageSearch.map.scrollTop = ui.q(prefix + 'listResults').scrollTop;
-			clearTimeout(pageSearch.map.timeout);
-			pageSearch.map.timeout = setTimeout(pageSearch.scrollMap, 100);
+		if (e.scrollTop != ui.q(e.prefix + 'listResults').scrollTop) {
+			e.scrollTop = ui.q(e.prefix + 'listResults').scrollTop;
+			clearTimeout(e.timeout);
+			e.timeout = setTimeout(pageSearch.scrollMap, 100);
 			return;
 		}
-		ui.classRemove(prefix + 'listResults list-row.highlightMap', 'highlightMap');
-		var rows = ui.qa(prefix + 'listResults list-row');
-		var scrollTop = ui.q(prefix + 'listResults').scrollTop + ui.q(prefix + 'listResults').offsetTop;
+		ui.classRemove(e.prefix + 'listResults list-row.highlightMap', 'highlightMap');
+		var rows = ui.qa(e.prefix + 'listResults list-row');
+		var scrollTop = ui.q(e.prefix + 'listResults').scrollTop + ui.q(e.prefix + 'listResults').offsetTop;
 		var markers = {};
-		for (var i = 0; i < pageSearch.map.markerLocation.length; i++) {
-			markers[pageSearch.map.markerLocation[i].id] = pageSearch.map.markerLocation[i];
-			pageSearch.map.markerLocation[i].setOpacity(0.2);
+		for (var i = 0; i < e.markerLocation.length; i++) {
+			markers[e.markerLocation[i].id] = e.markerLocation[i];
+			e.markerLocation[i].setOpacity(0.2);
 		}
 		for (var i = 0; i < rows.length; i++) {
 			if (rows[i].offsetTop >= scrollTop && rows[i].getAttribute('filtered') != 'true') {
@@ -507,23 +510,23 @@ ${v.keywords}
 					markers[rows[i].getAttribute('i')].setOpacity(1);
 					ui.classAdd(rows[i], 'highlightMap');
 					ui.q('map').setAttribute('created', new Date().getTime());
-					ui.q(prefix + 'button-text.map').style.display = null;
+					ui.q(e.prefix + 'button-text.map').style.display = null;
 				}
 				break;
 			}
 		}
 	}
 	static selectMapLocation(event) {
-		var prefix = 'search .' + pageSearch.getType() + ' ';
-		ui.classRemove(prefix + 'listResults list-row.highlightMap', 'highlightMap');
-		var rows = ui.qa(prefix + 'listResults list-row');
+		var e = pageSearch.map[pageSearch.getType()];
+		ui.classRemove(e.prefix + 'listResults list-row.highlightMap', 'highlightMap');
+		var rows = ui.qa(e.prefix + 'listResults list-row');
 		for (var i = 0; i < rows.length; i++) {
 			var d = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
 			if (d.latitude == event.latLng.lat() && d.longitude == event.latLng.lng()) {
 				ui.classAdd(rows[i], 'highlightMap');
-				for (var i2 = 0; i2 < pageSearch.map.markerLocation.length; i2++)
-					pageSearch.map.markerLocation[i2].setOpacity(pageSearch.map.markerLocation[i2].id == rows[i].getAttribute('i') ? 1 : 0.2);
-				ui.q(prefix + 'listResults').scrollTo({ top: rows[i].offsetTop - ui.q(prefix + 'listResults').offsetTop, behavior: 'smooth' });
+				for (var i2 = 0; i2 < e.markerLocation.length; i2++)
+					e.markerLocation[i2].setOpacity(e.markerLocation[i2].id == rows[i].getAttribute('i') ? 1 : 0.2);
+				ui.q(e.prefix + 'listResults').scrollTo({ top: rows[i].offsetTop - ui.q(e.prefix + 'listResults').offsetTop, behavior: 'smooth' });
 				break;
 			}
 		}
@@ -564,28 +567,28 @@ ${v.keywords}
 			pageSearch.selectTab('contacts');
 	}
 	static toggleMap() {
-		var prefix = 'search .' + pageSearch.getType() + ' ';
-		if (ui.q(prefix + 'map').getAttribute('created')) {
-			if (!pageSearch.map.canvas) {
-				pageSearch.map.canvas = new google.maps.Map(ui.q('map'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true });
-				pageSearch.map.canvas.addListener('bounds_changed', function () {
-					if (new Date().getTime() - ui.q(prefix + 'map').getAttribute('created') > 2000)
-						ui.q(prefix + 'button-text.map').style.display = 'inline-block';
+		var e = pageSearch.map[pageSearch.getType()];
+		if (ui.q(e.prefix + 'map').getAttribute('created')) {
+			if (!e.canvas) {
+				e.canvas = new google.maps.Map(ui.q('map'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true });
+				e.canvas.addListener('bounds_changed', function () {
+					if (new Date().getTime() - ui.q(e.prefix + 'map').getAttribute('created') > 2000)
+						ui.q(e.prefix + 'button-text.map').style.display = 'inline-block';
 				});
-				ui.on(prefix + 'input-hashtags textarea', 'keyup', function () {
-					ui.q(prefix + 'button-text.map').style.display = 'inline-block';
+				ui.on(e.prefix + 'input-hashtags textarea', 'keyup', function () {
+					ui.q(e.prefix + 'button-text.map').style.display = 'inline-block';
 				});
 			}
-			ui.q(prefix + 'map').setAttribute('created', new Date().getTime());
-			ui.classRemove(prefix + 'listResults list-row.highlightMap', 'highlightMap');
-			ui.toggleHeight(prefix + 'map', pageSearch.scrollMap);
-			pageSearch.map.scrollTop = -1;
-			if (!ui.q(prefix + 'list-row') && !ui.q(prefix + 'noResult'))
+			ui.q(e.prefix + 'map').setAttribute('created', new Date().getTime());
+			ui.classRemove(e.prefix + 'listResults list-row.highlightMap', 'highlightMap');
+			ui.toggleHeight(e.prefix + 'map', pageSearch.scrollMap);
+			e.scrollTop = -1;
+			if (!ui.q(e.prefix + 'list-row') && !ui.q(e.prefix + 'noResult'))
 				pageSearch.getType() == 'locations' ? pageSearch.locations.search() : pageSearch.events.search();
 		} else {
 			ui.attr('map', 'created', new Date().getTime());
 			communication.loadMap('pageSearch.toggleMap');
-			ui.on(prefix + 'listResults', 'scroll', pageSearch.scrollMap);
+			ui.on(e.prefix + 'listResults', 'scroll', pageSearch.scrollMap);
 		}
 	}
 }
