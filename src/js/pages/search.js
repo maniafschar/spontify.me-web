@@ -222,8 +222,6 @@ ${v.keywords}
 				if (v)
 					s += (s ? ' or ' : '') + global.getRegEx('event.skills', v);
 			}
-			if (s)
-				s = '(' + s + ') and ';
 			if (bounds) {
 				var b = pageSearch.events.map.canvas.getBounds();
 				if (b) {
@@ -235,6 +233,8 @@ ${v.keywords}
 					s += ' and location.longitude<' + (b.getNorthEast().lng() - border);
 				}
 			}
+			if (s)
+				s = '(' + s + ') and ';
 			return s + 'event.endDate>=cast(\'' + global.date.local2server(new Date()).substring(0, 10) + '\' as timestamp)';
 		},
 		search(bounds) {
