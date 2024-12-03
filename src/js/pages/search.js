@@ -162,7 +162,9 @@ ${v.keywords}
 <errorHint></errorHint>
 <dialogButtons>
 <button-text class="defaultButton" onclick="pageSearch.events.search()" label="search.action"></button-text>
+<button-text onclick="pageSearch.toggleMap()" label="search.buttonMap"></button-text>
 </dialogButtons>
+<map style="display:none;"></map>
 </form>`,
 		getFields() {
 			var v = {};
