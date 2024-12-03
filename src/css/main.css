@@ -1100,7 +1100,7 @@ subtitle {
 }
 
 map {
-	height: 20em;
+	height: 30vh;
 	overflow: hidden;
 	position: relative;
 	display: block;
