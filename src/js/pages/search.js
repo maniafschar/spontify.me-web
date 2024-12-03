@@ -427,30 +427,32 @@ ${v.keywords}
 			var rows = ui.qa(prefix + 'listResults list-row');
 			for (var i = 0; i < rows.length; i++) {
 				var d2 = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
-				if (d2.latitude > latSW)
-					latSW = d2.latitude;
-				if (d2.longitude < lonSW)
-					lonSW = d2.longitude;
-				if (d2.latitude < latNE)
-					latNE = d2.latitude;
-				if (d2.longitude > lonNE)
-					lonNE = d2.longitude;
-				var marker = new google.maps.Marker({
-					map: pageSearch.map.canvas,
-					title: d2.name,
-					id: d2.id,
-					contentString: '',
-					icon: {
-						url: pageSearch.map.svgLocation,
-						scaledSize: new google.maps.Size(40, 40),
-						origin: new google.maps.Point(0, 0),
-						anchor: new google.maps.Point(20, 40)
-					},
-					position: new google.maps.LatLng(d2.latitude, d2.longitude),
-					opacity: 0.2
-				});
-				marker.addListener('click', pageSearch.selectMapLocation);
-				pageSearch.map.markerLocation.push(marker);
+				if (!isNaN(d2.latitude)) {
+					if (d2.latitude > latSW)
+						latSW = d2.latitude;
+					if (d2.longitude < lonSW)
+						lonSW = d2.longitude;
+					if (d2.latitude < latNE)
+						latNE = d2.latitude;
+					if (d2.longitude > lonNE)
+						lonNE = d2.longitude;
+					var marker = new google.maps.Marker({
+						map: pageSearch.map.canvas,
+						title: d2.name,
+						id: d2.id,
+						contentString: '',
+						icon: {
+							url: pageSearch.map.svgLocation,
+							scaledSize: new google.maps.Size(40, 40),
+							origin: new google.maps.Point(0, 0),
+							anchor: new google.maps.Point(20, 40)
+						},
+						position: new google.maps.LatLng(d2.latitude, d2.longitude),
+						opacity: 0.2
+					});
+					marker.addListener('click', pageSearch.selectMapLocation);
+					pageSearch.map.markerLocation.push(marker);
+				}
 			}
 			if (pageSearch.map.resetMapBounds) {
 				var deltaLat = 0.00002 * (latNE - latSW), deltaLon = 0.00002 * (lonNE - lonSW);
