@@ -26,6 +26,24 @@ class pageSearch {
 	};
 	static template = v =>
 		global.template`<style>
+map {
+	height: 30vh;
+	overflow: hidden;
+	position: relative;
+	display: block;
+	margin: 0 -1em;
+	box-shadow: 0 0 1em rgb(0, 0, 0, 0.3);
+}
+.highlightMap::before {
+	content: '⤶';
+	position: absolute;
+	right: 1em;
+	top: 0.7em;
+	opacity: 0.15;
+	font-size: 4em;
+	color: var(--bg2stop);
+	transform: rotate(90deg);
+}
 button-text.map {
 	position: absolute;
 	width: 30em;
@@ -164,6 +182,7 @@ ${v.keywords}
 <button-text class="defaultButton" onclick="pageSearch.events.search()" label="search.action"></button-text>
 <button-text onclick="pageSearch.toggleMap()" label="search.buttonMap"></button-text>
 </dialogButtons>
+<button-text class="map" onclick="pageSearch.events.search(true)" label="search.map"></button-text>
 <map style="display:none;"></map>
 </form>`,
 		getFields() {
@@ -562,7 +581,7 @@ ${v.keywords}
 			ui.toggleHeight(prefix + 'map', pageSearch.scrollMap);
 			pageSearch.map.scrollTop = -1;
 			if (!ui.q(prefix + 'list-row') && !ui.q(prefix + 'noResult'))
-				pageSearch.locations.search();
+				pageSearch.getType() == 'locations' ? pageSearch.locations.search() : pageSearch.events.search();
 		} else {
 			ui.attr('map', 'created', new Date().getTime());
 			communication.loadMap('pageSearch.toggleMap');
