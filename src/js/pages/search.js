@@ -505,9 +505,7 @@ ${v.keywords}
 		}
 		for (var i = 0; i < rows.length; i++) {
 			if (rows[i].offsetTop >= scrollTop && rows[i].getAttribute('filtered') != 'true') {
-				var id = rows[i].getAttribute('i');
-				if (id.indexOf('_') > 0)
-					id = id.split('_')[0];
+				var id = JSON.parse(decodeURIComponent(rows[i].getAttribute('data'))).id;
 				if (markers[id]) {
 					markers[id].setOpacity(1);
 					ui.classAdd(rows[i], 'highlightMap');
