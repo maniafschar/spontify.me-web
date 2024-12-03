@@ -577,6 +577,8 @@ ${v.keywords}
 				});
 			}
 			ui.q(e.prefix + 'map').setAttribute('created', new Date().getTime());
+			if (ui.q(e.prefix + 'map').style.display != 'none')
+				ui.q(e.prefix + 'button-text.map').style.display = null;
 			ui.classRemove(e.prefix + 'listResults list-row.highlightMap', 'highlightMap');
 			ui.toggleHeight(e.prefix + 'map', pageSearch.scrollMap);
 			e.scrollTop = -1;
