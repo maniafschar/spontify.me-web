@@ -524,7 +524,7 @@ ${v.keywords}
 			if (d.latitude == event.latLng.lat() && d.longitude == event.latLng.lng()) {
 				ui.classAdd(rows[i], 'highlightMap');
 				for (var i2 = 0; i2 < e.markerLocation.length; i2++)
-					e.markerLocation[i2].setOpacity(e.markerLocation[i2].id == rows[i].getAttribute('i') ? 1 : 0.2);
+					e.markerLocation[i2].setOpacity(e.markerLocation[i2].id == d.id ? 1 : 0.2);
 				ui.q(e.prefix + 'listResults').scrollTo({ top: rows[i].offsetTop - ui.q(e.prefix + 'listResults').offsetTop, behavior: 'smooth' });
 				break;
 			}
