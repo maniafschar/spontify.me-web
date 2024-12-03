@@ -566,7 +566,7 @@ ${v.keywords}
 		var e = pageSearch.getType() == 'locations' ? pageSearch.locations.map : pageSearch.events.map;
 		if (ui.q(e.prefix + 'map').getAttribute('created')) {
 			if (!e.canvas) {
-				e.canvas = new google.maps.Map(ui.q('map'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true });
+				e.canvas = new google.maps.Map(ui.q(e.prefix + 'map'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true });
 				e.canvas.addListener('bounds_changed', function () {
 					if (new Date().getTime() - ui.q(e.prefix + 'map').getAttribute('created') > 2000)
 						ui.q(e.prefix + 'button-text.map').style.display = 'inline-block';
@@ -582,7 +582,7 @@ ${v.keywords}
 			if (!ui.q(e.prefix + 'list-row') && !ui.q(e.prefix + 'noResult'))
 				pageSearch.getType() == 'locations' ? pageSearch.locations.search() : pageSearch.events.search();
 		} else {
-			ui.attr('map', 'created', new Date().getTime());
+			ui.attr(e.prefix + 'map', 'created', new Date().getTime());
 			communication.loadMap('pageSearch.toggleMap');
 			ui.on(e.prefix + 'listResults', 'scroll', pageSearch.scrollMap);
 		}
