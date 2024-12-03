@@ -434,7 +434,7 @@ ${v.keywords}
 		pageSearch[type].search();
 	}
 	static resetMap(event) {
-		if (event.detail && event.detail.id != 'search tabBody>div.locations')
+		if (event.detail && event.detail.id != 'search tabBody>div.' + pageSearch.getType())
 			return;
 		var e = pageSearch.getType() == 'locations' ? pageSearch.locations.map : pageSearch.events.map;
 		for (var i = 0; i < e.markerLocation.length; i++)
