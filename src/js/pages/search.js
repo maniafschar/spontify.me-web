@@ -505,8 +505,11 @@ ${v.keywords}
 		}
 		for (var i = 0; i < rows.length; i++) {
 			if (rows[i].offsetTop >= scrollTop && rows[i].getAttribute('filtered') != 'true') {
-				if (markers[rows[i].getAttribute('i')]) {
-					markers[rows[i].getAttribute('i')].setOpacity(1);
+				var id = rows[i].getAttribute('i');
+				if (id.indexOf('_') > 0)
+					id = id.split('_')[0];
+				if (markers[id]) {
+					markers[id].setOpacity(1);
 					ui.classAdd(rows[i], 'highlightMap');
 					ui.q('map').setAttribute('created', new Date().getTime());
 					ui.q(e.prefix + 'button-text.map').style.display = null;
