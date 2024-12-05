@@ -431,9 +431,9 @@ ${v.keywords}
 		document.addEventListener('GeoLocation', function (event) {
 			if (event.detail.manual) {
 				if (ui.q(pageSearch.locations.map.prefix + 'map').getAttribute('created'))
-					pageSearch.locations.search(true);
+					pageSearch.locations.search();
 				if (ui.q(pageSearch.events.map.prefix + 'map').getAttribute('created'))
-					pageSearch.events.search(true);
+					pageSearch.events.search();
 			}
 		});
 	}
