@@ -125,7 +125,7 @@ label {
 					if (t) {
 						var list = user.get('locationPicker') || [];
 						for (var i = list.length - 1; i >= 0; i--) {
-							if (list[i].town == t)
+							if (!list[i] || list[i].town == t)
 								list.splice(i, 1);
 						}
 						list.push({ lat: lat, lon: lon, town: t, street: e?.street || r.street });
