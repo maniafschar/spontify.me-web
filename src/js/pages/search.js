@@ -425,6 +425,14 @@ ${v.keywords}
 					pageSearch.svgLocation = 'data:image/svg+xml;base64,' + btoa(e.outerHTML);
 				}
 			});
+		document.addEventListener('GeoLocation', function (event) {
+			if (event.manual) {
+				if (ui.q(pageSearch.locations.map.prefix + 'map').getAttribute('created'))
+					pageSearch.locations.search(true);
+				if (ui.q(pageSearch.events.map.prefix + 'map').getAttribute('created'))
+					pageSearch.events.search(true);
+			}
+		});
 	}
 	static getType() {
 		return ui.q('search tabHeader tab.tabActive').getAttribute('i');
