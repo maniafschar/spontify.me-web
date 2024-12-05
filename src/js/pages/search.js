@@ -447,7 +447,7 @@ ${v.keywords}
 			var processed = [];
 			for (var i = 0; i < rows.length; i++) {
 				var d2 = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
-				if (!isNaN(d2.latitude) && processed.indexOf(d2.id) < 0) {
+				if ((d2.latitude || d2.latitude == 0) && processed.indexOf(d2.id) < 0) {
 					if (d2.latitude > latSW)
 						latSW = d2.latitude;
 					if (d2.longitude < lonSW)
