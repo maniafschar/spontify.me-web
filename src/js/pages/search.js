@@ -394,6 +394,9 @@ ${v.keywords}
 			return geoData.getCurrent().town;
 		return ui.l('search.unknownTown');
 	}
+	static getType() {
+		return ui.q('search tabHeader tab.tabActive').getAttribute('i');
+	}
 	static init() {
 		ui.on(document, 'List', pageSearch.resetMap);
 		document.addEventListener('GeoLocation', function (event) {
@@ -426,16 +429,13 @@ ${v.keywords}
 				}
 			});
 		document.addEventListener('GeoLocation', function (event) {
-			if (event.manual) {
+			if (event.detail.manual) {
 				if (ui.q(pageSearch.locations.map.prefix + 'map').getAttribute('created'))
 					pageSearch.locations.search(true);
 				if (ui.q(pageSearch.events.map.prefix + 'map').getAttribute('created'))
 					pageSearch.events.search(true);
 			}
 		});
-	}
-	static getType() {
-		return ui.q('search tabHeader tab.tabActive').getAttribute('i');
 	}
 	static repeatSearch() {
 		var type = pageSearch.getType();
