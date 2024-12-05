@@ -23,14 +23,14 @@ map {
 	box-shadow: 0 0 1em rgb(0, 0, 0, 0.3);
 }
 .highlightMap::before {
-	content: '⤶';
+	content: '⤷';
 	position: absolute;
-	right: 1em;
-	top: 0.7em;
+	right: 0.65em;
+	bottom: 0.4em;
 	opacity: 0.15;
 	font-size: 4em;
 	color: var(--bg2stop);
-	transform: rotate(90deg);
+	transform: rotate(270deg);
 }
 button-text.map {
 	position: absolute;
