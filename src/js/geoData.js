@@ -125,20 +125,12 @@ class geoData {
 	}
 	static save(position, exec) {
 		var d = geoData.getDistance(geoData.current.lat, geoData.current.lon, position.latitude, position.longitude);
-		if (position.manual) {
-			geoData.currentManual.lat = position.latitude;
-			geoData.currentManual.lon = position.longitude;
-			if (d > 10) {
-				geoData.currentManual.town = '';
-				geoData.currentManual.street = '';
-			}
-		} else {
-			geoData.current.lat = position.latitude;
-			geoData.current.lon = position.longitude;
-			if (d > 10) {
-				geoData.current.town = '';
-				geoData.current.street = '';
-			}
+		var c = position.manual ? geoData.currentManual : geoData.current;
+		c.lat = position.latitude;
+		c.lon = position.longitude;
+		if (d > 10) {
+			c.town = '';
+			c.street = '';
 		}
 		if (user.contact?.id && (position.manual ||
 			(new Date().getTime() - geoData.lastSave > 5000) && (!geoData.localized || d > 0.05))) {
@@ -151,7 +143,7 @@ class geoData {
 				responseType: 'json',
 				error(r) {
 					geoData.current.street = r.status + ' ' + r.responseText;
-					document.dispatchEvent(new CustomEvent('GeoLocation', { detail: { type: 'update', ...geoData.current } }));
+					document.dispatchEvent(new CustomEvent('GeoLocation', { detail: { type: 'update', manual: position.manual, error: true } }));
 				},
 				success(r) {
 					if (!r)
@@ -161,7 +153,7 @@ class geoData {
 						geoData.currentManual = { lat: position.latitude, lon: position.longitude, street: r.street, town: r.town };
 					else
 						geoData.current = { lat: position.latitude, lon: position.longitude, street: r.street, town: r.town };
-					document.dispatchEvent(new CustomEvent('GeoLocation', { detail: { type: 'update', ...geoData.current } }));
+					document.dispatchEvent(new CustomEvent('GeoLocation', { detail: { type: 'update', manual: position.manual } }));
 					if (exec)
 						exec(r);
 				}
