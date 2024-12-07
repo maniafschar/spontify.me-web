@@ -348,7 +348,6 @@
 			"errorDateFormat": "Bitte gib einen korrekten Termin an.",
 			"errorDateNoEnd": "Bitte gib das Enddatum an.",
 			"errorDateTooSmall": "Der Termin liegt in der Vergangenheit.",
-			"errorInquiry": "Achtung: Du hast Deinen Standort nicht freigegeben. Somit können keine geeignete ${buddies} in Deiner Umgebung informiert werden. Deine Chancen, jemanden zu finden, sinken drastisch.",
 			"errorLocation": "Bitte wähle eine Location aus.",
 			"errorVisibility": "Du hast in Deinem Profil keine Attribute hinterlegt, so kann das Event niemanden vorgeschalgen werden. Wähle in Deinem Profil Attribute aus oder selektiere \"Alle\".",
 			"hashtags": "Interessen",

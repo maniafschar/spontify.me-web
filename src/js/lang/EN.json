@@ -348,7 +348,6 @@
 			"errorDateFormat": "Please enter a correct date.",
 			"errorDateNoEnd": "Please enter the end date.",
 			"errorDateTooSmall": "The date is in the past.",
-			"errorInquiry": "Attention: You have not shared your location. This means that no suitable ${buddies} in your area can be informed. Your chances of finding someone decrease drastically.",
 			"errorLocation": "Please choose a Location.",
 			"errorVisibility": "You have not stored any attributes in your profile. This way, the event cannot be suggested to anyone. Select attributes in your profile or select \"All\".",
 			"hashtags": "Interests",

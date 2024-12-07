@@ -89,7 +89,7 @@ clubs {
 		</value>
 	</field>
 	<field name="map">
-		<label class="date">${ui.l('events.locationMap')}</label>
+		<label>${ui.l('events.locationMap')}</label>
 		<value>
 			<mapEdit></mapEdit>
 		</value>
@@ -1261,10 +1261,6 @@ poll result div {
 		} else {
 			ui.classRemove('dialog-popup .event dialogButtons .save', 'hidden');
 			ui.classAdd('dialog-popup .event dialogButtons .selectLocation', 'hidden');
-		}
-		if (b == 'Inquiry' && !geoData.localized) {
-			var e = ui.q('dialog-popup explain.type');
-			e.innerHTML = e.innerHTML + '<br/><br/>' + ui.l('events.errorInquiry');
 		}
 		ui.q('dialog-popup label.date').innerText = ui.l();
 		ui.html('dialog-popup label.date', ui.l('events.' + (b == 'Poll' ? 'end' : b ? 'start' : 'date')));
