@@ -600,6 +600,7 @@
 			"title": "Login"
 		},
 		"marketing": {
+			"inviteFriends": "Invite your friends to help the community grow and get even more people to participate in surveys.",
 			"next": "Next",
 			"noResult": "There were too few participants in the survey, the result cannot be displayed.",
 			"previous": "Back",

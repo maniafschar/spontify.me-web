@@ -154,8 +154,8 @@ hint {
 			if (marketing.data.clientMarketingResult.id) {
 				if (marketing.data.clientMarketingResult.image)
 					ui.navigation.openHint({
-						desc: marketing.style + '<img class="result" src="' + global.serverImg + marketing.data.clientMarketingResult.image + '" />' + (marketing.data.storage.epilog ? '<div>'
-							+ marketing.data.storage.epilog.replace(/\n/g, '<br/>') + '</div>' : ''),
+						desc: marketing.style + '<img class="result" src="' + global.serverImg + marketing.data.clientMarketingResult.image + '" />'
+							+ '<div style="padding-top:1em;">' + ui.l('marketing.inviteFriends') + '<br/><button-text onclick="pageInfo.socialShare()" label="settings.socialShare"></button-text></div>',
 						pos: '5%,5%', size: '-5%,auto', onclick: 'return;'
 					});
 				return;
