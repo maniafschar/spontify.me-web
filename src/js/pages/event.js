@@ -548,10 +548,8 @@ poll result div {
 					webCall: 'event.editMap',
 					responseType: 'json',
 					success(r) {
-						if (r.formatted && ui.q('dialog-popup [name="address"]')) {
-							ui.q('dialog-popup [name="latitude"]').value = pageEvent.mapEdit.canvas.getCenter().lat();
-							ui.q('dialog-popup [name="longitude"]').value = pageEvent.mapEdit.canvas.getCenter().lng();
-						}
+						ui.q('dialog-popup [name="latitude"]').value = pageEvent.mapEdit.canvas.getCenter().lat();
+						ui.q('dialog-popup [name="longitude"]').value = pageEvent.mapEdit.canvas.getCenter().lng();
 					}
 				});
 			}, 2000);
