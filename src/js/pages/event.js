@@ -92,7 +92,7 @@ mapEdit{
 			<input-date name="startDate" value="${v.startDate}" min="${v.dateMin}" max="${v.dateMax}" scroll="dialog-popup popupContent div"></input-date>
 		</value>
 	</field>
-	<field name="map">
+	<field name="mapEdit">
 		<label>${ui.l('events.locationMap')}</label>
 		<value>
 			<mapEdit></mapEdit>
@@ -532,7 +532,7 @@ poll result div {
 			return;
 		}
 		pageEvent.mapEdit.canvas = new google.maps.Map(ui.q('dialog-popup mapEdit'), {
-			mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 15, center: new google.maps.LatLng(geoData.getCurrent().lat, geoData.getCurrent().lon), zoom: 17
+			mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 16, center: new google.maps.LatLng(geoData.getCurrent().lat, geoData.getCurrent().lon), zoom: 17
 		});
 		pageEvent.mapEdit.canvas.addListener('center_changed', function () {
 			clearTimeout(pageEvent.mapEdit.load);
@@ -1257,7 +1257,7 @@ poll result div {
 		pageEvent.openSection('dialog-popup field[name="endDate"]', (b == 'Online' || b == 'Location') && repetition && repetition != 'Games');
 		ui.q('dialog-popup .url label').innerText = ui.l(b == 'Online' ? 'events.urlOnlineEvent' : 'events.url');
 		pageEvent.openSection('dialog-popup .url', b == 'Online');
-		pageEvent.openSection('dialog-popup .map', b == 'Inquiry');
+		pageEvent.openSection('dialog-popup field[name="mapEdit"]', b == 'Inquiry');
 		pageEvent.openSection('dialog-popup explain.type', b == 'Inquiry' || b == 'Poll');
 		pageEvent.openSection('dialog-popup .locationName', b == 'Location');
 		pageEvent.openSection('dialog-popup .poll', b == 'Poll');
