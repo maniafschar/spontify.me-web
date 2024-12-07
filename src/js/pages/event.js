@@ -59,6 +59,10 @@ clubs {
 	position: relative;
  	display: block;
  }
+mapEdit{
+	display: block;
+	height: 15em;
+}
 </style>
 <form name="editElement" onsubmit="return false">
 <input type="hidden" name="id" value="${v.id}"/>
