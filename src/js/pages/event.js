@@ -531,7 +531,9 @@ poll result div {
 			setTimeout(pageEvent.editMap, 100);
 			return;
 		}
-		pageEvent.mapEdit.canvas = new google.maps.Map(ui.q('dialog-popup mapEdit'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, center: new google.maps.LatLng(parseFloat(ui.val('dialog-popup [name="latitude"]')), parseFloat(ui.val('dialog-popup [name="longitude"]'))), zoom: 17 });
+		pageEvent.mapEdit.canvas = new google.maps.Map(ui.q('dialog-popup mapEdit'), {
+			mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, center: new google.maps.LatLng(geoData.getCurrent().lat, geoData.getCurrent().lon), zoom: 17
+		});
 		pageEvent.mapEdit.canvas.addListener('center_changed', function () {
 			clearTimeout(pageEvent.mapEdit.load);
 			pageEvent.mapEdit.load = setTimeout(function () {
