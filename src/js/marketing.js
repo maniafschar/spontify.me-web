@@ -121,7 +121,9 @@ hint {
 				ui.q('dialog-hint button-text.right').setAttribute('label', 'Yes');
 				ui.q('dialog-hint buttons progressindex').style.width = 0;
 			} else
-				ui.q('dialog-hint div').innerHTML = (marketing.data.storage.epilog ? marketing.data.storage.epilog.replace(/\n/g, '<br/>') : '') + (msg ? '<br/><br/>' + msg.replace(/\n/g, '<br/>') : '');
+				ui.q('dialog-hint div').innerHTML = (marketing.data.storage.epilog ? marketing.data.storage.epilog.replace(/\n/g, '<br/>') : '')
+					+ (msg ? '<br/><br/>' + msg.replace(/\n/g, '<br/>') : '')
+					+ '<div style="padding-top:1em;">' + ui.l('marketing.inviteFriends') + '<br/><br/><button-text onclick="pageInfo.socialShare()" label="settings.socialShare"></button-text></div>';
 		};
 		if (marketing.data.mode == 'test')
 			next();
@@ -155,7 +157,7 @@ hint {
 				if (marketing.data.clientMarketingResult.image)
 					ui.navigation.openHint({
 						desc: marketing.style + '<img class="result" src="' + global.serverImg + marketing.data.clientMarketingResult.image + '" />'
-							+ '<div style="padding-top:1em;">' + ui.l('marketing.inviteFriends') + '<br/><button-text onclick="pageInfo.socialShare()" label="settings.socialShare"></button-text></div>',
+							+ '<div style="padding-top:1em;">' + ui.l('marketing.inviteFriends') + '<br/><br/><button-text onclick="pageInfo.socialShare()" label="settings.socialShare"></button-text></div>',
 						pos: '5%,5%', size: '-5%,auto', onclick: 'return;'
 					});
 				return;
