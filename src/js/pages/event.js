@@ -541,18 +541,8 @@ poll result div {
 			mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 16, center: new google.maps.LatLng(parseFloat(ui.val('dialog-popup [name="latitude"]')), parseFloat(ui.val('dialog-popup [name="longitude"]'))), zoom: 17
 		});
 		pageEvent.mapEdit.canvas.addListener('center_changed', function () {
-			clearTimeout(pageEvent.mapEdit.load);
-			pageEvent.mapEdit.load = setTimeout(function () {
-				communication.ajax({
-					url: global.serverApi + 'action/google?param=' + encodeURIComponent('latlng=' + pageEvent.mapEdit.canvas.getCenter().lat() + ',' + pageEvent.mapEdit.canvas.getCenter().lng()),
-					webCall: 'event.editMap',
-					responseType: 'json',
-					success(r) {
-						ui.q('dialog-popup [name="latitude"]').value = pageEvent.mapEdit.canvas.getCenter().lat();
-						ui.q('dialog-popup [name="longitude"]').value = pageEvent.mapEdit.canvas.getCenter().lng();
-					}
-				});
-			}, 2000);
+			ui.q('dialog-popup [name="latitude"]').value = pageEvent.mapEdit.canvas.getCenter().lat();
+			ui.q('dialog-popup [name="longitude"]').value = pageEvent.mapEdit.canvas.getCenter().lng();
 		});
 	}
 	static getCalendarList(data) {
