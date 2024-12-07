@@ -183,6 +183,8 @@ class Event extends BaseEntity {
 	imageList;
 	link;
 	locationId;
+	latitude;
+	longitude;
 	maxParticipants;
 	price;
 	publish;
