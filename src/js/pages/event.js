@@ -532,7 +532,7 @@ poll result div {
 			return;
 		}
 		pageEvent.mapEdit.canvas = new google.maps.Map(ui.q('dialog-popup mapEdit'), {
-			mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, center: new google.maps.LatLng(geoData.getCurrent().lat, geoData.getCurrent().lon), zoom: 17
+			mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 15, center: new google.maps.LatLng(geoData.getCurrent().lat, geoData.getCurrent().lon), zoom: 17
 		});
 		pageEvent.mapEdit.canvas.addListener('center_changed', function () {
 			clearTimeout(pageEvent.mapEdit.load);
