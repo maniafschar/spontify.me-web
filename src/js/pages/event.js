@@ -67,6 +67,8 @@ mapEdit{
 <form name="editElement" onsubmit="return false">
 <input type="hidden" name="id" value="${v.id}"/>
 <input type="hidden" name="locationId" value="${v.locationID}"/>
+<input type="hidden" name="longitude" value="${v.longitude}" />
+<input type="hidden" name="latitude" value="${v.latitude}" />
 <input type="hidden" name="skills" value="${v.skills}" />
 <input type="hidden" name="skillsText" value="${v.skillsText}" />
 <div class="event">
@@ -469,6 +471,10 @@ poll result div {
 		if (global.config.club)
 			v.hideOnlineEvent = 'class="hidden"';
 		v.publish = global.config.publishingWall ? '' : ' class="hidden"';
+		if (!v.latitude)
+			v.latitude = geoData.getCurrent().lat;
+		if (!v.longitude)
+			v.longitude = geoData.getCurrent().lon;
 		var skills = user.contact.skills?.split('\|');
 		var s = '';
 		if (skills) {
@@ -532,7 +538,7 @@ poll result div {
 			return;
 		}
 		pageEvent.mapEdit.canvas = new google.maps.Map(ui.q('dialog-popup mapEdit'), {
-			mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 16, center: new google.maps.LatLng(geoData.getCurrent().lat, geoData.getCurrent().lon), zoom: 17
+			mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, maxZoom: 16, center: new google.maps.LatLng(parseFloat(ui.val('dialog-popup [name="latitude"]')), parseFloat(ui.val('dialog-popup [name="longitude"]'))), zoom: 17
 		});
 		pageEvent.mapEdit.canvas.addListener('center_changed', function () {
 			clearTimeout(pageEvent.mapEdit.load);
