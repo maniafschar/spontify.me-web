@@ -16,6 +16,10 @@ import { pageLocation } from './location';
 export { pageEvent };
 
 class pageEvent {
+	static mapEdit = {
+		canvas: null,
+		load: null
+	};
 	static nearByExec = null;
 	static popupValues;
 	static paypal = { fee: null, feeDate: null, feeAfter: null, currency: null, merchantUrl: null };
@@ -82,6 +86,12 @@ clubs {
 		<label class="date">${ui.l('events.start')}</label>
 		<value>
 			<input-date name="startDate" value="${v.startDate}" min="${v.dateMin}" max="${v.dateMax}" scroll="dialog-popup popupContent div"></input-date>
+		</value>
+	</field>
+	<field name="map">
+		<label class="date">${ui.l('events.locationMap')}</label>
+		<value>
+			<mapEdit></mapEdit>
 		</value>
 	</field>
 	<field class="noWTDField checkbox">
@@ -510,6 +520,30 @@ poll result div {
 		});
 		selectable(v.repetition);
 		pageEvent.popupValues = JSON.stringify(formFunc.getForm('dialog-popup form'));
+		communication.loadMap('pageEvent.editMap');
+	}
+	static editMap() {
+		if (!ui.q('dialog-popup mapEdit')) {
+			setTimeout(pageEvent.editMap, 100);
+			return;
+		}
+		pageEvent.mapEdit.canvas = new google.maps.Map(ui.q('dialog-popup mapEdit'), { mapTypeId: google.maps.MapTypeId.ROADMAP, disableDefaultUI: true, center: new google.maps.LatLng(parseFloat(ui.val('dialog-popup [name="latitude"]')), parseFloat(ui.val('dialog-popup [name="longitude"]'))), zoom: 17 });
+		pageEvent.mapEdit.canvas.addListener('center_changed', function () {
+			clearTimeout(pageEvent.mapEdit.load);
+			pageEvent.mapEdit.load = setTimeout(function () {
+				communication.ajax({
+					url: global.serverApi + 'action/google?param=' + encodeURIComponent('latlng=' + pageEvent.mapEdit.canvas.getCenter().lat() + ',' + pageEvent.mapEdit.canvas.getCenter().lng()),
+					webCall: 'event.editMap',
+					responseType: 'json',
+					success(r) {
+						if (r.formatted && ui.q('dialog-popup [name="address"]')) {
+							ui.q('dialog-popup [name="latitude"]').value = pageEvent.mapEdit.canvas.getCenter().lat();
+							ui.q('dialog-popup [name="longitude"]').value = pageEvent.mapEdit.canvas.getCenter().lng();
+						}
+					}
+				});
+			}, 2000);
+		});
 	}
 	static getCalendarList(data) {
 		if (!data || data.length < 2)
@@ -1217,6 +1251,7 @@ poll result div {
 		pageEvent.openSection('dialog-popup field[name="endDate"]', (b == 'Online' || b == 'Location') && repetition && repetition != 'Games');
 		ui.q('dialog-popup .url label').innerText = ui.l(b == 'Online' ? 'events.urlOnlineEvent' : 'events.url');
 		pageEvent.openSection('dialog-popup .url', b == 'Online');
+		pageEvent.openSection('dialog-popup .map', b == 'Inquiry');
 		pageEvent.openSection('dialog-popup explain.type', b == 'Inquiry' || b == 'Poll');
 		pageEvent.openSection('dialog-popup .locationName', b == 'Location');
 		pageEvent.openSection('dialog-popup .poll', b == 'Poll');

@@ -356,6 +356,7 @@
 			"locationInputHint": "For searching enter 4 characters of the name or address of the Location.",
 			"locationInputHintCreateNew": "Location not found? No problem, create a",
 			"locationInputNoHit": "No hit",
+			"locationMap": "Where approximately would you like to do something?",
 			"matchIndicatorHint": "{0} of your {1} specified interests match. That's a {2}% match.",
 			"maxParticipants": "Max. Participants",
 			"myEvents": "which I created",
