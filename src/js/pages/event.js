@@ -94,7 +94,7 @@ mapEdit{
 			<input-date name="startDate" value="${v.startDate}" min="${v.dateMin}" max="${v.dateMax}" scroll="dialog-popup popupContent div"></input-date>
 		</value>
 	</field>
-	<field name="mapEdit">
+	<field name="mapEdit" style="display:none;">
 		<label>${ui.l('events.locationMap')}</label>
 		<value>
 			<mapEdit></mapEdit>
