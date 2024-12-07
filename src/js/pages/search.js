@@ -225,12 +225,21 @@ ${v.keywords}
 			if (bounds) {
 				var b = pageSearch.events.map.canvas.getBounds();
 				if (b) {
-					var border = 0.1 * Math.abs(b.getSouthWest().lat() - b.getNorthEast().lat());
-					s += (s ? ' and ' : '') + 'location.latitude>' + (b.getSouthWest().lat() + border);
-					s += ' and location.latitude<' + (b.getNorthEast().lat() - border);
-					border = 0.1 * Math.abs(b.getNorthEast().lng() - b.getSouthWest().lng());
-					s += ' and location.longitude>' + (b.getSouthWest().lng() + border);
-					s += ' and location.longitude<' + (b.getNorthEast().lng() - border);
+					if (s)
+						s += ' and ';
+					s += '(';
+					var borderLat = 0.1 * Math.abs(b.getSouthWest().lat() - b.getNorthEast().lat());
+					s += 'location.latitude>' + (b.getSouthWest().lat() + borderLat);
+					s += ' and location.latitude<' + (b.getNorthEast().lat() - borderLat);
+					var borderLon = 0.1 * Math.abs(b.getNorthEast().lng() - b.getSouthWest().lng());
+					s += ' and location.longitude>' + (b.getSouthWest().lng() + borderLon);
+					s += ' and location.longitude<' + (b.getNorthEast().lng() - borderLon);
+					s += ' or ';
+					s += 'event.latitude>' + (b.getSouthWest().lat() + borderLat);
+					s += ' and event.latitude<' + (b.getNorthEast().lat() - borderLat);
+					s += ' and event.longitude>' + (b.getSouthWest().lng() + borderLon);
+					s += ' and event.longitude<' + (b.getNorthEast().lng() - borderLon);
+					s += ')';
 				}
 			}
 			if (s)
@@ -364,8 +373,10 @@ ${v.keywords}
 			if (bounds) {
 				var b = pageSearch.locations.map.canvas.getBounds();
 				if (b) {
+					if (s)
+						s += ' and ';
 					var border = 0.1 * Math.abs(b.getSouthWest().lat() - b.getNorthEast().lat());
-					s += (s ? ' and ' : '') + 'location.latitude>' + (b.getSouthWest().lat() + border);
+					s += 'location.latitude>' + (b.getSouthWest().lat() + border);
 					s += ' and location.latitude<' + (b.getNorthEast().lat() - border);
 					border = 0.1 * Math.abs(b.getNorthEast().lng() - b.getSouthWest().lng());
 					s += ' and location.longitude>' + (b.getSouthWest().lng() + border);
@@ -455,6 +466,10 @@ ${v.keywords}
 			var processed = [];
 			for (var i = 0; i < rows.length; i++) {
 				var d2 = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
+				if (d2.latitude == null && d2.event.latitude != null) {
+					d2.latitude = d2.event.latitude;
+					d2.longitude = d2.event.longitude;
+				}
 				if ((d2.latitude || d2.latitude == 0) && processed.indexOf(d2.id) < 0) {
 					if (d2.latitude > latSW)
 						latSW = d2.latitude;
@@ -530,6 +545,10 @@ ${v.keywords}
 		var rows = ui.qa(e.prefix + 'listResults list-row');
 		for (var i = 0; i < rows.length; i++) {
 			var d = JSON.parse(decodeURIComponent(rows[i].getAttribute('data')));
+			if (d.latitude == null && d.event.latitude != null) {
+				d.latitude = d.event.latitude;
+				d.longitude = d.event.longitude;
+			}
 			if (d.latitude == event.latLng.lat() && d.longitude == event.latLng.lng()) {
 				ui.classAdd(rows[i], 'highlightMap');
 				for (var i2 = 0; i2 < e.markerLocation.length; i2++)
