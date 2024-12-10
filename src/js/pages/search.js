@@ -499,7 +499,7 @@ ${v.keywords}
 					processed.push(d2.id);
 				}
 			}
-			if (e.resetMapBounds) {
+			if (e.resetMapBounds && e.canvas) {
 				var deltaLat = 0.00002 * (latNE - latSW), deltaLon = 0.00002 * (lonNE - lonSW);
 				e.canvas.fitBounds(new google.maps.LatLngBounds(
 					new google.maps.LatLng(latSW + deltaLat, lonSW - deltaLon), //south west
