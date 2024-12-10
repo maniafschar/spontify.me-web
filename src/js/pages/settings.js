@@ -441,12 +441,6 @@ ${v.info}`;
 		user.contact.age = user.contact.birthday ? pageContact.getBirthday(user.contact.birthday).age : null;
 		pageSettings.currentSettings = pageSettings.getCurrentSettings();
 		bluetooth.reset();
-		if (goToID) {
-			if (goToID == 'autoOpen')
-				pageSettings.preview();
-			else
-				ui.navigation.goTo(goToID, true);
-		}
 		ui.css('settings save', 'display', '');
 		if (ui.q('settings input-image img.preview')) {
 			communication.ajax({
@@ -463,7 +457,14 @@ ${v.info}`;
 			});
 		} else
 			document.dispatchEvent(new CustomEvent('Settings', { detail: { action: 'save' } }));
-		initialisation.setLanguage(ui.val('settings input-checkbox[name="language"][checked="true"]'));
+		initialisation.setLanguage(ui.val('settings input-checkbox[name="language"][checked="true"]'), function () {
+			if (goToID) {
+				if (goToID == 'autoOpen')
+					pageSettings.preview();
+				else
+					ui.navigation.goTo(goToID, true);
+			}
+		});
 	}
 	static reset() {
 		formFunc.resetError(ui.q('input[name="pseudonym"]'));

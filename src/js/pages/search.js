@@ -409,10 +409,6 @@ ${v.keywords}
 		return ui.q('search tabHeader tab.tabActive').getAttribute('i');
 	}
 	static init() {
-		ui.on(document, 'List', pageSearch.resetMap);
-		document.addEventListener('GeoLocation', function (event) {
-			ui.html('search label.locationPicker', pageSearch.getTown());
-		});
 		if (!pageSearch.contacts.fieldValues)
 			pageSearch.contacts.fieldValues = user.get('searchContacts') || {};
 		if (!pageSearch.events.fieldValues)
@@ -621,3 +617,7 @@ ${v.keywords}
 		}
 	}
 }
+ui.on(document, 'List', pageSearch.resetMap);
+document.addEventListener('GeoLocation', function (event) {
+	ui.html('search label.locationPicker', pageSearch.getTown());
+});

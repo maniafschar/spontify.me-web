@@ -337,8 +337,11 @@ class initialisation {
 		initialisation.recoverInvoked = false;
 	}
 	static setLanguage(lang, exec) {
-		if (global.language == lang)
+		if (global.language == lang) {
+			if (exec)
+				exec();
 			return;
+		}
 		ui.classRemove('.langSelectImg', 'pressed');
 		ui.classAdd('.langSelectImg[l="' + lang + '"]', 'pressed');
 		communication.ajax({
