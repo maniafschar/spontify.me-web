@@ -404,6 +404,7 @@ class initialisation {
 		ui.html('info', '');
 		ui.html('settings', '');
 		ui.html('login', '');
+		ui.html('search', '');
 		if (exec)
 			exec();
 		else
