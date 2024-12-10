@@ -423,7 +423,11 @@ ${v.keywords}
 			ui.q('search tabBody div.locations').innerHTML = pageSearch.locations.getFields() + '<listResults></listResults>';
 			formFunc.initFields(ui.q('search'));
 		}
-		if (!pageSearch.svgLocation)
+		if (!pageSearch.svgLocation) {
+			ui.on(document, 'List', pageSearch.resetMap);
+			document.addEventListener('GeoLocation', function (event) {
+				ui.html('search label.locationPicker', pageSearch.getTown());
+			});
 			communication.ajax({
 				url: '/images/locations.svg',
 				webCall: 'search.init',
@@ -435,6 +439,7 @@ ${v.keywords}
 					pageSearch.svgLocation = 'data:image/svg+xml;base64,' + btoa(e.outerHTML);
 				}
 			});
+		}
 		document.addEventListener('GeoLocation', function (event) {
 			if (event.detail.manual) {
 				if (ui.q(pageSearch.locations.map.prefix + 'map').getAttribute('created'))
@@ -617,7 +622,3 @@ ${v.keywords}
 		}
 	}
 }
-ui.on(document, 'List', pageSearch.resetMap);
-document.addEventListener('GeoLocation', function (event) {
-	ui.html('search label.locationPicker', pageSearch.getTown());
-});
