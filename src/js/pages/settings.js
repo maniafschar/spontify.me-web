@@ -457,14 +457,12 @@ ${v.info}`;
 			});
 		} else
 			document.dispatchEvent(new CustomEvent('Settings', { detail: { action: 'save' } }));
-		initialisation.setLanguage(ui.val('settings input-checkbox[name="language"][checked="true"]'), function () {
-			if (goToID) {
-				if (goToID == 'autoOpen')
-					pageSettings.preview();
-				else
-					ui.navigation.goTo(goToID, true);
-			}
-		});
+		initialisation.setLanguage(ui.val('settings input-checkbox[name="language"][checked="true"]'), goToID ? function () {
+			if (goToID == 'autoOpen')
+				pageSettings.preview();
+			else
+				ui.navigation.goTo(goToID, true);
+		} : null);
 	}
 	static reset() {
 		formFunc.resetError(ui.q('input[name="pseudonym"]'));
