@@ -248,7 +248,7 @@ skills {
 		if (user.contact)
 			ui.navigation.closeHint();
 		else
-			ui.navigation.openHint({ desc: '<div style="width:100%;max-height:80vh;overflow-y:auto;"><img src="images/celebrate.svg" style="max-width:70%;"/><br/>' + ui.l('home.marketingOpenArticleText') + '<br/><br/><button-text onclick="ui.navigation.goTo(&quot;register&quot;)" label="login.register"></button-text></div>', pos: '5%,2em', size: '90%,auto', onclick: 'return false;' });
+			ui.navigation.openHint({ desc: '<div style="width:100%;max-height:80vh;overflow-y:auto;"><img src="images/celebrate.svg" style="max-width:70%;"/><br/>' + ui.l('home.marketingOpenArticleText') + '<br/><br/><button-text onclick="ui.navigation.goTo(&quot;login&quot;)" label="login.register"></button-text></div>', pos: '5%,2em', size: '90%,auto', onclick: 'return false;' });
 	}
 	static filterClose() {
 		if (ui.q('dialog-hint input-checkbox[checked="true"]')) {
