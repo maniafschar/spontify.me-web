@@ -440,13 +440,13 @@ class initialisation {
 							success(r) {
 								if (r && r.length > 1) {
 									var clientNews = model.convert(new ClientNews(), r, 1);
-									var s = '<article style="text-align:left;"><date style="display:block;font-size:0.7em;">' + global.date.formatDate(clientNews.publish) + (clientNews.source ? global.separator + clientNews.source : '') + (clientNews.skills ? global.separator + ui.l('skill' + clientNews.skills) : '') + '</date>';
+									var s = '<div style="text-align:left;cursor:pointer;" onclick="ui.navigation.openHTML(&quot;' + clientNews.url + '&quot;);pageHome.closeNews();"><date style="display:block;font-size:0.7em;">' + global.date.formatDate(clientNews.publish) + (clientNews.source ? global.separator + clientNews.source : '') + (clientNews.skills ? global.separator + ui.l('skill' + clientNews.skills) : '') + '</date>';
 									s += clientNews.description.replace(/\n/g, '<br/>');
 									s += '</text>'
 									if (clientNews.image)
 										s += '<img src="' + global.serverImg + clientNews.image + '" style="width:90%;margin-left:5%;margin-top:1em;border-radius:0.5em;"/>'
-									s += '</article>';
-									ui.navigation.openHint({ desc: '<div onclick="ui.navigation.openHTML(&quot;' + clientNews.url + '&quot;)">' + s + '</div>', pos: '5%,2em', size: '90%,auto', onclick: 'return false;', onclose: 'pageHome.closeNews()' });
+									s += '</div>';
+									ui.navigation.openHint({ desc: s, pos: '5%,2em', size: '90%,auto', onclick: 'return false;' });
 								}
 							}
 						});
