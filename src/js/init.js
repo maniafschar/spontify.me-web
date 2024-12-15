@@ -432,22 +432,25 @@ class initialisation {
 		if (p) {
 			setTimeout(function () {
 				if (ui.q('head link[rel="canonical"]').getAttribute('href').split('/').length > 4) {
-					communication.ajax({
-						url: global.serverApi + 'action/news?id=' + id,
-						webCall: 'home.openNews',
-						responseType: 'json',
-						success(r) {
-							if (r && r.length > 1) {
-								var clientNews = model.convert(new ClientNews(), r, 1);
-								var s = '<date>' + global.date.formatDate(clientNews.publish) + (clientNews.source ? global.separator + clientNews.source : '') + (clientNews.skills ? global.separator + ui.l('skill' + clientNews.skills) : '') + '</date>';
-								s += clientNews.description.replace(/\n/g, '<br/>');
-								s += '</text>'
-								if (clientNews.image)
-									s += '<img src="' + global.serverImg + clientNews.image + '"/>'
-								ui.navigation.openHint({ desc: '<div onclick="ui.navigation.openHTML(&quot;' + clientNews.url + '&quot;)">' + s + '</div>', pos: '5%,2em', size: '90%,auto', onclick: 'return false;', onclose: 'pageHome.closeNews()' });
+					if (p.indexOf('news=') == 0)
+						communication.ajax({
+							url: global.serverApi + 'action/news?id=' + p.substring(5),
+							webCall: 'home.openNews',
+							responseType: 'json',
+							success(r) {
+								if (r && r.length > 1) {
+									var clientNews = model.convert(new ClientNews(), r, 1);
+									var s = '<date>' + global.date.formatDate(clientNews.publish) + (clientNews.source ? global.separator + clientNews.source : '') + (clientNews.skills ? global.separator + ui.l('skill' + clientNews.skills) : '') + '</date>';
+									s += clientNews.description.replace(/\n/g, '<br/>');
+									s += '</text>'
+									if (clientNews.image)
+										s += '<img src="' + global.serverImg + clientNews.image + '"/>'
+									ui.navigation.openHint({ desc: '<div onclick="ui.navigation.openHTML(&quot;' + clientNews.url + '&quot;)">' + s + '</div>', pos: '5%,2em', size: '90%,auto', onclick: 'return false;', onclose: 'pageHome.closeNews()' });
+								}
 							}
-						}
-					});
+						});
+					else
+						ui.navigation.autoOpen(p);
 				} else if (p.indexOf('c=') == 0 && p.indexOf('&i=') > 0 && p.indexOf('&h=') > 0) {
 					p = p.split('&');
 					history.pushState(null, null, window.location.origin); history.pushState(null, null, window.location.origin);
