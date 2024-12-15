@@ -23,7 +23,7 @@ import { geoData } from './geoData';
 import { global, Strings } from './global';
 import { lists } from './lists';
 import { marketing } from './marketing';
-import { model } from './model';
+import { ClientNews, model } from './model';
 import { pageChat } from './pages/chat';
 import { groups, pageContact } from './pages/contact';
 import { pageEvent } from './pages/event';
@@ -431,9 +431,24 @@ class initialisation {
 		var p = global.getParam();
 		if (p) {
 			setTimeout(function () {
-				if (ui.q('head link[rel="canonical"]').getAttribute('href').split('/').length > 4)
-					ui.navigation.openHint({ desc: '<div style="width:100%;max-height:80vh;overflow-y:auto;"><img src="images/celebrate.svg" style="max-width:70%;"/><br/>' + ui.l('home.marketingOpenArticleText') + '<br/><br/><button-text onclick="ui.navigation.autoOpen(&quot;' + p + '&quot;)" label="home.marketingOpenArticleButton"></button-text></div>', pos: '5%,2em', size: '90%,auto', onclick: 'return false;' });
-				else if (p.indexOf('c=') == 0 && p.indexOf('&i=') > 0 && p.indexOf('&h=') > 0) {
+				if (ui.q('head link[rel="canonical"]').getAttribute('href').split('/').length > 4) {
+					communication.ajax({
+						url: global.serverApi + 'action/news?id=' + id,
+						webCall: 'home.openNews',
+						responseType: 'json',
+						success(r) {
+							if (r && r.length > 1) {
+								var clientNews = model.convert(new ClientNews(), r, 1);
+								var s = '<date>' + global.date.formatDate(clientNews.publish) + (clientNews.source ? global.separator + clientNews.source : '') + (clientNews.skills ? global.separator + ui.l('skill' + clientNews.skills) : '') + '</date>';
+								s += clientNews.description.replace(/\n/g, '<br/>');
+								s += '</text>'
+								if (clientNews.image)
+									s += '<img src="' + global.serverImg + clientNews.image + '"/>'
+								ui.navigation.openHint({ desc: '<div onclick="ui.navigation.openHTML(&quot;' + clientNews.url + '&quot;)">' + s + '</div>', pos: '5%,2em', size: '90%,auto', onclick: 'return false;', onclose: 'pageHome.closeNews()' });
+							}
+						}
+					});
+				} else if (p.indexOf('c=') == 0 && p.indexOf('&i=') > 0 && p.indexOf('&h=') > 0) {
 					p = p.split('&');
 					history.pushState(null, null, window.location.origin); history.pushState(null, null, window.location.origin);
 					communication.ajax({
