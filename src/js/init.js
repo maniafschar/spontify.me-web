@@ -435,7 +435,7 @@ class initialisation {
 					if (p.indexOf('news=') == 0)
 						communication.ajax({
 							url: global.serverApi + 'action/news?id=' + p.substring(5),
-							webCall: 'home.openNews',
+							webCall: 'init.showStartDialogs',
 							responseType: 'json',
 							success(r) {
 								if (r && r.length > 1) {

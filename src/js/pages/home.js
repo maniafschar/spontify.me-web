@@ -100,17 +100,21 @@ teaser.contacts {
 
 teaser.events {
 	top: 42%;
-	margin-top: 1px;
+	margin-top: 4px;
 }
 
 teaser card {
-	margin: 0 1px 0 0;
+	margin: 0 4px 0 0;
 	overflow: hidden;
 	position: relative;
 	display: inline-block;
 	cursor: pointer;
 	height: 100%;
 	color: white;
+}
+
+teaser card:last-child {
+	marginn: 0;
 }
 
 teaser card img {
