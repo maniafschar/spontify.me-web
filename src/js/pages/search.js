@@ -25,10 +25,10 @@ map {
 .highlightMap::before {
 	content: '⇯';
 	position: absolute;
-	right: 1em;
+	right: 0.75em;
 	bottom: 0.5em;
-	opacity: 0.1;
-	font-size: 4em;
+	opacity: 0.15;
+	font-size: 5em;
 	color: var(--bg2stop);
 }
 button-text.map {
