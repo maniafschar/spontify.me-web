@@ -114,7 +114,7 @@ teaser card {
 }
 
 teaser card:last-child {
-	marginn: 0;
+	margin: 0;
 }
 
 teaser card img {
