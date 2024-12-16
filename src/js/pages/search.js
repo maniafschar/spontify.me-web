@@ -25,9 +25,9 @@ map {
 .highlightMap::before {
 	content: '↳';
 	position: absolute;
-	right: 0.65em;
-	bottom: 0.6em;
-	opacity: 0.15;
+	right: 1em;
+	bottom: 0.4em;
+	opacity: 0.1;
 	font-size: 4em;
 	color: var(--bg2stop);
 	transform: rotate(270deg);
