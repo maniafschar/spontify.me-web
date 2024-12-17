@@ -440,7 +440,6 @@
 			"marketingCreateLocationUser": "Dear operator of the location {0}, would you like to create a user with whom you can maintain your location and set up events?",
 			"marketingCreateLocationUserButton": "Create user",
 			"marketing CreateLocationUserResult": "Your user has been created, a confirmation email has been sent to you.",
-			"marketingOpenArticleText": "${marketingOpenArticleText}",
 			"news": "News",
 			"noNews": "Currently no News in and arround {0}.",
 			"noNewsClub": "No News yet from your club.",
