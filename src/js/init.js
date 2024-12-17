@@ -440,7 +440,7 @@ class initialisation {
 							success(r) {
 								if (r && r.length > 1) {
 									var clientNews = model.convert(new ClientNews(), r, 1);
-									var s = '<div style="text-align:left;cursor:pointer;"><date style="display:block;font-size:0.7em;">' + global.date.formatDate(clientNews.publish) + (clientNews.source ? global.separator + clientNews.source : '') + (clientNews.skills ? global.separator + ui.l('skill' + clientNews.skills) : '') + '</date>';
+									var s = '<div style="text-align:left;overflow-y:auto;max-height:80vh;display:block;"><date style="display:block;font-size:0.7em;">' + global.date.formatDate(clientNews.publish) + (clientNews.source ? global.separator + clientNews.source : '') + (clientNews.skills ? global.separator + ui.l('skill' + clientNews.skills) : '') + '</date>';
 									s += clientNews.description.replace(/\n/g, '<br/>');
 									s += '</text>'
 									if (clientNews.image)
