@@ -319,7 +319,7 @@ mapEdit {
 			v.loggedIn = ' hidden';
 		} else {
 			v.notLoggedIn = ' hidden';
-			v.marketing = '<div style="padding:1em;">' + ui.l('marketing.locationText') + '</div>';
+			v.marketing = '<div style="padding:1em;">' + ui.l('marketing.engageToRegister') + '</div>';
 		}
 		if (v.locationFavorite.favorite)
 			v.favorite = ' favorite';
