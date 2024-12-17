@@ -600,6 +600,7 @@
 		},
 		"marketing": {
 			"inviteFriends": "Invite your friends to help the community grow and get even more people to participate in surveys.",
+			"locationText": "<b>Events, events, events!</b><br>This is about events, but also about spontaneous activities with like-minded people!<br>Log in and you'll find out more!",
 			"next": "Next",
 			"noResult": "There were too few participants in the survey, the result cannot be displayed.",
 			"previous": "Back",
