@@ -598,8 +598,8 @@
 			"title": "Login"
 		},
 		"marketing": {
+			"engageToRegister": "<b>Events, Events, Events!</b><br>Hier in ${appTitle} geht es um Events, aber auch um spontane Unternehmungen mit gleichgesinnten ${buddies}!<br>Log Dich ein und Du erfährst mehr.",
 			"inviteFriends": "Lade Deine Freunde, damit die Community wächst und noch mehr an Umfragen teilnehmen.",
-			"locationText": "<b>Events, Events, Events!</b><br>Hier in ${appTitle} geht es um Events, aber auch um spontane Unternehmungen mit gleichgesinnten ${buddies}!<br>Log Dich ein und Du erfährst mehr.",
 			"next": "Weiter",
 			"noResult": "Es gab zu wenige Teilnehmer an der Umfrage, das Resulat kann nicht angezeigt werden.",
 			"openArticle": "Artikel öffnen",
