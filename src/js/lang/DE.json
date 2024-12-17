@@ -603,6 +603,7 @@
 			"locationText": "<b>Events, Events, Events!</b><br>Hier in ${appTitle} geht es um Events, aber auch um spontane Unternehmungen mit gleichgesinnten ${buddies}!<br>Log Dich ein und Du erfährst mehr.",
 			"next": "Weiter",
 			"noResult": "Es gab zu wenige Teilnehmer an der Umfrage, das Resulat kann nicht angezeigt werden.",
+			"openArticle": "Artikel öffnen",
 			"previous": "Zurück",
 			"validUntil": "Diese Aktion läuft bis zum {0}<br/>Beeile Dich, Aktion geht solange der Vorrat reicht.<br/>Der Rechtsweg ist ausgeschlossen."
 		},
