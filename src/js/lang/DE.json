@@ -600,6 +600,7 @@
 		},
 		"marketing": {
 			"inviteFriends": "Lade Deine Freunde, damit die Community wächst und noch mehr an Umfragen teilnehmen.",
+			"locationText": "<b>Events, Events, Events!</b><br>Hier geht es um Events, aber auch um spontane Unternehmungen mit Gleichgesinnten!<br>Log Dich ein und Du erfährst mehr!",
 			"next": "Weiter",
 			"noResult": "Es gab zu wenige Teilnehmer an der Umfrage, das Resulat kann nicht angezeigt werden.",
 			"previous": "Zurück",
