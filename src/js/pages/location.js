@@ -52,6 +52,7 @@ ${v.matchIndicatorHintDescription}
 ${v.description}
 ${v.rating}
 <text>${v.address}</text>
+${v.marketing}
 <img class="map${v.hideMeGoogle}"
 	onclick="ui.navigation.openHTML(&quot;https://maps.google.com/maps/dir/${geoData.getCurrent().lat},${geoData.getCurrent().lon}/${v.latitude},${v.longitude}&quot;)" />
 <detailButtons>
@@ -316,8 +317,10 @@ mapEdit {
 			if (v.event.contactId == user.contact.id || v.contactId == user.contact.id)
 				v.hideMeBlock = ' hidden';
 			v.loggedIn = ' hidden';
-		} else
+		} else {
 			v.notLoggedIn = ' hidden';
+			v.marketing = '<div style="padding:1em 0.5em;">' + ui.l('marketing.locationText') + '</div>';
+		}
 		if (v.locationFavorite.favorite)
 			v.favorite = ' favorite';
 		if (global.isBrowser())
