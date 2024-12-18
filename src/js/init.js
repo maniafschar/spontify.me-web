@@ -450,7 +450,7 @@ class initialisation {
 								}
 								history.pushState(null, null, window.location.origin);
 								var e = ui.q('head title');
-								if (!e.innerHTML || e.innerHTML.indexOf(global.appTitle + global.separaator) == 0)
+								if (!e.innerHTML || e.innerHTML.indexOf(global.appTitle + global.separator) == 0)
 									e.innerHTML = global.appTitle;
 							}
 						});
