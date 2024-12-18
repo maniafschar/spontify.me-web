@@ -55,7 +55,7 @@ ${v.rating}
 ${v.skills}
 ${v.matchIndicatorHintDescription}
 ${v.marketing}
-<detailButtons style="margin-top:1em;">
+<detailButtons>
 	<button-text class="${v.loggedIn}"
 		onclick="ui.navigation.goTo(&quot;login&quot;)" label="login.action"></button-text>
 	<button-text class="${v.blocked}${v.hideMe}"
