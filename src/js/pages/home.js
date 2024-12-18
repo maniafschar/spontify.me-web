@@ -249,9 +249,6 @@ skills {
 			ui.toggleHeight(e);
 	}
 	static closeNews() {
-		var e = ui.q('head title');
-		if (!e.innerHTML || e.innerHTML.indexOf(global.appTitle + global.separaator) == 0)
-			e.innerHTML = global.appTitle;
 		if (user.contact)
 			ui.navigation.closeHint();
 		else
