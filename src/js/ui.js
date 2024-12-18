@@ -175,7 +175,7 @@ class ui {
 				else {
 					if (global.isBrowser()) {
 						history.pushState(null, null, window.location.origin);
-						if (!ui.q('head title').innerHTML)
+						if (!ui.q('head title').innerHTML || ui.q('head title').innerHTML.indexOf(global.appTitle + global.separaator) == 0)
 							ui.html('head title', global.appTitle);
 					}
 					if (tag.indexOf('r=') == 0) {
