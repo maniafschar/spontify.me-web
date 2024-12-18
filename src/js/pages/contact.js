@@ -54,6 +54,7 @@ ${v.rating}
 </text>
 ${v.skills}
 ${v.matchIndicatorHintDescription}
+${v.marketing}
 <detailButtons style="margin-top:1em;">
 	<button-text class="${v.loggedIn}"
 		onclick="ui.navigation.goTo(&quot;login&quot;)" label="login.action"></button-text>
@@ -176,6 +177,8 @@ ${v.matchIndicatorHintDescription}
 		v.birthday = pageContact.getBirthday(v.birthday, v.birthdayDisplay);
 		if (user.contact)
 			v.loggedIn = 'hidden';
+		else
+			v.marketing = '<div style="padding:1em;">' + ui.l('marketing.engageToRegister') + '</div>';
 		if (v.birthday.age) {
 			if (v.age)
 				v.ageDisplay = ' (' + v.age + ')';
