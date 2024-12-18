@@ -447,8 +447,11 @@ class initialisation {
 										s += '<img src="' + global.serverImg + clientNews.image + '" style="width:90%;margin-left:5%;margin-top:1em;border-radius:0.5em;"/>'
 									s += '</div><button-text label="marketing.openArticle" onclick="ui.navigation.openHTML(&quot;' + clientNews.url + '&quot;);pageHome.closeNews();" style="margin-top:0.5em;display:block;"></button-text>';
 									ui.navigation.openHint({ desc: s, pos: '5%,2em', size: '90%,auto', onclick: 'return false;' });
-									history.pushState(null, null, window.location.origin);
 								}
+								history.pushState(null, null, window.location.origin);
+								var e = ui.q('head title');
+								if (!e.innerHTML || e.innerHTML.indexOf(global.appTitle + global.separaator) == 0)
+									e.innerHTML = global.appTitle;
 							}
 						});
 					else
