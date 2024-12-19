@@ -159,7 +159,13 @@ class communication {
 		},
 		openBackground(e) {
 			communication.setApplicationIconBadgeNumber(e.count);
-			ui.navigation.openHint({ desc: '<b>' + e.aps.alert.title + '</b><br/>' + global.date.formatDate(new Date()) + '<br/>' + e.aps.alert.body, onclick: 'ui.navigation.autoOpen("' + e.exec + '")', pos: '5%,2em', size: '90%,auto' });
+			if (e.exec.indexOf('https://') == 0)
+				ui.navigation.openHint({ desc: '<b>' + e.aps.alert.title + '</b><br/>' + global.date.formatDate(new Date()) + '<br/>' + e.aps.alert.body, onclick: 'ui.navigation.autoOpen("' + e.exec + '")', pos: '5%,2em', size: '90%,auto' });
+			else if (e.exec.indexOf('chat=') == 0) {
+				if (ui.q('chatList').style.display == 'none')
+					pageChat.toggleUserList();
+			} else if (ui.q('notificationList').style.display == 'none')
+				pageHome.toggleNotification();
 		},
 		register() {
 			window.cordova.plugins.firebase.messaging.requestPermission().then(function () {
