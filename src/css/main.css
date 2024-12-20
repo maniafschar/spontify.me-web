@@ -931,12 +931,11 @@ detailCompass span {
 }
 
 detail detailDistance svg {
-	height: 3em;
+	height: 3em !important;
 	position: absolute;
 	left: 0;
 	top: 1em;
 	opacity: 0.3;
-	width: 100%;
 }
 
 a:link,
