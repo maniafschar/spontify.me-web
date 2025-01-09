@@ -256,7 +256,7 @@ next::after {
 	selectDay(i, next) {
 		this.setValue('Day', i ? ('0' + i).slice(-2) : null, parseInt(i));
 		if (next) {
-			if (!this.first && this.get('month').getAttribute('value'))
+			if (!this.firstCall && this.get('month').getAttribute('value'))
 				ui.navigation.closeHint();
 			else
 				this.toggleMonth();
@@ -273,9 +273,10 @@ next::after {
 	}
 	selectMinute(i, next) {
 		this.setValue('Minute', i >= 0 ? ('0' + i).slice(-2) : null);
-		if (next)
+		if (next) {
 			ui.navigation.closeHint();
-		 this.fist = false;
+			this.firstCall = false;
+		}
 	}
 	selectMonth(i, next) {
 		if (i)
@@ -284,7 +285,7 @@ next::after {
 			this.setValue('Month', null);
 		this.resetDay();
 		if (next) {
-			if (!this.first && this.get('hour').getAttribute('value'))
+			if (!this.firstCall && this.get('hour').getAttribute('value'))
 				ui.navigation.closeHint();
 			else
 				this.toggleHour();
@@ -295,13 +296,13 @@ next::after {
 		this.resetMonth();
 		this.resetDay();
 		if (next && this.get('hour')) {
-			if (!this.fist && this.get('hour').getAttribute('value'))
+			if (!this.firstCall && this.get('hour').getAttribute('value'))
 				ui.navigation.closeHint();
 			else
 				this.toggleHour();
 		}
-		if (!this.get('hour'))
-			 this.fist = false;
+		if (next && !this.get('hour'))
+			this.firstCall = false;
 	}
 	setValue(field, value, label) {
 		var e = this.get(field.toLowerCase());
