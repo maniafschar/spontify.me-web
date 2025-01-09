@@ -150,7 +150,7 @@ next::after {
 			outdated = maxMonth ? i > max.getDate() : minMonth ? i < min.getDate() : false;
 			if (!outdated && selectable)
 				outdated = selectable.indexOf(y + '-' + m + '-' + ('0' + i).slice(-2)) < 0;
-			s += `<label ${outdated ? 'class="outdated"' : `onclick="InputDate.getField(${this.x}).selectDay(${i},true)"`} ${!outdated && (i + offset) % 7 > 0 && (i + offset) % 7 < 6 ? '' : ' class="weekend"'}">${i}</label>`;
+			s += `<label ${outdated ? 'class="outdated"' : `onclick="InputDate.getField(${this.x}).selectDay(${i})"`} ${!outdated && (i + offset) % 7 > 0 && (i + offset) % 7 < 6 ? '' : ' class="weekend"'}">${i}</label>`;
 			if ((i + offset) % 7 == 0)
 				s += '<br/>';
 		}
@@ -253,55 +253,45 @@ next::after {
 		}
 		ui.navigation.closeHint();
 	}
-	selectDay(i, next) {
+	selectDay(i) {
 		this.setValue('Day', i ? ('0' + i).slice(-2) : null, parseInt(i));
-		if (next) {
-			if (!this.firstCall && this.get('month').getAttribute('value'))
-				ui.navigation.closeHint();
-			else
-				this.toggleMonth();
-		}
+		if (this.firstCall)
+			this.toggleMonth();
+		else
+			ui.navigation.closeHint();
 	}
-	selectHour(i, next) {
+	selectHour(i) {
 		this.setValue('Hour', i >= 0 ? ('0' + i).slice(-2) : null, parseInt(i));
-		if (next) {
-			if (this.get('minute').getAttribute('value'))
-				ui.navigation.closeHint();
-			else
-				this.toggleMinute();
-		}
+		if (this.firstCall)
+			this.toggleMinute();
+		else
+			ui.navigation.closeHint();
 	}
 	selectMinute(i, next) {
 		this.setValue('Minute', i >= 0 ? ('0' + i).slice(-2) : null);
-		if (next) {
-			ui.navigation.closeHint();
-			this.firstCall = false;
-		}
+		ui.navigation.closeHint();
+		this.firstCall = false;
 	}
-	selectMonth(i, next) {
+	selectMonth(i) {
 		if (i)
 			this.setValue('Month', ('0' + i).slice(-2), ui.l('date.month' + parseInt(i)).substring(0, 3));
 		else
 			this.setValue('Month', null);
 		this.resetDay();
-		if (next) {
-			if (!this.firstCall && this.get('hour').getAttribute('value'))
-				ui.navigation.closeHint();
-			else
-				this.toggleYear();
-		}
+		if (this.firstCall)
+			this.toggleYear();
+		else
+			ui.navigation.closeHint();
 	}
-	selectYear(i, next) {
+	selectYear(i) {
 		this.setValue('Year', i);
 		this.resetMonth();
 		this.resetDay();
-		if (next && this.get('hour')) {
-			if (!this.firstCall && this.get('hour').getAttribute('value'))
-				ui.navigation.closeHint();
-			else
-				this.toggleHour();
-		}
-		if (next && !this.get('hour'))
+		if (this.firstCall && this.get('hour'))
+			this.toggleHour();
+		else
+			ui.navigation.closeHint();
+		if (!this.get('hour'))
 			this.firstCall = false;
 	}
 	setValue(field, value, label) {
