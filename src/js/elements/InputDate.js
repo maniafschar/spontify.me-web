@@ -349,7 +349,7 @@ next::after {
 	toggleHour() {
 		var s = '', e = this.get('hour');
 		for (var i = 0; i < 24; i++) {
-			s += `<label onclick="InputDate.getField(${this.x}).selectHour(${i},true)" class="time">${i}</label>`;
+			s += `<label onclick="InputDate.getField(${this.x}).selectHour(${i})" class="time">${i}</label>`;
 			if ((i + 1) % 4 == 0)
 				s += '<br/>';
 		}
@@ -358,7 +358,7 @@ next::after {
 	toggleMinute() {
 		var s = '', e = this.get('minute');
 		for (var i = 0; i < 60; i += 5) {
-			s += `<label onclick="InputDate.getField(${this.x}).selectMinute(${i},true)" class="time">${i}</label>`;
+			s += `<label onclick="InputDate.getField(${this.x}).selectMinute(${i})" class="time">${i}</label>`;
 			if ((i / 5 + 1) % 4 == 0)
 				s += '<br/>';
 		}
@@ -375,7 +375,7 @@ next::after {
 		var s = '<style>label{padding:0.34em 0.75em;}</style>', e = this.get('month');
 		for (var i = parseInt(y) == min.getFullYear() ? min.getMonth() + 1 : 1;
 			i < (parseInt(y) == max.getFullYear() ? max.getMonth() + 1 : 13); i++) {
-			s += `<label onclick="InputDate.getField(${this.x}).selectMonth(${i},true)">${ui.l('date.month' + i)}</label>`;
+			s += `<label onclick="InputDate.getField(${this.x}).selectMonth(${i})">${ui.l('date.month' + i)}</label>`;
 			if (i % 3 == 0)
 				s += '<br/>';
 		}
@@ -397,7 +397,7 @@ next::after {
 		var desc = min < new Date().getFullYear();
 		for (var i = 0; i <= max - min; i++) {
 			var i2 = desc ? max - i : min + i;
-			s += `<label onclick="InputDate.getField(${this.x}).selectYear(${i2},true)">${i2}</label>`;
+			s += `<label onclick="InputDate.getField(${this.x}).selectYear(${i2})">${i2}</label>`;
 		}
 		this.toggle(e, s);
 	}
