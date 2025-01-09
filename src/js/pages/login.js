@@ -182,7 +182,7 @@ tabBody>div>form {
 			pageLogin.login(u.value, p.value, ui.q('[name="autoLogin"][checked="true"]'));
 	}
 	static getDraft() {
-		var v = window.localStorage && window.localStorage.getItem('login');
+		var v = window.sessionStorage && window.sessionStorage.getItem('login');
 		if (v)
 			try {
 				return JSON.parse(v);
@@ -465,7 +465,6 @@ tabBody>div>form {
 		}
 	}
 	static removeCredentials() {
-		window.localStorage.removeItem('login');
 		window.localStorage.removeItem('autoLogin');
 	}
 	static resetAfterLogoff() {
@@ -493,7 +492,7 @@ tabBody>div>form {
 		try {
 			var v = formFunc.getForm('login div:nth-child(3)').values;
 			v.email = ui.qa('login tabBody input[name="email"]')[parseInt(ui.q('login tabBody').style.marginLeft || 0) / -100].value;
-			window.localStorage.setItem('login', JSON.stringify(v));
+			window.sessionStorage.setItem('login', JSON.stringify(v));
 		} catch (e) { }
 	}
 	static savePassword() {
