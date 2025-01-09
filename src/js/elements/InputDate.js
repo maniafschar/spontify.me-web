@@ -242,11 +242,14 @@ next::after {
 			var e = this.get('year');
 			if (e) {
 				var d = global.date.getDateFields(type || '');
+				var b = this.firstCall;
+				this.firstCall = false;
 				this.selectYear(d.year);
 				this.selectMonth(d.month);
 				this.selectDay(d.day);
 				this.selectHour(d.hour);
 				this.selectMinute(d.minute);
+				this.firstCall = b;
 			} else if (type)
 				this._root.querySelector('label').innerHTML = type.indexOf('-') < 0 ? ui.l('search.dateSelection' + type.substring(0, 1).toUpperCase() + type.substring(1)) : global.date.formatDate(type);
 			this.setAttribute('value', type);
