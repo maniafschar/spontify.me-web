@@ -209,7 +209,7 @@ next::after {
 			var min = new Date(this.getAttribute('min')), max = new Date(this.getAttribute('max'));
 			var d = new Date(this.get('year').getAttribute('value') + '-' + this.get('month').getAttribute('value') + '-' + this.get('day').getAttribute('value'));
 			this.selectDay(min > d ? min.getDate() : d > max ? max.getDate() : d.getDate() != parseInt(this.get('day').getAttribute('value')) ?
-				       new Date(parseInt(this.get('year').getAttribute('value')), parseInt(this.get('month').getAttribute('value')) + 1, 0).getDate() : d.getDate());
+				       new Date(parseInt(this.get('year').getAttribute('value')), parseInt(this.get('month').getAttribute('value')), 0).getDate() : d.getDate());
 		}
 	}
 	resetMonth() {
