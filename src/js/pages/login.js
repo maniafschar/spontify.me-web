@@ -40,7 +40,7 @@ tabBody>div>form {
 	<field>
 		<label>${ui.l('email')}</label>
 		<value>
-			<input type="email" name="email" maxlength="100" />
+			<input type="email" name="email" maxlength="100" value="${v.email}" />
 		</value>
 	</field>
 	<field>
@@ -52,7 +52,7 @@ tabBody>div>form {
 	<field>
 		<label></label>
 		<value style="text-align:center;">
-			<input-checkbox name="autoLogin" value="1" label="login.keepmeloggedon" ${v['keepLoggedIn']}></input-checkbox>
+			<input-checkbox name="autoLogin" value="1" label="login.keepmeloggedon" ${v.keepLoggedIn}></input-checkbox>
 		</value>
 	</field>
 	<dialogButtons>
