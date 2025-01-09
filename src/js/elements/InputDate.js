@@ -5,6 +5,7 @@ import { ui } from '../ui';
 export { InputDate };
 
 class InputDate extends HTMLElement {
+	firstCall = true;
 	x = 0;
 	constructor() {
 		super();
@@ -254,11 +255,11 @@ next::after {
 	}
 	selectDay(i, next) {
 		this.setValue('Day', i ? ('0' + i).slice(-2) : null, parseInt(i));
-		if (next && this.get('hour')) {
-			if (this.get('hour').getAttribute('value'))
+		if (next) {
+			if (!this.first && this.get('month').getAttribute('value'))
 				ui.navigation.closeHint();
 			else
-				this.toggleHour();
+				this.toggleMonth();
 		}
 	}
 	selectHour(i, next) {
@@ -274,6 +275,7 @@ next::after {
 		this.setValue('Minute', i >= 0 ? ('0' + i).slice(-2) : null);
 		if (next)
 			ui.navigation.closeHint();
+		 this.fist = false;
 	}
 	selectMonth(i, next) {
 		if (i)
@@ -281,8 +283,8 @@ next::after {
 		else
 			this.setValue('Month', null);
 		this.resetDay();
-		if (next && this.get('hour')) {
-			if (this.get('hour').getAttribute('value'))
+		if (next) {
+			if (!this.first && this.get('hour').getAttribute('value'))
 				ui.navigation.closeHint();
 			else
 				this.toggleHour();
@@ -293,11 +295,13 @@ next::after {
 		this.resetMonth();
 		this.resetDay();
 		if (next && this.get('hour')) {
-			if (this.get('hour').getAttribute('value'))
+			if (!this.fist && this.get('hour').getAttribute('value'))
 				ui.navigation.closeHint();
 			else
 				this.toggleHour();
 		}
+		if (!this.get('hour'))
+			 this.fist = false;
 	}
 	setValue(field, value, label) {
 		var e = this.get(field.toLowerCase());
