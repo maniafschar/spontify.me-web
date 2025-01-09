@@ -288,7 +288,7 @@ next::after {
 			if (!this.firstCall && this.get('hour').getAttribute('value'))
 				ui.navigation.closeHint();
 			else
-				this.toggleHour();
+				this.toggleYear();
 		}
 	}
 	selectYear(i, next) {
