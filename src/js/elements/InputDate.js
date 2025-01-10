@@ -412,7 +412,6 @@ next::after {
 		var desc = min < new Date().getFullYear();
 		var maxPerRow = 5;
 		if (max - min > maxPerRow) {
-			var x = ;
 			for (var i = maxPerRow - (desc ? max : min) % maxPerRow; i > 0; i--)
 				s += `<label class="filler"></label>`;
 		}
