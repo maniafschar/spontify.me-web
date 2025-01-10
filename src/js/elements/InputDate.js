@@ -414,7 +414,7 @@ next::after {
 		for (var i = 0; i <= max - min; i++) {
 			var i2 = desc ? max - i : min + i;
 			s += `<label onclick="InputDate.getField(${this.x}).selectYear(${i2},true)">${i2}</label>`;
-			if (i2 % maxPerRow == 0)
+			if (i2 % maxPerRow == 1)
 				s += '<br/>';
 		}
 		if (max - min > maxPerRow) {
