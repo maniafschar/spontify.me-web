@@ -95,6 +95,10 @@ label.outdated {
 	opacity: 0.5;
 	cursor: default;
 }
+label.filler {
+	opacity: 0;
+	cursor: default;
+}
 prev,
 next {
 	position: absolute;
@@ -406,9 +410,21 @@ next::after {
 		var s = '<style>label{padding:0.34em 0;width:3.5em;text-align:center;}</style>', e = this.get('year');
 		var min = new Date(this.getAttribute('min')).getFullYear(), max = new Date(this.getAttribute('max')).getFullYear();
 		var desc = min < new Date().getFullYear();
+		var maxPerRow = 5;
+		if (max - min > maxPerRow) {
+			var x = ;
+			for (var i = maxPerRow - (desc ? max : min) % maxPerRow; i > 0; i--)
+				s += `<label class="filler"></label>`;
+		}
 		for (var i = 0; i <= max - min; i++) {
 			var i2 = desc ? max - i : min + i;
 			s += `<label onclick="InputDate.getField(${this.x}).selectYear(${i2},true)">${i2}</label>`;
+			if (i % maxPerRow == 0)
+				s += '<br/>';
+		}
+		if (max - min > maxPerRow) {
+			for (var i = (desc ? max : min) % maxPerRow; i < maxPerRow; i++)
+				s += `<label class="filler"></label>`;
 		}
 		this.toggle(e, s);
 	}
