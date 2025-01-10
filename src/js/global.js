@@ -101,6 +101,8 @@ class global {
 			if (!(d instanceof Date)) {
 				d = global.date.getDateFields(d);
 				d = new Date(d.year, parseInt(d.month) - 1, d.day, d.hour, d.minute, d.second);
+				if (d.hour == 0 && d.minute == 0 && d.second == 0)
+					return d.year + '-' + d.month + '-' + d.day;
 			}
 			d = d.toISOString();
 			return d.substring(0, d.indexOf('.'));
@@ -117,6 +119,8 @@ class global {
 			if (d instanceof Date)
 				return d;
 			d = global.date.getDateFields(d);
+			if (d.hour == 0 && d.minute == 0 && d.second == 0)
+				return new Date(Date.UTC(d.year, parseInt(d.month) - 1, d.day));
 			return new Date(Date.UTC(d.year, parseInt(d.month) - 1, d.day, d.hour, d.minute, d.second));
 		}
 	};
