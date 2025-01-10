@@ -338,7 +338,7 @@ next::after {
 			var hinkyX = Math.max(e.getBoundingClientRect().x - ui.q('main').getBoundingClientRect().x + e.getBoundingClientRect().width / 2 - 6, ui.emInPX * 1.5);
 			ui.navigation.openHint({
 				onclick: 'return',
-				desc: '<style i="calendar' + this.x + '">label{z-index:2;position:relative;}label.time{width:4em;text-align:center;}</style><div style="max-height:22em;overflow-y:auto;' + (global.getDevice() == 'phone' ? 'font-size:0.8em;' : '') + '">' + html + '</div>',
+				desc: '<style i="calendar' + this.x + '">label{z-index:2;position:relative;}label.time{width:4em;text-align:center;}</style><div style="max-height:20em;overflow-y:auto;' + (global.getDevice() == 'phone' ? 'font-size:0.8em;' : '') + '">' + html + '</div>',
 				pos: '2%,' + (e.getBoundingClientRect().y + e.getBoundingClientRect().height + ui.emInPX - m) + 'px', size: '96%,auto', hinkyClass: 'top', hinky: 'left:' + hinkyX + 'px;',
 				noLogin: true
 			});
