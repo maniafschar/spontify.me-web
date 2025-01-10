@@ -26,6 +26,11 @@ label {
 	padding: 0.34em 0.75em;
 }
 
+label.filler {
+	opacity: 0;
+	cursor: default;
+}
+
 label.filled {
 	opacity: 1;
 }`;
@@ -93,10 +98,6 @@ label.weekend {
 }
 label.outdated {
 	opacity: 0.5;
-	cursor: default;
-}
-label.filler {
-	opacity: 0;
 	cursor: default;
 }
 prev,
@@ -412,7 +413,7 @@ next::after {
 		var desc = min < new Date().getFullYear();
 		var maxPerRow = 5;
 		if (max - min > maxPerRow) {
-			for (var i = maxPerRow - (desc ? max : min) % maxPerRow; i > 0; i--)
+			for (var i = maxPerRow - (desc ? max : min) % maxPerRow; i >= 0; i--)
 				s += `<label class="filler"></label>`;
 		}
 		for (var i = 0; i <= max - min; i++) {
@@ -422,7 +423,7 @@ next::after {
 				s += '<br/>';
 		}
 		if (max - min > maxPerRow) {
-			for (var i = (desc ? max : min) % maxPerRow; i < maxPerRow; i++)
+			for (var i = (desc ? max : min) % maxPerRow; i <= maxPerRow; i++)
 				s += `<label class="filler"></label>`;
 		}
 		this.toggle(e, s);
