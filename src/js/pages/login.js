@@ -14,6 +14,7 @@ import { pageHome } from './home';
 export { pageLogin };
 
 class pageLogin {
+	static email = '';
 	static regexPseudonym = /[^A-Za-zÀ-ÿ]/;
 	static regexPW = /[^a-zA-ZÀ-ÿ0-9-_.+*#§$%&/\\ \^']/;
 	static timestamp = new Date().getTime();
@@ -36,7 +37,7 @@ tabBody>div>form {
 	</tab>
 </tabHeader>
 <tabBody>
-<div><form>
+<div><form name="login">
 	<field>
 		<label>${ui.l('email')}</label>
 		<value>
@@ -169,7 +170,7 @@ tabBody>div>form {
 		});
 	}
 	static fromForm() {
-		var u = ui.q('input[name="email"]');
+		var u = ui.q('login form[name="login"] input[name="email"]');
 		var p = ui.q('input[name="password"]');
 		formFunc.validation.email(u);
 		if (p.value.trim().length < 8)
@@ -180,15 +181,6 @@ tabBody>div>form {
 			p.value = '';
 		else
 			pageLogin.login(u.value, p.value, ui.q('[name="autoLogin"][checked="true"]'));
-	}
-	static getDraft() {
-		var v = window.sessionStorage && window.sessionStorage.getItem('login');
-		if (v)
-			try {
-				return JSON.parse(v);
-			} catch (e) {
-			}
-		return {};
 	}
 	static getRealPseudonym(s) {
 		s = s.replace(/\t/g, ' ').trim();
@@ -211,7 +203,7 @@ tabBody>div>form {
 	static init() {
 		ui.classRemove('dialog-navigation item', 'active');
 		if (!ui.q('login').innerHTML) {
-			var v = pageLogin.getDraft();
+			var v = {};
 			if (!global.isBrowser())
 				v.keepLoggedIn = ' checked="true"';
 			if (global.getOS() != 'ios')
@@ -432,10 +424,10 @@ tabBody>div>form {
 		}
 	}
 	static register() {
-		if (ui.val('input[name="email"]'))
-			formFunc.validation.email(ui.q('input[name="email"]'));
+		if (ui.val('login form[name="loginRegister"] input[name="email"]'))
+			formFunc.validation.email(ui.q('login form[name="loginRegister"] input[name="email"]'));
 		else
-			formFunc.setError(ui.q('[name="email"]'), 'settings.noEmail');
+			formFunc.setError(ui.q('login form[name="loginRegister"] [name="email"]'), 'settings.noEmail');
 		pageLogin.validatePseudonym();
 		pageLogin.validateAGB();
 		if (!ui.q('form[name=loginRegister] errorHint')) {
@@ -492,11 +484,7 @@ tabBody>div>form {
 		}, 500);
 	}
 	static saveDraft() {
-		try {
-			var v = formFunc.getForm('login div:nth-child(3)').values;
-			v.email = ui.qa('login tabBody input[name="email"]')[parseInt(ui.q('login tabBody').style.marginLeft || 0) / -100].value;
-			window.sessionStorage.setItem('login', JSON.stringify(v));
-		} catch (e) { }
+		pageLogin.email = ui.qa('login tabBody input[name="email"]')[parseInt(ui.q('login tabBody').style.marginLeft || 0) / -100].value;
 	}
 	static savePassword() {
 		if (ui.val('[name="passwd"]').length < 8)
@@ -553,7 +541,7 @@ tabBody>div>form {
 	}
 	static sendVerificationEmail() {
 		var fromDialog = ui.q('dialog-popup popupContent');
-		var email = fromDialog ? ui.q('dialog-popup input') : ui.qa('input[name="email"]')[1];
+		var email = fromDialog ? ui.q('dialog-popup input') : ui.q('login form[name="loginRecover"] input[name="email"]');
 		formFunc.resetError(email);
 		ui.html('login form[name="loginRecover"] errorHint', '');
 		var b = -1;
@@ -581,7 +569,7 @@ tabBody>div>form {
 			});
 	}
 	static setError(s, resetPW) {
-		if (ui.q('input[name="email"]')) {
+		if (ui.q('login form[name="login"] input[name="email"]')) {
 			var e = ui.q('input[name="password"]');
 			formFunc.setError(e, s);
 			if (resetPW)
@@ -594,14 +582,14 @@ tabBody>div>form {
 		ui.classRemove('login tab', 'tabActive');
 		ui.classAdd(ui.qa('login tab')[0], 'tabActive');
 		ui.css('login tabBody', 'margin-left', 0);
-		ui.qa('login input[name="email"]')[0].value = pageLogin.getDraft().email;
+		ui.q('login form[name="login"]  input[name="email"]').value = pageLogin.email;
 	}
 	static setTab2() {
 		pageLogin.saveDraft();
 		ui.css('login tabBody', 'margin-left', '-100%');
 		ui.classRemove('login tab', 'tabActive');
 		ui.classAdd(ui.qa('login tab')[1], 'tabActive');
-		ui.qa('login input[name="email"]')[1].value = pageLogin.getDraft().email;
+		ui.q('login form[name="loginRecover"] input[name="email"]').value = pageLogin.email;
 	}
 	static setTab3() {
 		pageLogin.saveDraft();
@@ -611,7 +599,7 @@ tabBody>div>form {
 		if (ui.qa('login input[name="email"]').length > 2) {
 			ui.css('login input[name="name"]', 'position', 'absolute');
 			ui.css('login input[name="name"]', 'right', '200%');
-			ui.qa('login input[name="email"]')[2].value = pageLogin.getDraft().email;
+			ui.q('login form[name="loginRegister"] input[name="email"]').value = pageLogin.email;
 		}
 	}
 	static swipeLeft() {
