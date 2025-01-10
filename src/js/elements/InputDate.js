@@ -418,7 +418,7 @@ next::after {
 			s += `<label onclick="InputDate.getField(${this.x}).selectYear(${i2},true)">${i2}</label>`;
 		}
 		if (max - min > maxPerRow) {
-			for (var i = (desc ? max : min) % maxPerRow; i < maxPerRow; i++)
+			for (var i = 0; i < (desc ? min - 1 : max + 1) % maxPerRow; i++)
 				s += `<label class="filler"></label>`;
 		}
 		this.toggle(e, s);
