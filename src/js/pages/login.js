@@ -432,7 +432,10 @@ tabBody>div>form {
 		}
 	}
 	static register() {
-		formFunc.validation.email(ui.q('input[name="email"]'));
+		if (ui.val('input[name="email"]'))
+			formFunc.validation.email(ui.q('input[name="email"]'));
+		else
+			formFunc.setError(ui.q('[name="email"]'), 'settings.noEmail');
 		pageLogin.validatePseudonym();
 		pageLogin.validateAGB();
 		if (!ui.q('form[name=loginRegister] errorHint')) {
