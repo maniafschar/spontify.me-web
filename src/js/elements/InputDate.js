@@ -406,7 +406,7 @@ next::after {
 		var s = '<style>label{padding:0.34em 0;width:3.5em;text-align:center;}label.filler{opacity:0;cursor:default;}</style>', e = this.get('year');
 		var min = new Date(this.getAttribute('min')).getFullYear(), max = new Date(this.getAttribute('max')).getFullYear();
 		var desc = min < new Date().getFullYear();
-		var maxPerRow = 5;
+		var maxPerRow = parseInt(ui.cssValue('main', 'width')) / ui.emInPX > 45 ? 10 : 5;
 		if (max - min > maxPerRow) {
 			for (var i = maxPerRow - (desc ? max : min) % maxPerRow; i > 0; i--)
 				s += `<label class="filler"></label>`;
