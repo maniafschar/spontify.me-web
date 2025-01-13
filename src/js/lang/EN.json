@@ -603,6 +603,7 @@
 			"next": "Next",
 			"noResult": "There were too few participants in the survey, the result cannot be displayed.",
 			"openArticle": "Open Article",
+			"pollTerminated": "The survey is over. You can only open the results if you have participated yourself.",
 			"previous": "Back",
 			"validUntil": "This promotion runs until {0}<br/>Hurry up, the offer lasts while stocks last.<br/>Legal recourse is excluded."
 		},

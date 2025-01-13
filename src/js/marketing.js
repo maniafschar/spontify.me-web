@@ -160,6 +160,8 @@ hint {
 							+ '<div style="padding-top:1em;">' + ui.l('marketing.inviteFriends') + '<br/><br/><button-text onclick="pageInfo.socialShare()" label="settings.socialShare"></button-text></div>',
 						pos: '5%,5%', size: '-5%,auto', onclick: 'return;'
 					});
+				else
+					ui.navigation.openPopup(ui.l('events.newPoll'), ui.l('marketing.pollTerminated'));
 				return;
 			}
 			var s;

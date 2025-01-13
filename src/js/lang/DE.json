@@ -603,6 +603,7 @@
 			"next": "Weiter",
 			"noResult": "Es gab zu wenige Teilnehmer an der Umfrage, das Resulat kann nicht angezeigt werden.",
 			"openArticle": "Artikel öffnen",
+			"pollTerminated": "Die Umfrage ist beendet. Das Ergebnis kannst Du nur dann öffnen, wenn Du auch selbst teigenommen hast.",
 			"previous": "Zurück",
 			"validUntil": "Diese Aktion läuft bis zum {0}<br/>Beeile Dich, Aktion geht solange der Vorrat reicht.<br/>Der Rechtsweg ist ausgeschlossen."
 		},
