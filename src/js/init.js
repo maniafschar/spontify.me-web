@@ -420,9 +420,8 @@ class initialisation {
 		if (user.contact || initialisation.recoverInvoked == true)
 			return;
 		initialisation.recoverInvoked = true;
-		var e = pageLogin.getDraft() || {};
 		pageLogin.removeCredentials();
-		pageLogin.verifyEmail(r, e.email ? e.email : '');
+		pageLogin.verifyEmail(r, pageLogin.email ? pageLogin.email : '');
 		if (global.isBrowser())
 			history.pushState(null, null, window.location.origin);
 	}
