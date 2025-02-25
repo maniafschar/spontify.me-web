@@ -35,7 +35,7 @@
 							if (response[i].indexOf('<Anhang: ') < 0)
 								lastChat = response[i].substring(response[i].indexOf(': ') + 2).replace('<', '&lt;').trim();
 							else
-								lastChat = '<img src="wa/' + response[i].substring(9, response[i].length - 1).trim() + '" />';
+								lastChat = '<img src="wa/' + response[i].substring(response[i].indexOf('<Anhang: ') + 9, response[i].length - 1).trim() + '" />';
 						} else
 							lastChat += '<br/>' + response[i].replace('<', '&lt;').trim();
 					}
