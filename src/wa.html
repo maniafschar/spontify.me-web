@@ -9,7 +9,7 @@
 				if (xmlhttp.readyState == 4) {
 					var start = /^\[\d\d.\d\d.\d\d, \d\d:\d\d:\d\d\] ([^:].*)/;
 					var response = xmlhttp.responseText.split('\n');
-					var e, s, currentDate;
+					var e, s, currentDate, users = {};
 					for (var i = 0; i < response.length; i++) {
 						if (response[i].match(start)) {
 							s = response[i].split(' ');
@@ -23,7 +23,12 @@
 							e.innerHTML = s[1].replace(']', '');
 							document.body.appendChild(e);
 							e = document.createElement('user');
-							e.innerHTML = response[i].substring(response[i].indexOf(']') + 1, response[i].indexOf(': '));
+							e.innerHTML = response[i].substring(response[i].indexOf(']') + 1, response[i].indexOf(': ')).trim();
+							if (users[e.innerHTML])
+								users[e.innerHTML].count++;
+							else
+								users[e.innerHTML] = { count: 1, id: Object.keys(users).length };
+							e.class = 'user' + users[e.innerHTML].id;
 							document.body.appendChild(e);
 						}
 					}
