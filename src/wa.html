@@ -27,11 +27,11 @@
 							}
 							addElement('time', s[1].replace(']', ''));
 							e = addElement('user', response[i].substring(response[i].indexOf(']') + 1, response[i].indexOf(': ')).trim());
-							if (users[e.innerText])
-								users[e.innerText].count++;
+							if (users[e.innerHTML])
+								users[e.innerHTML].count++;
 							else
-								users[e.innerText] = { count: 1, id: Object.keys(users).length };
-							currentChat.classList = 'user' + users[e.innerText].id;
+								users[e.innerHTML] = { count: 1, id: Object.keys(users).length };
+							currentChat.classList = 'user' + users[e.innerHTML].id;
 							lastChat = response[i].substring(response[i].indexOf(': ') + 2).trim();
 						} else
 							lastChat += '<br/>' + response[i].trim();
@@ -45,7 +45,7 @@
     		}
 		function addElement(name, text) {
 			var e = document.createElement(name);
-			e.innerText = text.trim();
+			e.innerHTML = text.trim().replace('<', '&lt;');
 			currentChat.appendChild(e);
 			return e;
 		}
