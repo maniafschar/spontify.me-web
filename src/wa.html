@@ -7,7 +7,12 @@
 			var xmlhttp = new XMLHttpRequest();
 			xmlhttp.onreadystatechange = function () {
 				if (xmlhttp.readyState == 4) {
-					var response = xmlhttp.responseText;
+					var response = xmlhttp.responseText.split('\n');
+					for (var i = 0; i < response.length; i++) {
+						var e = document.createElement('time');
+						e.innerHTML = response[i];
+						document.body.appendChild(e);
+					}
 				}
 			};
 			xmlhttp.open('GET', 'wa/_chat.txt', true);
