@@ -8,7 +8,7 @@
 			var xmlhttp = new XMLHttpRequest();
 			xmlhttp.onreadystatechange = function () {
 				if (xmlhttp.readyState == 4) {
-					var start = /^\[\d\d.\d\d.\d\d, \d\d:\d\d:\d\d\] ([^:].*)/;
+					var start = /^\[\d\d.\d\d.\d\d, \d\d:\d\d:\d\d\] ([^:].*?)/;
 					var response = xmlhttp.responseText.split('\n');
 					var e, s, currentDate, lastChat = '', users = {};
 					for (var i = 0; i < response.length; i++) {
