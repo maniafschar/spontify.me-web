@@ -3,9 +3,17 @@
 
 <head>
 	<script type="text/javascript">
-    function init() {
-    }
-  </script>
+		function init() {
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function () {
+				if (xmlhttp.readyState == 4) {
+					var response = xmlhttp.responseText;
+				}
+			};
+			xmlhttp.open('GET', 'wa/_chat.txt', true);
+			xmlhttp.send();
+    		}
+	</script>
 	<title>WA</title>
 	<style>
 	</style>
