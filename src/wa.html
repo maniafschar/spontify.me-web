@@ -28,7 +28,7 @@
 								users[e.innerHTML].count++;
 							else
 								users[e.innerHTML] = { count: 1, id: Object.keys(users).length };
-							e.class = 'user' + users[e.innerHTML].id;
+							e.classList = 'user' + users[e.innerHTML].id;
 							document.body.appendChild(e);
 						}
 					}
