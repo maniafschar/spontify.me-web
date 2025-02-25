@@ -9,11 +9,14 @@
 				if (xmlhttp.readyState == 4) {
 					var start = /^\[\d\d.\d\d.\d\d, \d\d:\d\d:\d\d\] ([^:].*)/;
 					var response = xmlhttp.responseText.split('\n');
-					var e, s, currentDate, lastChat = '', users = {};
+					var e, s, currentDate, lastChat = '', users = {}, currentChat = document.createElement('chat');
 					for (var i = 0; i < response.length; i++) {
 						if (response[i].match(start)) {
-							if (lastChat)
-								addElement('chat', lastChat);
+							if (lastChat) {
+								addElement('msg', lastChat);
+								document.body.append(currentChat);
+								currentChat = document.createElement('chat');
+							}
 							s = response[i].split(' ');
 							if (currentDate != s[0]) {
 								currentDate = s[0];
@@ -25,11 +28,12 @@
 								users[e.innerHTML].count++;
 							else
 								users[e.innerHTML] = { count: 1, id: Object.keys(users).length };
-							e.classList = 'user' + users[e.innerHTML].id;
+							currentChat.classList = 'user' + users[e.innerHTML].id;
 							lastChat = response[i].substring(response[i].indexOf(': ') + 2);
 						} else
 							lastChat += '\n' + response[i];
 					}
+					addElement('chat', lastChat);
 				}
 			};
 			xmlhttp.open('GET', 'wa/_chat.txt', true);
@@ -38,7 +42,7 @@
 		function addElement(name, text) {
 			var e = document.createElement(name);
 			e.innerHTML = text;
-			document.body.appendChild(e);
+			currentChat.appendChild(e);
 			return e;
 		}
 	</script>
