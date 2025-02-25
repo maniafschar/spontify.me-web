@@ -3,8 +3,8 @@
 
 <head>
 	<script type="text/javascript">
+		var currentChat = document.createElement('chat');
 		function init() {
-			var currentChat = document.createElement('chat');
 			var xmlhttp = new XMLHttpRequest();
 			xmlhttp.onreadystatechange = function () {
 				if (xmlhttp.readyState == 4) {
