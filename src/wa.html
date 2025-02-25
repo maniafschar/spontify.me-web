@@ -30,9 +30,9 @@
 							else
 								users[e.innerHTML] = { count: 1, id: Object.keys(users).length };
 							currentChat.classList = 'user' + users[e.innerHTML].id;
-							lastChat = response[i].substring(response[i].indexOf(': ') + 2);
+							lastChat = response[i].substring(response[i].indexOf(': ') + 2).trim();
 						} else
-							lastChat += '\n' + response[i];
+							lastChat += '<br/>' + response[i].trim();
 					}
 					addElement('chat', lastChat);
 					document.body.append(currentChat);
@@ -43,7 +43,7 @@
     		}
 		function addElement(name, text) {
 			var e = document.createElement(name);
-			e.innerHTML = text;
+			e.innerHTML = text.trim();
 			currentChat.appendChild(e);
 			return e;
 		}
