@@ -21,7 +21,9 @@
 							s = response[i].split(' ');
 							if (currentDate != s[0]) {
 								currentDate = s[0];
-								addElement('date', s[0].replace('[', '').replace(',', ''));
+								e = document.createElement('date');
+								e.innerHTML = s[0].replace('[', '').replace(',', '');
+								document.body.append(e);
 							}
 							addElement('time', s[1].replace(']', ''));
 							e = addElement('user', response[i].substring(response[i].indexOf(']') + 1, response[i].indexOf(': ')).trim());
@@ -56,6 +58,10 @@
 		date {
 			display: block;
 			text-align: center;
+			padding: 1em;
+			margin: 1em 0.5em 0.5em 0.5em;
+			border-radius: 0.5em;
+			background: rgba(200, 200, 200, 0.2);
 		}
 		chat {
 			display: block;
@@ -64,6 +70,7 @@
 			padding: 1em;
 			margin: 0.5em;
 			border-radius: 0.5em;
+			display: inline-block;
 		}
 		chat.user0 {
 			text-align: left;
