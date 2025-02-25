@@ -34,6 +34,8 @@
 							currentChat.classList = 'user' + users[e.innerHTML].id;
 							if (response[i].indexOf('<Anhang: ') < 0)
 								lastChat = response[i].substring(response[i].indexOf(': ') + 2).replace('<', '&lt;').trim();
+							else if (response[i].indexOf('.mp4') > 0)
+								lastChat = '<img src="wa/video.png" onclick="window.open(&quot;wa/' + response[i].substring(response[i].indexOf('<Anhang: ') + 9, response[i].length - 1).trim() + '&quot;, &quot;video&quot;)" />';
 							else
 								lastChat = '<img src="wa/' + response[i].substring(response[i].indexOf('<Anhang: ') + 9, response[i].length - 1).trim() + '" />';
 						} else
