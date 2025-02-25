@@ -35,6 +35,7 @@
 							lastChat += '\n' + response[i];
 					}
 					addElement('chat', lastChat);
+					document.body.append(currentChat);
 				}
 			};
 			xmlhttp.open('GET', 'wa/_chat.txt', true);
