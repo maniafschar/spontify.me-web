@@ -7,11 +7,25 @@
 			var xmlhttp = new XMLHttpRequest();
 			xmlhttp.onreadystatechange = function () {
 				if (xmlhttp.readyState == 4) {
+					var start = /^\[\d\d.\d\d.\d\d, \d\d:\d\d:\d\d\] ([^:].*)/;
 					var response = xmlhttp.responseText.split('\n');
+					var e, s, currentDate;
 					for (var i = 0; i < response.length; i++) {
-						var e = document.createElement('time');
-						e.innerHTML = response[i];
-						document.body.appendChild(e);
+						if (response[i].match(start)) {
+							s = response[i].split(' ');
+							if (currentDate != s[0]) {
+								currentDate = s[0];
+								e = document.createElement('date');
+								e.innerHTML = s[0].replace('[', '').replace(',', '');
+								document.body.appendChild(e);
+							}
+							e = document.createElement('time');
+							e.innerHTML = s[1].replace(']', '');
+							document.body.appendChild(e);
+							e = document.createElement('user');
+							e.innerHTML = response[i].substring(response[i].indexOf(']') + 1, response[i].indexOf(': '));
+							document.body.appendChild(e);
+						}
 					}
 				}
 			};
