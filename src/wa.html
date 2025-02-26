@@ -71,7 +71,7 @@
 			background: linear-gradient(135deg, #fff, #fffaf7 10%, #fff3ea 20%, #f5f3f0 33%, #ddf3ff 66%, #d0f1c9);
 			font-family: Comfortaa, Verdana, "Helvetica Neue", Helvetica, Arial, sans-serif;
 			font-size: 9pt;
-			padding: 1em;
+			padding: 2em;
 		}
 		date {
 			display: block;
@@ -119,14 +119,20 @@
 			background: rgba(255, 140, 0, 0.1);
 		}
 		chat.user0 time {
-			left: 2.5em;
+			left: 5.5em;
 		}
 		chat.user1 time {
-			right: 2.5em;
+			right: 5.5em;
 		}
 		@media print {
 			html {
 				-webkit-print-color-adjust: exact;
+			}
+			body {
+				display: table;
+				table-layout: fixed;
+				padding-top: 2.5cm;
+				height: auto;
 			}
 		}
 	</style>
