@@ -127,11 +127,16 @@
 		@media print {
 			html {
 				-webkit-print-color-adjust: exact;
+				background: lightblue url("background.png") 100% 100%;
 			}
-			@page {
-				size: A4;
-				padding-top: 1em; 
+			body {
+				background: none;
 			}
+		}
+		@page {
+			size: A4;
+			padding: 10mm 0;
+		}
 		}
 	</style>
 </head>
