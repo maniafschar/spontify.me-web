@@ -33,13 +33,13 @@
 								users[e.innerHTML] = { count: 1, id: Object.keys(users).length };
 							currentChat.classList = 'user' + users[e.innerHTML].id;
 							if (response[i].indexOf('<Anhang: ') < 0)
-								lastChat = response[i].substring(response[i].indexOf(': ') + 2).replace('<', '&lt;').trim();
+								lastChat = sanitize(response[i].substring(response[i].indexOf(': ') + 2));
 							else if (response[i].indexOf('.mp4') > 0)
 								lastChat = '<video controls><source src="wa/' + response[i].substring(response[i].indexOf('<Anhang: ') + 9, response[i].length - 1).trim() + '" /></video>';
 							else
 								lastChat = '<img src="wa/' + response[i].substring(response[i].indexOf('<Anhang: ') + 9, response[i].length - 1).trim() + '" />';
 						} else
-							lastChat += '<br/>' + response[i].replace('<', '&lt;').trim();
+							lastChat += '<br/>' + sanitize(response[i]);
 					}
 					addElement('msg', lastChat);
 					document.body.append(currentChat);
@@ -48,6 +48,9 @@
 			xmlhttp.open('GET', 'wa/_chat.txt', true);
 			xmlhttp.send();
     		}
+		function sanitize(s) {
+			return s.replace('<Diese Nachricht wurde bearbeitet.>', '').replace('<', '&lt;').trim();
+		}
 		function addElement(name, text) {
 			var e = document.createElement(name);
 			e.innerHTML = text.trim();
