@@ -49,7 +49,7 @@
 			xmlhttp.send();
     		}
 		function sanitize(s) {
-			return s.replace('<Diese Nachricht wurde bearbeitet.>', '').replace('<', '&lt;').trim();
+			return s.replace('<Diese Nachricht wurde bearbeitet.>', '').replaceAll('<', '&lt;').trim();
 		}
 		function addElement(name, text) {
 			var e = document.createElement(name);
