@@ -4,6 +4,7 @@
 <head>
 	<script type="text/javascript">
 		var currentChat = document.createElement('chat');
+		var content = null;
 		function init() {
 			var xmlhttp = new XMLHttpRequest();
 			xmlhttp.onreadystatechange = function () {
@@ -21,9 +22,7 @@
 							s = response[i].split(' ');
 							if (currentDate != s[0]) {
 								currentDate = s[0];
-								e = document.createElement('date');
-								e.innerText = s[0].replace('[', '').replace(',', '');
-								document.body.append(e);
+								addDate(currentDate);
 							}
 							addElement('time', s[1].replace(']', ''));
 							e = addElement('user', response[i].substring(response[i].indexOf(']') + 1, response[i].indexOf(': ')).trim());
@@ -56,6 +55,21 @@
 			e.innerHTML = text.trim();
 			currentChat.appendChild(e);
 			return e;
+		}
+		function addDate(date) {
+			if (content) {
+			}
+			var e = document.createElement('date');
+			e.innerText = date.replace('[', '').replace(',', '');
+			e.id = e.innerText.replaceAll('.', '');
+			document.body.append(e);
+			content = {
+				name1: null,
+				name2: null,
+				count1: 0,
+				count2: 0,
+				date: date
+			};
 		}
 	</script>
 	<title>WA</title>
@@ -147,6 +161,7 @@
 </head>
 
 <body onload="init()">
+	<content></content>
 </body>
 
 </html>
