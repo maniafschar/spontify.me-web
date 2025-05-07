@@ -17,6 +17,15 @@
 							if (lastChat) {
 								addElement('msg', lastChat);
 								document.body.append(currentChat);
+								var user = currentChat.querySelector('user').innerText;
+								if (content.names[user])
+									content.names[user].count++;
+								else {
+									content.names[user] = {
+										name: name,
+										count: 1
+									};
+								}
 								currentChat = document.createElement('chat');
 							}
 							s = response[i].split(' ');
@@ -58,16 +67,17 @@
 		}
 		function addDate(date) {
 			if (content) {
+				var e = document.createElement('a');
+				a.setAttribute('href', '#' + content.date.replaceAll('.', ''));
+				a.innerText = content.date;
+				document.getElementsByTagName('content')[0].append(e);
 			}
 			var e = document.createElement('date');
 			e.innerText = date.replace('[', '').replace(',', '');
 			e.id = e.innerText.replaceAll('.', '');
 			document.body.append(e);
 			content = {
-				name1: null,
-				name2: null,
-				count1: 0,
-				count2: 0,
+				names: {},
 				date: date
 			};
 		}
