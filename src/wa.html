@@ -5,26 +5,32 @@
 	<script type="text/javascript">
 		var currentChat = document.createElement('chat');
 		var content = null;
+		var total = {};
 		function init() {
 			var xmlhttp = new XMLHttpRequest();
 			xmlhttp.onreadystatechange = function () {
 				if (xmlhttp.readyState == 4) {
 					var start = /^.?\[\d\d.\d\d.\d\d, \d\d:\d\d:\d\d\] ([^:].*?)/;
 					var response = xmlhttp.responseText.replace(/\u200E/g, '').replaceAll('\r', '').split('\n');
-					var e, s, currentDate, lastChat = '', users = {};
+					var e, s, currentDate, lastChat = '', users = {}, me = 'man';
 					for (var i = 0; i < response.length; i++) {
 						if (response[i].match(start)) {
 							if (lastChat) {
 								addElement('msg', lastChat);
 								document.body.append(currentChat);
+								var msg = currentChat.querySelector('msg').innerText;
 								var user = currentChat.querySelector('user').innerText;
-								if (content.names[user])
-									content.names[user].count++;
-								else {
-									content.names[user] = {
-										name: name,
-										count: 1
-									};
+								if (!content.names[user])
+									content.names[user] = { chats: 0, words: 0, letters: 0 };
+								content.names[user].chats++;
+								if (msg) {
+									msg = msg.replaceAll('\t', ' ');
+									msg = msg.replaceAll('\r', ' ');
+									msg = msg.replaceAll('\n', ' ');
+									while (msg.indexOf('  ') > -1)
+										msg = msg.replaceAll('  ', '');
+									content.names[user].words += msg.split(' ').length;
+									content.names[user].letters += msg.replaceAll(' ', '').length;
 								}
 								currentChat = document.createElement('chat');
 							}
@@ -35,11 +41,11 @@
 							}
 							addElement('time', s[1].replace(']', ''));
 							e = addElement('user', response[i].substring(response[i].indexOf(']') + 1, response[i].indexOf(': ')).trim());
-							if (users[e.innerHTML])
-								users[e.innerHTML].count++;
+							if (users[e.innerText])
+								users[e.innerText].count++;
 							else
-								users[e.innerHTML] = { count: 1, id: Object.keys(users).length };
-							currentChat.classList = 'user' + users[e.innerHTML].id;
+								users[e.innerText] = { count: 1, id: Object.keys(users).length };
+							currentChat.classList = 'user' + (e.innerText == me ? 'Me' : '');
 							if (response[i].indexOf('<Anhang: ') < 0)
 								lastChat = sanitize(response[i].substring(response[i].indexOf(': ') + 2));
 							else if (response[i].indexOf('.mp4') > 0)
@@ -51,11 +57,18 @@
 					}
 					addElement('msg', lastChat);
 					document.body.append(currentChat);
+					var e = document.createElement('span'), s = '<tr><td>&nbsp;</td><td>Chats</td><td>Wörter</td><td>Zeichen</td></tr>';
+					Object.keys(total).forEach(name => {
+						s += '<tr><td style="text-align:right;">' + name + '</td><td>' + total[name].chats + '</td><td>' + total[name].words + '</td><td>' + total[name].letters + '</td></tr>';
+					});
+					e.innerHTML = '<table>' + s + '</table>';
+					var e2 = document.getElementsByTagName('content')[0];
+					e2.insertBefore(e, e2.firstChild);
 				}
 			};
 			xmlhttp.open('GET', 'wa/_chat.txt', true);
 			xmlhttp.send();
-    		}
+		}
 		function sanitize(s) {
 			return s.replace('<Diese Nachricht wurde bearbeitet.>', '').replaceAll('<', '&lt;').trim();
 		}
@@ -68,8 +81,17 @@
 		function addDate(date) {
 			if (content) {
 				var e = document.createElement('a');
-				a.setAttribute('href', '#' + content.date.replaceAll('.', ''));
-				a.innerText = content.date;
+				e.setAttribute('href', '#' + content.date.replaceAll('.', ''));
+				var s = content.date + ' ';
+				Object.keys(content.names).forEach(name => {
+					s += name + ' ' + content.names[name].chats + ' ';
+					if (!total[name])
+						total[name] = { chats: 0, words: 0, letters: 0 };
+					total[name].chats += content.names[name].chats;
+					total[name].words += content.names[name].words;
+					total[name].letters += content.names[name].letters;
+				});
+				e.innerText = s.trim();
 				document.getElementsByTagName('content')[0].append(e);
 			}
 			var e = document.createElement('date');
@@ -78,28 +100,36 @@
 			document.body.append(e);
 			content = {
 				names: {},
-				date: date
+				date: e.innerText
 			};
 		}
 	</script>
 	<title>WA</title>
 	<style>
-		@font-face {
-			font-family: 'Comfortaa';
-			font-style: regular;
-			font-weight: 400;
-			src: url(font/Comfortaa-Regular.ttf) format('truetype');
-		}
 		html {
 			width: 100%;
 			height: 100%;
 		}
+
 		body {
 			background: linear-gradient(135deg, #fff, #fffaf7 10%, #fff3ea 20%, #f5f3f0 33%, #ddf3ff 66%, #d0f1c9) 50% fixed;
 			font-family: Comfortaa, Verdana, "Helvetica Neue", Helvetica, Arial, sans-serif;
 			font-size: 9pt;
 			padding: 0 2em;
+			text-align: center;
 		}
+
+		content {
+			display: inline-block;
+			text-align: left;
+		}
+
+		content a {
+			display: block;
+			text-decoration: none;
+			color: darkblue;
+		}
+
 		date {
 			display: block;
 			text-align: center;
@@ -109,22 +139,27 @@
 			background: rgba(255, 255, 255, 0.8);
 			font-weight: bold;
 		}
+
 		date:first-child {
 			margin-top: 0;
 		}
+
 		chat {
 			display: block;
 			page-break-inside: avoid;
 			padding-top: 0.75em;
 		}
+
 		user {
 			display: none;
 		}
+
 		time {
 			position: absolute;
 			font-size: 0.7em;
 			margin-top: -0.5em;
 		}
+
 		msg {
 			padding: 0.5em 0.75em;
 			margin: 0.5em;
@@ -132,40 +167,51 @@
 			display: inline-block;
 			max-width: 90%;
 		}
+
 		msg img {
 			width: 100%;
 			border: none;
 		}
-		chat.user0 {
+
+		chat.user {
 			text-align: left;
 		}
-		chat.user1 {
+
+		chat.userMe {
 			text-align: right;
 		}
-		chat.user0 msg {
+
+		chat.user msg {
 			background: rgba(0, 140, 255, 0.1);
 		}
-		chat.user1 msg {
+
+		chat.userMe msg {
 			background: rgba(255, 140, 0, 0.1);
 		}
-		chat.user0 time {
+
+		chat.user time {
 			left: 5.5em;
 		}
-		chat.user1 time {
+
+		chat.userMe time {
 			right: 5.5em;
 		}
+
 		@media print {
 			html {
 				-webkit-print-color-adjust: exact;
 				background: linear-gradient(135deg, #fff, #E8F5E0 0%, #fffaf7 5%, #fff3ea 10%, #f5f3f0 17%, #ddf3ff 33%, #d0f1c9 50%, #fffaf7 63%, #fff3ea 67%, #f5f3f0 74%, #ddf3ff 91%, #d0f1c9 105%);
 				background-size: 105% 100%;
-			body {
-				background: none;
+
+				body {
+					background: none;
+				}
 			}
-		}
-		@page {
-			size: A4;
-			padding: 10mm 0 0 0;
+
+			@page {
+				size: A4;
+				padding: 6mm 0mm 4mm 0mm;
+			}
 		}
 	</style>
 </head>
