@@ -114,20 +114,25 @@
 		body {
 			background: linear-gradient(135deg, #fff, #fffaf7 10%, #fff3ea 20%, #f5f3f0 33%, #ddf3ff 66%, #d0f1c9) 50% fixed;
 			font-family: Comfortaa, Verdana, "Helvetica Neue", Helvetica, Arial, sans-serif;
-			font-size: 9pt;
-			padding: 0 2em;
+			font-size: 26pt;
+			padding: 0 0.5em;
 			text-align: center;
 		}
 
 		content {
 			display: inline-block;
 			text-align: left;
+			font-size: 0.8em;
 		}
 
 		content a {
 			display: block;
 			text-decoration: none;
 			color: darkblue;
+		}
+
+		content td {
+			padding: 0 0.3em;
 		}
 
 		date {
@@ -190,17 +195,17 @@
 		}
 
 		chat.user time {
-			left: 5.5em;
+			left: 2.7em;
 		}
 
 		chat.userMe time {
-			right: 5.5em;
+			right: 2.7em;
 		}
 
 		@media print {
 			html {
 				-webkit-print-color-adjust: exact;
-				background: linear-gradient(135deg, #fff, #E8F5E0 0%, #fffaf7 5%, #fff3ea 10%, #f5f3f0 17%, #ddf3ff 33%, #d0f1c9 50%, #fffaf7 63%, #fff3ea 67%, #f5f3f0 74%, #ddf3ff 91%, #d0f1c9 105%);
+				background: linear-gradient(135deg, #fff, #E8F5E0 0%, #fffaf7 5%, #fff3ea 10%, #f5f3f0 17%, #edf3ff 33%, #e0f1ea 50%, #fffaf7 63%, #fff3ea 67%, #f5f3f0 74%, #edf3ff 91%, #e0f1ea 105%);
 				background-size: 105% 100%;
 
 				body {
@@ -210,7 +215,7 @@
 
 			@page {
 				size: A4;
-				padding: 6mm 0mm 4mm 0mm;
+				padding: 2mm 0mm 1mm 0mm;
 			}
 		}
 	</style>
