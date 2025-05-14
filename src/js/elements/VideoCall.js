@@ -8,7 +8,6 @@ export { VideoCall };
 
 class VideoCall extends HTMLElement {
 	static mediaDevicesIds = [];
-	static activeDeviceId = null;
 	static connectedId;
 	static connectedUser;
 	static rtcPeerConnection;
@@ -158,7 +157,6 @@ streams {
 		navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
 			ui.q('video-call #localStream').srcObject = stream;
 			stream.getTracks().forEach(track => VideoCall.getRtcPeerConnection().addTrack(track, stream));
-			VideoCall.setActiveDeviceId(stream);
 			VideoCall.prepareVideoElement('localStream');
 			var e = ui.q('video-call videochat');
 			ui.classRemove(e, 'hidden');
@@ -253,7 +251,6 @@ streams {
 		ui.q('video-call videochat buttonIcon.mute').disabled = true;
 		ui.q('video-call videochat buttonIcon.camera').disabled = true;
 		VideoCall.mediaDevicesIds = [];
-		VideoCall.activeDeviceId = null;
 		ui.classRemove('video-call videochat buttonIcon.mute', 'muted');
 		ui.html('video-call streams video', '');
 		ui.q('video-call streams').classList.value = '';
@@ -402,13 +399,6 @@ streams {
 			e.style.zIndex = '-1';
 		}
 	}
-	static setActiveDeviceId(stream) {
-		if (stream && (global.isBrowser() || global.getOS() != 'ios')) {
-			const videoTracks = stream.getVideoTracks();
-			const videoTrackSettings = videoTracks[0]?.getSettings();
-			VideoCall.activeDeviceId = videoTrackSettings?.deviceId;
-		}
-	}
 	static setAudioMute() {
 		if (ui.classContains('video-call videochat buttonIcon.mute', 'muted')) {
 			ui.q('video-call #localStream').srcObject.getAudioTracks()[0].enabled = true;
@@ -471,7 +461,6 @@ streams {
 				ui.navigation.openPopup(ui.l('attention'), ui.l('chat.videoErrorDevice').replace('{0}', ':<br/>' + error));
 				VideoCall.callStop();
 			});
-			VideoCall.setActiveDeviceId(stream);
 			VideoCall.prepareVideoElement('localStream');
 		}).catch(err => {
 			ui.navigation.openPopup(ui.l('attention'), ui.l('chat.videoErrorDevice').replace('{0}', err.name == 'NotFoundError' ? '.' : ':<br/>' + err));
