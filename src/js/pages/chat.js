@@ -186,11 +186,11 @@ class pageChat {
 			return Strings.replaceInternalLinks(s);
 		s = s.trim();
 		s = s.replace(/</g, '&lt;');
+		if (v.contactId == user.clientId)
+			s = Strings.markdown(s);
 		s = Strings.replaceLinks(s);
 		s = s.replace(/\n/g, '<br/>');
 		s = Strings.replaceEmoji(s);
-		if (v.contactId == user.clientId)
-			s = Strings.markdown(s);
 		if (v.action && v.action.indexOf('ui.startVideoCall(' + user.contact.id + ')') < 0)
 			s = '<a onclick="' + v.action + '">' + s + '</a>';
 		return s;
