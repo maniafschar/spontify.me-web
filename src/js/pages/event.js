@@ -188,6 +188,24 @@ mapEdit{
 	</value>
 </field>
 </form>`;
+	static templateEditNew = v =>
+		global.template`<tabHeader>
+	<tab onclick="pageEvent.selectTab(0)" class="tabActive">
+		${ui.l('events.editEvent')}
+	</tab>
+	<tab onclick="pageEvent.selectTab(1)">
+		${ui.l('events.searchAi')}
+	</tab>
+</tabHeader>
+<tabBody>
+<div>
+	${v.edit}
+</div>
+<div>
+	user.skills
+	location
+</div>
+</tabBody>`;
 	static templateDetail = v =>
 		global.template`<style>
 detail text.description.event poll {
@@ -488,7 +506,7 @@ poll result div {
 		v.clubs = s ? s : ui.l('events.noClubs');
 		if (!global.config.searchMandatory)
 			v.repetitionClubsStyle = ' style="display:none;"';
-		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
+		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), id ? pageEvent.templateEdit(v) : pageEvent.templateEditNew(v), 'pageEvent.saveDraft()');
 		setTimeout(pageEvent.setForm, 400);
 		var selectable = function (value) {
 			if (!value || value.length < 3 || value == 'Once' || value == 'Games')
@@ -1232,6 +1250,17 @@ poll result div {
 		ui.toggleHeight('dialog-popup .event', function () {
 			ui.toggleHeight('dialog-popup .location');
 		});
+	}
+	static selectTab(i) {
+		if (ui.q('dialog-popup tabHeader tab.tabActive')?.getAttribute('onclick').indexOf(i) > 0)
+			return;
+		var animation = ui.q('dialog-popup tabBody').getAttribute('animation');
+		if (animation && new Date().getTime() - animation < 500)
+			return;
+		ui.classRemove('dialog-popup tab', 'tabActive');
+		ui.classAdd(ui.qa('dialog-popup tab')[i], 'tabActive');
+		ui.q('dialog-popup tabBody').style.marginLeft = i * -100 + '%';
+		ui.attr('dialog-popup tabBody', 'animation', new Date().getTime());
 	}
 	static selectVideoCall(e) {
 		ui.classRemove('dialog-popup hour', 'selected');
