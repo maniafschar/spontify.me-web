@@ -189,7 +189,15 @@ mapEdit{
 </field>
 </form>`;
 	static templateEditNew = v =>
-		global.template`<tabHeader>
+		global.template`<style>
+tabHeader tab {
+	width: 50%;
+}
+tabBody {
+	width: 200%;
+}
+</style>
+<tabHeader>
 	<tab onclick="pageEvent.selectTab(0)" class="tabActive">
 		${ui.l('events.new')}
 	</tab>
