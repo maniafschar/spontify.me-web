@@ -196,6 +196,9 @@ tabHeader tab {
 tabBody {
 	width: 200%;
 }
+tabBody>div {
+	width: 50%;
+}
 </style>
 <tabHeader>
 	<tab onclick="pageEvent.selectTab(0)" class="tabActive">
