@@ -209,7 +209,7 @@ next::after {
 			var min = new Date(this.getAttribute('min')), max = new Date(this.getAttribute('max'));
 			var d = new Date(this.get('year').getAttribute('value') + '-' + this.get('month').getAttribute('value') + '-' + this.get('day').getAttribute('value'));
 			this.selectDay(min > d ? min.getDate() : d > max ? max.getDate() : d.getDate() != parseInt(this.get('day').getAttribute('value')) ?
-				       new Date(parseInt(this.get('year').getAttribute('value')), parseInt(this.get('month').getAttribute('value')), 0).getDate() : d.getDate());
+				new Date(parseInt(this.get('year').getAttribute('value')), parseInt(this.get('month').getAttribute('value')), 0).getDate() : d.getDate());
 		}
 	}
 	resetMonth() {
@@ -335,11 +335,11 @@ next::after {
 			var m = parseInt(ui.cssValue('dialog-hint', 'margin-top'));
 			if (isNaN(m))
 				m = 0;
-			var hinkyX = Math.max(e.getBoundingClientRect().x - ui.q('main').getBoundingClientRect().x + e.getBoundingClientRect().width / 2 - 6, ui.emInPX * 1.5);
+			var hinkyX = Math.max(e.getBoundingClientRect().x - ui.q('main').getBoundingClientRect().x + e.getBoundingClientRect().width / 2 - 2 * ui.emInPX, ui.emInPX * 1.5);
 			ui.navigation.openHint({
 				onclick: 'return',
 				desc: '<style i="calendar' + this.x + '">label{z-index:2;position:relative;}label.time{width:4em;text-align:center;}</style><div style="max-height:20em;overflow-y:auto;' + (global.getDevice() == 'phone' ? 'font-size:0.8em;' : '') + '">' + html + '</div>',
-				pos: '2%,' + (e.getBoundingClientRect().y + e.getBoundingClientRect().height + ui.emInPX - m) + 'px', size: '96%,auto', hinkyClass: 'top', hinky: 'left:' + hinkyX + 'px;',
+				pos: '2em,' + (e.getBoundingClientRect().y + e.getBoundingClientRect().height + ui.emInPX - m) + 'px', hinkyClass: 'top', hinky: 'left:' + hinkyX + 'px;',
 				noLogin: true
 			});
 			ui.swipe('dialog-hint div', function (dir, event) {
