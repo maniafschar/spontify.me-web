@@ -342,7 +342,7 @@ next::after {
 			ui.navigation.openHint({
 				onclick: 'return',
 				desc: '<style i="calendar' + this.x + '">label{z-index:2;position:relative;}label.time{width:4em;text-align:center;}</style><div style="max-height:20em;overflow-y:auto;' + (global.getDevice() == 'phone' ? 'font-size:0.8em;' : '') + '">' + html + '</div>',
-				pos: '2em,' + (e.getBoundingClientRect().y + e.getBoundingClientRect().height + ui.emInPX - m) + 'px', size: 'auto,auto', hinkyClass: 'top', hinky: 'left:' + hinkyX + 'px;',
+				pos: (ui.q('dialog-popup').style.display == 'none' ? 0.5 : 1.5) + 'em,' + (e.getBoundingClientRect().y + e.getBoundingClientRect().height + ui.emInPX - m) + 'px', size: 'auto,auto', hinkyClass: 'top', hinky: 'left:' + hinkyX + 'px;',
 				noLogin: true
 			});
 			ui.swipe('dialog-hint div', function (dir, event) {
