@@ -78,6 +78,9 @@ label.filled {
 	}
 	getCalendar() {
 		var s = `<style>
+div {
+	padding: 0 3em;
+}
 label {
 	width: 2.5em;
 	text-align: center;
@@ -118,7 +121,7 @@ next {
 next::after {
 	content: '>';
 }
-</style>`;
+</style><div>`;
 		var m = this.get('month').getAttribute('value'), y = this.get('year').getAttribute('value'), maxDays = 31;
 		var min = new Date(this.getAttribute('min'));
 		var max = new Date(this.getAttribute('max'));
@@ -157,7 +160,7 @@ next::after {
 		for (var i = (new Date(parseInt(y), parseInt(m) - 1, maxDays).getDay() + 6) % 7; i < 6; i++)
 			s += `<label class="weekday">&nbsp;</label>`;
 		s += `<prev onclick="InputDate.getField(${this.x}).prevMonth(event)"></prev>`;
-		s += `<next onclick="InputDate.getField(${this.x}).nextMonth(event)"></next>`;
+		s += `<next onclick="InputDate.getField(${this.x}).nextMonth(event)"></next></div>`;
 		return s;
 	}
 	static getField(id) {
