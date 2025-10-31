@@ -195,9 +195,11 @@ tabHeader tab {
 }
 tabBody {
 	width: 200%;
+	transition: all 0.4s ease-out;
 }
 tabBody>div {
 	width: 50%;
+	float: left;
 }
 </style>
 <tabHeader>
