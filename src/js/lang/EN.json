@@ -403,6 +403,7 @@
 			"repetition_Week": "every week",
 			"repetition_TwoWeeks": "every 2. weeks",
 			"repetition_Year": "once a year",
+			"searchAi": "Recomendations",
 			"selectLocation": "Go to location selection",
 			"seriesExists": "Your recurring appointment for {0} already exists.<br/>Would you like to open it?",
 			"skillsStopRepetition": "Cancel serial event",

@@ -191,7 +191,7 @@ mapEdit{
 	static templateEditNew = v =>
 		global.template`<tabHeader>
 	<tab onclick="pageEvent.selectTab(0)" class="tabActive">
-		${ui.l('events.editEvent')}
+		${ui.l('events.new')}
 	</tab>
 	<tab onclick="pageEvent.selectTab(1)">
 		${ui.l('events.searchAi')}
@@ -199,7 +199,7 @@ mapEdit{
 </tabHeader>
 <tabBody>
 <div>
-	${v.edit}
+	${pageEvent.templateEdit(v)}
 </div>
 <div>
 	user.skills

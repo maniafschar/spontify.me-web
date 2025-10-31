@@ -247,8 +247,14 @@ tabBody>div>form {
 					pageLogin.removeCredentials();
 					if (v.auto_login_token) {
 						var token = Encryption.jsEncrypt.decrypt(v.auto_login_token);
-						if (token)
+						if (token) {
+							communication.ajax({
+								webCall: 'login.login',
+								url: global.serverApi + 'authentication/resetToken?token=' + encodeURIComponent(Encryption.encPUB(window.localStorage.getItem('autoLogin'))),
+								error: function () { }
+							});
 							window.localStorage.setItem('autoLogin', token);
+						}
 					}
 					if (ui.navigation.getActiveID() == 'login') {
 						setTimeout(function () { ui.html('login', ''); }, 500);

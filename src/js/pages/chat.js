@@ -186,8 +186,10 @@ class pageChat {
 			return Strings.replaceInternalLinks(s);
 		s = s.trim();
 		s = s.replace(/</g, '&lt;');
-		if (v.contactId == user.clientId)
+		if (v.contactId == user.clientId && v.action && v.action.indexOf('ai:') == 0) {
 			s = Strings.markdown(s);
+			s += '';
+		}
 		s = Strings.replaceLinks(s);
 		s = s.replace(/\n/g, '<br/>');
 		s = Strings.replaceEmoji(s);
