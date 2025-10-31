@@ -419,6 +419,7 @@
 			"ticketInteresst": "Tickets fitting your interests",
 			"ticketPast": "Past tickets",
 			"title": "Events",
+			"titleSingular": "Event",
 			"today": "Today, {0}",
 			"tomorrow": "Tomorrow, {0}",
 			"tomorrowPlusOne": "The day after tomorrow, {0}",

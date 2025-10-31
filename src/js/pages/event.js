@@ -519,7 +519,7 @@ poll result div {
 		v.clubs = s ? s : ui.l('events.noClubs');
 		if (!global.config.searchMandatory)
 			v.repetitionClubsStyle = ' style="display:none;"';
-		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), id ? pageEvent.templateEdit(v) : pageEvent.templateEditNew(v), 'pageEvent.saveDraft()');
+		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'titleSingular')), id ? pageEvent.templateEdit(v) : pageEvent.templateEditNew(v), 'pageEvent.saveDraft()');
 		setTimeout(pageEvent.setForm, 400);
 		var selectable = function (value) {
 			if (!value || value.length < 3 || value == 'Once' || value == 'Games')

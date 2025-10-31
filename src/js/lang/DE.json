@@ -419,6 +419,7 @@
 			"ticketInteresst": "Tickets passend zu Deinen Interessen",
 			"ticketPast": "Vergangene Tickets",
 			"title": "Events",
+			"titleSingular": "Event",
 			"today": "Heute, {0}",
 			"tomorrow": "Morgen, {0}",
 			"tomorrowPlusOne": "Übermorgen, {0}",
