@@ -121,7 +121,7 @@ next {
 next::after {
 	content: '>';
 }
-</style><div>`;
+</style>`;
 		var m = this.get('month').getAttribute('value'), y = this.get('year').getAttribute('value'), maxDays = 31;
 		var min = new Date(this.getAttribute('min'));
 		var max = new Date(this.getAttribute('max'));
@@ -160,7 +160,7 @@ next::after {
 		for (var i = (new Date(parseInt(y), parseInt(m) - 1, maxDays).getDay() + 6) % 7; i < 6; i++)
 			s += `<label class="weekday">&nbsp;</label>`;
 		s += `<prev onclick="InputDate.getField(${this.x}).prevMonth(event)"></prev>`;
-		s += `<next onclick="InputDate.getField(${this.x}).nextMonth(event)"></next></div>`;
+		s += `<next onclick="InputDate.getField(${this.x}).nextMonth(event)"></next>`;
 		return s;
 	}
 	static getField(id) {
