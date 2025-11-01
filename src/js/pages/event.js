@@ -188,40 +188,6 @@ mapEdit{
 	</value>
 </field>
 </form>`;
-	static templateEditNew = v =>
-		global.template`<style>
-tabHeader tab {
-	width: 50%;
-}
-tabBody {
-	width: 200%;
-	transition: all 0.4s ease-out;
-	height: calc(100% - 2em);
-}
-tabBody>div {
-	width: 50%;
-	float: left;
-	overflow-y: auto;
-	height: 100%;
-}
-</style>
-<tabHeader>
-	<tab onclick="pageEvent.selectTab(0)" class="tabActive">
-		${ui.l('events.new')}
-	</tab>
-	<tab onclick="pageEvent.selectTab(1)">
-		${ui.l('events.searchAi')}
-	</tab>
-</tabHeader>
-<tabBody>
-<div>
-	${pageEvent.templateEdit(v)}
-</div>
-<div>
-	user.skills
-	location
-</div>
-</tabBody>`;
 	static templateDetail = v =>
 		global.template`<style>
 detail text.description.event poll {
@@ -522,7 +488,7 @@ poll result div {
 		v.clubs = s ? s : ui.l('events.noClubs');
 		if (!global.config.searchMandatory)
 			v.repetitionClubsStyle = ' style="display:none;"';
-		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'titleSingular')), id ? pageEvent.templateEdit(v) : pageEvent.templateEditNew(v), 'pageEvent.saveDraft()');
+		ui.navigation.openPopup(ui.l('events.' + (id ? 'edit' : 'new')), pageEvent.templateEdit(v), 'pageEvent.saveDraft()');
 		setTimeout(pageEvent.setForm, 400);
 		var selectable = function (value) {
 			if (!value || value.length < 3 || value == 'Once' || value == 'Games')
