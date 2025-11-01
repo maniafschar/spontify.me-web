@@ -244,16 +244,18 @@ tabBody>div>form {
 							});
 						}
 					}
-					pageLogin.removeCredentials();
 					if (v.auto_login_token) {
 						var token = Encryption.jsEncrypt.decrypt(v.auto_login_token);
 						if (token) {
 							communication.ajax({
 								webCall: 'login.login',
 								url: global.serverApi + 'authentication/resetToken?token=' + encodeURIComponent(Encryption.encPUB(window.localStorage.getItem('autoLogin'))),
-								error: function () { }
+								error: function () { },
+								success: function () {
+									pageLogin.removeCredentials();
+									window.localStorage.setItem('autoLogin', token);
+								}
 							});
-							window.localStorage.setItem('autoLogin', token);
 						}
 					}
 					if (ui.navigation.getActiveID() == 'login') {
