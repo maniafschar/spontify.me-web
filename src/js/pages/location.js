@@ -235,7 +235,6 @@ mapEdit {
 			var e = ui.q('dialog-popup #deleteElement');
 			e.setAttribute('label', ui.l('delete.confirm'));
 			e.setAttribute('execute', true);
-
 		}
 	}
 	static detailLocationEvent(l, id) {
@@ -557,7 +556,7 @@ mapEdit {
 			method: id ? 'PATCH' : 'POST',
 			body: v,
 			error(e) {
-				if (e.status == 500 && e.response && (e.response.indexOf('exists') > -1 || e.response.indexOf('ConstraintViolationException') > -1))
+				if (e.status == 500 && e.response && (e.response.indexOf('exists:') == 0 || e.response.indexOf('ConstraintViolationException') > -1))
 					DialogPopup.setHint(ui.l('locations.alreadyExists'));
 				else if (e.status == 500 && e.response && e.response.indexOf('Invalid address') > -1)
 					DialogPopup.setHint(ui.l('locations.invalidAddress'));

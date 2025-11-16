@@ -1098,7 +1098,7 @@ poll result div {
 			error(r) {
 				if (r && r.responseText) {
 					var e = JSON.parse(r.responseText);
-					if (e.msg && e.msg.indexOf('event series exists:') == 0) {
+					if (e.msg && e.msg.indexOf('exists:') == 0) {
 						ui.navigation.openPopup(ui.l('attention'), ui.l('events.seriesExists').replace('{0}', ui.q('dialog-popup clubs input-checkbox[checked="true"] label').innerHTML)
 							+ '<br/><br/><button-text onclick="ui.navigation.autoOpen(&quot;' + global.encParam('e=' + e.msg.substring(e.msg.indexOf(':') + 1).trim()) + '&quot;)">' + ui.l('events.open') + '</button-text>');
 						return;

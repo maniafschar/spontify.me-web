@@ -253,7 +253,7 @@ tabBody>div>form {
 								error: function () { },
 								success: function () {
 									pageLogin.removeCredentials();
-									window.localStorage.setItem('autoLogin', token);
+									window.localStorage.setItem('autoLogin', '' + token);
 								}
 							});
 						}
