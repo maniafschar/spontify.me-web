@@ -246,7 +246,7 @@ tabBody>div>form {
 					}
 					if (v.auto_login_token) {
 						var token = Encryption.jsEncrypt.decrypt(v.auto_login_token);
-						if (token) {
+						if (window.localStorage && window.localStorage.getItem('autoLogin')) {
 							communication.ajax({
 								webCall: 'login.login',
 								url: global.serverApi + 'authentication/resetToken?token=' + encodeURIComponent(Encryption.encPUB(window.localStorage.getItem('autoLogin'))),
@@ -256,7 +256,8 @@ tabBody>div>form {
 									window.localStorage.setItem('autoLogin', '' + token);
 								}
 							});
-						}
+						} else
+							window.localStorage.setItem('autoLogin', '' + token);
 					}
 					if (ui.navigation.getActiveID() == 'login') {
 						setTimeout(function () { ui.html('login', ''); }, 500);
