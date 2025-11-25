@@ -449,11 +449,11 @@ poll result div {
 		if (global.config.eventNoHashtags)
 			v.eventNoHashtags = ' class="hidden"';
 		if (v.type == 'Online')
-			v.typeOnlineEvent = 'tabActive';
+			v.activeOnlineEvent = 'tabActive';
 		else if (v.type == 'Inquiry')
-			v.typeInquiry = 'tabActive';
+			v.activeInquiry = 'tabActive';
 		else if (v.type == 'Poll') {
-			v.typePoll = 'tabActive';
+			v.activePoll = 'tabActive';
 			if (v.description) {
 				try {
 					var d = JSON.parse(v.description);
@@ -466,7 +466,7 @@ poll result div {
 				} catch (e) { }
 			}
 		} else
-			v.typeLocation = 'tabActive';
+			v.activeLocation = 'tabActive';
 		if (global.config.club)
 			v.hideOnlineEvent = 'class="hidden"';
 		v.publish = global.config.publishingWall ? '' : ' class="hidden"';
