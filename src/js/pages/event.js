@@ -1048,10 +1048,7 @@ poll result div {
 			else
 				formFunc.validation.filterWords(tags);
 		}
-		if (!text.value)
-			formFunc.setError(text, 'error.description');
-		else
-			formFunc.validation.filterWords(text);
+		formFunc.validation.filterWords(text);
 		if (start.getAttribute('complete') == 'false')
 			formFunc.setError(start, 'events.errorDate');
 		if (price.value > 0 && !user.contact.authenticate)
