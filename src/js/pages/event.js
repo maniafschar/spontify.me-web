@@ -73,10 +73,10 @@ mapEdit{
 <input type="hidden" name="skillsText" value="${v.skillsText}" />
 <div class="event">
 	<tabHeader>
-		<tab i="Location" onclick="pageEvent.setForm()" class="${v.activeLocation}">${ui.l('events.location')}</tab>
-		<tab i="Online" onclick="pageEvent.setForm()" class="${v.activeOnlineEvent}">${ui.l('events.newOnlineEvent')}</tab>
-		<tab i="Inquiry" onclick="pageEvent.setForm()" class="${v.activeInquiry}">${ui.l('events.newInquiry')}</tab>
-		<tab i="Poll" onclick="pageEvent.setForm()" class="${v.activePoll}">${ui.l('events.newPoll')}</tab>
+		<tab i="Location" onclick="pageEvent.setForm(this)" class="${v.activeLocation}">${ui.l('events.location')}</tab>
+		<tab i="Online" onclick="pageEvent.setForm(this)" class="${v.activeOnlineEvent}">${ui.l('events.newOnlineEvent')}</tab>
+		<tab i="Inquiry" onclick="pageEvent.setForm(this)" class="${v.activeInquiry}">${ui.l('events.newInquiry')}</tab>
+		<tab i="Poll" onclick="pageEvent.setForm(this)" class="${v.activePoll}">${ui.l('events.newPoll')}</tab>
 	</tabHeader>
 	<tabBody>
 	<explain class="type" style="display:none;">${ui.l('events.newInquiryDescription')}</explain>
@@ -1248,7 +1248,12 @@ poll result div {
 		if (!ui.classContains(e, 'closed'))
 			ui.classAdd(e, 'selected');
 	}
-	static setForm() {
+	static setForm(e) {
+		var id = e.getAttribute('i');
+		if (id == ui.q('dialog-popup tabHeader tab.tabActive').getAttribute('i'))
+			return;
+		ui.classRemove('dialog-popup tabHeader tab', 'tabActive');
+		ui.classAdd('dialog-popup tabHeader tab[i="' + id + '"]', 'tabActive');
 		var repetition = ui.val('dialog-popup input-checkbox[name="repetition"][checked="true"]');
 		pageEvent.openSection('dialog-popup clubs', repetition == 'Games');
 		var b = ui.q('dialog-popup tabHeader tab.tabActive').getAttribute('i');
