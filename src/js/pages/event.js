@@ -72,15 +72,13 @@ mapEdit{
 <input type="hidden" name="skills" value="${v.skills}" />
 <input type="hidden" name="skillsText" value="${v.skillsText}" />
 <div class="event">
-	<field class="checkbox">
-		<label>${ui.l('type')}</label>
-		<value>
-			<input-checkbox type="radio" name="type" value="Location" label="events.location" onclick="pageEvent.setForm()" ${v.typeLocation}></input-checkbox>
-			<input-checkbox type="radio" name="type" value="Online" label="events.newOnlineEvent" onclick="pageEvent.setForm()" ${v.typeOnlineEvent} ${v.hideOnlineEvent}></input-checkbox>
-			<input-checkbox type="radio" name="type" value="Inquiry" label="events.newInquiry" onclick="pageEvent.setForm()" ${v.typeInquiry} ${v.hideInquiry}></input-checkbox>
-			<input-checkbox type="radio" name="type" value="Poll" label="events.newPoll" onclick="pageEvent.setForm()" ${v.typePoll}></input-checkbox>
-		</value>
-	</field>
+	<tabHeader>
+		<tab i="Location" onclick="pageEvent.setForm()" class="${v.typeLocation}">${ui.l('events.location')}</tab>
+		<tab i="Online" onclick="pageEvent.setForm()" class="${v.typeOnlineEvent}">${ui.l('events.newOnlineEvent')}</tab>
+		<tab i="Inquiry" onclick="pageEvent.setForm()" class="${v.typeInquiry}">${ui.l('events.newInquiry')}</tab>
+		<tab i="Poll" onclick="pageEvent.setForm()" class="${v.typePoll}">${ui.l('events.newPoll')}</tab>
+	</tabHeader>
+	<tabBody>
 	<explain class="type" style="display:none;">${ui.l('events.newInquiryDescription')}</explain>
 	<field${v.eventNoHashtags}>
 		<label>${ui.l('events.hashtags')}</label>
@@ -117,7 +115,7 @@ mapEdit{
 			<input-date type="date" name="endDate" value="${v.endDate}" min="${v.dateMin}" max="${v.dateMax}"></input--date>
 		</value>
 	</field>
-	<field>
+	<field class="noWTDField">
 		<label class="description">${ui.l('description')}</label>
 		<value>
 			<textarea name="description" maxlength="1000">${v.description}</textarea>
@@ -172,6 +170,7 @@ mapEdit{
 		<button-text onclick="pageLocation.deleteElement(${v.id},&quot;Event&quot;)" ${v.hideDelete} id="deleteElement" label="delete"></button-text>
 	</dialogButtons>
 	<popupHint></popupHint>
+	</tabBody>
 </div>
 <field class="location" style="display:none;">
 	<label style="padding-top:0;">${ui.l('events.location')}</label>
@@ -244,7 +243,7 @@ poll result div {
 		} else {
 			pageEvent.openSection('dialog-popup .paypal', false);
 			pageEvent.openSection('dialog-popup .picture', false);
-			pageEvent.openSection('dialog-popup .url', ui.val('dialog-popup [name="type"][checked="true"]') == 'Online');
+			pageEvent.openSection('dialog-popup .url', ui.q('dialog-popup tabHeader tab.tabActive').getAttribute('i') == 'Online');
 		}
 	}
 	static detail(v) {
@@ -1033,7 +1032,7 @@ poll result div {
 		var tags = ui.q('dialog-popup input-hashtags');
 		var id = ui.val('dialog-popup [name="id"]');
 		var repetition = ui.val('dialog-popup [name="repetition"][checked="true"]');
-		var type = ui.val('dialog-popup input-checkbox[name="type"][checked="true"]');
+		var type = ui.q('dialog-popup tabHeader tab.tabActive').getAttribute('i');
 		DialogPopup.setHint('');
 		formFunc.resetError(start);
 		formFunc.resetError(end);
@@ -1252,12 +1251,12 @@ poll result div {
 	static setForm() {
 		var repetition = ui.val('dialog-popup input-checkbox[name="repetition"][checked="true"]');
 		pageEvent.openSection('dialog-popup clubs', repetition == 'Games');
-		var b = ui.val('dialog-popup input-checkbox[name="type"][checked="true"]');
+		var b = ui.q('dialog-popup tabHeader tab.tabActive').getAttribute('i');
 		var es = ui.qa('dialog-popup .noWTDField:not(field[name="endDate"])');
 		for (var i = 0; i < es.length; i++)
 			pageEvent.openSection(es[i], b == 'Online' || b == 'Location');
 		if (b == 'Inquiry' || b == 'Poll')
-			ui.html('dialog-popup explain.type', b == 'Inquiry' ? ui.l('events.newInquiryDescription') : ui.l('events.newPollDescription'));
+			ui.html('dialog-popup explain.type', ui.l(b == 'Inquiry' ? 'events.newInquiryDescription' : 'events.newPollDescription'));
 		pageEvent.openSection('dialog-popup field[name="startDate"]', repetition != 'Games' || b == 'Inquiry' || b == 'Poll');
 		pageEvent.openSection('dialog-popup field[name="endDate"]', (b == 'Online' || b == 'Location') && repetition && repetition != 'Games');
 		ui.q('dialog-popup .url label').innerText = ui.l(b == 'Online' ? 'events.urlOnlineEvent' : 'events.url');
