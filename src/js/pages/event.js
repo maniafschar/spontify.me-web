@@ -74,7 +74,7 @@ tabHeader tab {
 <input type="hidden" name="latitude" value="${v.latitude}" />
 <input type="hidden" name="skills" value="${v.skills}" />
 <input type="hidden" name="skillsText" value="${v.skillsText}" />
-<div class="event">
+<div class="event" style="padding-top:1em;">
 	<tabHeader>
 		<tab i="Location" onclick="pageEvent.setForm(this)" class="${v.activeLocation}">${ui.l('events.location')}</tab>
 		<tab i="Online" onclick="pageEvent.setForm(this)" class="${v.activeOnlineEvent}">${ui.l('events.newOnlineEvent')}</tab>
