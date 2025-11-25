@@ -73,10 +73,10 @@ mapEdit{
 <input type="hidden" name="skillsText" value="${v.skillsText}" />
 <div class="event">
 	<tabHeader>
-		<tab i="Location" onclick="pageEvent.setForm()" class="${v.typeLocation}">${ui.l('events.location')}</tab>
-		<tab i="Online" onclick="pageEvent.setForm()" class="${v.typeOnlineEvent}">${ui.l('events.newOnlineEvent')}</tab>
-		<tab i="Inquiry" onclick="pageEvent.setForm()" class="${v.typeInquiry}">${ui.l('events.newInquiry')}</tab>
-		<tab i="Poll" onclick="pageEvent.setForm()" class="${v.typePoll}">${ui.l('events.newPoll')}</tab>
+		<tab i="Location" onclick="pageEvent.setForm()" class="${v.activeLocation}">${ui.l('events.location')}</tab>
+		<tab i="Online" onclick="pageEvent.setForm()" class="${v.activeOnlineEvent}">${ui.l('events.newOnlineEvent')}</tab>
+		<tab i="Inquiry" onclick="pageEvent.setForm()" class="${v.activeInquiry}">${ui.l('events.newInquiry')}</tab>
+		<tab i="Poll" onclick="pageEvent.setForm()" class="${v.activePoll}">${ui.l('events.newPoll')}</tab>
 	</tabHeader>
 	<tabBody>
 	<explain class="type" style="display:none;">${ui.l('events.newInquiryDescription')}</explain>
@@ -449,11 +449,11 @@ poll result div {
 		if (global.config.eventNoHashtags)
 			v.eventNoHashtags = ' class="hidden"';
 		if (v.type == 'Online')
-			v.typeOnlineEvent = 'checked="true"';
+			v.typeOnlineEvent = 'tabActive';
 		else if (v.type == 'Inquiry')
-			v.typeInquiry = 'checked="true"';
+			v.typeInquiry = 'tabActive';
 		else if (v.type == 'Poll') {
-			v.typePoll = 'checked="true"';
+			v.typePoll = 'tabActive';
 			if (v.description) {
 				try {
 					var d = JSON.parse(v.description);
@@ -466,7 +466,7 @@ poll result div {
 				} catch (e) { }
 			}
 		} else
-			v.typeLocation = 'checked="true"';
+			v.typeLocation = 'tabActive';
 		if (global.config.club)
 			v.hideOnlineEvent = 'class="hidden"';
 		v.publish = global.config.publishingWall ? '' : ' class="hidden"';
