@@ -118,7 +118,7 @@ tabHeader tab {
 			<input-date type="date" name="endDate" value="${v.endDate}" min="${v.dateMin}" max="${v.dateMax}"></input--date>
 		</value>
 	</field>
-	<field class="noWTDField">
+	<field name="description">
 		<label class="description">${ui.l('description')}</label>
 		<value>
 			<textarea name="description" maxlength="1000">${v.description}</textarea>
@@ -1270,6 +1270,7 @@ poll result div {
 		ui.q('dialog-popup .url label').innerText = ui.l(b == 'Online' ? 'events.urlOnlineEvent' : 'events.url');
 		pageEvent.openSection('dialog-popup .url', b == 'Online');
 		pageEvent.openSection('dialog-popup field[name="mapEdit"]', b == 'Inquiry');
+		pageEvent.openSection('dialog-popup field[name="description"]', b != 'Inquiry');
 		pageEvent.openSection('dialog-popup explain.type', b == 'Inquiry' || b == 'Poll');
 		pageEvent.openSection('dialog-popup .locationName', b == 'Location');
 		pageEvent.openSection('dialog-popup .poll', b == 'Poll');
