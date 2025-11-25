@@ -59,9 +59,12 @@ clubs {
 	position: relative;
  	display: block;
  }
-mapEdit{
+mapEdit {
 	display: block;
 	height: 15em;
+}
+tabHeader tab {
+	max-width: 25%;
 }
 </style>
 <form name="editElement" onsubmit="return false">
@@ -1249,7 +1252,7 @@ poll result div {
 			ui.classAdd(e, 'selected');
 	}
 	static setForm(e) {
-		var id = e.getAttribute('i');
+		var id = (e ? e : ui.q('dialog-popup tabHeader tab')).getAttribute('i');
 		if (id == ui.q('dialog-popup tabHeader tab.tabActive').getAttribute('i'))
 			return;
 		ui.classRemove('dialog-popup tabHeader tab', 'tabActive');
