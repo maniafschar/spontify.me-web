@@ -160,7 +160,7 @@ tabHeader tab {
 			<input name="url" value="${v.url}" />
 		</value>
 	</field>
-	<field${v.publish}>
+	<field${v.publish} style="display:none;">
 		<label>${ui.l('events.publish')}</label>
 		<value>
 			<input-checkbox name="publish" label="events.publishCheckbox" value="true" ${v.publishValue}></input-checkbox>
