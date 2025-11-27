@@ -86,7 +86,7 @@ tabHeader tab {
 	<field${v.eventNoHashtags}>
 		<label>${ui.l('events.hashtags')}</label>
 		<value>
-			<input-hashtags ids="${v.skills}" text="${v.skillsText}" name="skills"></input-hashtags>
+			<input-hashtags ids="${v.skills}" text="${v.skillsText}" name="skills" categories="0,1,2,4,5"></input-hashtags>
 		</value>
 	</field>
 	<field name="startDate">
