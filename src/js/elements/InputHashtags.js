@@ -42,7 +42,6 @@ hashtags category label {
 	text-overflow: ellipsis;
 	border-radius: 1em;
 	background: transparent;
-	color: var(--text);
 }
 
 :host(.location) hashtags div {
