@@ -211,8 +211,10 @@ hashtagButton::before {
 			s += '</div>';
 		} else {
 			s = '<category>';
-			for (var i = 0; i < ui.categories.length; i++)
-				s += '<label ' + (i == 0 ? ' class="selected"' : '') + 'onclick="this.getRootNode().host.toggleSubCategories(this,' + i + ')">' + ui.categories[i].label + '</label>';
+			for (var i = 0; i < ui.categories.length; i++) {
+				if (!this.getAttribute('categories') || this.getAttribute('categories').indexOf(ui.categories[i].key) > -1)
+					s += '<label ' + (i == 0 ? ' class="selected"' : '') + 'onclick="this.getRootNode().host.toggleSubCategories(this,' + i + ')">' + ui.categories[i].label + '</label>';
+			}
 			s += '</category>';
 			for (var i = 0; i < ui.categories.length; i++) {
 				s += '<div' + (i == 0 ? ' style="display:block;"' : '') + '>';
