@@ -140,7 +140,6 @@
 	"url": "https://fan-club.online",
 	"appConfig": {
 		"news": true,
-		"eventNoHashtags": true,
 		"publishingWall": true,
 		"searchMandatory": "9."
 	}
