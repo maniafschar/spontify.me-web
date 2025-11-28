@@ -1040,9 +1040,7 @@ poll result div {
 		formFunc.resetError(text);
 		formFunc.resetError(tags);
 		formFunc.resetError(price);
-		if (!global.config.eventNoHashtags && !tags.getAttribute('ids') && !tags.getAttribute('text'))
-			formFunc.setError(tags, 'error.hashtags');
-		else
+		if (tags.getAttribute('ids') || tags.getAttribute('text'))
 			formFunc.validation.filterWords(tags);
 		if (type == 'Inquiry')
 			text.value = '';
