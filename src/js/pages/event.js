@@ -83,7 +83,7 @@ tabHeader tab {
 	</tabHeader>
 	<tabBody>
 	<explain class="type" style="display:none;">${ui.l('events.newInquiryDescription')}</explain>
-	<field${v.eventNoHashtags}>
+	<field>
 		<label>${ui.l('events.hashtags')}</label>
 		<value>
 			<input-hashtags ids="${v.skills}" text="${v.skillsText}" name="skills" categories="0,1,2,4,5"></input-hashtags>
@@ -449,8 +449,6 @@ poll result div {
 			ui.l('events.paypalSignUpHintFee').replace('{0}', pageEvent.paypal.fee).replace('{1}', global.date.formatDate(pageEvent.paypal.feeDate)).replace('{2}', pageEvent.paypal.feeAfter)
 			: pageEvent.paypal.fee);
 		v.appointment = user.getAppointmentTemplate('authenticate');
-		if (global.config.eventNoHashtags)
-			v.eventNoHashtags = ' class="hidden"';
 		if (v.type == 'Online')
 			v.activeOnlineEvent = 'tabActive';
 		else if (v.type == 'Inquiry')
@@ -1042,12 +1040,10 @@ poll result div {
 		formFunc.resetError(text);
 		formFunc.resetError(tags);
 		formFunc.resetError(price);
-		if (!global.config.eventNoHashtags) {
-			if (!tags.getAttribute('ids') && !tags.getAttribute('text'))
-				formFunc.setError(tags, 'error.hashtags');
-			else
-				formFunc.validation.filterWords(tags);
-		}
+		if (!global.config.eventNoHashtags && !tags.getAttribute('ids') && !tags.getAttribute('text'))
+			formFunc.setError(tags, 'error.hashtags');
+		else
+			formFunc.validation.filterWords(tags);
 		if (type == 'Inquiry')
 			text.value = '';
 		else
