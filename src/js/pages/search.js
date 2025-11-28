@@ -187,22 +187,14 @@ ${v.keywords}
 			var v = {};
 			if (!pageSearch.events.fieldValues.keywords)
 				pageSearch.events.fieldValues.keywords = '';
-			if (global.config.eventNoHashtags)
-				v.keywords = '<input value="' + pageSearch.events.fieldValues.keywords + '" name="keywords"></input>'
-			else {
-				if (!pageSearch.events.fieldValues.keywordsText)
-					pageSearch.events.fieldValues.keywordsText = '';
-				v.keywords = '<input-hashtags ids="' + pageSearch.events.fieldValues.keywords + '" text="' + pageSearch.events.fieldValues.keywordsText + '" name="keywords"></input-hashtags>'
-			}
+			if (!pageSearch.events.fieldValues.keywordsText)
+				pageSearch.events.fieldValues.keywordsText = '';
+			v.keywords = '<input-hashtags ids="' + pageSearch.events.fieldValues.keywords + '" text="' + pageSearch.events.fieldValues.keywordsText + '" name="keywords"></input-hashtags>'
 			v.date = pageSearch.events.fieldValues.date;
 			return pageSearch.events.template(v);
 		},
 		getSearch(bounds) {
-			var v, s = '';
-			if (global.config.eventNoHashtags)
-				v = ui.val('search tabBody div.events input');
-			else
-				v = ui.q('search tabBody div.events input-hashtags').getAttribute('text');
+			var v = ui.q('search tabBody div.events input-hashtags').getAttribute('text'), s = '';
 			if (v) {
 				v = v.replace(/'/g, '\'\'').split('|');
 				for (var i = 0; i < v.length; i++) {
@@ -216,11 +208,9 @@ ${v.keywords}
 				}
 				s = s.substring(0, s.length - 4);
 			}
-			if (!global.config.eventNoHashtags) {
-				v = ui.q('search tabBody div.events input-hashtags').getAttribute('ids');
-				if (v)
-					s += (s ? ' or ' : '') + global.getRegEx('event.skills', v);
-			}
+			v = ui.q('search tabBody div.events input-hashtags').getAttribute('ids');
+			if (v)
+				s += (s ? ' or ' : '') + global.getRegEx('event.skills', v);
 			if (bounds) {
 				var b = pageSearch.events.map.canvas.getBounds();
 				if (b) {
