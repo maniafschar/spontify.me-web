@@ -350,7 +350,7 @@ poll result div {
 			v.hideMeEdit = ' hidden';
 		return pageEvent.templateDetail(v);
 	}
-	static edit(locationID, id) {
+	static edit(locationID, id, tab) {
 		if (!user.contact) {
 			ui.navigation.openHint({ desc: 'teaserEvents', pos: '5%,-35%', size: '90%,auto', hinkyClass: 'bottom', hinky: 'left:4.5em;' });
 			return;
@@ -394,11 +394,11 @@ poll result div {
 		}
 		ui.navigation.closeMenu();
 		if (id)
-			pageEvent.editInternal(locationID, id, JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).event);
+			pageEvent.editInternal(locationID, id, JSON.parse(decodeURIComponent(ui.q('detail card:last-child detailHeader').getAttribute('data'))).event, tab);
 		else
-			pageEvent.editInternal(locationID);
+			pageEvent.editInternal(locationID, null, null, tab);
 	}
-	static editInternal(locationID, id, v) {
+	static editInternal(locationID, id, v, tab) {
 		if (!id && user.get('event')) {
 			v = user.get('event').values;
 			if (v.startDate &&
@@ -449,25 +449,27 @@ poll result div {
 			ui.l('events.paypalSignUpHintFee').replace('{0}', pageEvent.paypal.fee).replace('{1}', global.date.formatDate(pageEvent.paypal.feeDate)).replace('{2}', pageEvent.paypal.feeAfter)
 			: pageEvent.paypal.fee);
 		v.appointment = user.getAppointmentTemplate('authenticate');
-		if (v.type == 'Online')
+		if (tab)
+			v['active' + tab] = 'tabActive';
+		else if (v.type == 'Online')
 			v.activeOnlineEvent = 'tabActive';
 		else if (v.type == 'Inquiry')
 			v.activeInquiry = 'tabActive';
-		else if (v.type == 'Poll') {
+		else if (v.type == 'Poll')
 			v.activePoll = 'tabActive';
-			if (v.description) {
-				try {
-					var d = JSON.parse(v.description);
-					v.description = d.q;
-					v.pollDisplay = ' style="display:block;"';
-					v.pollValue = ' value="' + d.a[0] + '"';
-					v.pollInput = '';
-					for (var i = 1; i < d.a.length; i++)
-						v.pollInput += '<input type="text" maxlength="250" value="' + (d.a[i] ? d.a[i] : '') + '" style="margin-top:0.5em;"/>';
-				} catch (e) { }
-			}
-		} else
+		else
 			v.activeLocation = 'tabActive';
+		if (v.type == 'Poll' && v.description) {
+			try {
+				var d = JSON.parse(v.description);
+				v.description = d.q;
+				v.pollDisplay = ' style="display:block;"';
+				v.pollValue = ' value="' + d.a[0] + '"';
+				v.pollInput = '';
+				for (var i = 1; i < d.a.length; i++)
+					v.pollInput += '<input type="text" maxlength="250" value="' + (d.a[i] ? d.a[i] : '') + '" style="margin-top:0.5em;"/>';
+			} catch (e) { }
+		}
 		if (global.config.club)
 			v.hideOnlineEvent = 'class="hidden"';
 		v.publish = global.config.publishingWall ? '' : ' class="hidden"';
