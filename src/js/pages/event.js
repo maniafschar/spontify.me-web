@@ -401,9 +401,14 @@ poll result div {
 	static editInternal(locationID, id, v, tab) {
 		if (!id && user.get('event')) {
 			v = user.get('event').values;
-			if (v.startDate &&
-				global.date.server2local(v.startDate).getTime() < new Date().getTime())
+			if (v.startDate && global.date.server2local(v.startDate).getTime() < new Date().getTime())
 				v.startDate = null;
+			if (tab) {
+				v.activeLocation = null;
+				v.activeOnlineEvent = null;
+				v.activeInquiry = null;
+				v.activePoll = null;
+			}
 		}
 		if (!v)
 			v = {};
