@@ -1248,7 +1248,7 @@ poll result div {
 			ui.classAdd(e, 'selected');
 	}
 	static setForm(e) {
-		var id = (e ? e : ui.q('dialog-popup tabHeader tab')).getAttribute('i');
+		var id = (e ? e : ui.q('dialog-popup tabHeader tab.tabActive') ? ui.q('dialog-popup tabHeader tab.tabActive') : ui.q('dialog-popup tabHeader tab')).getAttribute('i');
 		ui.classRemove('dialog-popup tabHeader tab', 'tabActive');
 		ui.classAdd('dialog-popup tabHeader tab[i="' + id + '"]', 'tabActive');
 		var repetition = ui.val('dialog-popup input-checkbox[name="repetition"][checked="true"]');
