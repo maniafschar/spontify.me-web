@@ -1047,12 +1047,14 @@ poll result div {
 		formFunc.resetError(text);
 		formFunc.resetError(tags);
 		formFunc.resetError(price);
+		if (type == 'Inquiry') {
+			text.value = '';
+			if (!tags.getAttribute('ids') && !tags.getAttribute('text'))
+				formFunc.setError(tags);
+		} else
+			formFunc.validation.filterWords(text);
 		if (tags.getAttribute('ids') || tags.getAttribute('text'))
 			formFunc.validation.filterWords(tags);
-		if (type == 'Inquiry')
-			text.value = '';
-		else
-			formFunc.validation.filterWords(text);
 		if (start.getAttribute('complete') == 'false')
 			formFunc.setError(start, 'events.errorDate');
 		if (price.value > 0 && !user.contact.authenticate)
