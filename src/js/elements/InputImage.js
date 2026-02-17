@@ -310,7 +310,7 @@ button-image.right {
 			ctx.rotate(0.5 * Math.PI);
 			ctx.translate(0, -h);
 			ctx.drawImage(image, 0, 0, w, h);
-			var b = canvas.toDataURL('image/jpeg', 1);;
+			var b = canvas.toDataURL('image/jpeg', 1);
 			img.src = b;
 			t.setAttribute('value', '.' + b.substring(b.indexOf('/') + 1, b.indexOf(';')) + global.separatorTech + b.substring(b.indexOf(',') + 1));
 			t._root.querySelector('imagePreviewSize').innerHTML = wh[1].trim() + ' x ' + wh[0].trim();

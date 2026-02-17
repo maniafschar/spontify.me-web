@@ -83,60 +83,12 @@ button-text.map {
 				v.matches = ' checked="true"';
 			return pageSearch.contacts.template(v);
 		},
-		getMatches() {
-			var search = '(' + global.getRegEx('contact.skills', user.contact.skills) + ' or ' + global.getRegEx('contact.skillsText', user.contact.skillsText) + ')';
-			if (global.config.searchMandatory && user.contact.skills && user.contact.skills.indexOf(global.config.searchMandatory) > -1) {
-				search += ' and (';
-				var s = user.contact.skills.split('|');
-				for (var i = 0; i < s.length; i++) {
-					if (s[i].indexOf(global.config.searchMandatory) == 0)
-						search += global.getRegEx('contact.skills', s[i]) + ' or ';
-				}
-				search = search.substring(0, search.length - 4) + ')';
-			}
-			var gender = function (age, i) {
-				if (age) {
-					var ageSplit = age.split(','), s2 = '';
-					if (ageSplit[0] > 18)
-						s2 = 'contact.age>=' + ageSplit[0];
-					if (ageSplit[1] < 99)
-						s2 += (s2 ? ' and ' : '') + 'contact.age<=' + ageSplit[1];
-					return 'contact.gender=' + i + (s2 ? ' and ' + s2 : '');
-				}
-				return '';
-			}
-			var s = gender(user.contact.ageMale, 1), g = '';
-			if (s)
-				g += ' or ' + s;
-			s = gender(user.contact.ageFemale, 2);
-			if (s)
-				g += ' or ' + s;
-			s = gender(user.contact.ageDivers, 3);
-			if (s)
-				g += ' or ' + s;
-			if (g)
-				search += ' and (' + g.substring(4) + ')';
-			return search;
-		},
 		getSearch() {
-			var s = '', s2 = '', s3 = '';
-			if (ui.q('search tabBody div.contacts [name="matches"][checked="true"]'))
-				s = ' and ' + pageSearch.contacts.getMatches();
-			var v = ui.q('search tabBody div.contacts input-hashtags').getAttribute('text');
-			if (v) {
-				v = v.replace(/'/g, '\'\'').split('|');
-				for (var i = 0; i < v.length; i++) {
-					if (v[i]) {
-						s2 = v[i].trim().toLowerCase();
-						s3 += 'contact.idDisplay=\'' + v[i].trim() + '\' or (contact.search=true and (LOWER(contact.description) like \'%' + s2 + '%\' or LOWER(contact.pseudonym) like \'%' + s2 + '%\' or LOWER(contact.skillsText) like \'%' + s2 + '%\')) or ';
-					}
-				}
-				s3 = s3.substring(0, s3.length - 4);
-			}
-			v = ui.q('search tabBody div.contacts input-hashtags').getAttribute('ids');
-			if (v)
-				s3 += (s3 ? ' or ' : '') + global.getRegEx('contact.skills', v);
-			return (s3.indexOf('contact.idDisplay') > -1 ? '' : 'contact.id<>' + user.clientId + ' and ') + 'contact.id<>' + user.contact.id + s + (s3 ? ' and (' + s3 + ')' : '');
+			return {
+				matches: ui.q('search tabBody div.contacts [name="matches"]').getAttribute('checked') == 'true',
+				tokens: ui.q('search tabBody div.contacts input-hashtags').getAttribute('text'),
+				ids: ui.q('search tabBody div.contacts input-hashtags').getAttribute('ids')
+			};
 		},
 		search() {
 			if (ui.q('search tabBody div.contacts [name="matches"][checked="true"]') && !user.contact.skills && !user.contact.skillsText)
@@ -150,7 +102,7 @@ button-text.map {
 					longitude: geoData.getCurrent().lon,
 					distance: -1,
 					query: 'contact_list',
-					search: encodeURIComponent(pageSearch.contacts.getSearch())
+					search: encodeURIComponent(JSON.stringify(pageSearch.contacts.getSearch()))
 				}, pageContact.listContacts, 'search tabBody>div.contacts', 'search');
 				user.set('searchContacts', pageSearch.contacts.fieldValues);
 			}
@@ -194,46 +146,19 @@ ${v.keywords}
 			return pageSearch.events.template(v);
 		},
 		getSearch(bounds) {
-			var v = ui.q('search tabBody div.events input-hashtags').getAttribute('text'), s = '';
-			if (v) {
-				v = v.replace(/'/g, '\'\'').split('|');
-				for (var i = 0; i < v.length; i++) {
-					if (v[i]) {
-						var l = ') like \'%' + v[i].trim().toLowerCase() + '%\' or LOWER(';
-						s += '((contact.search=true or event.price>0) and LOWER(contact.pseudonym' + l + 'contact.description' + l;
-						s = s.substring(0, s.lastIndexOf(' or LOWER(')) + ') or ';
-						s += 'LOWER(location.name' + l + 'location.description' + l + 'location.address' + l + 'location.address2' + l + 'location.telephone' + l + 'event.description' + l + 'event.skillsText' + l;
-						s = s.substring(0, s.lastIndexOf(' or LOWER(')) + ' or ';
-					}
-				}
-				s = s.substring(0, s.length - 4);
-			}
-			v = ui.q('search tabBody div.events input-hashtags').getAttribute('ids');
-			if (v)
-				s += (s ? ' or ' : '') + global.getRegEx('event.skills', v);
-			if (bounds) {
-				var b = pageSearch.events.map.canvas.getBounds();
-				if (b) {
-					if (s)
-						s += ' and ';
-					s += '(';
-					var borderLat = 0.1 * Math.abs(b.getSouthWest().lat() - b.getNorthEast().lat());
-					s += 'location.latitude>' + (b.getSouthWest().lat() + borderLat);
-					s += ' and location.latitude<' + (b.getNorthEast().lat() - borderLat);
-					var borderLon = 0.1 * Math.abs(b.getNorthEast().lng() - b.getSouthWest().lng());
-					s += ' and location.longitude>' + (b.getSouthWest().lng() + borderLon);
-					s += ' and location.longitude<' + (b.getNorthEast().lng() - borderLon);
-					s += ' or ';
-					s += 'event.latitude>' + (b.getSouthWest().lat() + borderLat);
-					s += ' and event.latitude<' + (b.getNorthEast().lat() - borderLat);
-					s += ' and event.longitude>' + (b.getSouthWest().lng() + borderLon);
-					s += ' and event.longitude<' + (b.getNorthEast().lng() - borderLon);
-					s += ')';
-				}
-			}
-			if (s)
-				s = '(' + s + ') and ';
-			return s + 'event.endDate>=cast(\'' + global.date.local2server(new Date()).substring(0, 10) + '\' as timestamp)';
+			var param = {
+				tokens: ui.q('search tabBody div.events input-hashtags').getAttribute('text'),
+				ids: ui.q('search tabBody div.events input-hashtags').getAttribute('ids')
+			};
+			var b = bounds && pageSearch.events.map.canvas.getBounds();
+			if (b)
+				param.bounds = {
+					southWestLat: b.getSouthWest().lat(),
+					northEastLat: b.getNorthEast().lat(),
+					northEastLng: b.getNorthEast().lng(),
+					southWestLng: b.getSouthWest().lng()
+				};
+			return param;
 		},
 		search(bounds) {
 			pageSearch.events.map.resetMapBounds = !bounds;
@@ -246,7 +171,7 @@ ${v.keywords}
 				distance: 100,
 				limit: -1,
 				query: 'event_list',
-				search: encodeURIComponent(pageSearch.events.getSearch(bounds))
+				search: encodeURIComponent(JSON.stringify(pageSearch.events.getSearch(bounds)))
 			}, function (events) {
 				var d = new Date();
 				var twoWeeks = new Date();
@@ -340,39 +265,20 @@ ${v.keywords}
 			return pageSearch.locations.template(v);
 		},
 		getSearch(bounds) {
-			var s = '';
-			var v = ui.q('search tabBody div.locations input-hashtags').getAttribute('text');
-			if (v) {
-				v = v.replace(/'/g, '\'\'').split('|');
-				for (var i = 0; i < v.length; i++) {
-					if (v[i]) {
-						var l = ') like \'%' + v[i].trim().toLowerCase() + '%\' or LOWER(';
-						s += '(LOWER(location.name' + l + 'location.description' + l + 'location.address' + l + 'location.address2' + l + 'location.telephone' + l;
-						s = s.substring(0, s.lastIndexOf(' or LOWER')) + ') or ';
-					}
-				}
-				if (s)
-					s = '(' + s.substring(0, s.length - 4) + ')';
-			}
-			v = ui.q('search tabBody div.locations input-hashtags').getAttribute('ids');
-			if (v)
-				s += (s ? ' or ' : '') + global.getRegEx('location.skills', v);
-			if (ui.q('search tabBody div.locations [name="favorites"][checked="true"]'))
-				s += (s ? ' and ' : '') + 'locationFavorite.favorite=true';
-			if (bounds) {
-				var b = pageSearch.locations.map.canvas.getBounds();
-				if (b) {
-					if (s)
-						s += ' and ';
-					var border = 0.1 * Math.abs(b.getSouthWest().lat() - b.getNorthEast().lat());
-					s += 'location.latitude>' + (b.getSouthWest().lat() + border);
-					s += ' and location.latitude<' + (b.getNorthEast().lat() - border);
-					border = 0.1 * Math.abs(b.getNorthEast().lng() - b.getSouthWest().lng());
-					s += ' and location.longitude>' + (b.getSouthWest().lng() + border);
-					s += ' and location.longitude<' + (b.getNorthEast().lng() - border);
-				}
-			}
-			return s;
+			var param = {
+				favorites: ui.q('search tabBody div.locations [name="favorites"]').getAttribute('checked') == 'true',
+				tokens: ui.q('search tabBody div.locations input-hashtags').getAttribute('text'),
+				ids: ui.q('search tabBody div.locations input-hashtags').getAttribute('ids')
+			};
+			var b = bounds && pageSearch.locations.map.canvas.getBounds();
+			if (b)
+				param.bounds = {
+					southWestLat: b.getSouthWest().lat(),
+					northEastLat: b.getNorthEast().lat(),
+					northEastLng: b.getNorthEast().lng(),
+					southWestLng: b.getSouthWest().lng()
+				};
+			return param;
 		},
 		search(bounds) {
 			pageSearch.locations.map.resetMapBounds = !bounds;
@@ -383,7 +289,7 @@ ${v.keywords}
 				longitude: geoData.getCurrent().lon,
 				distance: -1,
 				query: 'location_list',
-				search: encodeURIComponent(pageSearch.locations.getSearch(bounds))
+				search: encodeURIComponent(JSON.stringify(pageSearch.locations.getSearch(bounds)))
 			}, pageLocation.listLocation, 'search tabBody>div.locations', 'search');
 			user.set('searchLocations', pageSearch.locations.fieldValues);
 			ui.q('search .locations button-text.map').style.display = null;
