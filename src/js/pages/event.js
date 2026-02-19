@@ -1036,7 +1036,7 @@ poll result div {
 		var start = ui.q('dialog-popup input-date[name="startDate"]');
 		var end = ui.q('dialog-popup input-date[name="endDate"]');
 		var price = ui.q('dialog-popup [name="price"]');
-		var text = ui.q('dialog-popup [name="description"]');
+		var text = ui.q('dialog-popup [name="description"] textarea');
 		var tags = ui.q('dialog-popup input-hashtags');
 		var id = ui.val('dialog-popup [name="id"]');
 		var repetition = ui.val('dialog-popup [name="repetition"][checked="true"]');
