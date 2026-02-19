@@ -137,7 +137,7 @@ module.exports = (env) => {
 							.replace('{placeholderServer}', props.server)
 							.replace('{placeholderFacebookId}', props.facebookId)
 							.replace(/\{placeholderBundleID}/g, props.bundleId)
-							.replace(/\{placeholderAppConfig}/g, JSON.stringify(props.appConfig).replace(/\"/g, '\\"'))
+							.replace(/\{placeholderAppConfig}/g, JSON.stringify(props.appConfig)?.replace(/\"/g, '\\"'))
 							.replace(/\{placeholderAppleID}/g, props.appleId));
 						file = 'dist/oauthcallback.html';
 						fs.writeFileSync(file, fs.readFileSync(file, 'utf8')
