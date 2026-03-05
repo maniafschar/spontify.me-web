@@ -10,9 +10,9 @@ class InputHashtags extends HTMLElement {
 		super();
 		this._root = this.attachShadow({ mode: 'closed' });
 		if (InputHashtags.locationAttributes.length == 0) {
-			InputHashtags.locationAttributes.push(ui.l('locations.attributeMuseum') + '|x.3');
-			InputHashtags.locationAttributes.push(ui.l('locations.attributeCinema') + '|x.2');
-			InputHashtags.locationAttributes.push(ui.l('locations.attributeSportsbar') + '|x.1');
+			InputHashtags.locationAttributes.push(ui.l('locations.attributeMuseum') + '|1.22');
+			InputHashtags.locationAttributes.push(ui.l('locations.attributeCinema') + '|1.09');
+			InputHashtags.locationAttributes.push(ui.l('locations.attributeSportsbar') + '|1.21');
 		}
 	}
 	connectedCallback() {
