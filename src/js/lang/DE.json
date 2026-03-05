@@ -42,6 +42,7 @@
 				"Kino|09",
 				"Klassik|10",
 				"Mainstream|11",
+				"Museum|22",
 				"Musical|12",
 				"Oper|13",
 				"Pop Art|14",
@@ -49,6 +50,7 @@
 				"Rock'n'Roll|16",
 				"Romantik|17",
 				"Schlager|18",
+				"Sportsbar|21",
 				"Theater|19",
 				"Universität|20"
 			]
@@ -130,7 +132,7 @@
 				"Fitness|05",
 				"Fliegen|06",
 				"Fußball|07",
-				"Golfen|08",
+				"Golf|08",
 				"Joggen|09",
 				"Kitesurfen|10",
 				"Klettern|11",
